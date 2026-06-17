@@ -1,0 +1,40 @@
+{
+  "brand": "Korean with Madie",
+  "title": "한글 — Корейский алфавит",
+  "note": "Фирменные данные алфавита. name_ru — русское чтение названия буквы, sound — звук(и), romaja — латинская транскрипция (Revised Romanization), example — слово-пример.",
+  "consonants": [
+    { "char": "ㄱ", "name_ko": "기역", "name_ru": "киёк",   "sound": "[к, г]",   "romaja": "g / k",  "example": { "word": "가방", "ru": "сумка",  "en": "bag" } },
+    { "char": "ㄴ", "name_ko": "니은", "name_ru": "ниын",   "sound": "[н]",       "romaja": "n",      "example": { "word": "나무", "ru": "дерево", "en": "tree" } },
+    { "char": "ㄷ", "name_ko": "디귿", "name_ru": "тигыт",  "sound": "[т, д]",   "romaja": "d / t",  "example": { "word": "다리", "ru": "нога / мост", "en": "leg / bridge" } },
+    { "char": "ㄹ", "name_ko": "리을", "name_ru": "риыль",  "sound": "[р, ль]",  "romaja": "r / l",  "example": { "word": "라면", "ru": "рамён",  "en": "ramyeon" } },
+    { "char": "ㅁ", "name_ko": "미음", "name_ru": "миым",   "sound": "[м]",       "romaja": "m",      "example": { "word": "물",   "ru": "вода",   "en": "water" } },
+    { "char": "ㅂ", "name_ko": "비읍", "name_ru": "пиып",   "sound": "[п, б]",   "romaja": "b / p",  "example": { "word": "바다", "ru": "море",   "en": "sea" } },
+    { "char": "ㅅ", "name_ko": "시옷", "name_ru": "сиот",   "sound": "[с]",       "romaja": "s",      "example": { "word": "사과", "ru": "яблоко", "en": "apple" } },
+    { "char": "ㅇ", "name_ko": "이응", "name_ru": "иын",    "sound": "[–, нъ]",  "romaja": "ng / —", "example": { "word": "아이", "ru": "ребёнок","en": "child" } },
+    { "char": "ㅈ", "name_ko": "지읒", "name_ru": "чиыт",   "sound": "[ч, дж]",  "romaja": "j",      "example": { "word": "주스", "ru": "сок",    "en": "juice" } },
+    { "char": "ㅊ", "name_ko": "치읓", "name_ru": "чхиыт",  "sound": "[чх]",      "romaja": "ch",     "example": { "word": "책",   "ru": "книга",  "en": "book" } },
+    { "char": "ㅋ", "name_ko": "키읔", "name_ru": "кхиык",  "sound": "[кх]",      "romaja": "k",      "example": { "word": "커피", "ru": "кофе",   "en": "coffee" } },
+    { "char": "ㅌ", "name_ko": "티읕", "name_ru": "тхиыт",  "sound": "[тх]",      "romaja": "t",      "example": { "word": "토마토","ru": "помидор","en": "tomato" } },
+    { "char": "ㅍ", "name_ko": "피읖", "name_ru": "пхиып",  "sound": "[пх]",      "romaja": "p",      "example": { "word": "포도", "ru": "виноград","en": "grapes" } },
+    { "char": "ㅎ", "name_ko": "히읗", "name_ru": "хиыт",   "sound": "[х]",       "romaja": "h",      "example": { "word": "하늘", "ru": "небо",   "en": "sky" } }
+  ],
+  "vowels": [
+    { "char": "ㅏ", "name_ko": "아", "name_ru": "а",          "sound": "[а]",  "romaja": "a",   "example": { "word": "사람", "ru": "человек", "en": "person" } },
+    { "char": "ㅑ", "name_ko": "야", "name_ru": "я",          "sound": "[я]",  "romaja": "ya",  "example": { "word": "야구", "ru": "бейсбол", "en": "baseball" } },
+    { "char": "ㅓ", "name_ko": "어", "name_ru": "о (тёмное)", "sound": "[ŏ]",  "romaja": "eo",  "example": { "word": "어머니","ru": "мама",    "en": "mother" } },
+    { "char": "ㅕ", "name_ko": "여", "name_ru": "ё (тёмное)", "sound": "[yŏ]", "romaja": "yeo", "example": { "word": "여자", "ru": "женщина", "en": "woman" } },
+    { "char": "ㅗ", "name_ko": "오", "name_ru": "о",          "sound": "[о]",  "romaja": "o",   "example": { "word": "오이", "ru": "огурец",  "en": "cucumber" } },
+    { "char": "ㅛ", "name_ko": "요", "name_ru": "ё",          "sound": "[ё]",  "romaja": "yo",  "example": { "word": "요리", "ru": "блюдо / готовка", "en": "cooking" } },
+    { "char": "ㅜ", "name_ko": "우", "name_ru": "у",          "sound": "[у]",  "romaja": "u",   "example": { "word": "우유", "ru": "молоко",  "en": "milk" } },
+    { "char": "ㅠ", "name_ko": "유", "name_ru": "ю",          "sound": "[ю]",  "romaja": "yu",  "example": { "word": "유리", "ru": "стекло",  "en": "glass" } },
+    { "char": "ㅡ", "name_ko": "으", "name_ru": "ы",          "sound": "[ы]",  "romaja": "eu",  "example": { "word": "그림", "ru": "рисунок", "en": "picture" } },
+    { "char": "ㅣ", "name_ko": "이", "name_ru": "и",          "sound": "[и]",  "romaja": "i",   "example": { "word": "기차", "ru": "поезд",   "en": "train" } }
+  ],
+  "double_consonants": [
+    { "char": "ㄲ", "name_ko": "쌍기역", "name_ru": "ссангиёк",  "sound": "[кк]", "romaja": "kk", "example": { "word": "토끼", "ru": "кролик",    "en": "rabbit" } },
+    { "char": "ㄸ", "name_ko": "쌍디귿", "name_ru": "ссандигыт", "sound": "[тт]", "romaja": "tt", "example": { "word": "딸기", "ru": "клубника",  "en": "strawberry" } },
+    { "char": "ㅃ", "name_ko": "쌍비읍", "name_ru": "ссанбиып",  "sound": "[пп]", "romaja": "pp", "example": { "word": "빵",   "ru": "хлеб",      "en": "bread" } },
+    { "char": "ㅆ", "name_ko": "쌍시옷", "name_ru": "ссансиот",  "sound": "[сс]", "romaja": "ss", "example": { "word": "쌀",   "ru": "рис (сырой)","en": "rice (raw)" } },
+    { "char": "ㅉ", "name_ko": "쌍지읒", "name_ru": "ссанчиыт",  "sound": "[чч]", "romaja": "jj", "example": { "word": "찌개", "ru": "чигэ (суп)", "en": "stew" } }
+  ]
+}

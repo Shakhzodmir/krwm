@@ -1,0 +1,8 @@
+.DS_Store
+.claude/settings.local.json
+functions/node_modules/
+nothing/
+IMG_*.JPG
+.remember/logs/
+.remember/tmp/
+*pdf
