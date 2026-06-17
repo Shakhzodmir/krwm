@@ -1,0 +1,112 @@
+{
+  // ─────────────────────────────────────────────────────────────────────────
+  //  Korean with Madie — Realtime Database security rules (SECURE TARGET)
+  //
+  //  ⚠️  DO NOT DEPLOY AS-IS without reading SECURITY.md first.
+  //  These rules assume the architecture described in SECURITY.md:
+  //    1. Admins are REAL Firebase Auth users, flagged at  /admins/{uid} = true
+  //       (the plaintext password list in app.js must be removed).
+  //    2. Guests use Firebase ANONYMOUS Auth, so every visitor has an auth.uid
+  //       and socialUserId() returns auth.uid (not a local "g_…" id).
+  //
+  //  Until that migration is done the live app writes to /shared, /users and
+  //  /chats WITHOUT being signed in (admins) or as guests, so these rules would
+  //  block it. This file is the destination, not a drop-in. It is intentionally
+  //  NOT wired into firebase.json so `firebase deploy` won't apply it by accident.
+  //
+  //  To deploy once the app is migrated:
+  //    firebase deploy --only database
+  //  (after adding the "database" block shown in SECURITY.md to firebase.json)
+  // ─────────────────────────────────────────────────────────────────────────
+  "rules": {
+    ".read": false,
+    ".write": false,
+
+    // Public learning content: everyone reads, only admins write.
+    "shared": {
+      "customFeedPosts":  { ".read": true, ".write": "root.child('admins').child(auth.uid).val() === true" },
+      "customFlashcards": { ".read": true, ".write": "root.child('admins').child(auth.uid).val() === true" },
+      "customKpop":       { ".read": true, ".write": "root.child('admins').child(auth.uid).val() === true" },
+      "customVideos":     { ".read": true, ".write": "root.child('admins').child(auth.uid).val() === true" },
+      "customLessons":    { ".read": true, ".write": "root.child('admins').child(auth.uid).val() === true" },
+
+      // Likes: anyone may read; each user toggles only their OWN like.
+      "feedLikes": {
+        ".read": true,
+        "$postId": {
+          "$uid": {
+            ".write": "auth != null && auth.uid === $uid",
+            ".validate": "newData.isBoolean()"
+          }
+        }
+      },
+
+      // Comments: anyone reads; author may create/delete their own; admin may delete any.
+      "feedComments": {
+        ".read": true,
+        "$postId": {
+          "$commentId": {
+            ".write": "auth != null && ( (!data.exists() && newData.child('uid').val() === auth.uid) || (!newData.exists() && (data.child('uid').val() === auth.uid || root.child('admins').child(auth.uid).val() === true)) || data.child('uid').val() === auth.uid )",
+            "uid":  { ".validate": "newData.val() === auth.uid" },
+            "text": { ".validate": "newData.isString() && newData.val().length <= 500" },
+            "name": { ".validate": "newData.isString() && newData.val().length <= 80" },
+            "ts":   { ".validate": "newData.isNumber()" },
+            "likes": { "$liker": { ".write": "auth != null && auth.uid === $liker", ".validate": "newData.isBoolean()" } },
+            "replies": {
+              "$replyId": {
+                "uid":  { ".validate": "newData.val() === auth.uid" },
+                "text": { ".validate": "newData.isString() && newData.val().length <= 500" },
+                "likes": { "$liker": { ".write": "auth != null && auth.uid === $liker" } }
+              }
+            }
+          }
+        }
+      }
+    },
+
+    // Admin flags only — NO passwords here. Managed from the Firebase console.
+    "admins": {
+      ".read": "auth != null",
+      ".write": false
+    },
+
+    // User profiles. Readable by signed-in users (needed for friend search &
+    // the teacher's student list). Each user writes only their own node, with
+    // narrow exceptions so friends can drop a request into someone's inbox.
+    "users": {
+      ".read": "auth != null",
+      "$uid": {
+        ".write": "auth != null && (auth.uid === $uid || root.child('admins').child(auth.uid).val() === true)",
+        "name":   { ".validate": "newData.isString() && newData.val().length <= 80" },
+        "email":  { ".validate": "newData.isString() && newData.val().length <= 120" },
+        "avatar": { ".validate": "newData.isString() && newData.val().length <= 200000" },
+        "bio":    { ".validate": "newData.isString() && newData.val().length <= 200" },
+        "cover":  { ".validate": "newData.isString() && newData.val().length <= 400000" },
+        // Anyone signed in may push a friend request / unread marker to another user.
+        "inbox":      { "$key":  { ".write": "auth != null" } },
+        // $from is a friend uid (DM) or a group chat id (g_…), so the writer is any
+        // signed-in sender bumping the counter — can't pin it to auth.uid === $from.
+        "unreadFrom": { "$from": { ".write": "auth != null" } },
+        "friends":    { "$fid":  { ".write": "auth != null && (auth.uid === $uid || auth.uid === $fid)" } },
+        "outgoing":   { "$to":   { ".write": "auth != null && (auth.uid === $uid || auth.uid === $to)" } },
+        // Group chat membership pointers: the group creator writes them for every member.
+        "groups":     { "$gid":  { ".write": "auth != null" } }
+      }
+    },
+
+    // Chats: only the two members can read or write; a message's `from` must be the sender.
+    "chats": {
+      "$chatId": {
+        ".read":  "auth != null && data.child('meta/members/' + auth.uid).val() === true",
+        ".write": "auth != null && (data.child('meta/members/' + auth.uid).val() === true || !data.child('meta/members').exists())",
+        "messages": {
+          "$msgId": {
+            "from": { ".validate": "newData.val() === auth.uid" },
+            "text": { ".validate": "newData.isString() && newData.val().length <= 2000" },
+            "ts":   { ".validate": "newData.isNumber()" }
+          }
+        }
+      }
+    }
+  }
+}
