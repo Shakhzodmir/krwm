@@ -3130,6 +3130,17 @@
   .topik-entry-title { font-weight: 700; font-size: 16px; }
   .topik-entry-sub { font-size: 11.5px; opacity: .9; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .topik-entry-arrow { opacity: .85; flex-shrink: 0; }
+  /* Две группы экзаменов рядом — вертикальные компактные карточки */
+  .topik-entry-half {
+    flex: 1; min-width: 0; flex-direction: column; align-items: flex-start;
+    gap: 10px; padding: 14px;
+  }
+  .topik-entry-half .topik-entry-badge { font-size: 13px; padding: 8px 11px; align-self: flex-start; }
+  .topik-entry-half .topik-entry-text { flex: none; width: 100%; }
+  .topik-entry-half .topik-entry-title { font-size: 14px; line-height: 1.15; }
+  .topik-entry-half .topik-entry-sub { font-size: 10px; white-space: normal; line-height: 1.3; opacity: .92; }
+  .topik-entry-half.mock { background: linear-gradient(135deg, #5b6cb4 0%, #8a73c0 100%); box-shadow: 0 10px 26px -10px rgba(60,50,110,.5); }
+  body.theme-dark .topik-entry-half.mock { background: linear-gradient(135deg, #3D5288 0%, #5a4f86 100%); }
 
   /* Hub hero */
   .topik-hero {
@@ -3400,6 +3411,10 @@
   .exam-pts { font-size: 10.5px; font-weight: 700; color: var(--coral); background: var(--blush); border-radius: 999px; padding: 3px 10px; margin-left: auto; }
   .exam-q-orig { font-size: 11px; font-weight: 600; color: var(--soft); }
   .exam-instr { font-size: 14px; font-weight: 600; color: var(--berry); margin: 9px 0 15px; padding-left: 11px; border-left: 3px solid var(--rose); line-height: 1.45; }
+  .exam-listen-btn { display: inline-flex; align-items: center; gap: 8px; font-family: inherit; font-size: 13.5px; font-weight: 700; color: #fff; background: linear-gradient(135deg, #6f78c9, #8a73c0); border: none; border-radius: 999px; padding: 10px 18px; margin: 0 0 14px; cursor: pointer; box-shadow: 0 8px 18px -10px rgba(111,120,201,.7); transition: transform .15s ease, box-shadow .2s ease; }
+  .exam-listen-btn:hover { box-shadow: 0 10px 22px -10px rgba(111,120,201,.85); }
+  .exam-listen-btn:active { transform: scale(.97); }
+  .exam-listen-btn.playing { background: linear-gradient(135deg, #c95959, #d77a7a); box-shadow: 0 8px 18px -10px rgba(201,89,89,.7); }
   .exam-passage {
     background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 17px 19px;
     font-size: 17.5px; line-height: 1.95; color: var(--berry); margin-bottom: 18px;
@@ -4202,6 +4217,147 @@
     border-color: #1A0E10 !important;
     box-shadow: 0 var(--duo-lip) 0 #1A0E10 !important;
   }
+
+  /* ── FEED: композер «поделись фото» + посты учеников ────── */
+  .feed-composer {
+    width: 100%; display: flex; align-items: center; gap: 12px;
+    padding: 12px 14px; border-radius: 18px; cursor: pointer;
+    border: 2px solid var(--duo-blush); background: var(--card);
+    box-shadow: 0 3px 0 var(--duo-blush); font-family: inherit; text-align: left;
+    transition: transform .12s ease-out, box-shadow .12s ease-out;
+  }
+  .feed-composer:active { transform: translateY(3px); box-shadow: 0 0 0 var(--duo-blush); }
+  .feed-composer-av {
+    width: 38px; height: 38px; border-radius: 50%; object-fit: cover; flex-shrink: 0;
+    border: 2px solid var(--duo-rose);
+  }
+  .feed-composer-av-initial {
+    display: flex; align-items: center; justify-content: center;
+    background: var(--grad-coral); color: #fff; font-weight: 800; font-size: 15px;
+  }
+  .feed-composer-text { flex: 1; min-width: 0; color: var(--soft); font-size: 13.5px; font-weight: 600; }
+  .feed-composer-cam {
+    flex-shrink: 0; width: 34px; height: 34px; border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    background: var(--grad-coral); color: #fff; font-size: 14px;
+  }
+  .feed-composer-guest .feed-composer-av-initial { background: var(--soft); }
+
+  .composer-drop {
+    border: 2px dashed var(--line-strong); border-radius: 16px;
+    padding: 28px 16px; text-align: center; cursor: pointer; background: var(--paper);
+    transition: border-color .2s ease;
+  }
+  .composer-drop:hover { border-color: var(--coral); }
+  .composer-drop.has-photo { padding: 0; border-style: solid; overflow: hidden; background: #000; }
+  .composer-drop.has-photo img { width: 100%; max-height: 320px; object-fit: contain; display: block; }
+
+  .feed-card-student { background: var(--card) !important; }
+  .feed-student-head { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+  .feed-student-av {
+    width: 40px; height: 40px; border-radius: 50%; object-fit: cover; flex-shrink: 0;
+    border: 2px solid var(--duo-rose);
+  }
+  .feed-student-av-initial {
+    display: flex; align-items: center; justify-content: center;
+    background: var(--grad-coral); color: #fff; font-weight: 800; font-size: 16px;
+  }
+  .feed-student-name { font-weight: 700; font-size: 14px; color: var(--berry); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .feed-student-you { font-size: 10px; color: var(--coral); font-weight: 700; }
+  .feed-student-time { font-size: 11px; color: var(--soft); margin-top: 1px; }
+  .feed-student-act {
+    flex-shrink: 0; width: 32px; height: 32px; border-radius: 10px; border: none; cursor: pointer;
+    background: var(--paper); color: var(--soft); font-size: 13px;
+    display: flex; align-items: center; justify-content: center;
+    transition: background .15s, color .15s;
+  }
+  .feed-student-act:hover { background: rgba(var(--rose-rgb),.16); color: var(--coral); }
+  .feed-student-caption {
+    font-size: 13px; color: var(--text2); line-height: 1.5; margin-top: 10px;
+    white-space: pre-wrap; word-break: break-word;
+  }
+  body.theme-dark .feed-composer,
+  body.theme-dark .feed-card-student { background: #2A2A2E !important; }
+  body.theme-dark .feed-student-act { background: rgba(255,255,255,.08); }
+  body.theme-dark .composer-drop { background: #1E1E22; }
+
+  /* ── МОДУЛЬ 2: переключатель модулей ───────────────────── */
+  .module-switch { display: flex; gap: 8px; }
+  .module-tab {
+    flex: 1; min-width: 0; display: flex; align-items: center; gap: 8px;
+    padding: 10px 12px; border-radius: 14px; cursor: pointer; font-family: inherit;
+    border: 2px solid var(--duo-blush); background: var(--card); text-align: left;
+    box-shadow: 0 2px 0 var(--duo-blush);
+    transition: transform .12s ease-out, box-shadow .12s ease-out, border-color .15s;
+  }
+  .module-tab:active { transform: translateY(2px); box-shadow: 0 0 0 var(--duo-blush); }
+  .module-tab.active { border-color: var(--coral); background: linear-gradient(135deg, rgba(var(--rose-rgb),.16), var(--card)); box-shadow: 0 2px 0 var(--coral); }
+  .module-tab-num {
+    flex-shrink: 0; width: 34px; height: 34px; border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 800; font-size: 13px; background: var(--paper); color: var(--soft);
+  }
+  .module-tab.active .module-tab-num { background: var(--grad-coral); color: #fff; }
+  .module-tab-name { flex: 1; min-width: 0; font-size: 13px; font-weight: 700; color: var(--berry); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .module-tab.locked { opacity: .6; }
+  .module-tab-lock { font-size: 11px; color: var(--soft); flex-shrink: 0; }
+
+  /* ── МОДУЛЬ 2: диалог ──────────────────────────────────── */
+  .dlg-list { display: flex; flex-direction: column; gap: 10px; }
+  .dlg-row { display: flex; align-items: flex-end; gap: 8px; }
+  .dlg-row.b { flex-direction: row-reverse; }
+  .dlg-ava {
+    flex-shrink: 0; width: 32px; height: 32px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center; font-size: 17px;
+    background: var(--paper); border: 1px solid var(--line);
+  }
+  .dlg-bubble {
+    max-width: 78%; padding: 10px 13px; border-radius: 16px; cursor: pointer;
+    background: var(--card); border: 1.5px solid var(--line-strong);
+    transition: transform .15s ease, box-shadow .2s ease;
+  }
+  .dlg-row.a .dlg-bubble { border-bottom-left-radius: 5px; }
+  .dlg-row.b .dlg-bubble { border-bottom-right-radius: 5px; background: linear-gradient(135deg, var(--berry), var(--coral)); border-color: transparent; }
+  .dlg-row.b .dlg-ko { color: #fff; }
+  .dlg-row.b .dlg-ru { color: rgba(255,255,255,.85); }
+  .dlg-ko { font-size: 15px; font-weight: 600; color: var(--berry); line-height: 1.35; }
+  .dlg-ru { font-size: 11.5px; color: var(--soft); margin-top: 3px; line-height: 1.3; }
+  .dlg-row.speaking .dlg-bubble { box-shadow: 0 0 0 3px rgba(var(--rose-rgb),.45); transform: scale(1.02); }
+
+  /* ── МОДУЛЬ 2: конструктор предложения ─────────────────── */
+  .build-answer {
+    min-height: 52px; margin-top: 14px; padding: 10px; border-radius: 14px;
+    border: 2px dashed var(--line-strong); background: var(--paper);
+    display: flex; flex-wrap: wrap; gap: 8px; align-content: flex-start;
+  }
+  .build-answer.build-shake { animation: buildShake .45s; }
+  @keyframes buildShake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-6px)} 75%{transform:translateX(6px)} }
+  .build-pool { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+  .build-chip {
+    padding: 9px 14px; border-radius: 12px; cursor: pointer; font-family: inherit;
+    font-size: 15px; font-weight: 600; color: var(--berry);
+    background: var(--card); border: 2px solid var(--duo-blush); box-shadow: 0 2px 0 var(--duo-blush);
+    transition: transform .1s ease-out;
+  }
+  .build-chip:active { transform: translateY(2px); }
+  .build-chip.in-answer { background: rgba(var(--rose-rgb),.12); border-color: var(--coral); box-shadow: 0 2px 0 var(--coral); }
+  .build-chip.correct { background: rgba(132,196,116,.22); border-color: var(--ok-ink); box-shadow: 0 2px 0 var(--ok-ink); color: var(--ok-ink); }
+
+  /* ── МОДУЛЬ 2: аудирование + варианты ──────────────────── */
+  .listen-play {
+    width: 72px; height: 72px; border-radius: 50%; border: none; cursor: pointer;
+    background: var(--grad-coral); color: #fff; font-size: 26px;
+    box-shadow: 0 10px 24px -8px rgba(var(--accent-rgb),.6);
+    transition: transform .12s ease-out;
+  }
+  .listen-play:active { transform: scale(.94); }
+  .lesson-opt.opt-correct { background: rgba(132,196,116,.22) !important; border-color: var(--ok-ink) !important; color: var(--ok-ink) !important; }
+  .lesson-opt.opt-wrong { background: var(--bad-bg) !important; border-color: var(--bad-line) !important; color: var(--bad-ink) !important; }
+
+  body.theme-dark .module-tab,
+  body.theme-dark .dlg-ava,
+  body.theme-dark .dlg-bubble,
+  body.theme-dark .build-chip { background: #2A2A2E; }
 
   /* ── GAME CARDS v2 ──────────────────────────────────────── */
   .game-card-v2 {

@@ -124,11 +124,11 @@
     if (name === 'hangul' && !document.getElementById('consonants-grid').children.length) initHangulLab();
     if (name === 'games') syncBestScoreCards();
     if (name === 'home') { renderCustomVideos(); renderCustomFeedPosts(); renderHeroLesson(); renderDailyGoal(); renderSrsWidget(); renderContinue(); }
-    if (name === 'lessons') { renderCustomLessons(); renderLessonPath(); }
+    if (name === 'lessons') { renderModuleSwitcher(); renderCustomLessons(); renderLessonPath(); }
     if (name === 'profile') { syncAchievementsStrip(); renderWeeklyXpChart(); renderHomeworkList(); renderSavedWords(); renderPlanCard(); }
     if (name === 'social') renderFriendsAndChat();
     if (name === 'words') renderSavedWords();
-    if (name === 'topik') { _topikSection = null; renderTopik(); }
+    if (name === 'topik') { _topikSection = null; _topikReturn = null; renderTopik(); }
     if (name === 'selfstudy') { _ssSection = null; renderSelfStudy(); }
     if (name === 'admin') renderProfileAdminPanel(adminCurrentTab || 'hub');
     _curScreen = name;
@@ -948,7 +948,7 @@
   // ── Lesson flow (слайдовый, по презентации) ──
   let lessonStage = 0;
   let lessonViewId = null; // админ: открыть конкретный урок мимо прогресса
-  function startLessonFlow(id) { lessonViewId = id || null; lessonStage = id ? getLessonStage(id) : 0; renderLesson(); }
+  function startLessonFlow(id, fromStart) { lessonViewId = id || null; lessonStage = fromStart ? 0 : (id ? getLessonStage(id) : 0); renderLesson(); }
   function lessonSlides() {
     const l = getCurrentLesson();
     return (l && Array.isArray(l.slides)) ? l.slides : [];
@@ -1204,6 +1204,95 @@
         ${lessonNav('Завершить урок →')}
       `;
     }
+    // ── Модуль 2: диалог (2 голоса TTS) ──
+    if (slide.kind === 'dialog') {
+      const bubbles = (slide.lines || []).map((ln, i) => {
+        const isB = ln.who === 'B';
+        return `
+          <div class="dlg-row ${isB ? 'b' : 'a'}" data-dlg-i="${i}">
+            <div class="dlg-ava">${ln.av || (isB ? '🧑' : '🙂')}</div>
+            <div class="dlg-bubble" onclick="lessonPlay('${jsStr(ln.ko)}', this)">
+              <div class="ko dlg-ko">${escHtml(ln.ko)}</div>
+              ${ln.ru ? `<div class="dlg-ru">${escHtml(ln.ru)}</div>` : ''}
+            </div>
+          </div>`;
+      }).join('');
+      return `
+        <div class="page-eyebrow">${slide.eyebrow || 'ДИАЛОГ'}</div>
+        <div class="display" style="font-size:21px; color:var(--berry); margin-top:4px;">${slide.title}</div>
+        ${slide.sub ? `<div style="font-size:12px; color:var(--coral); margin-top:2px;">${slide.sub}</div>` : ''}
+        <button onclick="lessonSpeakDialog(this)" class="btn btn-rose btn-block" style="margin-top:14px;"><i class="fa-solid fa-headphones"></i> Прослушать диалог</button>
+        <div class="dlg-list" style="margin-top:14px;">${bubbles}</div>
+        ${hint(slide.note)}
+        ${lessonNav('Дальше →')}
+      `;
+    }
+    // ── Модуль 2: грамматический паттерн + дрилы ──
+    if (slide.kind === 'pattern') {
+      const examples = (slide.examples || []).map(ex => `
+        <div class="card card-padded" onclick="lessonPlay('${jsStr(ex.ko)}', this)" style="cursor:pointer; display:flex; align-items:center; gap:10px; margin-top:8px;">
+          <div style="flex:1; min-width:0;"><div class="ko" style="font-size:15px; color:var(--berry); font-weight:600;">${escHtml(ex.ko)}</div><div style="font-size:12px; color:var(--soft); margin-top:2px;">${escHtml(ex.ru)}</div></div>
+          <i class="fa-solid fa-volume-up" style="color:var(--coral); flex-shrink:0;"></i>
+        </div>`).join('');
+      const drills = (slide.drills || []).map(d => {
+        const opts = shuffleArr([...d.options]);
+        return `<div class="pattern-drill card card-padded" data-done="0" style="margin-top:10px;">
+          <div class="ko" style="font-size:15px; color:var(--berry); font-weight:600; line-height:1.4;">${escHtml(d.q)}</div>
+          ${d.ru ? `<div style="font-size:11.5px; color:var(--soft); margin-top:3px;">${escHtml(d.ru)}</div>` : ''}
+          <div style="display:flex; gap:8px; flex-wrap:wrap; margin-top:10px;">
+            ${opts.map(o => `<button class="btn btn-ghost lesson-opt" style="flex:1; min-width:78px; padding:10px 8px;" onclick="lessonPatternPick(this, '${jsStr(o)}', '${jsStr(d.answer)}')">${escHtml(o)}</button>`).join('')}
+          </div>
+        </div>`;
+      }).join('');
+      return `
+        <div class="page-eyebrow">${slide.eyebrow || 'ГРАММАТИКА'}</div>
+        <div class="display" style="font-size:21px; color:var(--berry); margin-top:4px;">${slide.title}</div>
+        ${slide.sub ? `<div style="font-size:12px; color:var(--coral); margin-top:2px;">${slide.sub}</div>` : ''}
+        <div class="card card-padded" style="background:rgba(201,165,92,.10); border-color:rgba(201,165,92,.4); margin-top:14px;">
+          <div style="font-size:13px; color:var(--berry); line-height:1.6;">${slide.rule}</div>
+        </div>
+        ${examples ? `<div style="margin-top:8px;">${examples}</div>` : ''}
+        ${drills ? `<div style="margin-top:14px;"><div style="font-size:10px; letter-spacing:.18em; color:var(--soft); margin-bottom:2px;">ПОТРЕНИРУЙСЯ</div>${drills}</div>` : ''}
+        ${lessonNav('Дальше →', !!drills)}
+      `;
+    }
+    // ── Модуль 2: собери предложение из слов ──
+    if (slide.kind === 'build') {
+      const chips = shuffleArr([...(slide.target || []), ...(slide.pool || [])]);
+      const chipHtml = chips.map(w => `<button type="button" class="build-chip" data-w="${escHtml(w)}" onclick="lessonBuildPick(this)">${escHtml(w)}</button>`).join('');
+      return `
+        <div class="page-eyebrow">${slide.eyebrow || 'СОБЕРИ ФРАЗУ'}</div>
+        <div class="display" style="font-size:21px; color:var(--berry); margin-top:4px;">${slide.title}</div>
+        <div class="card card-padded" style="margin-top:12px; text-align:center;">
+          <div style="font-size:10px; color:var(--soft); letter-spacing:.16em;">ПЕРЕВЕДИ НА КОРЕЙСКИЙ</div>
+          <div style="font-size:16px; color:var(--berry); font-weight:600; margin-top:6px;">${escHtml(slide.ru)}</div>
+        </div>
+        <div id="build-answer" class="build-answer" data-target="${(slide.target || []).map(escHtml).join('|')}"></div>
+        <div id="build-pool" class="build-pool">${chipHtml}</div>
+        <div id="build-feedback" style="text-align:center; font-size:13px; margin-top:10px; min-height:18px;"></div>
+        <div style="display:flex; gap:10px; margin-top:8px;">
+          <button onclick="prevLesson()" class="btn btn-ghost" style="flex:1;">← Назад</button>
+          <button id="build-check-btn" onclick="lessonBuildCheck(this)" class="btn btn-primary" style="flex:1.6;">Проверить</button>
+        </div>
+      `;
+    }
+    // ── Модуль 2: аудирование — услышь и выбери ──
+    if (slide.kind === 'listen') {
+      const opts = shuffleArr([...(slide.options || [])]);
+      return `
+        <div class="page-eyebrow">${slide.eyebrow || 'АУДИРОВАНИЕ'}</div>
+        <div class="display" style="font-size:21px; color:var(--berry); margin-top:4px;">${slide.title}</div>
+        <div style="font-size:12px; color:var(--coral); margin-top:2px;">${slide.sub || 'Нажми ▶ и выбери, что услышал(а)'}</div>
+        <div style="text-align:center; margin:20px 0;">
+          <button onclick="lessonPlay('${jsStr(slide.ko)}', this)" class="listen-play" aria-label="Прослушать"><i class="fa-solid fa-play"></i></button>
+          <div style="font-size:11px; color:var(--soft); margin-top:10px;">Тапни, чтобы прослушать ещё раз 🔊</div>
+        </div>
+        <div id="quiz-grid" style="display:grid; gap:10px;">
+          ${opts.map(o => `<button class="btn btn-ghost lesson-opt" onclick="lessonChoicePick(this, '${jsStr(o)}', '${jsStr(slide.answer)}')" style="padding:13px;">${escHtml(o)}</button>`).join('')}
+        </div>
+        ${lessonNav('Дальше →', true)}
+      `;
+    }
     // done
     const wordCount = Array.isArray(lesson.vocab) ? lesson.vocab.length : 0;
     return `
@@ -1276,6 +1365,122 @@
   }
   function lessonWordTap(el, ko) { playSyllable(ko, el); recordWordSeen(ko); }
   function lessonPlay(text, el) { playSyllable(text, el); }
+
+  // ── Модуль 2: озвучка диалога двумя голосами (по образцу speakExamScript) ──
+  let _seqItems = null, _seqIdx = 0, _seqBtn = null;
+  function stopKoSequence() {
+    _seqItems = null; _seqIdx = 0;
+    try { window.speechSynthesis && window.speechSynthesis.cancel(); } catch (_) {}
+    document.querySelectorAll('.dlg-row.speaking').forEach(r => r.classList.remove('speaking'));
+    if (_seqBtn) { if (_seqBtn.dataset.idle) _seqBtn.innerHTML = _seqBtn.dataset.idle; _seqBtn.classList.remove('playing'); _seqBtn = null; }
+  }
+  function speakKoSequence(items, btn) {
+    if (!('speechSynthesis' in window)) { toast('Голос недоступен в этом браузере'); return; }
+    if (typeof getSettings === 'function' && !getSettings().sound) { toast('Озвучка выключена в настройках 🔇', 'var(--berry)'); return; }
+    if (btn && btn === _seqBtn && _seqItems) { stopKoSequence(); return; } // toggle
+    stopSpeech(); stopKoSequence();
+    _seqBtn = btn || null;
+    if (btn) { if (!btn.dataset.idle) btn.dataset.idle = btn.innerHTML; btn.classList.add('playing'); btn.innerHTML = '<i class="fa-solid fa-stop"></i> Остановить'; }
+    const slow = (typeof getSettings === 'function' && getSettings().slowVoice);
+    _seqItems = items.slice(); _seqIdx = 0;
+    const next = () => {
+      document.querySelectorAll('.dlg-row.speaking').forEach(r => r.classList.remove('speaking'));
+      if (!_seqItems || _seqIdx >= _seqItems.length) { stopKoSequence(); return; }
+      const it = _seqItems[_seqIdx];
+      const row = document.querySelector(`.dlg-row[data-dlg-i="${it.i}"]`);
+      if (row) { row.classList.add('speaking'); try { row.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); } catch (_) {} }
+      _seqIdx++;
+      const u = new SpeechSynthesisUtterance(it.ko);
+      u.lang = 'ko-KR';
+      u.rate = slow ? 0.6 : 0.9;
+      u.pitch = it.who === 'B' ? 1.3 : 0.85;
+      u.onend = () => next();
+      u.onerror = () => next();
+      try { window.speechSynthesis.speak(u); } catch (_) { next(); }
+    };
+    next();
+  }
+  function lessonSpeakDialog(btn) {
+    const l = getCurrentLesson();
+    const slide = (l && Array.isArray(l.slides)) ? l.slides[lessonStage] : null;
+    if (!slide || !Array.isArray(slide.lines)) return;
+    const items = slide.lines.map((ln, i) => ({ ko: ln.ko, who: ln.who, i })).filter(x => x.ko);
+    speakKoSequence(items, btn);
+  }
+
+  // ── Модуль 2: выбор одного правильного варианта (listen) ──
+  function lessonChoicePick(btn, chosen, correct) {
+    const grid = btn.closest('#quiz-grid') || btn.parentElement;
+    if (chosen === correct) {
+      grid.querySelectorAll('button').forEach(b => { b.disabled = true; b.style.pointerEvents = 'none'; });
+      btn.classList.add('opt-correct');
+      const nb = document.getElementById('quiz-next-btn');
+      if (nb && nb.hasAttribute('disabled')) {
+        nb.removeAttribute('disabled'); nb.style.opacity = '1'; nb.style.pointerEvents = '';
+        addXp(8); toast('맞아요! Верно 🌸 +8 XP', 'var(--sage)');
+      }
+    } else {
+      btn.classList.add('opt-wrong');
+      setTimeout(() => btn.classList.remove('opt-wrong'), 600);
+    }
+  }
+
+  // ── Модуль 2: грамматические дрилы (несколько в слайде) ──
+  function lessonPatternPick(btn, chosen, correct) {
+    const drill = btn.closest('.pattern-drill');
+    if (chosen === correct) {
+      if (drill) { drill.querySelectorAll('button').forEach(b => { b.disabled = true; b.style.pointerEvents = 'none'; }); drill.dataset.done = '1'; }
+      btn.classList.add('opt-correct');
+      lessonPatternCheck();
+    } else {
+      btn.classList.add('opt-wrong');
+      setTimeout(() => btn.classList.remove('opt-wrong'), 600);
+    }
+  }
+  function lessonPatternCheck() {
+    const drills = [...document.querySelectorAll('.pattern-drill')];
+    if (drills.length && drills.every(d => d.dataset.done === '1')) {
+      const nb = document.getElementById('quiz-next-btn');
+      if (nb && nb.hasAttribute('disabled')) {
+        nb.removeAttribute('disabled'); nb.style.opacity = '1'; nb.style.pointerEvents = '';
+        addXp(10); toast('완벽해요! 🌸 +10 XP', 'var(--sage)');
+      }
+    }
+  }
+
+  // ── Модуль 2: конструктор предложения ──
+  function clearBuildFeedback() { const f = document.getElementById('build-feedback'); if (f) f.textContent = ''; }
+  function lessonBuildPick(btn) {
+    const ans = document.getElementById('build-answer');
+    if (!ans) return;
+    btn.style.display = 'none';
+    const chip = document.createElement('button');
+    chip.type = 'button';
+    chip.className = 'build-chip in-answer';
+    chip.textContent = btn.dataset.w;
+    chip.onclick = () => { btn.style.display = ''; chip.remove(); clearBuildFeedback(); };
+    ans.appendChild(chip);
+    clearBuildFeedback();
+  }
+  function lessonBuildCheck(btn) {
+    const ans = document.getElementById('build-answer');
+    const fb = document.getElementById('build-feedback');
+    if (!ans) return;
+    const target = (ans.dataset.target || '').split('|').filter(Boolean);
+    const cur = [...ans.querySelectorAll('.build-chip')].map(c => c.textContent);
+    const ok = cur.length === target.length && cur.every((w, i) => w === target[i]);
+    if (ok) {
+      ans.querySelectorAll('.build-chip').forEach(c => { c.classList.add('correct'); c.onclick = null; });
+      if (fb) { fb.style.color = 'var(--ok-ink)'; fb.textContent = '맞아요! Верно 🌸'; }
+      addXp(10); toast('잘했어요! +10 XP', 'var(--sage)');
+      btn.textContent = 'Дальше →';
+      btn.onclick = () => nextLesson();
+    } else {
+      if (fb) { fb.style.color = 'var(--bad-ink)'; fb.textContent = 'Не совсем — попробуй другой порядок 🌸'; }
+      ans.classList.add('build-shake');
+      setTimeout(() => ans.classList.remove('build-shake'), 500);
+    }
+  }
   function nextLesson() {
     const total = lessonSlides().length + 1;
     lessonStage = Math.min(total - 1, lessonStage + 1);
@@ -1289,15 +1494,19 @@
   }
   function closeLessonFlow() {
     lessonViewId = null;
+    stopKoSequence();
     document.getElementById('lesson-modal')?.remove();
     document.body.classList.remove('lesson-open');
   }
   function completeLesson() {
     const lesson = getCurrentLesson();
     if (lesson && Array.isArray(lesson.vocab)) lesson.vocab.forEach(w => recordWordSeen(w.ko));
+    // Повтор уже пройденного урока (через «Пройти ещё раз») или просмотр админом —
+    // это review: прогресс/XP не трогаем, чтобы не сбить текущий урок и не выдать XP заново.
+    const p0 = getLessonProgress();
+    const isReview = isAdmin() || (lesson && lessonViewId && p0.completed.includes(lesson.id));
     closeLessonFlow();
-    if (isAdmin()) {
-      // Админ только просматривает — прогресс/XP не трогаем, но карточку всё равно показываем
+    if (isReview) {
       renderLessonPath();
       showLessonCompletePopup(lesson, 0);
       return;
@@ -1841,7 +2050,7 @@
   }
 
   // ── Per-user data sync (full mirror to Firebase) ──
-  const USTORE_SYNC_KEYS = ['stats', 'avatar', 'unlocks', 'lessonProgress', 'bestScores', 'cover', 'bio'];
+  const USTORE_SYNC_KEYS = ['stats', 'avatar', 'unlocks', 'lessonProgress', 'lessonProgress_m2', 'bestScores', 'cover', 'bio'];
   let _skipCloudPush = false;
   const _userFieldDebounce = {};
   const _userFieldPending = {};
@@ -2012,7 +2221,7 @@
             syncAchievementsStrip();
             settleCloudSync();
             scheduleAchReconcile();
-          } else if (k === 'lessonProgress') {
+          } else if (k === 'lessonProgress' || k === 'lessonProgress_m2') {
             renderLessonPath();
             renderHeroLesson();
           } else if (k === 'bestScores') {
@@ -3092,30 +3301,45 @@
     Object.entries(xpByDay || {}).forEach(([k, v]) => { if (k >= start) sum += (+v || 0); });
     return sum;
   }
+  // Режим рейтинга: 'week' — XP с понедельника, 'all' — общий накопленный XP.
+  let _lbMode = 'week';
+  let _lbRows = null; // кэш строк с обоими значениями (week/all), чтобы переключать без перезагрузки
+  function setLeaderboardMode(mode) { _lbMode = (mode === 'all') ? 'all' : 'week'; paintLeaderboard(); }
   async function renderWeekLeaderboard() {
     const slot = document.getElementById('week-leaderboard');
     if (!slot) return;
     const me = Store.get('user');
-    if (!me || me.guest || typeof _db === 'undefined') { slot.innerHTML = ''; return; }
+    if (!me || me.guest || typeof _db === 'undefined') { slot.innerHTML = ''; _lbRows = null; return; }
     const friends = _friendsCache || {};
     const fids = Object.keys(friends);
-    if (!fids.length) { slot.innerHTML = ''; return; } // одному соревноваться не с кем
+    if (!fids.length) { slot.innerHTML = ''; _lbRows = null; return; } // одному соревноваться не с кем
     const myUid = firebaseUserId();
-    const rows = [{ uid: myUid, name: me.name || 'Я', me: true, xp: _weekXpFrom(stats.xpByDay) }];
+    const rows = [{ uid: myUid, name: me.name || 'Я', me: true, week: _weekXpFrom(stats.xpByDay), all: stats.xp || 0 }];
     await Promise.all(fids.map(async fid => {
       try {
-        const snap = await _db.ref('users/' + fid + '/stats/xpByDay').once('value');
-        rows.push({ uid: fid, name: (friends[fid] && friends[fid].name) || 'Друг', xp: _weekXpFrom(snap.val()) });
+        const snap = await _db.ref('users/' + fid + '/stats').once('value');
+        const s = snap.val() || {};
+        rows.push({ uid: fid, name: (friends[fid] && friends[fid].name) || 'Друг', week: _weekXpFrom(s.xpByDay), all: (+s.xp || 0) });
       } catch (_) {}
     }));
-    rows.sort((a, b) => b.xp - a.xp);
+    _lbRows = rows;
+    paintLeaderboard();
+  }
+  function paintLeaderboard() {
+    const slot = document.getElementById('week-leaderboard');
+    if (!slot || !_lbRows) return;
+    const mode = _lbMode;
+    const rows = _lbRows.map(r => ({ ...r, xp: mode === 'all' ? (r.all || 0) : (r.week || 0) })).sort((a, b) => b.xp - a.xp);
+    const sub = mode === 'all' ? 'по всему опыту' : 'XP с понедельника';
     const medal = i => i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : `<span style="font-size:11px;color:var(--hush);font-weight:700;">${i + 1}</span>`;
+    const myIdx = rows.findIndex(r => r.me);
     slot.innerHTML = `
       <div class="card card-padded" style="margin-bottom:16px; background:linear-gradient(160deg, var(--card), var(--paper));">
-        <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:10px;">
-          <div style="font-weight:700; color:var(--berry); font-size:14px;">🏆 Лидеры недели</div>
-          <div style="font-size:10px; color:var(--hush);">XP с понедельника</div>
+        <div class="auth-tabs" style="margin-bottom:8px;">
+          <button type="button" class="auth-tab ${mode === 'week' ? 'auth-tab-active' : ''}" onclick="setLeaderboardMode('week')">🏆 Лидеры недели</button>
+          <button type="button" class="auth-tab ${mode === 'all' ? 'auth-tab-active' : ''}" onclick="setLeaderboardMode('all')">🏆 Лидеры</button>
         </div>
+        <div style="font-size:10px; color:var(--hush); text-align:right; margin-bottom:8px;">${sub}</div>
         <div style="display:grid; gap:6px;">
           ${rows.slice(0, 5).map((r, i) => `
             <div style="display:flex; align-items:center; gap:10px; padding:8px 10px; border-radius:12px; background:${r.me ? 'rgba(var(--accent-rgb),.10)' : 'transparent'}; ${r.me ? 'box-shadow: inset 0 0 0 1px rgba(var(--accent-rgb),.25);' : ''}">
@@ -3124,7 +3348,7 @@
               <span style="font-weight:800; font-size:13px; color:${i === 0 ? 'var(--gold)' : 'var(--soft)'};">${r.xp} XP</span>
             </div>`).join('')}
         </div>
-        ${rows.findIndex(r => r.me) > 0 ? `<div style="text-align:center; font-size:11px; color:var(--soft); margin-top:8px;">До ${escHtml(rows[rows.findIndex(r => r.me) - 1].name)} осталось ${rows[rows.findIndex(r => r.me) - 1].xp - rows[rows.findIndex(r => r.me)].xp + 1} XP — догоняй! 🔥</div>` : `<div style="text-align:center; font-size:11px; color:var(--gold-ink); margin-top:8px;">Ты впереди всех — 화이팅! 🌟</div>`}
+        ${myIdx > 0 ? `<div style="text-align:center; font-size:11px; color:var(--soft); margin-top:8px;">До ${escHtml(rows[myIdx - 1].name)} осталось ${rows[myIdx - 1].xp - rows[myIdx].xp + 1} XP — догоняй! 🔥</div>` : (myIdx === 0 ? `<div style="text-align:center; font-size:11px; color:var(--gold-ink); margin-top:8px;">Ты впереди всех — 화이팅! 🌟</div>` : '')}
       </div>`;
   }
 
@@ -4780,9 +5004,12 @@
     if (!stats.gamePlays || typeof stats.gamePlays !== 'object') stats.gamePlays = {};
     if (!stats.perfectGames || typeof stats.perfectGames !== 'object') stats.perfectGames = {};
     if (!Array.isArray(stats.dates)) stats.dates = [];
+    _activeModule = UStore.get('activeModule') || 'm1';
+    if (!LESSON_MODULES[_activeModule]) _activeModule = 'm1';
     syncStats();
     syncBestScoreCards();
     syncAchievementsStrip();
+    renderModuleSwitcher();
     renderLessonPath();
     renderHeroLesson();
     renderSavedWords();
@@ -6551,16 +6778,315 @@
     if (Array.isArray(v)) return v.map(w => `${w.ko} — ${w.ru}`).join(' · ');
     return '';
   }
-  function getAllLessons() {
-    // Уроки от Мади (customLessons) показываются отдельным блоком
-    // через renderCustomLessons() и в основную дорожку уроков не входят.
-    return LESSON_CATALOG.slice();
+  // ═══════════════════════════════════════════════════════════════════════
+  //  МОДУЛЬ 2 · «Предложения и общение» (초급 продолжение, цель TOPIK I 1–2급)
+  //  Новые типы слайдов: pattern (грамматика+дрилы), build (сборка фразы),
+  //  dialog (2 голоса TTS), listen (аудирование).
+  // ═══════════════════════════════════════════════════════════════════════
+  const LESSON_CATALOG_M2 = [
+    {
+      id:'m2-l1', num:1, title:'Тема и подлежащее', ko:'은/는 · 이/가',
+      ru:'Частицы 은/는 и 이/가 — рассказываем о себе',
+      vocab:[
+        {ko:'저', ru:'я (вежливо)', translit:'чо'},
+        {ko:'이름', ru:'имя', translit:'ирым'},
+        {ko:'학생', ru:'студент', translit:'хаксэн'},
+        {ko:'친구', ru:'друг', translit:'чхингу'},
+        {ko:'한국 사람', ru:'кореец', translit:'хангук сарам'},
+        {ko:'이것', ru:'это', translit:'игот'}
+      ],
+      homework:{ tasks:[
+        'Составь 3 предложения о себе: 저는 …이에요/예요.',
+        'Спроси у друга: 이름이 뭐예요? — и запиши ответ.'
+      ]},
+      slides:[
+        { kind:'intro', title:'Тема и подлежащее', sub:'Рассказываем о себе',
+          intro:'«Теперь, когда ты знаешь хангыль, начнём строить предложения! Сегодня — две самые важные частицы: <span class="ko">은/는</span> (тема) и <span class="ko">이/가</span> (подлежащее). С ними ты расскажешь о себе 🌸 화이팅!»',
+          learn:[['📌','2 частицы'],['🗣️','о себе'],['🎯','дрилы']] },
+        { kind:'pattern', eyebrow:'ГРАММАТИКА', title:'은/는 и 이/가', sub:'тема против подлежащего',
+          rule:'<b>은 / 는</b> — частица <b>темы</b> («что касается…»). После согласной — <span class="ko">은</span>, после гласной — <span class="ko">는</span>.<br><b>이 / 가</b> — частица <b>подлежащего</b> (кто/что делает). После согласной — <span class="ko">이</span>, после гласной — <span class="ko">가</span>.',
+          examples:[
+            {ko:'저는 학생이에요.', ru:'Я студент.'},
+            {ko:'이름이 뭐예요?', ru:'Как тебя зовут? (букв. имя — что?)'},
+            {ko:'친구가 와요.', ru:'Друг приходит.'}
+          ],
+          drills:[
+            { q:'저__ 한국 사람이에요.', ru:'Я кореец.', options:['는','가','을'], answer:'는' },
+            { q:'이름__ 뭐예요?', ru:'Как тебя зовут?', options:['은','이','를'], answer:'이' },
+            { q:'친구__ 와요.', ru:'Друг приходит.', options:['가','를','에'], answer:'가' }
+          ] },
+        { kind:'build', eyebrow:'СОБЕРИ ФРАЗУ', title:'Я — студент', ru:'Я — студент.',
+          target:['저는','학생이에요'], pool:['친구가'] },
+        { kind:'dialog', eyebrow:'ДИАЛОГ', title:'Знакомство', sub:'첫 만남',
+          lines:[
+            { who:'A', av:'🙂', ko:'안녕하세요? 이름이 뭐예요?', ru:'Здравствуйте! Как вас зовут?' },
+            { who:'B', av:'🧑', ko:'저는 미나예요.', ru:'Я Мина.' },
+            { who:'A', av:'🙂', ko:'저는 안톤이에요. 학생이에요?', ru:'Я Антон. Вы студент?' },
+            { who:'B', av:'🧑', ko:'네, 저는 학생이에요.', ru:'Да, я студент.' }
+          ],
+          note:'Нажми «Прослушать диалог» — реплики читаются двумя голосами.' },
+        { kind:'quiz', eyebrow:'ПРОВЕРКА', title:'Слова урока',
+          items:[ {ko:'친구',ru:'друг'}, {ko:'이름',ru:'имя'}, {ko:'학생',ru:'студент'} ],
+          pool:['друг','имя','студент','я','книга','это'] },
+        { kind:'homework' },
+        { kind:'done' }
+      ]
+    },
+    {
+      id:'m2-l2', num:2, title:'Настоящее время', ko:'-아요/어요',
+      ru:'Вежливое настоящее: глаголы на -아요/어요',
+      vocab:[
+        {ko:'가다', ru:'идти → 가요', translit:'када'},
+        {ko:'먹다', ru:'есть → 먹어요', translit:'мокта'},
+        {ko:'마시다', ru:'пить → 마셔요', translit:'масида'},
+        {ko:'하다', ru:'делать → 해요', translit:'хада'},
+        {ko:'읽다', ru:'читать → 읽어요', translit:'икта'},
+        {ko:'커피', ru:'кофе', translit:'кхопхи'}
+      ],
+      homework:{ tasks:[
+        'Проспрягай 5 глаголов в форме -아요/어요.',
+        'Напиши, что ты делаешь сегодня: 저는 … -아요/어요.'
+      ]},
+      slides:[
+        { kind:'intro', title:'Настоящее время', sub:'Вежливый стиль -아요/어요',
+          intro:'«Глаголы в корейском меняют окончание. Вежливая форма настоящего времени — <span class="ko">-아요/어요</span>. Научимся её собирать — и сразу заговорим! 🌸»',
+          learn:[['🔁','спряжение'],['🗣️','диалог'],['👂','аудио']] },
+        { kind:'pattern', eyebrow:'ГРАММАТИКА', title:'Как получить -아요/어요', sub:'현재형',
+          rule:'Убери <span class="ko">-다</span> у глагола. Если последняя гласная основы <span class="ko">ㅏ</span> или <span class="ko">ㅗ</span> → добавь <b>아요</b>, иначе → <b>어요</b>. Особый случай: <span class="ko">하다 → 해요</span>.',
+          examples:[
+            {ko:'가다 → 가요', ru:'идти → иду'},
+            {ko:'먹다 → 먹어요', ru:'есть → ем'},
+            {ko:'마시다 → 마셔요', ru:'пить → пью'},
+            {ko:'하다 → 해요', ru:'делать → делаю'}
+          ],
+          drills:[
+            { q:'먹다 → ?', options:['먹어요','먹아요','머거요'], answer:'먹어요' },
+            { q:'가다 → ?', options:['가요','가어요','거요'], answer:'가요' },
+            { q:'하다 → ?', options:['해요','하요','하어요'], answer:'해요' }
+          ] },
+        { kind:'build', eyebrow:'СОБЕРИ ФРАЗУ', title:'Я пью кофе', ru:'Я пью кофе.',
+          target:['저는','커피를','마셔요'], pool:['먹어요'] },
+        { kind:'listen', eyebrow:'АУДИРОВАНИЕ', title:'Что он делает?', sub:'Нажми ▶ и выбери перевод',
+          ko:'저는 책을 읽어요.',
+          options:['Я читаю книгу.','Я смотрю книгу.','Я пишу книгу.'], answer:'Я читаю книгу.' },
+        { kind:'dialog', eyebrow:'ДИАЛОГ', title:'Что ты делаешь?', sub:'지금 뭐 해요?',
+          lines:[
+            { who:'A', av:'🙂', ko:'지금 뭐 해요?', ru:'Что сейчас делаешь?' },
+            { who:'B', av:'🧑', ko:'커피를 마셔요.', ru:'Пью кофе.' },
+            { who:'A', av:'🙂', ko:'저는 책을 읽어요.', ru:'А я читаю книгу.' },
+            { who:'B', av:'🧑', ko:'우리 같이 공부해요!', ru:'Давай учиться вместе!' }
+          ] },
+        { kind:'homework' },
+        { kind:'done' }
+      ]
+    },
+    {
+      id:'m2-l3', num:3, title:'Объект действия', ko:'을/를',
+      ru:'Винительный падеж 을/를 и глаголы действия',
+      vocab:[
+        {ko:'밥', ru:'еда, рис', translit:'пап'},
+        {ko:'영화', ru:'фильм', translit:'ёнхва'},
+        {ko:'음악', ru:'музыка', translit:'ымак'},
+        {ko:'한국어', ru:'корейский язык', translit:'хангуго'},
+        {ko:'물', ru:'вода', translit:'муль'},
+        {ko:'보다', ru:'смотреть → 봐요', translit:'пода'}
+      ],
+      homework:{ tasks:[
+        'Составь 4 фразы «… 을/를 …해요».',
+        'Запиши, какой фильм ты смотришь: 저는 …을/를 봐요.'
+      ]},
+      slides:[
+        { kind:'intro', title:'Объект действия', sub:'Частица 을/를 — кого/что?',
+          intro:'«Чтобы сказать, НА ЧТО направлено действие, нужна частица объекта <span class="ko">을/를</span>: 밥을 먹어요 — ем рис, 커피를 마셔요 — пью кофе 🌸»',
+          learn:[['🎯','частица 을/를'],['🍚','новые слова'],['✍️','сборка']] },
+        { kind:'pattern', eyebrow:'ГРАММАТИКА', title:'Частица объекта 을/를', sub:'목적격',
+          rule:'<b>을</b> — после согласной, <b>를</b> — после гласной. Ставится после слова, на которое направлено действие.',
+          examples:[
+            {ko:'밥을 먹어요.', ru:'Ем рис.'},
+            {ko:'커피를 마셔요.', ru:'Пью кофе.'},
+            {ko:'한국어를 공부해요.', ru:'Учу корейский.'}
+          ],
+          drills:[
+            { q:'밥__ 먹어요.', options:['을','를','이'], answer:'을' },
+            { q:'커피__ 마셔요.', options:['를','을','가'], answer:'를' },
+            { q:'영화__ 봐요.', options:['를','을','에'], answer:'를' }
+          ] },
+        { kind:'words', eyebrow:'СЛОВА', title:'Что можно делать',
+          items:[
+            {ko:'밥', ru:'еда', emoji:'🍚'}, {ko:'영화', ru:'фильм', emoji:'🎬'},
+            {ko:'음악', ru:'музыка', emoji:'🎵'}, {ko:'물', ru:'вода', emoji:'💧'}
+          ] },
+        { kind:'build', eyebrow:'СОБЕРИ ФРАЗУ', title:'Я смотрю фильм', ru:'Я смотрю фильм.',
+          target:['저는','영화를','봐요'], pool:['밥을'] },
+        { kind:'quiz', eyebrow:'ПРОВЕРКА', title:'Слова урока',
+          items:[ {ko:'영화',ru:'фильм'}, {ko:'음악',ru:'музыка'}, {ko:'한국어',ru:'корейский'} ],
+          pool:['фильм','музыка','корейский','вода','рис','кофе'] },
+        { kind:'homework' },
+        { kind:'done' }
+      ]
+    },
+    {
+      id:'m2-l4', num:4, title:'Где и куда', ko:'에 · 에서',
+      ru:'Частицы места: 에 (где/куда) и 에서 (где действие)',
+      vocab:[
+        {ko:'집', ru:'дом', translit:'чип'},
+        {ko:'학교', ru:'школа', translit:'хаккё'},
+        {ko:'카페', ru:'кафе', translit:'кхапхе'},
+        {ko:'시장', ru:'рынок', translit:'сиджан'},
+        {ko:'만나다', ru:'встречать → 만나요', translit:'маннада'},
+        {ko:'있다', ru:'быть, находиться → 있어요', translit:'итта'}
+      ],
+      homework:{ tasks:[
+        'Составь по 2 фразы с 에 и с 에서.',
+        'Опиши свой день: куда идёшь (에) и где что делаешь (에서).'
+      ]},
+      slides:[
+        { kind:'intro', title:'Где и куда', sub:'Частицы места 에 / 에서',
+          intro:'«Две частицы места легко перепутать. <span class="ko">에</span> — где находишься или куда идёшь. <span class="ko">에서</span> — где происходит действие. Разберёмся на примерах 🌸»',
+          learn:[['📍','에 / 에서'],['☕','диалог в кафе'],['👂','аудио']] },
+        { kind:'pattern', eyebrow:'ГРАММАТИКА', title:'에 и 에서', sub:'장소 조사',
+          rule:'<b>에</b> — место нахождения или направление: <span class="ko">집에 있어요</span> (дома), <span class="ko">학교에 가요</span> (в школу).<br><b>에서</b> — место, где идёт действие: <span class="ko">카페에서 공부해요</span> (учусь в кафе).',
+          examples:[
+            {ko:'집에 있어요.', ru:'Я дома.'},
+            {ko:'학교에 가요.', ru:'Иду в школу.'},
+            {ko:'카페에서 커피를 마셔요.', ru:'Пью кофе в кафе.'}
+          ],
+          drills:[
+            { q:'학교__ 가요.', ru:'Иду в школу.', options:['에','에서','을'], answer:'에' },
+            { q:'카페__ 커피를 마셔요.', ru:'Пью кофе в кафе.', options:['에서','에','를'], answer:'에서' },
+            { q:'집__ 있어요.', ru:'Я дома.', options:['에','에서','가'], answer:'에' }
+          ] },
+        { kind:'dialog', eyebrow:'ДИАЛОГ', title:'В кафе', sub:'카페에서',
+          lines:[
+            { who:'A', av:'🙂', ko:'어디에 가요?', ru:'Куда идёшь?' },
+            { who:'B', av:'🧑', ko:'카페에 가요.', ru:'Иду в кафе.' },
+            { who:'A', av:'🙂', ko:'카페에서 뭐 해요?', ru:'Что делаешь в кафе?' },
+            { who:'B', av:'🧑', ko:'친구를 만나요.', ru:'Встречаю друга.' }
+          ] },
+        { kind:'listen', eyebrow:'АУДИРОВАНИЕ', title:'Куда он идёт?', sub:'Нажми ▶ и выбери перевод',
+          ko:'저는 학교에 가요.',
+          options:['Я иду в школу.','Я дома.','Я в кафе.'], answer:'Я иду в школу.' },
+        { kind:'build', eyebrow:'СОБЕРИ ФРАЗУ', title:'Учусь в кафе', ru:'Я учусь в кафе.',
+          target:['저는','카페에서','공부해요'], pool:['학교에'] },
+        { kind:'homework' },
+        { kind:'done' }
+      ]
+    },
+    {
+      id:'m2-l5', num:5, title:'Прошедшее время', ko:'-았/었어요',
+      ru:'Прошедшее время: -았어요/었어요',
+      vocab:[
+        {ko:'어제', ru:'вчера', translit:'одже'},
+        {ko:'오늘', ru:'сегодня', translit:'оныль'},
+        {ko:'만나다', ru:'встречать → 만났어요', translit:'маннада'},
+        {ko:'맛있다', ru:'вкусный → 맛있어요', translit:'масытта'},
+        {ko:'김밥', ru:'кимпаб', translit:'кимбап'},
+        {ko:'숙제', ru:'домашнее задание', translit:'сукче'}
+      ],
+      homework:{ tasks:[
+        'Расскажи, что ты делал(а) вчера: 어제 저는 … -았/었어요.',
+        'Проспрягай 5 глаголов в прошедшем времени.'
+      ]},
+      slides:[
+        { kind:'intro', title:'Прошедшее время', sub:'Окончание -았/었어요',
+          intro:'«Чтобы рассказать о прошлом, добавляем <span class="ko">-았어요/었어요</span>. Принцип тот же, что у настоящего времени: смотрим на гласную основы 🌸»',
+          learn:[['🕐','прошлое'],['🗣️','диалог'],['🎯','дрилы']] },
+        { kind:'pattern', eyebrow:'ГРАММАТИКА', title:'Как получить прошедшее', sub:'과거형',
+          rule:'Если последняя гласная основы <span class="ko">ㅏ/ㅗ</span> → <b>-았어요</b>, иначе → <b>-었어요</b>. <span class="ko">하다 → 했어요</span>.',
+          examples:[
+            {ko:'가다 → 갔어요', ru:'идти → ходил'},
+            {ko:'먹다 → 먹었어요', ru:'есть → ел'},
+            {ko:'보다 → 봤어요', ru:'смотреть → смотрел'},
+            {ko:'하다 → 했어요', ru:'делать → делал'}
+          ],
+          drills:[
+            { q:'어제 영화를 ___.', ru:'Вчера смотрел фильм.', options:['봤어요','봐요','보었어요'], answer:'봤어요' },
+            { q:'밥을 ___.', ru:'Поел.', options:['먹었어요','먹았어요','먹어요'], answer:'먹었어요' },
+            { q:'숙제를 ___.', ru:'Сделал домашку.', options:['했어요','하았어요','해어요'], answer:'했어요' }
+          ] },
+        { kind:'dialog', eyebrow:'ДИАЛОГ', title:'Как прошёл день?', sub:'어제 뭐 했어요?',
+          lines:[
+            { who:'A', av:'🙂', ko:'어제 뭐 했어요?', ru:'Что вчера делал?' },
+            { who:'B', av:'🧑', ko:'친구를 만났어요.', ru:'Встретил друга.' },
+            { who:'A', av:'🙂', ko:'뭐 먹었어요?', ru:'Что ели?' },
+            { who:'B', av:'🧑', ko:'김밥을 먹었어요. 맛있었어요!', ru:'Ел кимпаб. Было вкусно!' }
+          ] },
+        { kind:'build', eyebrow:'СОБЕРИ ФРАЗУ', title:'Вчера встретил друга', ru:'Вчера я встретил друга.',
+          target:['어제','친구를','만났어요'], pool:['먹었어요'] },
+        { kind:'quiz', eyebrow:'ПРОВЕРКА', title:'Слова урока',
+          items:[ {ko:'어제',ru:'вчера'}, {ko:'김밥',ru:'кимпаб'}, {ko:'숙제',ru:'домашка'} ],
+          pool:['вчера','кимпаб','домашка','сегодня','друг','вкусный'] },
+        { kind:'homework' },
+        { kind:'done' }
+      ]
+    }
+  ];
+
+  // ── Реестр модулей и активный модуль ──
+  const LESSON_MODULES = {
+    m1: { id:'m1', title:'Модуль 1 · Хангыль', navTitle:'Модуль 1 · Хангыль', tabLabel:'М1', short:'Хангыль',
+          headerName:'Основа основ', headerSub:'Хангыль · базовый курс', lessons: LESSON_CATALOG },
+    m2: { id:'m2', title:'Модуль 2 · Предложения и общение', navTitle:'Модуль 2 · Общение', tabLabel:'М2', short:'Предложения',
+          headerName:'Предложения и общение', headerSub:'Грамматика · диалоги · речь', lessons: LESSON_CATALOG_M2 }
+  };
+  let _activeModule = 'm1';
+  // Модуль 2 — продолжение初級; сейчас открыт свободно (можно начать после хангыля).
+  function isModule2Unlocked() { return true; }
+  function setActiveModule(id) {
+    if (!LESSON_MODULES[id]) return;
+    if (id === 'm2' && !isModule2Unlocked() && !isAdmin()) { toast('Сначала освой Модуль 1 🌸'); return; }
+    _activeModule = id;
+    UStore.set('activeModule', id);
+    renderModuleSwitcher();
+    renderLessonPath();   // обновит карту + заголовок/прогресс модуля
+    renderHeroLesson();   // герой на главной отражает активный модуль
+    const sc = document.getElementById('screen-lessons'); if (sc) sc.scrollTop = 0;
+    window.scrollTo(0, 0);
   }
+  function syncModuleHeader() {
+    const mod = LESSON_MODULES[_activeModule] || LESSON_MODULES.m1;
+    const title = document.getElementById('module-title');
+    if (title) title.textContent = mod.navTitle || mod.title;
+    const hName = document.getElementById('module-header-title');
+    if (hName) hName.textContent = mod.headerName || '';
+    const hSub = document.getElementById('module-header-sub');
+    if (hSub) hSub.textContent = mod.headerSub || '';
+  }
+  function renderModuleSwitcher() {
+    const slot = document.getElementById('module-switcher-slot');
+    if (!slot) return;
+    const admin = isAdmin();
+    slot.innerHTML = `
+      <div class="module-switch">
+        ${Object.keys(LESSON_MODULES).map(id => {
+          const mod = LESSON_MODULES[id];
+          const active = _activeModule === id;
+          const locked = id === 'm2' && !isModule2Unlocked() && !admin;
+          const onClick = locked ? `toast('Сначала освой Модуль 1 🌸')` : `setActiveModule('${id}')`;
+          return `<button type="button" class="module-tab ${active ? 'active' : ''} ${locked ? 'locked' : ''}" onclick="${onClick}">
+            <span class="module-tab-num">${mod.tabLabel}</span>
+            <span class="module-tab-name">${mod.short}</span>
+            ${locked ? '<i class="fa-solid fa-lock module-tab-lock" aria-hidden="true"></i>' : ''}
+          </button>`;
+        }).join('')}
+      </div>`;
+    syncModuleHeader();
+  }
+
+  function getAllLessons() {
+    // Уроки активного модуля. Уроки от Мади (customLessons) показываются
+    // отдельным блоком через renderCustomLessons() и в дорожку не входят.
+    const mod = LESSON_MODULES[_activeModule] || LESSON_MODULES.m1;
+    return (mod.lessons || []).slice();
+  }
+  // Прогресс хранится отдельно по модулям: m1 — ключ 'lessonProgress' (обратная
+  // совместимость), остальные — 'lessonProgress_<id>'.
+  function lessonProgressKey() { return _activeModule === 'm1' ? 'lessonProgress' : 'lessonProgress_' + _activeModule; }
   function getLessonProgress() {
     const all = getAllLessons();
     const ids = new Set(all.map(l => l.id));
     const def = { current: all[0]?.id || null, completed: [] };
-    const p = Object.assign(def, UStore.get('lessonProgress') || {});
+    const p = Object.assign(def, UStore.get(lessonProgressKey()) || {});
     // Чистим прогресс от ID удалённых старых уроков
     p.completed = (Array.isArray(p.completed) ? p.completed : []).filter(id => ids.has(id));
     if (!ids.has(p.current)) {
@@ -6569,7 +7095,17 @@
     }
     return p;
   }
-  function setLessonProgress(p) { UStore.set('lessonProgress', p); }
+  function setLessonProgress(p) { UStore.set(lessonProgressKey(), p); }
+  // Сумма пройденных уроков по всем модулям (для статистики/ачивок)
+  function totalLessonsCompleted() {
+    let n = 0;
+    Object.keys(LESSON_MODULES).forEach(id => {
+      const key = id === 'm1' ? 'lessonProgress' : 'lessonProgress_' + id;
+      const pr = UStore.get(key);
+      if (pr && Array.isArray(pr.completed)) n += pr.completed.length;
+    });
+    return n;
+  }
   // Per-lesson stage so "Продолжить" resumes exactly where the user stopped.
   function getLessonStage(id) {
     const p = getLessonProgress();
@@ -7144,9 +7680,29 @@
 
   let _topikSection = null, _topikMenuScroll = 0;
   function openTopikSection(k) { _topikMenuScroll = _getScroll(); _topikSection = k; renderTopik(); const sc = document.getElementById('screen-topik'); if (sc) sc.scrollTop = 0; window.scrollTo(0, 0); }
-  function topikHome() { _topikSection = null; renderTopik(); requestAnimationFrame(() => _setScroll(_topikMenuScroll)); }
+  // Прямой вход с экрана «Уроки»: 'real' — официальные 회차, 'mock' — пробные (모의고사/EBS).
+  // Пробные сейчас живут в TOPIK II, реальные стартуем с TOPIK I (бета-модуль). Уровень можно
+  // переключить вкладками внутри экрана. После рендера — плавный скролл к нужной группе.
+  // Куда вернуть кнопкой «назад», если в раздел ТОПИК зашли НАПРЯМУЮ (минуя меню).
+  // Сбрасывается в switchScreen('topik') при обычном входе через меню.
+  let _topikReturn = null;
+  function openTopikGroup(kind) {
+    const k = kind === 'mock' ? 'mock' : 'real';
+    _topikLevel = k === 'mock' ? '2' : '1';
+    switchScreen('topik');        // обнулит _topikReturn
+    _topikReturn = 'lessons';     // ставим ПОСЛЕ: прямой вход — назад ведёт на Уроки
+    openTopikSection('exams');
+    setTimeout(() => {
+      document.getElementById('topik-grp-' + k)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 90);
+  }
+  function topikHome() {
+    if (_topikReturn) { const r = _topikReturn; _topikReturn = null; _topikSection = null; switchScreen(r, true); return; }
+    _topikSection = null; renderTopik(); requestAnimationFrame(() => _setScroll(_topikMenuScroll));
+  }
   // Контекстная кнопка «назад» экрана ТОПИК: из раздела → в меню, из меню → на Уроки
   function topikBack() {
+    if (_topikReturn) { const r = _topikReturn; _topikReturn = null; _topikSection = null; switchScreen(r, true); return; }
     if (_topikSection) { topikHome(); return; }
     switchScreen('lessons', true);
   }
@@ -7184,8 +7740,9 @@
       <div class="topik-mats">${items.map(m => topikMatCard(m, admin)).join('')}</div></div>`;
   }
   function topikSectionWrap(title, sub, inner, admin, addKind) {
+    const backLabel = _topikReturn === 'lessons' ? 'Уроки' : 'Разделы';
     return `
-      <button type="button" class="topik-back" onclick="topikHome()"><i class="fa-solid fa-chevron-left"></i> Разделы</button>
+      <button type="button" class="topik-back" onclick="topikHome()"><i class="fa-solid fa-chevron-left"></i> ${backLabel}</button>
       <div class="topik-sec-head"><h2 class="topik-sec-title">${title}</h2><p class="topik-sec-sub">${sub}</p>
         ${admin && addKind ? `<button type="button" class="chip chip-coral topik-sec-add" onclick="showAdminPanel('topik')"><i class="fa-solid fa-plus" style="font-size:10px;"></i> Добавить</button>` : ''}</div>
       ${inner}`;
@@ -7249,24 +7806,34 @@
 
   function renderTopikExams(slot, admin) {
     const exams = [102, 96, 91, 83, 64, 60, 52, 47, 41];
-    const cards = exams.map(n => `
+    const cardFor = (n) => `
       <div class="topik-exam-row">
         <div class="topik-exam-no">제<b>${n}</b>회</div>
         <div class="topik-exam-parts">
           <button type="button" class="topik-part-btn topik-part-read" onclick="startTopikExam(${n},'reading')"><span class="ko">읽기</span> Чтение</button>
           <button type="button" class="topik-part-btn topik-part-listen" onclick="startTopikExam(${n},'listening')"><span class="ko">듣기</span> Аудио</button>
         </div>
-      </div>`).join('');
-    slot.innerHTML = topikSectionWrap('Экзамены', 'Реальные тесты TOPIK I · 읽기 и 듣기 отдельно', `
+      </div>`;
+    const group = (id, ico, label, sub, cardsHtml, count, emptyMsg) => `
+      <div id="topik-grp-${id}" class="topik-group" style="margin-top:16px;">
+        <div class="topik-group-head"><span class="topik-group-ico">${ico}</span><span class="topik-group-label">${label}</span>${count ? `<span class="topik-group-count">${count}</span>` : ''}</div>
+        <div style="font-size:11px; color:var(--soft); margin:2px 0 8px;">${sub}</div>
+        ${cardsHtml ? `<div class="topik-exams-list">${cardsHtml}</div>` : `<div class="topik-note">${emptyMsg}</div>`}
+      </div>`;
+    slot.innerHTML = topikSectionWrap('Экзамены TOPIK I', 'Реальные тесты · 읽기 и 듣기 отдельно', `
       <div class="topik-note" style="margin:0 0 14px;">⏱️ Таймер как на экзамене: 읽기 — 60 мин, 듣기 — 40 мин. В конце — результат и разбор «почему этот вариант верный».</div>
-      <div class="topik-exams-list">${cards}</div>`, false, null);
+      ${group('real', '🏛️', 'Реальные экзамены', 'Официальные 회차 прошлых сессий TOPIK I', exams.map(cardFor).join(''), exams.length, '')}
+      ${group('mock', '🧪', 'Пробные и другие', '모의고사 · EBS · Hot TOPIK', '', 0, 'Пробные для TOPIK I готовятся 🌸 — а EBS уже есть во вкладке TOPIK II.')}`, false, null);
   }
 
   // ─────────────── TOPIK II (중·고급): экзамены + 쓰기 ───────────────
   function renderTopik2Exams(slot) {
-    const ready = Object.keys(typeof TOPIK2_EXAMS !== 'undefined' ? TOPIK2_EXAMS : {}).map(Number).sort((a, b) => b - a);
-    const cards = ready.map(n => {
-      const ex = TOPIK2_EXAMS[n];
+    const ex2 = (typeof TOPIK2_EXAMS !== 'undefined') ? TOPIK2_EXAMS : {};
+    const nums = Object.keys(ex2).map(Number);
+    const realNos = nums.filter(n => !ex2[n].mock).sort((a, b) => b - a);
+    const mockNos = nums.filter(n => ex2[n].mock).sort((a, b) => b - a);
+    const cardFor = (n) => {
+      const ex = ex2[n];
       const btn = (part, cls, ko, ru, fn) => {
         const has = part === 'writing' ? (ex.writing && ex.writing.tasks && ex.writing.tasks.length)
                                        : (ex[part] && ex[part].questions && ex[part].questions.length);
@@ -7274,17 +7841,24 @@
       };
       return `
       <div class="topik-exam-row">
-        <div class="topik-exam-no">제<b>${n}</b>회</div>
+        <div class="topik-exam-no">${ex.no || `제<b>${n}</b>회`}</div>
         <div class="topik-exam-parts">
           ${btn('listening', 'topik-part-listen', '듣기', 'Аудио', `startTopikExam(${n},'listening',2)`)}
           ${btn('writing', 'topik-part-write', '쓰기', 'Письмо', `startTopikWriting(${n})`)}
           ${btn('reading', 'topik-part-read', '읽기', 'Чтение', `startTopikExam(${n},'reading',2)`)}
         </div>
       </div>`;
-    }).join('');
+    };
+    const group = (id, ico, label, sub, nosArr, emptyMsg) => `
+      <div id="topik-grp-${id}" class="topik-group" style="margin-top:16px;">
+        <div class="topik-group-head"><span class="topik-group-ico">${ico}</span><span class="topik-group-label">${label}</span>${nosArr.length ? `<span class="topik-group-count">${nosArr.length}</span>` : ''}</div>
+        <div style="font-size:11px; color:var(--soft); margin:2px 0 8px;">${sub}</div>
+        ${nosArr.length ? `<div class="topik-exams-list">${nosArr.map(cardFor).join('')}</div>` : `<div class="topik-note">${emptyMsg}</div>`}
+      </div>`;
     slot.innerHTML = topikSectionWrap('Экзамены TOPIK II', 'Реальные тесты · 듣기 60 мин · 쓰기 50 мин · 읽기 70 мин', `
       <div class="topik-note" style="margin:0 0 14px;">⏱️ Как на экзамене: 듣기 50 вопросов, 쓰기 4 задания (51–54), 읽기 50 вопросов. 듣기 и 읽기 проверяются автоматически, 쓰기 — самооценка по официальным критериям.</div>
-      <div class="topik-exams-list">${cards || '<div class="topik-note">Первый тест готовится 🌸</div>'}</div>`, false, null);
+      ${group('real', '🏛️', 'Реальные экзамены', 'Официальные 회차 прошлых сессий TOPIK II', realNos, 'Реальные 회차 готовятся 🌸')}
+      ${group('mock', '🧪', 'Пробные и другие', '모의고사 · EBS · Hot TOPIK — тренировка в формате экзамена', mockNos, 'Пробные готовятся 🌸')}`, false, null);
   }
   function renderTopik2About(slot) {
     slot.innerHTML = topikSectionWrap('📌 Что нужно знать', 'TOPIK II — формат и уровни', `
@@ -7330,6 +7904,14 @@
   // Данные TOPIK II: { reading:{50}, listening:{50}, writing:{tasks:4} } — заполняется по мере постройки
   // 쓰기 №83 и №91 — реальные задания с официальных опубликованных тестов (topik.go.kr).
   const TOPIK2_EXAMS = {
+    /* EBS-1 */
+    1: {
+      no: "EBS<br><b>제1회</b>",
+      mock: true,
+      listening: {"durationMin":60,"total":100,"label":"EBS 모의고사 제1회 · 듣기 (1~50)","questions":[{"n":1,"points":2,"image":"assets/topik2/exams/img/ebs1-l-q1.png","instr":"Прослушайте и выберите подходящую картинку.","options":["①","②","③","④"],"answer":4,"script":"여자: 이 소포를 보내고 싶은데요.\n남자: 무게를 먼저 재야 하니까 저울 위에 올려 주세요.\n여자: 네, 그럼 오늘 보내면 얼마나 걸릴까요?","explain":"🎧 여자: 이 소포를 보내고 싶은데요.<br>남자: 무게를 먼저 재야 하니까 저울 위에 올려 주세요.<br>여자: 네, 그럼 오늘 보내면 얼마나 걸릴까요?<br><br>На почте: женщина хочет отправить посылку, сотрудник просит положить её на весы.<br>✅ <b>④</b> — у почтовой стойки клиентка отправляет посылку, рядом весы.<br>✖️ ① клиентка только держит коробку, ② сцена в банке, ③ упаковка коробок на складе.<br>🧩 소포 = «посылка»; 저울 = «весы»; 무게를 재다 = «взвешивать»."},{"n":2,"points":2,"image":"assets/topik2/exams/img/ebs1-l-q2.png","instr":"Прослушайте и выберите подходящую картинку.","options":["①","②","③","④"],"answer":3,"script":"남자: 이 상자는 어디에 놓을까요?\n여자: 여기 책상 옆에 두면 될 것 같아요. 무거운데 괜찮으세요?\n남자: 네, 괜찮아요. 이쪽 거의 다 정리됐어요.","explain":"🎧 남자: 이 상자는 어디에 놓을까요?<br>여자: 여기 책상 옆에 두면 될 것 같아요. 무거운데 괜찮으세요?<br>남자: 네, 괜찮아요. 이쪽 거의 다 정리됐어요.<br><br>Переезд/обустройство офиса: мужчина несёт коробку, женщина показывает, куда поставить — у стола.<br>✅ <b>③</b> — в офисе мужчина с коробкой, женщина у стола, вещи раскладывают.<br>✖️ ① переносят телевизор в гостиной, ② приём посылки у стойки, ④ погрузка коробок в грузовик.<br>🧩 상자 = «коробка»; 놓다 = «класть, ставить»; 정리되다 = «быть прибранным»."},{"n":3,"points":2,"image":"assets/topik2/exams/img/ebs1-l-q3.png","instr":"Прослушайте и выберите подходящий график.","options":["①","②","③","④"],"answer":1,"script":"남자: 여러분, 여름밤 편히 잠을 자고 계신가요? 최근 열대야 현상으로 잠을 못 이루는 분들이 많은데요. 기상청에 따르면, 2021년부터 열대야 발생 일수가 해마다 늘어나고 있는 것으로 나타났습니다. 열대야를 이겨 내는 방법으로는 미지근한 물로 샤워하기가 가장 많았으며, 가벼운 운동 그리고 시원한 침구 사용하기가 그 뒤를 이었습니다.","explain":"🎧 남자: 여러분, 여름밤 편히 잠을 자고 계신가요? 최근 열대야 현상으로 잠을 못 이루는 분들이 많은데요. 기상청에 따르면, 2021년부터 열대야 발생 일수가 해마다 늘어나고 있는 것으로 나타났습니다. 열대야를 이겨 내는 방법으로는 '미지근한 물로 샤워하기'가 가장 많았으며 '가벼운 운동' 그리고 '시원한 침구 사용하기'가 그 뒤를 이었습니다.<br><br>Новости: число «тропических ночей» (열대야) растёт с 2021 года год от года. Способы пережить жару: 1) тёплый душ, 2) лёгкая зарядка, 3) прохладное постельное бельё.<br>✅ <b>①</b> — линейный график со стабильным ежегодным ростом числа тропических ночей.<br>✖️ ② график сначала падает (2022), потом растёт — не «каждый год растёт», ③④ это диаграммы способов с неверным порядком пунктов.<br>🧩 열대야 = «тропическая ночь»; 기상청 = «метеослужба»; 발생 일수 = «число дней»."},{"n":4,"points":2,"instr":"Прослушайте диалог и выберите подходящее продолжение.","options":["나도 바지 하나 사야겠어.","특별한 날에 입으면 좋지.","그럼 빨리 가서 바꿔야지.","그럼 다른 색으로 골라 봐."],"answer":3,"script":"여자: 어제 산 바지 왜 안 입었어?\n남자: 항상 입던 사이즈라 괜찮을 줄 알았는데 집에서 입어 보니까 좀 작더라고.","explain":"🎧 여자: 어제 산 바지 왜 안 입었어?<br>남자: 항상 입던 사이즈라 괜찮을 줄 알았는데 집에서 입어 보니까 좀 작더라고.<br><br>Купленные вчера брюки оказались маловаты → совет обменять.<br>✅ <b>③ 그럼 빨리 가서 바꿔야지.</b> (тогда скорее иди и поменяй).<br>✖️ ① «и мне надо купить брюки», ② «хорошо надевать по особым дням», ④ «тогда выбери другой цвет» (проблема в размере, не в цвете).<br>🧩 작다 = «маловат»; 바꾸다 = «обменять»."},{"n":5,"points":2,"instr":"Прослушайте диалог и выберите подходящее продолжение.","options":["그래요? 저도 책 있는 거 좋아해요.","정말요? 그런 일이 있는지 몰랐어요.","그래요? 그럼 다음 모임은 거기서 해요.","정말요? 그럼 날짜를 조금 미뤄야겠네요."],"answer":3,"script":"여자: 다음 주 동아리 모임 어디에서 할까요?\n남자: 학교 앞에 새로 생긴 북카페는 어때요? 거기 조용하고 좋던데요.","explain":"🎧 여자: 다음 주 동아리 모임 어디에서 할까요?<br>남자: 학교 앞에 새로 생긴 북카페는 어때요? 거기 조용하고 좋던데요.<br><br>Где провести встречу кружка → мужчина предлагает новое тихое книжное кафе у школы.<br>✅ <b>③ 그래요? 그럼 다음 모임은 거기서 해요.</b> (тогда проведём следующую встречу там).<br>✖️ ① «я тоже люблю, когда есть книги», ② «не знала, что такое было», ④ «тогда перенесём дату» — не отвечают на предложение места.<br>🧩 동아리 = «кружок, клуб»; 북카페 = «книжное кафе»."},{"n":6,"points":2,"instr":"Прослушайте диалог и выберите подходящее продолжение.","options":["우선 낮에 표가 있는지 볼게.","벌써 사람들이 입장한 것 같아.","그럼 오후 6시 표로 하면 되겠다.","아직 영화가 언제 개봉할지 모른대."],"answer":3,"script":"여자: 우리 토요일에 영화 보기로 했잖아. 몇 시쯤 만날까?\n남자: 난 낮에 일이 좀 있어서 저녁이 좋을 것 같은데.","explain":"🎧 여자: 우리 토요일에 영화 보기로 했잖아. 몇 시쯤 만날까?<br>남자: 난 낮에 일이 좀 있어서 저녁이 좋을 것 같은데.<br><br>В субботу идут в кино; мужчина занят днём, удобнее вечером.<br>✅ <b>③ 그럼 오후 6시 표로 하면 되겠다.</b> (тогда возьмём билет на 18:00).<br>✖️ ① «сначала посмотрю, есть ли дневные билеты» (он хочет вечер), ② «кажется, люди уже вошли», ④ «ещё неизвестно, когда выйдет фильм» — уже решили смотреть.<br>🧩 표 = «билет»; 저녁 = «вечер»."},{"n":7,"points":2,"instr":"Прослушайте диалог и выберите подходящее продолжение.","options":["우리 축하 파티를 해야겠어요.","자격증이 있어야 할 수 있어요.","이번 시험이 정말 쉬웠나 봐요.","다음에는 좋은 결과가 있을 거예요."],"answer":4,"script":"여자: 전기 기사 자격증 시험 본 거, 결과 나왔어요?\n남자: 아, 그거 떨어졌어요. 지금부터 다음 시험 준비하려고요.","explain":"🎧 여자: 전기 기사 자격증 시험 본 거, 결과 나왔어요?<br>남자: 아, 그거 떨어졌어요. 지금부터 다음 시험 준비하려고요.<br><br>Мужчина не сдал экзамен на сертификат электрика, готовится к следующему → слова поддержки.<br>✅ <b>④ 다음에는 좋은 결과가 있을 거예요.</b> (в следующий раз всё получится).<br>✖️ ① «устроим праздник» (он провалил), ② «нужен сертификат, чтобы этим заниматься», ③ «экзамен был очень лёгким» — неуместно.<br>🧩 자격증 = «сертификат»; 떨어지다 = «провалить (экзамен)»."},{"n":8,"points":2,"instr":"Прослушайте диалог и выберите подходящее продолжение.","options":["두리공원 정문 앞에 있는 가로등이에요.","공원 앞 가로등 수를 좀 더 늘려야겠어요.","가로등이 새로 생겨서 거리가 환해졌네요.","가로등을 설치하는 데 시간이 많이 걸려요."],"answer":1,"script":"남자: 가로등이 고장 나서 신고하려고 합니다.\n여자: 네, 제보해 주셔서 감사합니다. 위치를 정확히 말씀해 주시면 빠르게 처리하겠습니다.","explain":"🎧 남자: 가로등이 고장 나서 신고하려고 합니다.<br>여자: 네, 제보해 주셔서 감사합니다. 위치를 정확히 말씀해 주시면 빠르게 처리하겠습니다.<br><br>Мужчина сообщает о сломанном фонаре; оператор просит точное место → он называет адрес.<br>✅ <b>① 두리공원 정문 앞에 있는 가로등이에요.</b> (это фонарь у главного входа в парк Тури).<br>✖️ ② «надо увеличить число фонарей», ③ «новый фонарь осветил улицу», ④ «установка фонарей занимает много времени» — не дают местоположение.<br>🧩 가로등 = «уличный фонарь»; 신고하다 = «сообщать»; 위치 = «местоположение»."},{"n":9,"points":2,"instr":"Прослушайте и выберите действие, которое женщина совершит далее.","options":["밥값을 계산한다.","화장실에 들른다.","식당에 전화한다.","식당으로 뛰어간다."],"answer":3,"script":"남자: 어? 내 휴대폰이 어디 있지?\n여자: 없어? 아까 식당 화장실에 두고 온 거 아니야? 계산하고 나올 때 들렀잖아.\n남자: 아, 그런가 봐. 요 앞이니까 금방 다녀올게.\n여자: 내가 식당에 전화해 볼게. 잠깐 기다려 봐.","explain":"🎧 남자: 어? 내 휴대폰이 어디 있지?<br>여자: 없어? 아까 식당 화장실에 두고 온 거 아니야? 계산하고 나올 때 들렀잖아.<br>남자: 아, 그런가 봐. 요 앞이니까 금방 다녀올게.<br>여자: 내가 식당에 전화해 볼게. 잠깐 기다려 봐.<br><br>Телефон забыт в туалете ресторана. Мужчина хочет сходить сам, но женщина говорит, что позвонит.<br>✅ <b>③ 식당에 전화한다.</b> — «내가 식당에 전화해 볼게».<br>✖️ ① оплатить счёт (уже оплачен), ② зайти в туалет, ④ бежать в ресторан — это собирался сделать мужчина.<br>🧩 휴대폰 = «телефон»; 들르다 = «заглянуть»."},{"n":10,"points":2,"instr":"Прослушайте и выберите действие, которое женщина совершит далее.","options":["그릇을 꺼낸다.","그릇을 분류한다.","그릇을 상자에 담는다.","그릇을 현관 앞에 둔다."],"answer":2,"script":"여자: 오래된 그릇 좀 정리해야겠어요. 너무 많네요.\n남자: 제가 여기 있는 그릇들을 다 꺼낼게요. 당신이 쓸 것과 버릴 걸 나눠 주세요.\n여자: 네, 제가 분류해 놓을게요. 그럼 버릴 건 저 상자에 담아서 현관 앞에 놔 주세요.\n남자: 알겠어요. 바로 시작해 볼까요?","explain":"🎧 여자: 오래된 그릇 좀 정리해야겠어요. 너무 많네요.<br>남자: 제가 여기 있는 그릇들을 다 꺼낼게요. 당신이 쓸 것과 버릴 걸 나눠 주세요.<br>여자: 네, 제가 분류해 놓을게요. 그럼 버릴 건 저 상자에 담아서 현관 앞에 놔 주세요.<br>남자: 알겠어요. 바로 시작해 볼까요?<br><br>Разбирают старую посуду. Мужчина достаёт, женщина берётся рассортировать на нужное/ненужное.<br>✅ <b>② 그릇을 분류한다.</b> — «제가 분류해 놓을게요».<br>✖️ ① достаёт посуду — это мужчина, ③ складывает в коробку / ④ ставит у входа — это мужчина с ненужным.<br>🧩 그릇 = «посуда»; 분류하다 = «сортировать»."},{"n":11,"points":2,"instr":"Прослушайте и выберите действие, которое женщина совершит далее.","options":["도서관에 간다.","점심을 먹는다.","자료를 검토한다.","참고 자료를 찾는다."],"answer":1,"script":"남자: 발표 준비 다 됐어? 자료 정리하는 게 쉽지 않네.\n여자: 나도 아직이야. 지금 자료 찾으러 도서관에 가려던 참이야.\n남자: 그래? 나도 같이 가도 돼? 끝나고 점심도 같이 먹자.\n여자: 그래. 자료도 같이 보고, 서로 도와 가면서 하자.","explain":"🎧 남자: 발표 준비 다 됐어? 자료 정리하는 게 쉽지 않네.<br>여자: 나도 아직이야. 지금 자료 찾으러 도서관에 가려던 참이야.<br>남자: 그래? 나도 같이 가도 돼? 끝나고 점심도 같이 먹자.<br>여자: 그래. 자료도 같이 보고, 서로 도와 가면서 하자.<br><br>Готовят доклад. Женщина прямо сейчас собирается в библиотеку за материалами.<br>✅ <b>① 도서관에 간다.</b> — «지금 자료 찾으러 도서관에 가려던 참이야».<br>✖️ ② обед (после), ③ просмотреть материалы (позже вместе), ④ искать справочные материалы — это цель похода, но ближайшее действие — идти в библиотеку.<br>🧩 발표 = «доклад»; ~려던 참이다 = «как раз собираться сделать»."},{"n":12,"points":2,"instr":"Прослушайте и выберите действие, которое женщина совершит далее.","options":["설문지를 복사한다.","설문지를 나누어 준다.","회의 자료를 정리한다.","회의장 상태를 점검한다."],"answer":3,"script":"여자: 회의가 끝날 때 이 설문지를 나눠 드려야 하죠?\n남자: 네, 인원 수에 맞게 복사해 놨지요?\n여자: 아니요, 아직이요. 아직 시간 있으니까 회의 자료부터 정리해 놓고 복사하겠습니다.\n남자: 고마워요. 전 회의장 상태를 한번 확인할게요.","explain":"🎧 여자: 회의가 끝날 때 이 설문지를 나눠 드려야 하죠?<br>남자: 네, 인원 수에 맞게 복사해 놨지요?<br>여자: 아니요, 아직이요. 아직 시간 있으니까 회의 자료부터 정리해 놓고 복사하겠습니다.<br>남자: 고마워요. 전 회의장 상태를 한번 확인할게요.<br><br>Подготовка к собранию. Женщина сначала разберёт материалы собрания, потом сделает копии.<br>✅ <b>③ 회의 자료를 정리한다.</b> — «회의 자료부터 정리해 놓고».<br>✖️ ① копировать анкеты (после), ② раздавать анкеты (в конце собрания), ④ проверить зал — это делает мужчина.<br>🧩 설문지 = «анкета»; 회의장 = «зал собраний»."},{"n":13,"points":2,"instr":"Прослушайте и выберите вариант, совпадающий с услышанным.","options":["여자는 혼자 등산을 가려고 한다.","남자는 마라톤 대회에 처음 나간다.","여자는 주말에 민아 씨를 만날 것이다.","남자의 형은 마라톤 대회에 여러 번 참가했다."],"answer":3,"script":"여자: 이번 주말에 민아 씨랑 등산 가려고 하는데 같이 갈래요?\n남자: 아, 아쉽네요. 이번 주말에 마라톤 대회가 있어서 못 갈 것 같아요.\n여자: 우와, 대회에 또 나가는 거예요?\n남자: 네, 이번엔 제 형이 처음 대회에 참여하게 돼서 저도 같이 뛰기로 했어요.","explain":"🎧 여자: 이번 주말에 민아 씨랑 등산 가려고 하는데 같이 갈래요?<br>남자: 아, 아쉽네요. 이번 주말에 마라톤 대회가 있어서 못 갈 것 같아요.<br>여자: 우와, 대회에 또 나가는 거예요?<br>남자: 네, 이번엔 제 형이 처음 대회에 참여하게 돼서 저도 같이 뛰기로 했어요.<br><br>Женщина в выходные идёт в поход с Мина, зовёт мужчину; он не может — марафон; на марафоне впервые бежит его старший брат.<br>✅ <b>③ Женщина в выходные встретится с Мина.</b> — «민아 씨랑 등산 가려고».<br>✖️ ① идёт в поход одна (нет, с Мина), ② у мужчины первый марафон (он бежит «снова», впервые — брат), ④ брат участвовал много раз (наоборот, впервые).<br>🧩 등산 = «поход в горы»; 마라톤 대회 = «марафон»."},{"n":14,"points":2,"instr":"Прослушайте и выберите вариант, совпадающий с услышанным.","options":["소방 점검은 오전에 실시한다.","소방 점검에 대한 사전 안내가 없었다.","소방 점검을 할 때 조명이 모두 꺼진다.","점검이 모두 끝나면 안내 방송을 할 것이다."],"answer":4,"script":"여자: 아파트 주민 여러분께 안내 말씀드립니다. 사전에 안내해 드린 대로, 잠시 후 오후 3시부터 소방 설비를 점검합니다. 점검 중에는 화재 경보음이 울리거나 일부 조명이 꺼질 수 있으나 실제 화재 상황은 아니니 놀라지 마시기 바랍니다. 점검이 완료되면 다시 안내 방송을 해 드리겠습니다.","explain":"🎧 여자(안내방송): 아파트 주민 여러분께 안내 말씀드립니다. 사전에 안내해 드린 대로, 잠시 후 오후 3시부터 소방 설비를 점검합니다. 점검 중에는 화재 경보음이 울리거나 일부 조명이 꺼질 수 있으나 실제 화재 상황은 아니니 놀라지 마시기 바랍니다. 점검이 완료되면 다시 안내 방송을 해 드리겠습니다.<br><br>Объявление в доме: с 15:00 проверка противопожарного оборудования; могут звучать сигналы и гаснуть часть света.<br>✅ <b>④ По завершении проверки сделают новое объявление.</b> — «점검이 완료되면 다시 안내 방송».<br>✖️ ① проверка утром (нет, 오후 3시 — днём), ② не было предупреждения (было: «사전에 안내해 드린 대로»), ③ гаснет весь свет (только «일부 조명» — часть).<br>🧩 소방 점검 = «противопожарная проверка»; 사전 안내 = «предварительное оповещение»."},{"n":15,"points":2,"instr":"Прослушайте и выберите вариант, совпадающий с услышанным.","options":["이 대회는 시민들의 참가율이 저조했다.","이 대회는 한국인만 참여할 수 있는 프로그램이다.","이 대회는 서로 경쟁하지 않고 경기를 즐길 수 있다.","이 대회에서는 수영, 자전거, 걷기 종목에 참여할 수 있다."],"answer":3,"script":"남자: 오늘 인주시청이 개최한 쉬엄쉬엄 인주 3종 축제가 이만 명 이상의 많은 시민들이 참가한 가운데 성공적으로 마무리되었습니다. 이 축제는 각자의 체력 수준에 따라 나만의 속도와 방식으로 수영, 자전거, 달리기 세 가지 종목에 참여하며 즐길 수 있는 프로그램인데요. 특히 외국인들도 축제를 마음껏 즐길 수 있도록 행사장 곳곳에서 외국어 서비스를 제공했습니다. 참가자 모두 경쟁 없이 운동을 즐길 수 있도록 했습니다.","explain":"🎧 남자: 오늘 인주시청이 개최한 '쉬엄쉬엄 인주 3종 축제'가 이만 명 이상의 많은 시민들이 참가한 가운데 성공적으로 마무리되었습니다. 이 축제는 각자의 체력 수준에 따라 나만의 속도와 방식으로 수영, 자전거, 달리기 세 가지 종목에 참여하며 즐길 수 있는 프로그램인데요. 특히 외국인들도 마음껏 즐길 수 있도록 외국어 서비스를 제공했습니다. 참가자 모두 경쟁 없이 운동을 즐길 수 있도록 했습니다.<br><br>Фестиваль «троеборья» в г. Инджу: более 20 000 участников, в своём темпе, без соревнования.<br>✅ <b>③ На этом мероприятии можно наслаждаться без соперничества друг с другом.</b> — «경쟁 없이 운동을 즐길 수 있도록».<br>✖️ ① низкая явка (наоборот, 이만 명 이상), ② только для корейцев (были и иностранцы), ④ виды — плавание, велосипед, <b>ходьба</b> (на самом деле <b>бег</b> 달리기, а не 걷기).<br>🧩 축제 = «фестиваль»; 경쟁 = «соревнование»; 종목 = «вид (спорта)»."},{"n":16,"points":2,"instr":"Прослушайте и выберите вариант, совпадающий с услышанным.","options":["이 프로그램은 도시 아이들을 위한 것이다.","이 프로그램에서는 일 년 동안 집을 빌려준다.","도시 아이들을 위한 농촌 프로그램이 부족하다.","도시 아이들은 부모와 함께 집을 수리해야 한다."],"answer":1,"script":"남자: 이번에 도시 아이들이 농촌 체험을 해 볼 수 있는 프로그램을 만드셨다고요? 어떤 프로그램인지 소개 좀 부탁드리겠습니다.\n여자: 네, 도시 아이들이 농촌에서 한 달 동안 살아 보는 프로그램인데요. 비어 있는 농촌 집을 수리해서, 신청한 가족이 한 달 동안 실제로 지낼 수 있도록 집을 빌려드리고요. 물고기 잡기, 고구마 캐기, 옥수수 따기 등 농촌 체험을 함께 해 볼 수 있도록 다양한 프로그램을 준비했습니다.","explain":"🎧 남자: 이번에 도시 아이들이 농촌 체험을 해 볼 수 있는 프로그램을 만드셨다고요? 어떤 프로그램인지 소개 좀 부탁드리겠습니다.<br>여자: 네, 도시 아이들이 농촌에서 한 달 동안 살아 보는 프로그램인데요. 비어 있는 농촌 집을 수리해서, 신청한 가족이 한 달 동안 실제로 지낼 수 있도록 집을 빌려드리고요. 물고기 잡기, 고구마 캐기, 옥수수 따기 등 농촌 체험을 함께 해 볼 수 있도록 다양한 프로그램을 준비했습니다.<br><br>Программа: городские дети на месяц едут «пожить» в деревне; организаторы ремонтируют пустые сельские дома и сдают семьям.<br>✅ <b>① Эта программа — для городских детей.</b> — «도시 아이들이 농촌 체험을 해 볼 수 있는 프로그램».<br>✖️ ② дом дают на год (на самом деле «한 달» — на месяц), ③ таких программ не хватает (не сказано), ④ дети с родителями сами ремонтируют дом (ремонтируют организаторы).<br>🧩 농촌 체험 = «сельский опыт»; 수리하다 = «ремонтировать»; 빌려주다 = «сдавать, давать в пользование»."},{"n":17,"points":2,"instr":"Прослушайте и выберите центральную мысль мужчины.","options":["잘 쉬어야 할 일을 더 잘할 수 있다.","평소 드라마 보는 시간을 줄여야 한다.","시간을 잘 관리하려면 연습이 필요하다.","숙제를 다 한 후에 드라마 보는 것이 좋다."],"answer":4,"script":"남자: 민아야, 숙제 다 했어?\n여자: 아직 시간 많으니까 이 드라마만 보고 할게요.\n남자: 할 일을 먼저 해 놓고 여유 있게 보는 게 더 좋지 않을까?","explain":"🎧 남자: 민아야, 숙제 다 했어?<br>여자: 아직 시간 많으니까 이 드라마만 보고 할게요.<br>남자: 할 일을 먼저 해 놓고 여유 있게 보는 게 더 좋지 않을까?<br><br>Дочь хочет доделать уроки после сериала; отец советует сначала закончить дела, а потом смотреть спокойно.<br>✅ <b>④ Сериал лучше смотреть после того, как доделаны уроки.</b> — «할 일을 먼저 해 놓고».<br>✖️ ① «хорошо отдохнув, лучше справишься с делами», ② «надо сократить время на сериалы», ③ «для тайм-менеджмента нужна практика» — не главная мысль.<br>🧩 할 일 = «дела, что нужно сделать»; 여유 있게 = «без спешки»."},{"n":18,"points":2,"instr":"Прослушайте и выберите центральную мысль мужчины.","options":["발표 준비는 미리 하는 것이 좋다.","목소리가 커야 발표 내용이 잘 전달된다.","앞자리에 앉아야 발표를 잘 들을 수 있다.","연습을 많이 해야 발표할 때 긴장하지 않는다."],"answer":2,"script":"남자: 민아야, 발표할 때 좀 더 크게 하지 그랬어. 뒤에서는 잘 안 들리더라고.\n여자: 그래? 너무 긴장해서 목소리가 작아졌나 봐.\n남자: 너 정말 열심히 준비했는데, 발표 내용이 잘 안 들려서 좀 안타까웠어.","explain":"🎧 남자: 민아야, 발표할 때 좀 더 크게 하지 그랬어. 뒤에서는 잘 안 들리더라고.<br>여자: 그래? 너무 긴장해서 목소리가 작아졌나 봐.<br>남자: 너 정말 열심히 준비했는데, 발표 내용이 잘 안 들려서 좀 안타까웠어.<br><br>Доклад был хорошо подготовлен, но сзади его не было слышно из-за тихого голоса.<br>✅ <b>② Чтобы содержание доклада дошло, нужен громкий голос.</b><br>✖️ ① «к докладу лучше готовиться заранее», ③ «надо сидеть впереди, чтобы хорошо слышать», ④ «много репетируй — не будешь волноваться» — не главная мысль.<br>🧩 발표 = «доклад, презентация»; 전달되다 = «доноситься, передаваться»."},{"n":19,"points":2,"instr":"Прослушайте и выберите центральную мысль мужчины.","options":["단어를 많이 쓰면 읽기 실력에 도움이 된다.","외국어를 잘하려면 단어를 많이 외워야 한다.","친구와 함께 단어를 공부하면 더 효과적이다.","단어를 소리 내어 읽으면 더 쉽게 외울 수 있다."],"answer":4,"script":"여자: 너 영어 시험 준비 잘하고 있어? 난 단어 외우는 게 너무 힘들어.\n남자: 다들 그렇지. 근데 나는 소리 내서 읽으면 더 잘 외워지더라.\n여자: 아, 그래? 난 계속 쓰면서 외웠는데, 나도 너처럼 읽으면서 해 볼까?\n남자: 한번 해 봐. 훨씬 기억에 잘 남을 거야.","explain":"🎧 여자: 너 영어 시험 준비 잘하고 있어? 난 단어 외우는 게 너무 힘들어.<br>남자: 다들 그렇지. 근데 나는 소리 내서 읽으면 더 잘 외워지더라.<br>여자: 아, 그래? 난 계속 쓰면서 외웠는데, 나도 너처럼 읽으면서 해 볼까?<br>남자: 한번 해 봐. 훨씬 기억에 잘 남을 거야.<br><br>Мужчина советует заучивать слова, читая их вслух — так лучше запоминается.<br>✅ <b>④ Если читать слова вслух, их легче запомнить.</b> — «소리 내서 읽으면 더 잘 외워지더라».<br>✖️ ① «много писать слова помогает чтению», ② «чтобы знать язык, надо много зубрить», ③ «учить слова с другом эффективнее» — не главная мысль.<br>🧩 소리 내어 읽다 = «читать вслух»; 외워지다 = «запоминаться»."},{"n":20,"points":2,"instr":"Прослушайте и выберите центральную мысль мужчины.","options":["설명이 자세한 요리책이 인기가 많다.","쉽게 들고 다닐 수 있는 요리책이 좋다.","요리책은 누구나 쉽게 따라 할 수 있어야 한다.","요리를 처음 배울 때는 요리책을 참고하는 것이 좋다."],"answer":3,"script":"여자: 이번에 새로 내신 요리책은 이전 책들과 어떤 점이 가장 다른가요?\n남자: 예전 요리책들은 대부분 요리를 좀 해 본 사람들을 대상으로 한 거였어요. 그래서 처음 요리하는 사람들에게는 따라 하기 어려운 부분이 많았죠. 저는 누구든지 쉽게 요리할 수 있도록 했어요. 설명은 간단하게 하고 과정은 한눈에 볼 수 있도록 그림도 많이 넣었습니다.","explain":"🎧 여자: 이번에 새로 내신 요리책은 이전 책들과 어떤 점이 가장 다른가요?<br>남자: 예전 요리책들은 대부분 요리를 좀 해 본 사람들을 대상으로 한 거였어요. 그래서 처음 요리하는 사람들에게는 따라 하기 어려운 부분이 많았죠. 저는 누구든지 쉽게 요리할 수 있도록 했어요. 설명은 간단하게 하고 과정은 한눈에 볼 수 있도록 그림도 많이 넣었습니다.<br><br>Интервью: прежние кулинарные книги были для опытных; автор сделал так, чтобы готовить мог любой новичок (простые описания, много картинок).<br>✅ <b>③ Кулинарная книга должна быть такой, чтобы любой мог легко повторить.</b> — «누구든지 쉽게 요리할 수 있도록».<br>✖️ ① «популярны книги с подробными объяснениями», ② «удобно носить с собой», ④ «новичку лучше сверяться с книгой» — не главная мысль.<br>🧩 요리책 = «кулинарная книга»; 따라 하다 = «повторять за»; 한눈에 = «с одного взгляда»."},{"n":21,"points":2,"instr":"Прослушайте и выберите центральную мысль мужчины.","options":["제품 포장의 색이 매출에 영향을 준다.","제품 포장지의 색을 바꾸지 않아도 된다.","주요 구매자가 좋아하는 색을 알아야 한다.","회사 로고 색과 제품 포장지 색이 같아야 한다."],"answer":2,"script":"여자: 오늘 회의에서 제품 포장 색깔을 좀 더 밝게 바꾸자는 의견이 나왔어요. 어떻게 생각하세요?\n남자: 저는 지금 색상이 우리 회사 이미지와 잘 맞는 것 같은데요. 회사 로고와 같은 색이잖아요.\n여자: 그래도 색깔이 조금 무겁게 느껴지지 않아요? 우리 제품은 10대 아이들이 주 대상이라 좀 더 가볍고 밝은 느낌이 있어야 할 것 같아요.\n남자: 10년 동안 같은 색인데 매출이 계속 상승했잖아요. 저는 변화의 필요성을 잘 못 느끼겠는데요.","explain":"🎧 여자: 오늘 회의에서 제품 포장 색깔을 좀 더 밝게 바꾸자는 의견이 나왔어요. 어떻게 생각하세요?<br>남자: 저는 지금 색상이 우리 회사 이미지와 잘 맞는 것 같은데요. 회사 로고와 같은 색이잖아요.<br>여자: 그래도 색깔이 조금 무겁게 느껴지지 않아요? 우리 제품은 10대 아이들이 주 대상이라 좀 더 가볍고 밝은 느낌이 있어야 할 것 같아요.<br>남자: 10년 동안 같은 색인데 매출이 계속 상승했잖아요. 저는 변화의 필요성을 잘 못 느끼겠는데요.<br><br>Женщина предлагает сделать упаковку ярче; мужчина считает, что нынешний цвет совпадает с логотипом и за 10 лет продажи только росли.<br>✅ <b>② Цвет упаковки можно не менять.</b> — «변화의 필요성을 잘 못 느끼겠는데요».<br>✖️ ① «цвет упаковки влияет на продажи» (это ближе к позиции женщины), ③ «надо знать любимый цвет покупателей», ④ «цвет логотипа и упаковки должны совпадать» — не центральная мысль мужчины.<br>🧩 포장지 = «упаковка»; 매출 = «выручка»; 변화의 필요성 = «необходимость перемен»."},{"n":22,"points":2,"instr":"Прослушайте и выберите вариант, совпадающий с услышанным.","options":["이 제품의 매출이 최근 감소하였다.","이 제품의 주요 구매자는 아이들이다.","최근에 이 제품의 포장지 색이 바뀌었다.","이 제품 포장지 색은 회사 로고의 색과 다르다."],"answer":2,"script":"여자: 오늘 회의에서 제품 포장 색깔을 좀 더 밝게 바꾸자는 의견이 나왔어요. 어떻게 생각하세요?\n남자: 저는 지금 색상이 우리 회사 이미지와 잘 맞는 것 같은데요. 회사 로고와 같은 색이잖아요.\n여자: 그래도 색깔이 조금 무겁게 느껴지지 않아요? 우리 제품은 10대 아이들이 주 대상이라 좀 더 가볍고 밝은 느낌이 있어야 할 것 같아요.\n남자: 10년 동안 같은 색인데 매출이 계속 상승했잖아요. 저는 변화의 필요성을 잘 못 느끼겠는데요.","explain":"🎧 (тот же диалог, что в вопросе 21).<br><br>✅ <b>② Основные покупатели этого товара — дети.</b> — «10대 아이들이 주 대상».<br>✖️ ① продажи недавно упали (наоборот, «계속 상승»), ③ цвет упаковки недавно изменили (нет: «10년 동안 같은 색»), ④ цвет упаковки отличается от логотипа (наоборот, «로고와 같은 색»).<br>🧩 주요 구매자 = «основные покупатели»; 10대 = «подростки»."},{"n":23,"points":2,"instr":"Прослушайте и определите, что делает мужчина.","options":["모바일 중고 거래 앱을 비판하고 있다.","모바일 중고 거래 앱 이용을 권유하고 있다.","모바일 중고 거래 앱에 대해 문의하고 있다.","모바일 중고 거래 앱의 불만 사항을 말하고 있다."],"answer":2,"script":"여자: 새 자전거 하나 사고 싶은데, 생각보다 비싸네요. 그래서 중고 자전거를 사 볼까 고민 중이에요.\n남자: 그럼 모바일 중고 거래 앱을 한번 이용해 보세요. 저도 가끔 쓰는데 자전거뿐만 아니라 전자기기, 옷 같은 것도 살 수 있어요.\n여자: 그래요? 근데 상태가 괜찮을까요? 온라인으로 거래하는 건 좀 불안해서요.\n남자: 요즘은 판매자들이 제품 상태를 자세히 올려놔서 믿을 만해요. 무엇보다 저렴하고 품질도 괜찮아요. 저도 노트북이랑 식탁을 그렇게 샀는데 지금까지 잘 쓰고 있어요.","explain":"🎧 여자: 새 자전거 하나 사고 싶은데, 생각보다 비싸네요. 그래서 중고 자전거를 사 볼까 고민 중이에요.<br>남자: 그럼 모바일 중고 거래 앱을 한번 이용해 보세요. 저도 가끔 쓰는데 자전거뿐만 아니라 전자기기, 옷 같은 것도 살 수 있어요.<br>여자: 그래요? 근데 상태가 괜찮을까요? 온라인으로 거래하는 건 좀 불안해서요.<br>남자: 요즘은 판매자들이 제품 상태를 자세히 올려놔서 믿을 만해요. 무엇보다 저렴하고 품질도 괜찮아요. 저도 노트북이랑 식탁을 그렇게 샀는데 지금까지 잘 쓰고 있어요.<br><br>Женщина думает купить б/у велосипед; мужчина советует приложение для сделок с подержанным и приводит свой опыт.<br>✅ <b>② Рекомендует пользоваться приложением для сделок с б/у.</b><br>✖️ ① критикует приложение, ③ спрашивает о приложении, ④ высказывает жалобы — мужчина, наоборот, советует.<br>🧩 중고 거래 = «сделки с подержанным»; 권유하다 = «советовать, рекомендовать»."},{"n":24,"points":2,"instr":"Прослушайте и выберите вариант, совпадающий с услышанным.","options":["모바일 중고 거래 앱의 제품은 질이 좋지 않다.","모바일 중고 거래 앱을 이용하는 것은 위험하다.","이 여자는 모바일 중고 거래 앱을 자주 이용한다.","이 남자는 모바일 중고 거래 앱에서 제품을 구매했다."],"answer":4,"script":"여자: 새 자전거 하나 사고 싶은데, 생각보다 비싸네요. 그래서 중고 자전거를 사 볼까 고민 중이에요.\n남자: 그럼 모바일 중고 거래 앱을 한번 이용해 보세요. 저도 가끔 쓰는데 자전거뿐만 아니라 전자기기, 옷 같은 것도 살 수 있어요.\n여자: 그래요? 근데 상태가 괜찮을까요? 온라인으로 거래하는 건 좀 불안해서요.\n남자: 요즘은 판매자들이 제품 상태를 자세히 올려놔서 믿을 만해요. 무엇보다 저렴하고 품질도 괜찮아요. 저도 노트북이랑 식탁을 그렇게 샀는데 지금까지 잘 쓰고 있어요.","explain":"🎧 (тот же диалог, что в вопросе 23).<br><br>✅ <b>④ Этот мужчина покупал товары в приложении для сделок с б/у.</b> — «저도 노트북이랑 식탁을 그렇게 샀는데».<br>✖️ ① товары плохого качества (наоборот, «품질도 괜찮아요»), ② пользоваться опасно (наоборот, «믿을 만해요»), ③ женщина часто пользуется (она только раздумывает и переживает).<br>🧩 구매하다 = «покупать»; 거래 = «сделка»."},{"n":25,"points":2,"instr":"Прослушайте и выберите центральную мысль мужчины.","options":["장난감을 조심해서 사용해야 한다.","장난감 수리점이 더 많아져야 한다.","장난감 수리는 빨리하는 것이 중요하다.","장난감 수리 방법을 사람들에게 알려 줘야 한다."],"answer":2,"script":"여자: 20년 동안 아이들의 장난감을 고쳐 주고 계신데요. 어려운 점도 있으실 것 같습니다.\n남자: 사실 가장 어려운 점은 일손이 부족하다는 것입니다. 아이들 장난감을 빨리 고쳐 주고 싶지만 전국에서 장난감을 보내 주셔서 그게 쉽지가 않습니다. 부품을 구하기 어려운 경우도 자주 있고요. 장난감 수리점이 여기저기 더 많아진다면 아이들에게 조금 더 빨리 장난감을 돌려줄 수 있을 것입니다. 제가 장난감 고치는 방법을 영상으로 만들어 인터넷에 올리고 있는데 많은 분들이 이 일에 관심을 가져 주시면 좋겠습니다.","explain":"🎧 여자: 20년 동안 아이들의 장난감을 고쳐 주고 계신데요. 어려운 점도 있으실 것 같습니다.<br>남자: 사실 가장 어려운 점은 일손이 부족하다는 것입니다. 아이들 장난감을 빨리 고쳐 주고 싶지만 전국에서 장난감을 보내 주셔서 그게 쉽지가 않습니다. 부품을 구하기 어려운 경우도 자주 있고요. 장난감 수리점이 여기저기 더 많아진다면 아이들에게 조금 더 빨리 장난감을 돌려줄 수 있을 것입니다. 제가 장난감 고치는 방법을 영상으로 만들어 인터넷에 올리고 있는데 많은 분들이 이 일에 관심을 가져 주시면 좋겠습니다.<br><br>Мастер 20 лет чинит детские игрушки. Не хватает рук, игрушки шлют со всей страны, трудно с запчастями.<br>✅ <b>② Мастерских по ремонту игрушек должно стать больше.</b> — «수리점이 여기저기 더 많아진다면 … 더 빨리 돌려줄 수 있을 것».<br>✖️ ① «игрушками надо пользоваться аккуратно», ③ «важно чинить быстро», ④ «надо обучать людей способам ремонта» — упомянуто, но не главная мысль.<br>🧩 수리점 = «мастерская»; 일손이 부족하다 = «не хватает рабочих рук»; 부품 = «деталь»."},{"n":26,"points":2,"instr":"Прослушайте и выберите вариант, совпадающий с услышанным.","options":["먼 지역에서 장난감을 보내기도 한다.","요즘 장난감 수리점에 일이 많지 않다.","이 남자는 장난감 부품을 쉽게 구할 수 있다.","이 남자는 최근에 장난감 고치는 일을 시작했다."],"answer":1,"script":"여자: 20년 동안 아이들의 장난감을 고쳐 주고 계신데요. 어려운 점도 있으실 것 같습니다.\n남자: 사실 가장 어려운 점은 일손이 부족하다는 것입니다. 아이들 장난감을 빨리 고쳐 주고 싶지만 전국에서 장난감을 보내 주셔서 그게 쉽지가 않습니다. 부품을 구하기 어려운 경우도 자주 있고요. 장난감 수리점이 여기저기 더 많아진다면 아이들에게 조금 더 빨리 장난감을 돌려줄 수 있을 것입니다. 제가 장난감 고치는 방법을 영상으로 만들어 인터넷에 올리고 있는데 많은 분들이 이 일에 관심을 가져 주시면 좋겠습니다.","explain":"🎧 (то же интервью, что в вопросе 25).<br><br>✅ <b>① Игрушки присылают и из далёких регионов.</b> — «전국에서 장난감을 보내 주셔서».<br>✖️ ② сейчас в мастерских мало работы (наоборот, рук не хватает), ③ мужчина легко достаёт детали (наоборот, «부품을 구하기 어려운 경우도 자주»), ④ начал чинить недавно (наоборот, «20년 동안»).<br>🧩 먼 지역 = «дальний регион»; 전국 = «вся страна»."},{"n":27,"points":2,"instr":"Прослушайте и выберите, с какой целью говорит мужчина.","options":["임시 공휴일 제도를 반대하기 위해","임시 공휴일에 쉬지 못하는 아쉬움을 말하기 위해","임시 공휴일이 회사에 미치는 영향을 주장하기 위해","임시 공휴일에 아이를 맡길 수 있는 시설을 소개하기 위해"],"answer":2,"script":"여자: 이번에 정부에서 다음 주 금요일을 임시 공휴일로 지정했대. 금요일까지 쉬면서 연휴가 꽤 길어지겠네.\n남자: 나도 들었어. 근데 우리 회사는 임시 공휴일에도 정상 근무라 나는 전혀 상관없어. 쉬는 사람들은 좋겠다. 부러워.\n여자: 나도 그래. 우리 회사도 같이 쉬면 좋을 텐데. 그날 나는 출근해야 하는데 아이 학교가 쉬니까 당장 아이 맡길 만한 곳도 알아봐야 해.\n남자: 임시 공휴일이라는 게 누구한테는 휴일인데, 우리 같은 직장인들에겐 오히려 부담이네.","explain":"🎧 여자: 이번에 정부에서 다음 주 금요일을 임시 공휴일로 지정했대. 금요일까지 쉬면서 연휴가 꽤 길어지겠네.<br>남자: 나도 들었어. 근데 우리 회사는 임시 공휴일에도 정상 근무라 나는 전혀 상관없어. 쉬는 사람들은 좋겠다. 부러워.<br>여자: 나도 그래. 우리 회사도 같이 쉬면 좋을 텐데. 그날 나는 출근해야 하는데 아이 학교가 쉬니까 당장 아이 맡길 만한 곳도 알아봐야 해.<br>남자: 임시 공휴일이라는 게 누구한테는 휴일인데, 우리 같은 직장인들에겐 오히려 부담이네.<br><br>Объявили временный выходной, но компания мужчины работает как обычно — он завидует отдыхающим, для офисных это «обуза».<br>✅ <b>② Чтобы выразить досаду, что не получится отдохнуть в выходной.</b> — «쉬는 사람들은 좋겠다. 부러워», «오히려 부담이네».<br>✖️ ① против самой системы выходных, ③ доказать влияние на компанию, ④ представить место, куда сдать ребёнка — мужчина об этом не говорит.<br>🧩 임시 공휴일 = «временный нерабочий день»; 아쉬움 = «досада, сожаление»; 부담 = «обуза»."},{"n":28,"points":2,"instr":"Прослушайте и выберите вариант, совпадающий с услышанным.","options":["아이 학교는 임시 공휴일에 쉬지 않는다.","남자는 임시 공휴일에 여행을 갈 계획이다.","남자와 여자는 임시 공휴일에도 출근해야 한다.","정부는 이번 주 금요일을 임시 공휴일로 지정했다."],"answer":3,"script":"여자: 이번에 정부에서 다음 주 금요일을 임시 공휴일로 지정했대. 금요일까지 쉬면서 연휴가 꽤 길어지겠네.\n남자: 나도 들었어. 근데 우리 회사는 임시 공휴일에도 정상 근무라 나는 전혀 상관없어. 쉬는 사람들은 좋겠다. 부러워.\n여자: 나도 그래. 우리 회사도 같이 쉬면 좋을 텐데. 그날 나는 출근해야 하는데 아이 학교가 쉬니까 당장 아이 맡길 만한 곳도 알아봐야 해.\n남자: 임시 공휴일이라는 게 누구한테는 휴일인데, 우리 같은 직장인들에겐 오히려 부담이네.","explain":"🎧 (тот же диалог, что в вопросе 27).<br><br>✅ <b>③ И мужчина, и женщина должны выйти на работу даже в выходной.</b> — он «정상 근무», она «그날 나는 출근해야 하는데».<br>✖️ ① школа ребёнка не отдыхает (наоборот, «아이 학교가 쉬니까»), ② мужчина планирует поездку (нет), ④ правительство назначило <b>эту</b> пятницу (на самом деле «다음 주 금요일» — следующую).<br>🧩 정상 근무 = «обычный рабочий день»; 출근하다 = «выходить на работу»."},{"n":29,"points":2,"instr":"Прослушайте и определите, кто такой мужчина.","options":["건물을 관리하는 시설 직원","사건 현장을 조사하는 경찰관","사고 현장을 정리하는 전문가","화재 현장에서 불을 끄는 소방관"],"answer":3,"script":"여자: 하시는 일이 일반적인 청소와는 좀 다르다고 들었습니다. 어떤 일을 주로 하시나요?\n남자: 네, 저는 주로 화재나 범죄가 일어난 장소를 청소하고 정리하는 일을 합니다. 이런 곳은 일반적인 청소로는 해결할 수 없는 상황이 많기 때문에 특별한 장비를 사용해서 청소를 해야 합니다.\n여자: 현장 상황에 따라 작업 방식도 달라지겠네요.\n남자: 네, 맞습니다. 예를 들어 불이 난 곳은 탄 먼지가 많고 범죄가 일어난 곳은 위험한 물건이 남아 있을 수 있어요. 그래서 먼저 현장을 잘 살펴보고 알맞은 약품과 도구를 준비합니다.\n여자: 정신적으로도 힘든 일일 것 같네요.\n남자: 그렇죠. 안타까운 사고의 흔적이 남아 있는 장소를 정리할 때는 마음이 힘들 때도 있습니다. 그래도 누군가는 꼭 해야 할 일이라서 책임감을 가지고 일하고 있습니다.","explain":"🎧 여자: 하시는 일이 일반적인 청소와는 좀 다르다고 들었습니다. 어떤 일을 주로 하시나요?<br>남자: 네, 저는 주로 화재나 범죄가 일어난 장소를 청소하고 정리하는 일을 합니다. … 특별한 장비를 사용해서 청소를 해야 합니다.<br>여자: 현장 상황에 따라 작업 방식도 달라지겠네요.<br>남자: 네. 먼저 현장을 잘 살펴보고 알맞은 약품과 도구를 준비합니다.<br>남자: 안타까운 사고의 흔적이 남아 있는 장소를 정리할 때는 마음이 힘들 때도 있습니다. 그래도 누군가는 꼭 해야 할 일이라서 책임감을 가지고 일하고 있습니다.<br><br>Мужчина убирает и приводит в порядок места после пожаров и преступлений — это не обычная уборка.<br>✅ <b>③ Специалист, который приводит в порядок места происшествий.</b><br>✖️ ① работник по обслуживанию здания, ② полицейский, расследующий происшествие, ④ пожарный, тушащий огонь — он именно убирает место после.<br>🧩 사고 현장 = «место происшествия»; 정리하다 = «приводить в порядок»; 전문가 = «специалист»."},{"n":30,"points":2,"instr":"Прослушайте и выберите вариант, совпадающий с услышанным.","options":["현장마다 같은 방법을 사용해서 청소해야 한다.","이 일은 감정에 영향을 받지 않고 일할 수 있다.","현장을 분석한 후 특별한 도구를 사용해야 한다.","이 일은 일반적인 청소보다 간단하고 하기가 쉽다."],"answer":3,"script":"여자: 하시는 일이 일반적인 청소와는 좀 다르다고 들었습니다. 어떤 일을 주로 하시나요?\n남자: 네, 저는 주로 화재나 범죄가 일어난 장소를 청소하고 정리하는 일을 합니다. 이런 곳은 일반적인 청소로는 해결할 수 없는 상황이 많기 때문에 특별한 장비를 사용해서 청소를 해야 합니다.\n여자: 현장 상황에 따라 작업 방식도 달라지겠네요.\n남자: 네, 맞습니다. 예를 들어 불이 난 곳은 탄 먼지가 많고 범죄가 일어난 곳은 위험한 물건이 남아 있을 수 있어요. 그래서 먼저 현장을 잘 살펴보고 알맞은 약품과 도구를 준비합니다.\n여자: 정신적으로도 힘든 일일 것 같네요.\n남자: 그렇죠. 안타까운 사고의 흔적이 남아 있는 장소를 정리할 때는 마음이 힘들 때도 있습니다. 그래도 누군가는 꼭 해야 할 일이라서 책임감을 가지고 일하고 있습니다.","explain":"🎧 (то же интервью, что в вопросе 29).<br><br>✅ <b>③ Сначала анализируют место, потом используют специальные инструменты.</b> — «먼저 현장을 잘 살펴보고 알맞은 약품과 도구를 준비».<br>✖️ ① на каждом месте один и тот же метод (наоборот, «현장 상황에 따라 달라짐»), ② работа без влияния на эмоции (наоборот, «정신적으로 힘든»), ④ проще обычной уборки (наоборот, сложнее).<br>🧩 분석하다 = «анализировать»; 약품 = «химические средства»; 도구 = «инструмент»."},{"n":31,"points":2,"instr":"Прослушайте и выберите мнение мужчины.","options":["자동차보다 보행자의 안전을 우선해야 한다.","속도 제한은 도시 외곽에서만 시행해야 한다.","교통 흐름을 위해 속도 제한을 완화해야 한다.","자동차 속도 제한은 실제로 효과가 높지 않다."],"answer":1,"script":"여자: 도시에서 자동차 사고를 줄이려고 속도를 제한하고 있는데 저는 너무 심한 것 같아요.\n남자: 저는 속도 제한이 필요하다고 생각해요. 특히 보행자가 많은 도심에서는 차량이 빠르게 달리면 사고 위험이 커지잖아요. 실제로 시속 30킬로미터 이하로 제한한 구간에서는 사고 발생률이 크게 줄었다는 통계도 있어요.\n여자: 물론 사고 예방은 중요하지만 너무 낮은 속도 제한은 교통 흐름을 방해하고 운전자에게 불편을 줄 수 있잖아요.\n남자: 그렇지만 교통보다 사람의 안전이 더 중요하다고 생각해요. 도로는 자동차만을 위한 공간이 아니니까요.","explain":"🎧 여자: 도시에서 자동차 사고를 줄이려고 속도를 제한하고 있는데 저는 너무 심한 것 같아요.<br>남자: 저는 속도 제한이 필요하다고 생각해요. 특히 보행자가 많은 도심에서는 차량이 빠르게 달리면 사고 위험이 커지잖아요. 실제로 시속 30킬로미터 이하로 제한한 구간에서는 사고 발생률이 크게 줄었다는 통계도 있어요.<br>여자: 물론 사고 예방은 중요하지만 너무 낮은 속도 제한은 교통 흐름을 방해하고 운전자에게 불편을 줄 수 있잖아요.<br>남자: 그렇지만 교통보다 사람의 안전이 더 중요하다고 생각해요. 도로는 자동차만을 위한 공간이 아니니까요.<br><br>Мужчина за ограничение скорости: в городе с пешеходами опасно, безопасность людей важнее, чем поток машин.<br>✅ <b>① Безопасность пешеходов важнее автомобилей.</b> — «교통보다 사람의 안전이 더 중요», «도로는 자동차만을 위한 공간이 아니».<br>✖️ ② ограничение только на окраинах, ③ ослабить ограничение ради потока, ④ ограничение неэффективно — это не его позиция.<br>🧩 속도 제한 = «ограничение скорости»; 보행자 = «пешеход»; 우선하다 = «ставить в приоритет»."},{"n":32,"points":2,"instr":"Прослушайте и выберите, какова позиция мужчины.","options":["여자의 의견에 대해 동의하고 있다.","상대방의 의견을 수용하며 조율하고 있다.","상대방에게 추가적인 자료 제시를 요구하고 있다.","통계 자료를 제시하며 여자의 의견에 반박하고 있다."],"answer":4,"script":"여자: 도시에서 자동차 사고를 줄이려고 속도를 제한하고 있는데 저는 너무 심한 것 같아요.\n남자: 저는 속도 제한이 필요하다고 생각해요. 특히 보행자가 많은 도심에서는 차량이 빠르게 달리면 사고 위험이 커지잖아요. 실제로 시속 30킬로미터 이하로 제한한 구간에서는 사고 발생률이 크게 줄었다는 통계도 있어요.\n여자: 물론 사고 예방은 중요하지만 너무 낮은 속도 제한은 교통 흐름을 방해하고 운전자에게 불편을 줄 수 있잖아요.\n남자: 그렇지만 교통보다 사람의 안전이 더 중요하다고 생각해요. 도로는 자동차만을 위한 공간이 아니니까요.","explain":"🎧 (тот же диалог, что в вопросе 31).<br><br>✅ <b>④ Приводит статистику и возражает мнению женщины.</b> — «실제로 … 사고 발생률이 크게 줄었다는 통계도 있어요» + «그렇지만 …».<br>✖️ ① соглашается с женщиной (наоборот), ② принимает её мнение и подстраивается (наоборот, спорит), ③ требует у неё дополнительных данных — данные приводит сам мужчина.<br>🧩 통계 자료 = «статистические данные»; 반박하다 = «возражать, опровергать»."},{"n":33,"points":2,"instr":"Прослушайте и определите, о чём идёт речь.","options":["낙타가 혹을 가지고 있는 이유","낙타가 몸속에 지방을 저장하는 방법","낙타가 사막의 더위를 이겨 내는 방법","낙타가 오랫동안 물 없이 살 수 있는 이유"],"answer":4,"script":"여자: 사막에서 쉽게 떠올릴 수 있는 동물, 바로 낙타입니다. 낙타의 등에 있는 혹에 물이 저장되어 있다고 알고 계신 분들이 많은데, 사실 그곳에는 지방이 저장되어 있습니다. 이 지방은 에너지가 부족할 때 천천히 사용되지요. 또 낙타는 체온을 잘 조절해서 땀을 거의 흘리지 않기 때문에 몸속의 물이 빠져나가는 양이 아주 적습니다. 게다가 낙타는 짧은 시간에 많은 물을 마실 수 있어서 물이 적은 환경에서도 잘 살아갈 수 있는 겁니다.","explain":"🎧 여자: 사막에서 쉽게 떠올릴 수 있는 동물, 바로 낙타입니다. 낙타의 등에 있는 혹에 물이 저장되어 있다고 알고 계신 분들이 많은데, 사실 그곳에는 지방이 저장되어 있습니다. 이 지방은 에너지가 부족할 때 천천히 사용되지요. 또 낙타는 체온을 잘 조절해서 땀을 거의 흘리지 않기 때문에 몸속의 물이 빠져나가는 양이 아주 적습니다. 게다가 낙타는 짧은 시간에 많은 물을 마실 수 있어서 물이 적은 환경에서도 잘 살아갈 수 있는 겁니다.<br><br>Весь рассказ объясняет, как верблюд выживает в пустыне почти без воды (жир в горбе, мало пота, быстро много пьёт).<br>✅ <b>④ Почему верблюд может долго жить без воды.</b><br>✖️ ① почему у верблюда есть горб (это лишь часть), ② как именно жир запасается (механизм не объясняется), ③ как переносит жару — рассказ шире, о выживании без воды.<br>🧩 낙타 = «верблюд»; 혹 = «горб»; 지방 = «жир»."},{"n":34,"points":2,"instr":"Прослушайте и выберите вариант, совпадающий с услышанным.","options":["낙타는 땀을 많이 흘린다.","낙타는 체온 조절을 잘한다.","낙타의 혹에는 물이 많이 들어 있다.","낙타는 긴 시간 동안 물을 마셔야 한다."],"answer":2,"script":"여자: 사막에서 쉽게 떠올릴 수 있는 동물, 바로 낙타입니다. 낙타의 등에 있는 혹에 물이 저장되어 있다고 알고 계신 분들이 많은데, 사실 그곳에는 지방이 저장되어 있습니다. 이 지방은 에너지가 부족할 때 천천히 사용되지요. 또 낙타는 체온을 잘 조절해서 땀을 거의 흘리지 않기 때문에 몸속의 물이 빠져나가는 양이 아주 적습니다. 게다가 낙타는 짧은 시간에 많은 물을 마실 수 있어서 물이 적은 환경에서도 잘 살아갈 수 있는 겁니다.","explain":"🎧 (та же лекция, что в вопросе 33).<br><br>✅ <b>② Верблюд хорошо регулирует температуру тела.</b> — «체온을 잘 조절해서 땀을 거의 흘리지 않기».<br>✖️ ① много потеет (наоборот, «땀을 거의 흘리지 않»), ③ в горбе много воды (там жир, не вода), ④ должен долго пить (наоборот, «짧은 시간에 많은 물을 마실 수 있어서»).<br>🧩 체온 조절 = «терморегуляция»; 땀을 흘리다 = «потеть»."},{"n":35,"points":2,"instr":"Прослушайте и определите, что делает мужчина.","options":["회사의 신제품을 홍보하고 있다.","창업 기념식에서 인사를 하고 있다.","회사 고객 불만에 대해 사과하고 있다.","회사 신입 직원 교육을 진행하고 있다."],"answer":2,"script":"남자: 오늘은 우리 기업이 30주년을 맞이하는 뜻깊은 날입니다. 그동안 수많은 도전과 변화 속에서도 흔들림 없이 함께해 주신 직원 여러분의 수고에 깊이 감사드립니다. 또한 저희를 믿고 신뢰를 보내 주신 고객 여러분께도 감사의 말씀을 전합니다. 30년 전, 작은 회사로 출발한 우리 기업은 고객 중심의 가치와 정직한 경영을 바탕으로 꾸준히 성장해 왔습니다. 앞으로도 지속 가능한 성장과 사회적 책임을 함께 실천하는 기업으로서, 더 나은 미래를 만들어 가는 데 최선을 다하겠습니다.","explain":"🎧 남자: 오늘은 우리 기업이 30주년을 맞이하는 뜻깊은 날입니다. 그동안 함께해 주신 직원 여러분과 고객 여러분께 깊이 감사드립니다. 30년 전, 작은 회사로 출발한 우리 기업은 고객 중심의 가치와 정직한 경영을 바탕으로 꾸준히 성장해 왔습니다. 앞으로도 지속 가능한 성장과 사회적 책임을 함께 실천하는 기업으로서 최선을 다하겠습니다.<br><br>Руководитель выступает с поздравительной речью на 30-летии компании.<br>✅ <b>② Произносит приветственную речь на юбилее основания.</b> — «30주년을 맞이하는 … 감사드립니다».<br>✖️ ① рекламирует новый продукт, ③ извиняется за жалобы клиентов, ④ проводит обучение новичков — речь именно юбилейная.<br>🧩 창업 = «основание (фирмы)»; 기념식 = «торжество, церемония»; 인사말 = «приветственная речь»."},{"n":36,"points":2,"instr":"Прослушайте и выберите вариант, совпадающий с услышанным.","options":["이 기업은 정직한 경영을 바탕으로 발전해 왔다.","이 기업은 올해 20주년을 맞이해서 기념식을 열었다.","이 기업은 사회의 책임보다 회사의 이익을 중요시한다.","이 기업은 처음부터 큰 기업으로 시작해서 빠르게 성장했다."],"answer":1,"script":"남자: 오늘은 우리 기업이 30주년을 맞이하는 뜻깊은 날입니다. 그동안 수많은 도전과 변화 속에서도 흔들림 없이 함께해 주신 직원 여러분의 수고에 깊이 감사드립니다. 또한 저희를 믿고 신뢰를 보내 주신 고객 여러분께도 감사의 말씀을 전합니다. 30년 전, 작은 회사로 출발한 우리 기업은 고객 중심의 가치와 정직한 경영을 바탕으로 꾸준히 성장해 왔습니다. 앞으로도 지속 가능한 성장과 사회적 책임을 함께 실천하는 기업으로서, 더 나은 미래를 만들어 가는 데 최선을 다하겠습니다.","explain":"🎧 (та же речь, что в вопросе 35).<br><br>✅ <b>① Эта компания развивалась на основе честного управления.</b> — «정직한 경영을 바탕으로 꾸준히 성장».<br>✖️ ② отмечает 20-летие (на самом деле 30주년), ③ ставит прибыль выше соц. ответственности (наоборот, «사회적 책임을 함께 실천»), ④ сразу начинала крупной (наоборот, «작은 회사로 출발»).<br>🧩 정직한 경영 = «честное управление»; 사회적 책임 = «социальная ответственность»."},{"n":37,"points":2,"instr":"Прослушайте и выберите центральную мысль женщины.","options":["일회용품을 대체할 수 있는 제품을 만들어야 한다.","일회용품 사용을 줄이기 위한 작은 실천이 중요하다.","친환경 제품의 가격을 현실적으로 조정할 필요가 있다.","정부는 환경 보호 정책을 보다 구체적으로 마련해야 한다."],"answer":2,"script":"남자: 요즘 환경 문제가 점점 심각해지고 있는데요. 변화를 위해서는 어떤 노력이 필요할까요?\n여자: 정부는 2030년까지 플라스틱 사용량을 줄이고 재활용률을 높이겠다는 목표로 다양한 정책을 시행하고 있지만 이것만으로는 한계가 있습니다. 반드시 일상에서 한 사람, 한 사람의 실천이 동반되어야 하지요. 예를 들어 텀블러를 들고 다니거나 장바구니를 사용하는 것처럼 일회용품 사용을 줄이려는 노력이 필요합니다. 물론 친환경 제품은 가격이 비싸지요. 또 규제가 없던 시절, 카페나 편의점에서 일회용품을 기본적으로 받았던 경험 때문에 이런 실천이 쉽지만은 않습니다.","explain":"🎧 남자: 요즘 환경 문제가 점점 심각해지고 있는데요. 변화를 위해서는 어떤 노력이 필요할까요?<br>여자: 정부는 2030년까지 플라스틱 사용량을 줄이고 재활용률을 높이겠다는 목표로 다양한 정책을 시행하고 있지만 이것만으로는 한계가 있습니다. 반드시 일상에서 한 사람, 한 사람의 실천이 동반되어야 하지요. 예를 들어 텀블러를 들고 다니거나 장바구니를 사용하는 것처럼 일회용품 사용을 줄이려는 노력이 필요합니다. 물론 친환경 제품은 가격이 비싸지요. 또 규제가 없던 시절, 카페나 편의점에서 일회용품을 기본적으로 받았던 경험 때문에 이런 실천이 쉽지만은 않습니다.<br><br>Женщина: одних госполитик мало — нужны повседневные действия каждого (тумблер, шопер).<br>✅ <b>② Важны маленькие действия ради сокращения одноразовых товаров.</b> — «한 사람, 한 사람의 실천이 동반되어야».<br>✖️ ① создавать замену одноразовым товарам, ③ скорректировать цену эко-товаров, ④ правительству нужна более конкретная политика — не главная мысль.<br>🧩 일회용품 = «одноразовые товары»; 실천 = «практика, действие»; 텀블러 = «термокружка»."},{"n":38,"points":2,"instr":"Прослушайте и выберите вариант, совпадающий с услышанным.","options":["최근 환경 문제가 조금씩 개선되고 있다.","요즘 카페에서는 일회용품을 기본으로 제공한다.","요즘은 친환경 제품이 저렴해 쉽게 구할 수 있다.","정부는 플라스틱 재활용률을 높이기 위한 정책을 시행하고 있다."],"answer":4,"script":"남자: 요즘 환경 문제가 점점 심각해지고 있는데요. 변화를 위해서는 어떤 노력이 필요할까요?\n여자: 정부는 2030년까지 플라스틱 사용량을 줄이고 재활용률을 높이겠다는 목표로 다양한 정책을 시행하고 있지만 이것만으로는 한계가 있습니다. 반드시 일상에서 한 사람, 한 사람의 실천이 동반되어야 하지요. 예를 들어 텀블러를 들고 다니거나 장바구니를 사용하는 것처럼 일회용품 사용을 줄이려는 노력이 필요합니다. 물론 친환경 제품은 가격이 비싸지요. 또 규제가 없던 시절, 카페나 편의점에서 일회용품을 기본적으로 받았던 경험 때문에 이런 실천이 쉽지만은 않습니다.","explain":"🎧 (тот же диалог, что в вопросе 37).<br><br>✅ <b>④ Правительство проводит политику для повышения уровня переработки пластика.</b> — «재활용률을 높이겠다는 목표로 다양한 정책을 시행».<br>✖️ ① проблемы среды улучшаются (наоборот, «점점 심각»), ② сейчас в кафе одноразовое дают по умолчанию (это про «규제가 없던 시절» — прошлое), ③ эко-товары дёшевы и доступны (наоборот, «가격이 비싸»).<br>🧩 재활용률 = «уровень переработки»; 정책을 시행하다 = «проводить политику»."},{"n":39,"points":2,"instr":"Прослушайте и выберите, о чём говорилось перед этим разговором.","options":["농촌 지역의 인구가 줄어서 많은 어려움이 생기고 있다.","농촌 지역 인구 유출에 대한 국민의 인식이 변화되었다.","농촌 지역 인구 유출 문제에 대한 해결책을 마련하였다.","농촌 지역 인구 유출로 인해 농촌 생활에는 여유가 생겼다."],"answer":1,"script":"여자: 이처럼 농촌 지역의 인구 유출로 인해 여러 가지 문제가 발생하고 있습니다. 농촌 지역의 인구 유출 문제를 해결하기 위한 방안에는 무엇이 있을까요?\n남자: 네. 농촌의 인구 감소는 단순히 사람이 줄어드는 것을 넘어 지역 경제와 공동체의 붕괴로 이어질 수 있기 때문에 빠른 대응이 필요합니다. 먼저, 제도적인 측면에서 청년들이 농촌에서도 안정적으로 일하고 정착할 수 있도록 창업이나 주거에 대한 실질적인 지원이 필요하고요. 또한 농업뿐만 아니라 교육, 문화, 복지 같은 생활 기반도 함께 마련되어야 합니다. 그리고 무엇보다 중요한 건 인식 개선입니다. 많은 사람들이 농촌을 불편하고 기회가 없는 곳으로 생각하는데 농촌의 장점과 가능성을 널리 알리는 노력도 함께 이루어져야 합니다.","explain":"🎧 여자: 이처럼 농촌 지역의 인구 유출로 인해 여러 가지 문제가 발생하고 있습니다. … 해결하기 위한 방안에는 무엇이 있을까요?<br>남자: 농촌의 인구 감소는 … 지역 경제와 공동체의 붕괴로 이어질 수 있기 때문에 빠른 대응이 필요합니다. 청년들이 정착할 수 있도록 창업·주거 지원이 필요하고, 교육·문화·복지 기반도 마련되어야 합니다. 무엇보다 중요한 건 인식 개선입니다.<br><br>Женщина начинает со слова «이처럼» (вот так / как видно) — значит, ДО этого речь шла о проблемах оттока населения.<br>✅ <b>① Из-за убыли населения села возникает много трудностей.</b> — «이처럼 … 여러 가지 문제가 발생».<br>✖️ ② изменилось восприятие людей (это цель, а не предыстория), ③ решение уже найдено (его только обсуждают), ④ в селе стало вольготнее (наоборот, проблемы).<br>🧩 인구 유출 = «отток населения»; 공동체 = «сообщество»; 인식 개선 = «изменение восприятия»."},{"n":40,"points":2,"instr":"Прослушайте и выберите вариант, совпадающий с услышанным.","options":["농촌 인구가 줄어들면서 범죄가 많아지고 있다.","정부의 체계적인 농촌 귀촌 정책이 마련되었다.","매년 농촌 인구가 도시 인구보다 증가하고 있다.","농촌 인구 정책은 빠르게 해결해야 할 문제이다."],"answer":4,"script":"여자: 이처럼 농촌 지역의 인구 유출로 인해 여러 가지 문제가 발생하고 있습니다. 농촌 지역의 인구 유출 문제를 해결하기 위한 방안에는 무엇이 있을까요?\n남자: 네. 농촌의 인구 감소는 단순히 사람이 줄어드는 것을 넘어 지역 경제와 공동체의 붕괴로 이어질 수 있기 때문에 빠른 대응이 필요합니다. 먼저, 제도적인 측면에서 청년들이 농촌에서도 안정적으로 일하고 정착할 수 있도록 창업이나 주거에 대한 실질적인 지원이 필요하고요. 또한 농업뿐만 아니라 교육, 문화, 복지 같은 생활 기반도 함께 마련되어야 합니다. 그리고 무엇보다 중요한 건 인식 개선입니다. 많은 사람들이 농촌을 불편하고 기회가 없는 곳으로 생각하는데 농촌의 장점과 가능성을 널리 알리는 노력도 함께 이루어져야 합니다.","explain":"🎧 (та же беседа, что в вопросе 39).<br><br>✅ <b>④ Политика по сельскому населению — проблема, которую надо решать быстро.</b> — «빠른 대응이 필요합니다».<br>✖️ ① растёт преступность (не упомянуто), ② системная госполитика уже создана (её только обсуждают), ③ село каждый год обгоняет город по населению (наоборот, отток).<br>🧩 빠른 대응 = «быстрое реагирование»; 귀촌 = «переезд в село»."},{"n":41,"points":2,"instr":"Прослушайте и выберите основное содержание лекции.","options":["사무 의자에는 조절 기능이 필요하다.","요즘 다양한 디자인의 의자가 인기를 끌고 있다.","요즘 의자는 인체 공학적 설계가 중심이 되고 있다.","의자는 기능뿐만 아니라 사용되는 소재도 중요하다."],"answer":3,"script":"여자: 여기 왼쪽 사진은 과거에 많이 사용되던 의자입니다. 높이나 각도를 조절할 수 없고 단단한 목재로 만들어져서 오래 앉아 있으면 불편했지요. 오른쪽 사진은 요즘 많이 볼 수 있는 의자인데요. 사용자의 편안함을 고려해 인체 공학적으로 설계되어 등받이 각도, 의자 높이, 팔걸이 위치를 내 몸에 맞게 조절할 수 있어 오래 앉아도 편안합니다.","explain":"🎧 여자: 여기 왼쪽 사진은 과거에 많이 사용되던 의자입니다. 높이나 각도를 조절할 수 없고 단단한 목재로 만들어져서 오래 앉아 있으면 불편했지요. 오른쪽 사진은 요즘 많이 볼 수 있는 의자인데요. 사용자의 편안함을 고려해 인체 공학적으로 설계되어 등받이 각도, 의자 높이, 팔걸이 위치를 내 몸에 맞게 조절할 수 있어 오래 앉아도 편안합니다.<br><br>Сравнение старого жёсткого деревянного стула и современного — спроектированного эргономично, с регулировками.<br>✅ <b>③ Современные стулья всё больше строятся вокруг эргономичного дизайна.</b> — «인체 공학적으로 설계되어».<br>✖️ ① офисному стулу нужна регулировка (узко), ② популярны разные дизайны, ④ важен и материал — не центральная мысль лекции.<br>🧩 인체 공학 = «эргономика»; 등받이 = «спинка»; 팔걸이 = «подлокотник»."},{"n":42,"points":2,"instr":"Прослушайте и выберите вариант, совпадающий с услышанным.","options":["요즘 의자의 기능이 점점 단순해지고 있다.","요즘 팔걸이 위치를 바꿀 수 있는 의자가 있다.","최근 조절 기능이 있는 의자라 판매율이 떨어진다.","옛날 나무 의자는 오래 앉아 있어도 편안함이 있었다."],"answer":2,"script":"여자: 여기 왼쪽 사진은 과거에 많이 사용되던 의자입니다. 높이나 각도를 조절할 수 없고 단단한 목재로 만들어져서 오래 앉아 있으면 불편했지요. 오른쪽 사진은 요즘 많이 볼 수 있는 의자인데요. 사용자의 편안함을 고려해 인체 공학적으로 설계되어 등받이 각도, 의자 높이, 팔걸이 위치를 내 몸에 맞게 조절할 수 있어 오래 앉아도 편안합니다.","explain":"🎧 (та же лекция, что в вопросе 41).<br><br>✅ <b>② Сейчас есть стулья, у которых можно менять положение подлокотника.</b> — «팔걸이 위치를 내 몸에 맞게 조절할 수 있어».<br>✖️ ① функции стульев упрощаются (наоборот), ③ из-за регулировки падают продажи (не сказано), ④ старый деревянный стул был удобен при долгом сидении (наоборот, «불편했지요»).<br>🧩 조절하다 = «регулировать»; 목재 = «древесина»."},{"n":43,"points":2,"instr":"Прослушайте и определите, о чём идёт речь.","options":["종이를 만드는 과정","종이를 관리하는 방법","종이가 지닌 문화적 가치","종이가 인간에게 미치는 영향"],"answer":1,"script":"남자: 나무를 잘게 부수고 물과 섞어 펄프를 만들어 낸다. 이 펄프를 망틀 위에 얇게 펼쳐 고르게 펴 준 뒤 롤러로 눌러 어느 정도 수분을 없앤다. 그다음 펄프를 깨끗한 물로 충분히 씻어 불순물을 제거한다. 이 과정은 매우 중요한데 펄프를 제대로 씻지 않으면 종이에 얼룩이 남고 인쇄할 때 품질이 떨어지기 때문이다. 세척이 끝난 펄프는 다시 롤러로 눌러 남은 수분을 최대한 제거한다. 그래야 종이의 밀도가 높아진다. 이후 종이를 말리는 실린더를 통해 완전히 건조시키고 섬유의 결을 고르게 정리한다. 그래야 종이가 구겨지거나 글자가 번지는 것을 줄일 수 있다. 이제 한 장의 종이가 완성된다.","explain":"🎧 남자: 나무를 잘게 부수고 물과 섞어 펄프를 만들어 낸다. 이 펄프를 망틀 위에 얇게 펼쳐 … 롤러로 눌러 어느 정도 수분을 없앤다. 그다음 펄프를 깨끗한 물로 충분히 씻어 불순물을 제거한다. … 세척이 끝난 펄프는 다시 롤러로 눌러 남은 수분을 최대한 제거한다. 그래야 종이의 밀도가 높아진다. 이후 종이를 말리는 실린더를 통해 완전히 건조시키고 … 이제 한 장의 종이가 완성된다.<br><br>Весь текст пошагово описывает, как из древесины получают лист бумаги.<br>✅ <b>① Процесс изготовления бумаги.</b><br>✖️ ② как ухаживать за бумагой, ③ культурная ценность бумаги, ④ влияние бумаги на человека — об этом речи нет.<br>🧩 펄프 = «целлюлоза, пульпа»; 불순물 = «примеси»; 밀도 = «плотность»."},{"n":44,"points":2,"instr":"Прослушайте и выберите причину, по которой пульпу прижимают роликом.","options":["종이의 결을 위해서","종이의 구김을 막기 위해서","종이의 인쇄 품질을 위해서","종이의 밀도를 높이기 위해서"],"answer":4,"script":"남자: 나무를 잘게 부수고 물과 섞어 펄프를 만들어 낸다. 이 펄프를 망틀 위에 얇게 펼쳐 고르게 펴 준 뒤 롤러로 눌러 어느 정도 수분을 없앤다. 그다음 펄프를 깨끗한 물로 충분히 씻어 불순물을 제거한다. 이 과정은 매우 중요한데 펄프를 제대로 씻지 않으면 종이에 얼룩이 남고 인쇄할 때 품질이 떨어지기 때문이다. 세척이 끝난 펄프는 다시 롤러로 눌러 남은 수분을 최대한 제거한다. 그래야 종이의 밀도가 높아진다. 이후 종이를 말리는 실린더를 통해 완전히 건조시키고 섬유의 결을 고르게 정리한다. 그래야 종이가 구겨지거나 글자가 번지는 것을 줄일 수 있다. 이제 한 장의 종이가 완성된다.","explain":"🎧 (тот же текст, что в вопросе 43).<br><br>✅ <b>④ Чтобы повысить плотность бумаги.</b> — «세척이 끝난 펄프는 다시 롤러로 눌러 남은 수분을 최대한 제거한다. 그래야 종이의 밀도가 높아진다».<br>✖️ ① ради текстуры бумаги, ② чтобы не мялась, ③ ради качества печати — прижим роликом нужен именно для плотности (через удаление влаги).<br>🧩 수분 = «влага»; 밀도를 높이다 = «повышать плотность»."},{"n":45,"points":2,"instr":"Прослушайте и выберите вариант, совпадающий с услышанным.","options":["이 지역은 철거 후 아파트 단지로 재개발되었다.","도시 재생 사업은 외부 전문가 중심으로 추진되었다.","도시 재생 사업을 통해 주민들의 참여가 활발하였다.","도시 재생 사업은 공연과 전시보다는 주거 환경 개선에 집중했다."],"answer":3,"script":"여자: 여기 보이는 사진은 노후된 주택들이 밀집해 있는 한 도시의 골목입니다. 이 지역은 한때 낙후된 지역으로 분류되어 전면 철거 후 아파트 단지를 조성하자는 의견이 많았지만, 다른 방향의 재생 사업이 이루어졌습니다. 바로 기존 건축물과 골목길을 그대로 보존하면서 문화와 예술을 입혀 지역을 되살리는 방식이었죠. 주민들과 예술가들이 협력해 공간을 재구성하고, 지역의 이야기를 담은 전시와 공연을 기획하면서 외부 방문객들의 발길도 이어지게 됐습니다. 이 과정에서 핵심적인 역할을 한 것은 바로 주민 참여였습니다. 행정 기관이 일방적으로 주도하는 개발이 아니라, 주민이 직접 회의에 참여하고 의견을 제안하면서 지역의 주체로서 적극적인 관여를 한 것입니다. 이처럼 도시 재생은 물리적인 환경 변화뿐 아니라, 공동체 회복과 지역 정체성 회복이라는 사회적 가치도 함께 담고 있습니다.","explain":"🎧 여자: 여기 보이는 사진은 노후된 주택들이 밀집해 있는 한 도시의 골목입니다. … 전면 철거 후 아파트 단지를 조성하자는 의견이 많았지만, 다른 방향의 재생 사업이 이루어졌습니다. 바로 기존 건축물과 골목길을 그대로 보존하면서 문화와 예술을 입혀 지역을 되살리는 방식이었죠. … 이 과정에서 핵심적인 역할을 한 것은 바로 주민 참여였습니다. 행정 기관이 일방적으로 주도하는 개발이 아니라, 주민이 직접 회의에 참여하고 의견을 제안하면서 적극적인 관여를 한 것입니다.<br><br>Старый переулок возродили, сохранив здания и добавив культуру/искусство; ключевую роль сыграло участие жителей.<br>✅ <b>③ Благодаря проекту обновления участие жителей было активным.</b> — «핵심적인 역할을 한 것은 바로 주민 참여».<br>✖️ ① снесли и застроили жильём (наоборот, здания сохранили), ② вели внешние эксперты (вели сами жители), ④ упор на жильё, а не выставки (наоборот, делали выставки и спектакли).<br>🧩 도시 재생 = «городская регенерация»; 노후되다 = «обветшать»; 주민 참여 = «участие жителей»."},{"n":46,"points":2,"instr":"Прослушайте и выберите, каким способом говорит женщина.","options":["도시 재생의 사례를 통해 주요 내용을 설명하고 있다.","도시 재생 사업의 문제점을 비판적으로 분석하고 있다.","도시 재생 사업이 가진 문제의 주요 원인을 유추하고 있다.","통계를 중심으로 도시 재생 사업의 효과를 수치로 제시하고 있다."],"answer":1,"script":"여자: 여기 보이는 사진은 노후된 주택들이 밀집해 있는 한 도시의 골목입니다. 이 지역은 한때 낙후된 지역으로 분류되어 전면 철거 후 아파트 단지를 조성하자는 의견이 많았지만, 다른 방향의 재생 사업이 이루어졌습니다. 바로 기존 건축물과 골목길을 그대로 보존하면서 문화와 예술을 입혀 지역을 되살리는 방식이었죠. 주민들과 예술가들이 협력해 공간을 재구성하고, 지역의 이야기를 담은 전시와 공연을 기획하면서 외부 방문객들의 발길도 이어지게 됐습니다. 이 과정에서 핵심적인 역할을 한 것은 바로 주민 참여였습니다. 행정 기관이 일방적으로 주도하는 개발이 아니라, 주민이 직접 회의에 참여하고 의견을 제안하면서 지역의 주체로서 적극적인 관여를 한 것입니다. 이처럼 도시 재생은 물리적인 환경 변화뿐 아니라, 공동체 회복과 지역 정체성 회복이라는 사회적 가치도 함께 담고 있습니다.","explain":"🎧 (та же лекция, что в вопросе 45).<br><br>✅ <b>① Объясняет суть на конкретном примере городской регенерации.</b> — весь рассказ построен вокруг одного реального переулка-кейса.<br>✖️ ② критически анализирует проблемы, ③ выводит причины проблем, ④ приводит эффект в цифрах по статистике — этого нет.<br>🧩 사례 = «пример, кейс»; 설명하다 = «объяснять»."},{"n":47,"points":2,"instr":"Прослушайте и выберите вариант, совпадающий с услышанным.","options":["도서관 이용자 중 청소년의 비율이 가장 높다.","도서관의 분위기가 새롭게 바뀌면서 청년층이 많아졌다.","도서관은 정보 제공을 넘어 문화 공간으로의 전환이 요구된다.","도서관에서는 이미 청소년 맞춤형 서비스가 충분히 제공되고 있다."],"answer":3,"script":"여자: 최근 청소년의 도서관 이용률을 높이기 위해 다양한 프로그램이 운영되고 있지만 실질적 변화를 끌어내기 어렵다는 지적도 나오고 있는데요. 청소년들의 도서관 이용을 활성화하려면 어떤 방안이 필요할까요?\n남자: 네, 무엇보다 청소년들이 도서관을 찾지 않게 되는 근본적인 원인을 분석하는 것이 중요하다고 생각합니다. 현재 도서관 이용자 층은 주로 중장년층에 편중되어 있죠. 따라서 청소년들도 자연스럽게 도서관을 찾을 수 있도록 도서관의 환경이나 분위기부터 변화가 필요합니다. 예를 들어, 청소년들의 관심사를 반영한 전시를 기획하거나 보다 쾌적한 학습 공간을 조성함으로써 도서관이 단순한 정보 제공 공간을 넘어 매력적인 문화 공간으로 인식되도록 해야 합니다.","explain":"🎧 여자: 최근 청소년의 도서관 이용률을 높이기 위해 다양한 프로그램이 운영되고 있지만 실질적 변화를 끌어내기 어렵다는 지적도 나오고 있는데요. … 어떤 방안이 필요할까요?<br>남자: 청소년들이 도서관을 찾지 않게 되는 근본적인 원인을 분석하는 것이 중요합니다. 현재 도서관 이용자 층은 주로 중장년층에 편중되어 있죠. … 도서관이 단순한 정보 제공 공간을 넘어 매력적인 문화 공간으로 인식되도록 해야 합니다.<br><br>✅ <b>③ От библиотеки требуется переход от выдачи информации к культурному пространству.</b> — «단순한 정보 제공 공간을 넘어 매력적인 문화 공간으로».<br>✖️ ① доля подростков среди читателей самая высокая (наоборот, «중장년층에 편중»), ② атмосфера сменилась и молодёжи стало больше (перемены ещё нужны), ④ услуги для подростков уже достаточны (наоборот, их не хватает).<br>🧩 청소년 = «подростки»; 중장년층 = «люди среднего и старшего возраста»; 문화 공간 = «культурное пространство»."},{"n":48,"points":2,"instr":"Прослушайте и выберите, какова позиция мужчины.","options":["도서관 활성화 방안에 대해 불신하고 있다.","청소년 맞춤형 접근이 필요하다는 입장을 보이고 있다.","도서관의 기존 운영 방식을 긍정적으로 평가하고 있다.","청소년보다는 중장년층을 위한 공간 확대를 주장하고 있다."],"answer":2,"script":"여자: 최근 청소년의 도서관 이용률을 높이기 위해 다양한 프로그램이 운영되고 있지만 실질적 변화를 끌어내기 어렵다는 지적도 나오고 있는데요. 청소년들의 도서관 이용을 활성화하려면 어떤 방안이 필요할까요?\n남자: 네, 무엇보다 청소년들이 도서관을 찾지 않게 되는 근본적인 원인을 분석하는 것이 중요하다고 생각합니다. 현재 도서관 이용자 층은 주로 중장년층에 편중되어 있죠. 따라서 청소년들도 자연스럽게 도서관을 찾을 수 있도록 도서관의 환경이나 분위기부터 변화가 필요합니다. 예를 들어, 청소년들의 관심사를 반영한 전시를 기획하거나 보다 쾌적한 학습 공간을 조성함으로써 도서관이 단순한 정보 제공 공간을 넘어 매력적인 문화 공간으로 인식되도록 해야 합니다.","explain":"🎧 (тот же диалог, что в вопросе 47).<br><br>✅ <b>② Высказывает позицию, что нужен подход, адаптированный под подростков.</b> — «청소년들의 관심사를 반영한 전시를 기획… 변화가 필요».<br>✖️ ① не верит в меры по оживлению библиотек (наоборот, предлагает их), ③ положительно оценивает нынешнюю работу (наоборот, нужны перемены), ④ требует расширить пространство для старших, а не подростков (наоборот).<br>🧩 맞춤형 = «адаптированный, под запрос»; 접근 = «подход»."},{"n":49,"points":2,"instr":"Прослушайте и выберите вариант, совпадающий с услышанным.","options":["우주 개발에서는 민간 기업들의 참여가 제한되어 있다.","우주 개발은 단순한 과학 기술을 넘어 안보와 연결된다.","단기적인 프로젝트를 추진하여 우주 개발의 성과를 내고 있다.","우주에서의 주도권 확보를 위해 국가 간의 경쟁을 금지하고 있다."],"answer":2,"script":"남자: 여러분, 최근 세계 각국이 우주 개발에 박차를 가하고 있는 이유는 무엇일까요? 단순히 과학 기술의 진보만을 위한 것은 아닙니다. 우주 개발은 곧 국가 경쟁력과 안보 전략에 직결되는 중요한 영역이기 때문입니다. 예를 들어, 인공위성은 통신, 기상 예보, 재난 대응 등 다양한 분야에서 핵심적인 역할을 하고 있으며 한 나라가 위성 운용 능력을 갖추는 것은 전략적 자립성과 연결됩니다. 특히 최근에는 민간 기업들이 참여하면서 기술 발전이 가속화되고 우주 자원을 둘러싼 경쟁도 본격화되고 있습니다. 우리나라도 위성 발사 및 개발, 우주 인터넷 통신망 구축 등 장기 프로젝트를 추진 중이며 우주 개발은 단기간의 성과보다 지속 가능한 투자와 전략적 비전이 중요한 분야입니다. 결국 미래를 준비하는 국가는 우주에서의 주도권 확보를 국가 안보와 경제 성장의 핵심 축으로 삼고 있습니다.","explain":"🎧 남자: 최근 세계 각국이 우주 개발에 박차를 가하고 있는 이유는 무엇일까요? 단순히 과학 기술의 진보만을 위한 것은 아닙니다. 우주 개발은 곧 국가 경쟁력과 안보 전략에 직결되는 중요한 영역이기 때문입니다. … 민간 기업들이 참여하면서 기술 발전이 가속화되고 우주 자원을 둘러싼 경쟁도 본격화되고 있습니다. … 우주 개발은 단기간의 성과보다 지속 가능한 투자와 전략적 비전이 중요한 분야입니다.<br><br>✅ <b>② Освоение космоса — это не просто наука, оно связано с безопасностью.</b> — «국가 경쟁력과 안보 전략에 직결».<br>✖️ ① участие частных компаний ограничено (наоборот, «민간 기업들이 참여»), ③ успехов добиваются краткосрочными проектами (наоборот, «단기간의 성과보다 지속 가능한 투자»), ④ соперничество стран запрещено (наоборот, «경쟁도 본격화»).<br>🧩 우주 개발 = «освоение космоса»; 안보 = «безопасность»; 인공위성 = «искусственный спутник»."},{"n":50,"points":2,"instr":"Прослушайте и выберите, каким способом говорит мужчина.","options":["우주 개발의 위험성을 이용하여 설득하고 있다.","민간 주도의 우주 개발을 비판적으로 접근하고 있다.","주요 국가들의 경쟁 사례를 비교하며 장단점을 분석하고 있다.","우주 개발의 효율을 설명하며 전략적 중요성을 강조하고 있다."],"answer":4,"script":"남자: 여러분, 최근 세계 각국이 우주 개발에 박차를 가하고 있는 이유는 무엇일까요? 단순히 과학 기술의 진보만을 위한 것은 아닙니다. 우주 개발은 곧 국가 경쟁력과 안보 전략에 직결되는 중요한 영역이기 때문입니다. 예를 들어, 인공위성은 통신, 기상 예보, 재난 대응 등 다양한 분야에서 핵심적인 역할을 하고 있으며 한 나라가 위성 운용 능력을 갖추는 것은 전략적 자립성과 연결됩니다. 특히 최근에는 민간 기업들이 참여하면서 기술 발전이 가속화되고 우주 자원을 둘러싼 경쟁도 본격화되고 있습니다. 우리나라도 위성 발사 및 개발, 우주 인터넷 통신망 구축 등 장기 프로젝트를 추진 중이며 우주 개발은 단기간의 성과보다 지속 가능한 투자와 전략적 비전이 중요한 분야입니다. 결국 미래를 준비하는 국가는 우주에서의 주도권 확보를 국가 안보와 경제 성장의 핵심 축으로 삼고 있습니다.","explain":"🎧 (та же лекция, что в вопросе 49).<br><br>✅ <b>④ Объясняет значимость освоения космоса и подчёркивает его стратегическую важность.</b> — «전략적 자립성», «전략적 비전», «국가 안보와 경제 성장의 핵심 축».<br>✖️ ① убеждает, играя на опасности космоса, ② критически подходит к частному освоению космоса, ③ сравнивает кейсы соперничества стран с плюсами и минусами — этого нет.<br>🧩 전략적 중요성 = «стратегическая важность»; 주도권 = «лидерство, инициатива»."}]},
+      reading: {"durationMin":70,"total":100,"label":"EBS 모의고사 제1회 · 읽기 (1~50)","questions":[{"n":1,"points":2,"instr":"Выберите подходящее выражение в ( ).","passage":"고향에 (　　) 부모님께 전화를 드렸다.","options":["도착해도","도착하거나","도착하더라도","도착하자마자"],"answer":4,"explain":"✅ <b>④ 도착하자마자</b> — «как только прибыл»: приехав на родину, сразу позвонил родителям.<br>✖️ ① 도착해도 «даже если приедет», ② 도착하거나 «приедет или», ③ 도착하더라도 «даже если бы приехал» — не подходят к завершённому действию в прошлом.<br>🧩 -자마자 — «как только, сразу после»: 집에 오자마자 잤어요 — Лёг спать, как только пришёл домой."},{"n":2,"points":2,"instr":"Выберите подходящее выражение в ( ).","passage":"늦어서 급하게 뛰어가다가 (　　).","options":["넘어질 뻔했다","넘어질 셈이다","넘어지려던 참이다","넘어지기 나름이다"],"answer":1,"explain":"✅ <b>① 넘어질 뻔했다</b> — «чуть не упал»: опаздывал, бежал второпях — и чуть не упал.<br>✖️ ② 넘어질 셈이다 «намерен упасть», ③ 넘어지려던 참이다 «как раз собирался упасть», ④ 넘어지기 나름이다 «зависит от того, как упасть» — нелогичны.<br>🧩 -(으)ㄹ 뻔하다 — «чуть не (произошло)»: 늦을 뻔했어요 — Чуть не опоздал."},{"n":3,"points":2,"instr":"Выберите выражение, близкое по смыслу к подчёркнутому (가기 위해서).","passage":"방학에 여행을 <u>가기 위해서</u> 아르바이트를 시작했다.","options":["가려면","가려고","가는 대신에","가는 바람에"],"answer":2,"explain":"✅ <b>② 가려고</b> — выражает ту же цель, что и «가기 위해서» (чтобы поехать).<br>✖️ ① 가려면 «если собираешься ехать» (условие), ③ 가는 대신에 «вместо того чтобы ехать», ④ 가는 바람에 «из-за того что поехал» — другое значение.<br>🧩 -(으)려고 = -기 위해서 — цель: 돈을 모으려고 일해요 — Работаю, чтобы накопить денег."},{"n":4,"points":2,"instr":"Выберите выражение, близкое по смыслу к подчёркнутому.","passage":"산 지 오래된 옷이지만 한두 번만 입었으니까 <u>새 옷이나 마찬가지이다</u>.","options":["새 옷이 좀 못났다","새 옷일 리가 없다","새 옷이나 다름없다","새 옷이 될 마련이다"],"answer":3,"explain":"✅ <b>③ 새 옷이나 다름없다</b> — «всё равно что новая» = «не отличается от новой».<br>✖️ ① «выглядит хуже новой», ② 새 옷일 리가 없다 «не может быть новой», ④ «непременно станет новой» — не передают смысл «как новая».<br>🧩 N(이)나 마찬가지이다 = N(와)과 다름없다 — «всё равно что N, не отличается от N»."},{"n":5,"points":2,"instr":"О чём этот текст (что рекламируют)?","passage":"🛍️ 하루 종일 든든한 것 같은 편안함으로\n더 산뜻한 하루를 경험하세요.","options":["안경","침대","수건","모자"],"answer":1,"explain":"✅ <b>① 안경</b> (очки): «надёжный комфорт весь день», «переживите более ясный (산뜻한) день» — реклама очков (чёткое, комфортное зрение).<br>✖️ ② 침대 кровать, ③ 수건 полотенце, ④ 모자 шляпа — к «산뜻한 하루 (ясный день)» не подходят.<br>🧩 산뜻하다 — свежий, ясный; 든든하다 — надёжный, основательный."},{"n":6,"points":2,"instr":"О чём этот текст (что рекламируют)?","passage":"🏪 약도, 택배도 여기서!\n24시간 당신의 옆에 있는 든든한 친구","options":["체육관","우체국","여행사","편의점"],"answer":4,"explain":"✅ <b>④ 편의점</b> (магазин у дома): работает «24시간», принимает посылки (택배), «друг рядом» — это круглосуточный магазин.<br>✖️ ② 우체국 почта работает не круглосуточно; ① 체육관 спортзал, ③ 여행사 турагентство — не про посылки и 24 часа.<br>🧩 택배 — доставка/посылка; 편의점 — мини-маркет (24 ч)."},{"n":7,"points":2,"instr":"О чём этот текст?","passage":"🚦 멈춰요! 지켜요!\n신호등 앞, 함께 만드는 안전한 약속","options":["환경 보호","자리 양보","교통 규칙","절약 습관"],"answer":3,"explain":"✅ <b>③ 교통 규칙</b> (правила дорожного движения): «остановись! соблюдай!», «у светофора (신호등) — общий безопасный уговор» — про ПДД.<br>✖️ ① 환경 보호 защита природы, ② 자리 양보 уступить место, ④ 절약 습관 экономия — не про светофор и безопасность на дороге.<br>🧩 신호등 — светофор; 지키다 — соблюдать."},{"n":8,"points":2,"instr":"О чём этот текст?","passage":"⚠️ 젖은 손으로 만지지 마십시오.\n사용 후 반드시 전원을 끄고 보관 바랍니다.","options":["신청 조건","주의 사항","이용 안내","장소 문의"],"answer":2,"explain":"✅ <b>② 주의 사항</b> (меры предосторожности): «не трогайте мокрыми руками», «после использования обязательно выключите питание» — это предупреждения по технике безопасности.<br>✖️ ① 신청 조건 условия заявки, ③ 이용 안내 инструкция по пользованию (шире), ④ 장소 문의 вопрос о месте — не подходят: текст именно предостерегает.<br>🧩 젖다 — намокнуть; 전원을 끄다 — выключить питание."},{"n":9,"points":2,"instr":"Выберите вариант, совпадающий с содержанием объявления.","passage":"🌿 제4회 녹색 한강 문화 축제\n• 기간: 4월 2일(수) ~ 4월 6일(일)\n• 장소: 인주시청 앞 광장\n• 내용: 재활용 가방 만들기 체험 및 친환경 제품 전시\n※ 체험을 원하시는 분은 현장에서 직접 신청하시기 바랍니다.","options":["이 축제는 일주일 동안 열린다.","이 축제는 인주 시청에서 진행된다.","축제에서 재활용 가방을 구입할 수 있다.","축제에서 체험을 하려면 현장에서 신청해야 한다."],"answer":4,"explain":"✅ <b>④</b> — «※체험을 원하시는 분은 현장에서 직접 신청» → чтобы участвовать в мастер-классе, нужна заявка на месте.<br>✖️ ① фестиваль идёт 4/2~4/6 — это 5 дней, а не неделя; ② проходит «인주시청 앞 광장 (на площади перед мэрией)», а не «в мэрии»; ③ сумки можно СДЕЛАТЬ (재활용 가방 만들기 체험), а не купить.<br>🧩 현장에서 신청하다 — подать заявку на месте; 체험 — мастер-класс, проба."},{"n":10,"points":2,"instr":"Выберите вариант, совпадающий с данными графика.","passage":"📊 1인 가구 한 달 생활비, 어디에 쓸까? (조사 대상: 1인 가구 1,000명)\n식비 31% · 주거비 27% · 문화비 14% · 교통비 10% · 통신비 9% · 기타 9%","options":["주거에 사용하는 비용이 두 번째로 많았다.","월 생활비 중 교통비와 기타의 비율이 같았다.","1인 가구는 생활비의 절반 이상을 식비로 지출했다.","통신비가 문화 생활에 쓰는 돈보다 두 배 이상 많았다."],"answer":1,"explain":"✅ <b>①</b> — жильё (주거비) 27% — на втором месте после еды (식비 31%).<br>✖️ ② 교통비 10% ≠ 기타 9% (не равны); ③ еда 31% — меньше половины, а не «절반 이상»; ④ связь 9% МЕНЬШЕ культуры 14%, а не «в два раза больше».<br>🧩 절반 이상 — больше половины; 두 배 이상 — в два с лишним раза."},{"n":11,"points":2,"instr":"Выберите вариант, совпадающий с содержанием текста.","passage":"인주시가 작년에 이어 올해도 아이를 키우는 가정을 위해 ‘장난감 도서관’을 운영한다. 이 서비스는 미리 신청한 가정에 차량이 직접 방문하여 다양한 장난감을 빌려주는 서비스이다. 이 도서관을 이용하면 새 장난감을 자주 사지 않아도 되기 때문에 이용 가정들의 만족도가 높다. 인주시청은 이 서비스를 확대해 더 많은 가정이 이용할 수 있도록 할 계획이라고 밝혔다.","options":["올해 처음으로 이 서비스가 시작되었다.","이 서비스는 신청을 해야 이용할 수 있다.","이 서비스를 이용한 가정들의 반응이 좋지 않다.","내년에는 장난감 도서관을 운영하지 않을 예정이다."],"answer":2,"explain":"✅ <b>②</b> — «미리 신청한 가정에 … 빌려주는 서비스» → услугой можно воспользоваться только по заявке.<br>✖️ ① «впервые в этом году» — нет: «작년에 이어 올해도» (продолжается с прошлого года); ③ «реакция плохая» — наоборот, «만족도가 높다»; ④ «в следующем году не будут проводить» — наоборот, планируют расширить (확대).<br>🧩 미리 신청하다 — заранее подать заявку; 만족도 — уровень удовлетворённости."},{"n":12,"points":2,"instr":"Выберите вариант, совпадающий с содержанием текста.","passage":"최근 폭설로 인해 차량 사고와 불편이 이어지고 있다. 이런 가운데 눈길에 멈춰 있는 차를 학생들이 밀어 주는 장면이 온라인에서 화제가 되고 있다. 학교 근처에서 멈춰 있는 차를 발견한 학생들은 여러 명이 함께 차를 밀어 도왔다. 이 모습을 본 시민이 사진을 찍어 인터넷에 올렸고 많은 사람들이 학생들의 따뜻한 행동을 칭찬하고 있다.","options":["눈길로 인해 교통사고가 많아졌다.","학생 여러 명이 힘을 모아 차를 밀었다.","한 시민이 차량 사고 사진을 인터넷에 올렸다.","많은 사람들이 학생들의 위험한 행동을 말렸다."],"answer":2,"explain":"✅ <b>②</b> — «여러 명이 함께 차를 밀어 도왔다» → несколько учеников вместе толкали машину.<br>✖️ ① текст не утверждает, что ДТП «стало больше» (сказано: 사고와 불편이 이어진다 — продолжаются); ③ гражданин выложил фото УЧЕНИКОВ, а не аварии; ④ люди не «останавливали» — они ХВАЛИЛИ (칭찬).<br>🧩 힘을 모으다 — объединить силы; 화제가 되다 — стать темой обсуждения, завирусниться."},{"n":13,"points":2,"instr":"Расставьте предложения в правильном порядке.","passage":"(가) 비타민은 언제 먹느냐에 따라 효과에 차이가 있다.\n(나) 따라서 비타민의 효과를 보려면 식사 후에 먹어야 한다.\n(다) 전문가들은 비타민을 식사 후에 먹는 것이 좋다고 말한다.\n(라) 음식과 함께 먹을 때 속이 더 편하고 효과도 좋아지기 때문이다.","options":["(가)-(다)-(라)-(나)","(가)-(라)-(나)-(다)","(다)-(나)-(가)-(라)","(다)-(라)-(가)-(나)"],"answer":1,"explain":"✅ <b>① (가)-(다)-(라)-(나)</b>: (가) общий тезис — эффект витаминов зависит от времени приёма → (다) эксперты советуют принимать после еды → (라) [причина] с едой желудку легче и эффект лучше → (나) 따라서 (поэтому) принимать после еды.<br>🧩 따라서 — «поэтому» (вывод, идёт в конце); -기 때문이다 — «потому что»."},{"n":14,"points":2,"instr":"Расставьте предложения в правильном порядке.","passage":"(가) 작은 일이었지만 좋은 이웃을 알게 되어서 마음이 따뜻해졌다.\n(나) 그날 저녁 옆집 아주머니가 직접 만든 쿠키를 한 봉지 가져다주셨다.\n(다) 얼마 전 우리 집 앞에 다른 이름이 쓰여 있는 택배 상자가 놓여 있었다.\n(라) 주소를 다시 확인하고 옆집에 가져다주었더니 아주머니가 고맙다고 하셨다.","options":["(가)-(나)-(다)-(라)","(가)-(다)-(라)-(나)","(다)-(나)-(라)-(가)","(다)-(라)-(나)-(가)"],"answer":4,"explain":"✅ <b>④ (다)-(라)-(나)-(가)</b>: (다) у дома появилась посылка с чужим именем → (라) проверил адрес, отнёс соседке — она поблагодарила → (나) тем вечером соседка принесла пакет домашнего печенья → (가) мелочь, но узнал хорошего соседа — стало тепло на душе.<br>🧩 가져다주다 — приносить (кому-то); -더니 — «сделал — и в результате»."},{"n":15,"points":2,"instr":"Расставьте предложения в правильном порядке.","passage":"(가) 그래서 기온이 낮은 아침에 안개가 자주 발생한다.\n(나) 공기 중에는 우리 눈에 보이지 않는 수증기가 포함되어 있다.\n(다) 안개는 공기 중에 있는 아주 작은 물방울들이 모여서 만들어진 것이다.\n(라) 이 수증기가 찬 공기와 만나면 작은 물방울로 변하는데 이것이 안개가 된다.","options":["(나)-(가)-(라)-(다)","(나)-(다)-(가)-(라)","(다)-(가)-(나)-(라)","(다)-(나)-(라)-(가)"],"answer":4,"explain":"✅ <b>④ (다)-(나)-(라)-(가)</b>: (다) туман — скопление мельчайших капель в воздухе [определение] → (나) в воздухе есть невидимый водяной пар → (라) когда пар встречает холодный воздух, превращается в капли — это и есть туман → (가) 그래서 поэтому туман часто возникает прохладным утром.<br>🧩 수증기 — водяной пар; 물방울 — капля; 그래서 — поэтому (вывод)."},{"n":16,"points":2,"instr":"Выберите подходящее выражение в ( ).","passage":"사람들은 보통 칭찬을 들으면 기분이 좋아지고 더 열심히 하게 된다고 생각한다. 그래서 누군가를 격려하거나 칭찬하는 것은 좋은 일이라고 생각한다. 그런데 상황에 따라 칭찬이 오히려 (　　) 있다. 칭찬은 받은 사람이 기대에 대한 부담을 느껴 도리어 실수하게 되기 때문이다.","options":["부족하게 느껴질 수도","좋은 상황을 만들 수도","실수의 원인이 될 수도","부담 없는 말이 될 수도"],"answer":3,"explain":"✅ <b>③ 실수의 원인이 될 수도</b> — «может стать причиной ошибки»: дальше поясняется, что похваленный чувствует давление ожиданий и наоборот ошибается (도리어 실수하게 되기 때문이다).<br>✖️ ① «покажется недостаточным», ② «создаст хорошую ситуацию», ④ «станет необременительными словами» — противоречат выводу о вреде похвалы.<br>🧩 오히려/도리어 — наоборот; 부담을 느끼다 — чувствовать давление."},{"n":17,"points":2,"instr":"Выберите подходящее выражение в ( ).","passage":"패스트푸드점이나 식당에서는 빠른 음악을 틀어 놓는 경우가 많다. 이는 단순히 신나는 분위기를 만들 뿐만 아니라 손님들의 행동에 영향을 주기 위한 의도적인 행동이다. 한 연구에 따르면 빠른 음악을 틀어 놓고 식사할 때 사람들은 음식을 더 빨리 먹는 경향이 있다고 한다. 빠른 음악을 틀어 놓으면 손님들이 (　　) 가게는 더 많은 손님을 받을 수 있게 된다.","options":["음식을 먹는 속도가 빨라져서","행복한 기분으로 먹기 때문에","좋은 분위기를 만들 수 있어서","음악의 주문을 방해하기 때문에"],"answer":1,"explain":"✅ <b>① 음식을 먹는 속도가 빨라져서</b> — «оттого что скорость еды растёт»: быстрая музыка → люди едят быстрее → столики освобождаются → заведение принимает больше гостей.<br>✖️ ② «счастливое настроение» и ④ «помехи» не объясняют, почему гостей становится БОЛЬШЕ; ③ «хорошая атмосфера» — лишь побочный эффект, в тексте подчёркнута скорость.<br>🧩 경향이 있다 — есть тенденция; 영향을 주다 — влиять."},{"n":18,"points":2,"instr":"Выберите подходящее выражение в ( ).","passage":"지폐에 등장하는 인물은 단순히 유명한 사람이 아니라 그 나라의 역사와 정체성을 보여 주는 상징으로 여겨진다. 그래서 많은 나라에서는 지폐에 들어갈 인물을 결정할 때 (　　) 한다. 어떤 나라는 지폐에 과학자나 교육자를 넣어 교육의 중요성을 강조하기도 하고, 어떤 나라는 예술가나 작가를 넣어 문화의 자부심을 드러내기도 한다.","options":["지폐의 디자인에 따라","나라에서 유명한 인물로","상징성과 의미를 고려하여","해외에서 알아볼 수 있게"],"answer":3,"explain":"✅ <b>③ 상징성과 의미를 고려하여</b> — «учитывая символизм и смысл»: персонаж на купюре — символ истории и идентичности страны, поэтому его выбирают по смыслу (учёные → важность образования, художники → гордость культурой).<br>✖️ ① «по дизайну купюры», ② «известного в стране человека», ④ «чтобы узнавали за рубежом» — не отражают идею символа нации.<br>🧩 정체성 — идентичность; 상징 — символ; 자부심 — гордость."},{"n":19,"points":2,"instr":"Прочитайте текст и выберите слово в ( ㉠ ).","passage":"펭귄은 일반적으로 추운 지역에 사는 동물로 잘 알려져 있다. 특히 남극처럼 얼음과 눈으로 뒤덮인 지역에서 살아가는 펭귄이 매체를 통해 자주 소개된다. (㉠) 일반적으로 알려진 것과 다르게 따뜻한 지역에서 사는 펭귄도 있다. 호주의 남부 해안이나 아프리카와 같은 지역에도 펭귄이 서식하고 있다. 이처럼 펭귄들은 각기 다른 기후에 맞게 생활하며 다양한 지역의 생태계에서 역할을 하고 있다.","options":["반면","만약","과연","혹시"],"answer":1,"explain":"✅ <b>① 반면</b> — «зато, с другой стороны»: пингвины известны как обитатели холода, ОДНАКО есть и пингвины тёплых регионов — нужен противительный союз.<br>✖️ ② 만약 «если», ③ 과연 «действительно ли», ④ 혹시 «не…ли» — не выражают контраст.<br>🧩 반면(에) — «тогда как, зато»; 서식하다 — обитать."},{"n":20,"points":2,"instr":"Выберите главную мысль текста.","passage":"펭귄은 일반적으로 추운 지역에 사는 동물로 잘 알려져 있다. 특히 남극처럼 얼음과 눈으로 뒤덮인 지역에서 살아가는 펭귄이 매체를 통해 자주 소개된다. (㉠) 일반적으로 알려진 것과 다르게 따뜻한 지역에서 사는 펭귄도 있다. 호주의 남부 해안이나 아프리카와 같은 지역에도 펭귄이 서식하고 있다. 이처럼 펭귄들은 각기 다른 기후에 맞게 생활하며 다양한 지역의 생태계에서 역할을 하고 있다.","options":["펭귄은 얼음과 눈이 있는 환경을 선호한다.","펭귄은 매체에 소개되면서 서식 지역이 알려졌다.","펭귄은 사는 지역에 따라 생김새와 성격이 다르다.","펭귄은 특정 기후가 아닌 다양한 환경에서 서식한다."],"answer":4,"explain":"✅ <b>④</b> — главная мысль: пингвины живут не только в холоде, а в РАЗНЫХ климатах и средах (남극뿐만 아니라 따뜻한 지역에도).<br>✖️ ① «предпочитают лёд и снег» — текст как раз это опровергает; ② про СМИ — второстепенно; ③ про «внешность и характер по регионам» в тексте не сказано.<br>🧩 다양한 환경 — разнообразная среда; 생태계 — экосистема."},{"n":21,"points":2,"instr":"Прочитайте текст и выберите выражение в ( ㉠ ).","passage":"최근 반려동물을 키우는 사람들이 많아지면서 공공장소에서 지켜야 할 기본적인 예절에 대한 관심도 높아지고 있다. 하지만 여전히 공원이나 산책로에서 목줄을 하지 않거나 배설물을 치우지 않고 가는 등 다른 사람들에게 불쾌감을 주는 행동으로 (㉠) 하는 사람들이 있다. 일부의 이런 행동 때문에 반려동물을 키우는 사람들에 대한 부정적인 인식이 생길 수 있으며 타인에게도 피해를 줄 수 있다. 이렇듯 작은 행동 하나가 다른 사람에게 큰 불편을 줄 수 있다는 것을 잊지 말아야 한다.","options":["손을 맞잡게","가슴을 울리게","눈살을 찌푸리게","발걸음을 맞추게"],"answer":3,"explain":"✅ <b>③ 눈살을 찌푸리게</b> — идиома «눈살을 찌푸리다» = «морщиться, хмуриться от недовольства»: люди выгуливают питомцев без поводка, не убирают за ними → вызывают у окружающих неприязнь.<br>✖️ ① 손을 맞잡다 «взяться за руки», ② 가슴을 울리다 «трогать до глубины души», ④ 발걸음을 맞추다 «идти в ногу» — позитивные/нейтральные, не подходят к «불쾌감».<br>🧩 눈살을 찌푸리다 — морщиться от неодобрения; 불쾌감 — неприятное чувство."},{"n":22,"points":2,"instr":"Выберите вариант, совпадающий с содержанием текста.","passage":"최근 반려동물을 키우는 사람들이 많아지면서 공공장소에서 지켜야 할 기본적인 예절에 대한 관심도 높아지고 있다. 하지만 여전히 공원이나 산책로에서 목줄을 하지 않거나 배설물을 치우지 않고 가는 등 다른 사람들에게 불쾌감을 주는 행동으로 (㉠) 하는 사람들이 있다. 일부의 이런 행동 때문에 반려동물을 키우는 사람들에 대한 부정적인 인식이 생길 수 있으며 타인에게도 피해를 줄 수 있다. 이렇듯 작은 행동 하나가 다른 사람에게 큰 불편을 줄 수 있다는 것을 잊지 말아야 한다.","options":["최근 공공장소에서 불쾌감을 느끼는 사람이 증가하고 있다.","반려동물과 산책하는 사람들은 공원이나 산책로에서 불편을 겪는다.","요즘 공원이나 산책로에서 반려동물의 배설물을 치우는 사람이 많아졌다.","반려동물과 산책할 때 반려동물의 목줄을 하지 않고 다니는 사람들이 있다."],"answer":4,"explain":"✅ <b>④</b> — «목줄을 하지 않거나 … 가는 사람들이 있다» → есть те, кто выгуливает питомца без поводка.<br>✖️ ① текст говорит о росте интереса к ЭТИКЕТУ, а не числа недовольных; ② неудобство испытывают ОКРУЖАЮЩИЕ, а не сами владельцы; ③ наоборот — проблема в тех, кто НЕ убирает.<br>🧩 목줄 — поводок; 배설물 — экскременты; 치우다 — убирать."},{"n":23,"points":2,"instr":"Выберите чувство «я» в выделенной части (когда клиент по-доброму ответил).","passage":"며칠 전 카페 아르바이트를 할 때 생긴 일이다. 아르바이트가 처음이라 긴장한 상태로 일을 하고 있었는데 점심시간이 되자 주문이 몰려 정신없이 일했다. 너무 정신이 없어서 주문이 잘못된 줄도 몰랐다. 실수를 깨달은 즉시 고객에게 급히 죄송하다고 사과한 후 바로 새 음료를 만들어 드렸다. 그 고객은 나를 보며 “괜찮아요. 저도 실수할 때가 많으니까요.”라고 웃으며 말해 주었다. 그 말을 듣는 순간 굳어 있던 마음이 풀리며 긴장이 사라졌다. 처음에는 너무 당황해서 눈앞이 캄캄했는데 고객의 따뜻한 말 덕분에 다시 힘을 얻어 일할 수 있었다. 그날 이후 나 역시 다른 사람의 실수에 조금 더 너그러운 마음을 가져야겠다고 다짐하게 되었다. 사소한 말 한마디가 얼마나 큰 위로가 될 수 있는지 알게 된 일이었다.","options":["화가 나고 억울했다.","기쁘고 뿌듯했다.","부끄럽고 신경이 쓰였다.","안심되고 마음이 놓였다."],"answer":4,"explain":"✅ <b>④ 안심되고 마음이 놓였다</b> (отлегло, стало спокойно): после ошибки рассказчик был в панике (눈앞이 캄캄), но добрые слова клиента «괜찮아요…» сняли напряжение (굳어 있던 마음이 풀리며).<br>✖️ ① «зол и обижен» — наоборот, благодарен; ② «рад и горд» — слишком, речь об облегчении; ③ «стыдно и тревожно» — это до слов клиента.<br>🧩 마음이 놓이다 — отлегло от сердца; 긴장이 풀리다 — напряжение спадает."},{"n":24,"points":2,"instr":"Выберите вариант, совпадающий с содержанием текста.","passage":"며칠 전 카페 아르바이트를 할 때 생긴 일이다. 아르바이트가 처음이라 긴장한 상태로 일을 하고 있었는데 점심시간이 되자 주문이 몰려 정신없이 일했다. 너무 정신이 없어서 주문이 잘못된 줄도 몰랐다. 실수를 깨달은 즉시 고객에게 급히 죄송하다고 사과한 후 바로 새 음료를 만들어 드렸다. 그 고객은 나를 보며 “괜찮아요. 저도 실수할 때가 많으니까요.”라고 웃으며 말해 주었다. 그 말을 듣는 순간 굳어 있던 마음이 풀리며 긴장이 사라졌다. 처음에는 너무 당황해서 눈앞이 캄캄했는데 고객의 따뜻한 말 덕분에 다시 힘을 얻어 일할 수 있었다. 그날 이후 나 역시 다른 사람의 실수에 조금 더 너그러운 마음을 가져야겠다고 다짐하게 되었다. 사소한 말 한마디가 얼마나 큰 위로가 될 수 있는지 알게 된 일이었다.","options":["나의 실수 때문에 점심시간이 더 바빠졌다.","나는 고객의 따뜻한 반응 덕분에 위로를 받았다.","고객은 처음에는 웃었지만 결국 나에게 화를 냈다.","고객이 주문을 잘못했지만 너그럽게 용서해 주었다."],"answer":2,"explain":"✅ <b>②</b> — «고객의 따뜻한 말 덕분에 다시 힘을 얻어» → благодаря тёплой реакции клиента рассказчик получил утешение.<br>✖️ ① обед и так был загружен, не из-за ошибки; ③ клиент не злился — он успокоил; ④ ошибся РАССКАЗЧИК, а не клиент.<br>🧩 위로를 받다 — получить утешение; 너그럽다 — великодушный."},{"n":25,"points":2,"instr":"Выберите вариант, который лучше всего объясняет заголовок газетной статьи.","passage":"📰 청년 농부 증가, 농촌에 새 바람","options":["청년 농부들이 새로운 농업 방식을 농촌에 알리고 있다.","고령화된 농촌에 청년들이 정착하면서 분위기가 바뀌고 있다.","기존의 농부들은 경쟁을 우려해 청년들과의 거리를 두고 있다.","농촌에 거주하는 청년들이 도시에 비해 일자리를 구하기 어렵다."],"answer":2,"explain":"✅ <b>②</b> — заголовок «Рост числа молодых фермеров — новый ветер в деревне»: в стареющую (고령화된) деревню переезжают молодые, и атмосфера меняется. «새 바람 (новый ветер)» = свежие перемены.<br>✖️ ① про «новый способ земледелия» в заголовке нет; ③ «держат дистанцию из-за конкуренции» — противоречит позитивному «새 바람»; ④ про трудности с работой — другая тема.<br>🧩 새 바람(이 불다) — повеяло переменами; 고령화 — старение (населения); 정착하다 — обосноваться."},{"n":26,"points":2,"instr":"Выберите вариант, который лучше всего объясняет заголовок газетной статьи.","passage":"📰 정부 지원금 축소, 전기차 판매 주춤","options":["전기차 가격이 낮아지면서 소비자들의 관심도 높아지고 있다.","전기차 판매자들이 판매 증가 원인을 정부 정책에서 찾고 있다.","정부의 지원이 줄어들자 소비자들의 전기차 구매가 감소하고 있다.","정부는 전기차의 보급을 늘리기 위해 지원금을 대폭 늘리기로 했다."],"answer":3,"explain":"✅ <b>③</b> — заголовок «Сокращение господдержки — продажи электромобилей застопорились»: субсидии урезали (축소) → покупки электромобилей пошли вниз. «주춤» = замедление, заминка.<br>✖️ ① про «снижение цены и рост интереса» — наоборот; ② про «поиск причин роста» — продаж нет, есть спад; ④ «резко увеличивает субсидии» — противоречит «지원금 축소».<br>🧩 주춤하다 — приостановиться, замедлиться; 축소 ↔ 확대 (сокращение ↔ расширение); 보급 — распространение."},{"n":27,"points":2,"instr":"Выберите вариант, который лучше всего объясняет заголовок газетной статьи.","passage":"📰 김유진 선수, 올해에도 세계 육상 선수권 금빛 질주","options":["김유진 선수가 이번 세계 대회에서도 우승을 차지했다.","김유진 선수는 세계 대회 금메달을 목표로 훈련하고 있다.","김유진 선수의 금메달 가능성이 높아져서 기대를 모으고 있다.","김유진 선수는 작년의 실패를 딛고 올해 대회에서 모두 우승했다."],"answer":1,"explain":"✅ <b>①</b> — заголовок «Спортсменка Ким Юджин и в этом году — золотой рывок на ЧМ по лёгкой атлетике»: «금빛 질주 (золотой забег)» = снова завоевала победу/золото на чемпионате.<br>✖️ ② «тренируется ради золота» — цель в будущем, а заголовок о результате; ③ «возросла вероятность» — золото уже взято, не «возможность»; ④ «после прошлогоднего провала» — «올해에도 (и в этом году тоже)» означает, что и в прошлом году побеждала.<br>🧩 금빛 질주 — победный (золотой) рывок; 우승을 차지하다 — завоевать первое место; 올해에도 — и в этом году тоже."},{"n":28,"points":2,"instr":"Выберите наиболее подходящее выражение в ( ).","passage":"요즘 아침 시간을 활용하고자 하는 사람들이 늘어나고 있다. (　　)에 따라 하루를 더 효율적으로 보낼 수 있기 때문이다. 아침 시간을 효과적으로 쓰는 방법 중 하나는 일찍 일어나 가벼운 운동을 하거나 독서를 하는 등 자신만의 습관을 만드는 것이다. 습관을 만드는 것이 쉽지는 않지만 아침 시간을 자신만의 방식으로 잘 활용한다면 더욱 계획적이고 여유 있는 하루를 보낼 수 있다.","options":["책을 얼마나 읽느냐","일과를 어떻게 시작하느냐","아침부터 운동을 열심히 하느냐","충분한 수면으로 휴식을 취하느냐"],"answer":2,"explain":"✅ <b>② 일과를 어떻게 시작하느냐</b> — «от того, как начинаешь день»: текст в целом о том, что от способа использования утра (а не конкретно чтения или спорта) зависит эффективность дня — «(일과를 어떻게 시작하느냐)에 따라 하루를 더 효율적으로».<br>✖️ ① 책 (чтение) и ③ 운동 (спорт) — лишь ПРИМЕРЫ привычек, а не общий принцип; ④ 수면 (сон) в тексте не обсуждается.<br>🧩 일과 — распорядок дня; -느냐에 따라 — «в зависимости от того, …ли»; 활용하다 — использовать (с пользой)."},{"n":29,"points":2,"instr":"Выберите наиболее подходящее выражение в ( ).","passage":"누군가 내 제안이나 부탁을 거절했을 때 우리는 종종 그것을 (　　) 받아들일 때가 있다. 하지만 상대는 나라는 사람을 평가하고 거절한 것이 아니라 특정한 조건이나 상황 속의 부탁을 거절한 것에 불과하다. 그 거절은 개인의 필요나 상황을 반영한 결과일 뿐 나라는 존재의 가치를 부정하는 것은 아니다. 따라서 거절을 지나치게 개인적인 것으로 받아들이기보다는 그것을 상황적 판단으로 이해하려는 태도가 필요하다.","options":["단순한 의견 차이로","필요하지 않은 내용으로","자신에 대한 부정적인 평가로","능력이 부족함을 나타내는 신호로"],"answer":3,"explain":"✅ <b>③ 자신에 대한 부정적인 평가로</b> — «как негативную оценку себя»: мы часто воспринимаем отказ как оценку нашей личности, НО («하지만») собеседник отказал не оценивая тебя, а лишь отклонил просьбу в конкретной ситуации.<br>✖️ ① «как простое расхождение во мнениях» и ② «как ненужное» — не вяжутся с дальнейшим «не отрицает ценность тебя»; ④ «сигнал нехватки способностей» — близко, но текст про оценку ЛИЧНОСТИ (나라는 존재의 가치), а не способностей.<br>🧩 거절 — отказ; -(으)로 받아들이다 — воспринимать как…; 지나치게 — чрезмерно."},{"n":30,"points":2,"instr":"Выберите наиболее подходящее выражение в ( ).","passage":"야간에 도로에서 교통정리나 작업을 하는 사람들이 입는 작업복은 어두운 환경에서도 운전자의 눈에 잘 띌 수 있도록 제작된다. 이 작업복은 일반 옷과 달리 (　　) 기능이 있는 특수한 소재로 만들어진다. 자동차 불빛이 작업복에 닿으면 작업복의 특수 소재가 그 빛을 운전자 쪽으로 되돌려 보내기 때문에 어두운 곳에서도 잘 발견되기 쉽다. 이러한 원리를 활용해 교통 표지판이나 도로 경계선에도 같은 소재를 활용하고 있다.","options":["빛을 반사하는","작업을 도와주는","자동차 불빛을 막는","눈의 피로를 줄여 주는"],"answer":1,"explain":"✅ <b>① 빛을 반사하는</b> — «отражающий свет»: дальше прямо сказано, что особый материал «빛을 운전자 쪽으로 되돌려 보낸다» (отправляет свет обратно к водителю) — это и есть отражение.<br>✖️ ② «помогающий работать» — общая фраза, не про свет; ③ «блокирующий свет фар» — наоборот, материал свет ВОЗВРАЩАЕТ; ④ «снижающий усталость глаз» — в тексте нет.<br>🧩 반사하다 — отражать; 되돌려 보내다 — отправлять обратно; 띄다(눈에 띄다) — бросаться в глаза."},{"n":31,"points":2,"instr":"Выберите наиболее подходящее выражение в ( ).","passage":"한국은 약 복용률이 높은 국가로 알려져 있었다. 감기나 가벼운 통증에도 약을 찾는 경우가 많았기 때문이다. 과거에는 병원 진료 없이 약을 쉽게 구입할 수 있어 약을 잘못 사용하거나 과하게 먹는 일이 자주 발생했다. 이런 문제를 줄이기 위해 한국에서는 병원에서 처방전을 받아야만 약국에서 약을 살 수 있는 의약 분업 제도를 시행하게 되었다. 이 제도는 (　　) 국민 건강을 보호하는 데 도움을 준다.","options":["약 구매처를 늘리고","약국에서 쉽게 약을 사고","불필요한 약의 복용을 막고","처방전 없이 약을 구입하고"],"answer":3,"explain":"✅ <b>③ 불필요한 약의 복용을 막고</b> — «предотвращая ненужный приём лекарств»: система «의약 분업» (рецепт от врача → покупка в аптеке) введена, чтобы сократить злоупотребление лекарствами и так защитить здоровье населения.<br>✖️ ① «увеличивая число точек продажи» и ② «легко покупать в аптеке» — противоречат цели контроля; ④ «покупать без рецепта» — именно это система ЗАПРЕЩАЕТ.<br>🧩 의약 분업 — разделение функций врача и аптеки; 처방전 — рецепт; 복용 — приём (лекарства); 막다 — предотвращать."},{"n":32,"points":2,"instr":"Прочитайте текст и выберите вариант, совпадающий с его содержанием.","passage":"일부 동물은 주변 환경과 비슷한 색을 띤다. 이를 보호색이라고 하는데 주로 자신을 숨길 때 사용된다. 사막에 사는 도마뱀은 몸의 색을 모래와 비슷하게 바꿔 천적이 쉽게 발견하지 못한다. 또한 숲속에 사는 생물은 잎이나 나무의 색과 비슷한 녹색을 띠게 된다. 이처럼 보호색은 신체적 방어력이나 발톱 등의 공격력이 약한 생물이 외부의 위협으로부터 자신을 지키는 생존 전략이다.","options":["보호색을 가진 생물은 보통 나무 위에서 생활한다.","보호색은 천적으로부터 안전하게 숨는 데 도움이 된다.","보호색을 가진 도마뱀은 들키지 않고 먹이를 유인할 수 있다.","보호색은 생물이 공격을 위해서 사용하는 대표적인 수단이다."],"answer":2,"explain":"✅ <b>②</b> — «주로 자신을 숨길 때 사용», «천적이 쉽게 발견하지 못한다» → защитная окраска помогает безопасно прятаться от хищников.<br>✖️ ① «обычно живут на деревьях» — нет: ящерица живёт в песке пустыни, цвет лишь похож на листву; ③ ящерица так ИЗБЕГАЕТ хищников (천적), а не приманивает добычу; ④ окраска нужна для ЗАЩИТЫ (자신을 지키는), а не для нападения.<br>🧩 보호색 — защитная окраска; 천적 — естественный враг; 생존 전략 — стратегия выживания."},{"n":33,"points":2,"instr":"Прочитайте текст и выберите вариант, совпадающий с его содержанием.","passage":"문해력은 단순히 글자를 읽는 능력이 아니라 글의 의미를 파악하고 상황에 따라 적절히 활용하는 능력을 말한다. 최근에는 교육 수준과 관계없이 문해력 부족을 겪는 사람들이 많아지고 있다. 이런 현상은 단지 학업 성취에 영향을 줄 뿐 그치지 않고 일상 생활, 사회적 의사소통, 일상 정보 처리 등 다양한 영역에서 문제를 일으킬 수 있다. 그렇기 때문에 문해력은 단순한 학습 능력이 아니라 사회 전반에 영향을 미치는 중요한 역량으로 인식되고 있다.","options":["학업 성적으로 문해력을 측정할 수 있다.","교육 수준에 따라 문해력에 차이가 생긴다.","사회적 중요성으로 인해 문해력이 필수 교과로 지정되었다.","문해력은 일상생활 전반에서 중요한 영향을 미치는 능력이다."],"answer":4,"explain":"✅ <b>④</b> — «사회 전반에 영향을 미치는 중요한 역량» → грамотность (문해력) влияет на повседневную жизнь в целом, а не только на учёбу.<br>✖️ ① грамотность — это понимание смысла, не сводится к «оценкам»; ② наоборот: проблемы возникают «교육 수준과 관계없이» (независимо от уровня образования); ③ про «обязательный школьный предмет» в тексте нет.<br>🧩 문해력 — функциональная грамотность; 역량 — компетенция; 사회 전반 — всё общество в целом."},{"n":34,"points":2,"instr":"Прочитайте текст и выберите вариант, совпадающий с его содержанием.","passage":"한국 전통 건축물의 천장이나 기둥 등에 그려진 색채 무늬를 단청이라고 한다. 대부분의 사람들은 아름다운 무늬와 색깔 때문에 단청을 단순한 장식 요소로만 인식하기 쉽다. 하지만 예로부터 단청은 건물을 아름답게 꾸미기 위한 것만이 아니라 외부 환경으로부터 건축물을 보호하는 기능도 함께 가지고 있었다. 이러한 기능 덕분에 비바람이나 햇볕에 약한 목재 건물이 오랫동안 보존될 수 있었다. 이처럼 단청은 우리 전통 건축의 기능과 아름다움을 함께 담고 있는 중요한 문화 요소이다.","options":["단청은 한국 전통 건축물을 보호하는 역할을 한다.","단청은 실내 공간의 벽면을 장식하기 위해 사용되었다.","한국 전통 건축물의 천장이나 기둥에는 특별한 장식이 없다.","한국 전통 건축물은 비바람과 햇볕에 강한 튼튼한 소재이다."],"answer":1,"explain":"✅ <b>①</b> — «외부 환경으로부터 건축물을 보호하는 기능» → дворцовая роспись 단청 защищает деревянное здание от внешней среды.<br>✖️ ② 단청 наносят на потолки и колонны (снаружи), и это не только украшение; ③ наоборот — 단청 это и есть узор/украшение; ④ дерево как раз СЛАБО к дождю и солнцу (약한 목재), поэтому его и защищает 단청.<br>🧩 단청 — традиционная многоцветная роспись; 목재 — древесина; 보존되다 — сохраняться."},{"n":35,"points":2,"instr":"Прочитайте текст и выберите его главную тему.","passage":"최근 여러 나라가 달 탐사에 관심을 보이며 기술 개발에 힘을 쏟고 있다. 달에는 에너지 자원을 포함한 희귀 자원이 있을 가능성이 높고 우주 연구의 중심지로 활용될 수도 있기 때문이다. 실제로 일부 국가는 탐사선을 달에 보내 달 표면에서 시료를 채취하는 데 성공했으며 관련 기술에서도 앞서 나가고 있다. 하지만 많은 나라들은 기술력이나 예산의 한계로 본격적인 탐사를 시작하지 못하고 있다. 인류의 미래 자원을 확보하기 위해서라도 달 탐사에 대한 투자와 기술 개발에 나설 필요가 있다.","options":["자원을 공정하게 활용하려면 국제적인 협력이 필요하다.","달 탐사를 위한 기술은 이미 대부분의 나라가 보유하고 있다.","희귀한 우주 자원을 개발하기 위해 달 탐사선을 보내야 한다.","미래 자원 확보를 위해 달 탐사에 대한 적극적인 노력이 필요하다."],"answer":4,"explain":"✅ <b>④</b> — вывод текста: «미래 자원을 확보하기 위해서라도 달 탐사에 대한 투자와 기술 개발에 나설 필요가 있다» → ради будущих ресурсов нужны активные усилия (инвестиции + технологии) в освоении Луны.<br>✖️ ① «международное сотрудничество» в тексте не главная мысль; ② «технологии уже у большинства стран» — наоборот, многим мешают «기술력이나 예산의 한계»; ③ слишком узко (только «послать зонд»), тогда как тема шире — нужны вложения и развитие.<br>🧩 달 탐사 — освоение Луны; 자원 확보 — обеспечение ресурсами; 적극적인 — активный."},{"n":36,"points":2,"instr":"Прочитайте текст и выберите его главную тему.","passage":"사람들의 소비 성향이 변화하고 있다. 요즘 사람들은 단순히 품질과 가격만을 기준으로 제품을 고르지 않는다. 착한 초콜릿, 착한 커피처럼 생산 과정에 인권이나 환경 보호의 가치를 반영한 제품을 찾는 경향을 보이고 있다. 과거에는 제품의 품질이나 가격, 또는 기업이 만들어 낸 일자리와 같은 경제적 가치를 중심으로 평가하던 소비자들의 기준이 달라지고 있는 것이다. 이에 따라 많은 기업들이 사회 공헌 활동이나 친환경 경영을 강조하며 브랜드 이미지를 바꾸려는 노력을 하고 있다.","options":["친환경 경영은 기업의 이미지 개선에 효과적인 전략이다.","소비 성향과 기업 평가 기준이 윤리 중심으로 변화하고 있다.","기업의 성공은 얼마나 많은 제품을 판매했는가에 따라 결정된다.","착한 소비를 실천하기 위해 소비자들은 일자리가 많은 기업을 선택한다."],"answer":2,"explain":"✅ <b>②</b> — главная мысль: покупатели уже судят не только по цене/качеству, а по этике (права человека, экология), и фирмы под это меняются → критерии потребления и оценки компаний смещаются к этике.<br>✖️ ① «эко-управление — эффективная стратегия имиджа» — лишь следствие, не тема; ③ «успех = объём продаж» — это ПРОШЛЫЙ подход, который текст как раз пересматривает; ④ про «выбор фирм с рабочими местами» — это тоже устаревший экономический критерий.<br>🧩 소비 성향 — потребительские предпочтения; 윤리 — этика; 착한 소비 — «этичное потребление»."},{"n":37,"points":2,"instr":"Прочитайте текст и выберите его главную тему.","passage":"스마트폰과 같은 디지털 기기의 발달과 함께 짧은 영상 콘텐츠를 즐기는 사람들이 늘고 있다. 이 콘텐츠들은 짧은 시간 안에 많은 정보를 전달하며 빠르게 소비된다. 하지만 이러한 소비 방식이 익숙해질수록 집중력이 필요한 활동에는 쉽게 지루함을 느끼게 된다. 짧은 자극에만 반응하는 습관이 형성되면 길고 복잡한 내용에 집중하는 데 어려움을 느낄 수 있기 때문이다.","options":["짧은 콘텐츠의 자극적인 요소에 대한 개선이 필요하다.","짧은 콘텐츠는 정보 전달 효율성을 높이는 데 기여한다.","짧은 콘텐츠의 반복적 소비는 집중력 저하를 초래할 수 있다.","짧은 콘텐츠는 소비 방식에 따라 습관 형성에 영향을 미친다."],"answer":3,"explain":"✅ <b>③</b> — главная мысль: привыкая к коротким роликам, человек быстро скучает там, где нужна концентрация, и теряет способность удерживать внимание на длинном → частое потребление «коротышей» снижает концентрацию.<br>✖️ ① про «улучшение раздражающих элементов» в тексте нет; ② «повышает эффективность передачи информации» — это плюс, но не главная мысль (текст о минусе); ④ слишком обтекаемо («влияет на привычки»), тема конкретнее — про СНИЖЕНИЕ концентрации.<br>🧩 집중력 — концентрация; 저하 — снижение; 반복적 소비 — повторяющееся потребление."},{"n":38,"points":2,"instr":"Прочитайте текст и выберите его главную тему.","passage":"자신에게는 쉬운 일이 상대에게는 어려운 일일 수 있다는 점을 생각하지 못하면 그 행동은 배려가 아닌 강요가 될 수도 있다. 이를 보여 주는 우화로 여우와 두루미 이야기가 있다. 여우는 두루미를 초대해 자신의 기준대로 평평한 접시에 음식을 내놓았고 두루미는 길고 뾰족한 부리 때문에 제대로 먹지 못했다는 내용이다. 이 이야기는 상대방의 입장을 고려하지 않은 배려가 자기중심적인 행동이 될 수도 있다는 점을 보여 준다.","options":["우화를 통해 진정한 배려가 무엇인지 알아야 한다.","자신만의 기준이 분명할 때 상대방을 배려할 수 있다.","배려할 때 상대방의 입장을 헤아리는 태도가 선행되어야 한다.","내가 좋아하는 것을 상대방에게 해 주는 것이 바람직한 배려이다."],"answer":3,"explain":"✅ <b>③</b> — главная мысль притчи о лисе и журавле: лиса угощала на плоской тарелке «по своим меркам», и журавль с длинным клювом не смог есть → настоящая забота начинается с учёта позиции другого.<br>✖️ ① «через басню узнать, что такое забота» — слишком общо, не выражает идею; ② «когда чёткие СВОИ критерии» — наоборот, эгоцентрично; ④ «давать другому то, что нравится МНЕ» — это и есть ошибка лисы.<br>🧩 배려 — забота, внимание к другому; 강요 — навязывание; 상대방의 입장 — позиция собеседника; 선행되다 — предшествовать."},{"n":39,"points":2,"instr":"Выберите место (㉠~㉣), куда лучше всего вставить данное предложение:<br><b>「사람들이 모이면서 자연스럽게 골목 상권이 살아나고 지역 사회가 활기를 띠게 된다.」</b>","passage":"도시 재생 사업은 오래된 지역을 새롭게 살려 지역 경제를 활성화하려는 사업이다. ( ㉠ ) 특히 최근에는 오래된 골목길을 새롭게 정비하여 상권을 되살리려는 시도가 늘고 있다. ( ㉡ ) 새롭게 단장한 골목에는 지역 특색을 살린 가게들이 들어서고 많은 사람들이 이곳을 찾기 시작한다. ( ㉢ ) 그러나 지나친 상업화로 인해 원래의 지역 특색이 사라질 위험도 함께 존재한다. ( ㉣ ) 이런 점을 고려하여 경제적 이익뿐만 아니라 지역의 고유문화를 지키는 방향으로 도시 재생이 이루어져야 한다.","options":["㉠","㉡","㉢","㉣"],"answer":3,"explain":"✅ <b>③ ㉢</b> — вставляемое предложение: «когда люди собираются, оживает уличная торговля и район наполняется жизнью». Перед ㉢ сказано «много людей начинают приходить сюда (많은 사람들이 이곳을 찾기 시작한다)» — естественное продолжение: люди собрались → торговля ожила. А после ㉢ идёт «그러나 (однако)» о риске чрезмерной коммерциализации — то есть позитивный пик уже описан.<br>✖️ ㉠/㉡ — там ещё нет «собравшихся людей» (только идёт обустройство переулков); ㉣ — уже идёт вывод, поток людей логически раньше.<br>🧩 골목 상권 — торговля в переулках; 활기를 띠다 — оживляться; 도시 재생 — городское обновление (реновация)."},{"n":40,"points":2,"instr":"Выберите место (㉠~㉣), куда лучше всего вставить данное предложение:<br><b>「즉, 열이 식는 속도와 균열이 생기는 방향에 따라 기둥의 굵기나 모양, 배열 형태가 달라지는 것이다.」</b>","passage":"주상절리는 화산 활동으로 인해 생긴 암석 지형이다. ( ㉠ ) 화산 활동이 끝나면 용암이 식으면서 열이 급격히 빠져나가게 된다. ( ㉡ ) 이 과정에서 표면에 작은 균열이 발생하는데 이 균열은 시간이 지나면서 점점 아래로 뻗어나가 기둥 모양을 이루게 된다. ( ㉢ ) 각기 다른 모양과 독특한 형태 때문에 오늘날에는 관광 명소로 널리 알려져 있다. ( ㉣ )","options":["㉠","㉡","㉢","㉣"],"answer":3,"explain":"✅ <b>③ ㉢</b> — вставляемое предложение начинается с «즉 (то есть)» и поясняет, КАК образуются колонны: от скорости остывания и направления трещин зависят толщина, форма и расположение столбов. Прямо перед ㉢ как раз описано, что трещины ползут вниз и формируют форму столба (기둥 모양을 이루게 된다) — «즉…» подытоживает этот механизм.<br>✖️ ㉠/㉡ — механизм трещин ещё не описан, обобщать нечего; ㉣ — речь уже о туристической славе, а не о формировании.<br>🧩 주상절리 — столбчатая отдельность (базальтовые колонны); 균열 — трещина; 용암 — лава."},{"n":41,"points":2,"instr":"Выберите место (㉠~㉣), куда лучше всего вставить данное предложение:<br><b>「이러한 점에서 조선왕조실록은 단순한 역사 기록을 넘어 진실을 자세히 남기려 한 문화적 태도의 상징이라 할 수 있다.」</b>","passage":"조선왕조실록은 조선 시대의 국왕과 정치, 사회, 외교 등 국가 운영 전반을 연대순으로 기록한 역사서이다. ( ㉠ ) 이 기록은 왕이 사망한 뒤 특별한 기관을 만들어 사관들이 편찬하였다. ( ㉡ ) 사실을 왜곡하지 않고 충실히 기록하기 위해 국왕조차도 함부로 열람할 수 없도록 하였다. ( ㉢ ) 실록에는 왕의 말과 행동, 대신들의 논쟁, 백성의 삶까지 상세하게 담겨 있다. ( ㉣ ) 현재 조선왕조실록은 그 가치를 인정받아 유네스코 세계기록유산으로 등재되어 세계적인 역사 자료로 평가받고 있다.","options":["㉠","㉡","㉢","㉣"],"answer":4,"explain":"✅ <b>④ ㉣</b> — вставляемое предложение начинается с «이러한 점에서 (в этом отношении)» и подытоживает ВСЕ ранее перечисленные черты: составление историографами, отказ от искажений, запрет даже королю читать, подробная запись всего. Поэтому оно идёт после последнего такого пункта (㉣) и перед финальной фразой о внесении в реестр ЮНЕСКО.<br>✖️ ㉠/㉡/㉢ — там перечисление ещё не завершено, обобщать рано.<br>🧩 조선왕조실록 — «Анналы династии Чосон»; 왜곡하다 — искажать; 사관 — придворный историограф; 세계기록유산 — реестр «Память мира» ЮНЕСКО."},{"n":42,"points":2,"instr":"Прочитайте отрывок и выберите чувство «재민» в подчёркнутой части.","passage":"재민은 오늘 생애 첫 월급을 받았다. 월급 통장을 확인하고 나니 마음 한편이 괜히 허전했다. 아버지께서 돌아가신 지 3년째 되는 날이어서 더욱 공허하게 느껴지는 것 같았다. 아버지가 살아 계셨다면 퇴근길에 아버지 댁에 들러 같이 밥 한 끼 했을지도 모를 일이었다. (중략)<br>재민의 아버지는 말이 없는 사람이었다. 늦게 퇴근하고도 말없이 아들을 위해 밥을 차렸고 주말이면 고장 난 전등을 갈거나 오래된 책상을 고치곤 했다. 재민은 중학생 시절에 그런 아버지의 모습이 답답하게 느껴지기도 했다. 가끔 다른 친구들의 아버지처럼 유쾌하게 농담을 주고받는 아버지를 상상한 적도 있었다. (중략)<br>입대 전 훈련소 앞에서 재민의 아버지는 덤덤하게 아들에게 봉투 하나를 건네며 말했다.<br>“필요한 거 있으면 쓰고 훈련 끝나면 전화 한번 줘라.”<br>그때 재민은 알겠다고 대답했지만 결국 아버지에게 전화를 한 건 입대한 지 6개월이 지난 어느 주말이었다. 그마저도 아버지와 통화는 하지 못했다. (중략)<br><u>재민은 아버지 번호를 눌러 보다가 천천히 손을 내렸다. 손에 쥔 휴대 전화가 유독 무겁게 느껴지는 날이었다.</u>","options":["서운하다","후회스럽다","후련하다","의심스럽다"],"answer":2,"explain":"✅ <b>② 후회스럽다</b> (полон сожаления): отец умер 3 года назад, при жизни был немногословным и заботливым, а Джэмин редко звонил ему; теперь, набрав номер, он опускает руку — телефон «кажется особенно тяжёлым». Это тяжесть запоздалого раскаяния.<br>✖️ ① 서운하다 «обидно» — обиды на отца нет; ③ 후련하다 «облегчение» — наоборот, тяжесть; ④ 의심스럽다 «подозрение» — ни к чему не относится.<br>🧩 후회스럽다 — испытывать сожаление; 허전하다 — пусто на душе; 덤덤하다 — невозмутимый, сдержанный."},{"n":43,"points":2,"instr":"Выберите то, что можно понять из содержания отрывка.","passage":"재민은 오늘 생애 첫 월급을 받았다. 월급 통장을 확인하고 나니 마음 한편이 괜히 허전했다. 아버지께서 돌아가신 지 3년째 되는 날이어서 더욱 공허하게 느껴지는 것 같았다. 아버지가 살아 계셨다면 퇴근길에 아버지 댁에 들러 같이 밥 한 끼 했을지도 모를 일이었다. (중략)<br>재민의 아버지는 말이 없는 사람이었다. 늦게 퇴근하고도 말없이 아들을 위해 밥을 차렸고 주말이면 고장 난 전등을 갈거나 오래된 책상을 고치곤 했다. 재민은 중학생 시절에 그런 아버지의 모습이 답답하게 느껴지기도 했다. 가끔 다른 친구들의 아버지처럼 유쾌하게 농담을 주고받는 아버지를 상상한 적도 있었다. (중략)<br>입대 전 훈련소 앞에서 재민의 아버지는 덤덤하게 아들에게 봉투 하나를 건네며 말했다.<br>“필요한 거 있으면 쓰고 훈련 끝나면 전화 한번 줘라.”<br>그때 재민은 알겠다고 대답했지만 결국 아버지에게 전화를 한 건 입대한 지 6개월이 지난 어느 주말이었다. 그마저도 아버지와 통화는 하지 못했다. (중략)<br>재민은 아버지 번호를 눌러 보다가 천천히 손을 내렸다. 손에 쥔 휴대 전화가 유독 무겁게 느껴지는 날이었다.","options":["재민의 아버지는 무뚝뚝한 사람이었다.","재민은 첫 월급을 받고 아버지 옷을 샀다.","재민은 아버지의 유쾌한 농담을 듣는 것을 좋아했다.","재민의 아버지는 훈련소 앞에서 아들에게 전화를 걸었다."],"answer":1,"explain":"✅ <b>①</b> — отец «말이 없는 사람», молча готовил сыну еду, чинил вещи, прощался «덤덤하게» → он был неразговорчивым, суховатым (무뚝뚝한) человеком.<br>✖️ ② про покупку одежды отцу в тексте нет (отец уже умер); ③ Джэмин лишь ВООБРАЖАЛ весёлого шутящего отца — таким отец не был; ④ отец не звонил — он отдал конверт и ПОПРОСИЛ сына позвонить.<br>🧩 무뚝뚝하다 — суровый, неразговорчивый; 덤덤하다 — без эмоций; 봉투 — конверт (с деньгами)."},{"n":44,"points":2,"instr":"Выберите наиболее подходящее выражение в ( ).","passage":"19세기 중반에 등장한 인상주의는 기존 회화의 틀을 깨고 새로운 시도를 한 예술 사조였다. 이전까지의 회화는 사물의 형태와 구도를 정밀하게 묘사하는 데 집중했지만 인상주의 화가들은 자연의 빛과 색채가 순간순간 달라진다는 점에 주목했다. 이들은 정해진 구도나 윤곽선을 따르기보다 (　　) 보이는 인상을 그대로 표현하고자 했다. 하루 중 시간에 따라 빛의 색과 밝기가 변한다는 점에 착안해 같은 장소를 아침, 낮, 저녁 등 시간대별로 여러 번 그리기도 했다. 이는 빛과 색의 변화가 자연의 인상을 결정한다고 믿었던 인상주의 화가들의 생각을 잘 보여 준다. 대표적인 예로 모네는 지베르니 정원의 수련 연못을 250점 이상 그리며 시간과 날씨에 따라 달라지는 빛의 인상을 포착하려 했다. 인상주의는 정적인 재현에서 벗어나 시간성과 순간성을 회화에 도입한 점에서 예술사적 의미를 지닌다.","options":["있는 그대로의 자연을 관찰하며","상상력을 더해 자연을 단순화하며","특징적인 시간대에 자연을 담아내며","이상적인 형태로 자연을 재구성하며"],"answer":1,"explain":"✅ <b>① 있는 그대로의 자연을 관찰하며</b> — «наблюдая природу как она есть»: противопоставлено «정해진 구도나 윤곽선을 따르기보다 (вместо следования заданной композиции и контурам)» — то есть они смотрели на саму натуру и передавали впечатление как видели.<br>✖️ ② «упрощая природу воображением» и ④ «перестраивая в идеальную форму» — противоречат идее фиксировать реальное впечатление; ③ «в характерное время» — это лишь следствие (в следующем предложении), а в самом пропуске нужен контраст «как есть».<br>🧩 인상주의 — импрессионизм; 윤곽선 — контур; 있는 그대로 — как есть."},{"n":45,"points":2,"instr":"Выберите главную тему текста.","passage":"19세기 중반에 등장한 인상주의는 기존 회화의 틀을 깨고 새로운 시도를 한 예술 사조였다. 이전까지의 회화는 사물의 형태와 구도를 정밀하게 묘사하는 데 집중했지만 인상주의 화가들은 자연의 빛과 색채가 순간순간 달라진다는 점에 주목했다. 이들은 정해진 구도나 윤곽선을 따르기보다 (　　) 보이는 인상을 그대로 표현하고자 했다. 하루 중 시간에 따라 빛의 색과 밝기가 변한다는 점에 착안해 같은 장소를 아침, 낮, 저녁 등 시간대별로 여러 번 그리기도 했다. 이는 빛과 색의 변화가 자연의 인상을 결정한다고 믿었던 인상주의 화가들의 생각을 잘 보여 준다. 대표적인 예로 모네는 지베르니 정원의 수련 연못을 250점 이상 그리며 시간과 날씨에 따라 달라지는 빛의 인상을 포착하려 했다. 인상주의는 정적인 재현에서 벗어나 시간성과 순간성을 회화에 도입한 점에서 예술사적 의미를 지닌다.","options":["인상주의는 형태보다 빛의 순간적인 변화를 중시하였다.","인상주의 화가인 모네는 수련을 주제로 다양한 작품을 남겼다.","구도나 윤곽선을 관찰하여 묘사하는 것이 인상주의 회화의 특징이다.","정적인 재현을 통해 자연을 표현하는 인상주의 화풍의 가치가 뛰어나다."],"answer":1,"explain":"✅ <b>①</b> — главная мысль: импрессионисты сосредоточились не на форме и композиции, а на мгновенных изменениях света и цвета (순간성·시간성).<br>✖️ ② Моне с кувшинками — лишь ПРИМЕР, не тема; ③ «наблюдать композицию и контуры» — это СТАРАЯ живопись, импрессионизм её отверг; ④ «статичная репрезентация» — наоборот, импрессионизм ушёл ОТ неё (정적인 재현에서 벗어나).<br>🧩 형태 — форма; 순간적인 변화 — мгновенное изменение; 중시하다 — придавать большое значение."},{"n":46,"points":2,"instr":"Выберите позицию (отношение) автора, выраженную в тексте.","passage":"최근 인공 지능 기술이 의료, 금융, 제조업 등 다양한 분야에서 활용되면서 인간의 삶에 큰 변화를 가져오고 있다. 그러나 인공 지능 기술의 급속한 발전은 사회적·윤리적 문제에 대한 우려도 함께 키우고 있다. 대표적으로 인공 지능이 생성하는 편향된 정보, 개인정보 침해, 인간의 일자리를 대체하는 문제 등이 지적된다. 특히 채용 과정이나 법률 자문과 같은 중요한 의사 결정에서 인공 지능이 인간의 편견을 그대로 학습해 재생산할 가능성이 제기되고 있다. 이로 인해 사회적 약자나 소수 집단이 불이익을 받을 우려가 있다. 이에 따라 전문가들은 인공 지능 개발 단계에서부터 윤리적 기준을 명확히 설정해야 한다고 강조한다. 정부와 기업은 공동으로 윤리 가이드라인을 마련하고 법적 규제를 통해 강제할 필요가 있다. 단순히 자율 규제에만 맡긴다면 기업들은 비용 절감이나 효율성만을 우선시하여 윤리적 책임을 소홀히 할 위험이 있기 때문이다. 기술의 발전은 필연적이지만 그로 인한 부작용을 최소화하려는 노력이 병행되지 않는다면 인공 지능이 초래할 사회적 문제는 더욱 심각해질 수 있다.","options":["인공 지능 기술 확산을 긍정적으로 평가하고 있다.","인공 지능 기술의 정보 전망 문제를 지적하고 있다.","인공 지능으로 인한 다양한 변화에 대해 설명하고 있다.","인공 지능 발전에 따른 윤리적 규제의 필요성을 강조하고 있다."],"answer":4,"explain":"✅ <b>④</b> — позиция автора: эксперты «강조한다» о ранней этической планке, нужны совместные гайдлайны и «법적 규제를 통해 강제할 필요가 있다» → автор подчёркивает необходимость этического регулирования ИИ.<br>✖️ ① «оценивает положительно» — тон предостерегающий, не хвалебный; ② «정보 전망 문제» — искажённая формулировка, не отражает позицию; ③ «просто описывает изменения» — автор идёт дальше описания и ПРИЗЫВАЕТ к регулированию.<br>🧩 강조하다 — подчёркивать; 윤리적 규제 — этическое регулирование; 법적 규제 — правовое регулирование."},{"n":47,"points":2,"instr":"Выберите вариант, совпадающий с содержанием текста.","passage":"최근 인공 지능 기술이 의료, 금융, 제조업 등 다양한 분야에서 활용되면서 인간의 삶에 큰 변화를 가져오고 있다. 그러나 인공 지능 기술의 급속한 발전은 사회적·윤리적 문제에 대한 우려도 함께 키우고 있다. 대표적으로 인공 지능이 생성하는 편향된 정보, 개인정보 침해, 인간의 일자리를 대체하는 문제 등이 지적된다. 특히 채용 과정이나 법률 자문과 같은 중요한 의사 결정에서 인공 지능이 인간의 편견을 그대로 학습해 재생산할 가능성이 제기되고 있다. 이로 인해 사회적 약자나 소수 집단이 불이익을 받을 우려가 있다. 이에 따라 전문가들은 인공 지능 개발 단계에서부터 윤리적 기준을 명확히 설정해야 한다고 강조한다. 정부와 기업은 공동으로 윤리 가이드라인을 마련하고 법적 규제를 통해 강제할 필요가 있다. 단순히 자율 규제에만 맡긴다면 기업들은 비용 절감이나 효율성만을 우선시하여 윤리적 책임을 소홀히 할 위험이 있기 때문이다. 기술의 발전은 필연적이지만 그로 인한 부작용을 최소화하려는 노력이 병행되지 않는다면 인공 지능이 초래할 사회적 문제는 더욱 심각해질 수 있다.","options":["인공 지능 기술은 다양한 분야에서 일자리 창출에 기여한다.","제품 과정에서 인공 지능을 활용하면 제품 공정성이 높아진다.","개인정보 침해가 인공 지능 기술의 문제점으로 지적되고 있다.","정부는 인공 지능 기술 확산을 억제하기 위한 규제를 시행 중이다."],"answer":3,"explain":"✅ <b>③</b> — «대표적으로 … 개인정보 침해 … 등이 지적된다» → нарушение приватности названо одной из проблем ИИ.<br>✖️ ① наоборот: ИИ «일자리를 대체하는 문제» (замещает рабочие места), а не создаёт их; ② про «справедливость продукции» в тексте нет — ИИ как раз может воспроизводить предвзятость; ④ регулирование пока только НУЖНО ввести («필요가 있다»), а не «시행 중» (уже действует).<br>🧩 개인정보 침해 — нарушение неприкосновенности личных данных; 지적되다 — отмечаться (как недостаток); 시행 중 — в процессе применения."},{"n":48,"points":2,"instr":"Выберите цель, с которой написан текст.","passage":"최근 기후 변화로 인한 이상 기후, 해수면 상승, 생태계 파괴 등 환경 문제가 심각해지고 있다. 이에 따라 전 세계는 온실가스 배출을 줄이고 탄소 중립 사회로의 전환을 추진하고 있다. 탄소 중립이란 인간의 활동으로 발생하는 이산화 탄소의 양과 이를 흡수하거나 제거하는 양을 같게 만들어 (　　) 것을 목표로 한다. 이를 달성하기 위해 각국 정부는 산업 전반에 걸쳐 탄소 배출을 줄이기 위한 법과 제도를 정비하고 있으며, 기업은 생산 과정에서 친환경 기술과 에너지 절감 방안을 도입하고 있다. 또한 시민들 역시 에너지 절약, 친환경 소비, 대중교통 이용 등 일상생활 속 실천을 통해 탄소 중립에 기여할 수 있다. 하지만 일각에서는 탄소 중립 달성의 부담을 개인에게 과도하게 전가하는 것이 아니냐는 비판도 제기된다. 구조적 변화 없이 시민의 자발적 실천만을 강조할 경우 실질적인 효과를 내기 어렵다는 지적이다. 따라서 탄소 중립은 특정 주체의 노력에만 맡길 것이 아니라 사회 전체가 각자의 책임을 다하며 협력해야 실현 가능한 과제라고 할 수 있다.","options":["탄소 중립 정책이 실패하는 원인을 분석하려고","탄소 중립의 개념과 역사적 기원을 설명하려고","탄소 중립을 위한 다양한 실천 방법을 소개하려고","탄소 중립 달성을 위한 공동의 책임을 강조하려고"],"answer":4,"explain":"✅ <b>④</b> — цель текста: вывод «사회 전체가 각자의 책임을 다하며 협력해야 실현 가능한 과제» → автор подчёркивает ОБЩУЮ ответственность за достижение углеродной нейтральности.<br>✖️ ① «анализ причин провала политики» — текст не о провале; ② «понятие даётся, но «역사적 기원» (исторические истоки) не раскрываются — это не цель; ③ способы практики лишь перечислены как пример, а не главная цель — текст спорит с перекладыванием бремени только на индивида.<br>🧩 탄소 중립 — углеродная нейтральность; 공동의 책임 — общая ответственность; 강조하다 — подчёркивать."},{"n":49,"points":2,"instr":"Выберите наиболее подходящее выражение в ( ).","passage":"최근 기후 변화로 인한 이상 기후, 해수면 상승, 생태계 파괴 등 환경 문제가 심각해지고 있다. 이에 따라 전 세계는 온실가스 배출을 줄이고 탄소 중립 사회로의 전환을 추진하고 있다. 탄소 중립이란 인간의 활동으로 발생하는 이산화 탄소의 양과 이를 흡수하거나 제거하는 양을 같게 만들어 (　　) 것을 목표로 한다. 이를 달성하기 위해 각국 정부는 산업 전반에 걸쳐 탄소 배출을 줄이기 위한 법과 제도를 정비하고 있으며, 기업은 생산 과정에서 친환경 기술과 에너지 절감 방안을 도입하고 있다. 또한 시민들 역시 에너지 절약, 친환경 소비, 대중교통 이용 등 일상생활 속 실천을 통해 탄소 중립에 기여할 수 있다. 하지만 일각에서는 탄소 중립 달성의 부담을 개인에게 과도하게 전가하는 것이 아니냐는 비판도 제기된다. 구조적 변화 없이 시민의 자발적 실천만을 강조할 경우 실질적인 효과를 내기 어렵다는 지적이다. 따라서 탄소 중립은 특정 주체의 노력에만 맡길 것이 아니라 사회 전체가 각자의 책임을 다하며 협력해야 실현 가능한 과제라고 할 수 있다.","options":["친환경 소비를 장려하는","실질적인 탄소 배출을 없애는","온실가스 감축 기술을 개발하는","재생 에너지를 보급하고 활용하는"],"answer":2,"explain":"✅ <b>② 실질적인 탄소 배출을 없애는</b> — «свести на нет фактические выбросы»: углеродная нейтральность = сделать объём выброшенного CO₂ равным объёму поглощённого/удалённого, то есть «нетто-ноль» (실질적인 배출 = 0).<br>✖️ ① «поощрять эко-потребление», ③ «разрабатывать технологии сокращения», ④ «внедрять ВИЭ» — это СПОСОБЫ достижения, упомянутые дальше, а в самом определении нужен результат «нулевых чистых выбросов».<br>🧩 탄소 중립 = нетто-ноль; 흡수/제거 — поглощение/удаление; 없애다 — сводить к нулю, устранять."},{"n":50,"points":2,"instr":"Выберите вариант, совпадающий с содержанием текста.","passage":"최근 기후 변화로 인한 이상 기후, 해수면 상승, 생태계 파괴 등 환경 문제가 심각해지고 있다. 이에 따라 전 세계는 온실가스 배출을 줄이고 탄소 중립 사회로의 전환을 추진하고 있다. 탄소 중립이란 인간의 활동으로 발생하는 이산화 탄소의 양과 이를 흡수하거나 제거하는 양을 같게 만들어 (　　) 것을 목표로 한다. 이를 달성하기 위해 각국 정부는 산업 전반에 걸쳐 탄소 배출을 줄이기 위한 법과 제도를 정비하고 있으며, 기업은 생산 과정에서 친환경 기술과 에너지 절감 방안을 도입하고 있다. 또한 시민들 역시 에너지 절약, 친환경 소비, 대중교통 이용 등 일상생활 속 실천을 통해 탄소 중립에 기여할 수 있다. 하지만 일각에서는 탄소 중립 달성의 부담을 개인에게 과도하게 전가하는 것이 아니냐는 비판도 제기된다. 구조적 변화 없이 시민의 자발적 실천만을 강조할 경우 실질적인 효과를 내기 어렵다는 지적이다. 따라서 탄소 중립은 특정 주체의 노력에만 맡길 것이 아니라 사회 전체가 각자의 책임을 다하며 협력해야 실현 가능한 과제라고 할 수 있다.","options":["환경 문제는 각국 정부의 강력한 규제로 해결해야 한다.","실질적인 효과를 위해 구조적 변화가 앞서 이루어져야 한다.","기업의 활발한 산업 활동 확대로 온실가스를 감축할 수 있다.","개인의 생활 속 실천이 가장 효과적인 탄소 중립 대응책이다."],"answer":2,"explain":"✅ <b>②</b> — «구조적 변화 없이 시민의 자발적 실천만을 강조할 경우 실질적인 효과를 내기 어렵다» → для реального эффекта необходимы структурные изменения, а не только личные усилия.<br>✖️ ① «решать только сильным госрегулированием» — текст подчёркивает участие ВСЕХ (사회 전체), а не одного субъекта; ③ «расширение промышленной деятельности сократит выбросы» — нелогично и не из текста; ④ «личная практика — самый эффективный способ» — текст КРИТИКУЕТ переваливание бремени на индивида.<br>🧩 구조적 변화 — структурные изменения; 자발적 실천 — добровольные действия; 전가하다 — перекладывать (ответственность)."}]},
+      writing: {"durationMin":50,"label":"EBS 모의고사 제1회 · 쓰기 (51~54)","tasks":[{"n":51,"points":10,"korInstr":"다음 글의 ㉠과 ㉡에 들어갈 말을 각각 쓰십시오. (각 10점)","instr":"Впишите подходящие выражения в ㉠ и ㉡. Это памятка банка (인주은행) клиенту — формальный стиль -ㅂ니다/-야 합니다.","passage":"📋 인주은행 회원 가입 안내 (고객 센터)\n\n비밀번호는 다른 사람이 쉽게 알 수 있는 것으로 만들면 위험합니다. 전화번호나 생일은 사용하지 말고 문자와 숫자를 ( ㉠ ). 그리고 안전을 위해 비밀번호를 가끔 ( ㉡ ).","blanks":[{"slot":"㉠","model":"섞어서 만들어야 합니다","check":"«전화번호나 생일은 사용하지 말고 문자와 숫자를 ( )» → не использовать телефон/день рождения, а буквы и цифры СМЕШАТЬ при создании: 섞어서 만들어야 합니다. Формальный стиль -야 합니다."},{"slot":"㉡","model":"변경해야 합니다","check":"«안전을 위해 비밀번호를 가끔 ( )» → для безопасности пароль время от времени МЕНЯТЬ: 변경해야 합니다 / 바꿔야 합니다. Стиль -야 합니다."}]},{"n":52,"points":10,"korInstr":"다음 글의 ㉠과 ㉡에 들어갈 말을 각각 쓰십시오. (각 10점)","instr":"Впишите подходящие выражения в ㉠ и ㉡. Научно-популярный текст о вкусе и запахе — письменный стиль -다.","passage":"음식의 맛은 입안에서만 느끼는 것이 아니라 냄새도 큰 영향을 준다. 사람이 음식을 먹을 때 코로 ( ㉠ ) 혀로 느낄 수 없는 향과 맛의 차이를 더 잘 구별할 수 있다. 반대로 감기에 걸려 코가 막히면 평소 좋아하던 음식도 맛이 없는 것처럼 느껴진다. 이처럼 맛을 제대로 느끼려면 혀의 역할뿐 아니라 ( ㉡ )도 매우 중요하다.","blanks":[{"slot":"㉠","model":"냄새를 맡으면","check":"«음식을 먹을 때 코로 ( ) 혀로 느낄 수 없는 … 차이를 더 잘 구별할 수 있다» → если носом НЮХАТЬ запах, различаешь лучше: 냄새를 맡으면. Условие -으면."},{"slot":"㉡","model":"코의 역할","check":"«맛을 제대로 느끼려면 혀의 역할뿐 아니라 ( )도 매우 중요하다» → важна не только роль языка, но и РОЛЬ НОСА: 코의 역할. Параллель с 혀의 역할."}]},{"n":53,"points":30,"min":200,"max":300,"korInstr":"다음은 「원격 근무 확산 이후 직장 문화」의 변화에 대한 자료이다. 이 내용을 200~300자의 글로 쓰시오. 단, 글의 제목은 쓰지 마시오. (30점)","instr":"Опишите данные об изменении рабочей культуры после распространения удалёнки текстом 200–300 знаков. Передайте динамику доли компаний (линейный график 2019→2022), долю имеющих опыт удалёнки (круговая) и плюсы/минусы. Письменный стиль -다, без заголовка.","image":"assets/topik2/exams/img/ebs1-w53.png","model":"원격 근무 시행 기업의 비율 변화를 살펴보면 2019년에서 2020년 사이에 원격 근무를 시행한 기업이 12.5%에서 54.3%로 급증했으나 이후 2021년 47.8%, 2022년 39.2%로 점차 감소하는 추세를 보이고 있다. 실제 원격 근무 경험에 대한 질문에 과반수가 경험이 있다고 대답했다. 원격 근무 실시 이후 변화에 대해 사람들은 업무 효율성이 증가하고 일과 삶의 균형이 향상되었다고 느꼈지만 동시에 서로 소통이 부족해지고 동료와의 거리감도 커졌다는 부정적인 측면도 느꼈다. 기업들은 이러한 부정적 변화로 원격 근무 시행을 줄이고 있는 것으로 보인다.","check":"① Описан график доли компаний с цифрами (2019→2020 рост 12.5%→54.3%, затем 2021년 47.8%, 2022년 39.2% спад)? ② Передан опыт удалёнки (과반수가 경험이 있다)? ③ Названы плюсы (업무 효율성↑, 일과 삶의 균형↑) и минусы (소통 부족, 동료와의 거리감↑)? ④ Вывод (기업들이 원격 근무 시행을 줄이는 추세)? ⑤ Стиль -다, 200~300 знаков, без заголовка?"},{"n":54,"points":50,"min":600,"max":700,"korInstr":"다음을 참고하여 600~700자로 글을 쓰시오. 단, 문제를 그대로 옮겨 쓰지 마시오. (50점)","instr":"Эссе 600–700 знаков о важности отдыха и реальных способах его обеспечить. Раскройте все три вопроса, разбейте на абзацы (важность / проблемы при недостатке / решения личное и общественное), письменный стиль -다.","passage":"현대인은 바쁜 일상과 끊임없는 경쟁 속에서 휴식의 중요성을 자주 간과하곤 한다. 그러나 충분한 휴식은 신체적 건강뿐만 아니라 정신적 안정, 일의 효율성에도 큰 영향을 미친다. 아래의 내용을 중심으로 휴식의 중요성과 이를 실천하기 위한 현실적인 방안에 대한 자신의 생각을 쓰라.\n• 휴식이 중요한 이유는 무엇인가?\n• 충분한 휴식을 취하지 못할 경우 어떤 문제가 생기는가?\n• 건강한 휴식 문화를 만들기 위한 방안은 무엇인가?","model":"현대 사회의 치열한 경쟁 속에서 많은 사람들이 일상에 쫓겨 충분한 휴식을 취하지 못하고 있다. 그러나 휴식은 단순히 일을 멈추는 것이 아니라, 신체와 정신을 회복시키고 삶의 질을 향상시키는 중요한 행위이다. 휴식을 통해 우리는 에너지를 재충전하고 스트레스를 완화하며, 더 나아가 창의적인 사고와 효율적인 업무 수행이 가능하다.\n만약 충분한 휴식을 취하지 못한다면 다양한 문제가 발생할 수 있다. 육체적으로는 피로가 누적되어 면역력이 약해지고 병으로 이어질 수 있다. 정신적으로 우울감, 불안이 증가하며, 이는 정신 건강 문제로 이어질 수 있다. 이러한 상태가 지속되면 개인의 삶은 물론 사회 전체에도 부정적인 영향을 미치게 된다.\n이러한 문제를 해결하기 위해서는 개인과 사회가 함께 노력해야 한다. 개인은 일과 휴식의 균형을 스스로 조절하려고 노력해야 한다. 주말이나 여가 시간에는 일과 완전히 분리된 활동을 하며 재충전해야 한다. 기업과 조직은 구성원들이 휴식을 충분히 취할 수 있도록 정시 퇴근, 휴가 사용 권장, 휴식 공간 제공 등 제도적 장치를 만들어야 한다. 마지막으로 사회 전체도 휴식을 긍정적으로 인식하는 문화가 확산되어야 한다. 우리는 휴식의 가치를 재인식하고, 바쁜 일상 속에서도 스스로를 돌보는 시간을 의도적으로 마련해야 한다.","check":"① Раскрыт 1-й вопрос — почему отдых важен (восстановление тела/духа, ↑эффективности и креативности)? ② Раскрыт 2-й вопрос — проблемы при недостатке (физически: усталость, ↓иммунитета, болезни; психически: депрессия, тревога; влияние на общество)? ③ Раскрыт 3-й вопрос — решения: личное (баланс работа/отдых, отдельная от работы деятельность) + компании (정시 퇴근, отпуска, зоны отдыха) + общество (культура позитивного отношения к отдыху)? ④ Три абзаца, связки 그러나·만약·이러한 문제를 해결하기 위해서는·마지막으로? ⑤ Стиль -다, 600~700 знаков, без дословного переписывания задания?"}]}
+    },
     102: {
       listening: {
         durationMin: 60, total: 100, label: '제102회 · 듣기 (1~50)',
@@ -7515,7 +8097,7 @@
   function startTopikWriting(n) {
     const data = (TOPIK2_EXAMS[n] || {}).writing;
     if (!data || !data.tasks || !data.tasks.length) { toast('Этот раздел готовится 🌸', 'var(--berry)'); return; }
-    _w2State = { exam: n, tasks: data.tasks, answers: {}, endAt: Date.now() + (data.durationMin || 50) * 60000, finished: false };
+    _w2State = { exam: n, label: data.label, tasks: data.tasks, answers: {}, endAt: Date.now() + (data.durationMin || 50) * 60000, finished: false };
     let ov = document.getElementById('topik-exam-overlay');
     if (!ov) { ov = document.createElement('div'); ov.id = 'topik-exam-overlay'; ov.className = 'exam-overlay'; document.body.appendChild(ov); }
     document.body.style.overflow = 'hidden';
@@ -7581,7 +8163,7 @@
     ov.innerHTML = `
       <div class="exam-top">
         <button onclick="exitW2()" class="chat-back-btn" aria-label="Выйти" style="width:38px; height:38px;"><i class="fa-solid fa-xmark"></i></button>
-        <div style="font-weight:800; font-size:14px; flex:1;">쓰기 · 제${_w2State.exam}회 (51~54)</div>
+        <div style="font-weight:800; font-size:14px; flex:1;">${_w2State.label || ('쓰기 · 제' + _w2State.exam + '회 (51~54)')}</div>
         <span id="w2-timer" class="exam-timer">⏱ 50:00</span>
       </div>
       <div class="exam-results" style="overflow-y:auto; flex:1;">
@@ -9028,13 +9610,50 @@
     setIcon();
     updateExamAudioUI();
   }
+  // ── Озвучка транскрипта 듣기 через Web Speech (ko-KR) — для экзаменов без аудиофайла (напр. EBS) ──
+  let _examSpeakLines = null, _examSpeakIdx = 0, _examSpeakBtn = null;
+  function stopExamScript() {
+    try { speechSynthesis.cancel(); } catch (_) {}
+    _examSpeakLines = null; _examSpeakIdx = 0;
+    if (_examSpeakBtn && _examSpeakBtn.dataset.idle) { _examSpeakBtn.classList.remove('playing'); _examSpeakBtn.innerHTML = _examSpeakBtn.dataset.idle; }
+    _examSpeakBtn = null;
+  }
+  function speakExamScript(btn) {
+    if (!('speechSynthesis' in window)) { toast('Голос недоступен в этом браузере'); return; }
+    const st = _examState; if (!st) return;
+    const q = st.questions[st.idx];
+    if (!q || !q.script) return;
+    if (btn && btn === _examSpeakBtn && _examSpeakLines) { stopExamScript(); return; } // toggle
+    stopExamScript();
+    _examSpeakBtn = btn || null;
+    if (btn) { if (!btn.dataset.idle) btn.dataset.idle = btn.innerHTML; btn.classList.add('playing'); btn.innerHTML = '<i class="fa-solid fa-stop"></i> Остановить'; }
+    const slow = (typeof getSettings === 'function' && getSettings().slowVoice);
+    _examSpeakLines = q.script.split('\n').map(s => s.trim()).filter(Boolean);
+    _examSpeakIdx = 0;
+    const next = () => {
+      if (!_examSpeakLines || _examSpeakIdx >= _examSpeakLines.length) { stopExamScript(); return; }
+      let line = _examSpeakLines[_examSpeakIdx++];
+      let pitch = 1.05, text = line;
+      const m = line.match(/^(남자|여자|남|여)\s*[:：]\s*(.*)$/); // снять метку говорящего, развести голоса по высоте
+      if (m) { text = m[2]; pitch = /남/.test(m[1]) ? 0.8 : 1.25; }
+      const u = new SpeechSynthesisUtterance(text);
+      u.lang = 'ko-KR';
+      u.rate = slow ? 0.6 : 0.92;
+      u.pitch = pitch;
+      u.onend = next; u.onerror = next;
+      speechSynthesis.speak(u);
+    };
+    next();
+  }
   function paintExam() {
+    stopExamScript();
     const st = _examState; if (!st) return;
     const ov = document.getElementById('topik-exam-overlay'); if (!ov) return;
     const q = st.questions[st.idx];
     const chosen = st.answers[q.n];
     const passage = q.passage ? `<div class="exam-passage ko">${q.passage.replace(/\n/g,'<br>')}</div>` : '';
     const image = q.image ? `<img class="exam-qimg" src="${q.image}" alt="Картинки к вопросу">` : '';
+    const listenBtn = q.script ? `<button type="button" class="exam-listen-btn" onclick="speakExamScript(this)"><i class="fa-solid fa-headphones"></i> Прослушать запись</button>` : '';
     const opts = q.options.map((o, i) => {
       const num = i + 1;
       const inner = q.image
@@ -9046,6 +9665,7 @@
     body.innerHTML = `
       <div class="exam-qno">Вопрос ${st.idx + 1} ${q.n !== st.idx + 1 ? `<span class="exam-q-orig">№${q.n}</span>` : ''} <span class="exam-pts">${q.points} балла</span></div>
       <div class="exam-instr">${q.instr || ''}</div>
+      ${listenBtn}
       ${image}${passage}
       <div class="exam-opts ${q.image ? 'exam-opts-pic' : ''}">${opts}</div>`;
     document.getElementById('exam-foot').innerHTML = `
@@ -9089,6 +9709,7 @@
     if (!_examState || _examState.finished) return;
     _examState.finished = true;
     stopExamTimer();
+    stopExamScript();
     renderExamResults(byTime);
   }
   function renderExamResults(byTime) {
@@ -9238,6 +9859,7 @@
   }
   function closeExam() {
     stopExamTimer();
+    stopExamScript();
     const finished = _examState && _examState.finished;
     if (_examState && !finished) {
       if (!confirm('Выйти из теста? Прогресс не сохранится.')) { startExamTimer(); return; }
@@ -9329,7 +9951,7 @@
     const next = all.find(l => !p.completed.includes(l.id));
     p.current = next ? next.id : null;
     setLessonProgress(p);
-    stats.lessons = p.completed.length;
+    stats.lessons = totalLessonsCompleted();
     UStore.set('stats', stats);
   }
 
@@ -9488,7 +10110,7 @@
     // Админу открыты все уроки — сразу запускаем урок целиком
     if (isAdmin()) { startLessonFlow(lessonId); return; }
     if (!completed && !current) { toast('Этот урок пока закрыт 🌸'); return; }
-    if (current) { startLessonFlow(); return; }
+    if (current) { startLessonFlow(lessonId); return; }
     // Show review modal for completed
     const m = document.createElement('div');
     m.className = 'modal-bg modal-center';
@@ -9514,7 +10136,7 @@
         ${l.vocab ? `<div class="ko-quote" style="margin-top:16px;"><div style="font-size:11px; letter-spacing:.16em; color:var(--coral); font-weight:600; margin-bottom:6px;">СЛОВАРЬ</div><div style="font-size:13px; color:var(--berry); line-height:1.6;">${vocabPreviewText(l.vocab)}</div></div>` : ''}
         <div style="display:flex; gap:8px; margin-top:16px;">
           <button onclick="this.closest('.modal-bg').remove()" class="btn btn-ghost" style="flex:1;">Закрыть</button>
-          <button onclick="this.closest('.modal-bg').remove(); startLessonFlow();" class="btn btn-primary" style="flex:1.5;">↻ Пройти ещё раз</button>
+          <button onclick="this.closest('.modal-bg').remove(); startLessonFlow('${l.id}', true);" class="btn btn-primary" style="flex:1.5;">↻ Пройти ещё раз</button>
         </div>
       </div>
     `;
@@ -9545,7 +10167,7 @@
     }).join('');
     const pct = Math.round((p.completed.length / all.length) * 100);
     slot.innerHTML = `
-      <div onclick="startLessonFlow()" class="hero" style="position:relative;">
+      <div onclick="startLessonFlow('${cur.id}')" class="hero" style="position:relative;">
         <img src="assets/bear2.png" alt="" class="duo-mascot duo-mascot-hero" onerror="this.style.display='none'">
         <div style="display:flex; justify-content:space-between; gap: 14px; position: relative; padding-right: 96px;">
           <div style="flex:1; min-width:0;">
@@ -9730,8 +10352,13 @@
       if (u && u.isAdmin) Store.set('customFeedPosts', posts);
       else _origStoreSet && _origStoreSet('customFeedPosts', posts);
     }
-    posts = posts.slice().sort((a, b) => (b.date || 0) - (a.date || 0));
-    if (posts.length === 0) {
+    // Композер «поделиться фото» (наполняет отдельный слот; зависит от входа)
+    renderFeedComposer();
+    // Посты учеников из RTDB (shared/userFeedPosts) — публичная лента в стиле Instagram.
+    // Сливаем с постами Мади и сортируем по времени (новые сверху).
+    const studentPosts = (_userFeedPosts || []).map(p => ({ ...p, date: p.ts || 0, _student: true }));
+    const merged = posts.slice().concat(studentPosts).sort((a, b) => (b.date || 0) - (a.date || 0));
+    if (merged.length === 0) {
       // Admin sees how to add posts; students get friendly built-in welcome cards
       // (local only — no DB writes, no like/comment bars) so the feed is never empty.
       slot.innerHTML = isAdmin()
@@ -9739,20 +10366,192 @@
         : welcomeFeedHtml();
       return;
     }
-    const total = posts.length;
+    const total = merged.length;
     let shown, footer = '';
     if (!feedShowAll) {
-      shown = posts.slice(0, 5);
+      shown = merged.slice(0, 5);
       if (total > 5) footer = `<div><button onclick="showAllFeed()" class="btn btn-ghost btn-block">Вся лента (${total}) →</button></div>`;
     } else {
       const pages = Math.ceil(total / FEED_PER_PAGE);
       if (feedPage > pages - 1) feedPage = pages - 1;
       if (feedPage < 0) feedPage = 0;
       const start = feedPage * FEED_PER_PAGE;
-      shown = posts.slice(start, start + FEED_PER_PAGE);
+      shown = merged.slice(start, start + FEED_PER_PAGE);
       footer = `<div style="display:grid; gap:8px;">${pageNavHtml(feedPage, pages, 'gotoFeedPage')}<button onclick="collapseFeed()" class="btn btn-ghost btn-block">↑ Свернуть</button></div>`;
     }
-    slot.innerHTML = shown.map(feedPostCardHtml).join('') + footer;
+    slot.innerHTML = shown.map(p => p._student ? studentPostCardHtml(p) : feedPostCardHtml(p)).join('') + footer;
+  }
+
+  // ───────────────────────────────────────────────────────────────────────────
+  // Публичная лента учеников (Instagram-стиль): фото + подпись + комментарии.
+  // Хранение: RTDB shared/userFeedPosts/{id} = {uid,name,avatar,image(base64),caption,ts}.
+  // Лайки/комменты переиспользуют общую систему shared/feedLikes|feedComments по pid.
+  // ───────────────────────────────────────────────────────────────────────────
+  let _userFeedPosts = [];   // [{id, uid, name, avatar, image, caption, ts}]
+  let _composerPhoto = null; // base64 выбранного фото в композере
+
+  // Простой фильтр нецензурщины (RU+EN основы). Проверяем по токенам, чтобы
+  // не ловить ложные срабатывания на стыках слов.
+  const _PROFANITY = ['бляд','блят','сука','сучка','хуй','хуе','хуя','пизд','ебал','ебан','ебат','ебуч','ебу','наху','похуй','залуп','гандон','гондон','мудак','мудил','долбоеб','пидор','пидар','выеб','уебок','уебищ','шлюх','говн','дерьм','залупа','fuck','shit','bitch','asshole','cunt','dick','pussy','faggot','nigger'];
+  function containsProfanity(text) {
+    if (!text) return false;
+    const tokens = String(text).toLowerCase().replace(/ё/g, 'е').split(/[^a-zа-я]+/).filter(Boolean);
+    return tokens.some(tok => _PROFANITY.some(w => tok.includes(w)));
+  }
+
+  // Композер «поделись фото» над лентой (отдельный слот, зависит от входа)
+  function renderFeedComposer() {
+    const slot = document.getElementById('feed-composer-slot');
+    if (!slot) return;
+    const u = Store.get('user');
+    const guest = !u || u.guest;
+    if (guest) {
+      slot.innerHTML = `
+        <button type="button" onclick="switchScreen('profile')" class="feed-composer feed-composer-guest">
+          <div class="feed-composer-av feed-composer-av-initial"><i class="fa-solid fa-user"></i></div>
+          <span class="feed-composer-text">Войди, чтобы делиться фото 🌸</span>
+          <i class="fa-solid fa-arrow-right" style="margin-left:auto; opacity:.6;"></i>
+        </button>`;
+      return;
+    }
+    const av = (typeof UStore !== 'undefined') ? UStore.get('avatar') : null;
+    slot.innerHTML = `
+      <button type="button" onclick="openFeedComposer()" class="feed-composer">
+        ${av ? `<img class="feed-composer-av" src="${av}" alt="">` : `<div class="feed-composer-av feed-composer-av-initial">${escHtml((socialUserName() || '?').charAt(0).toUpperCase())}</div>`}
+        <span class="feed-composer-text">Поделись моментом…</span>
+        <span class="feed-composer-cam"><i class="fa-solid fa-camera"></i></span>
+      </button>`;
+  }
+
+  // Карточка поста ученика (шапка автора → фото → подпись → лайки/комменты)
+  function studentPostCardHtml(p) {
+    const pid = p.id;
+    const isAuthor = p.uid === socialUserId();
+    const canDelete = isAuthor || isAdmin();
+    const av = authorAvatar(p);
+    const when = p.ts ? relativeTime(p.ts) : '';
+    const head = `
+      <div class="feed-student-head">
+        ${av ? `<img class="feed-student-av" src="${av}" alt="">` : `<div class="feed-student-av feed-student-av-initial">${escHtml((p.name || '?').charAt(0).toUpperCase())}</div>`}
+        <div style="flex:1; min-width:0;">
+          <div class="feed-student-name">${escHtml(p.name || 'Ученик')}${isAuthor ? ' <span class="feed-student-you">· ты</span>' : ''}</div>
+          <div class="feed-student-time">🌸 ученик · ${escHtml(when)}</div>
+        </div>
+        ${canDelete
+          ? `<button class="feed-student-act" onclick="deleteUserPost('${pid}')" aria-label="Удалить пост" title="Удалить"><i class="fa-solid fa-trash-can"></i></button>`
+          : `<button class="feed-student-act" onclick="reportUserPost('${pid}')" aria-label="Пожаловаться" title="Пожаловаться"><i class="fa-regular fa-flag"></i></button>`}
+      </div>`;
+    return `
+      <div class="feed-card feed-card-student" data-post-id="${pid}">
+        ${head}
+        ${p.image ? feedImageHtml(p.image, pid) : ''}
+        ${p.caption ? `<div class="feed-student-caption">${escHtml(p.caption)}</div>` : ''}
+        ${renderFeedSocialBar(pid)}
+        ${renderFeedCommentsBlock(pid)}
+      </div>`;
+  }
+
+  function openFeedComposer() {
+    const u = Store.get('user');
+    if (!u || u.guest) { toast('Войди в профиль, чтобы делиться фото 🌸', 'var(--coral)'); switchScreen('profile'); return; }
+    _composerPhoto = null;
+    const m = document.createElement('div');
+    m.className = 'modal-bg modal-center';
+    m.id = 'feed-composer-modal';
+    m.onclick = e => { if (e.target === m) m.remove(); };
+    m.innerHTML = `
+      <div class="modal-card" style="max-width:420px;">
+        <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:14px;">
+          <div>
+            <div class="page-eyebrow">НОВЫЙ ПОСТ</div>
+            <div class="display" style="font-size:20px; color:var(--berry); margin-top:2px;">Поделись моментом 🌸</div>
+          </div>
+          <div onclick="this.closest('.modal-bg').remove()" style="font-size:24px; line-height:1; color:var(--soft); cursor:pointer; padding:4px;">×</div>
+        </div>
+        <input type="file" accept="image/*" capture="environment" id="composer-file" style="display:none;" onchange="onComposerPhotoPick(event)">
+        <div id="composer-preview" onclick="document.getElementById('composer-file').click()" class="composer-drop">
+          <div style="font-size:40px;">📷</div>
+          <div style="font-size:13px; color:var(--soft); margin-top:6px;">Нажми, чтобы выбрать фото с телефона</div>
+        </div>
+        <textarea id="composer-caption" class="input" rows="3" maxlength="600" placeholder="Напиши описание… (необязательно)" style="resize:vertical; margin-top:12px;"></textarea>
+        <button onclick="publishUserPost()" class="btn btn-primary btn-block" style="margin-top:12px;"><i class="fa-solid fa-paper-plane" style="font-size:12px;"></i> Опубликовать</button>
+        <div style="font-size:10.5px; color:var(--soft); text-align:center; margin-top:10px; line-height:1.5;">Видят все ученики 🌸 Будь добрым — посты и комментарии модерируются.</div>
+      </div>`;
+    document.body.appendChild(m);
+  }
+
+  async function onComposerPhotoPick(ev) {
+    const file = ev.target.files && ev.target.files[0];
+    ev.target.value = '';
+    if (!file) return;
+    if (!/^image\//.test(file.type)) { toast('Можно загружать только изображения'); return; }
+    const prev = document.getElementById('composer-preview');
+    if (prev) prev.innerHTML = '<div style="font-size:13px; color:var(--soft);">Сжимаю…</div>';
+    try {
+      _composerPhoto = await compressImageFile(file, 1000, 0.72);
+      if (prev) { prev.classList.add('has-photo'); prev.innerHTML = `<img src="${_composerPhoto}" alt="">`; }
+    } catch (_) {
+      _composerPhoto = null;
+      if (prev) prev.innerHTML = '<div style="font-size:40px;">📷</div><div style="font-size:13px; color:var(--coral); margin-top:6px;">Не удалось обработать фото</div>';
+      toast('Не удалось обработать фото');
+    }
+  }
+
+  async function publishUserPost() {
+    if (typeof _db === 'undefined') { toast('Нет соединения'); return; }
+    const u = Store.get('user');
+    if (!u || u.guest) { toast('Войди, чтобы публиковать 🌸'); return; }
+    if (!_composerPhoto) { toast('Сначала добавь фото 📷'); return; }
+    const capEl = document.getElementById('composer-caption');
+    const caption = capEl ? (capEl.value || '').trim().slice(0, 600) : '';
+    if (containsProfanity(caption)) { toast('Уберите нецензурные слова из описания 🌸'); return; }
+    const post = {
+      uid: socialUserId(),
+      name: socialUserName(),
+      avatar: ((typeof UStore !== 'undefined') ? UStore.get('avatar') : null) || null,
+      image: _composerPhoto,
+      caption,
+      ts: Date.now()
+    };
+    const btn = document.querySelector('#feed-composer-modal .btn-primary');
+    if (btn) { btn.disabled = true; btn.textContent = 'Публикую…'; }
+    try {
+      await _db.ref('shared/userFeedPosts').push(post);
+      _composerPhoto = null;
+      document.getElementById('feed-composer-modal')?.remove();
+      toast('Опубликовано 🌸', 'var(--sage)');
+      if (typeof addXp === 'function') addXp(5);
+      if (typeof spawnConfetti === 'function') spawnConfetti();
+    } catch (e) {
+      console.warn('publishUserPost failed', e);
+      if (btn) { btn.disabled = false; btn.innerHTML = '<i class="fa-solid fa-paper-plane" style="font-size:12px;"></i> Опубликовать'; }
+      toast('Не удалось опубликовать');
+    }
+  }
+
+  async function deleteUserPost(pid) {
+    if (typeof _db === 'undefined') return;
+    const post = (_userFeedPosts || []).find(p => p.id === pid);
+    if (!post) return;
+    const mine = post.uid === socialUserId();
+    if (!mine && !isAdmin()) { toast('Можно удалять только свои посты'); return; }
+    if (!confirm('Удалить этот пост?')) return;
+    try {
+      await _db.ref('shared/userFeedPosts/' + pid).remove();
+      _db.ref('shared/feedLikes/' + pid).remove().catch(() => {});
+      _db.ref('shared/feedComments/' + pid).remove().catch(() => {});
+      _db.ref('shared/feedReports/' + pid).remove().catch(() => {});
+      toast('Пост удалён', 'var(--sage)');
+    } catch (e) { console.warn('deleteUserPost failed', e); toast('Не удалось удалить'); }
+  }
+
+  async function reportUserPost(pid) {
+    if (typeof _db === 'undefined') { toast('Нет соединения'); return; }
+    const uid = socialUserId();
+    try {
+      await _db.ref(`shared/feedReports/${pid}/${uid}`).set({ ts: Date.now(), name: socialUserName() });
+      toast('Спасибо! Мади проверит этот пост 🌸', 'var(--sage)');
+    } catch (e) { toast('Не удалось отправить жалобу'); }
   }
 
   // Build the inline video player markup for a feed post — handles YouTube / GDrive / direct file
@@ -10065,6 +10864,12 @@
       // Subscribe to live avatar updates for every author seen in the feed
       watchAvatarsForComments();
       refreshFeedSocial();
+    });
+    // Публичные посты учеников (последние 40, новые внизу узла — сортируем в рендере)
+    _db.ref('shared/userFeedPosts').orderByChild('ts').limitToLast(40).on('value', snap => {
+      const data = snap.val() || {};
+      _userFeedPosts = Object.entries(data).map(([id, p]) => ({ id, ...p }));
+      renderCustomFeedPosts();
     });
   }
 
@@ -10415,6 +11220,7 @@
     const text = input ? (input.value || '').trim() : '';
     if (!text) return;
     if (text.length > 500) { toast('≤ 500 символов'); return; }
+    if (containsProfanity(text)) { toast('Без нецензурных слов, пожалуйста 🌸'); return; }
     const uid = socialUserId();
     const name = socialUserName();
     const avatar = (typeof UStore !== 'undefined') ? UStore.get('avatar') : null;
@@ -10513,6 +11319,7 @@
     const text = input ? (input.value || '').trim() : '';
     if (!text) return;
     if (text.length > 500) { toast('≤ 500 символов'); return; }
+    if (containsProfanity(text)) { toast('Без нецензурных слов, пожалуйста 🌸'); return; }
     const uid = socialUserId();
     const name = socialUserName();
     const avatar = (typeof UStore !== 'undefined') ? UStore.get('avatar') : null;
@@ -11113,19 +11920,19 @@
     const pct = Math.min(100, Math.round((cur / goal) * 100));
     const done = cur >= goal;
     slot.innerHTML = `
-      <div onclick="openDailyGoalSettings()" class="card card-press" style="padding:14px 16px; cursor:pointer; ${done ? 'background:linear-gradient(135deg, rgba(229,180,60,.20), rgba(255,255,255,.7));' : ''}">
-        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:8px;">
-          <div style="display:flex; align-items:center; gap:8px; min-width:0;">
-            <span style="font-size:18px;">${done ? '🎉' : '🎯'}</span>
-            <span style="font-size:13px; font-weight:700; color:var(--berry);">${done ? 'Цель дня достигнута!' : 'Цель на сегодня'}</span>
+      <div onclick="openDailyGoalSettings()" class="card card-press" style="flex:1; min-width:0; padding:14px; cursor:pointer; display:flex; flex-direction:column; gap:8px; ${done ? 'background:linear-gradient(135deg, rgba(229,180,60,.20), rgba(255,255,255,.7));' : ''}">
+        <div style="display:flex; align-items:center; justify-content:space-between;">
+          <span style="font-size:21px;">${done ? '🎉' : '🎯'}</span>
+          <span style="font-size:12px; font-weight:800; color:${done ? 'var(--gold-ink)' : 'var(--coral)'}; flex-shrink:0;">${cur}/${goal}</span>
+        </div>
+        <div style="min-width:0; margin-top:auto;">
+          <div style="font-size:13px; font-weight:700; color:var(--berry); line-height:1.15;">${done ? 'Цель достигнута!' : 'Цель на сегодня'}</div>
+          <div style="height:8px; background:var(--paper); border-radius:999px; overflow:hidden; margin-top:8px;">
+            <div style="height:100%; width:${pct}%; background:${done ? '#C9A55C' : 'var(--grad-coral)'}; border-radius:999px; transition:width .5s ease;"></div>
           </div>
-          <span style="font-size:13px; font-weight:800; color:${done ? 'var(--gold-ink)' : 'var(--coral)'}; flex-shrink:0;">${cur}/${goal} XP</span>
-        </div>
-        <div style="height:10px; background:var(--paper); border-radius:999px; overflow:hidden;">
-          <div style="height:100%; width:${pct}%; background:${done ? '#C9A55C' : 'var(--grad-coral)'}; border-radius:999px; transition:width .5s ease;"></div>
-        </div>
-        <div style="font-size:10.5px; color:var(--soft); margin-top:6px;">
-          ${done ? '🌸 Молодец! Можно отдохнуть' : `Осталось ${goal - cur} XP · тапни чтобы изменить цель`}
+          <div style="font-size:9.5px; color:var(--soft); margin-top:5px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+            ${done ? '🌸 Молодец!' : `Осталось ${goal - cur} XP`}
+          </div>
         </div>
       </div>`;
   }
