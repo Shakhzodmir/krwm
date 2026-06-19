@@ -153,28 +153,24 @@
       </div>
     </div>
 
-    <!-- Quick actions: фокус-таймер (над «Целью дня») -->
-    <div style="padding: 0 20px 16px;">
-      <div onclick="openFocusRoom()" class="card card-press" style="padding: 16px 14px; display:flex; align-items:center; gap:12px; background: var(--grad-coral); border:none; color:white; box-shadow: 0 10px 24px -10px rgba(var(--accent-rgb),.65);">
-        <div style="width:44px; height:44px; flex-shrink:0; border-radius:14px; background:rgba(255,255,255,.22); display:flex; align-items:center; justify-content:center; font-size:23px;">⏱</div>
-        <div style="min-width:0;">
+    <!-- Quick actions: фокус-таймер + цель дня в один ряд (для динамичности) -->
+    <div style="padding: 0 20px 16px; display:flex; gap:12px; align-items:stretch;">
+      <div onclick="openFocusRoom()" class="card card-press" style="flex:1; min-width:0; padding: 14px; display:flex; flex-direction:column; gap:10px; background: var(--grad-coral); border:none; color:white; box-shadow: 0 10px 24px -10px rgba(var(--accent-rgb),.65);">
+        <div style="width:40px; height:40px; flex-shrink:0; border-radius:13px; background:rgba(255,255,255,.22); display:flex; align-items:center; justify-content:center; font-size:21px;">⏱</div>
+        <div style="min-width:0; margin-top:auto;">
           <div style="font-size:14px; font-weight:700;">Фокус-таймер</div>
-          <div style="font-size:10.5px; opacity:.9; margin-top:1px;">Помодоро · звуки · XP</div>
+          <div style="font-size:10px; opacity:.9; margin-top:2px;">Помодоро · звуки · XP</div>
         </div>
-        <i class="fa-solid fa-chevron-right" style="margin-left:auto; font-size:12px; opacity:.8;" aria-hidden="true"></i>
       </div>
-    </div>
 
-    <!-- Daily Goal widget (dynamic) -->
-    <div id="daily-goal-widget" style="padding: 0 20px 16px;"></div>
+      <!-- Daily Goal widget (dynamic, компактная плитка) -->
+      <div id="daily-goal-widget" style="flex:1; min-width:0; display:flex;"></div>
+    </div>
 
     <!-- SRS "review today" widget (dynamic; hidden when nothing is due) -->
     <div id="srs-widget" style="padding: 0 20px 16px;"></div>
 
-    <!-- Hero Lesson (dynamic, reflects current lesson) -->
-    <div id="hero-lesson" style="padding: 0 20px 20px;"></div>
-
-    <!-- TOPIK prep entry -->
+    <!-- TOPIK prep entry (над текущим уроком) -->
     <div style="padding: 0 20px 20px;">
       <button type="button" onclick="switchScreen('topik')" class="topik-entry" aria-label="Подготовка к ТОПИК">
         <span class="topik-entry-badge">TOPIK</span>
@@ -186,6 +182,9 @@
       </button>
     </div>
 
+    <!-- Hero Lesson (dynamic, reflects current lesson) -->
+    <div id="hero-lesson" style="padding: 0 20px 20px;"></div>
+
     <!-- Custom videos from admin -->
     <div id="custom-videos" style="padding: 0 20px 8px;"></div>
 
@@ -196,10 +195,13 @@
           <div class="rule"></div>
           <span class="title">Лента</span>
         </div>
-        <span class="meta">всё новое от Мади</span>
+        <span class="meta">новости Мади и моменты учеников</span>
       </div>
 
-      <!-- Custom feed posts from admin (announcements / culture / news) -->
+      <!-- Композер «поделись фото» (наполняется JS, зависит от входа) -->
+      <div id="feed-composer-slot" style="margin-bottom:14px;"></div>
+
+      <!-- Лента: посты Мади + публичные посты учеников -->
       <div id="custom-feed-posts" style="display:grid; gap:14px; margin-bottom:14px;"></div>
 
     </div>
@@ -210,7 +212,7 @@
     <header class="topbar">
       <div style="min-width:0;">
         <div class="page-eyebrow">МОЙ ПУТЬ</div>
-        <div class="display" style="font-size:20px; color:var(--berry); margin-top:2px; line-height:1.1; white-space:nowrap;">Модуль 1 · Хангыль</div>
+        <div id="module-title" class="display" style="font-size:18px; color:var(--berry); margin-top:2px; line-height:1.1;">Модуль 1 · Хангыль</div>
       </div>
       <div style="display:flex; align-items:center; gap:8px; flex-shrink:0;">
         <span id="module-pct-chip" class="chip" style="background: linear-gradient(90deg, var(--rose), var(--gold)); color:var(--berry); flex-shrink:0;">🌸 0%</span>
@@ -223,15 +225,21 @@
       <div class="progress"><i id="module-progress-bar" style="width:0%"></i></div>
     </div>
 
-    <!-- TOPIK prep entry -->
-    <div style="padding: 12px 20px 4px;">
-      <button type="button" onclick="switchScreen('topik')" class="topik-entry" aria-label="Подготовка к ТОПИК">
+    <!-- TOPIK prep entry: две группы рядом -->
+    <div style="padding: 12px 20px 4px; display:flex; gap:10px; align-items:stretch;">
+      <button type="button" onclick="openTopikGroup('real')" class="topik-entry topik-entry-half" aria-label="Реальные экзамены ТОПИК">
         <span class="topik-entry-badge">TOPIK</span>
         <span class="topik-entry-text">
-          <span class="topik-entry-title">Подготовка к ТОПИК</span>
-          <span class="topik-entry-sub">한국어능력시험 · 듣기 · 읽기 · 쓰기 기초</span>
+          <span class="topik-entry-title">Реальные экзамены</span>
+          <span class="topik-entry-sub">официальные 회차 · 듣기 · 읽기</span>
         </span>
-        <i class="fa-solid fa-chevron-right topik-entry-arrow" aria-hidden="true"></i>
+      </button>
+      <button type="button" onclick="openTopikGroup('mock')" class="topik-entry topik-entry-half mock" aria-label="Пробные и другие тесты">
+        <span class="topik-entry-badge">МОК</span>
+        <span class="topik-entry-text">
+          <span class="topik-entry-title">Пробные и другие</span>
+          <span class="topik-entry-sub">모의고사 · EBS · Hot TOPIK</span>
+        </span>
       </button>
     </div>
 
@@ -259,46 +267,42 @@
       </button>
     </div>
 
+    <!-- Переключатель модулей (Модуль 1 ↔ Модуль 2) — прямо над уроками модуля -->
+    <div id="module-switcher-slot" style="padding: 18px 20px 2px;"></div>
+
+    <!-- Заголовок раздела с уроками модуля -->
+    <div style="padding: 8px 20px 0;">
+      <div class="page-eyebrow">УРОКИ МОДУЛЯ</div>
+    </div>
+
     <!-- Module header -->
-    <div style="padding: 12px 20px;">
+    <div style="padding: 10px 20px 12px;">
       <div class="card card-padded" style="display:flex; justify-content:space-between; align-items:center; gap:12px;">
         <div style="display:flex; align-items:center; gap:12px; min-width:0; flex:1;">
           <div style="width:36px; height:36px; flex-shrink:0; border-radius:12px; background: var(--blush); display:flex; align-items:center; justify-content:center; font-size:18px;">🌸</div>
           <div style="min-width:0;">
-            <div style="font-weight:600; color:var(--berry); font-size:13px; line-height:1.2;">Основа основ</div>
-            <div style="font-size:10.5px; color: var(--soft); margin-top:2px;">Хангыль · базовый курс</div>
+            <div id="module-header-title" style="font-weight:600; color:var(--berry); font-size:13px; line-height:1.2;">Основа основ</div>
+            <div id="module-header-sub" style="font-size:10.5px; color: var(--soft); margin-top:2px;">Хангыль · базовый курс</div>
           </div>
         </div>
         <span id="module-header-count" class="chip chip-sage" style="flex-shrink:0;">✓ 0/10</span>
       </div>
     </div>
 
-    <!-- Dynamic lesson path -->
+    <!-- Dynamic lesson path (карта уроков модуля) -->
     <div id="lesson-path"></div>
 
-    <!-- Locked modules -->
-    <div style="padding: 0 20px; display: grid; gap: 10px;">
-      <!-- Закрытость показываем пунктиром и замком, а не opacity:
-           прозрачность роняла контраст текста ниже WCAG AA -->
+    <!-- Будущие модули (один мягкий тизер; навигация по модулям — в переключателе выше) -->
+    <div style="padding: 0 20px;">
       <div class="card card-padded" style="display:flex; justify-content:space-between; align-items:center; border-style:dashed;">
         <div style="display:flex; align-items:center; gap:12px;">
           <span style="font-size:18px;" aria-hidden="true">🌸</span>
           <div>
-            <div style="font-weight:600; font-size:13.5px; color:var(--soft);">Модуль 2 · Первые слова</div>
-            <div style="font-size:11px; color: var(--soft);">10 уроков · откроется после Модуля 1</div>
+            <div style="font-weight:600; font-size:13.5px; color:var(--soft);">Дальше — больше модулей</div>
+            <div style="font-size:11px; color: var(--soft);">Мади готовит продолжение курса 🌸</div>
           </div>
         </div>
-        <i class="fa-solid fa-lock" style="color:var(--hush);" aria-hidden="true"></i>
-      </div>
-      <div class="card card-padded" style="display:flex; justify-content:space-between; align-items:center; border-style:dashed;">
-        <div style="display:flex; align-items:center; gap:12px;">
-          <span style="font-size:18px;" aria-hidden="true">🌸</span>
-          <div>
-            <div style="font-weight:600; font-size:13.5px; color:var(--soft);">Модуль 3 · Простые предложения</div>
-            <div style="font-size:11px; color: var(--soft);">10 уроков · откроется после Модуля 2</div>
-          </div>
-        </div>
-        <i class="fa-solid fa-lock" style="color:var(--hush);" aria-hidden="true"></i>
+        <i class="fa-solid fa-seedling" style="color:var(--hush);" aria-hidden="true"></i>
       </div>
     </div>
 
