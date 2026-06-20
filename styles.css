@@ -4294,10 +4294,17 @@
   body.theme-dark .composer-drop { background: #1E1E22; }
 
   /* ── МОДУЛЬ 2: переключатель модулей ───────────────────── */
-  .module-switch { display: flex; gap: 6px; }
+  /* Вариант А: вкладки модулей в один ряд с горизонтальной прокруткой (4+ модулей) */
+  .module-switch {
+    display: flex; gap: 6px;
+    overflow-x: auto; -webkit-overflow-scrolling: touch;
+    scroll-snap-type: x proximity; padding-bottom: 2px;
+    scrollbar-width: none; -ms-overflow-style: none;
+  }
+  .module-switch::-webkit-scrollbar { display: none; }
   .module-tab {
-    flex: 1; min-width: 0; display: flex; align-items: center; gap: 6px;
-    padding: 9px 9px; border-radius: 14px; cursor: pointer; font-family: inherit;
+    flex: 0 0 auto; scroll-snap-align: start; display: flex; align-items: center; gap: 6px;
+    padding: 9px 11px; border-radius: 14px; cursor: pointer; font-family: inherit;
     border: 2px solid var(--duo-blush); background: var(--card); text-align: left;
     box-shadow: 0 2px 0 var(--duo-blush);
     transition: transform .12s ease-out, box-shadow .12s ease-out, border-color .15s;
@@ -4310,7 +4317,7 @@
     font-weight: 800; font-size: 12px; background: var(--paper); color: var(--soft);
   }
   .module-tab.active .module-tab-num { background: var(--grad-coral); color: #fff; }
-  .module-tab-name { flex: 1; min-width: 0; font-size: 12px; font-weight: 700; color: var(--berry); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .module-tab-name { flex: 0 0 auto; font-size: 12px; font-weight: 700; color: var(--berry); white-space: nowrap; }
   .module-tab.locked { opacity: .6; }
   .module-tab-lock { font-size: 11px; color: var(--soft); flex-shrink: 0; }
 
