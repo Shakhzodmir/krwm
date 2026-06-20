@@ -2801,6 +2801,18 @@
     box-shadow: 0 4px 10px -4px rgba(92,42,51,.4);
   }
 
+  /* Рейтинг: лёгкий тумблер периода (Неделя / Всё время) */
+  .lb-chip {
+    padding: 4px 11px; font-size: 11px; font-weight: 600;
+    background: var(--linen); color: var(--soft);
+    border: 1px solid transparent; border-radius: 999px; cursor: pointer;
+    transition: background var(--t-fast) var(--ease-out), color var(--t-fast) var(--ease-out);
+  }
+  .lb-chip:active { transform: scale(.97); }
+  .lb-chip-on {
+    background: var(--blush); color: var(--berry); border-color: var(--rose);
+  }
+
   /* ───── XP POP ───── */
   @keyframes xpPop {
     0%   { opacity: 0; transform: translate(-50%, 8px) scale(.9); }
@@ -4282,10 +4294,10 @@
   body.theme-dark .composer-drop { background: #1E1E22; }
 
   /* ── МОДУЛЬ 2: переключатель модулей ───────────────────── */
-  .module-switch { display: flex; gap: 8px; }
+  .module-switch { display: flex; gap: 6px; }
   .module-tab {
-    flex: 1; min-width: 0; display: flex; align-items: center; gap: 8px;
-    padding: 10px 12px; border-radius: 14px; cursor: pointer; font-family: inherit;
+    flex: 1; min-width: 0; display: flex; align-items: center; gap: 6px;
+    padding: 9px 9px; border-radius: 14px; cursor: pointer; font-family: inherit;
     border: 2px solid var(--duo-blush); background: var(--card); text-align: left;
     box-shadow: 0 2px 0 var(--duo-blush);
     transition: transform .12s ease-out, box-shadow .12s ease-out, border-color .15s;
@@ -4293,12 +4305,12 @@
   .module-tab:active { transform: translateY(2px); box-shadow: 0 0 0 var(--duo-blush); }
   .module-tab.active { border-color: var(--coral); background: linear-gradient(135deg, rgba(var(--rose-rgb),.16), var(--card)); box-shadow: 0 2px 0 var(--coral); }
   .module-tab-num {
-    flex-shrink: 0; width: 34px; height: 34px; border-radius: 10px;
+    flex-shrink: 0; width: 30px; height: 30px; border-radius: 9px;
     display: flex; align-items: center; justify-content: center;
-    font-weight: 800; font-size: 13px; background: var(--paper); color: var(--soft);
+    font-weight: 800; font-size: 12px; background: var(--paper); color: var(--soft);
   }
   .module-tab.active .module-tab-num { background: var(--grad-coral); color: #fff; }
-  .module-tab-name { flex: 1; min-width: 0; font-size: 13px; font-weight: 700; color: var(--berry); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .module-tab-name { flex: 1; min-width: 0; font-size: 12px; font-weight: 700; color: var(--berry); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .module-tab.locked { opacity: .6; }
   .module-tab-lock { font-size: 11px; color: var(--soft); flex-shrink: 0; }
 
@@ -4354,10 +4366,23 @@
   .lesson-opt.opt-correct { background: rgba(132,196,116,.22) !important; border-color: var(--ok-ink) !important; color: var(--ok-ink) !important; }
   .lesson-opt.opt-wrong { background: var(--bad-bg) !important; border-color: var(--bad-line) !important; color: var(--bad-ink) !important; }
 
+  /* ── Кнопка «в словарик» (быстрое сохранение слов/фраз/грамматики) ── */
+  .lsave-btn {
+    flex-shrink: 0; width: 30px; height: 30px; border-radius: 9px; padding: 0;
+    display: inline-flex; align-items: center; justify-content: center;
+    font-size: 13px; line-height: 1; cursor: pointer; color: var(--soft);
+    background: var(--card); border: 1px solid var(--line);
+    transition: transform var(--t-fast) var(--ease-out), background var(--t-fast) var(--ease-out);
+  }
+  .lsave-btn:active { transform: scale(.88); }
+  .lsave-corner { position: absolute; top: 7px; right: 7px; width: 28px; height: 28px; border-radius: 8px; z-index: 2; }
+  .lsave-inline { align-self: flex-end; }
+
   body.theme-dark .module-tab,
   body.theme-dark .dlg-ava,
   body.theme-dark .dlg-bubble,
   body.theme-dark .build-chip { background: #2A2A2E; }
+  body.theme-dark .lsave-btn { background: var(--paper); border-color: var(--line); color: var(--soft); }
 
   /* ── GAME CARDS v2 ──────────────────────────────────────── */
   .game-card-v2 {
@@ -5041,6 +5066,8 @@
   body.theme-dark .exam-opt,
   body.theme-dark .settings-row { background: var(--paper); color: var(--ink); border-color: var(--line); }
   body.theme-dark .auth-tab-active { background: var(--grad-coral); color: #fff; }
+  body.theme-dark .lb-chip { background: var(--paper); color: var(--soft); border-color: var(--line); }
+  body.theme-dark .lb-chip-on { background: rgba(var(--accent-rgb),.18); color: var(--ink); border-color: rgba(var(--accent-rgb),.5); }
   body.theme-dark .topbar,
   body.theme-dark .bottomnav,
   body.theme-dark .sidenav,
