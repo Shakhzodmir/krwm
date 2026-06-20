@@ -14722,6 +14722,31 @@
     if (st.end) return `до ${_jrnFmtDate(st.end)}`;
     return '';
   }
+  // Длительность обучения в годах/месяцах/днях (a ≤ b, ISO-даты)
+  function _jrnDiffYMD(aIso, bIso) {
+    let [ay, am, ad] = aIso.split('-').map(Number);
+    let [by, bm, bd] = bIso.split('-').map(Number);
+    let years = by - ay, months = bm - am, days = bd - ad;
+    if (days < 0) { months--; days += new Date(by, bm - 1, 0).getDate(); }
+    if (months < 0) { years--; months += 12; }
+    return { years, months, days };
+  }
+  // Сколько ученик учится: от старта до конца (или до сегодня, если ещё учится)
+  function _jrnDurationLabel(st) {
+    if (!st.start) return '';
+    const today = _jrnTodayIso();
+    if (st.start > today && !st.end) return '';      // ещё не начал — длительность не считаем
+    const end = st.end || today;
+    if (end < st.start) return '';
+    const d = _jrnDiffYMD(st.start, end);
+    const parts = [];
+    if (d.years) parts.push(d.years + ' г.');
+    if (d.months) parts.push(d.months + ' мес.');
+    if (!d.years && !d.months) parts.push(Math.max(0, d.days) + ' дн.');
+    const dur = parts.join(' ');
+    if (!dur) return '';
+    return st.end ? `длительность: ${dur}` : `учится уже ${dur}`;
+  }
   // Все даты месяца, попадающие на учебные дни ученицы (Пн=1…Вс=7) и внутри периода обучения
   function _jrnDatesFor(st, y, m) {
     const out = [];
@@ -14747,6 +14772,7 @@
       const days = (Array.isArray(st.days) ? st.days : Object.values(st.days || {})).slice().sort();
       const slotLine = days.map(d => JRN_DAYS[d - 1]).join(', ') + ` · ${st.from}–${st.to}`;
       const periodLabel = _jrnPeriodLabel(st);
+      const durLabel = _jrnDurationLabel(st);
       const todayIso = _jrnTodayIso();
       const ended = st.end && st.end < todayIso;
       const soon = st.start && st.start > todayIso;
@@ -14769,6 +14795,7 @@
               </div>
               <div style="font-size:11px; color:var(--coral); font-weight:600; margin-top:2px;">${escHtml(slotLine)}</div>
               ${periodLabel ? `<div style="font-size:10.5px; color:var(--soft); margin-top:3px;"><i class="fa-regular fa-calendar" style="font-size:9px;"></i> ${escHtml(periodLabel)}</div>` : ''}
+              ${durLabel ? `<div style="font-size:10.5px; color:var(--berry); font-weight:600; margin-top:2px;"><i class="fa-regular fa-hourglass-half" style="font-size:9px;"></i> ${escHtml(durLabel)}</div>` : ''}
             </div>
             <button onclick="jrnEditStudent('${sid}')" style="background:none; border:none; color:var(--coral); cursor:pointer; font-size:14px; padding:6px;" title="Изменить"><i class="fa-solid fa-pen-to-square"></i></button>
             <button onclick="jrnDeleteStudent('${sid}')" style="background:none; border:none; color:var(--bad-ink); cursor:pointer; font-size:15px; padding:6px;" title="Удалить">✕</button>
