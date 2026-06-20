@@ -1114,6 +1114,18 @@
         <button ${lockNext ? 'id="quiz-next-btn" disabled' : ''} onclick="nextLesson()" class="btn btn-primary" style="flex:1.6;${lockNext ? ' opacity:.45; pointer-events:none;' : ''}">${nextLabel}</button>
       </div>`;
   }
+  // Кнопка быстрого сохранения слова/фразы/грамматики в личный словарик.
+  // Иконка отражает текущее состояние; toggleMyWord перерисовывает её при клике.
+  // event.stopPropagation — чтобы не сработал onclick карточки (озвучка).
+  function lessonSaveHeart(ko, ru, translit, emoji, source, cls) {
+    if (!ko) return '';
+    const saved = isMyWord(ko);
+    const icon = saved
+      ? '<i class="fa-solid fa-heart" style="color:var(--coral);"></i>'
+      : '<i class="fa-regular fa-heart"></i>';
+    return `<button type="button" class="lsave-btn ${cls || ''}" aria-label="В словарик" title="Сохранить в Мои слова" onclick="event.stopPropagation(); toggleMyWord('${jsStr(ko)}','${jsStr(ru || '')}','${jsStr(translit || '')}','${jsStr(emoji || '🌸')}','${source || 'lesson'}', this)">${icon}</button>`;
+  }
+
   function renderLessonSlide(lesson, slide) {
     const hint = note => note ? `
       <div class="card card-padded" style="background: rgba(201,165,92,.10); border-color: rgba(201,165,92,.4); margin-top:18px;">
@@ -1181,7 +1193,8 @@
     }
     if (slide.kind === 'words') {
       const cards = slide.items.map(w => `
-        <div onclick="lessonWordTap(this, '${w.ko}')" class="card card-press" style="padding:14px 10px; text-align:center; cursor:pointer;">
+        <div onclick="lessonWordTap(this, '${w.ko}')" class="card card-press" style="padding:14px 10px; text-align:center; cursor:pointer; position:relative;">
+          ${lessonSaveHeart(w.ko, w.ru, w.translit || '', w.emoji || '🌸', 'lesson-word', 'lsave-corner')}
           <div style="font-size:32px;">${w.emoji}</div>
           <div class="ko" style="font-size:22px; font-weight:700; color:var(--berry); margin-top:4px;">${w.ko}</div>
           <div style="font-size:11px; color:var(--soft); margin-top:2px;">${w.ru}</div>
@@ -1215,6 +1228,7 @@
               <div class="ko dlg-ko">${escHtml(ln.ko)}</div>
               ${ln.ru ? `<div class="dlg-ru">${escHtml(ln.ru)}</div>` : ''}
             </div>
+            ${lessonSaveHeart(ln.ko, ln.ru || '', '', '💬', 'lesson-dialog', 'lsave-inline')}
           </div>`;
       }).join('');
       return `
@@ -1233,6 +1247,7 @@
         <div class="card card-padded" onclick="lessonPlay('${jsStr(ex.ko)}', this)" style="cursor:pointer; display:flex; align-items:center; gap:10px; margin-top:8px;">
           <div style="flex:1; min-width:0;"><div class="ko" style="font-size:15px; color:var(--berry); font-weight:600;">${escHtml(ex.ko)}</div><div style="font-size:12px; color:var(--soft); margin-top:2px;">${escHtml(ex.ru)}</div></div>
           <i class="fa-solid fa-volume-up" style="color:var(--coral); flex-shrink:0;"></i>
+          ${lessonSaveHeart(ex.ko, ex.ru || '', '', '📝', 'lesson-grammar', 'lsave-inline')}
         </div>`).join('');
       const drills = (slide.drills || []).map(d => {
         const opts = shuffleArr([...d.options]);
@@ -1267,7 +1282,7 @@
           <div style="font-size:10px; color:var(--soft); letter-spacing:.16em;">ПЕРЕВЕДИ НА КОРЕЙСКИЙ</div>
           <div style="font-size:16px; color:var(--berry); font-weight:600; margin-top:6px;">${escHtml(slide.ru)}</div>
         </div>
-        <div id="build-answer" class="build-answer" data-target="${(slide.target || []).map(escHtml).join('|')}"></div>
+        <div id="build-answer" class="build-answer" data-target="${(slide.target || []).map(escHtml).join('|')}" data-ru="${escHtml(slide.ru || '')}"></div>
         <div id="build-pool" class="build-pool">${chipHtml}</div>
         <div id="build-feedback" style="text-align:center; font-size:13px; margin-top:10px; min-height:18px;"></div>
         <div style="display:flex; gap:10px; margin-top:8px;">
@@ -1287,7 +1302,7 @@
           <button onclick="lessonPlay('${jsStr(slide.ko)}', this)" class="listen-play" aria-label="Прослушать"><i class="fa-solid fa-play"></i></button>
           <div style="font-size:11px; color:var(--soft); margin-top:10px;">Тапни, чтобы прослушать ещё раз 🔊</div>
         </div>
-        <div id="quiz-grid" style="display:grid; gap:10px;">
+        <div id="quiz-grid" style="display:grid; gap:10px;" data-save-ko="${escHtml(slide.ko || '')}" data-save-ru="${escHtml(slide.ru || '')}">
           ${opts.map(o => `<button class="btn btn-ghost lesson-opt" onclick="lessonChoicePick(this, '${jsStr(o)}', '${jsStr(slide.answer)}')" style="padding:13px;">${escHtml(o)}</button>`).join('')}
         </div>
         ${lessonNav('Дальше →', true)}
@@ -1419,6 +1434,15 @@
         nb.removeAttribute('disabled'); nb.style.opacity = '1'; nb.style.pointerEvents = '';
         addXp(8); toast('맞아요! Верно 🌸 +8 XP', 'var(--sage)');
       }
+      // Услышанную фразу можно сохранить в словарик (показываем после верного ответа).
+      const koSave = grid.dataset && grid.dataset.saveKo;
+      if (koSave && grid.parentElement && !grid.parentElement.querySelector('.listen-save')) {
+        const wrap = document.createElement('div');
+        wrap.className = 'listen-save';
+        wrap.style.cssText = 'text-align:center; margin-top:12px; font-size:12px; color:var(--soft); display:flex; align-items:center; justify-content:center; gap:8px;';
+        wrap.innerHTML = 'Запомнить фразу ' + lessonSaveHeart(koSave, grid.dataset.saveRu || '', '', '🎧', 'lesson-listen', 'lsave-inline');
+        grid.parentElement.insertBefore(wrap, grid.nextSibling);
+      }
     } else {
       btn.classList.add('opt-wrong');
       setTimeout(() => btn.classList.remove('opt-wrong'), 600);
@@ -1471,7 +1495,12 @@
     const ok = cur.length === target.length && cur.every((w, i) => w === target[i]);
     if (ok) {
       ans.querySelectorAll('.build-chip').forEach(c => { c.classList.add('correct'); c.onclick = null; });
-      if (fb) { fb.style.color = 'var(--ok-ink)'; fb.textContent = '맞아요! Верно 🌸'; }
+      const koPhrase = target.join(' ');
+      const ruPhrase = ans.dataset.ru || '';
+      if (fb) {
+        fb.style.color = 'var(--ok-ink)';
+        fb.innerHTML = '맞아요! Верно 🌸 ' + lessonSaveHeart(koPhrase, ruPhrase, '', '🧩', 'lesson-build', 'lsave-inline');
+      }
       addXp(10); toast('잘했어요! +10 XP', 'var(--sage)');
       btn.textContent = 'Дальше →';
       btn.onclick = () => nextLesson();
@@ -2050,7 +2079,7 @@
   }
 
   // ── Per-user data sync (full mirror to Firebase) ──
-  const USTORE_SYNC_KEYS = ['stats', 'avatar', 'unlocks', 'lessonProgress', 'lessonProgress_m2', 'bestScores', 'cover', 'bio'];
+  const USTORE_SYNC_KEYS = ['stats', 'avatar', 'unlocks', 'lessonProgress', 'lessonProgress_m2', 'lessonProgress_m3', 'bestScores', 'cover', 'bio'];
   let _skipCloudPush = false;
   const _userFieldDebounce = {};
   const _userFieldPending = {};
@@ -3301,54 +3330,108 @@
     Object.entries(xpByDay || {}).forEach(([k, v]) => { if (k >= start) sum += (+v || 0); });
     return sum;
   }
-  // Режим рейтинга: 'week' — XP с понедельника, 'all' — общий накопленный XP.
-  let _lbMode = 'week';
-  let _lbRows = null; // кэш строк с обоими значениями (week/all), чтобы переключать без перезагрузки
+  // Рейтинг. Две оси: охват (друзья / глобальный) и период (неделя / всё время).
+  let _lbMode = 'week';      // 'week' — XP с понедельника, 'all' — общий накопленный XP
+  let _lbScope = 'friends';  // 'friends' — я + друзья, 'global' — все ученики
+  let _lbFriendRows = null;  // кэш строк друзей (с week/all) — переключаем период без перезагрузки
+  let _lbGlobalRows = null;  // кэш строк глобального рейтинга
   function setLeaderboardMode(mode) { _lbMode = (mode === 'all') ? 'all' : 'week'; paintLeaderboard(); }
+  function setLbScope(scope) { _lbScope = (scope === 'global') ? 'global' : 'friends'; paintLeaderboard(); }
   async function renderWeekLeaderboard() {
     const slot = document.getElementById('week-leaderboard');
     if (!slot) return;
     const me = Store.get('user');
-    if (!me || me.guest || typeof _db === 'undefined') { slot.innerHTML = ''; _lbRows = null; return; }
+    if (!me || me.guest || typeof _db === 'undefined') { slot.innerHTML = ''; _lbFriendRows = _lbGlobalRows = null; return; }
+    const myUid = firebaseUserId();
+    const myRow = { uid: myUid, name: me.name || 'Я', me: true, week: _weekXpFrom(stats.xpByDay), all: stats.xp || 0 };
+
+    // — Друзья: я + друзья (свежая стата каждого из облака) —
     const friends = _friendsCache || {};
     const fids = Object.keys(friends);
-    if (!fids.length) { slot.innerHTML = ''; _lbRows = null; return; } // одному соревноваться не с кем
-    const myUid = firebaseUserId();
-    const rows = [{ uid: myUid, name: me.name || 'Я', me: true, week: _weekXpFrom(stats.xpByDay), all: stats.xp || 0 }];
-    await Promise.all(fids.map(async fid => {
-      try {
-        const snap = await _db.ref('users/' + fid + '/stats').once('value');
-        const s = snap.val() || {};
-        rows.push({ uid: fid, name: (friends[fid] && friends[fid].name) || 'Друг', week: _weekXpFrom(s.xpByDay), all: (+s.xp || 0) });
-      } catch (_) {}
-    }));
-    _lbRows = rows;
+    let friendRows = null;
+    if (fids.length) {
+      friendRows = [myRow];
+      await Promise.all(fids.map(async fid => {
+        try {
+          const snap = await _db.ref('users/' + fid + '/stats').once('value');
+          const s = snap.val() || {};
+          friendRows.push({ uid: fid, name: (friends[fid] && friends[fid].name) || 'Друг', week: _weekXpFrom(s.xpByDay), all: (+s.xp || 0) });
+        } catch (_) {}
+      }));
+    }
+    _lbFriendRows = friendRows;
+
+    // — Глобальный: все ученики из общего справочника (без админов) —
+    if (!_usersDirCache) { try { await loadUsersDirectory(); } catch (_) {} }
+    const dir = _usersDirCache || {};
+    const globalRows = [];
+    Object.entries(dir).forEach(([uid, u]) => {
+      if (!u || u.isAdmin) return;            // учителей в рейтинг учеников не включаем
+      if (uid === myUid) return;              // себя добавим из живой статы ниже
+      const s = u.stats || {};
+      globalRows.push({ uid, name: u.name || 'Ученик', week: _weekXpFrom(s.xpByDay), all: (+s.xp || 0) });
+    });
+    globalRows.push(myRow);
+    _lbGlobalRows = globalRows;
+
+    // Выбор охвата по умолчанию: если друзей нет — показываем глобальный.
+    if (!fids.length && _lbScope === 'friends') _lbScope = 'global';
     paintLeaderboard();
   }
   function paintLeaderboard() {
     const slot = document.getElementById('week-leaderboard');
-    if (!slot || !_lbRows) return;
+    if (!slot) return;
+    const hasFriends = !!(_lbFriendRows && _lbFriendRows.length);
+    const globalHasRivals = !!(_lbGlobalRows && _lbGlobalRows.length > 1);
+    if (!hasFriends && !globalHasRivals) { slot.innerHTML = ''; return; } // соревноваться не с кем
+
     const mode = _lbMode;
-    const rows = _lbRows.map(r => ({ ...r, xp: mode === 'all' ? (r.all || 0) : (r.week || 0) })).sort((a, b) => b.xp - a.xp);
+    const scope = (_lbScope === 'friends' && !hasFriends) ? 'friends' : _lbScope; // оставим вкладку, покажем подсказку
+    const src = scope === 'global' ? (_lbGlobalRows || []) : (_lbFriendRows || []);
+    const rows = src.map(r => ({ ...r, xp: mode === 'all' ? (r.all || 0) : (r.week || 0) })).sort((a, b) => b.xp - a.xp);
     const sub = mode === 'all' ? 'по всему опыту' : 'XP с понедельника';
     const medal = i => i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : `<span style="font-size:11px;color:var(--hush);font-weight:700;">${i + 1}</span>`;
     const myIdx = rows.findIndex(r => r.me);
+    const rowHtml = (r, i) => `
+      <div style="display:flex; align-items:center; gap:10px; padding:8px 10px; border-radius:12px; background:${r.me ? 'rgba(var(--accent-rgb),.10)' : 'transparent'}; ${r.me ? 'box-shadow: inset 0 0 0 1px rgba(var(--accent-rgb),.25);' : ''}">
+        <span style="width:22px; text-align:center; font-size:15px;">${medal(i)}</span>
+        <span style="flex:1; min-width:0; font-weight:600; font-size:13px; color:var(--berry); overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${escHtml(r.name)}${r.me ? ' <span style="font-size:10px;color:var(--coral);">· это ты</span>' : ''}</span>
+        <span style="font-weight:800; font-size:13px; color:${i === 0 ? 'var(--gold)' : 'var(--soft)'};">${r.xp} XP</span>
+      </div>`;
+
+    let body;
+    if (scope === 'friends' && !hasFriends) {
+      body = `<div style="text-align:center; font-size:12px; color:var(--soft); padding:14px 8px; line-height:1.55;">
+          Добавь друзей, чтобы соревноваться лично 🌸<br>
+          <button onclick="openAddFriendModal()" class="chip chip-coral" style="margin-top:10px; font-size:11px; padding:6px 14px; cursor:pointer; border:none;"><i class="fa-solid fa-user-plus" style="font-size:10px;"></i> Найти друзей</button>
+        </div>`;
+    } else {
+      const top = rows.slice(0, 5).map((r, i) => rowHtml(r, i)).join('');
+      // Если я вне топ-5 (актуально для глобального) — показать мою строку отдельно с реальным местом.
+      const tail = (myIdx >= 5)
+        ? `<div style="text-align:center; font-size:11px; color:var(--hush); margin:2px 0;">···</div>${rowHtml(rows[myIdx], myIdx)}`
+        : '';
+      const hint = myIdx > 0
+        ? `<div style="text-align:center; font-size:11px; color:var(--soft); margin-top:8px;">До ${escHtml(rows[myIdx - 1].name)} осталось ${rows[myIdx - 1].xp - rows[myIdx].xp + 1} XP — догоняй! 🔥</div>`
+        : (myIdx === 0 ? `<div style="text-align:center; font-size:11px; color:var(--gold-ink); margin-top:8px;">Ты впереди всех — 화이팅! 🌟</div>` : '');
+      body = `<div style="display:grid; gap:6px;">${top}${tail}</div>${hint}`;
+    }
+
+    const count = scope === 'global' ? rows.length : Math.max(0, rows.length);
     slot.innerHTML = `
       <div class="card card-padded" style="margin-bottom:16px; background:linear-gradient(160deg, var(--card), var(--paper));">
         <div class="auth-tabs" style="margin-bottom:8px;">
-          <button type="button" class="auth-tab ${mode === 'week' ? 'auth-tab-active' : ''}" onclick="setLeaderboardMode('week')">🏆 Лидеры недели</button>
-          <button type="button" class="auth-tab ${mode === 'all' ? 'auth-tab-active' : ''}" onclick="setLeaderboardMode('all')">🏆 Лидеры</button>
+          <button type="button" class="auth-tab ${scope === 'friends' ? 'auth-tab-active' : ''}" onclick="setLbScope('friends')">👥 Друзья</button>
+          <button type="button" class="auth-tab ${scope === 'global' ? 'auth-tab-active' : ''}" onclick="setLbScope('global')">🌍 Глобальный</button>
         </div>
-        <div style="font-size:10px; color:var(--hush); text-align:right; margin-bottom:8px;">${sub}</div>
-        <div style="display:grid; gap:6px;">
-          ${rows.slice(0, 5).map((r, i) => `
-            <div style="display:flex; align-items:center; gap:10px; padding:8px 10px; border-radius:12px; background:${r.me ? 'rgba(var(--accent-rgb),.10)' : 'transparent'}; ${r.me ? 'box-shadow: inset 0 0 0 1px rgba(var(--accent-rgb),.25);' : ''}">
-              <span style="width:22px; text-align:center; font-size:15px;">${medal(i)}</span>
-              <span style="flex:1; min-width:0; font-weight:600; font-size:13px; color:var(--berry); overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${escHtml(r.name)}${r.me ? ' <span style="font-size:10px;color:var(--coral);">· это ты</span>' : ''}</span>
-              <span style="font-weight:800; font-size:13px; color:${i === 0 ? 'var(--gold)' : 'var(--soft)'};">${r.xp} XP</span>
-            </div>`).join('')}
+        <div style="display:flex; justify-content:space-between; align-items:center; gap:8px; margin-bottom:8px;">
+          <div style="display:flex; gap:6px;">
+            <button type="button" class="lb-chip ${mode === 'week' ? 'lb-chip-on' : ''}" onclick="setLeaderboardMode('week')">Неделя</button>
+            <button type="button" class="lb-chip ${mode === 'all' ? 'lb-chip-on' : ''}" onclick="setLeaderboardMode('all')">Всё время</button>
+          </div>
+          <div style="font-size:10px; color:var(--hush); white-space:nowrap;">${sub}${scope === 'global' ? ` · ${count} 🌍` : ''}</div>
         </div>
-        ${myIdx > 0 ? `<div style="text-align:center; font-size:11px; color:var(--soft); margin-top:8px;">До ${escHtml(rows[myIdx - 1].name)} осталось ${rows[myIdx - 1].xp - rows[myIdx].xp + 1} XP — догоняй! 🔥</div>` : (myIdx === 0 ? `<div style="text-align:center; font-size:11px; color:var(--gold-ink); margin-top:8px;">Ты впереди всех — 화이팅! 🌟</div>` : '')}
+        ${body}
       </div>`;
   }
 
@@ -6815,6 +6898,23 @@
             { q:'이름__ 뭐예요?', ru:'Как тебя зовут?', options:['은','이','를'], answer:'이' },
             { q:'친구__ 와요.', ru:'Друг приходит.', options:['가','를','에'], answer:'가' }
           ] },
+        { kind:'pattern', eyebrow:'ГРАММАТИКА', title:'이에요 / 예요', sub:'связка «быть»',
+          rule:'Связка «есть / являюсь»: после согласной — <span class="ko">이에요</span>, после гласной — <span class="ko">예요</span>. <span class="ko">학생이에요</span> — (я) студент, <span class="ko">친구예요</span> — (это) друг.',
+          examples:[
+            {ko:'저는 학생이에요.', ru:'Я студент.'},
+            {ko:'이분은 친구예요.', ru:'Это друг.'},
+            {ko:'저는 한국 사람이에요.', ru:'Я кореец.'}
+          ],
+          drills:[
+            { q:'학생___ (после согласной)', ru:'студент', options:['이에요','예요','이가'], answer:'이에요' },
+            { q:'친구___ (после гласной)', ru:'друг', options:['예요','이에요','은'], answer:'예요' }
+          ] },
+        { kind:'words', eyebrow:'СЛОВА', title:'Рассказываем о себе',
+          items:[
+            {ko:'저', ru:'я (вежливо)', emoji:'🙋'}, {ko:'이름', ru:'имя', emoji:'🏷️'},
+            {ko:'학생', ru:'студент', emoji:'🎓'}, {ko:'친구', ru:'друг', emoji:'🧑‍🤝‍🧑'},
+            {ko:'한국 사람', ru:'кореец', emoji:'🇰🇷'}, {ko:'선생님', ru:'учитель', emoji:'👩‍🏫'}
+          ] },
         { kind:'build', eyebrow:'СОБЕРИ ФРАЗУ', title:'Я — студент', ru:'Я — студент.',
           target:['저는','학생이에요'], pool:['친구가'] },
         { kind:'dialog', eyebrow:'ДИАЛОГ', title:'Знакомство', sub:'첫 만남',
@@ -6825,6 +6925,11 @@
             { who:'B', av:'🧑', ko:'네, 저는 학생이에요.', ru:'Да, я студент.' }
           ],
           note:'Нажми «Прослушать диалог» — реплики читаются двумя голосами.' },
+        { kind:'listen', eyebrow:'АУДИРОВАНИЕ', title:'Кто это?', sub:'Нажми ▶ и выбери перевод',
+          ko:'저는 한국 사람이에요.', ru:'Я кореец.',
+          options:['Я кореец.','Я студент.','Это мой друг.'], answer:'Я кореец.' },
+        { kind:'build', eyebrow:'СОБЕРИ ФРАЗУ', title:'Как тебя зовут', ru:'Как тебя зовут?',
+          target:['이름이','뭐예요'], pool:['친구가'] },
         { kind:'quiz', eyebrow:'ПРОВЕРКА', title:'Слова урока',
           items:[ {ko:'친구',ru:'друг'}, {ko:'이름',ru:'имя'}, {ko:'학생',ru:'студент'} ],
           pool:['друг','имя','студент','я','книга','это'] },
@@ -6864,10 +6969,16 @@
             { q:'가다 → ?', options:['가요','가어요','거요'], answer:'가요' },
             { q:'하다 → ?', options:['해요','하요','하어요'], answer:'해요' }
           ] },
+        { kind:'words', eyebrow:'ГЛАГОЛЫ', title:'Что мы делаем',
+          items:[
+            {ko:'가다', ru:'идти', emoji:'🚶'}, {ko:'먹다', ru:'есть', emoji:'🍽️'},
+            {ko:'마시다', ru:'пить', emoji:'🥤'}, {ko:'하다', ru:'делать', emoji:'✨'},
+            {ko:'읽다', ru:'читать', emoji:'📖'}, {ko:'보다', ru:'смотреть', emoji:'👀'}
+          ] },
         { kind:'build', eyebrow:'СОБЕРИ ФРАЗУ', title:'Я пью кофе', ru:'Я пью кофе.',
           target:['저는','커피를','마셔요'], pool:['먹어요'] },
         { kind:'listen', eyebrow:'АУДИРОВАНИЕ', title:'Что он делает?', sub:'Нажми ▶ и выбери перевод',
-          ko:'저는 책을 읽어요.',
+          ko:'저는 책을 읽어요.', ru:'Я читаю книгу.',
           options:['Я читаю книгу.','Я смотрю книгу.','Я пишу книгу.'], answer:'Я читаю книгу.' },
         { kind:'dialog', eyebrow:'ДИАЛОГ', title:'Что ты делаешь?', sub:'지금 뭐 해요?',
           lines:[
@@ -6876,6 +6987,11 @@
             { who:'A', av:'🙂', ko:'저는 책을 읽어요.', ru:'А я читаю книгу.' },
             { who:'B', av:'🧑', ko:'우리 같이 공부해요!', ru:'Давай учиться вместе!' }
           ] },
+        { kind:'build', eyebrow:'СОБЕРИ ФРАЗУ', title:'Я читаю книгу', ru:'Я читаю книгу.',
+          target:['저는','책을','읽어요'], pool:['마셔요'] },
+        { kind:'quiz', eyebrow:'ПРОВЕРКА', title:'Слова урока',
+          items:[ {ko:'가다',ru:'идти'}, {ko:'먹다',ru:'есть'}, {ko:'마시다',ru:'пить'} ],
+          pool:['идти','есть','пить','читать','смотреть','делать'] },
         { kind:'homework' },
         { kind:'done' }
       ]
@@ -6918,6 +7034,18 @@
           ] },
         { kind:'build', eyebrow:'СОБЕРИ ФРАЗУ', title:'Я смотрю фильм', ru:'Я смотрю фильм.',
           target:['저는','영화를','봐요'], pool:['밥을'] },
+        { kind:'dialog', eyebrow:'ДИАЛОГ', title:'Чем заняты', sub:'뭐 해요?',
+          lines:[
+            { who:'A', av:'🙂', ko:'지금 뭐 해요?', ru:'Что сейчас делаешь?' },
+            { who:'B', av:'🧑', ko:'밥을 먹어요.', ru:'Ем.' },
+            { who:'A', av:'🙂', ko:'저는 한국어를 공부해요.', ru:'А я учу корейский.' },
+            { who:'B', av:'🧑', ko:'우리 같이 영화를 봐요!', ru:'Давай вместе посмотрим фильм!' }
+          ] },
+        { kind:'listen', eyebrow:'АУДИРОВАНИЕ', title:'Что он делает?', sub:'Нажми ▶ и выбери перевод',
+          ko:'저는 한국어를 공부해요.', ru:'Я учу корейский.',
+          options:['Я учу корейский.','Я смотрю фильм.','Я слушаю музыку.'], answer:'Я учу корейский.' },
+        { kind:'build', eyebrow:'СОБЕРИ ФРАЗУ', title:'Я ем рис', ru:'Я ем рис.',
+          target:['저는','밥을','먹어요'], pool:['영화를'] },
         { kind:'quiz', eyebrow:'ПРОВЕРКА', title:'Слова урока',
           items:[ {ko:'영화',ru:'фильм'}, {ko:'음악',ru:'музыка'}, {ko:'한국어',ru:'корейский'} ],
           pool:['фильм','музыка','корейский','вода','рис','кофе'] },
@@ -6964,10 +7092,19 @@
             { who:'B', av:'🧑', ko:'친구를 만나요.', ru:'Встречаю друга.' }
           ] },
         { kind:'listen', eyebrow:'АУДИРОВАНИЕ', title:'Куда он идёт?', sub:'Нажми ▶ и выбери перевод',
-          ko:'저는 학교에 가요.',
+          ko:'저는 학교에 가요.', ru:'Я иду в школу.',
           options:['Я иду в школу.','Я дома.','Я в кафе.'], answer:'Я иду в школу.' },
         { kind:'build', eyebrow:'СОБЕРИ ФРАЗУ', title:'Учусь в кафе', ru:'Я учусь в кафе.',
           target:['저는','카페에서','공부해요'], pool:['학교에'] },
+        { kind:'words', eyebrow:'МЕСТА', title:'Где мы бываем',
+          items:[
+            {ko:'집', ru:'дом', emoji:'🏠'}, {ko:'학교', ru:'школа', emoji:'🏫'},
+            {ko:'카페', ru:'кафе', emoji:'☕'}, {ko:'시장', ru:'рынок', emoji:'🛒'},
+            {ko:'도서관', ru:'библиотека', emoji:'📚'}, {ko:'회사', ru:'работа, фирма', emoji:'🏢'}
+          ] },
+        { kind:'quiz', eyebrow:'ПРОВЕРКА', title:'Слова урока',
+          items:[ {ko:'집',ru:'дом'}, {ko:'학교',ru:'школа'}, {ko:'시장',ru:'рынок'} ],
+          pool:['дом','школа','рынок','кафе','библиотека','работа'] },
         { kind:'homework' },
         { kind:'done' }
       ]
@@ -7013,9 +7150,1182 @@
           ] },
         { kind:'build', eyebrow:'СОБЕРИ ФРАЗУ', title:'Вчера встретил друга', ru:'Вчера я встретил друга.',
           target:['어제','친구를','만났어요'], pool:['먹었어요'] },
+        { kind:'words', eyebrow:'КОГДА', title:'Слова времени',
+          items:[
+            {ko:'어제', ru:'вчера', emoji:'📅'}, {ko:'오늘', ru:'сегодня', emoji:'☀️'},
+            {ko:'주말', ru:'выходные', emoji:'🎉'}, {ko:'아침', ru:'утро', emoji:'🌅'},
+            {ko:'저녁', ru:'вечер', emoji:'🌆'}, {ko:'숙제', ru:'домашка', emoji:'📒'}
+          ] },
+        { kind:'listen', eyebrow:'АУДИРОВАНИЕ', title:'Что было вчера?', sub:'Нажми ▶ и выбери перевод',
+          ko:'어제 친구를 만났어요.', ru:'Вчера я встретил друга.',
+          options:['Вчера встретил друга.','Сегодня встречаю друга.','Завтра увижу друга.'], answer:'Вчера встретил друга.' },
+        { kind:'build', eyebrow:'СОБЕРИ ФРАЗУ', title:'Вчера смотрел фильм', ru:'Вчера я смотрел фильм.',
+          target:['어제','영화를','봤어요'], pool:['먹었어요'] },
         { kind:'quiz', eyebrow:'ПРОВЕРКА', title:'Слова урока',
           items:[ {ko:'어제',ru:'вчера'}, {ko:'김밥',ru:'кимпаб'}, {ko:'숙제',ru:'домашка'} ],
           pool:['вчера','кимпаб','домашка','сегодня','друг','вкусный'] },
+        { kind:'homework' },
+        { kind:'done' }
+      ]
+    },
+    {
+      id:'m2-l6', num:6, title:'Числа', ko:'숫자',
+      ru:'Два вида чисел: китайские 일이삼 и исконные 하나둘셋',
+      vocab:[
+        {ko:'일', ru:'1 (кит.)', translit:'иль'},
+        {ko:'이', ru:'2 (кит.)', translit:'и'},
+        {ko:'삼', ru:'3 (кит.)', translit:'сам'},
+        {ko:'하나', ru:'1 (исконн.)', translit:'хана'},
+        {ko:'둘', ru:'2 (исконн.)', translit:'туль'},
+        {ko:'셋', ru:'3 (исконн.)', translit:'сет'},
+        {ko:'개', ru:'штука (счётн.)', translit:'кэ'},
+        {ko:'명', ru:'человек (счётн.)', translit:'мён'}
+      ],
+      homework:{ tasks:[
+        'Выпиши числа 1–10 в двух системах (китайские и исконные).',
+        'Посчитай предметы вокруг: 사과 세 개, 친구 두 명 — составь 5 фраз.'
+      ]},
+      slides:[
+        { kind:'intro', title:'Числа', sub:'숫자 — две системы',
+          intro:'«В корейском ДВА набора чисел. Китайские <span class="ko">일·이·삼</span> — для денег, минут, дат, номеров. Исконные <span class="ko">하나·둘·셋</span> — для счёта предметов, людей, часов и возраста. Сегодня освоим оба 🌸»',
+          learn:[['🔢','две системы'],['🍎','счётные слова'],['🎯','дрилы']] },
+        { kind:'info', eyebrow:'ЧИСЛА', title:'Китайские числа', sub:'한자어 숫자 — деньги, минуты, даты', cols:5,
+          grid:[
+            {ko:'일', ru:'1'}, {ko:'이', ru:'2'}, {ko:'삼', ru:'3'}, {ko:'사', ru:'4'}, {ko:'오', ru:'5'},
+            {ko:'육', ru:'6'}, {ko:'칠', ru:'7'}, {ko:'팔', ru:'8'}, {ko:'구', ru:'9'}, {ko:'십', ru:'10'}
+          ],
+          note:'Дальше просто: 십일 = 11, 이십 = 20, 백 = 100, 천 = 1000.' },
+        { kind:'info', eyebrow:'ЧИСЛА', title:'Исконные числа', sub:'고유어 숫자 — счёт предметов и людей', cols:5,
+          grid:[
+            {ko:'하나', ru:'1'}, {ko:'둘', ru:'2'}, {ko:'셋', ru:'3'}, {ko:'넷', ru:'4'}, {ko:'다섯', ru:'5'},
+            {ko:'여섯', ru:'6'}, {ko:'일곱', ru:'7'}, {ko:'여덟', ru:'8'}, {ko:'아홉', ru:'9'}, {ko:'열', ru:'10'}
+          ],
+          note:'Перед счётным словом меняются: 하나→한, 둘→두, 셋→세, 넷→네 (한 개, 두 명, 세 잔).' },
+        { kind:'pattern', eyebrow:'ГРАММАТИКА', title:'Какие числа когда', sub:'숫자 + 단위',
+          rule:'<b>Китайские</b> (일이삼): деньги <span class="ko">원</span>, минуты <span class="ko">분</span>, даты, номера телефонов.<br><b>Исконные</b> (하나둘셋): счёт предметов <span class="ko">개</span>, людей <span class="ko">명</span>, чашек <span class="ko">잔</span>, возраст <span class="ko">살</span>, часы <span class="ko">시</span>. Перед счётным словом: 하나→한, 둘→두, 셋→세.',
+          examples:[
+            {ko:'십 분', ru:'10 минут (кит.)'},
+            {ko:'사과 세 개', ru:'три яблока (исконн.)'},
+            {ko:'스무 살', ru:'20 лет (исконн.)'},
+            {ko:'커피 두 잔', ru:'две чашки кофе'}
+          ],
+          drills:[
+            { q:'3 яблока: 사과 ___ 개', ru:'перед счётным словом', options:['세','삼','셋'], answer:'세' },
+            { q:'10 минут: ___ 분', ru:'минуты — китайские', options:['십','열','다섯'], answer:'십' },
+            { q:'2 человека: 친구 ___ 명', ru:'перед счётным словом', options:['두','둘','이'], answer:'두' }
+          ] },
+        { kind:'words', eyebrow:'СЧЁТНЫЕ СЛОВА', title:'Что чем считаем',
+          items:[
+            {ko:'개', ru:'штука (предмет)', emoji:'📦'}, {ko:'명', ru:'человек', emoji:'👤'},
+            {ko:'잔', ru:'чашка, стакан', emoji:'🥤'}, {ko:'병', ru:'бутылка', emoji:'🍶'},
+            {ko:'권', ru:'книга, том', emoji:'📚'}, {ko:'살', ru:'лет (возраст)', emoji:'🎂'}
+          ] },
+        { kind:'build', eyebrow:'СОБЕРИ ФРАЗУ', title:'Три яблока', ru:'три яблока',
+          target:['사과','세','개'], pool:['두'] },
+        { kind:'listen', eyebrow:'АУДИРОВАНИЕ', title:'Сколько чашек?', sub:'Нажми ▶ и выбери перевод',
+          ko:'커피 두 잔이에요.', ru:'Это две чашки кофе.',
+          options:['Две чашки кофе.','Три чашки кофе.','Один кофе.'], answer:'Две чашки кофе.' },
+        { kind:'quiz', eyebrow:'ПРОВЕРКА', title:'Числа',
+          items:[ {ko:'하나',ru:'один'}, {ko:'둘',ru:'два'}, {ko:'셋',ru:'три'}, {ko:'십',ru:'десять'} ],
+          pool:['один','два','три','десять','пять','семь'] },
+        { kind:'homework' },
+        { kind:'done' }
+      ]
+    },
+    {
+      id:'m2-l7', num:7, title:'Время и дни', ko:'시간 · 요일',
+      ru:'Который час и какой сегодня день недели',
+      vocab:[
+        {ko:'지금', ru:'сейчас', translit:'чигым'},
+        {ko:'시', ru:'час', translit:'си'},
+        {ko:'분', ru:'минута', translit:'пун'},
+        {ko:'몇 시', ru:'который час', translit:'мёт си'},
+        {ko:'무슨 요일', ru:'какой день недели', translit:'мусын ёиль'},
+        {ko:'오늘', ru:'сегодня', translit:'оныль'}
+      ],
+      homework:{ tasks:[
+        'Запиши 5 раз текущее время по-корейски (한 시, 두 시 삼십 분…).',
+        'Назови все 7 дней недели и обведи сегодняшний.'
+      ]},
+      slides:[
+        { kind:'intro', title:'Время и дни', sub:'몇 시예요?',
+          intro:'«Спросить время просто: <span class="ko">지금 몇 시예요?</span> Часы считаем исконными числами + <span class="ko">시</span>, минуты — китайскими + <span class="ko">분</span>. И выучим дни недели 🌸»',
+          learn:[['🕐','часы и минуты'],['📅','дни недели'],['🗣️','диалог']] },
+        { kind:'pattern', eyebrow:'ГРАММАТИКА', title:'Который час', sub:'시 + 분',
+          rule:'Часы — <b>исконные</b> числа + <span class="ko">시</span>: 한 시, 두 시, 세 시. Минуты — <b>китайские</b> + <span class="ko">분</span>: 십 분, 삼십 분. «Сейчас 2:30» → <span class="ko">두 시 삼십 분이에요</span>.',
+          examples:[
+            {ko:'지금 몇 시예요?', ru:'Который сейчас час?'},
+            {ko:'한 시예요.', ru:'Час дня.'},
+            {ko:'두 시 삼십 분이에요.', ru:'2:30.'}
+          ],
+          drills:[
+            { q:'3 часа: ___ 시', ru:'часы — исконные', options:['세','삼','셋'], answer:'세' },
+            { q:'30 минут: 삼십 ___', ru:'единица минут', options:['분','시','명'], answer:'분' },
+            { q:'который час: 지금 몇 ___예요?', ru:'', options:['시','분','개'], answer:'시' }
+          ] },
+        { kind:'info', eyebrow:'ДНИ НЕДЕЛИ', title:'요일', sub:'неделя по-корейски', cols:1,
+          grid:[
+            {ko:'월요일', ru:'понедельник'}, {ko:'화요일', ru:'вторник'}, {ko:'수요일', ru:'среда'},
+            {ko:'목요일', ru:'четверг'}, {ko:'금요일', ru:'пятница'}, {ko:'토요일', ru:'суббота'}, {ko:'일요일', ru:'воскресенье'}
+          ],
+          note:'«Какой сегодня день?» → 오늘 무슨 요일이에요?' },
+        { kind:'words', eyebrow:'ВРЕМЯ СУТОК', title:'Когда',
+          items:[
+            {ko:'오전', ru:'до полудня (AM)', emoji:'🌅'}, {ko:'오후', ru:'после полудня (PM)', emoji:'🌇'},
+            {ko:'아침', ru:'утро', emoji:'🍳'}, {ko:'점심', ru:'обед, полдень', emoji:'🍱'},
+            {ko:'저녁', ru:'вечер', emoji:'🌃'}, {ko:'밤', ru:'ночь', emoji:'🌙'}
+          ] },
+        { kind:'dialog', eyebrow:'ДИАЛОГ', title:'Сколько времени?', sub:'지금 몇 시예요?',
+          lines:[
+            { who:'A', av:'🙂', ko:'지금 몇 시예요?', ru:'Который сейчас час?' },
+            { who:'B', av:'🧑', ko:'세 시예요.', ru:'Три часа.' },
+            { who:'A', av:'🙂', ko:'오늘 무슨 요일이에요?', ru:'Какой сегодня день?' },
+            { who:'B', av:'🧑', ko:'금요일이에요!', ru:'Пятница!' }
+          ] },
+        { kind:'build', eyebrow:'СОБЕРИ ФРАЗУ', title:'Сейчас два часа', ru:'Сейчас два часа.',
+          target:['지금','두','시예요'], pool:['세'] },
+        { kind:'listen', eyebrow:'АУДИРОВАНИЕ', title:'Который час?', sub:'Нажми ▶ и выбери перевод',
+          ko:'지금 네 시 삼십 분이에요.', ru:'Сейчас 4:30.',
+          options:['Сейчас 4:30.','Сейчас 3:40.','Сейчас 5:13.'], answer:'Сейчас 4:30.' },
+        { kind:'quiz', eyebrow:'ПРОВЕРКА', title:'Дни недели',
+          items:[ {ko:'월요일',ru:'понедельник'}, {ko:'토요일',ru:'суббота'}, {ko:'일요일',ru:'воскресенье'} ],
+          pool:['понедельник','суббота','воскресенье','пятница','среда','вторник'] },
+        { kind:'homework' },
+        { kind:'done' }
+      ]
+    },
+    {
+      id:'m2-l8', num:8, title:'В кафе: заказ', ko:'주문',
+      ru:'Заказываем еду: 주세요, 얼마예요? и счёт денег',
+      vocab:[
+        {ko:'주세요', ru:'дайте, пожалуйста', translit:'чусэё'},
+        {ko:'얼마예요', ru:'сколько стоит', translit:'ольмаеё'},
+        {ko:'원', ru:'вон (деньги)', translit:'вон'},
+        {ko:'메뉴', ru:'меню', translit:'меню'},
+        {ko:'여기요', ru:'извините! (позвать)', translit:'ёгиё'},
+        {ko:'한 잔', ru:'одна чашка', translit:'хан чан'}
+      ],
+      homework:{ tasks:[
+        'Закажи 3 напитка: «… 주세요» и спроси «얼마예요?».',
+        'Запиши цены словами: 삼천 원, 사천오백 원.'
+      ]},
+      slides:[
+        { kind:'intro', title:'В кафе: заказ', sub:'카페에서 주문해요',
+          intro:'«Время заказать! <span class="ko">주세요</span> — «дайте, пожалуйста», <span class="ko">얼마예요?</span> — «сколько стоит?». Деньги считаем китайскими числами + <span class="ko">원</span>. Сделаем настоящий заказ 🌸»',
+          learn:[['☕','заказ'],['💰','цены'],['🗣️','диалог']] },
+        { kind:'pattern', eyebrow:'ГРАММАТИКА', title:'… 주세요', sub:'просим вежливо',
+          rule:'<b>(что)</b> + <span class="ko">주세요</span> = «дайте, пожалуйста». С количеством: <span class="ko">커피 한 잔 주세요</span> — одну чашку кофе. Чтобы позвать официанта: <span class="ko">여기요!</span>',
+          examples:[
+            {ko:'커피 주세요.', ru:'Дайте кофе.'},
+            {ko:'물 한 잔 주세요.', ru:'Дайте стакан воды.'},
+            {ko:'김밥 두 개 주세요.', ru:'Дайте два кимпаба.'}
+          ],
+          drills:[
+            { q:'«дайте кофе»: 커피 ___', ru:'', options:['주세요','가요','있어요'], answer:'주세요' },
+            { q:'две чашки: 커피 두 ___ 주세요', ru:'счётное слово', options:['잔','개','명'], answer:'잔' },
+            { q:'позвать официанта: ___', ru:'', options:['여기요','안녕','네'], answer:'여기요' }
+          ] },
+        { kind:'pattern', eyebrow:'ГРАММАТИКА', title:'얼마예요?', sub:'сколько стоит',
+          rule:'<span class="ko">얼마예요?</span> — «сколько стоит?». Цена — китайские числа + <span class="ko">원</span>: 삼천 원 (3000), 오천 원 (5000).',
+          examples:[
+            {ko:'이거 얼마예요?', ru:'Сколько это стоит?'},
+            {ko:'삼천 원이에요.', ru:'3000 вон.'},
+            {ko:'커피는 사천 원이에요.', ru:'Кофе — 4000 вон.'}
+          ],
+          drills:[
+            { q:'«сколько стоит?»: ___', ru:'', options:['얼마예요','뭐예요','어디예요'], answer:'얼마예요' },
+            { q:'3000 вон: 삼천 ___', ru:'единица денег', options:['원','분','시'], answer:'원' }
+          ] },
+        { kind:'words', eyebrow:'СЛОВА', title:'Что в кафе',
+          items:[
+            {ko:'커피', ru:'кофе', emoji:'☕'}, {ko:'물', ru:'вода', emoji:'💧'},
+            {ko:'차', ru:'чай', emoji:'🍵'}, {ko:'주스', ru:'сок', emoji:'🧃'},
+            {ko:'케이크', ru:'торт', emoji:'🍰'}, {ko:'김밥', ru:'кимпаб', emoji:'🍙'}
+          ] },
+        { kind:'dialog', eyebrow:'ДИАЛОГ', title:'Заказ в кафе', sub:'주문할게요',
+          lines:[
+            { who:'A', av:'🙂', ko:'여기요, 메뉴 주세요.', ru:'Извините, меню, пожалуйста.' },
+            { who:'B', av:'🧑', ko:'네, 여기 있어요.', ru:'Да, вот, пожалуйста.' },
+            { who:'A', av:'🙂', ko:'커피 한 잔 주세요. 얼마예요?', ru:'Одну чашку кофе. Сколько стоит?' },
+            { who:'B', av:'🧑', ko:'사천 원이에요.', ru:'4000 вон.' }
+          ],
+          note:'Нажми «Прослушать диалог» — реплики читаются двумя голосами.' },
+        { kind:'build', eyebrow:'СОБЕРИ ФРАЗУ', title:'Одну чашку кофе', ru:'Дайте одну чашку кофе.',
+          target:['커피','한','잔','주세요'], pool:['물'] },
+        { kind:'listen', eyebrow:'АУДИРОВАНИЕ', title:'Что спросили?', sub:'Нажми ▶ и выбери перевод',
+          ko:'이거 얼마예요?', ru:'Сколько это стоит?',
+          options:['Сколько это стоит?','Что это?','Где это?'], answer:'Сколько это стоит?' },
+        { kind:'quiz', eyebrow:'ПРОВЕРКА', title:'Слова урока',
+          items:[ {ko:'주세요',ru:'дайте'}, {ko:'얼마예요',ru:'сколько стоит'}, {ko:'메뉴',ru:'меню'} ],
+          pool:['дайте','сколько стоит','меню','вода','чай','сейчас'] },
+        { kind:'homework' },
+        { kind:'done' }
+      ]
+    },
+    {
+      id:'m2-l9', num:9, title:'Покупки', ko:'쇼핑',
+      ru:'Указываем на товар: 이거/그거/저거 и счётные слова',
+      vocab:[
+        {ko:'이거', ru:'это (рядом со мной)', translit:'иго'},
+        {ko:'그거', ru:'то (рядом с тобой)', translit:'кыго'},
+        {ko:'저거', ru:'вон то (вдалеке)', translit:'чого'},
+        {ko:'사다', ru:'покупать → 사요', translit:'сада'},
+        {ko:'병', ru:'бутылка (счётн.)', translit:'пён'},
+        {ko:'얼마', ru:'сколько', translit:'ольма'}
+      ],
+      homework:{ tasks:[
+        'Поторгуйся в магазине: 이거 얼마예요? — 두 개 주세요.',
+        'Опиши 3 товара через 이거/그거/저거.'
+      ]},
+      slides:[
+        { kind:'intro', title:'Покупки', sub:'쇼핑해요',
+          intro:'«В магазине пригодятся указатели: <span class="ko">이거</span> — это (у меня), <span class="ko">그거</span> — то (у тебя), <span class="ko">저거</span> — вон то (вдалеке). И посчитаем товары счётными словами 🌸»',
+          learn:[['👉','이/그/저거'],['🛒','товары'],['🔢','счёт']] },
+        { kind:'pattern', eyebrow:'ГРАММАТИКА', title:'이거 · 그거 · 저거', sub:'указательные',
+          rule:'<b>이거</b> — это (рядом со мной). <b>그거</b> — то (рядом с тобой / о чём говорили). <b>저거</b> — вон то (далеко от обоих).',
+          examples:[
+            {ko:'이거 주세요.', ru:'Дайте это.'},
+            {ko:'그거 얼마예요?', ru:'Сколько то стоит?'},
+            {ko:'저거 좋아요.', ru:'Вон то нравится.'}
+          ],
+          drills:[
+            { q:'это (у меня в руке): ___', ru:'', options:['이거','그거','저거'], answer:'이거' },
+            { q:'вон то (вдалеке): ___', ru:'', options:['저거','이거','그거'], answer:'저거' }
+          ] },
+        { kind:'pattern', eyebrow:'ГРАММАТИКА', title:'Сколько штук', sub:'개 · 병 · 명',
+          rule:'Считаем товары исконными числами + счётное слово: <span class="ko">개</span> (предметы), <span class="ko">병</span> (бутылки), <span class="ko">명</span> (люди). 하나→한, 둘→두, 셋→세.',
+          examples:[
+            {ko:'사과 세 개 주세요.', ru:'Дайте три яблока.'},
+            {ko:'물 두 병 주세요.', ru:'Дайте две бутылки воды.'},
+            {ko:'사람 네 명이에요.', ru:'Четыре человека.'}
+          ],
+          drills:[
+            { q:'3 яблока: 사과 ___ 개', ru:'', options:['세','삼','셋'], answer:'세' },
+            { q:'2 бутылки воды: 물 두 ___', ru:'счётное слово', options:['병','잔','개'], answer:'병' }
+          ] },
+        { kind:'words', eyebrow:'СЛОВА', title:'В магазине',
+          items:[
+            {ko:'사과', ru:'яблоко', emoji:'🍎'}, {ko:'빵', ru:'хлеб', emoji:'🍞'},
+            {ko:'우유', ru:'молоко', emoji:'🥛'}, {ko:'옷', ru:'одежда', emoji:'👕'},
+            {ko:'신발', ru:'обувь', emoji:'👟'}, {ko:'가방', ru:'сумка', emoji:'👜'}
+          ] },
+        { kind:'dialog', eyebrow:'ДИАЛОГ', title:'В магазине', sub:'가게에서',
+          lines:[
+            { who:'A', av:'🙂', ko:'이거 얼마예요?', ru:'Сколько это стоит?' },
+            { who:'B', av:'🧑', ko:'그거 오천 원이에요.', ru:'То — 5000 вон.' },
+            { who:'A', av:'🙂', ko:'두 개 주세요.', ru:'Дайте два.' },
+            { who:'B', av:'🧑', ko:'네, 만 원이에요.', ru:'Хорошо, 10 000 вон.' }
+          ] },
+        { kind:'build', eyebrow:'СОБЕРИ ФРАЗУ', title:'Три яблока, пожалуйста', ru:'Дайте три яблока.',
+          target:['사과','세','개','주세요'], pool:['두'] },
+        { kind:'listen', eyebrow:'АУДИРОВАНИЕ', title:'Что попросили?', sub:'Нажми ▶ и выбери перевод',
+          ko:'저거 주세요.', ru:'Дайте вон то.',
+          options:['Дайте вон то.','Дайте это.','Сколько это?'], answer:'Дайте вон то.' },
+        { kind:'quiz', eyebrow:'ПРОВЕРКА', title:'Слова урока',
+          items:[ {ko:'이거',ru:'это'}, {ko:'저거',ru:'вон то'}, {ko:'사다',ru:'покупать'} ],
+          pool:['это','вон то','покупать','то','бутылка','сколько'] },
+        { kind:'homework' },
+        { kind:'done' }
+      ]
+    },
+    {
+      id:'m2-l10', num:10, title:'Отрицание', ko:'안 · 못',
+      ru:'Не делаю (안) и не могу (못)',
+      vocab:[
+        {ko:'안', ru:'не (не делаю)', translit:'ан'},
+        {ko:'못', ru:'не могу', translit:'мот'},
+        {ko:'좋아하다', ru:'любить → 좋아해요', translit:'чоаада'},
+        {ko:'바쁘다', ru:'быть занятым → 바빠요', translit:'паппыда'},
+        {ko:'시간', ru:'время', translit:'сиган'},
+        {ko:'내일', ru:'завтра', translit:'нэиль'}
+      ],
+      homework:{ tasks:[
+        'Составь 3 фразы с 안 и 3 фразы с 못.',
+        'Объясни разницу: когда 안, а когда 못.'
+      ]},
+      slides:[
+        { kind:'intro', title:'Отрицание', sub:'안 vs 못',
+          intro:'«Два способа сказать «нет». <span class="ko">안</span> — «не делаю» (по выбору): 안 가요. <span class="ko">못</span> — «не могу» (нет возможности или умения): 못 가요. Ставятся прямо перед глаголом 🌸»',
+          learn:[['🚫','안 / 못'],['🗣️','диалог'],['🎯','дрилы']] },
+        { kind:'pattern', eyebrow:'ГРАММАТИКА', title:'안 + глагол', sub:'не делаю',
+          rule:'<span class="ko">안</span> ставится <b>перед</b> глаголом и значит «не делаю» (по своему выбору). Есть и длинная форма: глагол + <span class="ko">-지 않아요</span>.',
+          examples:[
+            {ko:'저는 안 가요.', ru:'Я не иду.'},
+            {ko:'커피를 안 마셔요.', ru:'Я не пью кофе.'},
+            {ko:'오늘 안 바빠요.', ru:'Сегодня не занят.'}
+          ],
+          drills:[
+            { q:'«не иду»: ___ 가요', ru:'', options:['안','못','를'], answer:'안' },
+            { q:'«не ем»: ___ 먹어요', ru:'', options:['안','못','에'], answer:'안' }
+          ] },
+        { kind:'pattern', eyebrow:'ГРАММАТИКА', title:'못 + глагол', sub:'не могу',
+          rule:'<span class="ko">못</span> — «не могу» (нет возможности, времени, умения). 못 가요 — не могу пойти. 한국어를 못 해요 — не умею (не могу) по-корейски.',
+          examples:[
+            {ko:'오늘은 못 가요.', ru:'Сегодня не могу пойти.'},
+            {ko:'매워요. 못 먹어요.', ru:'Остро. Не могу есть.'},
+            {ko:'한국어를 못 해요.', ru:'Не умею по-корейски.'}
+          ],
+          drills:[
+            { q:'«не могу пойти»: ___ 가요', ru:'нет возможности', options:['못','안','를'], answer:'못' },
+            { q:'«не умею корейский»: 한국어를 ___ 해요', ru:'', options:['못','안','를'], answer:'못' }
+          ] },
+        { kind:'words', eyebrow:'СЛОВА', title:'Полезные глаголы',
+          items:[
+            {ko:'좋아하다', ru:'любить', emoji:'❤️'}, {ko:'싫어하다', ru:'не любить', emoji:'💔'},
+            {ko:'바쁘다', ru:'быть занятым', emoji:'😵'}, {ko:'시간', ru:'время', emoji:'⏰'},
+            {ko:'운동', ru:'спорт', emoji:'🏃'}, {ko:'매일', ru:'каждый день', emoji:'📆'}
+          ] },
+        { kind:'dialog', eyebrow:'ДИАЛОГ', title:'Не могу сегодня', sub:'오늘은 못 가요',
+          lines:[
+            { who:'A', av:'🙂', ko:'오늘 같이 영화 봐요?', ru:'Посмотрим сегодня кино вместе?' },
+            { who:'B', av:'🧑', ko:'미안해요, 오늘 바빠요. 못 가요.', ru:'Извини, сегодня занят. Не могу.' },
+            { who:'A', av:'🙂', ko:'그럼 내일 어때요?', ru:'Тогда как насчёт завтра?' },
+            { who:'B', av:'🧑', ko:'좋아요!', ru:'Отлично!' }
+          ] },
+        { kind:'build', eyebrow:'СОБЕРИ ФРАЗУ', title:'Я не пью кофе', ru:'Я не пью кофе.',
+          target:['저는','커피를','안','마셔요'], pool:['못'] },
+        { kind:'listen', eyebrow:'АУДИРОВАНИЕ', title:'Что он сказал?', sub:'Нажми ▶ и выбери перевод',
+          ko:'오늘은 못 가요.', ru:'Сегодня не могу пойти.',
+          options:['Сегодня не могу пойти.','Сегодня иду.','Завтра иду.'], answer:'Сегодня не могу пойти.' },
+        { kind:'quiz', eyebrow:'ПРОВЕРКА', title:'Слова урока',
+          items:[ {ko:'바쁘다',ru:'занятой'}, {ko:'시간',ru:'время'}, {ko:'내일',ru:'завтра'} ],
+          pool:['занятой','время','завтра','спорт','каждый день','любить'] },
+        { kind:'homework' },
+        { kind:'done' }
+      ]
+    },
+    {
+      id:'m2-l11', num:11, title:'Хочу и хобби', ko:'-고 싶어요',
+      ru:'Желания (-고 싶어요), хобби и выходные',
+      vocab:[
+        {ko:'취미', ru:'хобби', translit:'чхви ми'},
+        {ko:'주말', ru:'выходные', translit:'чумаль'},
+        {ko:'여행하다', ru:'путешествовать → 여행해요', translit:'ёхэнъада'},
+        {ko:'노래하다', ru:'петь → 노래해요', translit:'норэада'},
+        {ko:'쉬다', ru:'отдыхать → 쉬어요', translit:'свида'},
+        {ko:'그리고', ru:'и (к тому же)', translit:'кыриго'}
+      ],
+      homework:{ tasks:[
+        'Напиши 3 желания: «저는 …-고 싶어요».',
+        'Расскажи про хобби и план на выходные (취미가 뭐예요? 주말에 뭐 해요?).'
+      ]},
+      slides:[
+        { kind:'intro', title:'Хочу и хобби', sub:'-고 싶어요',
+          intro:'«Чтобы сказать «хочу что-то сделать», добавь к основе глагола <span class="ko">-고 싶어요</span>: 가고 싶어요 — хочу пойти. Поговорим о хобби и выходных 🌸»',
+          learn:[['💭','-고 싶어요'],['🎨','хобби'],['🗣️','диалог']] },
+        { kind:'pattern', eyebrow:'ГРАММАТИКА', title:'-고 싶어요', sub:'хочу сделать',
+          rule:'Основа глагола (без <span class="ko">-다</span>) + <span class="ko">-고 싶어요</span> = «хочу (сделать)». 가다 → 가고 싶어요, 먹다 → 먹고 싶어요.',
+          examples:[
+            {ko:'한국에 가고 싶어요.', ru:'Хочу поехать в Корею.'},
+            {ko:'김밥을 먹고 싶어요.', ru:'Хочу съесть кимпаб.'},
+            {ko:'쉬고 싶어요.', ru:'Хочу отдохнуть.'}
+          ],
+          drills:[
+            { q:'«хочу есть»: 먹___ 싶어요', ru:'', options:['고','어','지'], answer:'고' },
+            { q:'«хочу пойти в Корею»: 한국에 가고 ___', ru:'', options:['싶어요','있어요','해요'], answer:'싶어요' }
+          ] },
+        { kind:'pattern', eyebrow:'ГРАММАТИКА', title:'Спрашиваем о хобби', sub:'취미가 뭐예요?',
+          rule:'<span class="ko">취미가 뭐예요?</span> — «какое у тебя хобби?». <span class="ko">주말에 뭐 해요?</span> — «что делаешь на выходных?». <span class="ko">에</span> здесь — частица времени.',
+          examples:[
+            {ko:'취미가 뭐예요?', ru:'Какое у тебя хобби?'},
+            {ko:'주말에 뭐 해요?', ru:'Что делаешь на выходных?'},
+            {ko:'저는 음악을 좋아해요.', ru:'Я люблю музыку.'}
+          ],
+          drills:[
+            { q:'«какое хобби?»: 취미가 ___?', ru:'', options:['뭐예요','어디예요','얼마예요'], answer:'뭐예요' }
+          ] },
+        { kind:'words', eyebrow:'ХОББИ', title:'Что любим делать',
+          items:[
+            {ko:'운동', ru:'спорт', emoji:'🏃'}, {ko:'영화', ru:'кино', emoji:'🎬'},
+            {ko:'음악', ru:'музыка', emoji:'🎵'}, {ko:'여행', ru:'путешествие', emoji:'✈️'},
+            {ko:'게임', ru:'игры', emoji:'🎮'}, {ko:'요리', ru:'готовка', emoji:'🍳'}
+          ] },
+        { kind:'dialog', eyebrow:'ДИАЛОГ', title:'Хобби и выходные', sub:'취미가 뭐예요?',
+          lines:[
+            { who:'A', av:'🙂', ko:'취미가 뭐예요?', ru:'Какое у тебя хобби?' },
+            { who:'B', av:'🧑', ko:'저는 음악을 좋아해요. 그리고 노래하고 싶어요.', ru:'Я люблю музыку. И хочу петь.' },
+            { who:'A', av:'🙂', ko:'주말에 뭐 해요?', ru:'Что делаешь на выходных?' },
+            { who:'B', av:'🧑', ko:'친구를 만나고 영화를 봐요.', ru:'Встречаю друга и смотрю кино.' }
+          ] },
+        { kind:'build', eyebrow:'СОБЕРИ ФРАЗУ', title:'Хочу в Корею', ru:'Я хочу поехать в Корею.',
+          target:['저는','한국에','가고','싶어요'], pool:['먹고'] },
+        { kind:'listen', eyebrow:'АУДИРОВАНИЕ', title:'Чего он хочет?', sub:'Нажми ▶ и выбери перевод',
+          ko:'저는 영화를 보고 싶어요.', ru:'Я хочу посмотреть фильм.',
+          options:['Я хочу посмотреть фильм.','Я смотрю фильм.','Я не смотрю фильм.'], answer:'Я хочу посмотреть фильм.' },
+        { kind:'quiz', eyebrow:'ПРОВЕРКА', title:'Слова урока',
+          items:[ {ko:'취미',ru:'хобби'}, {ko:'주말',ru:'выходные'}, {ko:'여행',ru:'путешествие'} ],
+          pool:['хобби','выходные','путешествие','спорт','готовка','отдыхать'] },
+        { kind:'homework' },
+        { kind:'done' }
+      ]
+    },
+    {
+      id:'m2-l12', num:12, title:'Соединяем и общаемся', ko:'그리고 · 하지만 · -고',
+      ru:'Связываем предложения и повторяем весь модуль',
+      vocab:[
+        {ko:'그리고', ru:'и (к тому же)', translit:'кыриго'},
+        {ko:'하지만', ru:'но, однако', translit:'хаджиман'},
+        {ko:'그래서', ru:'поэтому', translit:'кырэсо'},
+        {ko:'같이', ru:'вместе', translit:'качхи'},
+        {ko:'어때요', ru:'как насчёт?', translit:'оттэё'},
+        {ko:'-고', ru:'и (соединяет действия)', translit:'-го'}
+      ],
+      homework:{ tasks:[
+        'Соедини 3 пары предложений через 그리고, 하지만, 그래서.',
+        'Составь мини-рассказ о выходных из 4–5 связанных предложений.'
+      ]},
+      slides:[
+        { kind:'intro', title:'Соединяем и общаемся', sub:'повторение модуля 🏁',
+          intro:'«Финал модуля! Научимся связывать предложения: <span class="ko">그리고</span> (и), <span class="ko">하지만</span> (но), <span class="ko">-고</span> (сделал и…). И соберём всё в большом диалоге. 화이팅 🌸»',
+          learn:[['🔗','соединители'],['🗣️','большой диалог'],['🏆','финальный квиз']] },
+        { kind:'pattern', eyebrow:'ГРАММАТИКА', title:'Соединяем предложения', sub:'그리고 · 하지만 · -고',
+          rule:'<b>그리고</b> — «и» между предложениями. <b>하지만</b> — «но». <b>그래서</b> — «поэтому». <span class="ko">-고</span> соединяет действия одного человека: <span class="ko">밥을 먹고 커피를 마셔요</span> — поем и пью кофе.',
+          examples:[
+            {ko:'밥을 먹고 커피를 마셔요.', ru:'Ем и пью кофе.'},
+            {ko:'영화를 좋아해요. 하지만 시간이 없어요.', ru:'Люблю кино. Но нет времени.'},
+            {ko:'한국어를 공부해요. 그래서 한국에 가고 싶어요.', ru:'Учу корейский. Поэтому хочу в Корею.'}
+          ],
+          drills:[
+            { q:'«ем и пью»: 밥을 먹__ 마셔요', ru:'соединяем действия', options:['고','지','어'], answer:'고' },
+            { q:'«но нет времени»: ___ 시간이 없어요', ru:'', options:['하지만','그리고','그래서'], answer:'하지만' }
+          ] },
+        { kind:'words', eyebrow:'СОЕДИНИТЕЛИ', title:'Слова-связки',
+          items:[
+            {ko:'그리고', ru:'и, к тому же', emoji:'➕'}, {ko:'하지만', ru:'но, однако', emoji:'↔️'},
+            {ko:'그래서', ru:'поэтому', emoji:'➡️'}, {ko:'같이', ru:'вместе', emoji:'🤝'},
+            {ko:'어때요', ru:'как насчёт?', emoji:'🤔'}, {ko:'내일', ru:'завтра', emoji:'📆'}
+          ] },
+        { kind:'dialog', eyebrow:'ДИАЛОГ', title:'Планы на выходные', sub:'주말 계획',
+          lines:[
+            { who:'A', av:'🙂', ko:'주말에 뭐 하고 싶어요?', ru:'Что хочешь делать на выходных?' },
+            { who:'B', av:'🧑', ko:'친구를 만나고 영화를 보고 싶어요.', ru:'Хочу встретить друга и посмотреть кино.' },
+            { who:'A', av:'🙂', ko:'저도 영화를 좋아해요. 같이 봐요!', ru:'Я тоже люблю кино. Давай вместе!' },
+            { who:'B', av:'🧑', ko:'좋아요. 몇 시에 만나요?', ru:'Хорошо. Во сколько встречаемся?' },
+            { who:'A', av:'🙂', ko:'오후 두 시에 만나요. 토요일에 봐요!', ru:'В два часа дня. Увидимся в субботу!' }
+          ],
+          note:'Большой диалог собирает всё из модуля: время, желания, соединители.' },
+        { kind:'build', eyebrow:'СОБЕРИ ФРАЗУ', title:'Поем и попью кофе', ru:'Поем и попью кофе.',
+          target:['밥을','먹고','커피를','마셔요'], pool:['저는'] },
+        { kind:'listen', eyebrow:'АУДИРОВАНИЕ', title:'Что он хочет?', sub:'Нажми ▶ и выбери перевод',
+          ko:'주말에 친구를 만나고 싶어요.', ru:'На выходных хочу встретить друга.',
+          options:['Хочу встретить друга на выходных.','Встретил друга вчера.','Не хочу встречать друга.'], answer:'Хочу встретить друга на выходных.' },
+        { kind:'quiz', eyebrow:'ФИНАЛЬНЫЙ КВИЗ', title:'Весь модуль 2',
+          items:[ {ko:'취미',ru:'хобби'}, {ko:'주말',ru:'выходные'}, {ko:'어제',ru:'вчера'}, {ko:'같이',ru:'вместе'}, {ko:'얼마',ru:'сколько'} ],
+          pool:['хобби','выходные','вчера','вместе','сколько','сейчас','время','завтра'] },
+        { kind:'homework' },
+        { kind:'done' }
+      ]
+    }
+  ];
+
+  // ── Модуль 3 · Связная речь и вежливость (TOPIK I · 2급) ──
+  const LESSON_CATALOG_M3 = [
+    {
+      id:'m3-l1', num:1, title:'Будущее и планы', ko:'-(으)ㄹ 거예요',
+      ru:'Будущее время -(으)ㄹ 거예요 и даты (월/일)',
+      vocab:[
+        {ko:'내일', ru:'завтра', translit:'нэиль'},
+        {ko:'다음 주', ru:'следующая неделя', translit:'таым чу'},
+        {ko:'계획', ru:'план', translit:'кйехвек'},
+        {ko:'약속', ru:'встреча, обещание', translit:'яксок'},
+        {ko:'방학', ru:'каникулы', translit:'панъхак'},
+        {ko:'생일', ru:'день рождения', translit:'сэнъиль'}
+      ],
+      homework:{ tasks:[
+        'Составь 3 плана на будущее: «내일/다음 주에 … -(으)ㄹ 거예요».',
+        'Назови свой день рождения: 제 생일은 … 월 … 일이에요.'
+      ]},
+      slides:[
+        { kind:'intro', title:'Будущее и планы', sub:'-(으)ㄹ 거예요',
+          intro:'«В Модуле 2 мы говорили о настоящем и прошлом. Теперь — о будущем! <span class="ko">-(으)ㄹ 거예요</span> значит «буду / собираюсь». И заодно научимся называть даты 🌸»',
+          learn:[['🔮','будущее'],['📅','даты'],['🗣️','планы']] },
+        { kind:'pattern', eyebrow:'ГРАММАТИКА', title:'-(으)ㄹ 거예요', sub:'буду / собираюсь',
+          rule:'Основа глагола + <b>-(으)ㄹ 거예요</b>. После гласной → <span class="ko">-ㄹ 거예요</span> (가다 → 갈 거예요), после согласной → <span class="ko">-을 거예요</span> (먹다 → 먹을 거예요). Читается «꺼예요».',
+          examples:[
+            {ko:'내일 학교에 갈 거예요.', ru:'Завтра пойду в школу.'},
+            {ko:'주말에 친구를 만날 거예요.', ru:'На выходных встречусь с другом.'},
+            {ko:'저녁에 김밥을 먹을 거예요.', ru:'Вечером съем кимпаб.'}
+          ],
+          drills:[
+            { q:'가다 → ?', options:['갈 거예요','가을 거예요','가 거예요'], answer:'갈 거예요' },
+            { q:'먹다 → ?', options:['먹을 거예요','먹ㄹ 거예요','머글 거예요'], answer:'먹을 거예요' },
+            { q:'내일 뭐 ___?', ru:'Что будешь делать завтра?', options:['할 거예요','해요','했어요'], answer:'할 거예요' }
+          ] },
+        { kind:'info', eyebrow:'ДАТЫ', title:'Месяцы 월', sub:'китайские числа + 월', cols:3,
+          grid:[
+            {ko:'일월', ru:'январь'}, {ko:'이월', ru:'февраль'}, {ko:'삼월', ru:'март'},
+            {ko:'사월', ru:'апрель'}, {ko:'오월', ru:'май'}, {ko:'유월', ru:'июнь'},
+            {ko:'칠월', ru:'июль'}, {ko:'팔월', ru:'август'}, {ko:'구월', ru:'сентябрь'},
+            {ko:'시월', ru:'октябрь'}, {ko:'십일월', ru:'ноябрь'}, {ko:'십이월', ru:'декабрь'}
+          ],
+          note:'Внимание: 6월 = 유월, 10월 = 시월 (не «육월/십월»). День — число + 일: 십오 일 (15-е).' },
+        { kind:'words', eyebrow:'СЛОВА', title:'Когда и что',
+          items:[
+            {ko:'내일', ru:'завтра', emoji:'➡️'}, {ko:'다음 주', ru:'след. неделя', emoji:'📆'},
+            {ko:'계획', ru:'план', emoji:'📝'}, {ko:'약속', ru:'встреча', emoji:'🤝'},
+            {ko:'방학', ru:'каникулы', emoji:'🏖️'}, {ko:'생일', ru:'день рождения', emoji:'🎂'}
+          ] },
+        { kind:'dialog', eyebrow:'ДИАЛОГ', title:'Что будешь делать?', sub:'주말 계획',
+          lines:[
+            { who:'A', av:'🙂', ko:'주말에 뭐 할 거예요?', ru:'Что будешь делать на выходных?' },
+            { who:'B', av:'🧑', ko:'친구를 만날 거예요.', ru:'Встречусь с другом.' },
+            { who:'A', av:'🙂', ko:'어디에 갈 거예요?', ru:'Куда пойдёте?' },
+            { who:'B', av:'🧑', ko:'영화를 볼 거예요. 같이 갈래요?', ru:'Будем смотреть кино. Пойдёшь с нами?' }
+          ],
+          note:'Нажми «Прослушать диалог» — реплики читаются двумя голосами.' },
+        { kind:'build', eyebrow:'СОБЕРИ ФРАЗУ', title:'Завтра — кино', ru:'Завтра буду смотреть фильм.',
+          target:['내일','영화를','볼','거예요'], pool:['갈'] },
+        { kind:'listen', eyebrow:'АУДИРОВАНИЕ', title:'Какие планы?', sub:'Нажми ▶ и выбери перевод',
+          ko:'주말에 부산에 갈 거예요.', ru:'На выходных поеду в Пусан.',
+          options:['На выходных поеду в Пусан.','Был в Пусане вчера.','Живу в Пусане.'], answer:'На выходных поеду в Пусан.' },
+        { kind:'quiz', eyebrow:'ПРОВЕРКА', title:'Слова урока',
+          items:[ {ko:'내일',ru:'завтра'}, {ko:'계획',ru:'план'}, {ko:'약속',ru:'встреча'} ],
+          pool:['завтра','план','встреча','каникулы','вчера','день рождения'] },
+        { kind:'homework' },
+        { kind:'done' }
+      ]
+    },
+    {
+      id:'m3-l2', num:2, title:'Просьбы и запреты', ko:'-(으)세요 · -지 마세요',
+      ru:'Вежливая просьба -(으)세요 и запрет -지 마세요',
+      vocab:[
+        {ko:'앉다', ru:'садиться → 앉으세요', translit:'анчта'},
+        {ko:'기다리다', ru:'ждать → 기다리세요', translit:'кидарида'},
+        {ko:'들어오다', ru:'входить → 들어오세요', translit:'тыроода'},
+        {ko:'조용히', ru:'тихо', translit:'чоёнъхи'},
+        {ko:'천천히', ru:'медленно', translit:'чхончхонхи'},
+        {ko:'담배', ru:'сигарета', translit:'тамбэ'}
+      ],
+      homework:{ tasks:[
+        'Дай 3 вежливые просьбы с -(으)세요.',
+        'Напиши 3 запрета с -지 마세요 (например, в музее).'
+      ]},
+      slides:[
+        { kind:'intro', title:'Просьбы и запреты', sub:'-(으)세요 · -지 마세요',
+          intro:'«В Модуле 2 ты знал только <span class="ko">주세요</span> — «дайте». Теперь любой глагол можно сделать вежливой просьбой: <span class="ko">-(으)세요</span>. А чтобы запретить — <span class="ko">-지 마세요</span> 🌸»',
+          learn:[['🙏','вежливо проси'],['🚫','запрещай'],['🗣️','диалог']] },
+        { kind:'pattern', eyebrow:'ГРАММАТИКА', title:'-(으)세요', sub:'вежливая просьба',
+          rule:'Основа глагола + <b>-(으)세요</b> = вежливая просьба и форма уважения. После гласной → <span class="ko">-세요</span> (가다 → 가세요), после согласной → <span class="ko">-으세요</span> (앉다 → 앉으세요).',
+          examples:[
+            {ko:'여기 앉으세요.', ru:'Садитесь здесь.'},
+            {ko:'잠깐 기다리세요.', ru:'Подождите немного.'},
+            {ko:'천천히 말하세요.', ru:'Говорите медленно.'}
+          ],
+          drills:[
+            { q:'앉다 → ?', options:['앉으세요','앉세요','앉아세요'], answer:'앉으세요' },
+            { q:'기다리다 → ?', options:['기다리세요','기다리으세요','기다세요'], answer:'기다리세요' }
+          ] },
+        { kind:'pattern', eyebrow:'ГРАММАТИКА', title:'-지 마세요', sub:'запрет',
+          rule:'Основа глагола + <b>-지 마세요</b> = «не делайте». 뛰지 마세요 — не бегайте, 사진을 찍지 마세요 — не фотографируйте.',
+          examples:[
+            {ko:'여기에서 담배를 피우지 마세요.', ru:'Не курите здесь.'},
+            {ko:'사진을 찍지 마세요.', ru:'Не фотографируйте.'},
+            {ko:'늦지 마세요.', ru:'Не опаздывайте.'}
+          ],
+          drills:[
+            { q:'«не курите»: 담배를 피우___ 마세요', ru:'', options:['지','으','고'], answer:'지' },
+            { q:'«не бегайте»: 뛰___ 마세요', ru:'', options:['지','세','어'], answer:'지' }
+          ] },
+        { kind:'words', eyebrow:'СЛОВА', title:'Указания',
+          items:[
+            {ko:'앉다', ru:'садиться', emoji:'🪑'}, {ko:'기다리다', ru:'ждать', emoji:'⏳'},
+            {ko:'들어오다', ru:'входить', emoji:'🚪'}, {ko:'조용히', ru:'тихо', emoji:'🤫'},
+            {ko:'천천히', ru:'медленно', emoji:'🐢'}, {ko:'담배', ru:'сигарета', emoji:'🚬'}
+          ] },
+        { kind:'dialog', eyebrow:'ДИАЛОГ', title:'В кабинете', sub:'사무실에서',
+          lines:[
+            { who:'A', av:'🧑', ko:'들어오세요. 여기 앉으세요.', ru:'Входите. Садитесь здесь.' },
+            { who:'B', av:'🙂', ko:'네, 감사합니다.', ru:'Да, спасибо.' },
+            { who:'A', av:'🧑', ko:'잠깐 기다리세요.', ru:'Подождите немного.' },
+            { who:'B', av:'🙂', ko:'네, 알겠습니다.', ru:'Да, хорошо.' }
+          ] },
+        { kind:'build', eyebrow:'СОБЕРИ ФРАЗУ', title:'Садитесь здесь', ru:'Садитесь здесь.',
+          target:['여기','앉으세요'], pool:['보세요'] },
+        { kind:'listen', eyebrow:'АУДИРОВАНИЕ', title:'Что просят?', sub:'Нажми ▶ и выбери перевод',
+          ko:'여기에서 조용히 하세요.', ru:'Здесь ведите себя тихо.',
+          options:['Будьте здесь потише.','Говорите громче.','Идите сюда.'], answer:'Будьте здесь потише.' },
+        { kind:'quiz', eyebrow:'ПРОВЕРКА', title:'Слова урока',
+          items:[ {ko:'앉다',ru:'садиться'}, {ko:'기다리다',ru:'ждать'}, {ko:'천천히',ru:'медленно'} ],
+          pool:['садиться','ждать','медленно','тихо','входить','сигарета'] },
+        { kind:'homework' },
+        { kind:'done' }
+      ]
+    },
+    {
+      id:'m3-l3', num:3, title:'Где что лежит', ko:'위·아래·앞·뒤·옆',
+      ru:'Позиционные слова и 있어요/없어요',
+      vocab:[
+        {ko:'위', ru:'верх, на', translit:'ви'},
+        {ko:'아래', ru:'низ, под', translit:'арэ'},
+        {ko:'앞', ru:'перёд', translit:'ап'},
+        {ko:'뒤', ru:'зад, позади', translit:'твин'},
+        {ko:'옆', ru:'рядом, сбоку', translit:'ёп'},
+        {ko:'안', ru:'внутри', translit:'ан'},
+        {ko:'책상', ru:'стол', translit:'чхэксанъ'},
+        {ko:'고양이', ru:'кошка', translit:'коянъи'}
+      ],
+      homework:{ tasks:[
+        'Опиши свою комнату: что где (위/아래/앞/뒤/옆/안) — 5 фраз.',
+        'Составь 3 фразы с 있어요 и 3 с 없어요.'
+      ]},
+      slides:[
+        { kind:'intro', title:'Где что лежит', sub:'위치 표현',
+          intro:'«Частицы 에/에서 ты уже знаешь. Теперь добавим позиционные слова: <span class="ko">위</span> (на), <span class="ko">아래</span> (под), <span class="ko">앞·뒤·옆·안</span>. И скажем, что где есть — <span class="ko">있어요/없어요</span> 🌸»',
+          learn:[['📍','положение'],['📦','есть/нет'],['🐱','предметы']] },
+        { kind:'info', eyebrow:'ПОЛОЖЕНИЕ', title:'Позиционные слова', sub:'место + ___ + 에', cols:1,
+          grid:[
+            {ko:'위', ru:'верх — на (책상 위)'}, {ko:'아래', ru:'низ — под'}, {ko:'앞', ru:'перёд — перед'},
+            {ko:'뒤', ru:'зад — позади'}, {ko:'옆', ru:'бок — рядом'}, {ko:'안', ru:'внутри — в'}, {ko:'밖', ru:'снаружи — вне'}
+          ],
+          note:'Схема: <место> + <позиция> + 에 + 있어요. Пример: 책상 위에 책이 있어요.' },
+        { kind:'pattern', eyebrow:'ГРАММАТИКА', title:'… 에 있어요 / 없어요', sub:'есть / нет',
+          rule:'<b>있어요</b> — есть, находится. <b>없어요</b> — нет, отсутствует. Подлежащее берёт <span class="ko">이/가</span>: <span class="ko">고양이가 있어요</span>.',
+          examples:[
+            {ko:'책상 위에 컴퓨터가 있어요.', ru:'На столе есть компьютер.'},
+            {ko:'가방 안에 책이 없어요.', ru:'В сумке нет книги.'},
+            {ko:'의자 옆에 고양이가 있어요.', ru:'Рядом со стулом есть кошка.'}
+          ],
+          drills:[
+            { q:'«на столе»: 책상 ___에', ru:'', options:['위','아래','앞'], answer:'위' },
+            { q:'«в сумке»: 가방 ___에', ru:'', options:['안','옆','뒤'], answer:'안' }
+          ] },
+        { kind:'words', eyebrow:'СЛОВА', title:'В комнате',
+          items:[
+            {ko:'책상', ru:'стол', emoji:'🪑'}, {ko:'침대', ru:'кровать', emoji:'🛏️'},
+            {ko:'창문', ru:'окно', emoji:'🪟'}, {ko:'컴퓨터', ru:'компьютер', emoji:'💻'},
+            {ko:'고양이', ru:'кошка', emoji:'🐱'}, {ko:'강아지', ru:'собака', emoji:'🐶'}
+          ] },
+        { kind:'dialog', eyebrow:'ДИАЛОГ', title:'Где мой телефон?', sub:'어디에 있어요?',
+          lines:[
+            { who:'A', av:'🙂', ko:'제 핸드폰이 어디에 있어요?', ru:'Где мой телефон?' },
+            { who:'B', av:'🧑', ko:'책상 위에 있어요.', ru:'На столе.' },
+            { who:'A', av:'🙂', ko:'아니요, 거기 없어요.', ru:'Нет, там его нет.' },
+            { who:'B', av:'🧑', ko:'아, 가방 안에 있어요!', ru:'А, он в сумке!' }
+          ] },
+        { kind:'build', eyebrow:'СОБЕРИ ФРАЗУ', title:'Книга на столе', ru:'На столе есть книга.',
+          target:['책상','위에','책이','있어요'], pool:['없어요'] },
+        { kind:'listen', eyebrow:'АУДИРОВАНИЕ', title:'Что где?', sub:'Нажми ▶ и выбери перевод',
+          ko:'가방 안에 핸드폰이 있어요.', ru:'В сумке есть телефон.',
+          options:['В сумке есть телефон.','Телефон на столе.','Сумки нет.'], answer:'В сумке есть телефон.' },
+        { kind:'quiz', eyebrow:'ПРОВЕРКА', title:'Слова урока',
+          items:[ {ko:'위',ru:'верх'}, {ko:'아래',ru:'низ'}, {ko:'옆',ru:'рядом'} ],
+          pool:['верх','низ','рядом','перёд','зад','внутри'] },
+        { kind:'homework' },
+        { kind:'done' }
+      ]
+    },
+    {
+      id:'m3-l4', num:4, title:'Иду, чтобы…', ko:'-(으)러 가다',
+      ru:'Цель движения: -(으)러 가다/오다',
+      vocab:[
+        {ko:'산책하다', ru:'гулять → 산책해요', translit:'санчхэкада'},
+        {ko:'빌리다', ru:'брать, одалживать → 빌려요', translit:'пиллида'},
+        {ko:'배우다', ru:'учиться → 배워요', translit:'пэуда'},
+        {ko:'식당', ru:'столовая, ресторан', translit:'сиктанъ'},
+        {ko:'극장', ru:'кинотеатр, театр', translit:'кыкчанъ'},
+        {ko:'공원', ru:'парк', translit:'конъвон'}
+      ],
+      homework:{ tasks:[
+        'Составь 4 фразы «… -(으)러 …에 가요».',
+        'Куда и зачем ты ходишь? Опиши 3 места и цель.'
+      ]},
+      slides:[
+        { kind:'intro', title:'Иду, чтобы…', sub:'-(으)러 가다/오다',
+          intro:'«Чтобы сказать, ЗАЧЕМ ты куда-то идёшь, нужна конструкция цели: <span class="ko">-(으)러 가다/오다</span>. 밥을 먹으러 식당에 가요 — иду в столовую поесть 🌸»',
+          learn:[['🎯','цель движения'],['🏃','глаголы'],['🗺️','места']] },
+        { kind:'pattern', eyebrow:'ГРАММАТИКА', title:'-(으)러 가다/오다', sub:'идти, чтобы…',
+          rule:'Основа глагола цели + <b>-(으)러</b> + <span class="ko">가다/오다</span>. После гласной → <span class="ko">-러</span> (보다 → 보러), после согласной → <span class="ko">-으러</span> (먹다 → 먹으러). Место ставится с <span class="ko">에</span>.',
+          examples:[
+            {ko:'친구를 만나러 가요.', ru:'Иду встретить друга.'},
+            {ko:'책을 빌리러 도서관에 가요.', ru:'Иду в библиотеку взять книгу.'},
+            {ko:'점심을 먹으러 식당에 가요.', ru:'Иду в столовую на обед.'}
+          ],
+          drills:[
+            { q:'먹다 → 먹___ 가요', ru:'', options:['으러','러','으로'], answer:'으러' },
+            { q:'보다 → 보___ 가요', ru:'', options:['러','으러','라'], answer:'러' },
+            { q:'공부하___ 도서관에 가요', ru:'учиться', options:['러','으러','고'], answer:'러' }
+          ] },
+        { kind:'words', eyebrow:'СЛОВА', title:'Зачем и куда',
+          items:[
+            {ko:'산책하다', ru:'гулять', emoji:'🚶'}, {ko:'빌리다', ru:'брать, занять', emoji:'📗'},
+            {ko:'배우다', ru:'учиться', emoji:'✏️'}, {ko:'식당', ru:'столовая', emoji:'🍽️'},
+            {ko:'극장', ru:'кинотеатр', emoji:'🎟️'}, {ko:'공원', ru:'парк', emoji:'🌳'}
+          ] },
+        { kind:'dialog', eyebrow:'ДИАЛОГ', title:'Куда собрался?', sub:'어디 가요?',
+          lines:[
+            { who:'A', av:'🙂', ko:'어디 가요?', ru:'Куда идёшь?' },
+            { who:'B', av:'🧑', ko:'책을 빌리러 도서관에 가요.', ru:'Иду в библиотеку взять книгу.' },
+            { who:'A', av:'🙂', ko:'저는 친구를 만나러 가요.', ru:'А я иду встретить друга.' },
+            { who:'B', av:'🧑', ko:'그럼 이따 봐요!', ru:'Тогда увидимся позже!' }
+          ] },
+        { kind:'build', eyebrow:'СОБЕРИ ФРАЗУ', title:'Встретить друга', ru:'Иду встретить друга.',
+          target:['친구를','만나러','가요'], pool:['먹으러'] },
+        { kind:'listen', eyebrow:'АУДИРОВАНИЕ', title:'Зачем идёт?', sub:'Нажми ▶ и выбери перевод',
+          ko:'영화를 보러 극장에 가요.', ru:'Иду в кинотеатр смотреть фильм.',
+          options:['Иду в кино смотреть фильм.','Уже посмотрел фильм.','Не люблю фильмы.'], answer:'Иду в кино смотреть фильм.' },
+        { kind:'quiz', eyebrow:'ПРОВЕРКА', title:'Слова урока',
+          items:[ {ko:'빌리다',ru:'брать'}, {ko:'산책하다',ru:'гулять'}, {ko:'배우다',ru:'учиться'} ],
+          pool:['брать','гулять','учиться','парк','кинотеатр','столовая'] },
+        { kind:'homework' },
+        { kind:'done' }
+      ]
+    },
+    {
+      id:'m3-l5', num:5, title:'Описываем мир', ko:'형용사',
+      ru:'Прилагательные: 크다·작다·예쁘다·비싸다·덥다·춥다',
+      vocab:[
+        {ko:'크다', ru:'большой → 커요', translit:'кхыда'},
+        {ko:'작다', ru:'маленький → 작아요', translit:'чакта'},
+        {ko:'예쁘다', ru:'красивый → 예뻐요', translit:'еппыда'},
+        {ko:'비싸다', ru:'дорогой → 비싸요', translit:'писсада'},
+        {ko:'싸다', ru:'дешёвый → 싸요', translit:'ссада'},
+        {ko:'덥다', ru:'жаркий → 더워요', translit:'топта'},
+        {ko:'춥다', ru:'холодный → 추워요', translit:'чхупта'},
+        {ko:'날씨', ru:'погода', translit:'нальсси'}
+      ],
+      homework:{ tasks:[
+        'Опиши 5 предметов прилагательными в форме -아요/어요.',
+        'Расскажи про сегодняшнюю погоду: 오늘 날씨가 … .'
+      ]},
+      slides:[
+        { kind:'intro', title:'Описываем мир', sub:'형용사 — прилагательные',
+          intro:'«До этого мы описывали действия. Теперь — свойства! Прилагательные спрягаются как глаголы (-아요/어요), но описывают: 커요 (большой), 예뻐요 (красивый), 추워요 (холодно) 🌸»',
+          learn:[['🎨','свойства'],['🌦️','погода'],['💬','어때요?']] },
+        { kind:'pattern', eyebrow:'ГРАММАТИКА', title:'Прилагательные на -아요/어요', sub:'описываем состояние',
+          rule:'Прилагательное (형용사) спрягается как глагол. <span class="ko">크다 → 커요</span>, <span class="ko">작다 → 작아요</span>. У <span class="ko">덥다·춥다</span> особая основа (ㅂ → 우): <span class="ko">더워요·추워요</span>. Вопрос о свойстве — <span class="ko">어때요?</span>',
+          examples:[
+            {ko:'가방이 비싸요.', ru:'Сумка дорогая.'},
+            {ko:'날씨가 더워요.', ru:'Погода жаркая.'},
+            {ko:'꽃이 예뻐요.', ru:'Цветок красивый.'}
+          ],
+          drills:[
+            { q:'크다 → ?', options:['커요','크어요','카요'], answer:'커요' },
+            { q:'춥다 → ?', ru:'ㅂ-неправильный', options:['추워요','춥어요','추어요'], answer:'추워요' },
+            { q:'비싸다 → ?', options:['비싸요','비싸어요','비셔요'], answer:'비싸요' }
+          ] },
+        { kind:'words', eyebrow:'СЛОВА', title:'Какой?',
+          items:[
+            {ko:'크다', ru:'большой', emoji:'🐘'}, {ko:'작다', ru:'маленький', emoji:'🐜'},
+            {ko:'예쁘다', ru:'красивый', emoji:'🌸'}, {ko:'비싸다', ru:'дорогой', emoji:'💎'},
+            {ko:'덥다', ru:'жаркий', emoji:'🥵'}, {ko:'춥다', ru:'холодный', emoji:'🥶'}
+          ] },
+        { kind:'dialog', eyebrow:'ДИАЛОГ', title:'Какая погода?', sub:'날씨가 어때요?',
+          lines:[
+            { who:'A', av:'🙂', ko:'오늘 날씨가 어때요?', ru:'Какая сегодня погода?' },
+            { who:'B', av:'🧑', ko:'좀 추워요.', ru:'Немного холодно.' },
+            { who:'A', av:'🙂', ko:'이 가방 어때요?', ru:'А как тебе эта сумка?' },
+            { who:'B', av:'🧑', ko:'예뻐요. 그런데 너무 비싸요.', ru:'Красивая. Но слишком дорогая.' }
+          ] },
+        { kind:'build', eyebrow:'СОБЕРИ ФРАЗУ', title:'Слишком дорого', ru:'Эта сумка слишком дорогая.',
+          target:['이','가방이','너무','비싸요'], pool:['싸요'] },
+        { kind:'listen', eyebrow:'АУДИРОВАНИЕ', title:'Какая погода?', sub:'Нажми ▶ и выбери перевод',
+          ko:'오늘 날씨가 추워요.', ru:'Сегодня холодная погода.',
+          options:['Сегодня холодно.','Сегодня жарко.','Погода хорошая.'], answer:'Сегодня холодно.' },
+        { kind:'quiz', eyebrow:'ПРОВЕРКА', title:'Слова урока',
+          items:[ {ko:'크다',ru:'большой'}, {ko:'작다',ru:'маленький'}, {ko:'비싸다',ru:'дорогой'} ],
+          pool:['большой','маленький','дорогой','дешёвый','красивый','холодный'] },
+        { kind:'homework' },
+        { kind:'done' }
+      ]
+    },
+    {
+      id:'m3-l6', num:6, title:'Умею и могу', ko:'-(으)ㄹ 수 있다',
+      ru:'Способность: -(으)ㄹ 수 있어요 / 없어요',
+      vocab:[
+        {ko:'수영하다', ru:'плавать → 수영해요', translit:'суёнъада'},
+        {ko:'운전하다', ru:'водить → 운전해요', translit:'унджонада'},
+        {ko:'요리하다', ru:'готовить → 요리해요', translit:'ёрида'},
+        {ko:'피아노', ru:'пианино', translit:'пиано'},
+        {ko:'치다', ru:'играть (на инстр.) → 쳐요', translit:'чхида'},
+        {ko:'외국어', ru:'иностранный язык', translit:'вегуго'}
+      ],
+      homework:{ tasks:[
+        'Назови 3 умения (… 할 수 있어요) и 2 неумения (… 할 수 없어요).',
+        'Спроси у друга: «…할 수 있어요?» и запиши ответ.'
+      ]},
+      slides:[
+        { kind:'intro', title:'Умею и могу', sub:'-(으)ㄹ 수 있다/없다',
+          intro:'«В Модуле 2 был <span class="ko">못</span> — «не могу сейчас». Теперь — про умение и возможность вообще: <span class="ko">-(으)ㄹ 수 있어요</span> (умею/могу) и <span class="ko">-(으)ㄹ 수 없어요</span> (не умею/не могу) 🌸»',
+          learn:[['💪','умения'],['🎹','инструменты'],['🗣️','диалог']] },
+        { kind:'pattern', eyebrow:'ГРАММАТИКА', title:'-(으)ㄹ 수 있어요', sub:'умею / могу',
+          rule:'Основа глагола + <b>-(으)ㄹ 수 있어요</b> (могу) / <b>없어요</b> (не могу). После гласной → <span class="ko">-ㄹ 수</span> (가다 → 갈 수 있어요), после согласной → <span class="ko">-을 수</span> (먹다 → 먹을 수 있어요).',
+          examples:[
+            {ko:'저는 수영할 수 있어요.', ru:'Я умею плавать.'},
+            {ko:'운전할 수 없어요.', ru:'Я не умею водить.'},
+            {ko:'피아노를 칠 수 있어요?', ru:'Ты умеешь играть на пианино?'}
+          ],
+          drills:[
+            { q:'먹다 → 먹___ 수 있어요', ru:'', options:['을','ㄹ','으'], answer:'을' },
+            { q:'가다 → ___ 수 있어요', ru:'', options:['갈','가을','가ㄹ'], answer:'갈' },
+            { q:'«не умею»: 운전할 수 ___', ru:'', options:['없어요','있어요','몰라요'], answer:'없어요' }
+          ] },
+        { kind:'words', eyebrow:'СЛОВА', title:'Что умеем',
+          items:[
+            {ko:'수영하다', ru:'плавать', emoji:'🏊'}, {ko:'운전하다', ru:'водить', emoji:'🚗'},
+            {ko:'요리하다', ru:'готовить', emoji:'🍳'}, {ko:'피아노', ru:'пианино', emoji:'🎹'},
+            {ko:'노래하다', ru:'петь', emoji:'🎤'}, {ko:'외국어', ru:'иностр. язык', emoji:'🌍'}
+          ] },
+        { kind:'dialog', eyebrow:'ДИАЛОГ', title:'Что умеешь?', sub:'할 수 있어요?',
+          lines:[
+            { who:'A', av:'🙂', ko:'수영할 수 있어요?', ru:'Умеешь плавать?' },
+            { who:'B', av:'🧑', ko:'네, 할 수 있어요. 운전은요?', ru:'Да, умею. А водить?' },
+            { who:'A', av:'🙂', ko:'아니요, 운전할 수 없어요.', ru:'Нет, водить не умею.' },
+            { who:'B', av:'🧑', ko:'괜찮아요. 같이 배워요!', ru:'Ничего. Научимся вместе!' }
+          ] },
+        { kind:'build', eyebrow:'СОБЕРИ ФРАЗУ', title:'Умею читать', ru:'Я умею читать по-корейски.',
+          target:['저는','한국어를','읽을','수','있어요'], pool:['없어요'] },
+        { kind:'listen', eyebrow:'АУДИРОВАНИЕ', title:'Может или нет?', sub:'Нажми ▶ и выбери перевод',
+          ko:'저는 운전할 수 없어요.', ru:'Я не умею водить.',
+          options:['Я не умею водить.','Я умею водить.','Я люблю водить.'], answer:'Я не умею водить.' },
+        { kind:'quiz', eyebrow:'ПРОВЕРКА', title:'Слова урока',
+          items:[ {ko:'수영하다',ru:'плавать'}, {ko:'운전하다',ru:'водить'}, {ko:'요리하다',ru:'готовить'} ],
+          pool:['плавать','водить','готовить','петь','пианино','язык'] },
+        { kind:'homework' },
+        { kind:'done' }
+      ]
+    },
+    {
+      id:'m3-l7', num:7, title:'Причина', ko:'-아서 / 어서',
+      ru:'Причина и последовательность: -아서/어서',
+      vocab:[
+        {ko:'비', ru:'дождь', translit:'пи'},
+        {ko:'피곤하다', ru:'уставший → 피곤해요', translit:'пхигонада'},
+        {ko:'아프다', ru:'болеть → 아파요', translit:'апхыда'},
+        {ko:'머리', ru:'голова', translit:'мори'},
+        {ko:'약', ru:'лекарство', translit:'як'},
+        {ko:'병원', ru:'больница', translit:'пёнъвон'}
+      ],
+      homework:{ tasks:[
+        'Соедини 4 пары «причина + следствие» через -아서/어서.',
+        'Объясни, почему ты что-то не сделал: «…-아서/어서 못 했어요».'
+      ]},
+      slides:[
+        { kind:'intro', title:'Причина', sub:'-아서 / 어서',
+          intro:'«Раньше мы соединяли предложения через 그래서. Теперь — внутри одного: <span class="ko">-아서/어서</span> = «потому что / и поэтому». 비가 와서 집에 있어요 — идёт дождь, поэтому я дома 🌸»',
+          learn:[['🔗','причина'],['🤒','самочувствие'],['🗣️','диалог']] },
+        { kind:'pattern', eyebrow:'ГРАММАТИКА', title:'-아서 / 어서', sub:'потому что',
+          rule:'Основа + <b>-아서/어서</b> присоединяет причину к следствию. Гласная основы ㅏ/ㅗ → <span class="ko">-아서</span>, иначе → <span class="ko">-어서</span>, <span class="ko">하다 → 해서</span>.',
+          examples:[
+            {ko:'비가 와서 집에 있어요.', ru:'Идёт дождь, поэтому я дома.'},
+            {ko:'맛있어서 많이 먹었어요.', ru:'Было вкусно, поэтому много съел.'},
+            {ko:'아파서 병원에 가요.', ru:'Болею, поэтому иду в больницу.'}
+          ],
+          drills:[
+            { q:'비가 ___ 집에 있어요', ru:'идёт дождь', options:['와서','오서','와고'], answer:'와서' },
+            { q:'맛있___ 많이 먹어요', ru:'вкусно', options:['어서','아서','해서'], answer:'어서' },
+            { q:'시간이 없___ 못 가요', ru:'нет времени', options:['어서','아서','으서'], answer:'어서' }
+          ] },
+        { kind:'words', eyebrow:'СЛОВА', title:'Самочувствие',
+          items:[
+            {ko:'비', ru:'дождь', emoji:'🌧️'}, {ko:'피곤하다', ru:'уставший', emoji:'😪'},
+            {ko:'아프다', ru:'болеть', emoji:'🤒'}, {ko:'머리', ru:'голова', emoji:'🤕'},
+            {ko:'약', ru:'лекарство', emoji:'💊'}, {ko:'병원', ru:'больница', emoji:'🏥'}
+          ] },
+        { kind:'dialog', eyebrow:'ДИАЛОГ', title:'Почему не пришёл?', sub:'왜 안 왔어요?',
+          lines:[
+            { who:'A', av:'🙂', ko:'어제 왜 안 왔어요?', ru:'Почему вчера не пришёл?' },
+            { who:'B', av:'🧑', ko:'너무 피곤해서 집에서 쉬었어요.', ru:'Очень устал, поэтому отдыхал дома.' },
+            { who:'A', av:'🙂', ko:'괜찮아요?', ru:'Ты в порядке?' },
+            { who:'B', av:'🧑', ko:'네, 이제 괜찮아요.', ru:'Да, теперь нормально.' }
+          ] },
+        { kind:'build', eyebrow:'СОБЕРИ ФРАЗУ', title:'Дождь — дома', ru:'Идёт дождь, поэтому я дома.',
+          target:['비가','와서','집에','있어요'], pool:['아파서'] },
+        { kind:'listen', eyebrow:'АУДИРОВАНИЕ', title:'Почему?', sub:'Нажми ▶ и выбери перевод',
+          ko:'머리가 아파서 약을 먹어요.', ru:'Голова болит, поэтому пью лекарство.',
+          options:['Болит голова, поэтому пью лекарство.','Голова не болит.','Иду в аптеку.'], answer:'Болит голова, поэтому пью лекарство.' },
+        { kind:'quiz', eyebrow:'ПРОВЕРКА', title:'Слова урока',
+          items:[ {ko:'비',ru:'дождь'}, {ko:'피곤하다',ru:'уставший'}, {ko:'아프다',ru:'болеть'} ],
+          pool:['дождь','уставший','болеть','лекарство','больница','голова'] },
+        { kind:'homework' },
+        { kind:'done' }
+      ]
+    },
+    {
+      id:'m3-l8', num:8, title:'Прямо сейчас', ko:'-고 있다',
+      ru:'Настоящее продолженное: -고 있어요',
+      vocab:[
+        {ko:'일하다', ru:'работать → 일해요', translit:'ирхада'},
+        {ko:'청소하다', ru:'убираться → 청소해요', translit:'чхонъсоада'},
+        {ko:'전화하다', ru:'звонить → 전화해요', translit:'чонхвада'},
+        {ko:'듣다', ru:'слушать → 들어요', translit:'тытта'},
+        {ko:'자다', ru:'спать → 자요', translit:'чада'},
+        {ko:'동생', ru:'младший(ая)', translit:'тонъсэн'}
+      ],
+      homework:{ tasks:[
+        'Опиши, что сейчас делают 4 разных человека (-고 있어요).',
+        'Ответь на «지금 뭐 하고 있어요?» тремя способами.'
+      ]},
+      slides:[
+        { kind:'intro', title:'Прямо сейчас', sub:'-고 있어요',
+          intro:'«Чтобы подчеркнуть, что действие идёт ПРЯМО СЕЙЧАС, используем <span class="ko">-고 있어요</span>. 지금 밥을 먹고 있어요 — я сейчас ем 🌸»',
+          learn:[['⏳','продолжение'],['📞','действия'],['🗣️','диалог']] },
+        { kind:'pattern', eyebrow:'ГРАММАТИКА', title:'-고 있어요', sub:'делаю прямо сейчас',
+          rule:'Основа глагола + <b>-고 있어요</b> = действие происходит сейчас (как английское «-ing»). 읽다 → 읽고 있어요, 듣다 → 듣고 있어요.',
+          examples:[
+            {ko:'지금 일하고 있어요.', ru:'Сейчас работаю.'},
+            {ko:'음악을 듣고 있어요.', ru:'Слушаю музыку.'},
+            {ko:'친구를 기다리고 있어요.', ru:'Жду друга.'}
+          ],
+          drills:[
+            { q:'먹다 → 먹___ 있어요', ru:'', options:['고','어','지'], answer:'고' },
+            { q:'«что делаешь сейчас»: 지금 뭐 하고 ___?', ru:'', options:['있어요','싶어요','했어요'], answer:'있어요' }
+          ] },
+        { kind:'words', eyebrow:'СЛОВА', title:'Чем заняты',
+          items:[
+            {ko:'일하다', ru:'работать', emoji:'💼'}, {ko:'청소하다', ru:'убираться', emoji:'🧹'},
+            {ko:'전화하다', ru:'звонить', emoji:'📞'}, {ko:'듣다', ru:'слушать', emoji:'🎧'},
+            {ko:'자다', ru:'спать', emoji:'😴'}, {ko:'동생', ru:'младший', emoji:'🧒'}
+          ] },
+        { kind:'dialog', eyebrow:'ДИАЛОГ', title:'Что делаешь?', sub:'지금 뭐 해요?',
+          lines:[
+            { who:'A', av:'🙂', ko:'여보세요? 지금 뭐 하고 있어요?', ru:'Алло? Что сейчас делаешь?' },
+            { who:'B', av:'🧑', ko:'친구를 기다리고 있어요.', ru:'Жду друга.' },
+            { who:'A', av:'🙂', ko:'동생은요?', ru:'А младший?' },
+            { who:'B', av:'🧑', ko:'동생은 자고 있어요.', ru:'Младший спит.' }
+          ] },
+        { kind:'build', eyebrow:'СОБЕРИ ФРАЗУ', title:'Слушаю музыку', ru:'Сейчас слушаю музыку.',
+          target:['지금','음악을','듣고','있어요'], pool:['먹고'] },
+        { kind:'listen', eyebrow:'АУДИРОВАНИЕ', title:'Кто что делает?', sub:'Нажми ▶ и выбери перевод',
+          ko:'동생이 자고 있어요.', ru:'Младший спит (сейчас).',
+          options:['Младший сейчас спит.','Младший проснулся.','У меня нет младшего.'], answer:'Младший сейчас спит.' },
+        { kind:'quiz', eyebrow:'ПРОВЕРКА', title:'Слова урока',
+          items:[ {ko:'일하다',ru:'работать'}, {ko:'청소하다',ru:'убираться'}, {ko:'전화하다',ru:'звонить'} ],
+          pool:['работать','убираться','звонить','слушать','спать','младший'] },
+        { kind:'homework' },
+        { kind:'done' }
+      ]
+    },
+    {
+      id:'m3-l9', num:9, title:'Давайте вместе', ko:'-(으)ㄹ까요? · -(으)ㅂ시다',
+      ru:'Предложения и приглашения',
+      vocab:[
+        {ko:'시작하다', ru:'начинать → 시작해요', translit:'сиджакада'},
+        {ko:'출발하다', ru:'отправляться → 출발해요', translit:'чхульбарада'},
+        {ko:'도와주다', ru:'помогать → 도와줘요', translit:'товаджуда'},
+        {ko:'구경하다', ru:'осматривать → 구경해요', translit:'кугёнъада'},
+        {ko:'이제', ru:'теперь, сейчас уже', translit:'идже'},
+        {ko:'함께', ru:'вместе', translit:'хамкке'}
+      ],
+      homework:{ tasks:[
+        'Предложи 3 совместных действия через -(으)ㄹ까요?',
+        'Напиши 3 призыва «давайте …» через -(으)ㅂ시다.'
+      ]},
+      slides:[
+        { kind:'intro', title:'Давайте вместе', sub:'-(으)ㄹ까요? · -(으)ㅂ시다',
+          intro:'«Чтобы предложить что-то сделать вместе: <span class="ko">-(으)ㄹ까요?</span> — «может, …?». А ответить призывом: <span class="ko">-(으)ㅂ시다</span> — «давайте!» 같이 갈까요? — 갑시다! 🌸»',
+          learn:[['🙋','предложим'],['🤝','давайте'],['🗣️','диалог']] },
+        { kind:'pattern', eyebrow:'ГРАММАТИКА', title:'-(으)ㄹ까요?', sub:'может, …?',
+          rule:'Основа + <b>-(으)ㄹ까요?</b> = «может, сделаем?». После гласной → <span class="ko">-ㄹ까요</span> (가다 → 갈까요?), после согласной → <span class="ko">-을까요</span> (먹다 → 먹을까요?). Призыв «давайте» → <b>-(으)ㅂ시다</b>: 갑시다!',
+          examples:[
+            {ko:'우리 같이 점심 먹을까요?', ru:'Может, пообедаем вместе?'},
+            {ko:'영화 볼까요?', ru:'Может, посмотрим кино?'},
+            {ko:'이제 출발합시다.', ru:'Давайте теперь отправимся.'}
+          ],
+          drills:[
+            { q:'«пойдём вместе?»: 같이 갈___?', ru:'', options:['까요','ㅂ시다','어요'], answer:'까요' },
+            { q:'«давайте есть»: 먹___', ru:'', options:['읍시다','을시다','ㅂ시다'], answer:'읍시다' },
+            { q:'마시다 → 마실___?', ru:'выпьем?', options:['까요','을까요','ㅂ시다'], answer:'까요' }
+          ] },
+        { kind:'words', eyebrow:'СЛОВА', title:'Действия вместе',
+          items:[
+            {ko:'시작하다', ru:'начинать', emoji:'▶️'}, {ko:'출발하다', ru:'отправляться', emoji:'🚉'},
+            {ko:'도와주다', ru:'помогать', emoji:'🤲'}, {ko:'구경하다', ru:'осматривать', emoji:'👀'},
+            {ko:'이제', ru:'теперь', emoji:'⌛'}, {ko:'함께', ru:'вместе', emoji:'🫂'}
+          ] },
+        { kind:'dialog', eyebrow:'ДИАЛОГ', title:'Куда сходим?', sub:'주말에 뭐 할까요?',
+          lines:[
+            { who:'A', av:'🙂', ko:'주말에 뭐 할까요?', ru:'Что будем делать на выходных?' },
+            { who:'B', av:'🧑', ko:'같이 공원에 갈까요?', ru:'Может, сходим в парк?' },
+            { who:'A', av:'🙂', ko:'좋아요! 그럼 열한 시에 만납시다.', ru:'Отлично! Тогда встретимся в 11.' },
+            { who:'B', av:'🧑', ko:'네, 그때 봐요!', ru:'Да, тогда увидимся!' }
+          ] },
+        { kind:'build', eyebrow:'СОБЕРИ ФРАЗУ', title:'Выпьем кофе?', ru:'Может, выпьем вместе кофе?',
+          target:['우리','같이','커피','마실까요'], pool:['갈까요'] },
+        { kind:'listen', eyebrow:'АУДИРОВАНИЕ', title:'Что предлагают?', sub:'Нажми ▶ и выбери перевод',
+          ko:'내일 같이 공부할까요?', ru:'Может, позанимаемся завтра вместе?',
+          options:['Позанимаемся завтра вместе?','Я учился вчера.','Я не хочу учиться.'], answer:'Позанимаемся завтра вместе?' },
+        { kind:'quiz', eyebrow:'ПРОВЕРКА', title:'Слова урока',
+          items:[ {ko:'시작하다',ru:'начинать'}, {ko:'도와주다',ru:'помогать'}, {ko:'출발하다',ru:'отправляться'} ],
+          pool:['начинать','помогать','отправляться','осматривать','вместе','теперь'] },
+        { kind:'homework' },
+        { kind:'done' }
+      ]
+    },
+    {
+      id:'m3-l10', num:10, title:'Хотя… так как…', ko:'-지만 · -(으)니까',
+      ru:'Уступка -지만 и причина -(으)니까',
+      vocab:[
+        {ko:'맵다', ru:'острый → 매워요', translit:'мэпта'},
+        {ko:'어렵다', ru:'трудный → 어려워요', translit:'орёпта'},
+        {ko:'쉽다', ru:'лёгкий → 쉬워요', translit:'свипта'},
+        {ko:'재미있다', ru:'интересный → 재미있어요', translit:'чэмиитта'},
+        {ko:'우산', ru:'зонт', translit:'усан'},
+        {ko:'택시', ru:'такси', translit:'тхэкси'}
+      ],
+      homework:{ tasks:[
+        'Составь 3 предложения с -지만 (контраст).',
+        'Составь 3 предложения с -(으)니까 (причина + просьба/решение).'
+      ]},
+      slides:[
+        { kind:'intro', title:'Хотя… так как…', sub:'-지만 · -(으)니까',
+          intro:'«Два связующих окончания внутри предложения. <span class="ko">-지만</span> — «но» (한국어는 어렵지만 재미있어요). <span class="ko">-(으)니까</span> — «так как» (비가 오니까 우산을 가져가요) 🌸»',
+          learn:[['↔️','-지만 = но'],['➡️','-(으)니까 = так как'],['🗣️','диалог']] },
+        { kind:'pattern', eyebrow:'ГРАММАТИКА', title:'-지만', sub:'но (внутри фразы)',
+          rule:'Основа + <b>-지만</b> = «но / хотя» — соединяет контраст в одном предложении. <span class="ko">비싸지만 사고 싶어요</span> — дорого, но хочу купить.',
+          examples:[
+            {ko:'한국어는 어렵지만 재미있어요.', ru:'Корейский трудный, но интересный.'},
+            {ko:'비싸지만 사고 싶어요.', ru:'Дорого, но хочу купить.'},
+            {ko:'피곤하지만 괜찮아요.', ru:'Устал, но всё нормально.'}
+          ],
+          drills:[
+            { q:'«дорого, но хочу»: 비싸___ 사고 싶어요', ru:'', options:['지만','니까','아서'], answer:'지만' },
+            { q:'«трудно, но интересно»: 어렵___ 재미있어요', ru:'', options:['지만','어서','고'], answer:'지만' }
+          ] },
+        { kind:'pattern', eyebrow:'ГРАММАТИКА', title:'-(으)니까', sub:'так как',
+          rule:'Основа + <b>-(으)니까</b> = «так как / раз уж». Часто перед просьбой или решением. После гласной → <span class="ko">-니까</span>, после согласной → <span class="ko">-으니까</span>.',
+          examples:[
+            {ko:'비가 오니까 우산을 가져가요.', ru:'Раз идёт дождь, бери зонт.'},
+            {ko:'시간이 없으니까 택시를 타요.', ru:'Так как нет времени, едем на такси.'},
+            {ko:'더우니까 물을 마셔요.', ru:'Жарко, поэтому пей воду.'}
+          ],
+          drills:[
+            { q:'«нет времени, поэтому такси»: 시간이 없___ 택시를 타요', ru:'', options:['으니까','니까','지만'], answer:'으니까' },
+            { q:'«идёт дождь, поэтому…»: 비가 오___ 우산을 가져가요', ru:'', options:['니까','으니까','아서'], answer:'니까' }
+          ] },
+        { kind:'words', eyebrow:'СЛОВА', title:'Свойства и вещи',
+          items:[
+            {ko:'맵다', ru:'острый', emoji:'🌶️'}, {ko:'어렵다', ru:'трудный', emoji:'😣'},
+            {ko:'쉽다', ru:'лёгкий', emoji:'😌'}, {ko:'재미있다', ru:'интересный', emoji:'😄'},
+            {ko:'우산', ru:'зонт', emoji:'☂️'}, {ko:'택시', ru:'такси', emoji:'🚕'}
+          ] },
+        { kind:'dialog', eyebrow:'ДИАЛОГ', title:'Корейский трудный?', sub:'한국어 어때요?',
+          lines:[
+            { who:'A', av:'🙂', ko:'한국어 어때요?', ru:'Как тебе корейский?' },
+            { who:'B', av:'🧑', ko:'좀 어렵지만 정말 재미있어요.', ru:'Немного трудно, но очень интересно.' },
+            { who:'A', av:'🙂', ko:'곧 시험이 있으니까 같이 공부할까요?', ru:'Скоро экзамен, давай позанимаемся вместе?' },
+            { who:'B', av:'🧑', ko:'네, 좋아요!', ru:'Да, отлично!' }
+          ] },
+        { kind:'build', eyebrow:'СОБЕРИ ФРАЗУ', title:'Трудно, но интересно', ru:'Корейский трудный, но интересный.',
+          target:['한국어는','어렵지만','재미있어요'], pool:['쉽지만'] },
+        { kind:'listen', eyebrow:'АУДИРОВАНИЕ', title:'Почему берёт зонт?', sub:'Нажми ▶ и выбери перевод',
+          ko:'비가 오니까 우산을 가져가요.', ru:'Так как идёт дождь, беру зонт.',
+          options:['Идёт дождь, поэтому беру зонт.','Дождя нет.','Забыл зонт.'], answer:'Идёт дождь, поэтому беру зонт.' },
+        { kind:'quiz', eyebrow:'ПРОВЕРКА', title:'Слова урока',
+          items:[ {ko:'맵다',ru:'острый'}, {ko:'어렵다',ru:'трудный'}, {ko:'재미있다',ru:'интересный'} ],
+          pool:['острый','трудный','интересный','лёгкий','зонт','такси'] },
+        { kind:'homework' },
+        { kind:'done' }
+      ]
+    },
+    {
+      id:'m3-l11', num:11, title:'Официальный стиль', ko:'-ㅂ니다 / 습니다',
+      ru:'Формальная речь (합니다체)',
+      vocab:[
+        {ko:'감사합니다', ru:'спасибо (формально)', translit:'камсаамнида'},
+        {ko:'죄송합니다', ru:'извините (формально)', translit:'чвесонъамнида'},
+        {ko:'처음', ru:'впервые, начало', translit:'чхоым'},
+        {ko:'반갑다', ru:'рад → 반갑습니다', translit:'панъгапта'},
+        {ko:'소개하다', ru:'представлять → 소개합니다', translit:'согэада'},
+        {ko:'회의', ru:'совещание', translit:'хвеи'}
+      ],
+      homework:{ tasks:[
+        'Переведи 5 фраз из -아요/어요 в формальный -ㅂ니다/습니다.',
+        'Напиши формальное самопредставление (이름·직업) в 합니다체.'
+      ]},
+      slides:[
+        { kind:'intro', title:'Официальный стиль', sub:'합니다체',
+          intro:'«Кроме вежливого <span class="ko">-아요/어요</span> есть строгий официальный стиль <span class="ko">-ㅂ니다/습니다</span> — в новостях, презентациях, на работе. Звучит уважительно и серьёзно 🌸»',
+          learn:[['🎩','формально'],['📋','работа'],['🤝','знакомство']] },
+        { kind:'pattern', eyebrow:'ГРАММАТИКА', title:'-ㅂ니다 / 습니다', sub:'официальный стиль',
+          rule:'Основа глагола + <b>-ㅂ니다</b> (после гласной: 가다 → 갑니다) или <b>-습니다</b> (после согласной: 먹다 → 먹습니다). Вопрос — <span class="ko">-ㅂ니까?/-습니까?</span> «есть/являюсь» → <span class="ko">입니다</span>.',
+          examples:[
+            {ko:'저는 학생입니다.', ru:'Я студент. (формально)'},
+            {ko:'한국어를 공부합니다.', ru:'Изучаю корейский.'},
+            {ko:'어디에 갑니까?', ru:'Куда идёте?'}
+          ],
+          drills:[
+            { q:'가다 → ?', options:['갑니다','가습니다','가ㅂ니다'], answer:'갑니다' },
+            { q:'먹다 → ?', options:['먹습니다','먹ㅂ니다','머습니다'], answer:'먹습니다' },
+            { q:'학생이다 → 학생___', ru:'', options:['입니다','습니다','ㅂ니다'], answer:'입니다' }
+          ] },
+        { kind:'words', eyebrow:'ВЕЖЛИВЫЕ ФРАЗЫ', title:'Формальные слова',
+          items:[
+            {ko:'감사합니다', ru:'спасибо', emoji:'🙏'}, {ko:'죄송합니다', ru:'извините', emoji:'🙇'},
+            {ko:'반갑습니다', ru:'рад встрече', emoji:'😊'}, {ko:'처음', ru:'впервые', emoji:'🆕'},
+            {ko:'소개하다', ru:'представлять', emoji:'🗣️'}, {ko:'회의', ru:'совещание', emoji:'📋'}
+          ] },
+        { kind:'dialog', eyebrow:'ДИАЛОГ', title:'Знакомство на работе', sub:'처음 뵙겠습니다',
+          lines:[
+            { who:'A', av:'🧑', ko:'안녕하십니까? 처음 뵙겠습니다.', ru:'Здравствуйте! Приятно познакомиться.' },
+            { who:'B', av:'🙂', ko:'네, 반갑습니다. 저는 안톤입니다.', ru:'Да, рад встрече. Я Антон.' },
+            { who:'A', av:'🧑', ko:'어느 나라에서 왔습니까?', ru:'Из какой вы страны?' },
+            { who:'B', av:'🙂', ko:'러시아에서 왔습니다.', ru:'Я из России.' }
+          ] },
+        { kind:'build', eyebrow:'СОБЕРИ ФРАЗУ', title:'Изучаю корейский (формально)', ru:'Я изучаю корейский.',
+          target:['저는','한국어를','공부합니다'], pool:['갑니다'] },
+        { kind:'listen', eyebrow:'АУДИРОВАНИЕ', title:'Что сказали?', sub:'Нажми ▶ и выбери перевод',
+          ko:'만나서 반갑습니다.', ru:'Рад знакомству. (формально)',
+          options:['Рад познакомиться.','До свидания.','Извините.'], answer:'Рад познакомиться.' },
+        { kind:'quiz', eyebrow:'ПРОВЕРКА', title:'Слова урока',
+          items:[ {ko:'감사합니다',ru:'спасибо'}, {ko:'죄송합니다',ru:'извините'}, {ko:'처음',ru:'впервые'} ],
+          pool:['спасибо','извините','впервые','совещание','рад','представлять'] },
+        { kind:'homework' },
+        { kind:'done' }
+      ]
+    },
+    {
+      id:'m3-l12', num:12, title:'День из жизни', ko:'복습 · 대화',
+      ru:'Повторение Модуля 3 и большой диалог',
+      vocab:[
+        {ko:'하루', ru:'один день, сутки', translit:'хару'},
+        {ko:'아침', ru:'утро', translit:'ачхим'},
+        {ko:'오후', ru:'после полудня', translit:'оху'},
+        {ko:'그래서', ru:'поэтому', translit:'кырэсо'},
+        {ko:'그런데', ru:'однако, кстати', translit:'кырондэ'},
+        {ko:'정말', ru:'действительно, очень', translit:'чонъмаль'}
+      ],
+      homework:{ tasks:[
+        'Опиши свой день: будущее (-ㄹ 거예요), сейчас (-고 있어요), причина (-아서).',
+        'Составь диалог-приглашение с -(으)ㄹ까요? и согласием.'
+      ]},
+      slides:[
+        { kind:'intro', title:'День из жизни', sub:'повторение модуля 🏁',
+          intro:'«Финал Модуля 3! Соберём всё вместе: будущее, вежливые просьбы, -고 있어요, причину -아서, контраст -지만 и официальный стиль — в одном большом диалоге. 화이팅 🌸»',
+          learn:[['🔗','всё вместе'],['🗣️','большой диалог'],['🏆','финальный квиз']] },
+        { kind:'pattern', eyebrow:'ПОВТОРЕНИЕ', title:'Связки Модуля 3', sub:'быстрый обзор',
+          rule:'<b>-(으)ㄹ 거예요</b> — буду. <b>-(으)세요</b> — просьба. <b>-(으)러 가다</b> — иду, чтобы. <b>-(으)ㄹ 수 있다</b> — умею. <b>-아서/어서</b> — потому что. <b>-고 있다</b> — сейчас. <b>-(으)ㄹ까요?</b> — может? <b>-지만 / -(으)니까</b> — но / так как.',
+          examples:[
+            {ko:'아침에 운동하러 공원에 갈 거예요.', ru:'Утром пойду в парк на спорт.'},
+            {ko:'지금 일하고 있어서 못 가요.', ru:'Сейчас работаю, поэтому не могу прийти.'},
+            {ko:'시간이 있으니까 같이 갈까요?', ru:'Раз есть время, может, пойдём вместе?'}
+          ],
+          drills:[
+            { q:'«сейчас работаю»: 지금 일하고 ___', ru:'', options:['있어요','싶어요','거예요'], answer:'있어요' },
+            { q:'«пойдём?»: 같이 갈___?', ru:'', options:['까요','니까','지만'], answer:'까요' }
+          ] },
+        { kind:'words', eyebrow:'РАСПОРЯДОК', title:'Слова дня',
+          items:[
+            {ko:'하루', ru:'день, сутки', emoji:'🗓️'}, {ko:'아침', ru:'утро', emoji:'🌅'},
+            {ko:'오후', ru:'после полудня', emoji:'🌇'}, {ko:'그래서', ru:'поэтому', emoji:'➡️'},
+            {ko:'그런데', ru:'однако, кстати', emoji:'🔄'}, {ko:'정말', ru:'очень, правда', emoji:'💯'}
+          ] },
+        { kind:'dialog', eyebrow:'ДИАЛОГ', title:'Планы на завтра', sub:'내일 뭐 할 거예요?',
+          lines:[
+            { who:'A', av:'🙂', ko:'내일 뭐 할 거예요?', ru:'Что будешь делать завтра?' },
+            { who:'B', av:'🧑', ko:'아침에 운동하러 공원에 갈 거예요.', ru:'Утром пойду в парк на спорт.' },
+            { who:'A', av:'🙂', ko:'오후에는 시간이 있어요? 같이 영화 볼까요?', ru:'А днём есть время? Посмотрим кино?' },
+            { who:'B', av:'🧑', ko:'좋아요! 그런데 저는 운전할 수 없어요.', ru:'Отлично! Но я не умею водить.' },
+            { who:'A', av:'🙂', ko:'괜찮아요. 지하철로 갑시다!', ru:'Ничего. Поедем на метро!' }
+          ],
+          note:'Большой диалог собирает всё из модуля: будущее, способность, предложение, причину.' },
+        { kind:'build', eyebrow:'СОБЕРИ ФРАЗУ', title:'Завтра — в Пусан', ru:'Завтра поеду в Пусан.',
+          target:['내일','부산에','갈','거예요'], pool:['왔어요'] },
+        { kind:'listen', eyebrow:'АУДИРОВАНИЕ', title:'Какой план?', sub:'Нажми ▶ и выбери перевод',
+          ko:'내일 친구를 만나러 갈 거예요.', ru:'Завтра пойду встретить друга.',
+          options:['Завтра пойду встретить друга.','Вчера встретил друга.','Не хочу встречаться.'], answer:'Завтра пойду встретить друга.' },
+        { kind:'quiz', eyebrow:'ФИНАЛЬНЫЙ КВИЗ', title:'Весь модуль 3',
+          items:[ {ko:'계획',ru:'план'}, {ko:'날씨',ru:'погода'}, {ko:'우산',ru:'зонт'}, {ko:'병원',ru:'больница'}, {ko:'함께',ru:'вместе'} ],
+          pool:['план','погода','зонт','больница','вместе','зад','лекарство','теперь'] },
         { kind:'homework' },
         { kind:'done' }
       ]
@@ -7024,17 +8334,22 @@
 
   // ── Реестр модулей и активный модуль ──
   const LESSON_MODULES = {
-    m1: { id:'m1', title:'Модуль 1 · Хангыль', navTitle:'Модуль 1 · Хангыль', tabLabel:'М1', short:'Хангыль',
+    m1: { id:'m1', title:'Модуль 1 · Хангыль', navTitle:'Модуль 1 · Хангыль', tabLabel:'М1', short:'Буквы',
           headerName:'Основа основ', headerSub:'Хангыль · базовый курс', lessons: LESSON_CATALOG },
-    m2: { id:'m2', title:'Модуль 2 · Предложения и общение', navTitle:'Модуль 2 · Общение', tabLabel:'М2', short:'Предложения',
-          headerName:'Предложения и общение', headerSub:'Грамматика · диалоги · речь', lessons: LESSON_CATALOG_M2 }
+    m2: { id:'m2', title:'Модуль 2 · Предложения и общение', navTitle:'Модуль 2 · Общение', tabLabel:'М2', short:'Фразы',
+          headerName:'Предложения и общение', headerSub:'Грамматика · диалоги · речь', lessons: LESSON_CATALOG_M2 },
+    m3: { id:'m3', title:'Модуль 3 · Связная речь и вежливость', navTitle:'Модуль 3 · Связная речь', tabLabel:'М3', short:'Речь',
+          headerName:'Связная речь', headerSub:'Вежливость · время · описания', lessons: LESSON_CATALOG_M3 }
   };
   let _activeModule = 'm1';
   // Модуль 2 — продолжение初級; сейчас открыт свободно (можно начать после хангыля).
   function isModule2Unlocked() { return true; }
+  // Модуль 3 — TOPIK I 2급; сейчас открыт свободно (гейтить после М2 — одной строкой).
+  function isModule3Unlocked() { return true; }
   function setActiveModule(id) {
     if (!LESSON_MODULES[id]) return;
     if (id === 'm2' && !isModule2Unlocked() && !isAdmin()) { toast('Сначала освой Модуль 1 🌸'); return; }
+    if (id === 'm3' && !isModule3Unlocked() && !isAdmin()) { toast('Сначала освой Модуль 2 🌸'); return; }
     _activeModule = id;
     UStore.set('activeModule', id);
     renderModuleSwitcher();
@@ -7061,8 +8376,9 @@
         ${Object.keys(LESSON_MODULES).map(id => {
           const mod = LESSON_MODULES[id];
           const active = _activeModule === id;
-          const locked = id === 'm2' && !isModule2Unlocked() && !admin;
-          const onClick = locked ? `toast('Сначала освой Модуль 1 🌸')` : `setActiveModule('${id}')`;
+          const locked = !admin && ((id === 'm2' && !isModule2Unlocked()) || (id === 'm3' && !isModule3Unlocked()));
+          const lockMsg = id === 'm3' ? 'Сначала освой Модуль 2 🌸' : 'Сначала освой Модуль 1 🌸';
+          const onClick = locked ? `toast('${lockMsg}')` : `setActiveModule('${id}')`;
           return `<button type="button" class="module-tab ${active ? 'active' : ''} ${locked ? 'locked' : ''}" onclick="${onClick}">
             <span class="module-tab-num">${mod.tabLabel}</span>
             <span class="module-tab-name">${mod.short}</span>
@@ -13390,14 +14706,30 @@
       if (adminCurrentTab === 'journal') renderProfileAdminPanel('journal');
     }
   }
-  // Все даты месяца, попадающие на учебные дни ученицы (Пн=1…Вс=7)
+  // ── Период обучения ученицы: ISO-даты 'YYYY-MM-DD'. Пустая граница = без ограничения ──
+  function _jrnTodayIso() { return `${TODAY.y}-${String(TODAY.m + 1).padStart(2, '0')}-${String(TODAY.d).padStart(2, '0')}`; }
+  function _jrnIso(y, m, dd) { return `${y}-${String(m + 1).padStart(2, '0')}-${String(dd).padStart(2, '0')}`; }
+  function _jrnInPeriod(st, y, m, dd) {
+    const iso = _jrnIso(y, m, dd);
+    if (st.start && iso < st.start) return false;
+    if (st.end && iso > st.end) return false;
+    return true;
+  }
+  function _jrnFmtDate(s) { if (!s) return ''; const p = String(s).split('-'); return p.length === 3 ? `${p[2]}.${p[1]}.${p[0]}` : s; }
+  function _jrnPeriodLabel(st) {
+    if (st.start && st.end) return `${_jrnFmtDate(st.start)} – ${_jrnFmtDate(st.end)}`;
+    if (st.start) return `с ${_jrnFmtDate(st.start)}`;
+    if (st.end) return `до ${_jrnFmtDate(st.end)}`;
+    return '';
+  }
+  // Все даты месяца, попадающие на учебные дни ученицы (Пн=1…Вс=7) и внутри периода обучения
   function _jrnDatesFor(st, y, m) {
     const out = [];
     const dim = new Date(y, m + 1, 0).getDate();
     const days = Array.isArray(st.days) ? st.days : Object.values(st.days || {});
     for (let dd = 1; dd <= dim; dd++) {
       const wd = ((new Date(y, m, dd).getDay() + 6) % 7) + 1;
-      if (days.includes(wd)) out.push(dd);
+      if (days.includes(wd) && _jrnInPeriod(st, y, m, dd)) out.push(dd);
     }
     return out;
   }
@@ -13414,6 +14746,10 @@
     const cards = students.map(([sid, st]) => {
       const days = (Array.isArray(st.days) ? st.days : Object.values(st.days || {})).slice().sort();
       const slotLine = days.map(d => JRN_DAYS[d - 1]).join(', ') + ` · ${st.from}–${st.to}`;
+      const periodLabel = _jrnPeriodLabel(st);
+      const todayIso = _jrnTodayIso();
+      const ended = st.end && st.end < todayIso;
+      const soon = st.start && st.start > todayIso;
       const dateChips = _jrnDatesFor(st, _jrnMonth.y, _jrnMonth.m).map(dd => {
         const mk = marks[`${sid}_${dd}`];
         const style = mk && JRN_MARKS[mk.s] ? JRN_MARKS[mk.s].chip : 'background:var(--paper); color:var(--berry); border:1px solid var(--line);';
@@ -13428,8 +14764,11 @@
               <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
                 <span style="font-weight:700; color:var(--berry); font-size:14px;">${escHtml(st.name)}</span>
                 ${st.trial ? '<span class="chip chip-gold" style="font-size:8.5px; padding:2px 7px;">ПРОБНЫЙ</span>' : ''}
+                ${ended ? '<span class="chip" style="font-size:8.5px; padding:2px 7px; background:var(--paper); color:var(--soft); border:1px solid var(--line);">ЗАВЕРШЕНО</span>' : ''}
+                ${soon ? '<span class="chip chip-blush" style="font-size:8.5px; padding:2px 7px;">СКОРО</span>' : ''}
               </div>
               <div style="font-size:11px; color:var(--coral); font-weight:600; margin-top:2px;">${escHtml(slotLine)}</div>
+              ${periodLabel ? `<div style="font-size:10.5px; color:var(--soft); margin-top:3px;"><i class="fa-regular fa-calendar" style="font-size:9px;"></i> ${escHtml(periodLabel)}</div>` : ''}
             </div>
             <button onclick="jrnEditStudent('${sid}')" style="background:none; border:none; color:var(--coral); cursor:pointer; font-size:14px; padding:6px;" title="Изменить"><i class="fa-solid fa-pen-to-square"></i></button>
             <button onclick="jrnDeleteStudent('${sid}')" style="background:none; border:none; color:var(--bad-ink); cursor:pointer; font-size:15px; padding:6px;" title="Удалить">✕</button>
@@ -13487,7 +14826,7 @@
     for (let i = 0; i < firstW; i++) cells += '<span></span>';
     for (let dd = 1; dd <= dim; dd++) {
       const wd = ((new Date(y, m, dd).getDay() + 6) % 7) + 1;
-      const todays = students.filter(([, st]) => _jrnStudentDays(st).includes(wd));
+      const todays = students.filter(([, st]) => _jrnStudentDays(st).includes(wd) && _jrnInPeriod(st, y, m, dd));
       const isToday = (y === TODAY.y && m === TODAY.m && dd === TODAY.d);
       const dots = todays.slice(0, 4).map(([sid]) => {
         const mk = marks[`${sid}_${dd}`];
@@ -13517,7 +14856,7 @@
     const ym = _jrnYm();
     const marks = (_jrnCache.marks || {})[ym] || {};
     const list = Object.entries(_jrnCache.students || {})
-      .filter(([, st]) => _jrnStudentDays(st).includes(wd))
+      .filter(([, st]) => _jrnStudentDays(st).includes(wd) && _jrnInPeriod(st, y, m, dd))
       .sort((a, b) => (a[1].from || '').localeCompare(b[1].from || ''));
     const rows = list.map(([sid, st]) => {
       const mk = marks[`${sid}_${dd}`];
@@ -13584,6 +14923,15 @@
             <span style="color:var(--soft);">—</span>
             <input id="jrn-st-to" class="input" type="time" value="${escAttr(st?.to || '16:00')}" style="flex:1;">
           </div>
+          <div>
+            <div style="font-size:10px; letter-spacing:.14em; color:var(--coral); font-weight:700; margin-bottom:6px;">ПЕРИОД ОБУЧЕНИЯ</div>
+            <div style="display:flex; gap:8px; align-items:center;">
+              <input id="jrn-st-start" class="input" type="date" value="${escAttr(st?.start || '')}" style="flex:1;" aria-label="Дата начала обучения">
+              <span style="color:var(--soft);">—</span>
+              <input id="jrn-st-end" class="input" type="date" value="${escAttr(st?.end || '')}" style="flex:1;" aria-label="Дата окончания обучения">
+            </div>
+            <div style="font-size:10px; color:var(--hush); margin-top:4px;">С какого и по какое число учится. Можно оставить пустым — без ограничения.</div>
+          </div>
           <label style="display:flex; align-items:center; gap:8px; font-size:12.5px; color:var(--berry); cursor:pointer;">
             <input id="jrn-st-trial" type="checkbox" ${st?.trial ? 'checked' : ''} style="width:16px; height:16px; accent-color:var(--coral);"> Пробный урок
           </label>
@@ -13608,11 +14956,17 @@
     const from = document.getElementById('jrn-st-from')?.value || '';
     const to = document.getElementById('jrn-st-to')?.value || '';
     const trial = !!document.getElementById('jrn-st-trial')?.checked;
+    const start = document.getElementById('jrn-st-start')?.value || '';
+    const end = document.getElementById('jrn-st-end')?.value || '';
     if (!name) { toast('Введи имя'); return; }
     if (!days.length) { toast('Выбери хотя бы один день'); return; }
     if (!from || !to) { toast('Укажи время урока'); return; }
+    if (start && end && end < start) { toast('Дата окончания раньше начала 🌸'); return; }
     const id = sid || ('s' + Date.now());
-    _jrnWrite('students/' + id, { name, days, from, to, trial });
+    const payload = { name, days, from, to, trial };
+    if (start) payload.start = start;
+    if (end) payload.end = end;
+    _jrnWrite('students/' + id, payload);
     document.getElementById('jrn-student-modal')?.remove();
     toast('Расписание сохранено 📅', 'var(--sage)');
     renderProfileAdminPanel('journal');
