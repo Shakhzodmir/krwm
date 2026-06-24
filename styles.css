@@ -2608,6 +2608,53 @@
     padding: 3px 8px; border-radius: 999px;
     box-shadow: 0 3px 8px -2px rgba(var(--accent-rgb),.5);
   }
+  /* Чипы выбора уровня корейского (регистрация · профиль · админка) */
+  .lvl-chip {
+    font-family: inherit; cursor: pointer;
+    font-size: 12px; font-weight: 600;
+    padding: 7px 12px; border-radius: 999px;
+    border: 1.5px solid var(--line-strong);
+    background: var(--paper); color: var(--berry);
+    transition: transform var(--t-base) var(--ease-out), border-color var(--t-base) var(--ease-out), background var(--t-base) var(--ease-out), color var(--t-base) var(--ease-out);
+  }
+  .lvl-chip:hover { transform: translateY(-1px); border-color: var(--coral); }
+  .lvl-chip:active { transform: translateY(0) scale(.98); }
+  .lvl-chip.on {
+    background: var(--grad-coral); color: #fff;
+    border-color: transparent;
+    box-shadow: 0 4px 12px -4px rgba(var(--accent-rgb),.5);
+  }
+  body.calm-motion .lvl-chip { transition: none; }
+
+  /* Календарь праздников: крупнее тап + понятная реакция на праздничных днях (#9) */
+  .cal-day { min-height: 42px; }
+  .cal-day-h:hover { transform: scale(1.08); filter: brightness(1.04); }
+  .cal-day-h:active { transform: scale(.94); }
+  body.calm-motion .cal-day-h:hover, body.calm-motion .cal-day-h:active { transform: none; }
+
+  /* Учёба в Корее: рейтинг вузов */
+  .uni-rank { font-weight: 800; color: var(--coral); }
+  .uni-facts { display: grid; gap: 8px; }
+  .uni-fact { background: var(--paper); border: 1px solid var(--line); border-radius: 14px; padding: 11px 13px; }
+  .uni-fact-h { font-size: 11px; color: var(--soft); font-weight: 600; letter-spacing: .02em; }
+  .uni-fact-v { font-size: 13px; color: var(--berry); margin-top: 3px; line-height: 1.45; }
+
+  /* ⭐ Кнопка «в избранное» на карточке игры */
+  .gcv-fav-btn {
+    position: absolute; top: 8px; right: 8px; z-index: 4;
+    width: 30px; height: 30px; border-radius: 50%;
+    border: none; padding: 0; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    background: rgba(127,127,127,.14); color: var(--hush);
+    font-size: 13px; line-height: 1;
+    transition: transform var(--t-base) var(--ease-out), color var(--t-base) var(--ease-out), background var(--t-base) var(--ease-out);
+  }
+  .gcv-fav-btn:hover { transform: scale(1.14); }
+  .gcv-fav-btn:active { transform: scale(.96); }
+  .gcv-fav-btn.on { color: var(--gold); background: rgba(201,165,92,.18); }
+  /* На карточке с флажком «Рекомендуем» (top-right) — звезду в левый верхний угол */
+  .game-card-v2:has(.gcv-flag) .gcv-fav-btn { right: auto; left: 8px; }
+  body.calm-motion .gcv-fav-btn { transition: none; }
   /* Кастомные SVG-иконки игр (единый набор, цвет берётся из темы) */
   .gcv-emoji-icon.gcv-svg { color: var(--coral); }
   .gcv-emoji-icon.gcv-svg svg {
@@ -3153,6 +3200,63 @@
   .topik-entry-half .topik-entry-sub { font-size: 10px; white-space: normal; line-height: 1.3; opacity: .92; }
   .topik-entry-half.mock { background: linear-gradient(135deg, #5b6cb4 0%, #8a73c0 100%); box-shadow: 0 10px 26px -10px rgba(60,50,110,.5); }
   body.theme-dark .topik-entry-half.mock { background: linear-gradient(135deg, #3D5288 0%, #5a4f86 100%); }
+
+  /* ───────── Bento-раскладка входов «Уроки» (#5c) ───────── */
+  .lessons-bento {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 10px;
+    padding: 12px 20px 4px; align-items: stretch;
+  }
+  .lessons-bento .be-ai { grid-column: 1 / -1; padding: 18px; }
+  .lessons-bento .be-ai .topik-entry-title { font-size: 17px; }
+  .lessons-bento .be-self { grid-row: span 2; justify-content: space-between; }
+  /* единый нейтральный бейдж поверх цветной карточки */
+  .be-badge { background: rgba(255,255,255,.2) !important; border-color: rgba(255,255,255,.4) !important; color: #fff !important; }
+  /* Цветовые акценты по карточкам (светлая тема) */
+  .topik-entry.be-ai      { background: linear-gradient(135deg, #E8694F 0%, #C0436A 100%); box-shadow: 0 14px 34px -10px rgba(224,67,90,.5); }
+  .topik-entry.be-real    { background: linear-gradient(135deg, var(--berry) 0%, var(--coral) 100%); }
+  .topik-entry.be-mock    { background: linear-gradient(135deg, #5b6cb4 0%, #8a73c0 100%); box-shadow: 0 10px 26px -10px rgba(60,50,110,.5); }
+  .topik-entry.be-self    { background: linear-gradient(160deg, #4A5A93 0%, #6E5BA6 100%); }
+  .topik-entry.be-deep    { background: linear-gradient(135deg, #C2598B 0%, #E0815F 100%); }
+  .topik-entry.be-reading { background: linear-gradient(140deg, #5BA86F 0%, #3E7E52 100%); }
+  .topik-entry.be-ai:hover { box-shadow: 0 20px 44px -12px rgba(224,67,90,.6); }
+  /* Тёмная тема — те же акценты приглушённо (перебивают общий тёмный фон карточек по специфичности) */
+  body.theme-dark .topik-entry.be-ai      { background: linear-gradient(135deg, #7A3C4E 0%, #5E2E48 100%); }
+  body.theme-dark .topik-entry.be-real    { background: linear-gradient(135deg, #3F3050 0%, #6E3B46 100%); }
+  body.theme-dark .topik-entry.be-mock    { background: linear-gradient(135deg, #3D5288 0%, #5a4f86 100%); }
+  body.theme-dark .topik-entry.be-self    { background: linear-gradient(160deg, #2E3A66 0%, #463A6B 100%); }
+  body.theme-dark .topik-entry.be-deep    { background: linear-gradient(135deg, #6E3556 0%, #7A4538 100%); }
+  body.theme-dark .topik-entry.be-reading { background: linear-gradient(140deg, #356046 0%, #284E37 100%); }
+  /* Очень узкие экраны — один столбец, ничего не сплющивается */
+  @media (max-width: 360px) {
+    .lessons-bento { grid-template-columns: 1fr; }
+    .lessons-bento .be-self { grid-row: auto; }
+  }
+
+  /* ───────── Динамика карточек-входов (Уроки / Главная) ───────── */
+  .topik-entry { position: relative; overflow: hidden; }
+  /* Световой блик пробегает по карточке при наведении/нажатии */
+  .topik-entry::after {
+    content: ""; position: absolute; inset: 0; z-index: 2; pointer-events: none;
+    background: linear-gradient(115deg, transparent 38%, rgba(255,255,255,.20) 48%, rgba(255,255,255,.34) 50%, rgba(255,255,255,.20) 52%, transparent 62%);
+    transform: translateX(-130%);
+    transition: transform .6s var(--ease-out);
+  }
+  .topik-entry:hover::after, .topik-entry:active::after { transform: translateX(130%); }
+  /* Усиленный подъём при наведении */
+  .topik-entry:hover { transform: translateY(-3px) scale(1.012); box-shadow: 0 18px 38px -12px rgba(92,42,51,.6); }
+  .topik-entry-half.mock:hover { box-shadow: 0 18px 38px -12px rgba(60,50,110,.6); }
+  .topik-entry:active { transform: translateY(-1px) scale(.985); }
+  /* Бейдж слегка наклоняется и подсвечивается */
+  .topik-entry-badge { transition: transform var(--t-base) var(--ease-spring), box-shadow var(--t-base) var(--ease-out); }
+  .topik-entry:hover .topik-entry-badge { transform: translateY(-1px) rotate(-3deg) scale(1.06); box-shadow: 0 6px 16px -6px rgba(0,0,0,.32); }
+  /* Стрелка уезжает вправо */
+  .topik-entry-arrow { transition: transform var(--t-base) var(--ease-spring), opacity var(--t-base) var(--ease-out); }
+  .topik-entry:hover .topik-entry-arrow { transform: translateX(5px); opacity: 1; }
+  /* Уважение к настройке «меньше движения» */
+  body.calm-motion .topik-entry::after { display: none; }
+  body.calm-motion .topik-entry:hover { transform: translateY(-2px); box-shadow: 0 14px 30px -10px rgba(92,42,51,.55); }
+  body.calm-motion .topik-entry:hover .topik-entry-badge,
+  body.calm-motion .topik-entry:hover .topik-entry-arrow { transform: none; }
 
   /* Hub hero */
   .topik-hero {
