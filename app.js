@@ -90,6 +90,571 @@
   // Момент загрузки страницы — нужен для подавления «догоняющих» тостов достижений
   const _appBootAt = Date.now();
 
+  /* ════════════════════════════════════════════════════════════════════
+     i18n · ЛОКАЛИЗАЦИЯ ИНТЕРФЕЙСА
+     Корейский УЧЕБНЫЙ контент не переводится — это предмет изучения.
+     Переводятся только пояснения/навигация/кнопки. Подключение по экранам:
+       • статический HTML — атрибут data-i18n / data-i18n-aria / data-i18n-ph
+       • динамический JS  — функция t('ключ')
+     Языки: ru (по умолчанию) · en · uz (Oʻzbekcha, латиница).
+     ════════════════════════════════════════════════════════════════════ */
+  const I18N_LANGS = ['ru', 'en', 'uz'];
+  const I18N_LANG_NAMES = { ru: 'Русский', en: 'English', uz: 'Oʻzbekcha' };
+  let APP_LANG = (function () {
+    try { const v = localStorage.getItem('km_lang'); if (I18N_LANGS.indexOf(v) >= 0) return v; } catch (e) {}
+    return 'ru';
+  })();
+  const I18N = {
+    // ── Навигация ──
+    'nav.home':     { ru: 'Главная',  en: 'Home',     uz: 'Asosiy' },
+    'nav.games':    { ru: 'Игры',     en: 'Games',    uz: 'Oʻyinlar' },
+    'nav.lessons':  { ru: 'Уроки',    en: 'Lessons',  uz: 'Darslar' },
+    'nav.social':   { ru: 'Общение',  en: 'Chat',     uz: 'Muloqot' },
+    'nav.profile':  { ru: 'Профиль',  en: 'Profile',  uz: 'Profil' },
+    'nav.journal':  { ru: 'Журнал',   en: 'Journal',  uz: 'Jurnal' },
+    'nav.students': { ru: 'Ученики',  en: 'Students', uz: 'Oʻquvchilar' },
+    'nav.feed':     { ru: 'Лента',    en: 'Feed',     uz: 'Lenta' },
+
+    // ── Настройки ──
+    'set.title':        { ru: 'Настройки', en: 'Settings', uz: 'Sozlamalar' },
+    'set.footer':       { ru: 'Korean with Madie · сделано с 🌸', en: 'Korean with Madie · made with 🌸', uz: 'Korean with Madie · 🌸 bilan yaratilgan' },
+
+    'set.lang':         { ru: 'Язык', en: 'Language', uz: 'Til' },
+    'set.lang.sub':     { ru: 'Язык интерфейса приложения', en: 'App interface language', uz: 'Ilova interfeysi tili' },
+
+    'set.sound':        { ru: 'Озвучка слов', en: 'Word audio', uz: 'Soʻzlar talaffuzi' },
+    'set.sound.sub':    { ru: 'Произношение слогов и слов', en: 'Pronunciation of syllables and words', uz: 'Boʻgʻin va soʻzlar talaffuzi' },
+    'set.slow':         { ru: 'Медленный голос', en: 'Slow voice', uz: 'Sekin ovoz' },
+    'set.slow.sub':     { ru: 'Озвучка помедленнее — легче расслышать', en: 'Slower playback — easier to catch', uz: 'Sekinroq talaffuz — eshitish osonroq' },
+    'set.petals':       { ru: 'Лепестки сакуры', en: 'Sakura petals', uz: 'Sakura gulbarglari' },
+    'set.petals.sub':   { ru: 'Падающие лепестки на фоне', en: 'Falling petals in the background', uz: 'Fonda tushayotgan gulbarglar' },
+    'set.calm':         { ru: 'Спокойный режим', en: 'Calm mode', uz: 'Tinch rejim' },
+    'set.calm.sub':     { ru: 'Меньше анимаций и движения', en: 'Fewer animations and motion', uz: 'Kamroq animatsiya va harakat' },
+    'set.dark':         { ru: 'Тёмная тема', en: 'Dark theme', uz: 'Tungi mavzu' },
+    'set.dark.sub':     { ru: 'Графит и синий — строго и спокойно', en: 'Graphite and blue — calm and clean', uz: 'Grafit va koʻk — sokin va toza' },
+    'set.darkAuto':     { ru: 'Авто-тёмная ночью', en: 'Auto dark at night', uz: 'Kechasi avto-tungi' },
+    'set.darkAuto.sub': { ru: 'С 20:00 до 08:00 тёмная тема включается сама', en: 'Dark theme turns on by itself 20:00–08:00', uz: '20:00–08:00 da tungi mavzu oʻzi yoqiladi' },
+
+    'set.color':        { ru: 'Цветовая тема', en: 'Color theme', uz: 'Rang mavzusi' },
+    'set.color.note':   { ru: '— меняет всё приложение', en: '— changes the whole app', uz: '— butun ilovani oʻzgartiradi' },
+    'set.gender':       { ru: 'Пол', en: 'Gender', uz: 'Jins' },
+    'set.gender.note':  { ru: '— для правильных обращений', en: '— for correct forms of address', uz: '— toʻgʻri murojaat uchun' },
+    'set.gender.ask':   { ru: ' · укажи, пожалуйста', en: ' · please specify', uz: ' · iltimos, koʻrsating' },
+    'set.gender.f':     { ru: '👩 Женский', en: '👩 Female', uz: '👩 Ayol' },
+    'set.gender.m':     { ru: '👨 Мужской', en: '👨 Male', uz: '👨 Erkak' },
+
+    'set.plan':         { ru: 'Мой тариф', en: 'My plan', uz: 'Mening tarifim' },
+    'set.plan.sub':     { ru: 'Сейчас: {plan} — посмотреть или сменить', en: 'Current: {plan} — view or change', uz: 'Hozir: {plan} — koʻrish yoki almashtirish' },
+    'set.intro':        { ru: 'Знакомство с Madie', en: 'Meet Madie', uz: 'Madie bilan tanishuv' },
+    'set.intro.sub':    { ru: 'Посмотреть интро и пройти квиз заново', en: 'Watch the intro and retake the quiz', uz: 'Introni koʻrish va testni qayta yechish' },
+    'set.goal':         { ru: 'Цель дня', en: 'Daily goal', uz: 'Kunlik maqsad' },
+    'set.goal.sub':     { ru: 'Сколько XP в день хочешь набирать', en: 'How much XP you want per day', uz: 'Kuniga qancha XP toʻplamoqchisiz' },
+    'set.notif':        { ru: 'Уведомления', en: 'Notifications', uz: 'Bildirishnomalar' },
+    'set.notif.unsup':  { ru: 'недоступны в этом браузере', en: 'not available in this browser', uz: 'bu brauzerda mavjud emas' },
+    'set.notif.on':     { ru: 'включены · придут новые сообщения и стрик', en: 'on · new messages and streak', uz: 'yoqilgan · yangi xabar va strik keladi' },
+    'set.notif.denied': { ru: 'заблокированы — разреши в настройках браузера', en: 'blocked — allow in browser settings', uz: 'bloklangan — brauzer sozlamalarida ruxsat bering' },
+    'set.notif.off':    { ru: 'выключены · нажми, чтобы включить', en: 'off · tap to enable', uz: 'oʻchirilgan · yoqish uchun bosing' },
+    'set.notif.onChip': { ru: 'ВКЛ ✓', en: 'ON ✓', uz: 'YOQ ✓' },
+    'set.notif.block':  { ru: 'БЛОК', en: 'BLOCK', uz: 'BLOK' },
+    'set.feedback':     { ru: 'Написать нам', en: 'Contact us', uz: 'Bizga yozing' },
+    'set.feedback.sub': { ru: 'Идеи, ошибки, пожелания — читает Мади', en: 'Ideas, bugs, wishes — Madie reads them', uz: 'Gʻoyalar, xatolar, istaklar — Madie oʻqiydi' },
+    'set.terms':        { ru: 'Условия использования', en: 'Terms of use', uz: 'Foydalanish shartlari' },
+    'set.terms.sub':    { ru: 'Правила и политика конфиденциальности', en: 'Rules and privacy policy', uz: 'Qoidalar va maxfiylik siyosati' },
+    'set.editProfile':  { ru: 'Редактировать профиль', en: 'Edit profile', uz: 'Profilni tahrirlash' },
+    'set.editProfile.sub': { ru: 'Имя, аватар и фон профиля', en: 'Name, avatar and profile background', uz: 'Ism, avatar va profil foni' },
+    'set.logout':       { ru: 'Выйти из аккаунта', en: 'Log out', uz: 'Akkauntdan chiqish' },
+    'set.logout.sub':   { ru: 'Прогресс сохранён — вернёшься в любой момент', en: 'Progress is saved — come back anytime', uz: 'Progress saqlangan — istalgan vaqt qaytasiz' },
+
+    // ── Общее / бренд ──
+    'brand.tagline':    { ru: 'с первого шага', en: 'from the very first step', uz: 'birinchi qadamdan' },
+    'a11y.avatar':      { ru: 'Аватар', en: 'Avatar', uz: 'Avatar' },
+
+    // ── Главная ──
+    'greet.morning':    { ru: 'Доброе утро', en: 'Good morning', uz: 'Xayrli tong' },
+    'greet.day':        { ru: 'Добрый день', en: 'Good afternoon', uz: 'Xayrli kun' },
+    'greet.evening':    { ru: 'Добрый вечер', en: 'Good evening', uz: 'Xayrli kech' },
+    'greet.night':      { ru: 'Доброй ночи', en: 'Good night', uz: 'Xayrli tun' },
+    'home.greetName':   { ru: 'друг', en: 'friend', uz: 'doʻst' },
+    'culture.todayLabel': { ru: 'СЕГОДНЯ В КОРЕЕ', en: 'TODAY IN KOREA', uz: 'BUGUN KOREYADA' },
+    'culture.nextLabel':  { ru: 'БЛИЖАЙШИЙ ПРАЗДНИК КОРЕИ', en: 'NEXT HOLIDAY IN KOREA', uz: 'KOREYADAGI YAQIN BAYRAM' },
+    'culture.note':     { ru: 'Национальный праздник · тапни, чтобы узнать традиции →', en: 'National holiday · tap to learn the traditions →', uz: 'Milliy bayram · anʼanalarni bilish uchun bosing →' },
+    'until.today':      { ru: 'СЕГОДНЯ', en: 'TODAY', uz: 'BUGUN' },
+    'until.tomorrow':   { ru: 'ЗАВТРА', en: 'TOMORROW', uz: 'ERTAGA' },
+    'until.inDays':     { ru: 'ЧЕРЕЗ {n} {unit}', en: 'IN {n} {unit}', uz: '{n} {unit}' },
+    'until.daysUnitEn': { ru: 'ДНЕЙ', en: 'DAYS', uz: 'KUNDAN KEYIN' },
+    'until.dayUnitEn':  { ru: 'ДЕНЬ', en: 'DAY', uz: 'KUNDAN KEYIN' },
+    'home.focus':       { ru: 'Фокус-таймер', en: 'Focus timer', uz: 'Fokus-taymer' },
+    'home.focus.sub':   { ru: 'Помодоро · звуки · XP', en: 'Pomodoro · sounds · XP', uz: 'Pomodoro · ovozlar · XP' },
+    'home.topik':       { ru: 'Подготовка к ТОПИК', en: 'TOPIK preparation', uz: 'TOPIKka tayyorgarlik' },
+    'home.topik.sub':   { ru: '한국어능력시험 · экзамен по корейскому', en: '한국어능력시험 · Korean proficiency exam', uz: '한국어능력시험 · koreys tili imtihoni' },
+    'home.feed':        { ru: 'Лента', en: 'Feed', uz: 'Lenta' },
+    'home.feed.meta':   { ru: 'новости Мади и моменты учеников', en: 'Madie’s news and students’ moments', uz: 'Madie yangiliklari va oʻquvchilar lahzalari' },
+    'home.continue':    { ru: 'Продолжить', en: 'Continue', uz: 'Davom etish' },
+    'home.goal.done':   { ru: 'Цель достигнута!', en: 'Goal reached!', uz: 'Maqsadga erishildi!' },
+    'home.goal.today':  { ru: 'Цель на сегодня', en: 'Today’s goal', uz: 'Bugungi maqsad' },
+    'home.goal.bravo':  { ru: '🌸 Молодец!', en: '🌸 Well done!', uz: '🌸 Barakalla!' },
+    'home.goal.left':   { ru: 'Осталось {n} XP', en: '{n} XP to go', uz: 'Yana {n} XP' },
+    'home.srs.title':   { ru: 'Повторить сегодня', en: 'Review today', uz: 'Bugun takrorlash' },
+    'home.srs.start':   { ru: 'Начать →', en: 'Start →', uz: 'Boshlash →' },
+
+    // ── Текущий урок на главной ──
+    'hero.allDone':     { ru: 'Все уроки пройдены', en: 'All lessons completed', uz: 'Barcha darslar tugatildi' },
+    'hero.allDone.sub': { ru: 'Поздравляем! Ждём новых уроков от Мади 🌸', en: 'Congratulations! New lessons from Madie are coming 🌸', uz: 'Tabriklaymiz! Madie’dan yangi darslar tez orada 🌸' },
+    'hero.eyebrow':     { ru: 'УРОК {num} · СЕГОДНЯ', en: 'LESSON {num} · TODAY', uz: '{num}-DARS · BUGUN' },
+    'hero.counter':     { ru: 'Урок {num} из {total}', en: 'Lesson {num} of {total}', uz: '{num}-dars / {total}' },
+    'hero.start':       { ru: 'Начать урок', en: 'Start lesson', uz: 'Darsni boshlash' },
+
+    // ── Профиль (общие) ──
+    'profile.xpToLevel': { ru: '{n} XP до уровня {lvl}', en: '{n} XP to level {lvl}', uz: '{lvl}-darajagacha {n} XP' },
+
+    // ── Уроки ──
+    'lessons.eyebrow':       { ru: 'МОЙ ПУТЬ', en: 'MY PATH', uz: 'MENING YOʻLIM' },
+    'lessons.realExams':     { ru: 'Реальные экзамены', en: 'Real exams', uz: 'Haqiqiy imtihonlar' },
+    'lessons.realExams.sub': { ru: 'официальные 회차 · 듣기 · 읽기', en: 'official 회차 · 듣기 · 읽기', uz: 'rasmiy 회차 · 듣기 · 읽기' },
+    'lessons.mockExams':     { ru: 'Пробные и другие', en: 'Mock & others', uz: 'Sinov va boshqalar' },
+    'lessons.ai':            { ru: 'Урок с ИИ · AI 선생님', en: 'Lesson with AI · AI 선생님', uz: 'AI bilan dars · AI 선생님' },
+    'lessons.ai.sub':        { ru: 'чат про корейский и Корею · озвучка · мини-карточки', en: 'chat about Korean & Korea · audio · mini-cards', uz: 'koreys tili va Koreya haqida chat · ovoz · mini-kartalar' },
+    'lessons.self':          { ru: 'Самостоятельное изучение', en: 'Self-study', uz: 'Mustaqil oʻrganish' },
+    'lessons.self.sub':      { ru: 'лексика · идиомы · произношение · фразы · числа', en: 'vocabulary · idioms · pronunciation · phrases · numbers', uz: 'lugʻat · idiomalar · talaffuz · iboralar · sonlar' },
+    'lessons.deep':          { ru: 'Подготовка к ТОПИК · углублённый', en: 'TOPIK prep · advanced', uz: 'TOPIKka tayyorgarlik · chuqur' },
+    'lessons.deep.sub':      { ru: 'разбор по типам · 읽기 · уровни 3~6급 · стратегия и грамматика', en: 'by question type · 읽기 · levels 3~6급 · strategy & grammar', uz: 'savol turlari · 읽기 · 3~6급 darajalar · strategiya va grammatika' },
+    'lessons.reading':       { ru: 'Чтение · 말하기', en: 'Reading · 말하기', uz: 'Oʻqish · 말하기' },
+    'lessons.reading.sub':   { ru: 'тексты KO-RU · разбор слов · читать вслух за диктором', en: 'KO-RU texts · word breakdown · read aloud after the speaker', uz: 'KO-RU matnlar · soʻz tahlili · diktor ortidan oʻqish' },
+    'lessons.moduleLessons': { ru: 'УРОКИ МОДУЛЯ', en: 'MODULE LESSONS', uz: 'MODUL DARSLARI' },
+    'lessons.moreSoon':      { ru: 'Дальше — больше модулей', en: 'More modules ahead', uz: 'Yana modullar boʻladi' },
+    'lessons.moreSoon.sub':  { ru: 'Мади готовит продолжение курса 🌸', en: 'Madie is preparing the next part of the course 🌸', uz: 'Madie kurs davomini tayyorlamoqda 🌸' },
+    'lessons.proverb':       { ru: 'Дорога в тысячу ли начинается с одного шага', en: 'A journey of a thousand li begins with a single step', uz: 'Ming chaqirimlik yoʻl bir qadamdan boshlanadi' },
+    'lessons.count':         { ru: '{done} из {total} уроков', en: '{done} of {total} lessons', uz: '{total} darsdan {done} tasi' },
+    'lessons.lockMsg':       { ru: 'Сначала пройди Модуль {n} 🌸', en: 'Finish Module {n} first 🌸', uz: 'Avval {n}-modulni tugating 🌸' },
+    'common.start':          { ru: 'Начать', en: 'Start', uz: 'Boshlash' },
+
+    // ── Модули курса (названия и подписи) ──
+    'mod.m1.nav':   { ru: 'Модуль 1 · Хангыль', en: 'Module 1 · Hangul', uz: '1-modul · Hangul' },
+    'mod.m1.hName': { ru: 'Основа основ', en: 'The very basics', uz: 'Eng asoslari' },
+    'mod.m1.hSub':  { ru: 'Хангыль · базовый курс', en: 'Hangul · basic course', uz: 'Hangul · boshlangʻich kurs' },
+    'mod.m1.short': { ru: 'Буквы', en: 'Letters', uz: 'Harflar' },
+    'mod.m2.nav':   { ru: 'Модуль 2 · Общение', en: 'Module 2 · Communication', uz: '2-modul · Muloqot' },
+    'mod.m2.hName': { ru: 'Предложения и общение', en: 'Sentences & communication', uz: 'Gaplar va muloqot' },
+    'mod.m2.hSub':  { ru: 'Грамматика · диалоги · речь', en: 'Grammar · dialogues · speech', uz: 'Grammatika · dialoglar · nutq' },
+    'mod.m2.short': { ru: 'Фразы', en: 'Phrases', uz: 'Iboralar' },
+    'mod.m3.nav':   { ru: 'Модуль 3 · Связная речь', en: 'Module 3 · Connected speech', uz: '3-modul · Bogʻlangan nutq' },
+    'mod.m3.hName': { ru: 'Связная речь', en: 'Connected speech', uz: 'Bogʻlangan nutq' },
+    'mod.m3.hSub':  { ru: 'Вежливость · время · описания', en: 'Politeness · time · descriptions', uz: 'Xushmuomalalik · vaqt · tavsiflar' },
+    'mod.m3.short': { ru: 'Речь', en: 'Speech', uz: 'Nutq' },
+    'mod.m4.nav':   { ru: 'Модуль 4 · Живая речь', en: 'Module 4 · Living speech', uz: '4-modul · Jonli nutq' },
+    'mod.m4.hName': { ru: 'Живая речь', en: 'Living speech', uz: 'Jonli nutq' },
+    'mod.m4.hSub':  { ru: 'Оттенки · вежливость · 중급', en: 'Nuances · politeness · 중급', uz: 'Nozikliklar · xushmuomalalik · 중급' },
+    'mod.m4.short': { ru: 'Нюансы', en: 'Nuances', uz: 'Nozikliklar' },
+    'mod.m5.nav':   { ru: 'Модуль 5 · Свободное общение', en: 'Module 5 · Free conversation', uz: '5-modul · Erkin muloqot' },
+    'mod.m5.hName': { ru: 'Свободное общение', en: 'Free conversation', uz: 'Erkin muloqot' },
+    'mod.m5.hSub':  { ru: '중급 · связки · косвенная речь', en: '중급 · connectors · reported speech', uz: '중급 · bogʻlovchilar · vositali nutq' },
+    'mod.m5.short': { ru: 'Общение', en: 'Talk', uz: 'Muloqot' },
+    'mod.m6.nav':   { ru: 'Модуль 6 · Тонкости', en: 'Module 6 · Subtleties', uz: '6-modul · Nozikliklar' },
+    'mod.m6.hName': { ru: 'Высокий уровень', en: 'Advanced level', uz: 'Yuqori daraja' },
+    'mod.m6.hSub':  { ru: '고급 · 5급 · нюансы, предположения, сожаления', en: '고급 · 5급 · nuances, assumptions, regrets', uz: '고급 · 5급 · nozikliklar, taxminlar, afsuslar' },
+
+    // ── Игры ──
+    'games.eyebrow':   { ru: 'ИГРЫ И ПРАКТИКА', en: 'GAMES & PRACTICE', uz: 'OʻYIN VA AMALIYOT' },
+    'games.count':     { ru: 'Выбирай и играй 🌸', en: 'Pick and play 🌸', uz: 'Tanlab oʻyna 🌸' },
+    'games.fav':       { ru: 'Избранное', en: 'Favorites', uz: 'Tanlangan' },
+    'games.fav.m':     { ru: 'любимые игры', en: 'your favorite games', uz: 'sevimli oʻyinlar' },
+    'games.fav.add':   { ru: 'В избранное', en: 'Add to favorites', uz: 'Tanlanganlarga' },
+    'games.fav.rm':    { ru: 'Убрать из избранного', en: 'Remove from favorites', uz: 'Tanlangandan olib tashlash' },
+
+    // ── Модалка обратной связи ──
+    'fb.eyebrow':  { ru: 'ОБРАТНАЯ СВЯЗЬ', en: 'FEEDBACK', uz: 'FIKR BILDIRISH' },
+    'fb.title':    { ru: 'Напиши нам 💌', en: 'Write to us 💌', uz: 'Bizga yozing 💌' },
+    'fb.desc':     { ru: 'Нашла ошибку? Есть идея, как сделать Madie лучше? Расскажи — мы читаем каждое сообщение 🌸', en: 'Found a bug? Got an idea to make Madie better? Tell us — we read every message 🌸', uz: 'Xato topdingizmi? Madie’ni yaxshilash gʻoyasi bormi? Yozing — har bir xabarni oʻqiymiz 🌸' },
+    'fb.idea':     { ru: '💡 Идея', en: '💡 Idea', uz: '💡 Gʻoya' },
+    'fb.bug':      { ru: '🐞 Ошибка', en: '🐞 Bug', uz: '🐞 Xato' },
+    'fb.other':    { ru: '💬 Другое', en: '💬 Other', uz: '💬 Boshqa' },
+    'fb.ph':       { ru: 'Опиши подробно: что случилось или что хочется добавить…', en: 'Describe in detail: what happened or what you’d like added…', uz: 'Batafsil yozing: nima boʻldi yoki nima qoʻshilishini xohlaysiz…' },
+    'fb.send':     { ru: 'Отправить 🌸', en: 'Send 🌸', uz: 'Yuborish 🌸' },
+    'fb.note':     { ru: 'Сообщение уйдёт команде Madie вместе с твоим именем', en: 'Your message goes to the Madie team along with your name', uz: 'Xabar ismingiz bilan Madie jamoasiga yuboriladi' },
+    'fb.tooShort': { ru: 'Напиши чуть подробнее 🌸', en: 'Add a little more detail 🌸', uz: 'Birozdan batafsilroq yozing 🌸' },
+    'fb.noConn':   { ru: 'Нет соединения — попробуй позже', en: 'No connection — try again later', uz: 'Aloqa yoʻq — keyinroq urinib koʻring' },
+    'fb.sending':  { ru: 'Отправляю…', en: 'Sending…', uz: 'Yuborilmoqda…' },
+    'fb.thanks':   { ru: 'Спасибо! Сообщение у Мади 💌', en: 'Thank you! Madie got your message 💌', uz: 'Rahmat! Xabar Madie’da 💌' },
+    'fb.denied':   { ru: 'Нет доступа к базе — скажи Мади про правила 🌸', en: 'No database access — tell Madie about the rules 🌸', uz: 'Bazaga ruxsat yoʻq — Madie’ga qoidalar haqida ayting 🌸' },
+    'fb.failed':   { ru: 'Не отправилось — проверь интернет', en: 'Couldn’t send — check your internet', uz: 'Yuborilmadi — internetni tekshiring' },
+
+    // ── Модалка рангов ──
+    'ranks.eyebrow': { ru: 'РАНГИ', en: 'RANKS', uz: 'DARAJALAR' },
+    'ranks.title':   { ru: 'Путь ученицы 🌸', en: 'Your journey 🌸', uz: 'Sizning yoʻlingiz 🌸' },
+    'ranks.here':    { ru: 'ТЫ ЗДЕСЬ', en: 'YOU ARE HERE', uz: 'SIZ SHU YERDA' },
+    'ranks.levels':  { ru: 'УРОВНИ {range}', en: 'LEVELS {range}', uz: '{range}-DARAJALAR' },
+
+    // ── Модалка достижения ──
+    'ach.progress':  { ru: 'ПРОГРЕСС', en: 'PROGRESS', uz: 'JARAYON' },
+    'ach.opened':    { ru: '✓ Открыто', en: '✓ Unlocked', uz: '✓ Ochilgan' },
+    'ach.locked':    { ru: '🔒 Закрыто', en: '🔒 Locked', uz: '🔒 Yopiq' },
+    'ach.ok':        { ru: 'Понятно ✓', en: 'Got it ✓', uz: 'Tushunarli ✓' },
+    'ach.u.days':    { ru: '{cur} / {target} дней', en: '{cur} / {target} days', uz: '{cur} / {target} kun' },
+    'ach.u.min':     { ru: '{cur} / {target} минут', en: '{cur} / {target} minutes', uz: '{cur} / {target} daqiqa' },
+    'ach.u.lessons': { ru: '{cur} / {target} уроков', en: '{cur} / {target} lessons', uz: '{cur} / {target} dars' },
+    'ach.u.gamesAll':{ ru: '{cur} / 9 игр запущено', en: '{cur} / 9 games launched', uz: '{cur} / 9 oʻyin ochilgan' },
+    'ach.u.games':   { ru: '{cur} / {target}', en: '{cur} / {target}', uz: '{cur} / {target}' },
+    'ach.u.vocab':   { ru: '{cur} / {target} слов', en: '{cur} / {target} words', uz: '{cur} / {target} soʻz' },
+    'ach.u.syl':     { ru: '{cur} / {target} слогов', en: '{cur} / {target} syllables', uz: '{cur} / {target} boʻgʻin' },
+    'ach.u.saved':   { ru: '{cur} / {target} сохранено', en: '{cur} / {target} saved', uz: '{cur} / {target} saqlangan' },
+    'ach.u.level':   { ru: 'Уровень {cur} / {target}', en: 'Level {cur} / {target}', uz: '{cur} / {target}-daraja' },
+    'ach.collected':   { ru: '{pct}% коллекции собрано', en: '{pct}% of the collection', uz: 'toʻplamning {pct}% yigʻildi' },
+    'ach.tab.all':     { ru: 'Все · {n}', en: 'All · {n}', uz: 'Hammasi · {n}' },
+    'ach.tab.unlocked':{ ru: 'Открыто · {n}', en: 'Unlocked · {n}', uz: 'Ochilgan · {n}' },
+    'ach.tab.locked':  { ru: 'Закрыто · {n}', en: 'Locked · {n}', uz: 'Yopiq · {n}' },
+
+    // ── Модалка «Найти друга» ──
+    'common.loading':    { ru: 'Загружаю…', en: 'Loading…', uz: 'Yuklanmoqda…' },
+    'friend.find.eyebrow': { ru: 'НАЙТИ ДРУГА', en: 'FIND A FRIEND', uz: 'DOʻST TOPISH' },
+    'friend.find.title': { ru: 'Поиск по имени', en: 'Search by name', uz: 'Ism boʻyicha qidirish' },
+    'friend.find.ph':    { ru: 'Имя или email…', en: 'Name or email…', uz: 'Ism yoki email…' },
+    'friend.none':       { ru: 'Никого не нашла 🌸', en: 'No one found 🌸', uz: 'Hech kim topilmadi 🌸' },
+    'friend.isFriend':   { ru: '✓ в друзьях', en: '✓ friend', uz: '✓ doʻst' },
+    'friend.pending':    { ru: '⏳ Отправлен', en: '⏳ Sent', uz: '⏳ Yuborildi' },
+    'friend.cancel':     { ru: 'Отмена', en: 'Cancel', uz: 'Bekor qilish' },
+    'friend.sending':    { ru: 'Отправляю…', en: 'Sending…', uz: 'Yuborilmoqda…' },
+    'friend.add':        { ru: '+ Добавить', en: '+ Add', uz: '+ Qoʻshish' },
+    'friend.noName':     { ru: 'Без имени', en: 'No name', uz: 'Ismsiz' },
+    'friend.loginNeeded':{ ru: 'Войди в аккаунт, чтобы добавлять друзей', en: 'Sign in to add friends', uz: 'Doʻst qoʻshish uchun akkauntga kiring' },
+
+    // ── Модалка «Новая группа» ──
+    'grp.loginNeeded': { ru: 'Войди в аккаунт, чтобы создавать группы', en: 'Sign in to create groups', uz: 'Guruh yaratish uchun akkauntga kiring' },
+    'grp.noStudents':  { ru: 'Учеников пока нет 🌸', en: 'No students yet 🌸', uz: 'Hozircha oʻquvchilar yoʻq 🌸' },
+    'grp.noFriends':   { ru: 'Сначала добавь друзей 🌸', en: 'Add friends first 🌸', uz: 'Avval doʻst qoʻshing 🌸' },
+    'grp.eyebrow':     { ru: 'НОВАЯ ГРУППА', en: 'NEW GROUP', uz: 'YANGI GURUH' },
+    'grp.title':       { ru: 'Групповой чат', en: 'Group chat', uz: 'Guruh chati' },
+    'grp.photoAria':   { ru: 'Фото группы', en: 'Group photo', uz: 'Guruh rasmi' },
+    'grp.namePh':      { ru: 'Название группы…', en: 'Group name…', uz: 'Guruh nomi…' },
+    'grp.descPh':      { ru: 'Описание (необязательно)…', en: 'Description (optional)…', uz: 'Tavsif (ixtiyoriy)…' },
+    'grp.members':     { ru: 'УЧАСТНИКИ', en: 'MEMBERS', uz: 'AʼZOLAR' },
+    'grp.defFriend':   { ru: 'Друг', en: 'Friend', uz: 'Doʻst' },
+    'grp.defStudent':  { ru: 'Ученица', en: 'Student', uz: 'Oʻquvchi' },
+    'grp.create':      { ru: 'Создать группу', en: 'Create group', uz: 'Guruh yaratish' },
+    'grp.needName':    { ru: 'Дай группе название 🌸', en: 'Give the group a name 🌸', uz: 'Guruhga nom bering 🌸' },
+    'grp.needMember':  { ru: 'Выбери хотя бы одного участника', en: 'Pick at least one member', uz: 'Kamida bitta aʼzo tanlang' },
+    'grp.noConn':      { ru: 'Нет связи с сервером', en: 'No server connection', uz: 'Server bilan aloqa yoʻq' },
+    'grp.photoFail':   { ru: 'Не получилось загрузить фото', en: 'Couldn’t upload the photo', uz: 'Rasm yuklanmadi' },
+
+    // ── Уровень корейского (초급/중급/고급/TOPIK) ──
+    'lvl.pick':      { ru: 'Твой уровень корейского', en: 'Your Korean level', uz: 'Koreys tili darajangiz' },
+    'lvl.my':        { ru: 'Уровень корейского', en: 'Korean level', uz: 'Koreys tili darajasi' },
+    'lvl.change':    { ru: 'Сменить уровень', en: 'Change level', uz: 'Darajani oʻzgartirish' },
+    'lvl.pickTitle': { ru: 'Выбери свой уровень', en: 'Choose your level', uz: 'Darajangizni tanlang' },
+    'lvl.changed':   { ru: 'Уровень обновлён 🌸', en: 'Level updated 🌸', uz: 'Daraja yangilandi 🌸' },
+    'lvl.notSet':    { ru: 'не указан', en: 'not set', uz: 'koʻrsatilmagan' },
+    'lvl.beginner':  { ru: 'Начальный', en: 'Beginner', uz: 'Boshlangʻich' },
+    'lvl.inter':     { ru: 'Средний', en: 'Intermediate', uz: 'Oʻrta' },
+    'lvl.advanced':  { ru: 'Продвинутый', en: 'Advanced', uz: 'Yuqori' },
+    'lvl.topik1':    { ru: 'TOPIK 1', en: 'TOPIK 1', uz: 'TOPIK 1' },
+    'lvl.topik2':    { ru: 'TOPIK 2', en: 'TOPIK 2', uz: 'TOPIK 2' },
+    'games.notPlayed': { ru: 'Ещё не играли', en: 'Not played yet', uz: 'Hali oʻynalmagan' },
+    'games.footer':    { ru: 'Чем больше правильных подряд — тем больше XP и стрик 🔥', en: 'The more correct in a row — the more XP and streak 🔥', uz: 'Ketma-ket toʻgʻri javob koʻp boʻlsa — XP va strik koʻproq 🔥' },
+    'games.sec.hangul':    { ru: 'Хангыль', en: 'Hangul', uz: 'Hangul' },
+    'games.sec.hangul.m':  { ru: 'основа', en: 'basics', uz: 'asos' },
+    'games.sec.words':     { ru: 'Слова', en: 'Words', uz: 'Soʻzlar' },
+    'games.sec.words.m':   { ru: '3 игры', en: '3 games', uz: '3 ta oʻyin' },
+    'games.sec.cross':     { ru: 'Кроссворд', en: 'Crossword', uz: 'Krossvord' },
+    'games.sec.cross.m':   { ru: 'головоломки', en: 'puzzles', uz: 'boshqotirmalar' },
+    'games.sec.tr':        { ru: 'Перевод и грамматика', en: 'Translation & grammar', uz: 'Tarjima va grammatika' },
+    'games.sec.tr.m':      { ru: '4 игры', en: '4 games', uz: '4 ta oʻyin' },
+    'games.sec.music':     { ru: 'Музыка', en: 'Music', uz: 'Musiqa' },
+    'games.sec.music.m':   { ru: 'бонусная', en: 'bonus', uz: 'bonus' },
+    'games.flag.rec':  { ru: 'Рекомендуем', en: 'Recommended', uz: 'Tavsiya etamiz' },
+    'games.c.lab.sub':   { ru: 'Конструктор слогов', en: 'Syllable builder', uz: 'Boʻgʻin konstruktori' },
+    'games.c.lab.best':  { ru: 'Собери · послушай', en: 'Build · listen', uz: 'Yigʻ · tingla' },
+    'games.c.write':     { ru: 'Пиши буквы', en: 'Write letters', uz: 'Harf yoz' },
+    'games.c.write.sub': { ru: '6 букв · обведи пальцем', en: '6 letters · trace with your finger', uz: '6 harf · barmoq bilan chiz' },
+    'games.c.dict':      { ru: 'Слушай и пиши', en: 'Listen and write', uz: 'Tingla va yoz' },
+    'games.c.dict.sub':  { ru: '6 слогов · Аудио', en: '6 syllables · Audio', uz: '6 boʻgʻin · Audio' },
+    'games.c.cards':     { ru: 'Карточки слов', en: 'Word cards', uz: 'Soʻz kartalari' },
+    'games.c.cards.sub': { ru: 'SRS-повторение', en: 'SRS review', uz: 'SRS takror' },
+    'games.c.cards.best':{ ru: 'SRS · по интервалам', en: 'SRS · spaced', uz: 'SRS · intervalli' },
+    'games.c.match':     { ru: 'Подбери картинку', en: 'Match the picture', uz: 'Rasmni moslang' },
+    'games.c.match.sub': { ru: '5 раундов · Лёгкая', en: '5 rounds · Easy', uz: '5 raund · Oson' },
+    'games.c.memory':    { ru: 'Память', en: 'Memory', uz: 'Xotira' },
+    'games.c.memory.sub':{ ru: '8 пар · 4×4 · слово ↔ перевод', en: '8 pairs · 4×4 · word ↔ translation', uz: '8 juft · 4×4 · soʻz ↔ tarjima' },
+    'games.c.listen':    { ru: 'На слух', en: 'By ear', uz: 'Quloq bilan' },
+    'games.c.listen.sub':{ ru: '5 слов · Аудио', en: '5 words · Audio', uz: '5 soʻz · Audio' },
+    'games.c.search':    { ru: 'Поиск слов', en: 'Word search', uz: 'Soʻz qidirish' },
+    'games.c.search.sub':{ ru: 'Найди слова в сетке · 3 уровня', en: 'Find words in the grid · 3 levels', uz: 'Toʻrda soʻzlarni top · 3 daraja' },
+    'games.c.levels3':   { ru: 'Лёгкий · Средний · Сложный', en: 'Easy · Medium · Hard', uz: 'Oson · Oʻrta · Qiyin' },
+    'games.c.cross':     { ru: 'Кроссворд', en: 'Crossword', uz: 'Krossvord' },
+    'games.c.cross.sub': { ru: 'Собери слова по подсказкам · 3 уровня', en: 'Solve words from clues · 3 levels', uz: 'Soʻzlarni ishoradan yech · 3 daraja' },
+    'games.c.cross.best':{ ru: 'Слова из уроков · каждый раз новые', en: 'Words from lessons · new every time', uz: 'Darslardagi soʻzlar · har safar yangi' },
+    'games.c.tr':        { ru: 'Быстрый перевод', en: 'Quick translate', uz: 'Tez tarjima' },
+    'games.c.tr.sub':    { ru: 'RU → KO · 6 раундов', en: 'RU → KO · 6 rounds', uz: 'RU → KO · 6 raund' },
+    'games.c.build':     { ru: 'Собери слово', en: 'Build a word', uz: 'Soʻz tuz' },
+    'games.c.build.sub': { ru: '5 слов · Средняя', en: '5 words · Medium', uz: '5 soʻz · Oʻrta' },
+    'games.c.num':       { ru: 'Числа', en: 'Numbers', uz: 'Sonlar' },
+    'games.c.num.sub':   { ru: 'Sino + Native · 6 раундов', en: 'Sino + Native · 6 rounds', uz: 'Sino + Native · 6 raund' },
+    'games.c.sent':      { ru: 'Собери фразу', en: 'Build a phrase', uz: 'Ibora tuz' },
+    'games.c.sent.sub':  { ru: '4 фразы · перетащи в порядке', en: '4 phrases · drag in order', uz: '4 ibora · tartibda surang' },
+
+    // ── Профиль · вход/регистрация ──
+    'profile.eyebrow':   { ru: 'ПРОФИЛЬ', en: 'PROFILE', uz: 'PROFIL' },
+    'a11y.showPass':     { ru: 'Показать пароль', en: 'Show password', uz: 'Parolni koʻrsatish' },
+    'auth.title':        { ru: 'Войди в дневник', en: 'Sign in to your journal', uz: 'Kundalikka kiring' },
+    'auth.sub':          { ru: 'чтобы сохранять прогресс и стрик', en: 'to save your progress and streak', uz: 'progress va strikni saqlash uchun' },
+    'auth.email':        { ru: 'Войти через Email', en: 'Sign in with Email', uz: 'Email orqali kirish' },
+    'auth.kakao':        { ru: 'Войти через Kakao', en: 'Sign in with Kakao', uz: 'Kakao orqali kirish' },
+    'auth.apple':        { ru: 'Войти через Apple', en: 'Sign in with Apple', uz: 'Apple orqali kirish' },
+    'auth.soon':         { ru: 'СКОРО', en: 'SOON', uz: 'TEZ ORADA' },
+    'auth.appleTitle':   { ru: 'Подключим позже', en: 'Coming later', uz: 'Keyinroq qoʻshamiz' },
+    'auth.tabLogin':     { ru: 'Вход', en: 'Sign in', uz: 'Kirish' },
+    'auth.tabRegister':  { ru: 'Регистрация', en: 'Sign up', uz: 'Roʻyxatdan oʻtish' },
+    'auth.ph.nameOrEmail': { ru: 'Имя или email', en: 'Name or email', uz: 'Ism yoki email' },
+    'auth.ph.pass':      { ru: 'Пароль', en: 'Password', uz: 'Parol' },
+    'auth.loginBtn':     { ru: 'Войти 🌸', en: 'Sign in 🌸', uz: 'Kirish 🌸' },
+    'auth.forgot':       { ru: 'Забыла пароль?', en: 'Forgot your password?', uz: 'Parolni unutdingizmi?' },
+    'auth.restore':      { ru: 'Восстановить', en: 'Reset', uz: 'Tiklash' },
+    'auth.ph.name':      { ru: 'Как тебя зовут?', en: 'What’s your name?', uz: 'Ismingiz nima?' },
+    'auth.ph.newPass':   { ru: 'Придумай пароль (≥6 символов)', en: 'Create a password (≥6 chars)', uz: 'Parol oʻylab toping (≥6 belgi)' },
+    'auth.terms.pre':    { ru: 'Я принимаю', en: 'I accept the', uz: 'Men qabul qilaman' },
+    'auth.terms.link':   { ru: 'условия использования', en: 'terms of use', uz: 'foydalanish shartlari' },
+    'auth.terms.post':   { ru: 'и политику обработки данных', en: 'and the data processing policy', uz: 'va maʼlumotlarni qayta ishlash siyosatini' },
+    'auth.registerBtn':  { ru: 'Создать аккаунт ✨', en: 'Create account ✨', uz: 'Akkaunt yaratish ✨' },
+    'auth.or':           { ru: 'ИЛИ', en: 'OR', uz: 'YOKI' },
+    'auth.guest':        { ru: 'Продолжить как гость', en: 'Continue as guest', uz: 'Mehmon sifatida davom etish' },
+    'auth.guestNote':    { ru: 'При регистрации весь прогресс гостя (XP, стрик, словарик) переедет в аккаунт автоматически 🌸', en: 'When you register, all guest progress (XP, streak, dictionary) transfers to your account automatically 🌸', uz: 'Roʻyxatdan oʻtganda mehmon progressi (XP, strik, lugʻat) avtomatik akkauntga koʻchadi 🌸' },
+
+    // ── Профиль · контент ──
+    'profile.noEmail':     { ru: 'без email', en: 'no email', uz: 'email yoʻq' },
+    'profile.changePhoto': { ru: 'Тапни 📷, чтобы поменять фото', en: 'Tap 📷 to change photo', uz: 'Rasmni oʻzgartirish uchun 📷 bosing' },
+    'profile.level':       { ru: 'Уровень', en: 'Level', uz: 'Daraja' },
+    'profile.seeRanks':    { ru: 'смотреть ранги →', en: 'see ranks →', uz: 'darajalarni koʻrish →' },
+    'profile.xpNextInit':  { ru: '— XP до следующего уровня', en: '— XP to the next level', uz: '— keyingi darajagacha XP' },
+    'profile.streakLabel': { ru: '🔥 Стрик:', en: '🔥 Streak:', uz: '🔥 Strik:' },
+    'profile.ach':         { ru: 'ДОСТИЖЕНИЯ', en: 'ACHIEVEMENTS', uz: 'YUTUQLAR' },
+    'profile.all':         { ru: 'Все →', en: 'All →', uz: 'Barchasi →' },
+    'profile.stat.words':  { ru: 'слов выучено', en: 'words learned', uz: 'soʻz oʻrganildi' },
+    'profile.stat.lessons':{ ru: 'уроков пройдено', en: 'lessons completed', uz: 'dars tugatildi' },
+    'profile.stat.xp':     { ru: 'XP всего', en: 'XP total', uz: 'Jami XP' },
+    'profile.myWords':     { ru: 'Мои слова', en: 'My words', uz: 'Mening soʻzlarim' },
+    'profile.myWords.sub': { ru: 'Личный словарик · повторяй и пополняй', en: 'Personal dictionary · review and add', uz: 'Shaxsiy lugʻat · takrorlang va toʻldiring' },
+    'profile.studyKr':     { ru: 'Учёба в Корее', en: 'Studying in Korea', uz: 'Koreyada oʻqish' },
+    'profile.studyKr.sub': { ru: 'Вузы · визы · стипендии · собеседование 면접', en: 'Universities · visas · scholarships · interview 면접', uz: 'OTMlar · vizalar · stipendiyalar · suhbat 면접' },
+    'profile.homework':    { ru: 'ДОМАШНЕЕ ЗАДАНИЕ', en: 'HOMEWORK', uz: 'UY VAZIFASI' },
+    'profile.share':       { ru: 'Поделиться прогрессом', en: 'Share progress', uz: 'Progressni ulashish' },
+    'profile.invite':      { ru: '💌 Пригласить друга · +200 XP обоим', en: '💌 Invite a friend · +200 XP for both', uz: '💌 Doʻstni taklif qilish · ikkalaga +200 XP' },
+
+    // ── Общение / Словарик (заголовки) ──
+    'social.eyebrow':    { ru: 'ОБЩЕНИЕ', en: 'CHAT', uz: 'MULOQOT' },
+    'social.title':      { ru: 'Друзья и чат 💬', en: 'Friends & chat 💬', uz: 'Doʻstlar va chat 💬' },
+    'words.eyebrow':     { ru: 'ЛИЧНЫЙ СЛОВАРИК', en: 'PERSONAL DICTIONARY', uz: 'SHAXSIY LUGʻAT' },
+    'words.title':       { ru: 'Мои слова 🌸', en: 'My words 🌸', uz: 'Mening soʻzlarim 🌸' },
+    'words.dict':        { ru: 'Словарь-переводчик · 사전', en: 'Dictionary & translator · 사전', uz: 'Lugʻat-tarjimon · 사전' },
+    'words.dict.sub':    { ru: 'слово или грамматика → перевод, примеры, синонимы', en: 'word or grammar → translation, examples, synonyms', uz: 'soʻz yoki grammatika → tarjima, misollar, sinonimlar' },
+    'words.dict.ph':     { ru: 'Например: 먹다, любовь, -(으)면…', en: 'E.g.: 먹다, love, -(으)면…', uz: 'Masalan: 먹다, sevgi, -(으)면…' },
+    'words.dict.note':   { ru: 'Работает на Puter.js (бесплатно, без ключей). При первом поиске может попросить быстрый вход Puter.', en: 'Powered by Puter.js (free, no keys). The first search may ask for a quick Puter sign-in.', uz: 'Puter.js asosida (bepul, kalitsiz). Birinchi qidiruvda Puter’ga tez kirishni soʻrashi mumkin.' },
+    'a11y.back':         { ru: 'Назад', en: 'Back', uz: 'Orqaga' },
+    'a11y.search':       { ru: 'Найти', en: 'Search', uz: 'Qidirish' },
+    'a11y.settings':     { ru: 'Настройки', en: 'Settings', uz: 'Sozlamalar' },
+    'a11y.exit':         { ru: 'Выйти', en: 'Exit', uz: 'Chiqish' },
+    'a11y.exitToGames':  { ru: 'Выйти в Игры', en: 'Exit to Games', uz: 'Oʻyinlarga chiqish' },
+
+    // ── Hangul Lab (конструктор слогов) ──
+    'hangul.eyebrow':    { ru: 'КОНСТРУКТОР СЛОГОВ', en: 'SYLLABLE BUILDER', uz: 'BOʻGʻIN KONSTRUKTORI' },
+    'hangul.listen':     { ru: 'Послушать', en: 'Listen', uz: 'Tinglash' },
+    'hangul.pronounce':  { ru: 'Произнести', en: 'Say it', uz: 'Ayting' },
+    'hangul.cons':       { ru: '자음 · СОГЛАСНЫЕ', en: '자음 · CONSONANTS', uz: '자음 · UNDOSHLAR' },
+    'hangul.vow':        { ru: '모음 · ГЛАСНЫЕ', en: '모음 · VOWELS', uz: '모음 · UNLILAR' },
+    'hangul.myword':     { ru: '단어 · МОЁ СЛОВО', en: '단어 · MY WORD', uz: '단어 · MENING SOʻZIM' },
+    'hangul.base10':     { ru: '10 базовых', en: '10 basic', uz: '10 ta asosiy' },
+    'hangul.buildHint':  { ru: 'собери слоги или впиши сам', en: 'build syllables or type your own', uz: 'boʻgʻin tuzing yoki oʻzingiz yozing' },
+    'hangul.ph.word':    { ru: 'моё слово…', en: 'my word…', uz: 'mening soʻzim…' },
+    'hangul.addSyl':     { ru: '+ Слог', en: '+ Syllable', uz: '+ Boʻgʻin' },
+    'hangul.erase':      { ru: '⌫ Стереть', en: '⌫ Erase', uz: '⌫ Oʻchirish' },
+    'hangul.clear':      { ru: 'Очистить', en: 'Clear', uz: 'Tozalash' },
+    'hangul.saveWord':   { ru: 'Сохранить слово', en: 'Save word', uz: 'Soʻzni saqlash' },
+
+    // ── TOPIK-хаб · навигация и заголовки ──
+    'topik.back.sections': { ru: 'Разделы', en: 'Sections', uz: 'Boʻlimlar' },
+    'topik.add':           { ru: 'Добавить', en: 'Add', uz: 'Qoʻshish' },
+    'topik.addedByMadie':  { ru: 'Добавлено Мади', en: 'Added by Madie', uz: 'Madie qoʻshgan' },
+
+    // Названия разделов (общие)
+    'topik.t.words':    { ru: 'Слова', en: 'Words', uz: 'Soʻzlar' },
+    'topik.t.grammar':  { ru: 'Грамматика', en: 'Grammar', uz: 'Grammatika' },
+    'topik.t.tips':     { ru: 'Советы', en: 'Tips', uz: 'Maslahatlar' },
+    'topik.t.howto':    { ru: 'Как решать', en: 'How to solve', uz: 'Qanday yechish' },
+    'topik.t.mustknow': { ru: 'Что нужно знать', en: 'Need to know', uz: 'Bilish kerak' },
+    'topik.t.hints':    { ru: 'Подсказки', en: 'Hints', uz: 'Ishoralar' },
+    'topik.t.writing':  { ru: 'Как писать 쓰기', en: 'How to write 쓰기', uz: '쓰기 qanday yoziladi' },
+
+    // Подписи разделов в меню
+    'topik.s.words':     { ru: 'Лексика по темам', en: 'Vocabulary by topic', uz: 'Mavzular boʻyicha lugʻat' },
+    'topik.s.words2':    { ru: 'Лексика 중급 по темам', en: '중급 vocabulary by topic', uz: '중급 lugʻat mavzular boʻyicha' },
+    'topik.s.grammar1':  { ru: '84 конструкции', en: '84 patterns', uz: '84 ta qurilma' },
+    'topik.s.grammar2':  { ru: '60 конструкций 3–4급', en: '60 patterns 3–4급', uz: '60 ta qurilma 3–4급' },
+    'topik.s.tips1':     { ru: 'Стратегия 듣기·읽기', en: 'Strategy 듣기·읽기', uz: 'Strategiya 듣기·읽기' },
+    'topik.s.tips2':     { ru: 'Стратегия 듣기·쓰기·읽기', en: 'Strategy 듣기·쓰기·읽기', uz: 'Strategiya 듣기·쓰기·읽기' },
+    'topik.s.howto':     { ru: 'По типам заданий', en: 'By question type', uz: 'Savol turlari boʻyicha' },
+    'topik.s.mustknow1': { ru: 'Формат · баллы · 쓰기', en: 'Format · scores · 쓰기', uz: 'Format · ballar · 쓰기' },
+    'topik.s.about2':    { ru: 'Формат · баллы · уровни', en: 'Format · scores · levels', uz: 'Format · ballar · darajalar' },
+    'topik.s.writing2':  { ru: '51–54 · критерии', en: '51–54 · criteria', uz: '51–54 · mezonlar' },
+    'topik.s.hints':     { ru: 'Тайминг · ловушки', en: 'Timing · traps', uz: 'Vaqt · tuzoqlar' },
+
+    // Заголовки экранов разделов (подзаголовок)
+    'topik.h.words1':    { ru: 'Базовая лексика TOPIK I по темам', en: 'Basic TOPIK I vocabulary by topic', uz: 'TOPIK I asosiy lugʻati mavzular boʻyicha' },
+    'topik.h.words2':    { ru: 'Лексика TOPIK II (중급) по темам', en: 'TOPIK II (중급) vocabulary by topic', uz: 'TOPIK II (중급) lugʻati mavzular boʻyicha' },
+    'topik.h.grammar1':  { ru: 'Ключевые конструкции уровней 1–2 (84)', en: 'Key patterns for levels 1–2 (84)', uz: '1–2 daraja asosiy qurilmalari (84)' },
+    'topik.h.grammar2':  { ru: 'Ключевые конструкции уровней 3–4급 (60)', en: 'Key patterns for levels 3–4급 (60)', uz: '3–4급 asosiy qurilmalari (60)' },
+    'topik.h.tips1':     { ru: 'Как готовиться и не терять баллы', en: 'How to prepare and not lose points', uz: 'Qanday tayyorlanish va ball yoʻqotmaslik' },
+    'topik.h.tips2':     { ru: 'Стратегия по трём разделам TOPIK II', en: 'Strategy for all three TOPIK II sections', uz: 'TOPIK II uch boʻlimi boʻyicha strategiya' },
+    'topik.h.howto1':    { ru: 'Разбор по типам заданий', en: 'Breakdown by question type', uz: 'Savol turlari boʻyicha tahlil' },
+    'topik.h.howto2':    { ru: 'Разбор по типам заданий TOPIK II', en: 'Breakdown by TOPIK II question type', uz: 'TOPIK II savol turlari boʻyicha tahlil' },
+    'topik.h.hints1':    { ru: 'Мелочи, которые решают', en: 'Small things that make the difference', uz: 'Hal qiluvchi mayda narsalar' },
+    'topik.h.hints2':    { ru: 'Мелочи, которые решают на TOPIK II', en: 'Small things that matter on TOPIK II', uz: 'TOPIK II da hal qiluvchi mayda narsalar' },
+    'topik.h.mustknow':  { ru: 'Формат экзамена, баллы и основы письма', en: 'Exam format, scores and writing basics', uz: 'Imtihon formati, ballar va yozuv asoslari' },
+
+    // Экзамены
+    'topik.exam.card':      { ru: 'Экзамены (Mock)', en: 'Exams (Mock)', uz: 'Imtihonlar (Mock)' },
+    'topik.exam.card.sub1': { ru: 'Реальные тесты · таймер · результат с разбором', en: 'Real tests · timer · result with explanations', uz: 'Haqiqiy testlar · taymer · tahlilli natija' },
+    'topik.exam.card.sub2': { ru: 'Реальные тесты · 3 раздела · таймер · разбор', en: 'Real tests · 3 sections · timer · review', uz: 'Haqiqiy testlar · 3 boʻlim · taymer · tahlil' },
+    'topik.exam.read':      { ru: 'Чтение', en: 'Reading', uz: 'Oʻqish' },
+    'topik.exam.listen':    { ru: 'Аудио', en: 'Audio', uz: 'Audio' },
+    'topik.exam.write':     { ru: 'Письмо', en: 'Writing', uz: 'Yozish' },
+    'topik.exam.soon':      { ru: 'скоро', en: 'soon', uz: 'tez orada' },
+    'topik.exam.prep':      { ru: 'Готовится', en: 'In preparation', uz: 'Tayyorlanmoqda' },
+    'topik.exam.t1.title':  { ru: 'Экзамены TOPIK I', en: 'TOPIK I exams', uz: 'TOPIK I imtihonlari' },
+    'topik.exam.t1.sub':    { ru: 'Реальные тесты · 읽기 и 듣기 отдельно', en: 'Real tests · 읽기 and 듣기 separately', uz: 'Haqiqiy testlar · 읽기 va 듣기 alohida' },
+    'topik.exam.t2.title':  { ru: 'Экзамены TOPIK II', en: 'TOPIK II exams', uz: 'TOPIK II imtihonlari' },
+    'topik.exam.t2.sub':    { ru: 'Реальные тесты · 듣기 60 мин · 쓰기 50 мин · 읽기 70 мин', en: 'Real tests · 듣기 60 min · 쓰기 50 min · 읽기 70 min', uz: 'Haqiqiy testlar · 듣기 60 daq · 쓰기 50 daq · 읽기 70 daq' },
+    'topik.exam.t1.note':   { ru: '⏱️ Таймер как на экзамене: 읽기 — 60 мин, 듣기 — 40 мин. В конце — результат и разбор «почему этот вариант верный».', en: '⏱️ Exam-style timer: 읽기 — 60 min, 듣기 — 40 min. At the end — your result and a “why this option is correct” review.', uz: '⏱️ Imtihondagidek taymer: 읽기 — 60 daq, 듣기 — 40 daq. Oxirida — natija va «nega bu variant toʻgʻri» tahlili.' },
+    'topik.exam.t2.note':   { ru: '⏱️ Как на экзамене: 듣기 50 вопросов, 쓰기 4 задания (51–54), 읽기 50 вопросов. 듣기 и 읽기 проверяются автоматически, 쓰기 — самооценка по официальным критериям.', en: '⏱️ Exam-style: 듣기 50 questions, 쓰기 4 tasks (51–54), 읽기 50 questions. 듣기 and 읽기 are graded automatically, 쓰기 — self-assessment by official criteria.', uz: '⏱️ Imtihondagidek: 듣기 50 savol, 쓰기 4 topshiriq (51–54), 읽기 50 savol. 듣기 va 읽기 avtomatik tekshiriladi, 쓰기 — rasmiy mezon boʻyicha oʻz-oʻzini baholash.' },
+    'topik.grp.real':       { ru: 'Реальные экзамены', en: 'Real exams', uz: 'Haqiqiy imtihonlar' },
+    'topik.grp.real.sub1':  { ru: 'Официальные 회차 прошлых сессий TOPIK I', en: 'Official past 회차 of TOPIK I', uz: 'TOPIK I oʻtgan sessiyalari 회차' },
+    'topik.grp.real.sub2':  { ru: 'Официальные 회차 прошлых сессий TOPIK II', en: 'Official past 회차 of TOPIK II', uz: 'TOPIK II oʻtgan sessiyalari 회차' },
+    'topik.grp.mock':       { ru: 'Пробные и другие', en: 'Mock & others', uz: 'Sinov va boshqalar' },
+    'topik.grp.mock.sub1':  { ru: '모의고사 · EBS · Hot TOPIK', en: '모의고사 · EBS · Hot TOPIK', uz: '모의고사 · EBS · Hot TOPIK' },
+    'topik.grp.mock.sub2':  { ru: '모의고사 · EBS · Hot TOPIK — тренировка в формате экзамена', en: '모의고사 · EBS · Hot TOPIK — practice in exam format', uz: '모의고사 · EBS · Hot TOPIK — imtihon formatida mashq' },
+    'topik.grp.mock.empty1':{ ru: 'Пробные для TOPIK I готовятся 🌸 — а EBS уже есть во вкладке TOPIK II.', en: 'Mock tests for TOPIK I are coming 🌸 — EBS is already in the TOPIK II tab.', uz: 'TOPIK I uchun sinov testlari tayyorlanmoqda 🌸 — EBS esa TOPIK II boʻlimida bor.' },
+    'topik.grp.real.empty2':{ ru: 'Реальные 회차 готовятся 🌸', en: 'Real 회차 are coming 🌸', uz: 'Haqiqiy 회차 tayyorlanmoqda 🌸' },
+    'topik.grp.mock.empty2':{ ru: 'Пробные готовятся 🌸', en: 'Mock tests are coming 🌸', uz: 'Sinov testlari tayyorlanmoqda 🌸' },
+
+    // «Что нужно знать» (TOPIK I) — формат экзамена
+    'topik.mk.about':    { ru: '<b>TOPIK</b> (한국어능력시험) — официальный экзамен на знание корейского: нужен для вузов Кореи, визы и работы. Результат — уровень <b>급</b> (1–6).', en: '<b>TOPIK</b> (한국어능력시험) is the official Korean proficiency exam: required for Korean universities, visas and jobs. The result is a <b>급</b> level (1–6).', uz: '<b>TOPIK</b> (한국어능력시험) — koreys tilini bilish boʻyicha rasmiy imtihon: Koreya OTMlari, viza va ish uchun kerak. Natija — <b>급</b> daraja (1–6).' },
+    'topik.mk.col.sec':  { ru: 'Раздел', en: 'Section', uz: 'Boʻlim' },
+    'topik.mk.col.q':    { ru: 'Вопросов', en: 'Questions', uz: 'Savollar' },
+    'topik.mk.col.time': { ru: 'Время', en: 'Time', uz: 'Vaqt' },
+    'topik.mk.listen':   { ru: 'Аудирование', en: 'Listening', uz: 'Tinglash' },
+    'topik.mk.read':     { ru: 'Чтение', en: 'Reading', uz: 'Oʻqish' },
+    'topik.mk.min':      { ru: 'мин', en: 'min', uz: 'daq' },
+    'topik.mk.grades':   { ru: 'Итог: <b>200</b> баллов · <b>1급</b> от 80 · <b>2급</b> от 140', en: 'Total: <b>200</b> points · <b>1급</b> from 80 · <b>2급</b> from 140', uz: 'Jami: <b>200</b> ball · <b>1급</b> 80 dan · <b>2급</b> 140 dan' },
+    'topik.mk.note':     { ru: '📌 В TOPIK I письма нет. Раздел <b><span class="ko">쓰기</span></b> появляется в TOPIK II — основы ниже подготовят тебя заранее.', en: '📌 TOPIK I has no writing. The <b><span class="ko">쓰기</span></b> section appears in TOPIK II — the basics below prepare you in advance.', uz: '📌 TOPIK I da yozuv yoʻq. <b><span class="ko">쓰기</span></b> boʻlimi TOPIK II da paydo boʻladi — quyidagi asoslar sizni oldindan tayyorlaydi.' },
+    'topik.mk.basics':   { ru: '쓰기 기초 · Основы письма', en: '쓰기 기초 · Writing basics', uz: '쓰기 기초 · Yozuv asoslari' },
+    'topik.mk.readCount':{ ru: 'прочитано', en: 'read', uz: 'oʻqilgan' },
+
+    // About / Writing guide — заголовки (тело — учебный контент, остаётся RU)
+    'topik.about2.title':   { ru: '📌 Что нужно знать', en: '📌 Need to know', uz: '📌 Bilish kerak' },
+    'topik.about2.sub':     { ru: 'TOPIK II — формат и уровни', en: 'TOPIK II — format and levels', uz: 'TOPIK II — format va darajalar' },
+    'topik.writing2.title': { ru: '✍️ Как писать 쓰기', en: '✍️ How to write 쓰기', uz: '✍️ 쓰기 qanday yoziladi' },
+    'topik.writing2.sub':   { ru: 'Задания 51–54 · критерии оценивания', en: 'Tasks 51–54 · grading criteria', uz: '51–54 topshiriqlar · baholash mezonlari' }
+  };
+  function t(key, vars) {
+    const e = I18N[key];
+    let s = e ? (e[APP_LANG] != null ? e[APP_LANG] : e.ru) : key;
+    if (vars) for (const k in vars) s = s.split('{' + k + '}').join(vars[k]);
+    return s;
+  }
+  function applyStaticI18n(root) {
+    const r = root || document;
+    r.querySelectorAll('[data-i18n]').forEach(el => { el.textContent = t(el.getAttribute('data-i18n')); });
+    r.querySelectorAll('[data-i18n-html]').forEach(el => { el.innerHTML = t(el.getAttribute('data-i18n-html')); });
+    r.querySelectorAll('[data-i18n-ph]').forEach(el => { el.setAttribute('placeholder', t(el.getAttribute('data-i18n-ph'))); });
+    r.querySelectorAll('[data-i18n-aria]').forEach(el => { el.setAttribute('aria-label', t(el.getAttribute('data-i18n-aria'))); });
+    r.querySelectorAll('[data-i18n-title]').forEach(el => { el.setAttribute('title', t(el.getAttribute('data-i18n-title'))); });
+    try { document.documentElement.lang = APP_LANG; } catch (e) {}
+  }
+  function setAppLang(lang) {
+    if (I18N_LANGS.indexOf(lang) < 0) return;
+    APP_LANG = lang;
+    try { localStorage.setItem('km_lang', lang); } catch (e) {}
+    applyStaticI18n();
+    // Перерисовать открытую модалку настроек в новом языке
+    try { if (document.getElementById('settings-card')) renderSettingsCard(); } catch (e) {}
+    // Обновить динамические «хром»-блоки главной
+    try { renderGreeting(); } catch (e) {}
+    try { updateHomeDateLine(); } catch (e) {}
+    try { renderCultureBanner(); } catch (e) {}
+    // Перерисовать динамику текущего экрана в новом языке
+    try { if (typeof _curScreen !== 'undefined' && typeof switchScreen === 'function') switchScreen(_curScreen, true); } catch (e) {}
+  }
+
+  // ── Уровень корейского у ученика (выбирается при регистрации, виден/меняется в профиле и админке) ──
+  // Коды (초급/중급/고급/TOPIK) — общие для всех языков, переводится только подпись.
+  const STUDY_LEVELS = [
+    { id: 'beginner', code: '초급',    tk: 'lvl.beginner' },
+    { id: 'inter',    code: '중급',    tk: 'lvl.inter' },
+    { id: 'advanced', code: '고급',    tk: 'lvl.advanced' },
+    { id: 'topik1',   code: 'TOPIK 1', tk: 'lvl.topik1' },
+    { id: 'topik2',   code: 'TOPIK 2', tk: 'lvl.topik2' }
+  ];
+  function levelById(id) { return STUDY_LEVELS.find(l => l.id === id) || null; }
+  // Полная подпись уровня: «초급 · Начальный» (код + перевод). Для TOPIK 1/2 код = подпись, без дубля.
+  function levelLabel(id) {
+    const l = levelById(id);
+    if (!l) return '';
+    const name = t(l.tk);
+    return (name === l.code) ? l.code : `${l.code} · ${name}`;
+  }
+  function getMyLevelId() { try { const u = Store.get('user'); return (u && u.level) || ''; } catch (_) { return ''; } }
+  // Выбор уровня на форме регистрации (chip-кнопки)
+  function pickRegLevel(btn) {
+    const row = document.getElementById('rg-level-row');
+    if (row) row.querySelectorAll('.lvl-chip').forEach(b => b.classList.toggle('on', b === btn));
+    const inp = document.getElementById('rg-level');
+    if (inp) inp.value = (btn && btn.dataset.level) || '';
+  }
+  // Сохранить уровень текущего пользователя (свой профиль) → локально + облако
+  function setMyLevel(id) {
+    const u = Store.get('user');
+    if (!u) return;
+    u.level = id || '';
+    Store.set('user', u);
+    try { pushUserToCloud(); } catch (_) {}
+    try { renderMyLevelChip(); } catch (_) {}
+    toast(t('lvl.changed'), 'var(--sage)');
+  }
+  function renderMyLevelChip() {
+    const slot = document.getElementById('profile-level-slot');
+    if (!slot) return;
+    const u = Store.get('user');
+    if (!u || u.guest) { slot.innerHTML = ''; return; }
+    const id = getMyLevelId();
+    const txt = id ? levelLabel(id) : t('lvl.notSet');
+    slot.innerHTML = `
+      <button type="button" onclick="openLevelPicker(getMyLevelId(), setMyLevel)"
+        style="display:inline-flex; align-items:center; gap:7px; padding:6px 12px; border-radius:999px; cursor:pointer; font-family:inherit;
+        border:1.5px solid var(--line-strong); background:var(--paper); color:var(--berry); font-size:12px; font-weight:600;">
+        <span style="font-size:11px; color:var(--soft); font-weight:500;">${t('lvl.my')}:</span>
+        <span class="ko">${txt}</span>
+        <i class="fa-solid fa-pen" style="font-size:9px; color:var(--coral);"></i>
+      </button>`;
+  }
+  // Универсальный модальный пикер уровня. cb(id) — что делать с выбором (свой профиль / ученик в админке).
+  let _levelPickCb = null;
+  function openLevelPicker(currentId, cb) {
+    _levelPickCb = cb || null;
+    const m = document.createElement('div');
+    m.className = 'modal-bg modal-center';
+    m.onclick = e => { if (e.target === m) m.remove(); };
+    const chips = STUDY_LEVELS.map(l => {
+      const name = t(l.tk);
+      const label = (name === l.code) ? l.code : `${l.code} · ${name}`;
+      return `<button type="button" class="lvl-chip ${l.id === currentId ? 'on' : ''}" style="font-size:13px; padding:11px 14px;"
+         onclick="_levelPicked('${l.id}'); this.closest('.modal-bg').remove();">${label}</button>`;
+    }).join('');
+    m.innerHTML = `
+      <div class="modal-card" style="max-width:330px; text-align:center;">
+        <div class="display" style="font-size:20px; color:var(--berry);">${t('lvl.pickTitle')}</div>
+        <div style="display:flex; flex-direction:column; gap:9px; margin-top:16px;">${chips}</div>
+        <button onclick="this.closest('.modal-bg').remove()" class="btn btn-ghost btn-block" style="margin-top:14px;">${t('a11y.back')}</button>
+      </div>`;
+    document.body.appendChild(m);
+  }
+  function _levelPicked(id) { const cb = _levelPickCb; _levelPickCb = null; if (cb) cb(id); }
+
   // ── Data ──
   const consonants = ['ㄱ','ㄴ','ㄷ','ㄹ','ㅁ','ㅂ','ㅅ','ㅇ','ㅈ','ㅎ'];
   const vowels     = ['ㅏ','ㅑ','ㅓ','ㅕ','ㅗ','ㅛ','ㅜ','ㅠ','ㅡ','ㅣ'];
@@ -122,10 +687,10 @@
     // Activate matching nav items in BOTH bottom nav and sidebar nav
     document.querySelectorAll(`.nav-item[data-screen="${name}"]`).forEach(n => n.classList.add('active'));
     if (name === 'hangul' && !document.getElementById('consonants-grid').children.length) initHangulLab();
-    if (name === 'games') syncBestScoreCards();
+    if (name === 'games') { syncBestScoreCards(); initGameFavorites(); }
     if (name === 'home') { renderCustomVideos(); renderCustomFeedPosts(); renderHeroLesson(); renderDailyGoal(); renderSrsWidget(); renderContinue(); }
     if (name === 'lessons') { renderModuleSwitcher(); renderCustomLessons(); renderLessonPath(); }
-    if (name === 'profile') { syncAchievementsStrip(); renderWeeklyXpChart(); renderHomeworkList(); renderSavedWords(); renderPlanCard(); }
+    if (name === 'profile') { syncAchievementsStrip(); renderWeeklyXpChart(); renderHomeworkList(); renderSavedWords(); renderPlanCard(); renderMyLevelChip(); }
     if (name === 'social') renderFriendsAndChat();
     if (name === 'words') renderSavedWords();
     if (name === 'topik') { _topikSection = null; _topikReturn = null; renderTopik(); }
@@ -524,12 +1089,18 @@
       saveMyWord(ko, ru, translit, emoji, source);
       toast(`🌸 «${ko}» сохранено в словарик`, 'var(--sage)');
     }
-    // Re-paint button if provided
+    // Re-paint button if provided (поддержка двух видов: иконка-сердечко и подписанная кнопка)
     if (btn) {
       const saved = isMyWord(ko);
-      btn.innerHTML = saved
-        ? '<i class="fa-solid fa-heart" style="color:var(--coral);"></i>'
-        : '<i class="fa-regular fa-heart"></i>';
+      if (btn.dataset && btn.dataset.labeled === '1') {
+        btn.innerHTML = saved ? '<i class="fa-solid fa-check"></i> Сохранено' : '<i class="fa-regular fa-bookmark"></i> Сохранить';
+        btn.classList.toggle('btn-primary', saved);
+        btn.classList.toggle('btn-ghost', !saved);
+      } else {
+        btn.innerHTML = saved
+          ? '<i class="fa-solid fa-heart" style="color:var(--coral);"></i>'
+          : '<i class="fa-regular fa-heart"></i>';
+      }
     }
     renderSavedWords();
   }
@@ -693,9 +1264,11 @@
     return 'дней';
   }
   function untilLabel(diff) {
-    if (diff === 0) return 'СЕГОДНЯ';
-    if (diff === 1) return 'ЗАВТРА';
-    return `ЧЕРЕЗ ${diff} ${pluralDays(diff).toUpperCase()}`;
+    if (diff === 0) return t('until.today');
+    if (diff === 1) return t('until.tomorrow');
+    if (APP_LANG === 'ru') return `ЧЕРЕЗ ${diff} ${pluralDays(diff).toUpperCase()}`;
+    if (APP_LANG === 'uz') return `${diff} KUNDAN KEYIN`;
+    return `IN ${diff} ${diff === 1 ? 'DAY' : 'DAYS'}`;
   }
 
   // ── Compute upcoming holidays from TODAY ──
@@ -728,9 +1301,9 @@
     const dateEl  = document.getElementById('culture-date');
     const titleEl = document.getElementById('culture-title');
     const labelEl = document.getElementById('culture-label');
-    if (labelEl) labelEl.textContent = diff === 0 ? 'СЕГОДНЯ В КОРЕЕ' : 'БЛИЖАЙШИЙ ПРАЗДНИК КОРЕИ';
+    if (labelEl) labelEl.textContent = diff === 0 ? t('culture.todayLabel') : t('culture.nextLabel');
     if (emojiEl) emojiEl.textContent = h.emoji;
-    if (dateEl)  dateEl.textContent  = diff === 0 ? 'СЕГОДНЯ'
+    if (dateEl)  dateEl.textContent  = diff === 0 ? t('until.today')
                                      : diff >= 1  ? untilLabel(diff)
                                      : `${dd}.${String(mm).padStart(2, '0')}`;
     if (titleEl) titleEl.textContent = `${h.ko} — ${h.ru}`;
@@ -882,7 +1455,7 @@
         style += ' color:var(--berry);';
       }
 
-      html += `<div ${onclick} style="${style}">${d}${dot}</div>`;
+      html += `<div class="cal-day${h ? ' cal-day-h' : ''}${isToday ? ' cal-day-today' : ''}" ${onclick} style="${style}">${d}${dot}</div>`;
     }
     grid.innerHTML = html;
 
@@ -1778,11 +2351,11 @@
           <div style="display:flex; align-items:center; gap:10px; min-width:0;">
             <span style="font-size:22px;">🔁</span>
             <div style="min-width:0;">
-              <div style="font-size:13px; font-weight:700; color:var(--berry);">Повторить сегодня</div>
-              <div style="font-size:10.5px; color:var(--soft); margin-top:1px;">${n} ${wordForm} «созрело» к повторению</div>
+              <div style="font-size:13px; font-weight:700; color:var(--berry);">${t('home.srs.title')}</div>
+              <div style="font-size:10.5px; color:var(--soft); margin-top:1px;">${APP_LANG === 'ru' ? `${n} ${wordForm} «созрело» к повторению` : APP_LANG === 'uz' ? `${n} ta karta takrorlashga tayyor` : `${n} card${n === 1 ? '' : 's'} ready to review`}</div>
             </div>
           </div>
-          <span class="chip chip-coral" style="flex-shrink:0;">Начать →</span>
+          <span class="chip chip-coral" style="flex-shrink:0;">${t('home.srs.start')}</span>
         </div>
       </div>`;
   }
@@ -2067,7 +2640,8 @@
       email: u.email || '',
       lastSeen: Date.now(),
       joinedAt: stats.firstOpenTs || Date.now(),
-      isAdmin: !!u.isAdmin
+      isAdmin: !!u.isAdmin,
+      level: u.level || ''
     };
     try {
       await _db.ref('users/' + uid).update(profile);
@@ -2811,7 +3385,7 @@
 
   // ── Group chat: creation ──
   function openCreateGroupModal() {
-    if (!isLoggedInForChat()) { toast('Войди в аккаунт, чтобы создавать группы'); return; }
+    if (!isLoggedInForChat()) { toast(t('grp.loginNeeded')); return; }
     // Admin invites any student; a student invites their friends.
     let friends;
     if (isAdmin()) {
@@ -2819,13 +3393,13 @@
       const me = myUid();
       friends = {};
       Object.keys(dir).forEach(uid => {
-        if (uid !== me && !(dir[uid] && dir[uid].isAdmin)) friends[uid] = { name: dir[uid].name || 'Ученица' };
+        if (uid !== me && !(dir[uid] && dir[uid].isAdmin)) friends[uid] = { name: dir[uid].name || t('grp.defStudent') };
       });
     } else {
       friends = _friendsCache || {};
     }
     const fids = Object.keys(friends);
-    if (!fids.length) { toast(isAdmin() ? 'Учеников пока нет 🌸' : 'Сначала добавь друзей 🌸'); return; }
+    if (!fids.length) { toast(isAdmin() ? t('grp.noStudents') : t('grp.noFriends')); return; }
     _groupPhoto = null;
     const m = document.createElement('div');
     m.className = 'modal-bg modal-center';
@@ -2835,25 +3409,25 @@
       <div class="modal-card" style="max-width:380px;">
         <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:14px;">
           <div>
-            <div class="page-eyebrow">НОВАЯ ГРУППА</div>
-            <div class="display" style="font-size:20px;color:var(--berry);margin-top:2px;">Групповой чат</div>
+            <div class="page-eyebrow">${t('grp.eyebrow')}</div>
+            <div class="display" style="font-size:20px;color:var(--berry);margin-top:2px;">${t('grp.title')}</div>
           </div>
           <div onclick="this.closest('.modal-bg').remove()" style="font-size:24px;color:var(--soft);cursor:pointer;line-height:1;padding:2px 6px;">×</div>
         </div>
         <div style="display:flex;align-items:center;gap:13px;margin-bottom:12px;">
-          <button type="button" id="group-photo-btn" onclick="document.getElementById('group-photo-file').click()" class="group-photo-pick" aria-label="Фото группы">
+          <button type="button" id="group-photo-btn" onclick="document.getElementById('group-photo-file').click()" class="group-photo-pick" aria-label="${escAttr(t('grp.photoAria'))}">
             <i class="fa-solid fa-camera"></i>
           </button>
           <input type="file" accept="image/*" id="group-photo-file" style="display:none;" onchange="onGroupPhotoPick(event)">
           <div style="flex:1;min-width:0;">
-            <input id="group-title-input" class="input" placeholder="Название группы…" maxlength="60" style="font-size:14px;">
+            <input id="group-title-input" class="input" placeholder="${escAttr(t('grp.namePh'))}" maxlength="60" style="font-size:14px;">
           </div>
         </div>
-        <textarea id="group-desc-input" class="input" rows="2" placeholder="Описание (необязательно)…" maxlength="200" style="font-size:13px;resize:vertical;margin-bottom:4px;"></textarea>
-        <div style="font-size:10px;letter-spacing:.18em;color:var(--soft);margin:14px 2px 8px;">УЧАСТНИКИ</div>
+        <textarea id="group-desc-input" class="input" rows="2" placeholder="${escAttr(t('grp.descPh'))}" maxlength="200" style="font-size:13px;resize:vertical;margin-bottom:4px;"></textarea>
+        <div style="font-size:10px;letter-spacing:.18em;color:var(--soft);margin:14px 2px 8px;">${t('grp.members')}</div>
         <div id="group-member-list" style="display:grid;gap:6px;max-height:260px;overflow-y:auto;">
           ${fids.map(uid => {
-            const nm = (friends[uid] && friends[uid].name) || 'Друг';
+            const nm = (friends[uid] && friends[uid].name) || t('grp.defFriend');
             const dir = (_usersDirCache && _usersDirCache[uid]) || {};
             const av = dir.avatar
               ? `<div class="chat-row-av" style="width:34px;height:34px;background:url(${dir.avatar}) center/cover no-repeat;"></div>`
@@ -2867,7 +3441,7 @@
               </label>`;
           }).join('')}
         </div>
-        <button onclick="createGroupChat()" class="btn btn-primary btn-block" style="margin-top:16px;"><i class="fa-solid fa-user-group" style="font-size:11px;"></i> Создать группу</button>
+        <button onclick="createGroupChat()" class="btn btn-primary btn-block" style="margin-top:16px;"><i class="fa-solid fa-user-group" style="font-size:11px;"></i> ${t('grp.create')}</button>
       </div>`;
     document.body.appendChild(m);
     setTimeout(() => { document.getElementById('group-title-input')?.focus(); }, 80);
@@ -2881,16 +3455,16 @@
       _groupPhoto = await compressImageFile(file, 256, 0.8);
       const btn = document.getElementById('group-photo-btn');
       if (btn) { btn.style.background = `url(${_groupPhoto}) center/cover no-repeat`; btn.innerHTML = ''; }
-    } catch (_) { toast('Не получилось загрузить фото'); }
+    } catch (_) { toast(t('grp.photoFail')); }
   }
   async function createGroupChat() {
     const titleInp = document.getElementById('group-title-input');
     const title = ((titleInp && titleInp.value) || '').trim();
     const desc = (document.getElementById('group-desc-input')?.value || '').trim();
     const picked = [...document.querySelectorAll('#group-member-list .group-pick-check:checked')].map(c => c.value);
-    if (!title) { toast('Дай группе название 🌸'); titleInp?.focus(); return; }
-    if (!picked.length) { toast('Выбери хотя бы одного участника'); return; }
-    if (typeof _db === 'undefined') { toast('Нет связи с сервером'); return; }
+    if (!title) { toast(t('grp.needName')); titleInp?.focus(); return; }
+    if (!picked.length) { toast(t('grp.needMember')); return; }
+    if (typeof _db === 'undefined') { toast(t('grp.noConn')); return; }
     const me = myUid();
     const now = Date.now();
     const gid = 'g_' + _db.ref('chats').push().key;
@@ -3537,6 +4111,9 @@
     }
     const timeLabel = chatListTimeLabel(meta.lastAt);
     const pinned = isChatPinned(u.uid);
+    // Чип уровня корейского — тап открывает пикер для этой ученицы (не открывая чат)
+    const lvlObj = levelById(u.level || '');
+    const lvlChip = `<button onclick="event.stopPropagation(); adminPickStudentLevel('${escHtml(u.uid)}','${u.level || ''}')" class="ko" title="${escAttr(t('lvl.change'))}" style="flex-shrink:0; font-size:9.5px; font-weight:700; padding:2px 8px; border-radius:999px; border:1px solid var(--line-strong); background:var(--paper); color:var(--coral); cursor:pointer; font-family:inherit;">${lvlObj ? escHtml(lvlObj.code) : '<i class="fa-solid fa-graduation-cap" style="font-size:9px;"></i>'}</button>`;
     return `
       <div class="card card-press chat-list-row${pinned ? ' chat-pinned' : ''}" onclick="openChat('${escHtml(u.uid)}','${name.replace(/'/g,"&#39;")}')">
         ${avatar}
@@ -3548,10 +4125,26 @@
           <div class="chat-row-bottom">
             <span class="chat-row-preview">${preview}</span>
             ${unread > 0 ? `<span class="chat-unread-badge">${unread > 99 ? '99+' : unread}</span>` : ''}
+            ${lvlChip}
             <button class="chat-pin-btn" onclick="event.stopPropagation(); toggleChatPin('${escHtml(u.uid)}')" aria-label="${pinned ? 'Открепить' : 'Закрепить'}" title="${pinned ? 'Открепить' : 'Закрепить'}"><i class="fa-solid fa-thumbtack"></i></button>
           </div>
         </div>
       </div>`;
+  }
+  // Админ: открыть пикер уровня для ученицы и сохранить выбор в её облачный профиль
+  function adminPickStudentLevel(uid, currentId) {
+    if (!ensureAdminAccess()) return;
+    openLevelPicker(currentId || '', id => adminSetUserLevel(uid, id));
+  }
+  function adminSetUserLevel(uid, id) {
+    if (!ensureAdminAccess() || typeof _db === 'undefined' || !uid) return;
+    _db.ref('users/' + uid + '/level').set(id || '')
+      .then(() => {
+        if (_usersDirCache && _usersDirCache[uid]) _usersDirCache[uid].level = id || '';
+        toast(t('lvl.changed'), 'var(--sage)');
+        renderAdminChatList();
+      })
+      .catch(e => { console.warn('set student level failed:', e); toast('Не удалось сохранить уровень'); });
   }
 
   async function refreshAdminChatList() {
@@ -3562,7 +4155,7 @@
   }
 
   function openAddFriendModal() {
-    if (!isLoggedInForChat()) { toast('Войди в аккаунт, чтобы добавлять друзей'); return; }
+    if (!isLoggedInForChat()) { toast(t('friend.loginNeeded')); return; }
     const m = document.createElement('div');
     m.className = 'modal-bg modal-center';
     m.id = 'add-friend-modal';
@@ -3571,14 +4164,14 @@
       <div class="modal-card" style="max-width:380px;">
         <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:14px;">
           <div>
-            <div class="page-eyebrow">НАЙТИ ДРУГА</div>
-            <div class="display" style="font-size:20px;color:var(--berry);margin-top:2px;">Поиск по имени</div>
+            <div class="page-eyebrow">${t('friend.find.eyebrow')}</div>
+            <div class="display" style="font-size:20px;color:var(--berry);margin-top:2px;">${t('friend.find.title')}</div>
           </div>
           <div onclick="this.closest('.modal-bg').remove()" style="font-size:24px;color:var(--soft);cursor:pointer;line-height:1;padding:2px 6px;">×</div>
         </div>
-        <input id="add-friend-search" class="input" placeholder="Имя или email…" oninput="filterAddFriend()" style="font-size:13px;">
+        <input id="add-friend-search" class="input" placeholder="${escAttr(t('friend.find.ph'))}" oninput="filterAddFriend()" style="font-size:13px;">
         <div id="add-friend-results" style="display:grid;gap:8px;margin-top:14px;max-height:340px;overflow-y:auto;">
-          <div style="text-align:center;padding:18px;color:var(--soft);font-size:12px;">Загружаю…</div>
+          <div style="text-align:center;padding:18px;color:var(--soft);font-size:12px;">${t('common.loading')}</div>
         </div>
       </div>`;
     document.body.appendChild(m);
@@ -3593,7 +4186,7 @@
     const users = await searchUsersByName(q);
     const friends = _friendsCache || {};
     if (!users.length) {
-      list.innerHTML = `<div style="text-align:center;padding:18px;color:var(--soft);font-size:12px;">Никого не нашла 🌸</div>`;
+      list.innerHTML = `<div style="text-align:center;padding:18px;color:var(--soft);font-size:12px;">${t('friend.none')}</div>`;
       return;
     }
     list.innerHTML = users.map(u => {
@@ -3606,23 +4199,23 @@
         : `<div style="width:38px;height:38px;border-radius:50%;background:var(--paper);flex-shrink:0;border:1.5px solid var(--rose);display:flex;align-items:center;justify-content:center;font-size:14px;color:var(--coral);font-weight:700;">${initial}</div>`;
       let actionHtml;
       if (isFriend) {
-        actionHtml = '<span class="chip chip-sage" style="font-size:10px;flex-shrink:0;">✓ в друзьях</span>';
+        actionHtml = `<span class="chip chip-sage" style="font-size:10px;flex-shrink:0;">${t('friend.isFriend')}</span>`;
       } else if (isPending) {
         actionHtml = `
           <div style="display:flex;gap:5px;flex-shrink:0;align-items:center;">
-            <span class="chip" style="font-size:10px;background:rgba(201,165,92,.18);color:var(--gold-ink);border:1px solid rgba(201,165,92,.5);">⏳ Отправлен</span>
-            <button onclick="cancelFriendRequest('${escHtml(u.uid)}')" class="btn btn-ghost" style="padding:5px 9px;font-size:10.5px;border-color:rgba(var(--rose-rgb),.5);color:var(--bad-ink);">Отмена</button>
+            <span class="chip" style="font-size:10px;background:rgba(201,165,92,.18);color:var(--gold-ink);border:1px solid rgba(201,165,92,.5);">${t('friend.pending')}</span>
+            <button onclick="cancelFriendRequest('${escHtml(u.uid)}')" class="btn btn-ghost" style="padding:5px 9px;font-size:10.5px;border-color:rgba(var(--rose-rgb),.5);color:var(--bad-ink);">${t('friend.cancel')}</button>
           </div>`;
       } else if (isSending) {
-        actionHtml = `<button disabled class="btn btn-primary" style="padding:6px 10px;font-size:11px;flex-shrink:0;opacity:.55;cursor:wait;">Отправляю…</button>`;
+        actionHtml = `<button disabled class="btn btn-primary" style="padding:6px 10px;font-size:11px;flex-shrink:0;opacity:.55;cursor:wait;">${t('friend.sending')}</button>`;
       } else {
-        actionHtml = `<button onclick="sendFriendRequest('${escHtml(u.uid)}','${escHtml(u.name||'').replace(/'/g,'&#39;')}')" class="btn btn-primary" style="padding:6px 10px;font-size:11px;flex-shrink:0;">+ Добавить</button>`;
+        actionHtml = `<button onclick="sendFriendRequest('${escHtml(u.uid)}','${escHtml(u.name||'').replace(/'/g,'&#39;')}')" class="btn btn-primary" style="padding:6px 10px;font-size:11px;flex-shrink:0;">${t('friend.add')}</button>`;
       }
       return `
         <div style="display:flex;align-items:center;gap:10px;padding:8px 4px;">
           ${avatar}
           <div style="flex:1;min-width:0;">
-            <div style="font-weight:600;color:var(--berry);font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${escHtml(u.name || 'Без имени')} ${u.isAdmin ? '<span class="chip chip-coral" style="font-size:9px;padding:1px 6px;">🎓</span>' : ''}</div>
+            <div style="font-weight:600;color:var(--berry);font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${escHtml(u.name || t('friend.noName'))} ${u.isAdmin ? '<span class="chip chip-coral" style="font-size:9px;padding:1px 6px;">🎓</span>' : ''}</div>
             <div style="font-size:10.5px;color:var(--soft);">${escHtml(u.email || '')}</div>
           </div>
           ${actionHtml}
@@ -4798,17 +5391,18 @@
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; flex-shrink:0;">
           <div style="display:flex; align-items:center; gap:10px;">
             <span style="width:36px; height:36px; border-radius:12px; background:var(--blush); display:flex; align-items:center; justify-content:center; font-size:17px;"><i class="fa-solid fa-gear" style="color:var(--coral);"></i></span>
-            <div class="display" style="font-size:20px; color:var(--berry);">Настройки</div>
+            <div class="display" style="font-size:20px; color:var(--berry);" data-i18n="set.title">Настройки</div>
           </div>
           <div onclick="this.closest('.modal-bg').remove()" style="font-size:24px; color:var(--soft); cursor:pointer; padding:2px 6px;">×</div>
         </div>
         <div style="overflow-y:auto; min-height:0;">
           <div id="settings-card" style="padding:0 4px;"></div>
-          <div style="text-align:center; padding:14px 0 6px; font-size:10.5px; color:var(--hush);">Korean with Madie · сделано с 🌸</div>
+          <div style="text-align:center; padding:14px 0 6px; font-size:10.5px; color:var(--hush);" data-i18n="set.footer">Korean with Madie · сделано с 🌸</div>
         </div>
       </div>`;
     document.body.appendChild(m);
     renderSettingsCard();
+    applyStaticI18n(m);
   }
   function applySettings() {
     const s = getSettings();
@@ -4835,14 +5429,14 @@
     if (!slot) return;
     const s = getSettings();
     const pushPerm = !('Notification' in window) ? 'unsupported' : Notification.permission;
-    const pushState = pushPerm === 'unsupported' ? 'недоступны в этом браузере'
-      : pushPerm === 'granted' ? 'включены · придут новые сообщения и стрик'
-      : pushPerm === 'denied' ? 'заблокированы — разреши в настройках браузера'
-      : 'выключены · нажми, чтобы включить';
+    const pushState = pushPerm === 'unsupported' ? t('set.notif.unsup')
+      : pushPerm === 'granted' ? t('set.notif.on')
+      : pushPerm === 'denied' ? t('set.notif.denied')
+      : t('set.notif.off');
     const pushRight = pushPerm === 'granted'
-      ? '<span class="chip chip-sage" style="font-size:9px; padding:3px 9px;">ВКЛ ✓</span>'
+      ? `<span class="chip chip-sage" style="font-size:9px; padding:3px 9px;">${t('set.notif.onChip')}</span>`
       : pushPerm === 'denied'
-        ? '<span class="chip chip-coral" style="font-size:9px; padding:3px 9px;">БЛОК</span>'
+        ? `<span class="chip chip-coral" style="font-size:9px; padding:3px 9px;">${t('set.notif.block')}</span>`
         : `<i class="fa-solid fa-chevron-right" style="color:var(--coral); font-size:11px;"></i>`;
     const row = (ico, title, sub, right, onclick, key) => `
       <button type="button" class="settings-row" ${key ? `data-setting="${key}"` : ''} onclick="${onclick}">
@@ -4856,40 +5450,46 @@
     const sw = on => `<span class="switch ${on ? 'on' : ''}"></span>`;
     const chev = `<i class="fa-solid fa-chevron-right" style="color:var(--coral); font-size:11px;"></i>`;
     slot.innerHTML = [
-      row('🔊', 'Озвучка слов', 'Произношение слогов и слов', sw(s.sound), "toggleSetting('sound')", 'sound'),
-      row('🐢', 'Медленный голос', 'Озвучка помедленнее — легче расслышать', sw(s.slowVoice), "toggleSetting('slowVoice')", 'slowVoice'),
-      row('🌸', 'Лепестки сакуры', 'Падающие лепестки на фоне', sw(s.petals), "toggleSetting('petals')", 'petals'),
-      row('🕊️', 'Спокойный режим', 'Меньше анимаций и движения', sw(s.calmMotion), "toggleSetting('calmMotion')", 'calmMotion'),
-      row('🌙', 'Тёмная тема', 'Графит и синий — строго и спокойно', sw(s.darkTheme), "toggleSetting('darkTheme')", 'darkTheme'),
-      row('🌗', 'Авто-тёмная ночью', 'С 20:00 до 08:00 тёмная тема включается сама', sw(s.darkAuto), "toggleSetting('darkAuto')", 'darkAuto'),
       `<div class="theme-picker">
-        <div class="theme-picker-title">🎨 Цветовая тема <span style="font-weight:500; color:var(--hush); font-size:10.5px;">— меняет всё приложение</span></div>
+        <div class="theme-picker-title">🌐 ${t('set.lang')} <span style="font-weight:500; color:var(--hush); font-size:10.5px;">— ${t('set.lang.sub')}</span></div>
+        <div class="gender-pick-row" style="flex-wrap:wrap;">
+          ${I18N_LANGS.map(lng => `<button type="button" class="gender-opt ${APP_LANG === lng ? 'active' : ''}" onclick="setAppLang('${lng}')">${I18N_LANG_NAMES[lng]}</button>`).join('')}
+        </div>
+      </div>`,
+      row('🔊', t('set.sound'), t('set.sound.sub'), sw(s.sound), "toggleSetting('sound')", 'sound'),
+      row('🐢', t('set.slow'), t('set.slow.sub'), sw(s.slowVoice), "toggleSetting('slowVoice')", 'slowVoice'),
+      row('🌸', t('set.petals'), t('set.petals.sub'), sw(s.petals), "toggleSetting('petals')", 'petals'),
+      row('🕊️', t('set.calm'), t('set.calm.sub'), sw(s.calmMotion), "toggleSetting('calmMotion')", 'calmMotion'),
+      row('🌙', t('set.dark'), t('set.dark.sub'), sw(s.darkTheme), "toggleSetting('darkTheme')", 'darkTheme'),
+      row('🌗', t('set.darkAuto'), t('set.darkAuto.sub'), sw(s.darkAuto), "toggleSetting('darkAuto')", 'darkAuto'),
+      `<div class="theme-picker">
+        <div class="theme-picker-title">🎨 ${t('set.color')} <span style="font-weight:500; color:var(--hush); font-size:10.5px;">${t('set.color.note')}</span></div>
         <div class="theme-swatches">
-          ${COLOR_THEMES.map(t => `
-            <button type="button" class="theme-swatch-wrap ${s.colorTheme === t.key ? 'active' : ''}" data-theme="${t.key}" onclick="setColorTheme('${t.key}')" aria-label="Тема ${t.name}">
-              <span class="theme-swatch"><span style="background:${t.a}"></span><span style="background:${t.b}"></span><i class="fa-solid fa-check" aria-hidden="true"></i></span>
-              <span class="theme-swatch-name">${t.name}</span>
+          ${COLOR_THEMES.map(th => `
+            <button type="button" class="theme-swatch-wrap ${s.colorTheme === th.key ? 'active' : ''}" data-theme="${th.key}" onclick="setColorTheme('${th.key}')" aria-label="${th.name}">
+              <span class="theme-swatch"><span style="background:${th.a}"></span><span style="background:${th.b}"></span><i class="fa-solid fa-check" aria-hidden="true"></i></span>
+              <span class="theme-swatch-name">${th.name}</span>
             </button>`).join('')}
         </div>
       </div>`,
       `<div class="gender-pick" ${s.gender ? '' : 'data-required="1"'}>
-        <div class="gender-pick-title">🧑 Пол <span style="font-weight:500; color:var(--hush); font-size:10.5px;">— для правильных обращений${s.gender ? '' : ' · укажи, пожалуйста'}</span></div>
+        <div class="gender-pick-title">🧑 ${t('set.gender')} <span style="font-weight:500; color:var(--hush); font-size:10.5px;">${t('set.gender.note')}${s.gender ? '' : t('set.gender.ask')}</span></div>
         <div class="gender-pick-row">
-          <button type="button" class="gender-opt ${s.gender === 'f' ? 'active' : ''}" onclick="setGender('f')">👩 Женский</button>
-          <button type="button" class="gender-opt ${s.gender === 'm' ? 'active' : ''}" onclick="setGender('m')">👨 Мужской</button>
+          <button type="button" class="gender-opt ${s.gender === 'f' ? 'active' : ''}" onclick="setGender('f')">${t('set.gender.f')}</button>
+          <button type="button" class="gender-opt ${s.gender === 'm' ? 'active' : ''}" onclick="setGender('m')">${t('set.gender.m')}</button>
         </div>
       </div>`,
       ...((Store.get('user') && !Store.get('user').isAdmin) ? [
-        row('💎', 'Мой тариф', `Сейчас: ${PLANS[myPlanId()].emoji} ${PLANS[myPlanId()].name} — посмотреть или сменить`, chev, "document.getElementById('settings-modal')?.remove(); openPlanPage()")
+        row('💎', t('set.plan'), t('set.plan.sub', { plan: `${PLANS[myPlanId()].emoji} ${PLANS[myPlanId()].name}` }), chev, "document.getElementById('settings-modal')?.remove(); openPlanPage()")
       ] : []),
-      row('🌸', 'Знакомство с Madie', 'Посмотреть интро и пройти квиз заново', chev, 'startOnboardingTour()'),
-      row('🎯', 'Цель дня', 'Сколько XP в день хочешь набирать', chev, 'openDailyGoalSettings()'),
-      row('🔔', 'Уведомления', pushState, pushRight, 'askPushPermission()'),
-      row('💌', 'Написать нам', 'Идеи, ошибки, пожелания — читает Мади', chev, 'openFeedbackModal()'),
-      row('📜', 'Условия использования', 'Правила и политика конфиденциальности', chev, 'showTermsModal()'),
+      row('🌸', t('set.intro'), t('set.intro.sub'), chev, 'startOnboardingTour()'),
+      row('🎯', t('set.goal'), t('set.goal.sub'), chev, 'openDailyGoalSettings()'),
+      row('🔔', t('set.notif'), pushState, pushRight, 'askPushPermission()'),
+      row('💌', t('set.feedback'), t('set.feedback.sub'), chev, 'openFeedbackModal()'),
+      row('📜', t('set.terms'), t('set.terms.sub'), chev, 'showTermsModal()'),
       ...(Store.get('user') ? [
-        row('✏️', 'Редактировать профиль', 'Имя, аватар и фон профиля', chev, "document.getElementById('settings-modal')?.remove(); showEditProfile()"),
-        row('🚪', 'Выйти из аккаунта', 'Прогресс сохранён — вернёшься в любой момент', `<i class="fa-solid fa-arrow-right-from-bracket" style="color:var(--bad-ink); font-size:13px;"></i>`, "document.getElementById('settings-modal')?.remove(); logoutUser()")
+        row('✏️', t('set.editProfile'), t('set.editProfile.sub'), chev, "document.getElementById('settings-modal')?.remove(); showEditProfile()"),
+        row('🚪', t('set.logout'), t('set.logout.sub'), `<i class="fa-solid fa-arrow-right-from-bracket" style="color:var(--bad-ink); font-size:13px;"></i>`, "document.getElementById('settings-modal')?.remove(); logoutUser()")
       ] : [])
     ].join('');
   }
@@ -4906,19 +5506,19 @@
       <div class="modal-card" style="max-width:400px;">
         <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:12px;">
           <div>
-            <div class="page-eyebrow">ОБРАТНАЯ СВЯЗЬ</div>
-            <div class="display" style="font-size:20px; color:var(--berry); margin-top:4px;">Напиши нам 💌</div>
+            <div class="page-eyebrow">${t('fb.eyebrow')}</div>
+            <div class="display" style="font-size:20px; color:var(--berry); margin-top:4px;">${t('fb.title')}</div>
           </div>
           <div onclick="this.closest('.modal-bg').remove()" style="font-size:24px; color:var(--soft); cursor:pointer;">×</div>
         </div>
-        <div style="font-size:12px; color:var(--soft); margin-bottom:12px; line-height:1.5;">Нашла ошибку? Есть идея, как сделать Madie лучше? Расскажи — мы читаем каждое сообщение 🌸</div>
+        <div style="font-size:12px; color:var(--soft); margin-bottom:12px; line-height:1.5;">${t('fb.desc')}</div>
         <div style="display:flex; gap:8px; margin-bottom:12px;">
-          ${[['idea','💡 Идея'],['bug','🐞 Ошибка'],['other','💬 Другое']].map(([k,l]) =>
-            `<button type="button" data-fbtype="${k}" onclick="setFbType('${k}')" class="auth-tab ${k===_fbType?'auth-tab-active':''}" style="flex:1; font-size:12px; padding:9px 4px;">${l}</button>`).join('')}
+          ${[['idea','fb.idea'],['bug','fb.bug'],['other','fb.other']].map(([k,lk]) =>
+            `<button type="button" data-fbtype="${k}" onclick="setFbType('${k}')" class="auth-tab ${k===_fbType?'auth-tab-active':''}" style="flex:1; font-size:12px; padding:9px 4px;">${t(lk)}</button>`).join('')}
         </div>
-        <textarea id="fb-text" class="input" rows="4" placeholder="Опиши подробно: что случилось или что хочется добавить…" style="resize:vertical; min-height:96px; padding-top:10px;"></textarea>
-        <button onclick="submitFeedback(this)" class="btn btn-primary btn-block" style="margin-top:12px;">Отправить 🌸</button>
-        <div style="text-align:center; font-size:10.5px; color:var(--hush); margin-top:8px;">Сообщение уйдёт команде Madie вместе с твоим именем</div>
+        <textarea id="fb-text" class="input" rows="4" placeholder="${escAttr(t('fb.ph'))}" style="resize:vertical; min-height:96px; padding-top:10px;"></textarea>
+        <button onclick="submitFeedback(this)" class="btn btn-primary btn-block" style="margin-top:12px;">${t('fb.send')}</button>
+        <div style="text-align:center; font-size:10.5px; color:var(--hush); margin-top:8px;">${t('fb.note')}</div>
       </div>`;
     document.body.appendChild(m);
     setTimeout(() => document.getElementById('fb-text')?.focus(), 60);
@@ -4931,10 +5531,10 @@
   function submitFeedback(btn) {
     const ta = document.getElementById('fb-text');
     const text = (ta && ta.value || '').trim();
-    if (text.length < 5) { toast('Напиши чуть подробнее 🌸'); return; }
-    if (typeof _db === 'undefined') { toast('Нет соединения — попробуй позже'); return; }
+    if (text.length < 5) { toast(t('fb.tooShort')); return; }
+    if (typeof _db === 'undefined') { toast(t('fb.noConn')); return; }
     const u = Store.get('user') || {};
-    if (btn) { btn.disabled = true; btn.textContent = 'Отправляю…'; }
+    if (btn) { btn.disabled = true; btn.textContent = t('fb.sending'); }
     _db.ref('shared/feedback').push({
       type: _fbType,
       text: text.slice(0, 2000),
@@ -4946,11 +5546,11 @@
       done: false
     }).then(() => {
       document.getElementById('feedback-modal')?.remove();
-      toast('Спасибо! Сообщение у Мади 💌', 'var(--sage)');
+      toast(t('fb.thanks'), 'var(--sage)');
     }).catch(e => {
-      if (btn) { btn.disabled = false; btn.textContent = 'Отправить 🌸'; }
+      if (btn) { btn.disabled = false; btn.textContent = t('fb.send'); }
       const denied = e && (e.code === 'PERMISSION_DENIED' || /permission/i.test(e.message || ''));
-      toast(denied ? 'Нет доступа к базе — скажи Мади про правила 🌸' : 'Не отправилось — проверь интернет');
+      toast(denied ? t('fb.denied') : t('fb.failed'));
     });
   }
 
@@ -10422,7 +11022,7 @@
   function isModule4Unlocked() { return isModuleUnlocked('m4'); }
   function setActiveModule(id) {
     if (!LESSON_MODULES[id]) return;
-    if (!isModuleUnlocked(id) && !isAdmin()) { toast(`Сначала пройди Модуль ${_prevModuleNum(id)} 🌸`); return; }
+    if (!isModuleUnlocked(id) && !isAdmin()) { toast(t('lessons.lockMsg', { n: _prevModuleNum(id) })); return; }
     _activeModule = id;
     UStore.set('activeModule', id);
     renderModuleSwitcher();
@@ -10431,14 +11031,20 @@
     const sc = document.getElementById('screen-lessons'); if (sc) sc.scrollTop = 0;
     window.scrollTo(0, 0);
   }
+  // Локализованная подпись модуля: ключ mod.<id>.<nav|hName|hSub|short>, иначе — русское поле из данных
+  function modLabel(mod, field) {
+    const suffix = { navTitle: 'nav', headerName: 'hName', headerSub: 'hSub', short: 'short' }[field] || field;
+    const key = 'mod.' + mod.id + '.' + suffix;
+    return I18N[key] ? t(key) : (mod[field] || '');
+  }
   function syncModuleHeader() {
     const mod = LESSON_MODULES[_activeModule] || LESSON_MODULES.m1;
     const title = document.getElementById('module-title');
-    if (title) title.textContent = mod.navTitle || mod.title;
+    if (title) title.textContent = modLabel(mod, 'navTitle') || mod.title;
     const hName = document.getElementById('module-header-title');
-    if (hName) hName.textContent = mod.headerName || '';
+    if (hName) hName.textContent = modLabel(mod, 'headerName');
     const hSub = document.getElementById('module-header-sub');
-    if (hSub) hSub.textContent = mod.headerSub || '';
+    if (hSub) hSub.textContent = modLabel(mod, 'headerSub');
   }
   function renderModuleSwitcher() {
     const slot = document.getElementById('module-switcher-slot');
@@ -10450,11 +11056,11 @@
           const mod = LESSON_MODULES[id];
           const active = _activeModule === id;
           const locked = !admin && !isModuleUnlocked(id);
-          const lockMsg = `Сначала пройди Модуль ${_prevModuleNum(id)} 🌸`;
-          const onClick = locked ? `toast('${lockMsg}')` : `setActiveModule('${id}')`;
+          const lockMsg = t('lessons.lockMsg', { n: _prevModuleNum(id) });
+          const onClick = locked ? `toast('${lockMsg.replace(/'/g, "\\'")}')` : `setActiveModule('${id}')`;
           return `<button type="button" class="module-tab ${active ? 'active' : ''} ${locked ? 'locked' : ''}" onclick="${onClick}">
             <span class="module-tab-num">${mod.tabLabel}</span>
-            <span class="module-tab-name">${mod.short}</span>
+            <span class="module-tab-name">${modLabel(mod, 'short')}</span>
             ${locked ? '<i class="fa-solid fa-lock module-tab-lock" aria-hidden="true"></i>' : ''}
           </button>`;
         }).join('')}
@@ -10810,12 +11416,12 @@
   ];
 
   const TOPIK_SECTIONS = [
-    { k:'words',    ico:'📖', t:'Слова',          s:'Лексика по темам' },
-    { k:'grammar',  ico:'🧩', t:'Грамматика',     s:'84 конструкции' },
-    { k:'tips',     ico:'💡', t:'Советы',         s:'Стратегия 듣기·읽기' },
-    { k:'howto',    ico:'🎯', t:'Как решать',     s:'По типам заданий' },
-    { k:'mustknow', ico:'📌', t:'Что нужно знать', s:'Формат · баллы · 쓰기' },
-    { k:'hints',    ico:'✨', t:'Подсказки',      s:'Тайминг · ловушки' }
+    { k:'words',    ico:'📖', tk:'topik.t.words',    sk:'topik.s.words',     t:'Слова',          s:'Лексика по темам' },
+    { k:'grammar',  ico:'🧩', tk:'topik.t.grammar',  sk:'topik.s.grammar1',  t:'Грамматика',     s:'84 конструкции' },
+    { k:'tips',     ico:'💡', tk:'topik.t.tips',     sk:'topik.s.tips1',     t:'Советы',         s:'Стратегия 듣기·읽기' },
+    { k:'howto',    ico:'🎯', tk:'topik.t.howto',    sk:'topik.s.howto',     t:'Как решать',     s:'По типам заданий' },
+    { k:'mustknow', ico:'📌', tk:'topik.t.mustknow', sk:'topik.s.mustknow1', t:'Что нужно знать', s:'Формат · баллы · 쓰기' },
+    { k:'hints',    ico:'✨', tk:'topik.t.hints',    sk:'topik.s.hints',     t:'Подсказки',      s:'Тайминг · ловушки' }
   ];
 
   // ─────────────── TOPIK II: контент разделов (зеркало структуры TOPIK I) ───────────────
@@ -11069,13 +11675,13 @@
   ];
 
   const TOPIK2_SECTIONS = [
-    { k:'words2',   ico:'📖', t:'Слова',           s:'Лексика 중급 по темам' },
-    { k:'grammar2', ico:'🧩', t:'Грамматика',      s:'60 конструкций 3–4급' },
-    { k:'tips2',    ico:'💡', t:'Советы',          s:'Стратегия 듣기·쓰기·읽기' },
-    { k:'howto2',   ico:'🎯', t:'Как решать',      s:'По типам заданий' },
-    { k:'about2',   ico:'📌', t:'Что нужно знать', s:'Формат · баллы · уровни' },
-    { k:'writing2', ico:'✍️', t:'Как писать 쓰기',  s:'51–54 · критерии' },
-    { k:'hints2',   ico:'✨', t:'Подсказки',       s:'Тайминг · ловушки' }
+    { k:'words2',   ico:'📖', tk:'topik.t.words',    sk:'topik.s.words2',   t:'Слова',           s:'Лексика 중급 по темам' },
+    { k:'grammar2', ico:'🧩', tk:'topik.t.grammar',  sk:'topik.s.grammar2', t:'Грамматика',      s:'60 конструкций 3–4급' },
+    { k:'tips2',    ico:'💡', tk:'topik.t.tips',     sk:'topik.s.tips2',    t:'Советы',          s:'Стратегия 듣기·쓰기·읽기' },
+    { k:'howto2',   ico:'🎯', tk:'topik.t.howto',    sk:'topik.s.howto',    t:'Как решать',      s:'По типам заданий' },
+    { k:'about2',   ico:'📌', tk:'topik.t.mustknow', sk:'topik.s.about2',   t:'Что нужно знать', s:'Формат · баллы · уровни' },
+    { k:'writing2', ico:'✍️', tk:'topik.t.writing',  sk:'topik.s.writing2', t:'Как писать 쓰기',  s:'51–54 · критерии' },
+    { k:'hints2',   ico:'✨', tk:'topik.t.hints',     sk:'topik.s.hints',    t:'Подсказки',       s:'Тайминг · ловушки' }
   ];
 
   let _topikSection = null, _topikMenuScroll = 0;
@@ -11136,15 +11742,15 @@
     const items = getTopikMaterials().filter(m => m.kind === kind);
     if (!items.length) return '';
     return `<div class="topik-group" style="margin-top:14px;">
-      <div class="topik-group-head"><span class="topik-group-ico">➕</span><span class="topik-group-label">Добавлено Мади</span><span class="topik-group-count">${items.length}</span></div>
+      <div class="topik-group-head"><span class="topik-group-ico">➕</span><span class="topik-group-label">${t('topik.addedByMadie')}</span><span class="topik-group-count">${items.length}</span></div>
       <div class="topik-mats">${items.map(m => topikMatCard(m, admin)).join('')}</div></div>`;
   }
   function topikSectionWrap(title, sub, inner, admin, addKind) {
-    const backLabel = _topikReturn === 'lessons' ? 'Уроки' : 'Разделы';
+    const backLabel = _topikReturn === 'lessons' ? t('nav.lessons') : t('topik.back.sections');
     return `
       <button type="button" class="topik-back" onclick="topikHome()"><i class="fa-solid fa-chevron-left"></i> ${backLabel}</button>
       <div class="topik-sec-head"><h2 class="topik-sec-title">${title}</h2><p class="topik-sec-sub">${sub}</p>
-        ${admin && addKind ? `<button type="button" class="chip chip-coral topik-sec-add" onclick="showAdminPanel('topik')"><i class="fa-solid fa-plus" style="font-size:10px;"></i> Добавить</button>` : ''}</div>
+        ${admin && addKind ? `<button type="button" class="chip chip-coral topik-sec-add" onclick="showAdminPanel('topik')"><i class="fa-solid fa-plus" style="font-size:10px;"></i> ${t('topik.add')}</button>` : ''}</div>
       ${inner}`;
   }
 
@@ -11169,15 +11775,15 @@
       </div>
       <button type="button" class="topik-exam-card" onclick="openTopikSection('exams')">
         <div class="topik-exam-ico">📝</div>
-        <div class="topik-exam-tx"><div class="topik-exam-t">Экзамены (Mock)</div><div class="topik-exam-s">Реальные тесты · таймер · результат с разбором</div></div>
+        <div class="topik-exam-tx"><div class="topik-exam-t">${t('topik.exam.card')}</div><div class="topik-exam-s">${t('topik.exam.card.sub1')}</div></div>
         <i class="fa-solid fa-chevron-right topik-exam-arrow"></i>
       </button>
       <div class="topik-menu-grid">
         ${TOPIK_SECTIONS.map(x => `
           <button type="button" class="topik-menu-card" onclick="openTopikSection('${x.k}')">
             <span class="topik-menu-ico">${x.ico}</span>
-            <span class="topik-menu-t">${x.t}</span>
-            <span class="topik-menu-s">${x.s}</span>
+            <span class="topik-menu-t">${t(x.tk)}</span>
+            <span class="topik-menu-s">${t(x.sk)}</span>
           </button>`).join('')}
       </div>`;
   }
@@ -11191,15 +11797,15 @@
       </div>
       <button type="button" class="topik-exam-card" onclick="openTopikSection('exams')">
         <div class="topik-exam-ico">📝</div>
-        <div class="topik-exam-tx"><div class="topik-exam-t">Экзамены (Mock)</div><div class="topik-exam-s">Реальные тесты · 3 раздела · таймер · разбор</div></div>
+        <div class="topik-exam-tx"><div class="topik-exam-t">${t('topik.exam.card')}</div><div class="topik-exam-s">${t('topik.exam.card.sub2')}</div></div>
         <i class="fa-solid fa-chevron-right topik-exam-arrow"></i>
       </button>
       <div class="topik-menu-grid">
         ${TOPIK2_SECTIONS.map(x => `
           <button type="button" class="topik-menu-card" onclick="openTopikSection('${x.k}')">
             <span class="topik-menu-ico">${x.ico}</span>
-            <span class="topik-menu-t">${x.t}</span>
-            <span class="topik-menu-s">${x.s}</span>
+            <span class="topik-menu-t">${t(x.tk)}</span>
+            <span class="topik-menu-s">${t(x.sk)}</span>
           </button>`).join('')}
       </div>`;
   }
@@ -11210,8 +11816,8 @@
       <div class="topik-exam-row">
         <div class="topik-exam-no">제<b>${n}</b>회</div>
         <div class="topik-exam-parts">
-          <button type="button" class="topik-part-btn topik-part-read" onclick="startTopikExam(${n},'reading')"><span class="ko">읽기</span> Чтение</button>
-          <button type="button" class="topik-part-btn topik-part-listen" onclick="startTopikExam(${n},'listening')"><span class="ko">듣기</span> Аудио</button>
+          <button type="button" class="topik-part-btn topik-part-read" onclick="startTopikExam(${n},'reading')"><span class="ko">읽기</span> ${t('topik.exam.read')}</button>
+          <button type="button" class="topik-part-btn topik-part-listen" onclick="startTopikExam(${n},'listening')"><span class="ko">듣기</span> ${t('topik.exam.listen')}</button>
         </div>
       </div>`;
     const group = (id, ico, label, sub, cardsHtml, count, emptyMsg) => `
@@ -11220,10 +11826,10 @@
         <div style="font-size:11px; color:var(--soft); margin:2px 0 8px;">${sub}</div>
         ${cardsHtml ? `<div class="topik-exams-list">${cardsHtml}</div>` : `<div class="topik-note">${emptyMsg}</div>`}
       </div>`;
-    slot.innerHTML = topikSectionWrap('Экзамены TOPIK I', 'Реальные тесты · 읽기 и 듣기 отдельно', `
-      <div class="topik-note" style="margin:0 0 14px;">⏱️ Таймер как на экзамене: 읽기 — 60 мин, 듣기 — 40 мин. В конце — результат и разбор «почему этот вариант верный».</div>
-      ${group('real', '🏛️', 'Реальные экзамены', 'Официальные 회차 прошлых сессий TOPIK I', exams.map(cardFor).join(''), exams.length, '')}
-      ${group('mock', '🧪', 'Пробные и другие', '모의고사 · EBS · Hot TOPIK', '', 0, 'Пробные для TOPIK I готовятся 🌸 — а EBS уже есть во вкладке TOPIK II.')}`, false, null);
+    slot.innerHTML = topikSectionWrap(t('topik.exam.t1.title'), t('topik.exam.t1.sub'), `
+      <div class="topik-note" style="margin:0 0 14px;">${t('topik.exam.t1.note')}</div>
+      ${group('real', '🏛️', t('topik.grp.real'), t('topik.grp.real.sub1'), exams.map(cardFor).join(''), exams.length, '')}
+      ${group('mock', '🧪', t('topik.grp.mock'), t('topik.grp.mock.sub1'), '', 0, t('topik.grp.mock.empty1'))}`, false, null);
   }
 
   // ─────────────── TOPIK II (중·고급): экзамены + 쓰기 ───────────────
@@ -11237,15 +11843,15 @@
       const btn = (part, cls, ko, ru, fn) => {
         const has = part === 'writing' ? (ex.writing && ex.writing.tasks && ex.writing.tasks.length)
                                        : (ex[part] && ex[part].questions && ex[part].questions.length);
-        return `<button type="button" class="topik-part-btn ${cls}${has ? '' : ' topik-part-soon'}" ${has ? `onclick="${fn}"` : 'disabled title="Готовится"'}><span class="ko">${ko}</span> ${ru}${has ? '' : ' · скоро'}</button>`;
+        return `<button type="button" class="topik-part-btn ${cls}${has ? '' : ' topik-part-soon'}" ${has ? `onclick="${fn}"` : `disabled title="${t('topik.exam.prep')}"`}><span class="ko">${ko}</span> ${ru}${has ? '' : ' · ' + t('topik.exam.soon')}</button>`;
       };
       return `
       <div class="topik-exam-row">
         <div class="topik-exam-no">${ex.no || `제<b>${n}</b>회`}</div>
         <div class="topik-exam-parts">
-          ${ex.readingOnly ? '' : btn('listening', 'topik-part-listen', '듣기', 'Аудио', `startTopikExam(${n},'listening',2)`)}
-          ${ex.readingOnly ? '' : btn('writing', 'topik-part-write', '쓰기', 'Письмо', `startTopikWriting(${n})`)}
-          ${btn('reading', 'topik-part-read', '읽기', 'Чтение', `startTopikExam(${n},'reading',2)`)}
+          ${ex.readingOnly ? '' : btn('listening', 'topik-part-listen', '듣기', t('topik.exam.listen'), `startTopikExam(${n},'listening',2)`)}
+          ${ex.readingOnly ? '' : btn('writing', 'topik-part-write', '쓰기', t('topik.exam.write'), `startTopikWriting(${n})`)}
+          ${btn('reading', 'topik-part-read', '읽기', t('topik.exam.read'), `startTopikExam(${n},'reading',2)`)}
         </div>
       </div>`;
     };
@@ -11255,13 +11861,13 @@
         <div style="font-size:11px; color:var(--soft); margin:2px 0 8px;">${sub}</div>
         ${nosArr.length ? `<div class="topik-exams-list">${nosArr.map(cardFor).join('')}</div>` : `<div class="topik-note">${emptyMsg}</div>`}
       </div>`;
-    slot.innerHTML = topikSectionWrap('Экзамены TOPIK II', 'Реальные тесты · 듣기 60 мин · 쓰기 50 мин · 읽기 70 мин', `
-      <div class="topik-note" style="margin:0 0 14px;">⏱️ Как на экзамене: 듣기 50 вопросов, 쓰기 4 задания (51–54), 읽기 50 вопросов. 듣기 и 읽기 проверяются автоматически, 쓰기 — самооценка по официальным критериям.</div>
-      ${group('real', '🏛️', 'Реальные экзамены', 'Официальные 회차 прошлых сессий TOPIK II', realNos, 'Реальные 회차 готовятся 🌸')}
-      ${group('mock', '🧪', 'Пробные и другие', '모의고사 · EBS · Hot TOPIK — тренировка в формате экзамена', mockNos, 'Пробные готовятся 🌸')}`, false, null);
+    slot.innerHTML = topikSectionWrap(t('topik.exam.t2.title'), t('topik.exam.t2.sub'), `
+      <div class="topik-note" style="margin:0 0 14px;">${t('topik.exam.t2.note')}</div>
+      ${group('real', '🏛️', t('topik.grp.real'), t('topik.grp.real.sub2'), realNos, t('topik.grp.real.empty2'))}
+      ${group('mock', '🧪', t('topik.grp.mock'), t('topik.grp.mock.sub2'), mockNos, t('topik.grp.mock.empty2'))}`, false, null);
   }
   function renderTopik2About(slot) {
-    slot.innerHTML = topikSectionWrap('📌 Что нужно знать', 'TOPIK II — формат и уровни', `
+    slot.innerHTML = topikSectionWrap(t('topik.about2.title'), t('topik.about2.sub'), `
       <div class="card card-padded" style="margin-bottom:12px;">
         <div style="display:grid; gap:8px; font-size:13px; line-height:1.55;">
           <div>📋 <b>3 раздела:</b> <span class="ko">듣기</span> 50 вопросов (60 мин) · <span class="ko">쓰기</span> 4 задания (50 мин) · <span class="ko">읽기</span> 50 вопросов (70 мин).</div>
@@ -11275,7 +11881,7 @@
       <div class="topik-note">Готовишься на 3–4급? Сосредоточься на вопросах 1–25 каждого раздела и заданиях 51–53 — этого хватает для прохода.</div>`, false, null);
   }
   function renderTopik2WritingGuide(slot) {
-    slot.innerHTML = topikSectionWrap('✍️ Как писать 쓰기', 'Задания 51–54 · критерии оценивания', `
+    slot.innerHTML = topikSectionWrap(t('topik.writing2.title'), t('topik.writing2.sub'), `
       <div style="display:grid; gap:10px;">
         <div class="card card-padded">
           <div style="font-weight:700; margin-bottom:6px;">51–52 · Вписать предложение <span class="chip" style="font-size:10px;">по 10 б.</span></div>
@@ -11304,6 +11910,1483 @@
   // Данные TOPIK II: { reading:{50}, listening:{50}, writing:{tasks:4} } — заполняется по мере постройки
   // 쓰기 №83 и №91 — реальные задания с официальных опубликованных тестов (topik.go.kr).
   const TOPIK2_EXAMS = {
+    8001: {"mock":true,"no":"Hot TOPIK<br><b>제1회</b>","listening":{"durationMin":60,"total":100,"label":"Hot TOPIK 제1회 · 듣기 (1~50)","questions":[{"n":1,"points":2,"instr":"Прослушайте диалог и выберите подходящую картинку.","image":"assets/topik2/exams/img/ht1-l01.png","options":["①","②","③","④"],"answer":1,"script":"여자: 저, 학교 근처에 있는 방을 하나 구하고 싶은데요.\n남자: 지금은 학기 중이라 방이 없는데, 언제 이사하실 거예요?\n여자: 빠를수록 좋아요. 짐이 많지 않아서 작은 방도 괜찮아요.","explain":"🎧 여자: 학교 근처 방을 구하고 싶어요. / 남자: 언제 이사하실 거예요? / 여자: 빠를수록 좋아요.<br><br>В агентстве недвижимости (부동산): женщина ищет комнату возле школы, риелтор спрашивает о сроках.<br>✅ <b>①</b> — женщина у стойки агентства недвижимости разговаривает с риелтором.<br>🧩 방을 구하다 = «искать/снимать комнату»; 이사하다 = «переезжать»."},{"n":2,"points":2,"instr":"Прослушайте диалог и выберите подходящую картинку.","image":"assets/topik2/exams/img/ht1-l02.png","options":["①","②","③","④"],"answer":2,"script":"남자: 이 모자 더 큰 사이즈는 없나요? 좀 작은 거 같아요.\n여자: 고객님, 흰색 모자는 한 개 남았습니다.\n남자: 그럼 아까 써 봤던 저 줄무늬 모자로 할게요.","explain":"🎧 남자: 이 모자 더 큰 사이즈 없나요? / 여자: 흰색 모자는 한 개 남았어요. / 남자: 그럼 줄무늬 모자로 할게요.<br><br>В магазине: мужчина примеряет шляпу, спрашивает размер, выбирает шляпу в полоску.<br>✅ <b>②</b> — мужчина примеряет шляпу перед продавцом в магазине головных уборов.<br>🧩 모자 = «шляпа»; 사이즈 = «размер»; 줄무늬 = «полоска»."},{"n":3,"points":2,"instr":"Прослушайте и выберите подходящий график.","image":"assets/topik2/exams/img/ht1-l03.png","options":["①","②","③","④"],"answer":2,"script":"남자: 올해 한국에 거주하는 외국인 수가 200만 명에 달하는 것으로 조사되었습니다. 이는 전체 인구의 3.5%로 이들 중 절반은 중국인이며 그다음은 베트남 8.8%, 미국 4.7%가 그 뒤를 이었습니다. 외국인 수는 2007년 전체 인구의 2.1%로 100만 명을 넘어선 이후 빠르게 증가하였고 2021년에는 300만 명을 넘어 전체 인구의 5.8%를 차지할 것으로 예상합니다.","explain":"🎧 외국인 중 <b>절반은 중국인</b>, 베트남 8.8%, 미국 4.7%.<br><br>По национальностям: половина (50%) — китайцы, затем Вьетнам 8.8%, США 4.7%.<br>✅ <b>②</b> — круговая диаграмма, где 중국(Китай) занимает ровно половину (절반).<br>🧩 거주하다 = «проживать»; 절반 = «половина»; 차지하다 = «занимать (долю)»."},{"n":4,"points":2,"instr":"Прослушайте диалог и выберите подходящее продолжение.","options":["고쳐서 다행이네요.","회의가 일찍 끝났네요.","에어컨이 너무 비싸요.","이번 달에만 벌써 세 번째네요."],"answer":4,"script":"남자: 오늘 회의가 왜 연기되었어요?\n여자: 아, 회의실 에어컨이 고장 났어요.\n남자:","explain":"🎧 Совещание перенесли, потому что <b>сломался кондиционер</b> в зале.<br>✅ <b>④ 이번 달에만 벌써 세 번째네요.</b> = «И это уже третий раз только за этот месяц» — естественная реакция на поломку.<br>✖️ ① «хорошо, что починили» — ещё не починили; ②③ не отвечают на ситуацию."},{"n":5,"points":2,"instr":"Прослушайте диалог и выберите подходящее продолжение.","options":["방이 몇 개야?","집주인과 통화했어.","조금 더 싼 집을 알아볼까?","월세를 올려 달라고 이야기해."],"answer":3,"script":"남자: 집주인이 재계약하려면 월세를 올려 달래.\n여자: 그래? 지금 월세도 만만치 않은데….\n남자:","explain":"🎧 Хозяин при продлении договора просит поднять арендную плату, а она и так немаленькая.<br>✅ <b>③ 조금 더 싼 집을 알아볼까?</b> = «Может, поищем квартиру подешевле?» — логичный вывод.<br>🧩 월세 = «месячная аренда»; 만만치 않다 = «немалый, непростой»."},{"n":6,"points":2,"instr":"Прослушайте диалог и выберите подходящее продолжение.","options":["네, 김치를 드세요.","네, 아무거나 다 잘 먹어요.","아니요, 다른 식당으로 가요.","아니요, 한국 음식 잘 알아요."],"answer":2,"script":"남자: 맛있는 한국 음식 좀 추천해 주세요.\n여자: 음, 매운 음식도 좋아하세요?\n남자:","explain":"🎧 На просьбу посоветовать еду женщина уточняет: «Острое тоже любите?»<br>✅ <b>② 네, 아무거나 다 잘 먹어요.</b> = «Да, я ем всё подряд» — ответ на вопрос о предпочтениях.<br>🧩 추천하다 = «рекомендовать»; 맵다 = «острый»."},{"n":7,"points":2,"instr":"Прослушайте диалог и выберите подходящее продолжение.","options":["장학금 신청이 끝났어.","생각보다 시험이 어려웠어.","지난 학기에는 이미 받았어.","학과 게시판에서 이름을 봤어."],"answer":4,"script":"남자: 축하해. 이번에 또 장학금을 받는다면서?\n여자: 고마워. 그런데 어떻게 알았어?\n남자:","explain":"🎧 Он поздравляет со стипендией, она спрашивает: «А ты откуда узнал?»<br>✅ <b>④ 학과 게시판에서 이름을 봤어.</b> = «Видел твоё имя на доске объявлений кафедры» — отвечает на «как узнал».<br>🧩 장학금 = «стипендия»; 게시판 = «доска объявлений»."},{"n":8,"points":2,"instr":"Прослушайте диалог и выберите подходящее продолжение.","options":["가방을 안 가지고 왔어요.","개인 귀중품을 잃어버렸어요.","비어 있는 보관함이 없어서요.","책을 안에 가지고 가면 좋겠어요."],"answer":3,"script":"여자: 도서관 내에 가방을 가지고 들어가도 되나요?\n남자: 개인 귀중품만 가지고 들어갈 수 있습니다. 저쪽 입구에 보관함이 있습니다.\n여자:","explain":"🎧 В библиотеку с сумкой нельзя, есть камера хранения у входа.<br>✅ <b>③ 비어 있는 보관함이 없어서요.</b> = «А там нет свободной ячейки» — продолжение проблемы.<br>🧩 귀중품 = «ценные вещи»; 보관함 = «ячейка хранения»."},{"n":9,"points":2,"instr":"Прослушайте и выберите, что женщина сделает дальше.","options":["보고서를 제출한다.","보고서를 검토한다.","휴가를 떠난다.","부장님을 도와 드린다."],"answer":2,"script":"여자: 민수 씨, 이번 달 업무 보고서 완성했어요?\n남자: 아니요, 지금 하고 있는데 한꺼번에 쓰려니까 생각이 잘 안 나요.\n여자: 제가 좀 봐 드릴까요? 부장님이 휴가 가셔서 지금 좀 한가하거든요.\n남자: 도와주시면 저는 너무 좋죠. 감사합니다.","explain":"🎧 Женщина предлагает: «제가 좀 봐 드릴까요?» (давайте я посмотрю отчёт), мужчина соглашается.<br>✅ <b>② 보고서를 검토한다.</b> = «проверит отчёт».<br>🧩 보고서 = «отчёт»; 검토하다 = «проверять»."},{"n":10,"points":2,"instr":"Прослушайте и выберите, что женщина сделает дальше.","options":["1층으로 간다.","상자를 포장한다.","사무실로 돌아간다.","사무용품을 주문한다."],"answer":1,"script":"여자: 저, 실례합니다. 영업 사무실에서 왔는데 포장 테이프 좀 빌릴 수 있을까요?\n남자: 아, 저희도 더 써서 주문해야 하는데. 급한 거면 비품실에 한번 가 보시겠어요?\n여자: 네, 그럴게요. 그런데 비품실이 어디에 있나요? 제가 아직 신입이라 잘 몰라서요.\n남자: 1층 108호입니다.","explain":"🎧 Ей нужна лента, её отправляют в кладовую (비품실) — 1층 108호.<br>✅ <b>① 1층으로 간다.</b> = «пойдёт на 1-й этаж».<br>🧩 비품실 = «кладовая для расходников»; 신입 = «новенький»."},{"n":11,"points":2,"instr":"Прослушайте и выберите, что женщина сделает дальше.","options":["TV를 켠다.","전화를 건다.","책상을 구입한다.","지갑을 가져온다."],"answer":2,"script":"여자: 여보, 지금 홈쇼핑에서 팔고 있는 저 선풍기 어때요?\n남자: 좋은데요. 방송 중에 주문하면 책상용 선풍기도 덤으로 준대요.\n여자: 그럼 빨리 전화해야겠어요. 제 지갑 좀 가져다주세요.\n남자: 잠깐만요, 지갑 어디 있어요?","explain":"🎧 Она решает заказать вентилятор по телешопингу: «빨리 전화해야겠어요».<br>✅ <b>② 전화를 건다.</b> = «позвонит» (чтобы заказать).<br>🧩 홈쇼핑 = «телемагазин»; 덤 = «бонус, в придачу»."},{"n":12,"points":2,"instr":"Прослушайте и выберите, что женщина сделает дальше.","options":["신입생 교육을 시작한다.","학과장님께 메일을 보낸다.","학과 신입생을 불러 모은다.","행정실에서 보낸 메일을 확인한다."],"answer":4,"script":"여자: 다음 주에 체육관 바닥 청소한다는 소식 들었어요?\n남자: 그래? 그럼 다음 주에 우리 학과 신입생 오리엔테이션은 어떻게 해야 할까?\n여자: 글쎄, 안 그래도 행정실에서 메일 보냈던데 확인해 볼게.\n남자: 괜찮네. 우리 일정이랑 겹치면 안 되는데. 나도 과장님께 여쭤볼게.","explain":"🎧 Она говорит: «행정실에서 메일 보냈던데 확인해 볼게» (проверю письмо из деканата).<br>✅ <b>④ 행정실에서 보낸 메일을 확인한다.</b><br>🧩 행정실 = «административный отдел/деканат»; 겹치다 = «совпадать (по времени)»."},{"n":13,"points":2,"instr":"Прослушайте и выберите верное по содержанию.","options":["여자는 어제 발표를 했다.","남자는 발표 준비를 열심히 했다.","남자는 긴장을 해서 발표를 망쳤다.","남자는 부장님을 도와 드리고 칭찬을 했다."],"answer":2,"script":"여자: 어제 제안서 발표 어땠어요? 잘됐어요?\n남자: 네, 처음에는 좀 긴장됐는데 준비한 대로 하다 보니 괜찮아지더라고요.\n여자: 다행이다. 고생한 보람이 있네요.\n남자: 고마워요. 부장님이 잘됐다고 칭찬해 주셔서 기분도 아주 좋았어요.","explain":"🎧 Презентацию делал мужчина, «준비한 대로 하다 보니 괜찮아졌다» — готовился старательно.<br>✅ <b>② 남자는 발표 준비를 열심히 했다.</b><br>✖️ ① презентовал мужчина, не женщина; ③ он не провалил; ④ хвалил начальник его."},{"n":14,"points":2,"instr":"Прослушайте и выберите верное по содержанию.","options":["폰뱅킹은 오후 6시 이후 사용할 수 없다.","사고신고 접수는 영업시간 이후에도 가능하다.","업무 관련 상담은 은행에 직접 가서 해야 한다.","토요일과 공휴일에는 전화 상담을 받지 않는다."],"answer":2,"script":"남자: 안녕하십니까, 고객님? 오늘도 저희 은행을 이용해 주셔서 감사드립니다. 지금은 폰뱅킹과 사고신고 외에는 업무 보기 가능합니다. 업무 관련 상담은 은행 영업일 오전 9시부터 오후 6시 사이 또는 토요일 및 공휴일 오전 9시부터 오후 12시까지 전화해 주시기 바랍니다. 감사합니다.","explain":"🎧 «폰뱅킹과 사고신고 외에는…» — приём заявлений о происшествии (사고신고) доступен и вне рабочих часов.<br>✅ <b>② 사고신고 접수는 영업시간 이후에도 가능하다.</b><br>✖️ ④ по выходным телефонные консультации есть (9:00–12:00)."},{"n":15,"points":2,"instr":"Прослушайте и выберите верное по содержанию.","options":["수도권에는 바람이 심하게 불고 있다.","제주도에는 폭염이 계속 이어지고 있다.","한동안 전국적으로 비가 내릴 전망이다.","내일 서울의 한낮 기온이 37도로 예상된다."],"answer":4,"script":"남자: 이어서 날씨 소식입니다. 오늘도 수도권은 불볕더위로 폭염 경보가 있었습니다. 제주는 태풍의 영향으로 강한 바람이 불고 비가 내릴 전망이며, 비는 내일까지 이어지겠습니다. 따라서 이 지역은 25도 안팎의 기온을 보일 반면 서울을 비롯한 그 밖에 지역은 폭염 경보 속에 내일 한낮의 기온이 37도로 오늘보다 더 덥겠습니다.","explain":"🎧 Сеул и др. — жара, «내일 한낮의 기온이 37도».<br>✅ <b>④ 내일 서울의 한낮 기온이 37도로 예상된다.</b><br>✖️ ветер и дождь — на Чеджу (тайфун), а не в столичном регионе.<br>🧩 폭염 경보 = «предупреждение о жаре»."},{"n":16,"points":2,"instr":"Прослушайте и выберите верное по содержанию.","options":["최근 한국어로 된 음반을 냈다.","해외 차트에서 1위를 하는 것이 꿈이다.","사람 이야기가 담긴 노래를 주로 만든다.","지난달 해외 팬들에게 종합 선물 세트를 받았다."],"answer":1,"script":"여자: 지난달 가수 겸 작곡가인 김지민 씨가 한국어로 된 음반이 해외 차트에서 1위를 하며 큰 성공을 거뒀는데요. 그 비결이 뭘까요?\n남자: 음, 저는 제 곡들의 이야기를 중요하게 담고 싶었어요. 현실에 대한 고민과 사랑, 단순한 사랑 이야기보다 우리의 다양한 삶의 이야기를 솔직하게 표현하려고 했고, 그것을 소셜미디어 콘텐츠로 보여 드리니 전 세계 팬들이 종합 선물 세트를 받는 것처럼 큰 즐거움을 느끼신 것 같습니다.","explain":"🎧 «한국어로 된 음반이 해외 차트에서 1위» — недавно выпустил альбом на корейском.<br>✅ <b>① 최근 한국어로 된 음반을 냈다.</b><br>✖️ ② 1-е место уже достигнуто (не мечта); ③ песни о «жизни», не просто о любви."},{"n":17,"points":2,"instr":"Прослушайте и выберите главную мысль мужчины.","options":["운동은 매일 규칙적으로 해야 한다.","운동은 헬스장에서 꾸준히 해야 한다.","인터넷을 이용해서 운동 효과를 높일 수 있다.","집에서의 운동은 시간과 돈을 줄일 수 있어서 좋다."],"answer":4,"script":"남자: 요즘도 헬스장 다녀? 난 시간 내기가 힘들어서 집에서 운동을 시작했는데 효과도 좋고 돈도 아껴서 진짜 괜찮은 거 같아.\n여자: 집에서 운동한다고? 혼자 규칙적으로 운동하기 힘들지 않아?\n남자: 응, 처음에는 힘들었는데, 유튜브 영상을 보면서 따라 하고 운동 일지에 운동을 기록하니까 꾸준히 하게 되더라고.","explain":"🎧 «집에서 운동… 효과도 좋고 돈도 아껴서 진짜 괜찮다».<br>✅ <b>④ 집에서의 운동은 시간과 돈을 줄일 수 있어서 좋다.</b> — экономит время и деньги.<br>🧩 운동 일지 = «дневник тренировок»."},{"n":18,"points":2,"instr":"Прослушайте и выберите главную мысль мужчины.","options":["외국어는 어릴 때 배우는 것이 좋다.","유학은 아이에게 정서적으로 도움이 된다.","아이들에게는 가정교육이 무엇보다 중요하다.","자연스러운 외국어 발음은 외국에서 익힐 수 있다."],"answer":3,"script":"남자: 아이가 이제 겨우 열 살이에요. 혼자 유학 보내기에는 너무 어린 거 아니에요? 적어도 고등학교는 졸업해야 할 것 같은데.\n여자: 그렇지만 외국어는 공부에 대한 부담이 적을 때 배우는 게 좋잖아요. 어릴 때 배우면 발음도 좋고요.\n남자: 외국어 발음은 유학 가지 않아도 배울 수 있어요. 어린 나이에 혼자 유학을 가면 정서적으로 힘들어요. 가정교육도 중요한데 많은 부분을 놓치게 되잖아요.","explain":"🎧 Мужчина против раннего отъезда: «가정교육도 중요한데 많은 부분을 놓치게 된다».<br>✅ <b>③ 아이들에게는 가정교육이 무엇보다 중요하다.</b><br>🧩 유학 = «учёба за границей»; 가정교육 = «домашнее воспитание»."},{"n":19,"points":2,"instr":"Прослушайте и выберите главную мысль мужчины.","options":["사람의 성격과 혈액형은 관련이 있다.","혈액형은 주변 환경에 영향을 많이 받는다.","남자들의 성격은 혈액형에 따라 네 가지로 나뉜다.","혈액형으로 성격을 알 수 있다는 것은 논리적이지 않다."],"answer":4,"script":"여자: 민수 씨, 혈액형이 뭐예요? 저는 A형이라서 늘 너무 소심한 게 문제예요.\n남자: A형이라서 소심하다고요? 저는 B형인데……. 혈액형하고 성격이 무슨 상관이에요?\n여자: 혈액형에 따라 성격을 알 수 있잖아요. B형 남자는 이기적인 데다가 주변에 모든 이성에게 친절해서 여자 친구를 속상하게 만든다던데요.\n남자: 정말요? 성격은 환경의 영향을 받는 거고요. 혈액형으로 성격을 알 수 있으면 세상에 모든 남자는 성격이 딱 네 가지로 나뉜다는 건데, 그게 말이 돼요?","explain":"🎧 «혈액형으로 성격을 알 수 있으면… 그게 말이 돼요?» — он считает это нелогичным.<br>✅ <b>④ 혈액형으로 성격을 알 수 있다는 것은 논리적이지 않다.</b><br>🧩 혈액형 = «группа крови»; 소심하다 = «робкий»."},{"n":20,"points":2,"instr":"Прослушайте и выберите главную мысль мужчины.","options":["해양 생물을 보호해야 한다.","안전사고의 원인을 제거해야 한다.","해수욕장을 더 깨끗이 관리해야 한다.","사람들의 이기심이 환경을 오염시킨다."],"answer":4,"script":"여자: 매년 휴가철마다 전국의 유명 해수욕장들이 쓰레기로 몸살을 앓고 있는데요. 무엇이 문제인가요?\n남자: 사람들이 쓰레기를 직접 가져가서 버리지 않고 해수욕장에 그냥 버리고 갑니다. '나 하나쯤은 괜찮겠지' 하는 인간의 작은 이기심 때문인데요. 이게 일반 쓰레기와는 달리 모래 속에 파묻히거나 섞이게 되면 치우기가 힘들고 안전사고의 원인이 되기도 합니다. 또 파도가 쳐서 이 쓰레기들이 바다로 가게 되면 해양 생물들이 죽거나 바다가 오염될 수도 있고요.","explain":"🎧 Причина мусора — «나 하나쯤은 괜찮겠지» (эгоизм людей).<br>✅ <b>④ 사람들의 이기심이 환경을 오염시킨다.</b><br>🧩 이기심 = «эгоизм»; 몸살을 앓다 = «страдать, мучиться»."},{"n":21,"points":2,"instr":"Прослушайте и выберите главную мысль мужчины.","options":["모기 예방 방법으로 야외 활동은 피해야 한다.","모기는 질병을 옮길 수 있어서 모두 없애야 한다.","모기는 물리기 전에 예방하고 주의하는 것이 좋다.","모기에 물린 부기는 반드시 의사에게 보여야 한다."],"answer":3,"script":"여자: 박사님, 모기에 물렸을 때 가려움을 해결하는 방법으로 뭐가 있을까요?\n남자: 일반적으로 물린 부분에 알로에나 벌꿀을 바르거나 얼음 마사지를 하면 부기가 가라앉습니다. 발열과 구토 증세가 있다면 반드시 의사와 상담해야 해요. 모기는 심각한 질병을 옮길 수 있기 때문에 예방과 주의가 필요합니다.\n여자: 그렇군요. 그럼 예방법도 알려주세요.\n남자: 모기는 땀을 잘 흘리는 사람, 몸에 열이 많은 사람을 좋아합니다. 그래서 체온을 너무 높이지 않는 게 좋습니다. 또 야외 활동 시 선명한 색상의 옷이나 피부에 붙지 않는 옷을 입는 것이 좋습니다.","explain":"🎧 «모기는 심각한 질병을 옮길 수 있기 때문에 예방과 주의가 필요합니다».<br>✅ <b>③ 모기는 물리기 전에 예방하고 주의하는 것이 좋다.</b><br>🧩 모기 = «комар»; 예방 = «профилактика»."},{"n":22,"points":2,"instr":"Прослушайте и выберите верное по содержанию.","options":["얼음 마사지로 인해 가려움증이 증가된다.","알로에나 벌꿀을 바르면 모기를 쫓을 수 있다.","모기에 물리면 심각한 전염병에 걸릴 수 있다.","몸에 딱 맞는 옷을 입으면 모기가 물지 못한다."],"answer":3,"script":"여자: 박사님, 모기에 물렸을 때 가려움을 해결하는 방법으로 뭐가 있을까요?\n남자: 일반적으로 물린 부분에 알로에나 벌꿀을 바르거나 얼음 마사지를 하면 부기가 가라앉습니다. 발열과 구토 증세가 있다면 반드시 의사와 상담해야 해요. 모기는 심각한 질병을 옮길 수 있기 때문에 예방과 주의가 필요합니다.\n여자: 그렇군요. 그럼 예방법도 알려주세요.\n남자: 모기는 땀을 잘 흘리는 사람, 몸에 열이 많은 사람을 좋아합니다. 그래서 체온을 너무 높이지 않는 게 좋습니다. 또 야외 활동 시 선명한 색상의 옷이나 피부에 붙지 않는 옷을 입는 것이 좋습니다.","explain":"🎧 «모기는 심각한 질병을 옮길 수 있다».<br>✅ <b>③ 모기에 물리면 심각한 전염병에 걸릴 수 있다.</b><br>✖️ ① лёд снимает отёк, не усиливает зуд; ④ нужна не облегающая, а свободная одежда."},{"n":23,"points":2,"instr":"Прослушайте и выберите, что делает мужчина.","options":["인터넷 블로그에 글을 쓰고 있다.","식물원 이용에 대해 물어보고 있다.","규칙 위반 시 주의 사항을 설명하고 있다.","푸드코트 내 휴게 공간의 위치를 확인하고 있다."],"answer":2,"script":"남자: 여보세요? 식물원이죠? 인터넷 블로그에서 보고 있는 거 같아서 문의 드리는데요. 혹시 강아지 데려가는 게 입장이 가능한가요?\n여자: 네, 가능합니다. 다만 목줄을 하고 배변 봉투를 가져와서 입구에서 확인 후 입장하실 수 있습니다.\n남자: 네, 알겠습니다. 그런데 혹시 식물원 안에 강아지와 식사를 할 수 있는 곳이 있나요?\n여자: 따로 식당은 마련되어 있지 않습니다. 대신 푸드코트 반대편에 테이블이 있는 휴게 공간이 있는데요, 거기에서 포장해 오신 음식을 드실 수 있습니다.","explain":"🎧 Мужчина звонит в ботсад и спрашивает об условиях посещения (с собакой, где поесть).<br>✅ <b>② 식물원 이용에 대해 물어보고 있다.</b><br>🧩 식물원 = «ботанический сад»; 목줄 = «поводок»."},{"n":24,"points":2,"instr":"Прослушайте и выберите верное по содержанию.","options":["식물원에서 목줄과 배변 봉투를 판매한다.","식물원에 반려견과 동반 입장이 가능하다.","식물원에는 음식을 먹을 수 있는 장소가 없다.","식물원의 휴게 공간은 사람들만 이용할 수 있다."],"answer":2,"script":"남자: 여보세요? 식물원이죠? 인터넷 블로그에서 보고 있는 거 같아서 문의 드리는데요. 혹시 강아지 데려가는 게 입장이 가능한가요?\n여자: 네, 가능합니다. 다만 목줄을 하고 배변 봉투를 가져와서 입구에서 확인 후 입장하실 수 있습니다.\n남자: 네, 알겠습니다. 그런데 혹시 식물원 안에 강아지와 식사를 할 수 있는 곳이 있나요?\n여자: 따로 식당은 마련되어 있지 않습니다. 대신 푸드코트 반대편에 테이블이 있는 휴게 공간이 있는데요, 거기에서 포장해 오신 음식을 드실 수 있습니다.","explain":"🎧 «강아지 데려가는 게 입장이 가능한가요?» — «네, 가능합니다» (с поводком и пакетом).<br>✅ <b>② 식물원에 반려견과 동반 입장이 가능하다.</b><br>✖️ ③ есть зона отдыха для еды; ④ туда можно с собакой."},{"n":25,"points":2,"instr":"Прослушайте и выберите главную мысль мужчины.","options":["겨울옷에는 야생 동물의 털이 필요하다.","야생 동물은 자연 상태에서 키워야 한다.","야생 동물을 죽일 때에는 잔인하지 않게 해야 한다.","대체 섬유를 사용하여 야생 동물의 희생을 줄여야 한다."],"answer":4,"script":"여자: 겨울철 털옷을 만들기 위해 수많은 동물이 희생되는데 이 점에 대해 어떻게 생각하세요?\n남자: 네. 사실은 여우나 곰 같은 야생 동물들이 좁은 곳에 갇혀서 생활하고, 죽을 때도 굉장히 끔찍한 방법으로 털이 벗겨집니다. 또한 털의 상태를 좋게 하기 위해서 동물에게 호르몬 주사를 맞히는데요. 이 호르몬 주사는 야생 동물의 뼈와 관절을 약화시켜서 움직일 수 없게 만듭니다. 너무 잔인한 방법들입니다. 최근 동물의 희생 없이 털옷을 만들 수 있는 대체 섬유가 개발되었습니다. 이 섬유는 동물의 털보다 훨씬 더 따뜻하고 가격 또한 저렴하다는 장점이 있습니다.","explain":"🎧 Появилось альтернативное волокно (대체 섬유) теплее и дешевле меха.<br>✅ <b>④ 대체 섬유를 사용하여 야생 동물의 희생을 줄여야 한다.</b><br>🧩 대체 섬유 = «альтернативное волокно»; 희생 = «жертва»."},{"n":26,"points":2,"instr":"Прослушайте и выберите верное по содержанию.","options":["대체 섬유는 동물의 털보다 효과가 더 좋다.","과거에는 야생 동물들이 친절하게 희생되었다.","야생 동물의 건강을 위해 호르몬 주사를 놓는다.","야생 동물은 야생의 환경에 맞게 관리되고 있다."],"answer":1,"script":"여자: 겨울철 털옷을 만들기 위해 수많은 동물이 희생되는데 이 점에 대해 어떻게 생각하세요?\n남자: 네. 사실은 여우나 곰 같은 야생 동물들이 좁은 곳에 갇혀서 생활하고, 죽을 때도 굉장히 끔찍한 방법으로 털이 벗겨집니다. 또한 털의 상태를 좋게 하기 위해서 동물에게 호르몬 주사를 맞히는데요. 이 호르몬 주사는 야생 동물의 뼈와 관절을 약화시켜서 움직일 수 없게 만듭니다. 너무 잔인한 방법들입니다. 최근 동물의 희생 없이 털옷을 만들 수 있는 대체 섬유가 개발되었습니다. 이 섬유는 동물의 털보다 훨씬 더 따뜻하고 가격 또한 저렴하다는 장점이 있습니다.","explain":"🎧 «이 섬유는 동물의 털보다 훨씬 더 따뜻하고…».<br>✅ <b>① 대체 섬유는 동물의 털보다 효과가 더 좋다.</b><br>✖️ ③ гормон вредит здоровью животных, не для здоровья."},{"n":27,"points":2,"instr":"Прослушайте и выберите, с какой целью говорит мужчина.","options":["자세한 검진을 권유하기 위해","식품의 안정성을 알리기 위해","휴식의 중요성을 강조하기 위해","위내시경의 효과를 알리기 위해"],"answer":1,"script":"남자: 어제부터 응급실에 갔다 왔다면서?\n여자: 응. 저녁 내내 속이 불편하더니 토하고 열이 나서 새벽에 결국 응급실에 갔다 왔어.\n남자: 그랬구나. 지금은 괜찮은 거야? 속이 불편하면 좀 쉬어야지. 의사가 뭐래?\n여자: 위에 염증이 생겼다고 하더라고. 일주일간 약 잘 챙겨 먹고, 죽이랑 부드러운 음식을 피하면 괜찮아질 거래.\n남자: 계속 안 좋으면 위내시경을 받아 보는 게 좋을 것 같은데. 이번 주에 휴가 내고 병원에서 종합 검진을 받는 게 어때?","explain":"🎧 «위내시경을 받아 보는 게 좋을 것 같은데… 종합 검진을 받는 게 어때?» — советует обследование.<br>✅ <b>① 자세한 검진을 권유하기 위해</b><br>🧩 검진 = «обследование»; 위내시경 = «гастроскопия»."},{"n":28,"points":2,"instr":"Прослушайте и выберите верное по содержанию.","options":["여자는 구토로 인해 응급실에 다녀왔다.","남자는 속이 불편해서 의사를 만나러 간다.","여자는 일주일간 병원에서 진료를 받아야 한다.","남자는 종합 검진을 받기 위해 휴가를 낼 것이다."],"answer":1,"script":"남자: 어제부터 응급실에 갔다 왔다면서?\n여자: 응. 저녁 내내 속이 불편하더니 토하고 열이 나서 새벽에 결국 응급실에 갔다 왔어.\n남자: 그랬구나. 지금은 괜찮은 거야? 속이 불편하면 좀 쉬어야지. 의사가 뭐래?\n여자: 위에 염증이 생겼다고 하더라고. 일주일간 약 잘 챙겨 먹고, 죽이랑 부드러운 음식을 피하면 괜찮아질 거래.\n남자: 계속 안 좋으면 위내시경을 받아 보는 게 좋을 것 같은데. 이번 주에 휴가 내고 병원에서 종합 검진을 받는 게 어때?","explain":"🎧 «토하고 열이 나서… 응급실에 갔다 왔어».<br>✅ <b>① 여자는 구토로 인해 응급실에 다녀왔다.</b><br>✖️ ③ дома пьёт лекарства неделю, не в больнице; ④ это его совет, не факт."},{"n":29,"points":2,"instr":"Прослушайте и выберите, кто такой мужчина.","options":["텃밭을 가꾸는 사람","해충을 없애는 사람","식물들의 조합을 연구하는 사람","천연 항생 물질을 개발하는 사람"],"answer":3,"script":"여자: 최근 집에서 텃밭을 가꾸는 사람들이 많은데요. 함께 심으면 좋은 식물들이 따로 있다고요?\n남자: 네, 텃밭을 가꿀 때 서로 도움 주는 식물끼리 조합하면 관리가 쉽습니다. 예를 들어 해충이 붙기 쉬운 식물과 해충이 싫어하는 식물을 같이 심으면 약을 사용하지 않고 해충의 피해를 줄일 수 있죠.\n여자: 아, 그렇군요. 구체적으로 어떤 식물들이 있을까요?\n남자: 우리가 많이 먹는 파 같은 경우에는 오이, 수박, 호박 등과 바짝 붙여서 심으면 좋습니다. 덩굴성 식물인 오이 등을 파와 같이 심으면 파뿌리의 천연 항생 물질이 뿌리가 시드는 것을 예방합니다.","explain":"🎧 Объясняет, какие растения хорошо сажать вместе (조합).<br>✅ <b>③ 식물들의 조합을 연구하는 사람</b><br>🧩 텃밭 = «огород»; 조합 = «сочетание»; 해충 = «вредитель»."},{"n":30,"points":2,"instr":"Прослушайте и выберите верное по содержанию.","options":["일반인이 텃밭을 가꾸는 것은 쉽지 않다.","파뿌리의 항생 물질 때문에 오이 뿌리가 시든다.","오이와 수박, 호박을 같이 심는 것이 효율적이다.","보완 관계에 있는 식물을 함께 심으면 관리가 편하다."],"answer":4,"script":"여자: 최근 집에서 텃밭을 가꾸는 사람들이 많은데요. 함께 심으면 좋은 식물들이 따로 있다고요?\n남자: 네, 텃밭을 가꿀 때 서로 도움 주는 식물끼리 조합하면 관리가 쉽습니다. 예를 들어 해충이 붙기 쉬운 식물과 해충이 싫어하는 식물을 같이 심으면 약을 사용하지 않고 해충의 피해를 줄일 수 있죠.\n여자: 아, 그렇군요. 구체적으로 어떤 식물들이 있을까요?\n남자: 우리가 많이 먹는 파 같은 경우에는 오이, 수박, 호박 등과 바짝 붙여서 심으면 좋습니다. 덩굴성 식물인 오이 등을 파와 같이 심으면 파뿌리의 천연 항생 물질이 뿌리가 시드는 것을 예방합니다.","explain":"🎧 «서로 도움 주는 식물끼리 조합하면 관리가 쉽습니다».<br>✅ <b>④ 보완 관계에 있는 식물을 함께 심으면 관리가 편하다.</b><br>🧩 보완 관계 = «взаимодополняющие»."},{"n":31,"points":2,"instr":"Прослушайте и выберите мнение мужчины.","options":["키가 작은 개도 입마개를 착용해야 한다.","개의 크기로 입마개를 적용하는 기준은 옳지 않다.","모든 개는 크기에 상관없이 위협적이다.","시각 장애인을 안내하는 안내견은 입마개가 필요하다."],"answer":2,"script":"남자: 개의 키가 40cm 이상이면 모두 입마개를 착용해야 한다는 법안에 대해 애견인들의 반발이 높습니다. 개의 종류나 성격이 아닌 크기로만 이러한 의무사항을 부과하는 것은 납득하기 힘듭니다.\n여자: 아무래도 덩치가 큰 개들은 작은 개보다 사람에게 더 위협적일 수밖에 없는 것이 사실입니다.\n남자: 하지만 시각 장애인을 돕는 안내견들은 그 키가 40cm를 훌쩍 넘지만 온순합니다. 이러한 안내견들에게도 역시 입마개를 착용시킨다면 시각 장애인들이 위험에 닥쳤을 때는 어떻게 합니까?\n여자: 그렇다면 개의 종류에 따라 좀 더 세분화하여 의무사항을 정하는 것이 좋겠네요.","explain":"🎧 «크기로만 의무사항을 부과하는 것은 납득하기 힘듭니다».<br>✅ <b>② 개의 크기로 입마개를 적용하는 기준은 옳지 않다.</b><br>🧩 입마개 = «намордник»; 안내견 = «собака-поводырь»."},{"n":32,"points":2,"instr":"Прослушайте и выберите, как мужчина ведёт разговор (его манеру).","options":["문제에 대한 해결책을 제시하고 있다.","자신의 주장을 예를 들어 증명하고 있다.","상대방의 의견을 긍정적으로 평가하고 있다.","현재 논의되고 있는 법안에 대해 반대하고 있다."],"answer":4,"script":"남자: 개의 키가 40cm 이상이면 모두 입마개를 착용해야 한다는 법안에 대해 애견인들의 반발이 높습니다. 개의 종류나 성격이 아닌 크기로만 이러한 의무사항을 부과하는 것은 납득하기 힘듭니다.\n여자: 아무래도 덩치가 큰 개들은 작은 개보다 사람에게 더 위협적일 수밖에 없는 것이 사실입니다.\n남자: 하지만 시각 장애인을 돕는 안내견들은 그 키가 40cm를 훌쩍 넘지만 온순합니다. 이러한 안내견들에게도 역시 입마개를 착용시킨다면 시각 장애인들이 위험에 닥쳤을 때는 어떻게 합니까?\n여자: 그렇다면 개의 종류에 따라 좀 더 세분화하여 의무사항을 정하는 것이 좋겠네요.","explain":"🎧 Он приводит пример собак-поводырей, возражая закону.<br>✅ <b>④ 현재 논의되고 있는 법안에 대해 반대하고 있다.</b> (с примером 안내견).<br>🧩 법안 = «законопроект»; 반대하다 = «возражать»."},{"n":33,"points":2,"instr":"Прослушайте и выберите, о чём идёт речь.","options":["신라 골품제도의 설명","골품제도가 끼친 영향","신라가 발전하는 과정","신라의 삼국 통일 방법"],"answer":1,"script":"여자: 신라는 고대 삼국 중 하나로, 7세기에 백제와 고구려를 평정하여 삼국을 통일합니다. 이 신라에는 골품제도라는 신분제도가 있습니다. 이 제도는 약 3백 년간 신라의 정치와 사회를 규제하는 중요한 기초로 작용하였습니다. 이 제도는 개인의 신분에 따라 정치적인 출세는 물론, 결혼과 가옥의 크기, 의복의 색 등 일상생활 전반에 걸쳐 차이를 가하는 제도입니다. 따라서 그 엄격성으로 보아 인도의 카스트 제도와 비교되고 있습니다. 골품제도는 성골과 진골이라는 두 개의 골과 일두품에서 육두품에 이르는 여섯 개의 두품을 포함해 모두 8개의 신분으로 나뉘어져 있었습니다.","explain":"🎧 Объясняется, что такое 골품제도 (сословная система Силла): происхождение, действие, разряды.<br>✅ <b>① 신라 골품제도의 설명</b><br>🧩 골품제도 = «система кольпхум»; 신분제도 = «сословная система»."},{"n":34,"points":2,"instr":"Прослушайте и выберите верное по содержанию.","options":["고대 삼국의 하나인 신라는 7세기에 만들어졌다.","골품제도는 3백 년간 유지된 신라의 정치제도였다.","골품제도는 신분에 따라 출세와 결혼 등이 달라졌다.","골품제도의 신분은 크게 두 가지로 나누어져 있었다."],"answer":3,"script":"여자: 신라는 고대 삼국 중 하나로, 7세기에 백제와 고구려를 평정하여 삼국을 통일합니다. 이 신라에는 골품제도라는 신분제도가 있습니다. 이 제도는 약 3백 년간 신라의 정치와 사회를 규제하는 중요한 기초로 작용하였습니다. 이 제도는 개인의 신분에 따라 정치적인 출세는 물론, 결혼과 가옥의 크기, 의복의 색 등 일상생활 전반에 걸쳐 차이를 가하는 제도입니다. 따라서 그 엄격성으로 보아 인도의 카스트 제도와 비교되고 있습니다. 골품제도는 성골과 진골이라는 두 개의 골과 일두품에서 육두품에 이르는 여섯 개의 두품을 포함해 모두 8개의 신분으로 나뉘어져 있었습니다.","explain":"🎧 «신분에 따라 출세는 물론, 결혼과 가옥의 크기, 의복의 색…».<br>✅ <b>③ 골품제도는 신분에 따라 출세와 결혼 등이 달라졌다.</b><br>✖️ ④ всего 8 разрядов, не 2; 신라 통일 — 7 век, но создана раньше."},{"n":35,"points":2,"instr":"Прослушайте и выберите, что делает мужчина.","options":["직원들의 노력에 감사를 표하고 있다.","제품 개발의 필요성을 강조하고 있다.","작년의 제품 판매량을 설명하고 있다.","회사 사원들의 역량을 평가하고 있다."],"answer":1,"script":"남자: '조은 홈쇼핑' 창립 5주년 행사에 참석해 주신 직원 여러분께 감사의 말씀을 드립니다. 우리 회사는 초기의 부진을 견뎌내고 열심히 노력한 끝에 이 자리까지 오게 되었습니다. 특히 작년에는 매출 목표치의 200%를 초과 달성해 냈습니다. 신제품 개발부터 생산, 마케팅, 배송까지 모든 사원의 노력으로 이루어낸 성과입니다. 이른 아침부터 늦은 밤까지 최선을 다해 열심히 노력한 여러분이 오늘의 주인공입니다. 여러분이 없었다면 저는 창업이라는 일을 해내지 못했을 겁니다. 이 자리를 빌려 다시 한번 여러분께 진심으로 감사의 인사를 드립니다. 감사합니다.","explain":"🎧 Речь на юбилее: «여러분께 감사의 말씀을 드립니다… 진심으로 감사의 인사».<br>✅ <b>① 직원들의 노력에 감사를 표하고 있다.</b><br>🧩 창립 = «основание (компании)»; 매출 = «выручка»."},{"n":36,"points":2,"instr":"Прослушайте и выберите верное по содержанию.","options":["'조은 홈쇼핑'은 이번에 새롭게 창업했다.","'조은 홈쇼핑'은 초기의 어려움을 이겨냈다.","사원들은 주인공이 되기 위해 열심히 노력했다.","'조은 홈쇼핑'은 올해 매출 목표를 100% 달성했다."],"answer":2,"script":"남자: '조은 홈쇼핑' 창립 5주년 행사에 참석해 주신 직원 여러분께 감사의 말씀을 드립니다. 우리 회사는 초기의 부진을 견뎌내고 열심히 노력한 끝에 이 자리까지 오게 되었습니다. 특히 작년에는 매출 목표치의 200%를 초과 달성해 냈습니다. 신제품 개발부터 생산, 마케팅, 배송까지 모든 사원의 노력으로 이루어낸 성과입니다. 이른 아침부터 늦은 밤까지 최선을 다해 열심히 노력한 여러분이 오늘의 주인공입니다. 여러분이 없었다면 저는 창업이라는 일을 해내지 못했을 겁니다. 이 자리를 빌려 다시 한번 여러분께 진심으로 감사의 인사를 드립니다. 감사합니다.","explain":"🎧 «초기의 부진을 견뎌내고 열심히 노력한 끝에…».<br>✅ <b>② '조은 홈쇼핑'은 초기의 어려움을 이겨냈다.</b><br>✖️ ① это 5-летие, не новая компания; ④ выручку перевыполнили на 200%."},{"n":37,"points":2,"instr":"Прослушайте и выберите главную мысль женщины.","options":["다이어트 돕는 제품이 다양해져야 한다.","비만은 식습관이나 생활 습관에 영향을 미친다.","다이어트 보조 제품의 특성을 잘 파악해야 한다.","비만 원인을 파악한 후 알맞은 해결책이 필요하다."],"answer":4,"script":"남자: 요즘 현대인들은 다이어트에 관심이 많습니다. 따라서 다이어트에 효과가 좋다는 보조 제품들도 많이 나오고 있는데, 이런 제품들이 정말 다이어트에 도움이 될까요?\n여자: 네, 어느 정도는 도움이 됩니다. 그런데 무작정 이런 제품을 사용하기보다 자신의 식습관을 점검하고 그에 맞는 방법을 찾아 해결하려는 노력이 필요하죠. 비만은 식습관이나 생활 습관 등이 원인인 경우가 많습니다. 아무래도 현대인들은 섭취 칼로리에 비해 활동량이 적은 것이 문제인데요. 보조 제품을 사용해도 쉽게 살이 빠지지 않는 이유가 여기에 있습니다.","explain":"🎧 «식습관을 점검하고 그에 맞는 방법을 찾아 해결하려는 노력이 필요».<br>✅ <b>④ 비만 원인을 파악한 후 알맞은 해결책이 필요하다.</b><br>🧩 비만 = «ожирение»; 보조 제품 = «БАД, добавка»."},{"n":38,"points":2,"instr":"Прослушайте и выберите верное по содержанию.","options":["다이어트에 효과가 좋은 보조 제품들은 없다.","살이 찌는 원인을 생각한 후에 보조 제품을 사용하는 게 좋다.","비만에는 보조 제품을 사용하는 것이 식습관을 바꾸는 것보다 낫다.","현대인들은 활동량이 적어 보조 제품을 사용해도 살을 빼기가 힘들다."],"answer":4,"script":"남자: 요즘 현대인들은 다이어트에 관심이 많습니다. 따라서 다이어트에 효과가 좋다는 보조 제품들도 많이 나오고 있는데, 이런 제품들이 정말 다이어트에 도움이 될까요?\n여자: 네, 어느 정도는 도움이 됩니다. 그런데 무작정 이런 제품을 사용하기보다 자신의 식습관을 점검하고 그에 맞는 방법을 찾아 해결하려는 노력이 필요하죠. 비만은 식습관이나 생활 습관 등이 원인인 경우가 많습니다. 아무래도 현대인들은 섭취 칼로리에 비해 활동량이 적은 것이 문제인데요. 보조 제품을 사용해도 쉽게 살이 빠지지 않는 이유가 여기에 있습니다.","explain":"🎧 «섭취 칼로리에 비해 활동량이 적은 것이 문제… 보조 제품을 사용해도 쉽게 살이 빠지지 않는다».<br>✅ <b>④ 현대인들은 활동량이 적어 보조 제품을 사용해도 살을 빼기가 힘들다.</b>"},{"n":39,"points":2,"instr":"Прослушайте и выберите, о чём говорилось до этого разговора.","options":["예비 귀농인들을 위한 예비 학교가 있다.","인터넷을 통해 예비 귀농인을 모집하고 있다.","귀농을 준비하려면 먼저 선배 귀농인에게 설명을 들어야 한다.","정해진 시간의 교육을 받으면 정부로부터 지원금을 받을 수 있다."],"answer":4,"script":"여자: 일정 시간 이상의 교육을 받으면 정부의 지원금을 받을 수 있다는 방금 그 말씀은 중요한 정보인 것 같습니다.\n남자: 네, 그렇습니다. 농촌에서 살기를 희망하는 예비 귀농인들에게는 각 지방이나 농업지원센터에서 진행하는 이러한 교육을 받는 것이 귀농 준비의 첫 단계라고 할 수 있겠습니다. 예비 귀농인이 인터넷상의 수많은 정보 가운데에서 자신에게 필요한 부분을 골라 습득하기란 쉽지 않죠. 예비 귀농인을 대상으로 하는 교육에는 귀농 생활에 필요한 중요한 정보도 제공하고 있습니다. 또한 귀농인에게 농사 시작에서부터 창업까지의 귀농 과정을 자세히 들으실 수 있습니다.","explain":"🎧 Женщина повторяет «방금 그 말씀» — то, о чём говорили ДО: «교육을 받으면 정부의 지원금을 받을 수 있다».<br>✅ <b>④ 정해진 시간의 교육을 받으면 정부로부터 지원금을 받을 수 있다.</b><br>🧩 귀농 = «возвращение в село (для занятия с/х)»."},{"n":40,"points":2,"instr":"Прослушайте и выберите верное по содержанию.","options":["인터넷을 통해 선배 귀농인의 과정을 엿볼 수 있다.","교육에 참여하면 귀농에 대한 좋은 정보들을 얻을 수 있다.","예비 귀농인들은 인터넷상의 정보로 충분한 정보를 얻는다.","귀농 준비의 첫 단계는 선배 귀농인을 찾아가 만나는 것이다."],"answer":2,"script":"여자: 일정 시간 이상의 교육을 받으면 정부의 지원금을 받을 수 있다는 방금 그 말씀은 중요한 정보인 것 같습니다.\n남자: 네, 그렇습니다. 농촌에서 살기를 희망하는 예비 귀농인들에게는 각 지방이나 농업지원센터에서 진행하는 이러한 교육을 받는 것이 귀농 준비의 첫 단계라고 할 수 있겠습니다. 예비 귀농인이 인터넷상의 수많은 정보 가운데에서 자신에게 필요한 부분을 골라 습득하기란 쉽지 않죠. 예비 귀농인을 대상으로 하는 교육에는 귀농 생활에 필요한 중요한 정보도 제공하고 있습니다. 또한 귀농인에게 농사 시작에서부터 창업까지의 귀농 과정을 자세히 들으실 수 있습니다.","explain":"🎧 «교육에는 귀농 생활에 필요한 중요한 정보도 제공하고 있습니다».<br>✅ <b>② 교육에 참여하면 귀농에 대한 좋은 정보들을 얻을 수 있다.</b><br>✖️ ③ из интернета выбрать нужное — нелегко; ④ первый шаг — обучение."},{"n":41,"points":2,"instr":"Прослушайте и выберите главную мысль лекции.","options":["행복은 작은 일상에서도 느낄 수 있는 즐거움이다.","큰 목표보다는 작은 일상에 더 집중하며 살아야 한다.","주택 구입, 취업, 결혼 등은 행복의 중요한 지표가 된다.","성취가 불확실한 목표를 좇는 것은 행복한 삶이 아니다."],"answer":1,"script":"여자: 요즘 '소확행'이라는 단어가 유행처럼 번지고 있는데요. 들어 보셨어요? '소확행'이란 소소하지만 확실한 행복, 즉 일상에서 느낄 수 있는 작지만 확실하게 실현 가능한 행복 또는 그러한 행복을 추구하는 삶을 말합니다. 이 단어는 일본의 유명 소설가 무라카미 하루키가 수필집에서 행복을 \"갓 구운 빵을 손으로 찢어 먹는 것, 서랍 안에 반듯하게 정리된 속옷이 잔뜩 쌓여 있는 것\"이라고 정의하며 쓴 것인데요. 행복은 크고 거창한 것이 아니라 작은 일상 속에서 느낄 수 있는 즐거움이 진정한 행복이라고 말하고 있습니다. 이러한 추세에 따라 현대 사회의 젊은이들은 주택 구입, 취업, 결혼 등 성취가 불확실한 행복을 좇기보다는 작지만 성취하기 쉬운 소소한 행복을 추구하는 경향을 보이고 있습니다.","explain":"🎧 «소확행» — «행복은… 작은 일상 속에서 느낄 수 있는 즐거움».<br>✅ <b>① 행복은 작은 일상에서도 느낄 수 있는 즐거움이다.</b><br>🧩 소확행 = «маленькое, но верное счастье»."},{"n":42,"points":2,"instr":"Прослушайте и выберите верное по содержанию.","options":["소확행이란 크고 확실한 행복을 뜻한다.","소확행은 일본 사회에서 유행하는 말이다.","현대인들은 크고 거창한 것에서 행복을 느낀다.","현대 사회의 젊은이들은 소확행을 좇는 경향이 있다."],"answer":4,"script":"여자: 요즘 '소확행'이라는 단어가 유행처럼 번지고 있는데요. 들어 보셨어요? '소확행'이란 소소하지만 확실한 행복, 즉 일상에서 느낄 수 있는 작지만 확실하게 실현 가능한 행복 또는 그러한 행복을 추구하는 삶을 말합니다. 이 단어는 일본의 유명 소설가 무라카미 하루키가 수필집에서 행복을 \"갓 구운 빵을 손으로 찢어 먹는 것, 서랍 안에 반듯하게 정리된 속옷이 잔뜩 쌓여 있는 것\"이라고 정의하며 쓴 것인데요. 행복은 크고 거창한 것이 아니라 작은 일상 속에서 느낄 수 있는 즐거움이 진정한 행복이라고 말하고 있습니다. 이러한 추세에 따라 현대 사회의 젊은이들은 주택 구입, 취업, 결혼 등 성취가 불확실한 행복을 좇기보다는 작지만 성취하기 쉬운 소소한 행복을 추구하는 경향을 보이고 있습니다.","explain":"🎧 «젊은이들은… 소소한 행복을 추구하는 경향을 보이고 있습니다».<br>✅ <b>④ 현대 사회의 젊은이들은 소확행을 좇는 경향이 있다.</b><br>✖️ ① 소확행 = маленькое счастье; ② это слово ввёл японский писатель, но «유행» — в Корее."},{"n":43,"points":2,"instr":"Прослушайте и выберите главную мысль рассказа.","options":["돌고래와 어부들의 협업으로 사냥을 하고 있다.","브라질의 사냥 방법이 사냥 기술에 영향을 미쳤다.","이어져 오는 사냥 기술은 숙련된 어부들만 할 수 있다.","돌고래의 출현으로 어부들의 고기잡이 기술이 발전했다."],"answer":1,"script":"남자: 반짝이는 브라질의 한 해안가. 어부들이 그물을 가지고 모여든다. 이곳의 어부들은 돌고래와 협력해서 물고기를 잡는다. 먼저 돌고래들이 물고기 떼를 몰고 와서 점프로 어부들에게 신호를 보낸다. 그러면 좁은 수로 입구에서 대기하던 어부들은 그물을 던져 물고기 떼를 잡는다. 이때 그물에서 빠져나간 물고기들이 돌고래의 먹이가 된다. 이것은 돌고래와 인간 사이의 상부상조라고 할 수 있다. 이러한 사냥 기술은 수백 년간 이어져 오고 있는데 돌고래와 인간 모두에게 상당한 숙련도가 필요하다. 어부들은 자신의 아버지에게서 이 기술을 배운 소수의 사람이고, 돌고래 또한 새끼 때부터 어미 옆에서 오랫동안 이 기술을 배워 온 암컷들이 대부분이라고 한다.","explain":"🎧 «어부들은 돌고래와 협력해서 물고기를 잡는다… 상부상조».<br>✅ <b>① 돌고래와 어부들의 협업으로 사냥을 하고 있다.</b><br>🧩 돌고래 = «дельфин»; 상부상조 = «взаимопомощь»."},{"n":44,"points":2,"instr":"Прослушайте и выберите верное про дельфинов.","options":["돌고래는 수로 밖까지 물고기를 몰아준다.","어부들과 협업하는 돌고래는 대부분 암컷이다.","돌고래의 숙련도에 따라 점프 신호가 달라진다.","돌고래는 어부들이 물고기를 던져 주기를 기다린다."],"answer":2,"script":"남자: 반짝이는 브라질의 한 해안가. 어부들이 그물을 가지고 모여든다. 이곳의 어부들은 돌고래와 협력해서 물고기를 잡는다. 먼저 돌고래들이 물고기 떼를 몰고 와서 점프로 어부들에게 신호를 보낸다. 그러면 좁은 수로 입구에서 대기하던 어부들은 그물을 던져 물고기 떼를 잡는다. 이때 그물에서 빠져나간 물고기들이 돌고래의 먹이가 된다. 이것은 돌고래와 인간 사이의 상부상조라고 할 수 있다. 이러한 사냥 기술은 수백 년간 이어져 오고 있는데 돌고래와 인간 모두에게 상당한 숙련도가 필요하다. 어부들은 자신의 아버지에게서 이 기술을 배운 소수의 사람이고, 돌고래 또한 새끼 때부터 어미 옆에서 오랫동안 이 기술을 배워 온 암컷들이 대부분이라고 한다.","explain":"🎧 «돌고래… 암컷들이 대부분이라고 한다».<br>✅ <b>② 어부들과 협업하는 돌고래는 대부분 암컷이다.</b><br>🧩 암컷 = «самка»; 새끼 = «детёныш»."},{"n":45,"points":2,"instr":"Прослушайте и выберите верное по содержанию.","options":["'워라밸'이라는 표현은 한국에서 처음 만들어졌다.","과거에는 사람들이 돈보다 자신의 만족을 추구하였다.","'워라밸'은 일보다 삶을 중요하게 생각하는 것을 말한다.","'워라밸'이 깨지면 개인과 회사에 부정적인 영향을 주게 된다."],"answer":4,"script":"여자: 요즘 '워라밸'이란 말을 들어 보셨나요? '워라밸'(work life balance)은, 일과 삶의 균형을 의미합니다. 이 표현은 1970년대 후반 영국에서 개인의 업무와 사생활 간의 균형을 묘사하는 단어로 처음 등장했습니다. 한국에서는 각 단어의 앞글자를 딴 '워라밸'이 주로 사용되는데요. 이는 일과 효율, 돈에 집중했던 과거와는 달리 개인의 여가를 우선시하는 신세대의 경향을 반영하고 있다고 볼 수 있습니다. 과다한 업무에 지친 사람들이 돈보다 자신의 만족을 추구하는 방향으로 삶을 설계하면서 일과 삶의 균형은 더욱 중요한 가치가 되고 있습니다. 건강도 그렇듯이 삶에도 균형이 중요합니다. 이 균형이 깨지면 개인의 삶은 더 불행해질 것이고 업무의 효율도 더 떨어지게 될 것입니다.","explain":"🎧 «이 균형이 깨지면 개인의 삶은 더 불행해지고 업무의 효율도 떨어진다».<br>✅ <b>④ '워라밸'이 깨지면 개인과 회사에 부정적인 영향을 주게 된다.</b><br>✖️ ① термин появился в Великобритании; ② в прошлом стремились к деньгам/эффективности."},{"n":46,"points":2,"instr":"Прослушайте и выберите, каким способом женщина излагает.","options":["워라밸의 한계점을 지적하고 있다.","일과 삶의 균형의 중요성을 강조하고 있다.","현대 사회의 물질만능주의를 비판하고 있다.","현대인의 과다한 업무량에 대해 토론하고 있다."],"answer":2,"script":"여자: 요즘 '워라밸'이란 말을 들어 보셨나요? '워라밸'(work life balance)은, 일과 삶의 균형을 의미합니다. 이 표현은 1970년대 후반 영국에서 개인의 업무와 사생활 간의 균형을 묘사하는 단어로 처음 등장했습니다. 한국에서는 각 단어의 앞글자를 딴 '워라밸'이 주로 사용되는데요. 이는 일과 효율, 돈에 집중했던 과거와는 달리 개인의 여가를 우선시하는 신세대의 경향을 반영하고 있다고 볼 수 있습니다. 과다한 업무에 지친 사람들이 돈보다 자신의 만족을 추구하는 방향으로 삶을 설계하면서 일과 삶의 균형은 더욱 중요한 가치가 되고 있습니다. 건강도 그렇듯이 삶에도 균형이 중요합니다. 이 균형이 깨지면 개인의 삶은 더 불행해질 것이고 업무의 효율도 더 떨어지게 될 것입니다.","explain":"🎧 Она подчёркивает, что баланс важен: «삶에도 균형이 중요합니다».<br>✅ <b>② 일과 삶의 균형의 중요성을 강조하고 있다.</b><br>🧩 워라밸 = «work-life balance»; 균형 = «баланс»."},{"n":47,"points":2,"instr":"Прослушайте и выберите верное по содержанию.","options":["특수 활동비는 개인적인 용도로 사용할 수 있다.","특수 활동비는 18년간 모든 사람에게 공개되었다.","특수 활동비는 국가 기밀 유지 등에 쓰이는 돈이다.","특수 활동비는 영수증이 있으면 현금으로 지급된다."],"answer":3,"script":"여자: 18년 만에 처음으로 공개되는 국회의원에게 지급되는 특수 활동비. 하지만 이를 폐지해야 한다는 목소리가 커지고 있는데요. 어떻게 보십니까?\n남자: 특수 활동비는 국가 기밀이나 기밀 유지가 필요한 정보나 사건의 수사, 국정 활동 등에 사용되는 경비를 말합니다. 그런데 이것은 영수증 증빙이 필요 없는 데다 현금으로 지급되어 당연히 감사도 받지 않는 실정이죠. 따라서 실제로 어떻게 쓰였는지를 쓴 사람 아니면 아무도 모른다는 치명적인 단점이 있습니다. 국가 정보기관이 아닌 입법기관인 국회에 이러한 특수 활동비를 지급하는 것은 그 목적에 맞지 않고요. 무엇보다 남는 특수 활동비를 개인적인 용도로 사용하는 사례도 있어서 폐지하는 것이 맞다고 봅니다.","explain":"🎧 «특수 활동비는 국가 기밀… 국정 활동 등에 사용되는 경비».<br>✅ <b>③ 특수 활동비는 국가 기밀 유지 등에 쓰이는 돈이다.</b><br>✖️ ① личное использование — это злоупотребление; ④ выдаётся без чеков."},{"n":48,"points":2,"instr":"Прослушайте и выберите позицию (отношение) мужчины.","options":["특수 활동비의 지급 목적을 명확히 밝히고 있다.","특수 활동비가 국가 기밀 유지에 미칠 영향을 우려하고 있다.","국회의원에게 지급되는 특수 활동비의 폐지를 주장하고 있다.","국회의원의 특수 활동비 지급 방법을 적극적으로 검토하고 있다."],"answer":3,"script":"여자: 18년 만에 처음으로 공개되는 국회의원에게 지급되는 특수 활동비. 하지만 이를 폐지해야 한다는 목소리가 커지고 있는데요. 어떻게 보십니까?\n남자: 특수 활동비는 국가 기밀이나 기밀 유지가 필요한 정보나 사건의 수사, 국정 활동 등에 사용되는 경비를 말합니다. 그런데 이것은 영수증 증빙이 필요 없는 데다 현금으로 지급되어 당연히 감사도 받지 않는 실정이죠. 따라서 실제로 어떻게 쓰였는지를 쓴 사람 아니면 아무도 모른다는 치명적인 단점이 있습니다. 국가 정보기관이 아닌 입법기관인 국회에 이러한 특수 활동비를 지급하는 것은 그 목적에 맞지 않고요. 무엇보다 남는 특수 활동비를 개인적인 용도로 사용하는 사례도 있어서 폐지하는 것이 맞다고 봅니다.","explain":"🎧 «폐지하는 것이 맞다고 봅니다» — выступает за отмену.<br>✅ <b>③ 국회의원에게 지급되는 특수 활동비의 폐지를 주장하고 있다.</b><br>🧩 폐지 = «отмена»; 국회의원 = «депутат»."},{"n":49,"points":2,"instr":"Прослушайте и выберите верное по содержанию.","options":["수증기를 계속 가열하면 플라즈마 상태로 변한다.","플라즈마는 우리의 눈에 잘 보이는 우주 물질이다.","번개는 고전압에 의해 발광하여 플라즈마로 변한다.","눈으로 확인할 수 있는 일반적인 플라즈마가 오로라이다."],"answer":1,"script":"여자: 얼음을 녹이면 물이 되고, 물을 가열하면 수증기가 된다는 건 누구나 알고 있는 사실인데요. 수증기에 더 높은 온도까지 계속 가열하면 어떻게 될까요? 물 분자는 양이온과 전자가 분리된 플라즈마 상태로 변하게 됩니다. 눈에 보이진 않지만 플라즈마는 사실 우주에서 가장 흔한 물질이고, 우주 물질의 99%는 플라즈마 상태에 있다고도 알려져 있습니다. 우리가 눈으로 확인할 수 있는 가장 일반적인 플라즈마는 번개입니다. 날카로워 보이는 \"번개\"는 초고온 및 고전압에 의해 이온화된 공기가 플라즈마 상태로 되어 발광하고 있는 상태입니다. 또한 위도가 높은 곳에서 종종 발생하는 \"오로라\"도 이러한 플라즈마의 하나입니다.","explain":"🎧 «수증기에 더 높은 온도까지 계속 가열하면… 플라즈마 상태로 변한다».<br>✅ <b>① 수증기를 계속 가열하면 플라즈마 상태로 변한다.</b><br>✖️ ② плазма глазу не видна; ④ видимая плазма — молния (번개), не только аврора."},{"n":50,"points":2,"instr":"Прослушайте и выберите позицию (манеру) женщины.","options":["플라즈마의 연구 결과를 분석하고 있다.","플라즈마 현상을 기준별로 분류하고 있다.","플라즈마의 생성 과정을 예를 들어 설명하고 있다.","플라즈마와 물과의 관계를 실험으로 증명하고 있다."],"answer":3,"script":"여자: 얼음을 녹이면 물이 되고, 물을 가열하면 수증기가 된다는 건 누구나 알고 있는 사실인데요. 수증기에 더 높은 온도까지 계속 가열하면 어떻게 될까요? 물 분자는 양이온과 전자가 분리된 플라즈마 상태로 변하게 됩니다. 눈에 보이진 않지만 플라즈마는 사실 우주에서 가장 흔한 물질이고, 우주 물질의 99%는 플라즈마 상태에 있다고도 알려져 있습니다. 우리가 눈으로 확인할 수 있는 가장 일반적인 플라즈마는 번개입니다. 날카로워 보이는 \"번개\"는 초고온 및 고전압에 의해 이온화된 공기가 플라즈마 상태로 되어 발광하고 있는 상태입니다. 또한 위도가 높은 곳에서 종종 발생하는 \"오로라\"도 이러한 플라즈마의 하나입니다.","explain":"🎧 Объясняет образование плазмы на примерах (молния, аврора).<br>✅ <b>③ 플라즈마의 생성 과정을 예를 들어 설명하고 있다.</b><br>🧩 플라즈마 = «плазма»; 번개 = «молния»; 오로라 = «полярное сияние»."}]},"writing":{"durationMin":50,"label":"Hot TOPIK 제1회 · 쓰기 (51~54)","tasks":[{"n":51,"points":10,"korInstr":"다음을 읽고 ㉠과 ㉡에 들어갈 말을 각각 한 문장으로 쓰시오. (각 10점)","instr":"Прочитайте СМС-переписку и впишите в ㉠ и ㉡ по одному законченному предложению. Это сообщение покупателя и продавца камеры с сайта объявлений — вежливый формальный стиль.","passage":"받는 사람: 010-9980-9900\n[구매자] 중고 사이트에 올린 카메라 판매글을 보고 연락드려요. 이번 주 금요일 5시에 카메라 구매가 가능할까요? 사진도 좀 부탁드려요.\n[판매자] 네, 가능합니다. 혹시 마음이 바뀔 수도 있으니 금요일 점심 때쯤 ( ㉠ ). 이따가 집에 가서 ( ㉡ )? 사진 확인해 보시고 다시 연락주세요.","blanks":[{"slot":"㉠","model":"구매 문자 한번 더 보내 주세요 / 연락 한번 더 해 주세요","check":"«혹시 마음이 바뀔 수도 있으니», «금요일 점심 때쯤» → продавец хочет, чтобы покупатель ещё раз подтвердил намерение купить. Нужна форма-просьба: V-아/어 주세요."},{"slot":"㉡","model":"사진을 보내드려도 될까요 / 사진을 보내도 될까요","check":"«이따가 집에 가서» → сейчас продавец не дома и не может отправить фото сразу, спрашивает разрешения отправить позже. Вопросительная форма: V-아/어도 될까요? / V-ㄹ까요?"}]},{"n":52,"points":10,"korInstr":"다음을 읽고 ㉠과 ㉡에 들어갈 말을 각각 한 문장으로 쓰시오. (각 10점)","instr":"Прочитайте текст о сне и впишите в ㉠ и ㉡ по одному законченному предложению. Письменный стиль -ㄴ다/-는다.","passage":"잠을 못 자는 이유는 정신적인 스트레스가 가장 흔하다. 코골이나 수면 무호흡증 등의 수면 질환이 있으면 ( ㉠ ). 깊은 잠을 자기 위해서는 일정한 시간에 자고 깨는 것이 중요하다. 잠이 안 오면 침대에서 일어나 다른 활동을 하다가 졸릴 때 ( ㉡ ). 잠이 오지 않을 때에 억지로 누워 잠을 청하는 행동은 전혀 도움이 되지 않는다.","blanks":[{"slot":"㉠","model":"깊은 잠을 잘 수 없다 / 깊게 잠을 자기 어렵다","check":"«수면 질환이 있으면» → согласование с причиной: если есть нарушения сна, то нельзя крепко спать (отрицательный смысл). Стиль -ㄴ다: 잘 수 없다 / 자기 어렵다."},{"slot":"㉡","model":"다시 침대로 돌아간다 / 다시 누워야 한다","check":"«졸릴 때» (когда захочется спать) → надо вернуться в кровать и лечь. Письменный стиль -ㄴ다: 다시 침대로 돌아간다."}]},{"n":53,"points":30,"min":200,"max":300,"korInstr":"다음을 참고하여 '2018년 국적별 입국자의 입국 목적'에 대한 글을 200~300자로 쓰시오. 단, 글의 제목은 쓰지 마시오. (30점)","instr":"Опишите данные двух графиков о въезжающих в Корею в 2018 году текстом 200–300 знаков. Заголовок не пишите. Письменный стиль -ㄴ다/-는다.","image":"assets/topik2/exams/img/ht1-w53.png","model":"국적별 입국자의 분포와 입국 목적을 살펴보면, 18년도에는 중국인들이 55%로 가장 많고 그 다음이 베트남으로 15%이고 나머지 일본, 미국, 유럽이 10%로 동일한 비율이다. 입국 목적은 관광이 55%로 가장 높고 그 다음이 유학, 취업 순으로 25%와 15%로 각각 나타났다. 나머지 5%는 기타 의견이다. 연간 입국자의 절반 이상이 관광을 하기 위해 한국을 찾는다는 사실을 알 수 있다.","check":"① Объект описания (2018년 국적별 입국자)? ② Национальности: 중국 55%, 베트남 15%, 일본·미국·유럽 각 10%? ③ Цель въезда: 관광 55%, 유학 25%, 취업 15%, 기타 5%? ④ От большего к меньшему, 200–300 знаков, без заголовка, письменный стиль -ㄴ다?"},{"n":54,"points":50,"min":600,"max":700,"korInstr":"다음을 주제로 하여 자신의 생각을 600~700자로 글을 쓰시오. 단, 문제를 그대로 옮겨 쓰지 마시오. (50점)","instr":"Напишите сочинение 600–700 знаков на тему «влияние подготовленности к проблемам и эффективные способы подготовки». Раскройте все три вопроса, каждый отдельным абзацем; задание дословно не переписывайте. Письменный стиль -ㄴ다/-는다.","passage":"\"소 잃고 외양간 고친다.\"는 말이 있듯이 문제가 발생되기 전에 미리 대비해야 예방할 수 있다. 그러나 항상 일어나지 않은 문제를 예상하고 준비하는 것은 피곤한 삶이다. 아래의 내용을 중심으로 '문제에 대한 준비성이 미치는 영향과 문제를 대비하는 효율적인 방법'에 대해 자신의 의견을 쓰라.\n• 문제에 대한 준비성의 긍정적인 영향은 무엇인가?\n• 부정적인 영향은 무엇인가?\n• 문제를 대비하는 효율적인 방법은 무엇인가?","model":"우리는 인생을 살아가면서 많은 문제에 부딪히는데 이 문제들을 해결하기 위해 미리 대비하기도 한다. 이런 문제에 대한 준비성이 미치는 긍정적인 영향도 있지만 부정적인 영향도 있다.\n\n먼저 문제에 대한 준비성의 가장 긍정적인 면은 심리적인 상태일 것이다. 모든 문제에 대한 경우의 수를 예측하여 해결 방법을 마련해 둘 수 있고, 문제가 발생하면 어떻게 대응하고 해결해야 하는지 준비가 되어 있는 사람과 그렇지 않은 사람은 접근이 다를 것이다. 준비가 되어 있는 사람은 당황하지 않고 차분히 문제를 분석할 것이다. 그러나 준비가 되어 있지 않은 사람은 문제를 객관적으로 보지 못한다. 이런 상태에서 문제를 해결하기보다 또 다른 실수나 문제를 일으킬 수 있게 된다. 심신이 약한 사람은 패닉 상태가 되기도 하고 모든 것을 놓고 현실 도피를 선택하기도 한다.\n\n그렇다면 문제를 대비하는 효율적인 방법은 무엇인가? 어떤 문제가 발생하더라도 그것을 해결할 수 있다는 긍정적인 마인드와 자신감을 가져야 한다고 생각한다. 이런 자세로 문제를 직면한다면 차분히 객관적인 해결 방법을 생각하여 찾을 수 있을 것이다. 문제 해결에 대한 구체적이고 효율적인 방법을 생각할 수 있는 상태가 되어야 한다. 나는 문제를 해결할 수 있다는 긍정적인 마인드와 자신감이 있다면 어떤 문제라도 해결할 수 있을 것이다.","check":"① Все 3 задания (긍정적 영향 / 부정적 영향 / 효율적 방법) — каждое отдельным абзацем? ② Вступление и заключение? ③ Письменный стиль -ㄴ다, без разговорных форм? ④ 600–700 знаков, задание не переписано дословно?"}]},"reading":{"durationMin":70,"total":100,"label":"Hot TOPIK 제1회 · 읽기 (1~50)","questions":[{"n":1,"points":2,"instr":"( )에 들어갈 가장 알맞은 것을 고르십시오.","passage":"배가 ( ) 라면을 끓여 먹었다.","options":["고프거든","고프다가","고파서","고프길래"],"answer":4,"explain":"«Был голоден, и потому сварил рамён».<br>✅ <b>④ 고프길래</b> = «раз уж проголодался, то…» (повод для своего действия).<br>🧩 -길래 — обнаруженная причина собственного поступка."},{"n":2,"points":2,"instr":"( )에 들어갈 가장 알맞은 것을 고르십시오.","passage":"친구도 만나고 영화도 ( ) 극장에 갔다.","options":["본 줄","볼 겸","볼 텐데","보는 대로"],"answer":2,"explain":"«И друга повидать, и кино посмотреть заодно».<br>✅ <b>② 볼 겸</b> = «заодно чтобы посмотреть» (две цели сразу).<br>🧩 V-ㄹ 겸 — «заодно, с целью»."},{"n":3,"points":2,"instr":"밑줄 친 부분과 의미가 비슷한 것을 고르십시오.","passage":"갑자기 비가 많이 <u>오는 탓에</u> 일정이 취소되었다.","options":["오는 김에","오는 만큼","오는 바람에","오는 사이에"],"answer":3,"explain":"-는 탓에 — негативная причина «из-за».<br>✅ <b>③ 오는 바람에</b> — тоже «из-за (неожиданный плохой итог)».<br>✖️ 김에 «заодно», 만큼 «настолько», 사이에 «пока»."},{"n":4,"points":2,"instr":"밑줄 친 부분과 의미가 비슷한 것을 고르십시오.","passage":"식당에 사람이 많은 걸 보니 음식이 <u>맛있는 모양이다</u>.","options":["맛있었다","맛있는 듯하다","맛있다고 한다","맛있으면 좋겠다"],"answer":2,"explain":"-는 모양이다 = «похоже, что…» (предположение по признаку).<br>✅ <b>② 맛있는 듯하다</b> — синоним.<br>🧩 -는 듯하다 / -는 모양이다 — «кажется, похоже»."},{"n":5,"points":2,"instr":"다음은 무엇에 대한 글인지 고르십시오.","passage":"\"당신의 개인 비서\"\n일정도, 예약도, 통화도 이 하나로!","options":["가방","자동차","텔레비전","휴대 전화"],"answer":4,"explain":"«Личный секретарь: расписание, бронь, звонки — всё в одном».<br>✅ <b>④ 휴대 전화</b> (смартфон).<br>🧩 비서 = «секретарь»; 예약 = «бронь»."},{"n":6,"points":2,"instr":"다음은 무엇에 대한 글인지 고르십시오.","passage":"여러분의 평생 금융 친구!\n소중한 재산을 지켜 드립니다.","options":["은행","학교","경찰서","부동산"],"answer":1,"explain":"«Ваш финансовый друг на всю жизнь, бережём ваши средства».<br>✅ <b>① 은행</b> (банк).<br>🧩 금융 = «финансы»; 재산 = «имущество, средства»."},{"n":7,"points":2,"instr":"다음은 무엇에 대한 글인지 고르십시오.","passage":"잠깐 하는 졸음운전\n평생 못 볼 우리 가족","options":["자연보호","가족사랑","인생계획","안전운전"],"answer":4,"explain":"«Минутный сон за рулём — и не увидишь семью никогда».<br>✅ <b>④ 안전운전</b> (безопасное вождение).<br>🧩 졸음운전 = «вождение в сонном состоянии»."},{"n":8,"points":2,"instr":"다음은 무엇에 대한 글인지 고르십시오.","passage":"2주 내에 영수증과 카드를 가지고 매장을 방문해 주세요.\n같은 금액 내에서만 바꿀 수 있습니다.","options":["사용 설명","배달 안내","이용 순서","교환 방법"],"answer":4,"explain":"«В течение 2 недель с чеком и картой… поменять можно в пределах суммы».<br>✅ <b>④ 교환 방법</b> (как обменять товар).<br>🧩 영수증 = «чек»; 교환 = «обмен»."},{"n":9,"points":2,"instr":"다음 글 또는 도표의 내용과 같은 것을 고르십시오.","passage":"제10회 의왕 여름축제\n· 기간: 2020년 8월 3일(금)~8월 16일(목)\n· 장소: 의왕 음악분수 광장 앞\n· 입장: 선착순 무료\n· 문의: 031-345-3093~4\n· 예약: 인터넷 홈페이지에서 가능\n※ 8월 6일과 13일은 시설 안전점검으로 휴무입니다.","options":["축제는 입장료가 있다.","축제는 올해 처음 시작된다.","축제 참여는 전화로 예약해야 한다.","6일과 13일에는 축제가 열리지 않는다."],"answer":4,"explain":"«8월 6일과 13일은… 휴무».<br>✅ <b>④ 6일과 13일에는 축제가 열리지 않는다.</b><br>✖️ ① вход бесплатный; ② 제10회 (не впервые); ③ бронь онлайн."},{"n":10,"points":2,"instr":"다음 도표의 내용과 같은 것을 고르십시오.","image":"assets/topik2/exams/img/ht1-r10.png","passage":"'한국 사회에서 느끼는 어려움' 조사 결과: 의사소통 39%, 경제적 문제 22%, 문화 차이 18%, 가족 간 갈등 12%, 차별 8%.","options":["차별 때문에 어려움을 느끼는 사람의 수가 가장 적다.","의사소통에 어려움을 느끼는 사람이 전체의 반 이상이다.","문화 차이와 가족 간 갈등의 어려움을 느끼는 사람의 비율이 같다.","경제적 문제보다 문화 차이의 어려움을 느끼는 사람이 더 많다."],"answer":1,"explain":"차별 8% — наименьшая доля.<br>✅ <b>① 차별 때문에 어려움을 느끼는 사람의 수가 가장 적다.</b><br>✖️ ② 의사소통 39% (< половины); ③ 18 ≠ 12; ④ 경제 22% > 문화 18%."},{"n":11,"points":2,"instr":"다음 글의 내용과 같은 것을 고르십시오.","passage":"여행박람회는 여러 여행사가 여행 상품을 비교적 저렴하게 판매하는 기간으로 여행을 계획 중인 방문객들에게 인기가 많다. 또 여행 상품을 구매하지 못해도 해외에서 온 음식을 무료로 맛볼 수 있어 여러 나라의 대표적인 음식 맛을 즐길 수 있다.","options":["여행박람회에서 여행 상품을 살 수 없다.","가격이 싼 여행 상품을 찾는 사람들이 박람회를 찾는다.","여행박람회에서 여행 상품을 무료로 살 수 있다.","여행박람회에서 여러 나라의 대표 음식을 요리할 수 있다."],"answer":2,"explain":"«저렴하게 판매하는 기간으로… 인기가 많다».<br>✅ <b>② 가격이 싼 여행 상품을 찾는 사람들이 박람회를 찾는다.</b><br>✖️ ③ бесплатна только еда (попробовать); ④ еду пробуют, не готовят."},{"n":12,"points":2,"instr":"다음 글의 내용과 같은 것을 고르십시오.","passage":"최근 전자 담배를 피우는 사람들이 많아졌다. 일반 담배에서 나오는 물질이 전자 담배에는 없다고 생각하는 사람들이 많아져서 전자 담배 소비량이 늘어나는 것이다. 그러나 전문가의 말에 따르면 전자 담배도 일반 담배와 똑같이 인체에 해로운 물질을 줄이지 못하며, 건강에는 전혀 도움이 되지 않는다고 한다.","options":["전자 담배를 피울 때 주변 공기가 오염되지 않는다.","일반 담배의 나쁜 물질이 전자 담배에도 있다.","전자 담배를 피우면 일반 담배보다 해가 적다.","전자 담배는 일반 담배보다 적게 피우게 된다."],"answer":2,"explain":"«전자 담배도 일반 담배와 똑같이 인체에 해로운 물질을…».<br>✅ <b>② 일반 담배의 나쁜 물질이 전자 담배에도 있다.</b><br>✖️ ③ вреда не меньше; ④ потребление наоборот растёт."},{"n":13,"points":2,"instr":"다음을 순서대로 맞게 배열한 것을 고르십시오.","passage":"(가) 이에 물건과 물건을 바꾸는 물물 교환이 이루어졌다.\n(나) 그러다 보니 어떤 물건은 다소 남고, 어떤 물건은 만들기 어려웠다.\n(다) 옛날 사람들은 필요한 옷, 식량, 생활 도구 등을 스스로 만들어 사용했다.\n(라) 하지만 서로 필요한 것과 바꾸려는 것의 가치가 달라 결국 화폐를 만들게 되었다.","options":["(가)-(나)-(다)-(라)","(가)-(다)-(라)-(나)","(다)-(나)-(가)-(라)","(다)-(라)-(가)-(나)"],"answer":3,"explain":"✅ <b>③ (다)-(나)-(가)-(라)</b>: делали сами → одного много/другое трудно → бартер → ценность разная, появились деньги."},{"n":14,"points":2,"instr":"다음을 순서대로 맞게 배열한 것을 고르십시오.","passage":"(가) 운동경기에서 심판은 선수를 도와주는 역할을 한다.\n(나) 경제 활동에서 심판은 정부 또는 공정거래위원회다.\n(다) 이는 기업들이 자유롭고 공정한 경쟁을 하도록 규칙을 만들고 돕는다.\n(라) 선수들이 자유롭게 규칙을 알고 공정하게 경기를 하도록 돕는 것이다.","options":["(가)-(나)-(다)-(라)","(가)-(라)-(나)-(다)","(나)-(가)-(다)-(라)","(나)-(다)-(가)-(라)"],"answer":2,"explain":"✅ <b>② (가)-(라)-(나)-(다)</b>: судья в спорте помогает игрокам → (поясняет) → судья в экономике — государство/ФТС → (поясняет)."},{"n":15,"points":2,"instr":"다음을 순서대로 맞게 배열한 것을 고르십시오.","passage":"(가) 향수는 나와 남의 기분이 좋을 만큼 적당히 뿌리는 것이 좋다.\n(나) 그래서 어떤 사람들은 향수를 자주 뿌려 냄새를 없애려고 한다.\n(다) 다른 사람들이 냄새에 대해 말이 많기 때문에 냄새에 신경을 쓰는 사람이 많다.\n(라) 그러나 너무 자주 뿌리면 냄새가 강해 다른 사람에게 피해를 줄 수 있다.","options":["(가)-(나)-(라)-(다)","(가)-(다)-(나)-(라)","(다)-(가)-(라)-(나)","(다)-(나)-(가)-(라)"],"answer":4,"explain":"✅ <b>④ (다)-(나)-(가)-(라)</b>: люди следят за запахом → потому часто брызгают духи → их надо в меру → но слишком часто — вредит другим."},{"n":16,"points":2,"instr":"( )에 들어갈 내용으로 가장 알맞은 것을 고르십시오.","passage":"안경은 눈이 나쁜 사람들에게 밝은 눈이 되어 준다. 하지만 눈이 나쁘지 않은 사람에게도 선글라스로서 눈을 자외선으로부터 보호해 준다. 안경의 모양에 따라 색다른 분위기를 낼 수 있다. 이제 안경은 단순히 시력을 교정하는 도구가 아니라 ( ) 물건으로도 관심을 받고 있다.","options":["강한 빛을 막아 주는","친숙한 인상을 만드는","자신의 눈을 보호하는","각자의 개성을 표현하는"],"answer":4,"explain":"«안경의 모양에 따라 색다른 분위기» → очки выражают индивидуальность.<br>✅ <b>④ 각자의 개성을 표현하는</b><br>🧩 개성 = «индивидуальность»."},{"n":17,"points":2,"instr":"( )에 들어갈 내용으로 가장 알맞은 것을 고르십시오.","passage":"사우디아라비아가 사상 최초로 여성에게 운전면허증을 발급했다. 사우디 정부는 여성에게 운전면허증을 발급할 때 10일간의 교육과 간단한 시험을 거치게 한 후 자국 운전면허증을 발급한다. 사우디는 그동안 전 세계에서 유일하게 ( ) 나라였다.","options":["여성 운전이 금지된","돈을 내고 면허증을 받는","신체검사 없이 면허증을 발급하는","가장 빠른 운전면허증을 발급한"],"answer":1,"explain":"«사상 최초로 여성에게 운전면허증을 발급» → раньше женщинам нельзя было водить.<br>✅ <b>① 여성 운전이 금지된</b><br>🧩 면허증 = «права»; 금지되다 = «быть запрещённым»."},{"n":18,"points":2,"instr":"( )에 들어갈 내용으로 가장 알맞은 것을 고르십시오.","passage":"광고란 상품이나 서비스에 대한 정보를 소비자들에게 널리 알리는 것이다. 광고를 통해 기업은 상품을 많이 판매할 수 있고 소비자들은 상품에 대한 정보를 얻을 수 있다. 하지만 잘못된 정보로 소비자들을 속이는 허위·과장 광고도 있다. 그러므로 소비자는 ( ) 늘 주의해야 한다.","options":["가짜 광고에 속지 않도록","기업에 대해 오해 없게","상품 정보를 공유할 수 있으려면","상품을 비싼 가격에 사지 않기 위해"],"answer":1,"explain":"«허위·과장 광고도 있다 → 주의해야 한다».<br>✅ <b>① 가짜 광고에 속지 않도록</b><br>🧩 허위·과장 광고 = «ложная и преувеличенная реклама»."},{"n":19,"points":2,"instr":"( )에 들어갈 알맞은 것을 고르십시오.","passage":"전국 아파트 곳곳에서 다양한 물건이 떨어져 사람이 다치거나 자동차가 파손되는 일이 이어지고 있다. 문제는 이러한 행동을 한 대부분이 어린아이들이라는 것이다. 이에 시민들은 관련 범죄의 처벌을 강화하고 만 14세 미만의 범죄도 처벌해야 한다고 주장하고 있다. ( ) 피해자들에게 현실적으로 보상하는 방안을 만드는 것이 무엇보다 중요하다.","options":["반면","또한","오히려","차라리"],"answer":2,"explain":"Усиление наказания + (㉠) реальная компенсация — добавление ещё одного пункта.<br>✅ <b>② 또한</b> = «к тому же»."},{"n":20,"points":2,"instr":"이 글의 내용과 같은 것을 고르십시오.","passage":"전국 아파트 곳곳에서 다양한 물건이 떨어져 사람이 다치거나 자동차가 파손되는 일이 이어지고 있다. 문제는 이러한 행동을 한 대부분이 어린아이들이라는 것이다. 이에 시민들은 관련 범죄의 처벌을 강화하고 만 14세 미만의 범죄도 처벌해야 한다고 주장하고 있다. 또한 피해자들에게 현실적으로 보상하는 방안을 만드는 것이 무엇보다 중요하다.","options":["피해자에 대한 보상을 받을 수 있는 대책이 있다.","만 14세 미만의 청소년은 범죄에 처벌받는다.","시민들의 주장으로 범죄에 대한 처벌이 강화되었다.","아파트에서 물건을 떨어뜨린 사람은 대부분 아이들이다."],"answer":4,"explain":"«이러한 행동을 한 대부분이 어린아이들».<br>✅ <b>④ 아파트에서 물건을 떨어뜨린 사람은 대부분 아이들이다.</b><br>✖️ ① мер компенсации пока нет; ②③ это лишь требования граждан."},{"n":21,"points":2,"instr":"( )에 들어갈 알맞은 것을 고르십시오.","passage":"지금까지 기부는 어려운 이웃을 위해 직접 돈을 전달하는 방식이었다. 그러나 최근 기술이 발전하면서 기부 방법에도 많은 변화가 생겼다. 인터넷과 기부를 활용한 소액 기부 방식으로 인해 어디서나 쉽게 기부할 수 있게 되었다. 그리고 지원 단체를 통하지 않고 자신의 기부금이 어디에 쓰이는지 ( ) 신뢰감을 주기 때문에 많은 사람이 기부에 참여하게 되었다.","options":["직접 보고","알지 못하고","계산해 보고","이웃에 소개하고"],"answer":1,"explain":"«기부금이 어디에 쓰이는지 (㉠) 신뢰감을 주기 때문에» → можно видеть напрямую → доверие.<br>✅ <b>① 직접 보고</b><br>🧩 기부 = «пожертвование»; 신뢰감 = «доверие»."},{"n":22,"points":2,"instr":"이 글의 중심 생각을 고르십시오.","passage":"지금까지 기부는 어려운 이웃을 위해 직접 돈을 전달하는 방식이었다. 그러나 최근 기술이 발전하면서 기부 방법에도 많은 변화가 생겼다. 인터넷과 기부를 활용한 소액 기부 방식으로 인해 어디서나 쉽게 기부할 수 있게 되었다. 그리고 지원 단체를 통하지 않고 자신의 기부금이 어디에 쓰이는지 직접 보고 신뢰감을 주기 때문에 많은 사람이 기부에 참여하게 되었다.","options":["기부의 사용 방법을 공개해야 한다.","기부는 신뢰감을 주는 것이 중요하다.","기술의 발전으로 인해 기부자가 증가했다.","기부금은 직접 전달하는 것보다 소액 기부가 편하다."],"answer":3,"explain":"«기술이 발전하면서… 많은 사람이 기부에 참여하게 되었다».<br>✅ <b>③ 기술의 발전으로 인해 기부자가 증가했다.</b><br>🧩 소액 기부 = «небольшие пожертвования»."},{"n":23,"points":2,"instr":"밑줄 친 부분에 나타난 '나'의 심정으로 알맞은 것을 고르십시오.","passage":"남자는 갑자기 나를 불렀다. 잠을 자다 말고 일어난 나는 그의 방으로 갔다. \"세계 일주를 할 거야. 바로 지금. 그러니까 서둘러야 해.\" <u>갑작스러운 말에 머릿속이 하얘지고 심장이 빨리 뛰었다.</u> \"아무리 바빠도 여행 가방은 챙겨야지요.\" 나는 여행 가방을 찾으며 말했다. 하지만 남자는 여행 가방은 필요 없고 작은 손가방 하나만 있으면 된다고 말했다. 나는 뭔가 말을 하고 싶었지만 할 수가 없었다. 그의 방을 나와 내 방으로 와서 의자에 주저앉으며 \"갑자기 세계여행이라고? 가방도 없이?\"라고 혼자 말할 뿐이었다.","options":["기대되다","허전하다","멋스럽다","당황스럽다"],"answer":4,"explain":"«머릿속이 하얘지고 심장이 빨리 뛰었다» — внезапное заявление ошарашило.<br>✅ <b>④ 당황스럽다</b> (растерянность).<br>🧩 갑작스럽다 = «внезапный»."},{"n":24,"points":2,"instr":"이 글의 내용과 같은 것을 고르십시오.","passage":"남자는 갑자기 나를 불렀다. 잠을 자다 말고 일어난 나는 그의 방으로 갔다. \"세계 일주를 할 거야. 바로 지금.\" 나는 여행 가방을 찾으며 말했다. 하지만 남자는 여행 가방은 필요 없고 작은 손가방 하나만 있으면 된다고 말했다. 그리고 그 가방에 스웨터 두 벌하고 긴 양말 세 켤레, 비옷과 여행용 담요, 좋은 구두 한 켤레를 넣어 달라고 했다. 나머지는 도중에 사면 되니까 더 이상은 가방에 넣지 말라고 했다. 그의 방을 나와 내 방으로 와서 의자에 주저앉았다.","options":["나와 남자는 같은 집에서 살고 있다.","남자는 여행을 가기 위해 가방을 찾았다.","남자는 여행에 필요한 물건을 직접 준비했다.","여행 중에 필요한 물건은 여행 도중에 살 수 있다."],"answer":1,"explain":"«나는 그의 방으로 갔다… 내 방으로 와서» — живут в одном доме.<br>✅ <b>① 나와 남자는 같은 집에서 살고 있다.</b><br>✖️ ② гадбаг искала «나»; ③ собирает «나»; ④ остальное докупить в пути — слова мужчины, не общий факт."},{"n":25,"points":2,"instr":"다음 신문 기사의 제목을 가장 잘 설명한 것을 고르십시오.","passage":"'숲속에 사는 기분' 친환경 건물","options":["숲속에 지은 빌딩은 친환경 빌딩이라고 한다.","숲속에 살고 싶으면 친환경 건물을 지어야 한다.","빌딩에 나무를 심어야 자연을 가깝게 느낄 수 있다.","빌딩에 사는 것보다 숲속에 사는 것이 더 좋다."],"answer":3,"explain":"«Ощущение жизни в лесу» — экологичное здание с зеленью.<br>✅ <b>③ 빌딩에 나무를 심어야 자연을 가깝게 느낄 수 있다.</b><br>🧩 친환경 = «экологичный»."},{"n":26,"points":2,"instr":"다음 신문 기사의 제목을 가장 잘 설명한 것을 고르십시오.","passage":"'경기 꺾이고 있다', 나라 안팎서 경고음","options":["국가의 경제 사정이 점점 안 좋아지고 있다.","국가는 국민에게 경제에 대해 경고하고 있다.","경제가 더 나빠지지 않도록 나서야 한다.","곳곳에서 울리는 경고음 때문에 경제가 나빠졌다."],"answer":1,"explain":"경기 꺾이다 = «экономика идёт на спад», 경고음 — тревожные сигналы.<br>✅ <b>① 국가의 경제 사정이 점점 안 좋아지고 있다.</b>"},{"n":27,"points":2,"instr":"다음 신문 기사의 제목을 가장 잘 설명한 것을 고르십시오.","passage":"날아다니는 응급실 닥터 헬기, 위급 환자 구해","options":["빠른 진료가 필요한 환자들이 닥터 헬기를 원한다.","응급실에 대기자가 너무 많아 닥터 헬기를 만들었다.","위급한 환자를 위해서 이동 가능한 응급실을 만들었다.","응급처치가 가능한 닥터 헬기 덕분에 위급한 환자를 살렸다."],"answer":4,"explain":"«Летающая скорая — вертолёт спас тяжёлого пациента».<br>✅ <b>④ 응급처치가 가능한 닥터 헬기 덕분에 위급한 환자를 살렸다.</b><br>🧩 응급실 = «реанимация/скорая»; 위급 환자 = «тяжёлый больной»."},{"n":28,"points":2,"instr":"( )에 들어갈 내용으로 가장 알맞은 것을 고르십시오.","passage":"한국에는 '이웃사촌'이라는 말이 있다. 이는 옛날부터 ( ) 지낸다는 뜻이다. 특히 예전에는 한 마을에 오래 정착해 사는 경우가 많았기 때문에 이웃 주민과 다정하고 화목하게 지냈다. 요즘에도 이웃끼리 기쁨과 슬픔을 함께 나누며 지낸다. 이렇게 이웃 간에 서로 돕고 지내는 상부상조의 전통은 조상이 전해 준 소중한 것이다.","options":["친척들과 의좋게","이웃들과 가족처럼","모든 가족과 재미있게","마을 주민들과 친구처럼"],"answer":2,"explain":"이웃사촌 = «сосед, как родня».<br>✅ <b>② 이웃들과 가족처럼</b><br>🧩 상부상조 = «взаимопомощь»."},{"n":29,"points":2,"instr":"( )에 들어갈 내용으로 가장 알맞은 것을 고르십시오.","passage":"국민이라면 누구나 국가에 세금을 낸다. 하지만 모두 똑같은 금액으로 세금을 내지는 않는다. 그것은 ( ) 때문이다. 소득이나 재산이 많은 사람은 더 많이 내고 적게 가진 사람은 적게 낸다. 국가에서 세금을 걷는 가장 중요한 이유는 나라의 살림을 하기 위해서다. 또한 부유층과 서민층의 격차를 줄이는 역할도 한다. 이렇게 세금은 나라 살림을 꾸리고 모두가 더불어 사는 사회를 만드는 데 쓰인다.","options":["나라 살림에 도움이 되지 않기","개개인의 소득과 재산이 다르기","국가가 세금을 걷는 방식이 다르기","국민이 똑같은 금액을 원하지 않기"],"answer":2,"explain":"«소득이나 재산이 많은 사람은 더 많이 내고…» → ставка зависит от дохода/имущества.<br>✅ <b>② 개개인의 소득과 재산이 다르기</b><br>🧩 세금 = «налог»; 격차 = «разрыв»."},{"n":30,"points":2,"instr":"( )에 들어갈 내용으로 가장 알맞은 것을 고르십시오.","passage":"에너지는 그 형태가 다양하게 바뀐다. 전기 에너지가 빛 에너지로 바뀌고, 그 빛이 다시 다른 에너지로 쓰이기도 한다. 이렇게 에너지의 형태가 변해도 ( ) 것이다. 에너지는 형태가 변할 뿐 새로 만들어지거나 사라지지 않아 그 총량은 항상 일정하게 보존되는데, 이를 '에너지 보존 법칙'이라고 한다.","options":["종류에 따라 다르다는","총량을 측정하기 어렵다는","에너지의 양은 그대로 있다는","새로운 에너지로 볼 수 없다는"],"answer":3,"explain":"Закон сохранения энергии: «총량은 항상 일정하게 보존».<br>✅ <b>③ 에너지의 양은 그대로 있다는</b><br>🧩 보존 = «сохранение»; 총량 = «общее количество»."},{"n":31,"points":2,"instr":"( )에 들어갈 내용으로 가장 알맞은 것을 고르십시오.","passage":"많은 학생이 자신이 좋아하는 것과 잘하는 것이 무엇인지 알지 못해 고민한다. 자신의 적성과 흥미를 찾으려면 여러 가지 ( ) 한다. 독서, 여행, 봉사 활동, 악기 연주, 취미 등 다양한 분야를 경험해 보면 그중 무엇이 가장 재미있고 잘 맞는지 알 수 있다. 또한 평소에 자신의 적성과 흥미가 무엇인지 질문을 스스로 하고 답해야 한다. 책이나 선생님과 진로 상담을 하는 것도 좋은 방법이다.","options":["많은 경험을 쌓아야","관련 분야에 대해 잘 알아야","관심을 갖고 꾸준히 지켜봐야","취미와 직업을 연결시켜 생각해야"],"answer":1,"explain":"«독서, 여행, 봉사 활동… 다양한 분야를 경험해 보면» → набираться опыта.<br>✅ <b>① 많은 경험을 쌓아야</b><br>🧩 적성 = «склонность, способности»."},{"n":32,"points":2,"instr":"다음을 읽고 글의 내용과 같은 것을 고르십시오.","passage":"'아이돌'은 '우상'이라는 뜻을 가진 영어 단어에서 유래되었다. 청소년의 나이대와 비슷하고 인기가 많은 가수 신분으로, 인기뿐만 아니라 외모와 화려한 패션, 트렌디한 음악과 춤을 함께 갖춰 사람들 사이에서 우상과도 같은 존재로 불린다. 그런데 영어권 그룹이 한국어 가사로 음악을 만들 만큼 이제 영어 단어인 아이돌은 영어권에서도 한국식 의미로 쓰인다. 현재 아이돌은 막강한 영향력으로 방송과 공연 등 문화산업 전반을 장악하고 있다.","options":["10대 영화배우로 활동하는 사람은 아이돌이 될 수 없다.","아이돌은 영어 단어에서 유래되어 청소년을 뜻하는 단어이다.","아이돌은 방송과 공연 등 문화산업 전반에서 영향력이 막강하다.","아이돌 때문에 다양한 세대가 한류와 케이팝을 알게 되었다."],"answer":3,"explain":"«막강한 영향력으로 방송과 공연 등 문화산업 전반을 장악».<br>✅ <b>③ 아이돌은 방송과 공연 등 문화산업 전반에서 영향력이 막강하다.</b><br>✖️ ② 아이돌 от «우상(кумир)», не «청소년»."},{"n":33,"points":2,"instr":"다음을 읽고 글의 내용과 같은 것을 고르십시오.","passage":"특수 분장사가 되려면 유학을 가거나 학원에 다니는 등 여러 방법이 있지만, 가장 좋은 방법은 현장에서 직접 배우는 것이다. 처음에는 한국 영화 시장이 그렇게 크지 않고 특수 분장사에 대한 인식이 부족했다. 특수 분장사가 되려면 영화에 대한 기본적인 이해가 필요하고, 영화에 관심이 많으며 평소 머릿속에 떠오른 생각을 손으로 표현하기 좋아하는 사람이어야 한다.","options":["미술의 재능과 관계없이 특수 분장사로 일할 수 있다.","특수 분장사는 평소에 생각하는 것들을 그대로 만들 수 있어야 한다.","특수 분장사가 되는 가장 좋은 방법은 해외에서 배워 오는 것이다.","한국 영화 시장 규모에 비해 특수 분장사에 대한 수요는 높은 편이다."],"answer":2,"explain":"«머릿속에 떠오른 생각을 손으로 표현하기 좋아하는 사람».<br>✅ <b>② 특수 분장사는 평소에 생각하는 것들을 그대로 만들 수 있어야 한다.</b><br>✖️ ③ лучший способ — на площадке, не за рубежом.<br>🧩 특수 분장사 = «гримёр спецэффектов»."},{"n":34,"points":2,"instr":"다음을 읽고 글의 내용과 같은 것을 고르십시오.","passage":"백화 현상은 바닷물 온도가 올라가거나 오염되면서 산호가 영양분을 잃고 하얗게 변하며 죽어 가는 현상이다. 지구 온난화로 인한 수온 상승, 바닷물 오염 등이 그 원인이다. 산호초가 죽으면 거기에 기대어 사는 다양한 바다 생물도 함께 사라진다. 이런 백화 현상은 특정 지역만의 문제가 아니라 전 세계 바다에서 일어나고 있다.","options":["백화 현상이 어업에는 큰 영향을 미치지 않는다.","산호초와 다양한 생물이 백화로 사라지고 있다.","산호가 죽어 가고 있는 현상은 전 세계적으로 일어나고 있다.","백화 현상 때문에 바다 온도가 높아져서 바다가 산성화되고 있다."],"answer":3,"explain":"«특정 지역만의 문제가 아니라 전 세계 바다에서 일어나고 있다».<br>✅ <b>③ 산호가 죽어 가고 있는 현상은 전 세계적으로 일어나고 있다.</b><br>✖️ ④ причина — рост температуры, а не наоборот.<br>🧩 백화 현상 = «обесцвечивание кораллов»."},{"n":35,"points":2,"instr":"이 글의 주제로 가장 알맞은 것을 고르십시오.","passage":"어린이는 텔레비전을 통해 각종 정보를 얻을 수 있다. 뉴스나 다큐멘터리 프로그램 등을 통해 다양한 지식을 쌓고 호기심을 계발할 수도 있다. 또한 가족과 함께 텔레비전을 시청하면서 프로그램에 나온 주제에 대해 이야기를 나누며 서로의 생각을 알게 되어 관계에도 도움이 된다. 마지막으로 교육 프로그램을 통해서 재미있고 흥미롭게 학습을 할 수도 있다.","options":["어린이들은 다양한 분야에 대해 관심을 갖고 정보를 찾아야 한다.","어린이들에게 맞는 텔레비전 프로그램이 많아 도움을 줄 수 있다.","재미있는 학습을 위해 텔레비전의 학습 프로그램을 이용하는 것이 좋다.","가족과 함께 텔레비전을 시청하는 것은 관계가 좋아지는 데 도움을 준다."],"answer":2,"explain":"ТВ даёт детям информацию, общение в семье, обучение — общая мысль.<br>✅ <b>② 어린이들에게 맞는 텔레비전 프로그램이 많아 도움을 줄 수 있다.</b> (③④ — частные плюсы)."},{"n":36,"points":2,"instr":"이 글의 주제로 가장 알맞은 것을 고르십시오.","passage":"인생을 살아가면서 작은 일에도 의미를 두고 소소한 목표를 이루는 것이 행복으로 이어진다. 크고 거창한 목표만을 좇으면 그것을 이루기 전까지 행복을 느끼기 어렵다. 아무리 사회적으로 중요한 일이라도 자신과 관계가 없다면 행복을 느끼기 어려울 것이다.","options":["목표가 없는 인간의 삶은 아무런 의미가 없다.","작고 큰 목표를 모두 이루어야 한다.","현대인들에게는 사회적으로 중요한 일이 먼저다.","자신과 관계 깊은 목표를 성취해야 행복을 느낀다."],"answer":4,"explain":"«자신과 관계가 없다면 행복을 느끼기 어렵다».<br>✅ <b>④ 자신과 관계 깊은 목표를 성취해야 행복을 느낀다.</b>"},{"n":37,"points":2,"instr":"이 글의 주제로 가장 알맞은 것을 고르십시오.","passage":"한국에는 '빨리빨리'라는 독특한 문화가 있다. 문화는 한 사회의 생활과 사고방식이 담긴 것으로, 빨리빨리 문화는 장점과 단점이 양면적인 문화이다. 빨리빨리 문화는 한국 사회를 빠르게 성장시키는 데 큰 역할을 했다. 하지만 서두르다 보니 결과만 중요하게 여겨 과정을 소홀히 하거나 사람들 간의 관계까지 소홀히 하는 태도가 나타나기도 한다. 따라서 빨리빨리 문화는 장점은 살리고 단점은 고쳐 나가야 할 문화라고 할 수 있다.","options":["한국은 독특한 문화를 통해 빨리 발전하고 있다.","빨리빨리 문화는 수정과 보완이 필요한 문화이다.","한국의 미래를 위해 빨리빨리 문화를 계속해야 한다.","한국인들은 독특한 문화를 통해 일하는 방법을 배운다."],"answer":2,"explain":"«장점은 살리고 단점은 고쳐 나가야 할 문화».<br>✅ <b>② 빨리빨리 문화는 수정과 보완이 필요한 문화이다.</b><br>🧩 양면적 = «двоякий, обоюдоострый»."},{"n":38,"points":2,"instr":"이 글의 주제로 가장 알맞은 것을 고르십시오.","passage":"사람들은 종종 자신을 남과 비교하며 다른 사람의 재능을 부러워한다. 하지만 사람마다 가진 재능과 그것이 어울리는 자리는 모두 다르다. 남과 비교하기보다 오로지 자신만이 자신의 능력과 가능성을 정확하게 알 수 있다. 그러므로 결국 자신을 가장 잘 아는 사람은 자신뿐이다.","options":["자신의 능력은 자신만이 정확하게 가늠할 수 있다.","다른 사람과 구별되는 자신만의 재능을 계발해야 한다.","남과 비교하며 자신의 재능을 부러워하면 안 된다.","성공하는 사람은 다른 사람의 재능에 관심이 없다."],"answer":1,"explain":"«오로지 자신만이 자신의 능력과 가능성을 정확하게 알 수 있다».<br>✅ <b>① 자신의 능력은 자신만이 정확하게 가늠할 수 있다.</b><br>🧩 가늠하다 = «оценивать, прикидывать»."},{"n":39,"points":2,"instr":"다음 글에서 <보기>의 문장이 들어가기에 가장 알맞은 곳을 고르십시오.","passage":"<보기> 학습이란 규칙을 익히는 작업으로 학습을 마치면 같은 유형의 다른 문제를 풀 수 있어야 한다.\n\n인공지능은 인간에 비하면 좁은 범위의 일을 수행한다. ( ㉠ ) 우선 개나 고양이, 자동차 같은 사물을 인식하고, 자동차를 운전하며, 문장의 의미를 이해하고 특정 언어를 다른 언어로 번역하는 일을 할 수 있다. ( ㉡ ) 이러한 능력들은 대부분 '지도학습'으로 가능해진다. ( ㉢ ) 지도학습은 '기계학습'의 방법 중 하나인데, ( ㉣ ) 기계학습은 문자 그대로 기계가 어떤 문제를 해결하기 위한 규칙을 습득한다는 의미이다.","options":["㉠","㉡","㉢","㉣"],"answer":3,"explain":"Определение «학습이란…» уместно после «지도학습으로 가능해진다» и перед «지도학습은 기계학습의 방법».<br>✅ <b>③ ㉢</b>"},{"n":40,"points":2,"instr":"다음 글에서 <보기>의 문장이 들어가기에 가장 알맞은 곳을 고르십시오.","passage":"<보기> 대량 생산과 대량 소비를 통해 사람들의 생활이 풍족해지고 생활 양식이 비슷해진다.\n\n시간의 흐름에 따라 사회의 모습이나 질서에 일정한 변화가 나타나는 현상을 사회 변동이라고 한다. ( ㉠ ) 사회 변동에 따른 일상생활의 변화가 다양한데 먼저 기계가 등장하면서 사람들의 생활 양식이 크게 달라졌다. ( ㉡ ) 커피를 즐길 수 있는 카페가 늘어나고, 이탈리아의 피자, 터키의 케밥, 베트남의 쌀국수 등 다른 나라의 전통 음식을 그 나라에 가지 않고도 쉽게 먹을 수 있게 되었다. ( ㉢ ) 또 스마트폰이 등장하면서 일상생활이 혁신적인 변화를 맞이하게 된다. ( ㉣ )","options":["㉠","㉡","㉢","㉣"],"answer":2,"explain":"«기계 등장 → 생활 양식 달라졌다» → [대량 생산·소비로 생활 풍족] → 카페·외국 음식 등 примеры.<br>✅ <b>② ㉡</b>"},{"n":41,"points":2,"instr":"다음 글에서 <보기>의 문장이 들어가기에 가장 알맞은 곳을 고르십시오.","passage":"<보기> 하지만 이 작은 배려가 다른 사람의 기분을 좋게 하고 감동을 준다.\n\n배려란 내가 아닌 다른 사람을 위하는 마음에서 비롯된다. ( ㉠ ) 우리는 일상에서 작은 배려를 실천할 수 있다. ( ㉡ ) 자리 양보하기, 공공장소에서 큰 소리 내지 않기, 건물의 현관문을 지날 때 뒷사람을 위해 문을 잡아 주기 등은 어떻게 보면 사소한 일이라고 할 수 있을 만큼 쉽고 간단한 일이다. ( ㉢ ) 그래서 타인과 마찰을 빚는 경우가 줄어들고 서로를 이해하게 된다. ( ㉣ )","options":["㉠","㉡","㉢","㉣"],"answer":3,"explain":"«…쉽고 간단한 일이다» → [하지만 이 작은 배려가… 감동을 준다] → «그래서 마찰이 줄어든다».<br>✅ <b>③ ㉢</b>"},{"n":42,"points":2,"instr":"밑줄 친 부분에 나타난 '엄마'의 심정으로 알맞은 것을 고르십시오.","passage":"엄마는 전자 키보드와 김치냉장고를 치우면 피아노 자리를 충분히 만들 수 있다며 의기양양했다. 이모네 피아노는 최소 삼백만 원도 넘는 것일 테니 그 비싼 걸 얻는 데 김치냉장고 하나쯤은 당연히 포기해야 한다고 주장했다. 결국 엄마는 인터넷 중고 카페에 전자 키보드와 김치냉장고를 아주 싼 값에 올렸고 사흘 뒤 깔끔하게 팔렸다. 드디어 이틀 뒤, 사다리차가 집에 먼저 도착했다. <u>엄마는 피아노가 아직 안 와서 어떡하냐며 계단을 두세 칸씩 뛰어 내려갔다.</u> 사다리차의 창문이 열리더니 청색 모자를 쓴 아저씨가 고개를 내밀었다. \"아직 안 왔어요?\" \"곧 올 거예요.\" 엄마는 아저씨를 쳐다보지도 않고 주변을 두리번거리며 대답했다.","options":["흡족하다","상냥하다","비겁하다","조급하다"],"answer":2,"explain":"По официальному ключу сборника ответ — <b>② 상냥하다</b>. (По сюжету мама спешит — это особенность коммерческого пробника; оставлено как в книге.)"},{"n":43,"points":2,"instr":"위 글의 내용과 같은 것을 고르십시오.","passage":"엄마는 전자 키보드와 김치냉장고를 치우면 피아노 자리를 충분히 만들 수 있다며 의기양양했다. 어차피 김치냉장고가 너무 오래되어 제 기능을 못하고, 얼마 전에 바꾼 냉장고가 있으니 문제 될 게 없다는 것이었다. 결국 엄마는 인터넷 중고 카페에 전자 키보드와 김치냉장고를 아주 싼 값에 올렸고 사흘 뒤 깔끔하게 팔렸다. 피아노는 그로부터 이틀 뒤에 온다고 했다. 배달비에 조율비까지 해서 30만 원이 든다고 했다. 게다가 우리 집은 3층이라 사다리차까지 빌려야 한다는데도 엄마의 입꼬리는 자꾸만 올라갔다.","options":["김치 냉장고가 고장 나서 새 냉장고를 사야 한다.","집 앞 사다리차 덕분에 사람들이 길을 지나다니기 편리했다.","사다리차를 제외한 피아노 배달비와 조율비에 30만 원이 들었다.","엄마는 사다리차 아저씨를 통해 전자 키보드와 김치냉장고를 팔았다."],"answer":3,"explain":"«배달비에 조율비까지 해서 30만 원… 게다가 사다리차까지 빌려야 한다» → 30만원 без учёта автовышки.<br>✅ <b>③ 사다리차를 제외한 피아노 배달비와 조율비에 30만 원이 들었다.</b><br>✖️ ④ продала через интернет."},{"n":44,"points":2,"instr":"위 글의 주제로 알맞은 것을 고르십시오.","passage":"2016년 1월 스위스 다보스 포럼에서 기존 산업 분류에 정의되지 않은 모든 산업이 가져올 세계 경제 변화를 제4차 산업혁명이라고 부르기 시작했다. 이전까지의 공장 자동화는 미리 입력된 프로그램에 따라 생산 시설이 수동적으로 움직이는 것이었다. 하지만 4차 산업혁명에서 생산 설비는 제품과 상황에 따라 능동적으로 작업 방식을 결정하게 된다. 지금까지는 생산 설비가 중앙 집중화된 시스템의 통제를 받았지만 4차 산업혁명에서는 각 기기가 개별 공정에 알맞은 것을 판단해 실행하게 된다. 이것은 모든 산업 설비가 각각의 인터넷 주소를 갖고 무선 인터넷을 통해 서로 대화할 수 있기 때문에 가능한 일이다.","options":["4차 산업혁명을 통해 미래의 경제 상황을 예측할 수 있다.","기존 산업분류에 정의되지 않은 산업이 계속 증가하고 있다.","4차 산업혁명에서 가장 중요한 것은 작업 방식의 능동성이다.","4차 산업혁명은 무선 인터넷을 통해 작업 효율성을 높인다."],"answer":3,"explain":"«생산 설비는… 능동적으로 작업 방식을 결정하게 된다».<br>✅ <b>③ 4차 산업혁명에서 가장 중요한 것은 작업 방식의 능동성이다.</b><br>🧩 능동적 = «активный, самостоятельный»."},{"n":45,"points":2,"instr":"( )에 들어갈 내용으로 가장 알맞은 것을 고르십시오.","passage":"2016년 1월 스위스 다보스 포럼에서 기존 산업 분류에 정의되지 않은 모든 산업이 가져올 세계 경제 변화를 제4차 산업혁명이라고 부르기 시작했다. 하지만 4차 산업혁명에서 생산 설비는 제품과 상황에 따라 능동적으로 작업 방식을 결정하게 된다. 지금까지는 생산 설비가 ( ) 4차 산업혁명에서는 각 기기가 개별 공정에 알맞은 것을 판단해 실행하게 된다.","options":["중앙 집중화된 시스템의 통제를 받았지만","개별 공정마다 다른 프로그램이 필요했지만","정해진 규칙 없이 자유롭게 작동했지만","인터넷 없이도 서로 정보를 주고받았지만"],"answer":1,"explain":"Контраст «지금까지는 (㉠) ↔ 4차 산업혁명에서는 각 기기가 스스로 판단».<br>✅ <b>① 중앙 집중화된 시스템의 통제를 받았지만</b><br>🧩 중앙 집중화 = «централизация»."},{"n":46,"points":2,"instr":"다음 글에서 <보기>의 글이 들어가기에 가장 알맞은 곳을 고르십시오.","passage":"<보기> 제도가 도입됐지만 어디까지를 근로 시간으로 볼지에 대한 기준이 모호하다는 지적도 많다.\n\n주 52시간 근무제는 주당 법정 근로 시간을 기존 68시간에서 52시간으로 단축하여 종업원 300인 이상의 사업장과 공공기관을 대상으로 2018년 7월 1일부터 시행되었다. ( ㉠ ) 주 52시간 근무제는 하루 8시간씩 근무를 포함한 연장 근로를 총 12시간까지 법적으로 허용하는 것이다. ( ㉡ ) 관계 부처에서 관련 가이드북을 내놓았지만 정작 기업들이 궁금해하는 질문에는 답이 없어 도움이 안 된다는 지적도 있다. ( ㉢ ) 경제계는 미국과 일본 등 선진국 사례를 참조해 정책을 현실에 맞게 고쳐야 한다고 주장한다. ( ㉣ )","options":["㉠","㉡","㉢","㉣"],"answer":2,"explain":"После описания того, что считается рабочим временем (연장 근로 허용), уместен укор о «모호한 기준» → перед «가이드북도 답이 없다».<br>✅ <b>② ㉡</b>"},{"n":47,"points":2,"instr":"위 글의 내용과 같은 것을 고르십시오.","passage":"주 52시간 근무제는 주당 법정 근로 시간을 기존 68시간에서 52시간으로 단축하여 종업원 300인 이상의 사업장과 공공기관을 대상으로 2018년 7월 1일부터 시행되었다. 경제계는 미국과 일본 등 선진국 사례를 참조해 정책을 현실에 맞게 고쳐야 한다고 주장한다. 일본은 주 45시간, 연 360시간 이상의 추가 근로를 못 하게 규정하고 있다. 하지만 고액 연봉을 받는 전문직은 근로 시간 제한에서 제외하며, 미국도 고소득 전문직을 근로 시간 제한 상한에서 빼는 정책을 도입해 노동자가 원하면 초과 근무가 가능하다.","options":["일본의 고액 연봉자들은 근로 시간 제한이 따로 없다.","근로자들의 주당 법정 근로 시간이 전과 비교해 큰 차이가 없다.","정부의 가이드북을 통해 새로운 근로 제도에 대한 이해를 도울 수 있다.","주 52시간 근무제는 모든 사업장을 대상으로 시행되고 있다."],"answer":1,"explain":"«고액 연봉을 받는 전문직은 근로 시간 제한에서 제외».<br>✅ <b>① 일본의 고액 연봉자들은 근로 시간 제한이 따로 없다.</b><br>✖️ ② время сократили с 68 до 52 (большая разница); ④ только предприятия 300+ человек."},{"n":48,"points":2,"instr":"위 글을 쓴 목적으로 알맞은 것을 고르십시오.","passage":"한국의 몰카 범죄는 매년 꾸준히 증가하고 있는 추세인데, 이는 넥타이, 볼펜, 물병, 탁상시계, 안경, 벨트 등에 장착되는 초소형 카메라가 아무런 제약 없이 판매되고 있기 때문이다. 몰카 범죄로 인해 국민의 분노와 두려움이 사회 전반으로 확산되어 카메라 판매를 금지해야 한다는 요구도 높은 상황이다. 하지만 판매 금지가 범죄를 막기 어렵고 오히려 부작용만 날 수도 있어서 판매를 법으로 규제하는 것은 현실적으로 어렵다. 결국 몰카 범죄는 초소형 카메라 자체의 문제가 아니므로 판매를 무조건적으로 금지하면 논란만 더 확산될 것이다.","options":["초소형 카메라 남용 문제를 제기하기 위해서","몰카 범죄에 대한 정부의 정책을 설명하기 위해서","몰카 범죄의 내용과 처벌 방법을 설명하기 위해서","초소형 카메라 판매 금지에 대한 변화를 촉구하기 위해서"],"answer":4,"explain":"Автор доказывает, что слепой запрет продаж — не выход, нужен иной подход.<br>✅ <b>④ 초소형 카메라 판매 금지에 대한 변화를 촉구하기 위해서</b><br>🧩 몰카 = «скрытая съёмка»; 규제 = «регулирование»."},{"n":49,"points":2,"instr":"( )에 들어갈 내용으로 가장 알맞은 것을 고르십시오.","passage":"몰카 범죄로 인해 카메라 판매를 금지해야 한다는 요구도 높은 상황이다. 하지만 초소형 카메라는 몰카와 의료·산업용 카메라와의 ( ) 판매 금지가 범죄를 막기 어렵고 오히려 부작용만 날 수도 있어서 판매를 법으로 규제하는 것은 현실적으로 어렵다.","options":["역할이 서로 다르고","뚜렷한 구별이 힘들고","높은 가격 차이가 있고","장단점을 모두 가지고 있어"],"answer":2,"explain":"Камеру для скрытой съёмки трудно отличить от медицинской/промышленной → запрет не сработает.<br>✅ <b>② 뚜렷한 구별이 힘들고</b><br>🧩 구별 = «различение»."},{"n":50,"points":2,"instr":"밑줄 친 부분에 나타난 필자의 태도로 알맞은 것을 고르십시오.","passage":"한국의 몰카 범죄는 매년 꾸준히 증가하고 있는 추세인데, 이는 넥타이, 볼펜, 안경 등에 장착되는 초소형 카메라가 아무런 제약 없이 판매되고 있기 때문이다. <u>원래 초소형 카메라는 의료 및 산업분야에서 정밀한 작업을 하는 데 중요한 역할을 하고 있다.</u> 하지만 판매 금지가 범죄를 막기 어렵고 오히려 부작용만 날 수도 있어서 판매를 법으로 규제하는 것은 현실적으로 어렵다. 결국 몰카 범죄는 초소형 카메라 자체의 문제가 아니므로 판매를 무조건적으로 금지하면 논란만 더 확산될 것이다.","options":["초소형 카메라 판매에 대한 규제를 요구하고 있다.","초소형 카메라 판매 금지 결과에 대해 우려하고 있다.","초소형 카메라를 만들게 된 배경에 대해 설명하고 있다.","초소형 카메라가 사회에 기여한 바를 높이 평가하고 있다."],"answer":4,"explain":"Подчёркнуто: «의료 및 산업분야에서… 중요한 역할을 하고 있다» — автор признаёт полезный вклад камер.<br>✅ <b>④ 초소형 카메라가 사회에 기여한 바를 높이 평가하고 있다.</b>"}]}},
+    8002: {"mock":true,"no":"Hot TOPIK<br><b>제2회</b>","listening":{"durationMin":60,"total":100,"label":"Hot TOPIK 제2회 · 듣기 (1~50)","questions":[{"n":1,"points":2,"instr":"Прослушайте диалог и определите, где происходит разговор.","options":["카페","버스 정류장","지하철역","편의점"],"answer":2,"script":"남자: 어, 버스 온다! 근데 이 커피 어떡하지?\n여자: 빨리 마시고 타. 아니면 다음 버스 타야 해.\n남자: 알았어. 한 번에 다 마실게.","explain":"🎧 «버스 온다!», «빨리 마시고 타» — речь о посадке в автобус с кофе в руках.<br>✅ <b>② 버스 정류장</b> — разговор на автобусной остановке.<br>🧩 정류장 = «остановка»."},{"n":2,"points":2,"instr":"Прослушайте диалог и определите, где происходит разговор.","options":["기차 안","미용실","서점","병원 대기실"],"answer":1,"script":"여자: 저기, 창가 자리인데 옆 사람이랑 너무 붙어 있는 것 같아요.\n남자: 좌석을 좀 바꿔 드릴까요? 뒤쪽에 자리가 좀 더 넓어요.\n여자: 네, 그럼 거기로 옮겨 주세요.","explain":"🎧 «창가 자리», «좌석을 바꿔 드릴까요» — речь о местах в вагоне.<br>✅ <b>① 기차 안</b> — разговор в поезде о пересадке на другое место.<br>🧩 창가 자리 = «место у окна»; 좌석 = «сиденье»."},{"n":3,"points":2,"instr":"Прослушайте новость и выберите верное по содержанию.","options":["응답자의 43.7%가 집에서 운동을 한다고 답했다.","홈트레이닝은 여성에게만 인기가 있다.","헬스장 이용자가 홈트레이닝보다 훨씨 많다.","홈트레이닝의 인기는 점점 줄어들고 있다."],"answer":1,"script":"남자: 최근 집에서 운동하는 '홈트레이닝' 인구가 빠르게 늘고 있습니다. 이번 조사에서 전체 응답자의 43.7%가 집에서 운동한다고 답했으며, 그중 남성 비율이 여성보다 다소 높게 나타났습니다. 헬스장에 가지 않아도 영상을 보며 운동할 수 있다는 점이 인기의 가장 큰 이유로 꼽혔습니다.","explain":"🎧 «전체 응답자의 43.7%가 집에서 운동한다고 답했으며».<br>✅ <b>① 응답자의 43.7%가 집에서 운동을 한다고 답했다.</b><br>✖️남성 비율이 더 높을 뿐 여성도 포함; 헬스장 언급은 비교 차원.<br>🧩 홈트레이닝 = «домашняя тренировка»; 응답자 = «респондент»."},{"n":4,"points":2,"instr":"Прослушайте диалог и выберите подходящее продолжение.","options":["저도 가 보고 싶어요.","학교 앞이라 그런지 항상 줄이 길어요.","이 빵은 너무 딱딱해요.","저는 단 음식을 잘 못 먹어요."],"answer":2,"script":"남자: 요즘 학교 앞에 새로 생긴 빵집 가 봤어? 계란빵이 진짜 맛있더라.\n여자: 아, 거기? 나도 가고 싶은데 사람이 너무 많아서 아직 못 가 봤어.\n남자:","explain":"🎧 Женщина: «사람이 너무 많아서 못 가 봤어» (народу слишком много).<br>✅ <b>② 학교 앞이라 그런지 항상 줄이 길어요.</b> = «Видно, из-за того, что у школы — там всегда очередь» — подтверждает её слова.<br>🧩 빵집 = «пекарня»; 줄이 길다 = «длинная очередь»."},{"n":5,"points":2,"instr":"Прослушайте диалог и выберите подходящее продолжение.","options":["저도 등산을 싫어해요.","정상까지는 두 시간쯔음 걸려요.","네, 어제 비가 많이 왔어요.","아니요, 아직 출발 안 했어요."],"answer":2,"script":"여자: 선생님, 내일 등산 모임은 늦어도 4시까지는 출발해야 한다고 들었는데요.\n남자: 네, 맞아요. 일찍 출발해야 정상에서 해 지기 전에 내려올 수 있거든요.\n여자: 정상까지 가는 데 시간이 얼마나 걸릴까요?\n남자:","explain":"🎧 Вопрос «정상까지 가는 데 시간이 얼마나 걸릴까요?» (сколько времени до вершины).<br>✅ <b>② 정상까지는 두 시간쯔음 걸려요.</b> — прямой ответ на вопрос о времени.<br>🧩 정상 = «вершина»; 해 지다 = «солнце садится»."},{"n":6,"points":2,"instr":"Прослушайте диалог и выберите подходящее продолжение.","options":["그래? 인기가 많은 경기인가 봐.","아니, 나는 축구를 별로 안 좋아해.","경기장 가는 길을 잘 모르겠어.","그럼 우리도 표를 사러 가야겠다."],"answer":1,"script":"남자: 어, 학생들이 운동장에 왜 이렇게 많이 모여 있지?\n여자: 아, 오늘 학교 대표 축구 경기가 있잖아. 다들 구경하러 가는 길이래.\n남자:","explain":"🎧 «학교 대표 축구 경기가 있잖아… 다들 구경하러 가는 길».<br>✅ <b>① 그래? 인기가 많은 경기인가 봐.</b> — реакция на то, что собралось много людей.<br>🧩 운동장 = «спортплощадка»; 대표 경기 = «представительный матч»."},{"n":7,"points":2,"instr":"Прослушайте диалог и выберите подходящее продолжение.","options":["네, 게임도 잘하는 편이에요.","아니요, 가벼운 노트북이면 다 괜찮아요.","대학생들이 많이 쓰는 모델로 할게요.","수리하는 데 얼마나 걸려요?"],"answer":3,"script":"남자: 노트북을 새로 사려고 하는데요.\n여자: 네, 따로 찾으시는 브랜드나 모델이 있으세요?\n남자:","explain":"🎧 Вопрос продавца: «찾으시는 브랜드나 모델이 있으세요?» (есть ли конкретная марка/модель).<br>✅ <b>③ 대학생들이 많이 쓰는 모델로 할게요.</b> — прямой ответ с выбором по критерию.<br>🧩 모델 = «модель»; -(으)로 할게요 = «возьму…»."},{"n":8,"points":2,"instr":"Прослушайте диалог и выберите подходящее продолжение.","options":["저는 담배를 안 피워요.","흡연실이 몇 층에 있어요?","그럼 안에서는 피울 수 없겠네요.","건물이 참 깨끗하네요."],"answer":3,"script":"여자: 처음 오시는 거면 안내해 드릴게요. 이 건물은 전체가 금연 구역이에요.\n남자:","explain":"🎧 «건물은 전체가 금연 구역» (всё здание — зона, где нельзя курить).<br>✅ <b>③ 그럼 안에서는 피울 수 없겠네요.</b> — логичный вывод из правила.<br>🧩 금연 구역 = «зона для некурящих»."},{"n":9,"points":2,"instr":"Прослушайте и выберите, что женщина сделает дальше.","options":["인터넷으로 표를 산다.","휴대폰을 충전한다.","역무원에게 길을 묻는다.","예약 번호를 찾는다."],"answer":2,"script":"여자: 어? 휴대폰 배터리가 얼마 안 남았는데, 표를 예약한 문자도 못 찾겠어요.\n남자: 저쪽에 충전할 수 있는 곳이 있어요. 먼저 충전부터 하시는 게 좋을 것 같아요.\n여자: 그래야겠어요. 잠깐 충전기 좀 빌려도 될까요?","explain":"🎧 «먼저 충전부터 하시는 게 좋을 것 같아요» → женщина соглашается.<br>✅ <b>② 휴대폰을 충전한다.</b><br>🧩 배터리가 얼마 안 남다 = «батарея почти разряжена»."},{"n":10,"points":2,"instr":"Прослушайте и выберите, что женщина сделает дальше.","options":["음료를 다 마신다.","검색대 밖에서 기다린다.","음료수를 새로 산다.","가방을 다시 싼다."],"answer":1,"script":"남자: 죄송하지만 음료를 들고는 검색대를 통과하실 수 없습니다.\n여자: 아, 그래요? 그럼 어떻게 해야 하나요?\n남자: 다 드시고 통과하시거나 버리고 가셔야 합니다.\n여자: 알겠어요, 얼마 안 남았으니까 여기서 마시고 갈게요.","explain":"🎧 «다 드시고 통과하시거나» → «여기서 마시고 갈게요».<br>✅ <b>① 음료를 다 마신다.</b><br>🧩 검색대 = «пункт проверки/контроля»."},{"n":11,"points":2,"instr":"Прослушайте и выберите, что женщина сделает дальше.","options":["책을 추천받는다.","음악을 틀어 본다.","책을 직접 구경한다.","서점 위치를 찾아본다."],"answer":3,"script":"여자: 요즘 재미있게 읽을 책 좀 추천해 주시겠어요?\n남자: 사람마다 취향이 달라서요, 직접 둘러보시면서 마음에 드는 걸 골라 보시는 게 어때요?\n여자: 그럴까요? 그럼 한번 둘러볼게요.","explain":"🎧 «직접 둘러보시면서 골라 보세요» → «한번 둘러볼게요».<br>✅ <b>③ 책을 직접 구경한다.</b><br>🧩 둘러보다 = «осматриваться, прохаживаться»."},{"n":12,"points":2,"instr":"Прослушайте и выберите, что женщина сделает дальше.","options":["수업을 신청한다.","메일을 다시 보낸다.","교수님을 찾아간다.","시험 날짜를 확인한다."],"answer":3,"script":"여자: 졸업 시험이 금요일로 연기됐다는 메일 봤어?\n남자: 그래? 나는 못 봤는데. 확실한 거야?\n여자: 메일에는 그렇게 써 있는데 혹시 모르니까 교수님께 직접 가서 확인해 볼래.\n남자: 그래, 그게 확실하겠다.","explain":"🎧 «교수님께 직접 가서 확인해 볼래».<br>✅ <b>③ 교수님을 찾아간다.</b><br>🧩 연기되다 = «переноситься (по срокам)»."},{"n":13,"points":2,"instr":"Прослушайте и выберите верное по содержанию.","options":["여자는 내일 회사 축구 모임에 참석할 것이다.","남자는 축구를 한 번도 해 본 적이 없다.","여자는 이미 축구화를 준비해 두었다.","남자는 축구 모임에 가지 않기로 했다."],"answer":1,"script":"남자: 과장님도 내일 사원들 축구 모임에 가시나요?\n여자: 네, 저도 가려고요. 다들 같이 운동하면서 친해지자고 하셔서요.\n남자: 잘됐네요. 그럼 내일 같이 가요. 운동화만 챙기면 되겠죠?\n여자: 네, 가벼운 옷이랑 운동화만 챙기시면 될 것 같아요.","explain":"🎧 «저도 가려고요» (女) — собирается пойти на завтрашний матч сотрудников.<br>✅ <b>① 여자는 내일 회사 축구 모임에 참석할 것이다.</b><br>✖️ про опыт игры и бутсы речи нет."},{"n":14,"points":2,"instr":"Прослушайте и выберите верное по содержанию.","options":["전시회 안내 방송에서는 드라마 소품을 판매한다.","전시회는 이번 주말에만 한시적으로 열린다.","전시회에서는 드라마 속 장면을 직접 볼 수 있다.","전시회 입장은 사전 예약자만 가능하다."],"answer":3,"script":"여자(안내 방송): 안녕하십니까, 오늘도 저희 도서·드라마 전시회를 찾아 주셔서 감사합니다. 이번 전시는 인기 드라마의 주요 촬영 세트를 그대로 재현해 관람객들이 직접 드라마 속 공간에 들어가 사진을 찍을 수 있도록 마련했습니다. 전시는 이번 달 말까지 계속되며, 별도의 예약 없이도 관람이 가능합니다.","explain":"🎧 «드라마의 주요 촬영 세트를 그대로 재현해… 직접 드라마 속 공간에 들어가».<br>✅ <b>③ 전시회에서는 드라마 속 장면을 직접 볼 수 있다.</b><br>✖️ 이번 달 말까지 (не только выходные); 예약 없이도 가능."},{"n":15,"points":2,"instr":"Прослушайте и выберите верное по содержанию.","options":["1979년에는 결혼 상대를 신문 광고로 구했다.","옛날에는 결혼 상대를 직접 만나야만 정할 수 있었다.","과거 결혼 조건에는 경제력이 전혀 포함되지 않았다.","요즘도 결혼 상대를 구하는 방식은 예전과 같다."],"answer":1,"script":"남자: 옛날 신문을 보다가 재미있는 걸 발견했는데요, 1979년 신문에 결혼 상대를 구한다는 광고가 실려 있더라고요.\n여자: 정말요? 그때도 그런 광고가 있었어요?\n남자: 네, 나이와 직업, 원하는 상대의 조건까지 자세히 적어서 신문에 냈더라고요. 요즘은 인터넷이나 결혼정보회사를 이용하지만 방법은 비슷한 것 같아요.","explain":"🎧 «1979년 신문에 결혼 상대를 구한다는 광고가 실려 있더라».<br>✅ <b>① 1979년에는 결혼 상대를 신문 광고로 구했다.</b><br>🧩 결혼정보회사 = «брачное агентство»."},{"n":16,"points":2,"instr":"Прослушайте и выберите верное по содержанию.","options":["이 쇼핑몰은 남성용 매장만 운영한다.","이 쇼핑몰의 휴게 공간은 유료로 운영된다.","이 쇼핑몰에는 남성 휴게 공간이 새로 생겼다.","이 쇼핑몰은 휴게 공간을 없애기로 했다."],"answer":3,"script":"여자: 요즘 한 대형 쇼핑몰에 여성들이 쇼핑하는 동안 남성들이 쉴 수 있는 휴게 공간이 생겨서 화제라고 하던데요.\n남자: 네, 의자와 음료, 충전 시설까지 갖춰 놓아서 기다리는 동안 편하게 쉴 수 있다고 해요. 무료로 이용할 수 있다는 점도 인기 이유 중 하나죠.\n여자: 작은 배려가 쇼핑몰의 만족도를 높이는 것 같네요.","explain":"🎧 «남성들이 쉴 수 있는 휴게 공간이 생겨서… 무료로 이용할 수 있다».<br>✅ <b>③ 이 쇼핑몰에는 남성 휴게 공간이 새로 생겼다.</b><br>✖️ 무료(не платно)."},{"n":17,"points":2,"instr":"Прослушайте и выберите главную мысль мужчины.","options":["소소한 소비로도 행복한 삶을 살 수 있다.","돈을 많이 벌어야 행복할 수 있다.","행복은 큰 목표를 이뤄야 느낄 수 있다.","소비를 줄이는 것이 가장 중요하다."],"answer":1,"script":"여자: 요즘 큰 지출 없이도 소소하게 행복을 느낀다는 사람들이 많아진 것 같아요.\n남자: 네, 저도 그래요. 비싼 여행 대신 동네 카페에서 커피 한 잔 마시는 것만으로도 충분히 만족스럽거든요. 꼭 큰돈을 써야 행복한 건 아니더라고요. 작은 즐거움을 자주 느끼는 게 오히려 삶의 만족도를 더 높여 주는 것 같아요.","explain":"🎧 «꼭 큰돈을 써야 행복한 건 아니더라고요… 작은 즐거움을 자주 느끼는 게».<br>✅ <b>① 소소한 소비로도 행복한 삶을 살 수 있다.</b><br>🧩 소소하다 = «маленький, скромный»."},{"n":18,"points":2,"instr":"Прослушайте и выберите главную мысль мужчины.","options":["유기 동물 보호소를 줄여야 한다.","반려동물을 키우는 사람이 늘어야 한다.","반려동물 등록제의 실효성을 높여야 한다.","반려동물에게 세금을 부과해야 한다."],"answer":3,"script":"여자: 휴가철마다 유기 동물 보호소에 버려지는 반려동물이 많다고 하던데요.\n남자: 네, 보호소 입소 동물 중 상당수가 등록이 안 된 상태라고 합니다. 반려동물 등록제가 있긴 하지만 단속이 약해서 실제로는 잘 지켜지지 않고 있거든요. 등록제가 제대로 작동해야 주인을 쉽게 찾을 수 있고, 무책임한 유기도 줄어들 거라고 봅니다.","explain":"🎧 «등록제가 제대로 작동해야… 무책임한 유기도 줄어들 거라고 봅니다».<br>✅ <b>③ 반려동물 등록제의 실효성을 높여야 한다.</b><br>🧩 실효성 = «реальная эффективность»; 유기 = «оставление, бросание»."},{"n":19,"points":2,"instr":"Прослушайте и выберите главную мысль мужчины.","options":["공원에서는 누구나 자유롭게 일할 수 있어야 한다.","공원에서 일하는 사람들은 다른 이용객을 배려해야 한다.","공원에서 노트북으로 일하는 사람을 위한 전용 좌석이 필요하다.","공원에서는 일을 하면 안 된다는 규정이 필요하다."],"answer":2,"script":"여자: 요즘 공원 잔디밭에 돗자리를 펴고 노트북으로 일하는 사람들이 많이 보이던데요.\n남자: 네, 저도 봤는데 좀 걱정이 되더라고요. 자리를 넓게 차지하고 전화로 회의까지 하는 경우도 있어서 다른 사람들이 쉬는 데 방해가 되겠더라고요. 공원은 다 같이 쉬는 공간인데, 일하는 분들도 주변을 좀 더 신경 써 주면 좋을 것 같아요.","explain":"🎧 «다른 사람들이 쉬는 데 방해가 되겠더라고요… 주변을 좀 더 신경 써 주면».<br>✅ <b>② 공원에서 일하는 사람들은 다른 이용객을 배려해야 한다.</b><br>🧩 돗자리 = «коврик для пикника»; 배려하다 = «учитывать (других)»."},{"n":20,"points":2,"instr":"Прослушайте и выберите главную мысль мужчины.","options":["어린이는 디지털 기기 사용을 자제해야 한다.","스마트폰은 아이들에게 해로운 영향만 준다.","디지털 기기를 활용한 학습이 교육에 도움이 된다.","아이들은 종이책으로만 공부해야 한다."],"answer":3,"script":"여자: 어린이 교육 프로그램을 만드는 업체들이 디지털 기기로 학습 효과를 높이는 방법을 고민하고 있대요.\n남자: 네, 요즘 아이들은 스마트폰이나 태블릿을 다루는 게 워낙 익숙하잖아요. 그 친숙함을 학습에 잘 활용하면 흥미를 잃지 않고 꾸준히 공부할 수 있을 것 같아요. 그림이나 영상으로 보여 주면 이해도 훨씬 빠르고요.","explain":"🎧 «친숙함을 학습에 잘 활용하면 흥미를 잃지 않고 꾸준히 공부할 수 있을 것 같아요».<br>✅ <b>③ 디지털 기기를 활용한 학습이 교육에 도움이 된다.</b>"},{"n":21,"points":2,"instr":"Прослушайте и выберите главную мысль мужчины.","options":["1인 가구를 위한 복지 정책을 늘려야 한다.","1인 가구는 스스로 문제를 해결해야 한다.","1인 가구는 앞으로 계속 줄어들 것이다.","1인 가구를 위한 정책은 이미 충분하다."],"answer":1,"script":"여자: 최근 1인 가구 수가 빠르게 늘면서 이들을 위한 정책도 다양해지고 있다고 하던데요.\n남자: 네, 소득이 낮은 청년 1인 가구는 주거비 지원이 필요하고, 혼자 사는 노년층은 안전과 건강 관리 지원이 필요합니다. 연령대나 상황에 따라 필요한 지원이 다르기 때문에 1인 가구를 위한 복지를 좀 더 세심하게 늘려 가야 한다고 봅니다.","explain":"🎧 «1인 가구를 위한 복지를 좀 더 세심하게 늘려 가야 한다».<br>✅ <b>① 1인 가구를 위한 복지 정책을 늘려야 한다.</b><br>🧩 주거비 = «расходы на жильё»."},{"n":22,"points":2,"instr":"Прослушайте и выберите верное по содержанию.","options":["1인 가구는 모두 같은 지원을 받는다.","지자체들이 1인 가구의 특성에 맞는 정책을 마련하고 있다.","노년층 1인 가구에는 지원이 필요 없다.","청년 1인 가구는 주거비 지원을 받지 못한다."],"answer":2,"script":"여자: 최근 1인 가구 수가 빠르게 늘면서 이들을 위한 정책도 다양해지고 있다고 하던데요.\n남자: 네, 소득이 낮은 청년 1인 가구는 주거비 지원이 필요하고, 혼자 사는 노년층은 안전과 건강 관리 지원이 필요합니다. 연령대나 상황에 따라 필요한 지원이 다르기 때문에 1인 가구를 위한 복지를 좀 더 세심하게 늘려 가야 한다고 봅니다.","explain":"🎧 «연령대나 상황에 따라 필요한 지원이 다르기 때문에».<br>✅ <b>② 지자체들이 1인 가구의 특성에 맞는 정책을 마련하고 있다.</b><br>✖️ 지원은 연령·상황별로 다르게 제공됨."},{"n":23,"points":2,"instr":"Прослушайте и выберите, что хочет сделать мужчина.","options":["인터넷 쇼핑으로 선물을 비교해 보고 싶다.","아버지께 직접 선물을 사 드리고 싶다.","아버지께 인터넷 쇼핑 사용법을 가르쳐 드리고 싶다.","아버지의 선물을 환불하고 싶다."],"answer":1,"script":"남자: 아버지 생신 선물을 뭘 사야 할지 도무지 모르겠어. 매번 골라도 마음에 안 드신다고 하시고.\n여자: 그러면 인터넷으로 몇 가지 사 보고 비교해 보는 건 어때? 후기도 많고 가격 비교도 쉽잖아.\n남자: 그게 좋겠다. 인터넷으로 몇 개 찾아서 비교해 봐야겠어.","explain":"🎧 «인터넷으로 몇 개 찾아서 비교해 봐야겠어».<br>✅ <b>① 인터넷 쇼핑으로 선물을 비교해 보고 싶다.</b><br>🧩 후기 = «отзыв»."},{"n":24,"points":2,"instr":"Прослушайте и выберите верное по содержанию.","options":["남자는 아버지께 선물을 드린 적이 없다.","인터넷 쇼핑몰에서는 후기와 가격을 비교하기 쉽다.","여자는 선물 고르는 것을 도와주지 않았다.","아버지는 항상 선물을 마음에 들어 하셨다."],"answer":2,"script":"남자: 아버지 생신 선물을 뭘 사야 할지 도무지 모르겠어. 매번 골라도 마음에 안 드신다고 하시고.\n여자: 그러면 인터넷으로 몇 가지 사 보고 비교해 보는 건 어때? 후기도 많고 가격 비교도 쉽잖아.\n남자: 그게 좋겠다. 인터넷으로 몇 개 찾아서 비교해 봐야겠어.","explain":"🎧 «후기도 많고 가격 비교도 쉽잖아».<br>✅ <b>② 인터넷 쇼핑몰에서는 후기와 가격을 비교하기 쉽다.</b><br>✖️ матери всегда нравились подарки — наоборот, не нравились."},{"n":25,"points":2,"instr":"Прослушайте и выберите главную мысль мужчины.","options":["에너지 효율 등급은 가전제품 가격과 무관하다.","에너지 효율 등급제는 모든 나라에서 동일하다.","에너지 효율 등급이 높은 제품을 고르면 전기료를 아낄 수 있다.","에너지 효율 등급이 낮을수록 더 좋은 제품이다."],"answer":3,"script":"여자: 요즘 가전제품을 살 때 에너지 효율 등급을 꼭 확인하라고 하던데, 정말 차이가 그렇게 큰가요?\n남자: 네, 차이가 꽤 큽니다. 등급이 1등급에 가까울수록 같은 기능을 쓰더라도 전기를 덜 쓰도록 설계돼 있어서, 처음에 조금 비싸더라도 장기적으로는 전기 요금을 아낄 수 있습니다. 그래서 오래 쓸 제품일수록 등급을 꼭 따져 보고 사는 게 좋습니다.","explain":"🎧 «등급이 1등급에 가까울수록… 전기 요금을 아낄 수 있습니다».<br>✅ <b>③ 에너지 효율 등급이 높은 제품을 고르면 전기료를 아낄 수 있다.</b><br>🧩 에너지 효율 등급 = «класс энергоэффективности»."},{"n":26,"points":2,"instr":"Прослушайте и выберите верное по содержанию.","options":["에너지 효율 등급은 전기 사용량과 관련이 없다.","에너지 효율이 높은 제품은 초기 가격이 더 비쌀 수 있다.","등급이 낮은 제품일수록 전기를 덜 사용한다.","에너지 효율 등급은 단기간 사용할 때만 의미가 있다."],"answer":2,"script":"여자: 요즘 가전제품을 살 때 에너지 효율 등급을 꼭 확인하라고 하던데, 정말 차이가 그렇게 큰가요?\n남자: 네, 차이가 꽤 큽니다. 등급이 1등급에 가까울수록 같은 기능을 쓰더라도 전기를 덜 쓰도록 설계돼 있어서, 처음에 조금 비싸더라도 장기적으로는 전기 요금을 아낄 수 있습니다. 그래서 오래 쓸 제품일수록 등급을 꼭 따져 보고 사는 게 좋습니다.","explain":"🎧 «처음에 조금 비싸더라도 장기적으로는 전기 요금을 아낄 수 있습니다».<br>✅ <b>② 에너지 효율이 높은 제품은 초기 가격이 더 비쌀 수 있다.</b><br>✖️ 등급이 높을수록(1등급) 전기를 덜 씀; 오래 쓸 제품일수록 의미가 큼."},{"n":27,"points":2,"instr":"Прослушайте и выберите, с какой целью говорит мужчина.","options":["해외 생활의 어려움을 미리 알려 주기 위해","독일 음식을 소개하기 위해","이직을 권유하기 위해","여행 계획을 세우기 위해"],"answer":3,"script":"여자: 다음 달부터 독일 지사로 발령받게 됐어요. 처음 가는 거라 기대도 되고 떨리기도 하네요.\n남자: 좋은 기회네요. 그런데 막상 외국에서 혼자 생활하다 보면 언어나 문화 차이 때문에 생각보다 적응하기 어려운 부분들이 많아요. 미리 마음의 준비를 좀 해 두시는 게 좋을 것 같아요.","explain":"🎧 «막상 외국에서 혼자 생활하다 보면… 미리 마음의 준비를 좀 해 두시는 게 좋을 것 같아요».<br>✅ <b>③ 해외 생활의 어려움을 미리 알려 주기 위해</b><br>🧩 발령받다 = «получить назначение»."},{"n":28,"points":2,"instr":"Прослушайте и выберите верное по содержанию.","options":["남자는 독일에서 오래 살아 본 경험이 있다.","여자는 독일 지사로 가는 것에 대해 기대하고 있다.","여자는 발령을 거절하려고 한다.","남자는 여자와 함께 독일에 갈 것이다."],"answer":2,"script":"여자: 다음 달부터 독일 지사로 발령받게 됐어요. 처음 가는 거라 기대도 되고 떨리기도 하네요.\n남자: 좋은 기회네요. 그런데 막상 외국에서 혼자 생활하다 보면 언어나 문화 차이 때문에 생각보다 적응하기 어려운 부분들이 많아요. 미리 마음의 준비를 좀 해 두시는 게 좋을 것 같아요.","explain":"🎧 «기대도 되고 떨리기도 하네요».<br>✅ <b>② 여자는 독일 지사로 가는 것에 대해 기대하고 있다.</b>"},{"n":29,"points":2,"instr":"Прослушайте и выберите, кто такой мужчина.","options":["여행지를 소개하는 사람","지역 축제를 기획하는 사람","특정 지역 유행 현상을 연구하는 사람","관광객 통계를 작성하는 사람"],"answer":3,"script":"여자: 최근 특정 동네가 갑자기 사람들의 관심을 끌면서 유명해지는 '핫플레이스 현상'에 대해 연구하고 계시다고요?\n남자: 네, 처음에는 SNS에 사진 한두 장이 퍼지면서 시작되지만, 그 뒤로 비슷한 가게들이 모이고 입소문이 더해지면서 한 지역 전체가 짧은 시간에 유행 지역으로 자리 잡는 과정을 살펴보고 있습니다.","explain":"🎧 «'핫플레이스 현상'에 대해 연구하고 계시다고요?» — мужчина изучает это явление.<br>✅ <b>③ 특정 지역 유행 현상을 연구하는 사람</b><br>🧩 핫플레이스 = «модное место»; 입소문 = «слухи, устная реклама»."},{"n":30,"points":2,"instr":"Прослушайте и выберите верное по содержанию.","options":["핫플레이스가 되려면 오랜 시간이 필요하다.","핫플레이스는 시간이 지나도 변하지 않는다.","핫플레이스 현상은 SNS와 관련이 없다.","핫플레이스 현상은 한 지역이 짧은 시간에 유행하게 되는 것이다."],"answer":4,"script":"여자: 최근 특정 동네가 갑자기 사람들의 관심을 끌면서 유명해지는 '핫플레이스 현상'에 대해 연구하고 계시다고요?\n남자: 네, 처음에는 SNS에 사진 한두 장이 퍼지면서 시작되지만, 그 뒤로 비슷한 가게들이 모이고 입소문이 더해지면서 한 지역 전체가 짧은 시간에 유행 지역으로 자리 잡는 과정을 살펴보고 있습니다.","explain":"🎧 «한 지역 전체가 짧은 시간에 유행 지역으로 자리 잡는 과정».<br>✅ <b>④ 핫플레이스 현상은 한 지역이 짧은 시간에 유행하게 되는 것이다.</b><br>✖️ SNS에서 시작되며 오랜 시간이 필요 없음."},{"n":31,"points":2,"instr":"Прослушайте и выберите мнение мужчины.","options":["노키즈존은 모든 매장에 필요한 제도이다.","아이가 있으면 어떤 매장도 들어갈 수 없어야 한다.","노키즈존 지정은 매장마다 다르게 판단할 문제이다.","노키즈존은 즉시 전면 폐지되어야 한다."],"answer":3,"script":"여자: 아이 동반 손님을 받지 않는 '노키즈존' 매장이 계속 늘고 있는데, 차별이라는 의견도 많잖아요.\n남자: 글쎼요, 가게 입장에서는 안전사고나 다른 손님과의 마찰을 줄이려는 목적도 있을 거예요. 다만 모든 매장에 일괄적으로 적용할 문제는 아니라고 봅니다. 매장 규모나 분위기에 따라 운영자가 스스로 판단할 수 있게 두는 게 맞는 것 같아요.\n여자: 그래도 아예 입장을 막는 건 너무 과한 것 같은데요.","explain":"🎧 «모든 매장에 일괄적으로 적용할 문제는 아니라고 봅니다… 운영자가 스스로 판단할 수 있게».<br>✅ <b>③ 노키즈존 지정은 매장마다 다르게 판단할 문제이다.</b><br>🧩 일괄적으로 = «единообразно»; 마찰 = «трение, конфликт»."},{"n":32,"points":2,"instr":"Прослушайте и выберите, как мужчина ведёт разговор.","options":["여자의 의견에 전적으로 동의하고 있다.","구체적인 통계를 제시하며 설명하고 있다.","상대방의 주장을 강하게 반박하고 있다.","제도의 운영 방식에 대한 대안을 제시하고 있다."],"answer":4,"script":"여자: 아이 동반 손님을 받지 않는 '노키즈존' 매장이 계속 늘고 있는데, 차별이라는 의견도 많잖아요.\n남자: 글쎄요, 가게 입장에서는 안전사고나 다른 손님과의 마찰을 줄이려는 목적도 있을 거예요. 다만 모든 매장에 일괄적으로 적용할 문제는 아니라고 봅니다. 매장 규모나 분위기에 따라 운영자가 스스로 판단할 수 있게 두는 게 맞는 것 같아요.\n여자: 그래도 아예 입장을 막는 건 너무 과한 것 같은데요.","explain":"🎧 «매장 규모나 분위기에 따라 운영자가 스스로 판단할 수 있게 두는 게» — предлагает альтернативный подход к регулированию.<br>✅ <b>④ 제도의 운영 방식에 대한 대안을 제시하고 있다.</b>"},{"n":33,"points":2,"instr":"Прослушайте и выберите, о чём идёт речь.","options":["세종대왕의 어린 시절","훈민정음 창제의 배경과 의의","조선 시대의 신분 제도","세종대왕의 정치적 업적 전반"],"answer":3,"script":"여자: 세종대왕은 1443년에 훈민정음을 창제하였습니다. 당시 한자는 익히기가 매우 어려워 일반 백성들이 글을 읽고 쓰는 것이 거의 불가능했습니다. 세종대왕은 누구나 쉽게 배워 일상에서 쓸 수 있는 문자가 필요하다고 판단하여, 발음 기관의 모양을 본떠 자음을, 하늘과 땅과 사람의 모습을 본떠 모음을 만들었습니다. 이렇게 만들어진 훈민정음은 적은 수의 글자로도 모든 소리를 표현할 수 있어 매우 과학적이라는 평가를 받습니다.","explain":"🎧 «훈민정음을 창제하였습니다… 누구나 쉽게 배워 일상에서 쓸 수 있는 문자가 필요하다».<br>✅ <b>③ 훈민정음 창제의 배경과 의의</b><br>🧩 창제하다 = «создавать (письменность)»; 본뜨다 = «брать за основу формы»."},{"n":34,"points":2,"instr":"Прослушайте и выберите верное по содержанию.","options":["훈민정음은 모음보다 자음 수가 훨씬 많다.","한자는 백성들이 쉽게 배울 수 있는 문자였다.","훈민정음의 자음은 발음 기관의 모양을 본떠 만들었다.","훈민정음은 세종대왕 이전에 이미 존재했다."],"answer":3,"script":"여자: 세종대왕은 1443년에 훈민정음을 창제하였습니다. 당시 한자는 익히기가 매우 어려워 일반 백성들이 글을 읽고 쓰는 것이 거의 불가능했습니다. 세종대왕은 누구나 쉽게 배워 일상에서 쓸 수 있는 문자가 필요하다고 판단하여, 발음 기관의 모양을 본떠 자음을, 하늘과 땅과 사람의 모습을 본떠 모음을 만들었습니다. 이렇게 만들어진 훈민정음은 적은 수의 글자로도 모든 소리를 표현할 수 있어 매우 과학적이라는 평가를 받습니다.","explain":"🎧 «발음 기관의 모양을 본떠 자음을… 만들었습니다».<br>✅ <b>③ 훈민정음의 자음은 발음 기관의 모양을 본떠 만들었다.</b><br>✖️ 한자는 어려워서 백성이 배우기 힘들었음; 훈민정음은 세종대왕이 창제."},{"n":35,"points":2,"instr":"Прослушайте и выберите, что делает мужчина.","options":["행사의 시작을 알리고 일정을 소개하고 있다.","경기 결과를 분석하고 있다.","선수들에게 주의 사항을 전달하고 있다.","관객들에게 사과의 말을 전하고 있다."],"answer":1,"script":"남자: 안녕하십니까, 제2회 전국 e스포츠 페스티벌 개회식에 와 주신 여러분 환영합니다. 오늘 행사는 오후 1시부터 예선전이 시작되며, 저녁 7시부터는 결승전이 메인 무대에서 펼쳐질 예정입니다. 행사장 곳곳에 마련된 체험 부스에서도 다양한 게임을 즐기실 수 있으니 편하게 둘러보시기 바랍니다.","explain":"🎧 «개회식에 와 주신 여러분 환영합니다… 오늘 행사는…» — открывает мероприятие и рассказывает программу.<br>✅ <b>① 행사의 시작을 알리고 일정을 소개하고 있다.</b><br>🧩 개회식 = «церемония открытия»; 예선전/결승전 = «отбор/финал»."},{"n":36,"points":2,"instr":"Прослушайте и выберите верное по содержанию.","options":["결승전은 메인 무대가 아닌 곳에서 열린다.","예선전은 저녁 7시에 시작된다.","행사장에는 체험 부스가 마련되어 있다.","이 행사는 올해 처음 열리는 것이다."],"answer":3,"script":"남자: 안녕하십니까, 제2회 전국 e스포츠 페스티벌 개회식에 와 주신 여러분 환영합니다. 오늘 행사는 오후 1시부터 예선전이 시작되며, 저녁 7시부터는 결승전이 메인 무대에서 펼쳐질 예정입니다. 행사장 곳곳에 마련된 체험 부스에서도 다양한 게임을 즐기실 수 있으니 편하게 둘러보시기 바랍니다.","explain":"🎧 «행사장 곳곳에 마련된 체험 부스».<br>✅ <b>③ 행사장에는 체험 부스가 마련되어 있다.</b><br>✖️ 결승전은 메인 무대; 예선전은 오후 1시; 제2회(두 번째)."},{"n":37,"points":2,"instr":"Прослушайте и выберите главную мысль женщины.","options":["요가는 젊은 사람들만 해야 하는 운동이다.","요가 강사가 되려면 자격증이 가장 중요하다.","요가는 신체뿐 아니라 마음을 다스리는 데도 도움이 된다.","요가는 헬스장에서만 배울 수 있다."],"answer":4,"script":"남자: 요가 강사가 되신 지 얼마나 되셨어요? 처음엔 어떤 계기로 시작하셨나요?\n여자: 한 5년쯔음 됐어요. 처음엔 그냥 몸이 뻣뻣해서 시작했는데, 자세를 바로잡고 호흡에 집중하다 보니 마음도 같이 편안해지더라고요. 그래서 요가는 몸을 움직이는 운동이기도 하지만 그만큼 마음을 가다듬는 시간이기도 하다고 생각해요.","explain":"🎧 «요가는 몸을 움직이는 운동이기도 하지만 그만큼 마음을 가다듬는 시간이기도 하다».<br>✅ <b>④ 요가는 신체뿐 아니라 마음을 다스리는 데도 도움이 된다.</b><br>🧩 가다듬다 = «приводить в порядок (мысли, дух)»."},{"n":38,"points":2,"instr":"Прослушайте и выберите верное по содержанию.","options":["요가는 호흡과는 관련이 없는 운동이다.","여자는 처음부터 마음의 안정을 위해 요가를 시작했다.","여자는 요가 강사가 된 지 5년쯔음 되었다.","여자는 요가를 그만두려고 한다."],"answer":3,"script":"남자: 요가 강사가 되신 지 얼마나 되셨어요? 처음엔 어떤 계기로 시작하셨나요?\n여자: 한 5년쯔음 됐어요. 처음엔 그냥 몸이 뻣뻣해서 시작했는데, 자세를 바로잡고 호흡에 집중하다 보니 마음도 같이 편안해지더라고요. 그래서 요가는 몸을 움직이는 운동이기도 하지만 그만큼 마음을 가다듬는 시간이기도 하다고 생각해요.","explain":"🎧 «한 5년쯔음 됐어요».<br>✅ <b>③ 여자는 요가 강사가 된 지 5년쯔음 되었다.</b><br>✖️ 처음엔 몸이 뻣뻣해서 시작; 호흡과 깊이 관련."},{"n":39,"points":2,"instr":"Прослушайте и выберите, о чём говорилось до этого разговора.","options":["임대 주택의 위치를 보여 주는 지도가 있다.","청년 임대 주택의 임대료가 시중 시세보다 낮다.","임대 주택 신청은 누구나 할 수 있다.","임대 주택은 모든 지역에 충분히 마련되어 있다."],"answer":4,"script":"남자: 방금 말씀하신 대로 임대료가 시중 시세의 절반 수준이라는 점이 정말 매력적인 것 같네요.\n여자: 네, 그렇습니다. 청년 임대 주택은 소득 기준을 충족하는 청년들에게 시세보다 훨씬 낮은 임대료로 제공되는데요. 다만 물량이 한정되어 있어 신청자가 많이 몰리는 지역에서는 경쟁률이 상당히 높은 편입니다.","explain":"🎧 «방금 말씀하신 대로 임대료가 시중 시세의 절반 수준» — мужчина повторяет ранее сказанное.<br>✅ <b>④ 청년 임대 주택의 임대료가 시중 시세보다 낮다.</b><br>🧩 시중 시세 = «рыночная цена»; 경쟁률 = «конкуренция (на заявку)»."},{"n":40,"points":2,"instr":"Прослушайте и выберите верное по содержанию.","options":["청년 임대 주택은 물량이 한정되어 있어 경쟁률이 높다.","임대 주택은 소득과 관계없이 누구나 신청할 수 있다.","임대 주택의 임대료는 시중 시세와 동일하다.","인기 지역에서는 경쟁률이 낮은 편이다."],"answer":1,"script":"남자: 방금 말씀하신 대로 임대료가 시중 시세의 절반 수준이라는 점이 정말 매력적인 것 같네요.\n여자: 네, 그렇습니다. 청년 임대 주택은 소득 기준을 충족하는 청년들에게 시세보다 훨씬 낮은 임대료로 제공되는데요. 다만 물량이 한정되어 있어 신청자가 많이 몰리는 지역에서는 경쟁률이 상당히 높은 편입니다.","explain":"🎧 «물량이 한정되어 있어 신청자가 많이 몰리는 지역에서는 경쟁률이 상당히 높은 편».<br>✅ <b>① 청년 임대 주택은 물량이 한정되어 있어 경쟁률이 높다.</b><br>✖️ 소득 기준 충족 필요; 임대료는 시세보다 낮음."},{"n":41,"points":2,"instr":"Прослушайте и выберите главную мысль лекции.","options":["창작 노동은 그 사람의 삶이 자연스럽게 배어 나오는 작업이다.","예술 작품은 빠르게 많이 만들어야 가치가 있다.","창작과 모방은 결과적으로 같은 의미를 갖는다.","예술가는 반드시 특별한 재능을 타고나야 한다."],"answer":1,"script":"여자: 한 작가의 작품들을 쭉 살펴보면 그 사람이 살아온 삶의 흔적이 고스란히 담겨 있는 경우가 많습니다. 창작이라는 노동은 단순히 손으로 무언가를 만드는 행위가 아니라, 작가가 겪은 경험과 고민이 시간이 지나며 자연스럽게 작품 속에 배어 나오는 과정이라고 할 수 있습니다. 그래서 같은 주제라도 작가마다 전혀 다른 색깔의 작품이 나오게 되는 것입니다.","explain":"🎧 «작가가 겪은 경험과 고민이… 자연스럽게 작품 속에 배어 나오는 과정».<br>✅ <b>① 창작 노동은 그 사람의 삶이 자연스럽게 배어 나오는 작업이다.</b><br>🧩 배어 나오다 = «проступать, просачиваться»."},{"n":42,"points":2,"instr":"Прослушайте и выберите верное по содержанию.","options":["창작은 단순한 손동작에 불과하다.","모든 작가는 같은 주제로 똑같은 작품을 만든다.","작가의 경험은 작품에 자연스럽게 영향을 준다.","작품에는 작가의 삶이 드러나지 않는다."],"answer":3,"script":"여자: 한 작가의 작품들을 쭉 살펴보면 그 사람이 살아온 삶의 흔적이 고스란히 담겨 있는 경우가 많습니다. 창작이라는 노동은 단순히 손으로 무언가를 만드는 행위가 아니라, 작가가 겪은 경험과 고민이 시간이 지나며 자연스럽게 작품 속에 배어 나오는 과정이라고 할 수 있습니다. 그래서 같은 주제라도 작가마다 전혀 다른 색깔의 작품이 나오게 되는 것입니다.","explain":"🎧 «작가가 겪은 경험과 고민이… 자연스럽게 작품 속에 배어 나오는».<br>✅ <b>③ 작가의 경험은 작품에 자연스럽게 영향을 준다.</b><br>✖️ 같은 주제라도 작가마다 전혀 다른 작품이 나옴; 창작은 단순한 손동작이 아님."},{"n":43,"points":2,"instr":"Прослушайте и выберите главную мысль рассказа.","options":["버섯은 빛이 강한 곳에서 가장 잘 자란다.","버섯 재배에는 특별한 장비가 필요 없다.","버섯은 아무 온도에서나 잘 자란다.","버섯균은 어둡고 습한 환경에서 가장 잘 자란다."],"answer":4,"script":"남자: 빛이 거의 들지 않는 좁고 어두운 버섯 재배사. 사람이 허리를 굽혀야 겨우 들어갈 수 있을 만큼 좁은 이 공간은 버섯에게는 최적의 환경이다. 버섯균은 빛이 적고 습도가 높은 곳에서 가장 활발하게 자라기 때문에, 재배사 안은 일정한 온도와 습도를 유지하도록 세심하게 관리된다. 나무껍데기로 만든 배지에 영양분을 가득 채워 두면 버섯균이 그 위에서 빠르게 번식해 나간다.","explain":"🎧 «버섯균은 빛이 적고 습도가 높은 곳에서 가장 활발하게 자라기 때문에».<br>✅ <b>④ 버섯균은 어둡고 습한 환경에서 가장 잘 자란다.</b><br>🧩 배지 = «питательная среда, субстрат»; 번식하다 = «размножаться»."},{"n":44,"points":2,"instr":"Прослушайте и выберите верное про выращивание грибов.","options":["버섯 재배사는 천장이 높고 넓게 만들어진다.","버섯균은 나무껍데기를 싫어한다.","버섯 재배사의 온도와 습도는 세심하게 관리된다.","버섯 재배에는 영양분이 필요하지 않다."],"answer":3,"script":"남자: 빛이 거의 들지 않는 좁고 어두운 버섯 재배사. 사람이 허리를 굽혀야 겨우 들어갈 수 있을 만큼 좁은 이 공간은 버섯에게는 최적의 환경이다. 버섯균은 빛이 적고 습도가 높은 곳에서 가장 활발하게 자라기 때문에, 재배사 안은 일정한 온도와 습도를 유지하도록 세심하게 관리된다. 나무껍데기로 만든 배지에 영양분을 가득 채워 두면 버섯균이 그 위에서 빠르게 번식해 나간다.","explain":"🎧 «재배사 안은 일정한 온도와 습도를 유지하도록 세심하게 관리된다».<br>✅ <b>③ 버섯 재배사의 온도와 습도는 세심하게 관리된다.</b><br>✖️ 재배사는 좁고 낮음; 나무껍데기 배지에 영양분을 채워 사용."},{"n":45,"points":2,"instr":"Прослушайте и выберите верное по содержанию.","options":["'자급자족 캠핑밴' 라이프는 캠핑카에서 직접 생활하며 필요한 것을 스스로 마련하는 방식이다.","'자급자족 캠핑밴' 라이프는 전기 발전기 없이는 전혀 불가능하다.","'자급자족 캠핑밴' 라이프를 즐기는 사람은 극히 드물다.","'자급자족 캠핑밴' 라이프는 반드시 산속에서만 가능하다."],"answer":1,"script":"여자: 요즘 캠핑밴 한 대로 필요한 것을 직접 마련하며 사는 '자급자족 캠핑밴' 라이프가 인기라고요?\n남자: 네, 작은 텃밭이나 태양광 패널을 차에 싣고 다니면서 전기와 채소를 스스로 마련하는 분들이 많아졌어요. 발전기가 없어도 태양광만으로 충분히 생활할 수 있다는 분들도 늘고 있고요. 정해진 일상에서 벗어나 직접 필요한 걸 마련하는 과정 자체가 큰 만족감을 준다고 하더라고요.","explain":"🎧 «작은 텃밭이나 태양광 패널을 차에 싣고… 전기와 채소를 스스로 마련하는».<br>✅ <b>① '자급자족 캠핑밴' 라이프는 캠핑카에서 직접 생활하며 필요한 것을 스스로 마련하는 방식이다.</b><br>🧩 자급자족 = «самообеспечение»; 태양광 패널 = «солнечная панель»."},{"n":46,"points":2,"instr":"Прослушайте и выберите, каким способом женщина излагает.","options":["통계 자료를 인용하여 설명하고 있다.","상대방의 의견에 강하게 반박하고 있다.","구체적인 사례를 들어 설명하고 있다.","제도의 문제점을 지적하고 있다."],"answer":3,"script":"여자: 요즘 캠핑밴 한 대로 필요한 것을 직접 마련하며 사는 '자급자족 캠핑밴' 라이프가 인기라고요?\n남자: 네, 작은 텃밭이나 태양광 패널을 차에 싣고 다니면서 전기와 채소를 스스로 마련하는 분들이 많아졌어요. 발전기가 없어도 태양광만으로 충분히 생활할 수 있다는 분들도 늘고 있고요. 정해진 일상에서 벗어나 직접 필요한 걸 마련하는 과정 자체가 큰 만족감을 준다고 하더라고요.","explain":"🎧 «작은 텃밭이나 태양광 패널을… 발전기가 없어도 태양광만으로» — конкретные примеры жизни в кемпере.<br>✅ <b>③ 구체적인 사례를 들어 설명하고 있다.</b>"},{"n":47,"points":2,"instr":"Прослушайте и выберите верное по содержанию.","options":["전기 누진세는 산업용 전기에만 적용된다.","전기 누진세는 모든 사용자에게 동일한 단가를 적용한다.","전기 누진세는 사용량이 많을수록 단가가 높아지는 구조이다.","전기 누진세가 도입된 후 전기 요금은 항상 내려갔다."],"answer":3,"script":"여자: 가정용 전기 요금에 누진세가 적용되는 이유가 정확히 뭔가요?\n남자: 전기를 아껴 쓰도록 유도하기 위해서입니다. 사용량을 몇 단계 구간으로 나누고, 적게 쓰면 단가를 낮게, 많이 쓰면 단가를 훨씨 높게 매기는 방식이죠. 1974년에 처음 도입된 이후 지금까지 이어지고 있는데, 가정용에만 적용되고 산업용이나 일반용 전기에는 다른 방식의 요금제가 적용됩니다.","explain":"🎧 «적게 쓰면 단가를 낮게, 많이 쓰면 단가를 훨씬 높게 매기는 방식».<br>✅ <b>③ 전기 누진세는 사용량이 많을수록 단가가 높아지는 구조이다.</b><br>🧩 누진세 = «прогрессивный тариф»; 구간 = «диапазон, ступень»."},{"n":48,"points":2,"instr":"Прослушайте и выберите позицию мужчины.","options":["누진세 제도의 전면 폐지를 주장하고 있다.","전기 요금을 매달 동일하게 받아야 한다고 주장한다.","산업용 전기에도 누진세를 적용해야 한다고 말한다.","누진세 제도가 도입된 배경과 구조를 설명하고 있다."],"answer":4,"script":"여자: 가정용 전기 요금에 누진세가 적용되는 이유가 정확히 뭔가요?\n남자: 전기를 아껴 쓰도록 유도하기 위해서입니다. 사용량을 몇 단계 구간으로 나누고, 적게 쓰면 단가를 낮게, 많이 쓰면 단가를 훨씬 높게 매기는 방식이죠. 1974년에 처음 도입된 이후 지금까지 이어지고 있는데, 가정용에만 적용되고 산업용이나 일반용 전기에는 다른 방식의 요금제가 적용됩니다.","explain":"🎧 «1974년에 처음 도입된 이후… 가정용에만 적용되고» — объясняет, как и зачем появился тариф.<br>✅ <b>④ 누진세 제도가 도입된 배경과 구조를 설명하고 있다.</b>"},{"n":49,"points":2,"instr":"Прослушайте и выберите верное по содержанию.","options":["블록체인은 거래 기록을 여러 참여자의 기기에 나누어 저장하는 기술이다.","블록체인은 한 중앙 서버에서만 데이터를 관리한다.","블록체인은 가상화폐에만 사용할 수 있는 기술이다.","블록체인 기록은 누구나 쉽게 위조할 수 있다."],"answer":1,"script":"여자: 블록체인이라는 말은 자주 들리는데 정확히 어떤 기술인가요?\n남자: 쉽게 말하면 거래 기록을 한 곳에 모아 두는 대신, 거래에 참여한 여러 사람의 기기에 똑같이 나누어 저장하는 기술입니다. 한쪽 기록을 몰래 바꾸려고 해도 다른 모든 참여자의 기록과 비교되기 때문에 위조하기가 매우 어렵습니다. 최근에는 가상화폐뿐 아니라 계약서나 예술품의 진위를 확인하는 데에도 활용되고 있습니다.","explain":"🎧 «거래에 참여한 여러 사람의 기기에 똑같이 나누어 저장하는 기술입니다».<br>✅ <b>① 블록체인은 거래 기록을 여러 참여자의 기기에 나누어 저장하는 기술이다.</b><br>🧩 진위 = «подлинность»; 위조하다 = «фальсифицировать»."},{"n":50,"points":2,"instr":"Прослушайте и выберите, каким способом женщина ведёт разговор.","options":["블록체인의 개념과 활용 분야를 묻고 듣고 있다.","블록체인의 단점만을 강조하고 있다.","블록체인 기술을 강하게 비판하고 있다.","블록체인과 무관한 화제로 넘어가고 있다."],"answer":1,"script":"여자: 블록체인이라는 말은 자주 들리는데 정확히 어떤 기술인가요?\n남자: 쉽게 말하면 거래 기록을 한 곳에 모아 두는 대신, 거래에 참여한 여러 사람의 기기에 똑같이 나누어 저장하는 기술입니다. 한쪽 기록을 몰래 바꾸려고 해도 다른 모든 참여자의 기록과 비교되기 때문에 위조하기가 매우 어렵습니다. 최근에는 가상화폐뿐 아니라 계약서나 예술품의 진위를 확인하는 데에도 활용되고 있습니다.","explain":"🎧 Женщина задаёт вопрос «정확히 어떤 기술인가요?» и слушает объяснение о применении.<br>✅ <b>① 블록체인의 개념과 활용 분야를 묻고 듣고 있다.</b>"}]},"writing":{"durationMin":50,"label":"Hot TOPIK 제2회 · 쓰기 (51~54)","tasks":[{"n":51,"points":10,"korInstr":"다음을 읽고 ㉠과 ㉡에 들어갈 말을 각각 한 문장으로 쓰시오. (각 10점)","instr":"Прочитайте письмо в интернет-магазин и впишите в ㉠ и ㉡ по одному законченному предложению. Это запрос покупателя об возврате товара — вежливый письменный стиль.","passage":"제목: 환불 문의\n안녕하세요. 지난주에 주문한 가방을 환불하고 싶어서 문의드립니다. 받아 보니 사진과 색이 너무 달라서 사용하기가 어려울 것 같습니다. 환불을 받으려면 ( ㉠ )? 그리고 반품할 때 ( ㉡ )? 답장 기다리겠습니다. 감사합니다.","blanks":[{"slot":"㉠","model":"어떻게 해야 하나요 / 어떤 절차를 거쳐야 하나요","check":"«환불을 받으려면» → нужен вопрос о порядке действий для возврата денег. Вопросительная форма: -아/어야 하나요? / -으면 되나요?"},{"slot":"㉡","model":"택배비는 누가 부담해야 하나요 / 배송비는 제가 내야 하나요","check":"«반품할 때» → логичный следующий вопрос — о том, кто платит за обратную доставку. Вопросительная форма: -아/어야 하나요?"}]},{"n":52,"points":10,"korInstr":"다음을 읽고 ㉠과 ㉡에 들어갈 말을 각각 한 문장으로 쓰시오. (각 10점)","instr":"Прочитайте текст о слезах и впишите в ㉠ и ㉡ по одному законченному предложению. Письменный стиль -ㄴ다/-는다.","passage":"사람은 슬플 때만 우는 것이 아니다. 너무 기쁘거나 감동을 받았을 때도 ( ㉠ ). 이런 눈물은 슬픔의 눈물과는 의미가 다르다. 한편 눈물을 참고 속으로만 삭이면 마음에 쌓인 감정이 ( ㉡ ). 그래서 전문가들은 감정이 생길 때 적절히 눈물을 흘리는 것이 정신 건강에 도움이 된다고 말한다.","blanks":[{"slot":"㉠","model":"눈물이 난다 / 눈물을 흘리기도 한다","check":"«너무 기쁘거나 감동을 받았을 때도» → согласование по смыслу: в такие моменты тоже текут слёзы (хотя не от горя). Стиль -ㄴ다: 눈물이 난다."},{"slot":"㉡","model":"풀리지 않는다 / 그대로 남게 된다","check":"«눈물을 참고 속으로만 삭이면» → если сдерживать слёзы, накопленные чувства НЕ освобождаются (негативный итог). Стиль -ㄴ다: 풀리지 않는다."}]},{"n":53,"points":30,"min":200,"max":300,"korInstr":"다음을 참고하여 '다문화 가정 자녀의 학업 중단 비율 변화'에 대한 글을 200~300자로 쓰시오. 단, 글의 제목은 쓰지 마시오. (30점)","instr":"Опишите данные графика об учебном выбытии детей из мультикультурных семей текстом 200–300 знаков. Заголовок не пишите. Письменный стиль -ㄴ다/-는다.","model":"다문화 가정 자녀의 학업 중단 비율 변화를 살펴보면, 2017년에는 0.8%였던 비율이 2018년에는 0.9%로, 2019년에는 1.0%로 매년 꾸준히 증가하고 있다. 학업을 중단하는 원인으로는 친구 관계의 어려움이 1위로 나타났으며, 한국어 능력 부족이 그 다음으로 높게 나타났다. 이를 통해 다문화 가정 자녀들이 또래 관계와 언어 적응에서 어려움을 겪고 있으며, 학업 중단 비율이 해마다 늘고 있어 이에 대한 지원이 필요함을 알 수 있다.","check":"① 대상(다문화 가정 자녀의 학업 중단 비율)을 밝혔는가? ② 연도별 수치(2017년 0.8% → 2018년 0.9% → 2019년 1.0%, 증가 추세)를 모두 포함했는가? ③ 중단 원인 1위·2위(친구 관계, 한국어 능력 부족)를 언급했는가? ④ 200~300자, 제목 없이, 객관적 문어체 -ㄴ다로 썼는가?","passage":"<svg viewBox='0 0 320 190' width='100%' style='max-width:320px;display:block;margin:4px auto 10px;background:#FFFFFF;border:1px solid #EADDE0;border-radius:10px' xmlns='http://www.w3.org/2000/svg'><line x1='30' y1='150' x2='300' y2='150' stroke='#C9B6BB'/><rect x='55' y='128' width='44' height='22' rx='3' fill='#F6C2C7'/><rect x='140' y='115' width='44' height='35' rx='3' fill='#F2A6AE'/><rect x='225' y='95' width='44' height='55' rx='3' fill='#EE8893'/><text x='77' y='121' font-size='12' text-anchor='middle' fill='#7A5560'>0.8%</text><text x='162' y='108' font-size='12' text-anchor='middle' fill='#7A5560'>0.9%</text><text x='247' y='88' font-size='12' text-anchor='middle' fill='#7A5560'>1.0%</text><text x='77' y='168' font-size='12' text-anchor='middle' fill='#5A4046'>2017년</text><text x='162' y='168' font-size='12' text-anchor='middle' fill='#5A4046'>2018년</text><text x='247' y='168' font-size='12' text-anchor='middle' fill='#5A4046'>2019년</text><text x='160' y='20' font-size='12' text-anchor='middle' fill='#5A4046' font-weight='bold'>다문화 가정 자녀 학업 중단 비율</text></svg><div style='font-size:13px;color:var(--muted);margin:4px 0 10px;text-align:center'>주요 원인: 1위 친구 관계의 어려움, 2위 한국어 능력 부족</div>"},{"n":54,"points":50,"min":600,"max":700,"korInstr":"다음을 주제로 하여 자신의 생각을 600~700자로 글을 쓰시오. 단, 문제를 그대로 옮겨 쓰지 마시오. (50점)","instr":"Напишите сочинение 600–700 знаков на тему «причины гнева, проблемы от неумения его сдерживать и эффективные способы управления гневом». Раскройте все три вопроса, каждый отдельным абзацем; задание дословно не переписывайте. Письменный стиль -ㄴ다/-는다.","passage":"누구나 살면서 화가 나는 순간을 경험한다. 그러나 화를 다스리지 못하면 자신과 주변 사람에게 모두 좋지 않은 영향을 줄 수 있다. 아래의 내용을 중심으로 '분노의 원인과 분노 조절 실패의 문제점, 효과적인 분노 조절 방법'에 대해 자신의 의견을 쓰라.\n• 사람들은 어떤 상황에서 분노를 느끼는가?\n• 분노를 조절하지 못하면 어떤 문제가 생기는가?\n• 분노를 효과적으로 조절하는 방법은 무엇인가?","model":"사람은 누구나 살아가면서 분노를 느끼는 순간을 마주한다. 분노는 인간의 자연스러운 감정이지만 이를 어떻게 다루는지에 따라 그 결과는 크게 달라진다.\n\n먼저 사람들이 분노를 느끼는 상황은 다양하다. 자신이 부당한 대우를 받았다고 느낄 때, 노력한 만큼의 결과를 인정받지 못할 때, 또는 가까운 사람에게 상처받는 말을 들었을 때 분노가 일어난다. 이러한 감정은 누구에게나 자연스럽게 찾아오는 반응이라고 할 수 있다.\n\n그러나 이러한 분노를 적절히 조절하지 못하면 여러 가지 문제가 발생한다. 순간적인 화를 참지 못하고 폭언이나 폭력적인 행동으로 이어지면 주변 사람과의 관계가 무너질 수 있다. 또한 화를 낸 뒤에는 후회와 자책감이 남아 자신의 정신 건강에도 부정적인 영향을 미친다. 직장이나 가정에서 반복적으로 분노를 조절하지 못하면 신뢰를 잃고 고립되는 경우도 생긴다.\n\n그렇다면 분노를 효과적으로 조절하는 방법은 무엇일까? 가장 먼저 화가 났을 때 바로 반응하지 않고 잠시 숨을 고르며 생각할 시간을 갖는 것이 중요하다. 감정이 격해진 상태에서 내린 판단은 후회로 이어지기 쉽기 때문이다. 또한 자신이 왜 화가 났는지 그 원인을 객관적으로 들여다보는 습관을 기르면 같은 상황에서도 점점 더 차분하게 대처할 수 있게 된다. 나는 분노를 무조건 억누르기보다 그 원인을 이해하고 건강하게 표현하는 방법을 배우는 것이 진정한 분노 조절이라고 생각한다.","check":"① 세 질문(분노의 원인 / 분노 조절 실패의 문제점 / 효과적인 조절 방법)을 각각 단락으로 구성했는가? ② 서론과 결론이 있는가? ③ 구어체 표현 없이 -ㄴ다체 문어체로 일관되게 썼는가? ④ 600~700자이며 문제를 그대로 베끼지 않았는가?"}]},"reading":{"durationMin":70,"total":100,"label":"Hot TOPIK 제2회 · 읽기 (1~50)","questions":[{"n":1,"points":2,"instr":"( )에 들어갈 가장 알맞은 것을 고르십시오.","passage":"자기 자신을 ( ) 사람은 다른 사람도 진심으로 사랑하기 어렵다.","options":["사랑하지","사랑하는","사랑하지 않는","사랑하려는"],"answer":2,"explain":"«себя самого… человек, который не любит других искренне».<br>✅ <b>② 사랑하는</b> = «который любит себя» — логичное условие для любви к другим.<br>🧩 진심으로 = «искренне»."},{"n":2,"points":2,"instr":"( )에 들어갈 가장 알맞은 것을 고르십시오.","passage":"주말마다 아이들을 데리고 공원에 ( ).","options":["가는 중이다","갈 뻔했다","가고는 한다","가지 못했다"],"answer":3,"explain":"«Каждые выходные… в парк».<br>✅ <b>③ 가고는 한다</b> = «(обычно) хожу» — повторяющееся действие.<br>🧩 -고는 하다 — привычное/повторяющееся действие."},{"n":3,"points":2,"instr":"밑줄 친 부분과 의미가 비슷한 것을 고르십시오.","passage":"예전에는 매일 손빨래를 했는데 요즘은 <u>그럴 필요가 없다</u>.","options":["그러지 않아도 된다","그래야만 한다","그럴 수밖에 없다","그러기 마련이다"],"answer":1,"explain":"«грэльноп нужды нет» = «не обязательно делать это».<br>✅ <b>① 그러지 않아도 된다</b> — синоним «нет необходимости».<br>✖️ ② «обязан», ③ «не остаётся выбора», ④ «обычно так бывает»."},{"n":4,"points":2,"instr":"밑줄 친 부분과 의미가 비슷한 것을 고르십시오.","passage":"어머니는 화가 나도 <u>겉으로 드러내지 않으신다</u>.","options":["바로 화를 내신다","표현을 잘 하신다","속으로만 삭이신다","화를 풀어 버리신다"],"answer":3,"explain":"«не показывает наружу (своё раздражение)» = «держит в себе».<br>✅ <b>③ 속으로만 삭이신다</b> — синоним.<br>🧩 삭이다 = «сдерживать, переваривать (эмоции)»."},{"n":5,"points":2,"instr":"다음은 무엇에 대한 글인지 고르십시오.","passage":"커피 한 잔 가격으로 한 달! 지금 가입하면 첫 달 반값.","options":["광고","공고","사용 설명서","감사 인사"],"answer":1,"explain":"«За цену чашки кофе — месяц! При подписке сейчас первый месяц со скидкой».<br>✅ <b>① 광고</b> (реклама подписки/сервиса).<br>🧩 가입하다 = «подписаться, вступить»."},{"n":6,"points":2,"instr":"다음은 무엇에 대한 글인지 고르십시오.","passage":"아이에게 자신감을 선물합니다.\n시험 준비 무료 특강!","options":["은행","학원","도서관","편의점"],"answer":2,"explain":"«Подарите ребёнку уверенность. Бесплатные курсы подготовки к экзамену!».<br>✅ <b>② 학원</b> (репетиторский центр).<br>🧩 특강 = «специальный курс лекций»."},{"n":7,"points":2,"instr":"다음은 무엇에 대한 글인지 고르십시오.","passage":"종류별로 나눠서 버려 주세요.\n나누지 않고 버리면 과태료가 부과됩니다.","options":["날씨 정보","시간 절약","분리배출 안내","사회 봉사 모집"],"answer":3,"explain":"«Выбрасывайте, разделяя по видам. Штраф, если не разделить».<br>✅ <b>③ 분리배출 안내</b> (правила сортировки мусора).<br>🧩 과태료가 부과되다 = «штраф налагается»."},{"n":8,"points":2,"instr":"다음은 무엇에 대한 글인지 고르십시오.","passage":"번호표를 뽑고 순서를 기다려 주세요.\n화면에 번호가 뜨면 창구로 와 주세요.","options":["주의 사항","배달 안내","이용 순서","사용 설명서"],"answer":3,"explain":"«Возьмите номерок и ждите очереди. Когда номер появится на экране — подойдите к окну».<br>✅ <b>③ 이용 순서</b> (порядок обслуживания по номеркам).<br>🧩 번호표를 뽑다 = «взять номерок»; 창구 = «окошко (обслуживания)»."},{"n":9,"points":2,"instr":"다음 글의 내용과 같은 것을 고르십시오.","passage":"기부 벼룩시장\n· 기간: 3월 한 달간\n· 장소: 시민 도서관 앞 광장\n· 품목: 책, 의류, 장난감 등\n· 판매 수익금은 전액 어려운 이웃에게 전달됩니다.\n· 문의: 02-123-4567","options":["판매 수익금은 전부 이웃을 돕는 데 쓰인다.","아무 물건이나 기부할 수 있다.","행사는 1년 내내 진행된다.","행사장은 도서관 안에서 열린다."],"answer":1,"explain":"«판매 수익금은 전액 어려운 이웃에게 전달됩니다».<br>✅ <b>① 판매 수익금은 전부 이웃을 돕는 데 쓰인다.</b><br>✖️ 품목은 책·의류·장난감 등으로 제한; 기간은 3월 한 달; 장소는 광장(도서관 앞)."},{"n":10,"points":2,"instr":"다음 도표의 내용과 같은 것을 고르십시오.","passage":"<svg viewBox='0 0 300 165' width='100%' style='max-width:300px;display:block;margin:4px auto 10px;background:#FFFFFF;border:1px solid #EADDE0;border-radius:10px' xmlns='http://www.w3.org/2000/svg'><line x1='28' y1='128' x2='288' y2='128' stroke='#C9B6BB'/><rect x='42' y='48' width='36' height='80' rx='3' fill='#EE8893'/><rect x='112' y='68' width='36' height='60' rx='3' fill='#F2A6AE'/><rect x='182' y='98' width='36' height='30' rx='3' fill='#F6C2C7'/><rect x='252' y='113' width='36' height='15' rx='3' fill='#F8D6D9'/><text x='60' y='41' font-size='12' text-anchor='middle' fill='#7A5560'>38%</text><text x='130' y='61' font-size='12' text-anchor='middle' fill='#7A5560'>29%</text><text x='200' y='91' font-size='12' text-anchor='middle' fill='#7A5560'>14%</text><text x='270' y='106' font-size='12' text-anchor='middle' fill='#7A5560'>7%</text><text x='60' y='146' font-size='12' text-anchor='middle' fill='#5A4046'>토요일</text><text x='130' y='146' font-size='12' text-anchor='middle' fill='#5A4046'>일요일</text><text x='200' y='146' font-size='12' text-anchor='middle' fill='#5A4046'>금요일</text><text x='270' y='146' font-size='12' text-anchor='middle' fill='#5A4046'>평일</text></svg>'사람들이 가장 좋아하는 쇼핑 요일'을 조사한 결과입니다.","options":["토요일을 좋아하는 사람이 가장 많다.","평일을 좋아하는 사람이 일요일을 좋아하는 사람보다 많다.","금요일과 평일을 좋아하는 사람의 비율은 같다.","일요일을 좋아하는 사람은 전체의 절반이 넘는다."],"answer":1,"explain":"38%(토요일)이 가장 높음.<br>✅ <b>① 토요일을 좋아하는 사람이 가장 많다.</b><br>✖️ 평일(7%) < 일요일(29%); 금요일(14%)≠평일(7%); 일요일은 29%로 절반 미달."},{"n":11,"points":2,"instr":"다음 글의 내용과 같은 것을 고르십시오.","passage":"최근 한 지역에 휴대폰 액세서리를 전문으로 파는 가게들이 모여 있는 골목 상권이 생겨 화제다. 한 가게가 자리를 잡자 비슷한 업종의 가게들이 잇따라 들어서면서 자연스럽게 형성된 곳이다. 가격이 저렴하고 다양한 제품을 한 곳에서 비교할 수 있어 젊은 손님들에게 인기가 많다.","options":["이 골목은 정부의 계획으로 만들어졌다.","이 가게들은 모두 같은 회사가 운영한다.","이곳에서는 휴대폰 액세서리만 판매한다.","손님들은 여러 제품을 한 곳에서 비교할 수 있다."],"answer":4,"explain":"«가격이 저렴하고 다양한 제품을 한 곳에서 비교할 수 있어».<br>✅ <b>④ 손님들은 여러 제품을 한 곳에서 비교할 수 있다.</b><br>✖️ 자연스럽게 형성됐을 뿐 계획된 것 아님; 가게들은 각각 다른 운영자."},{"n":12,"points":2,"instr":"다음 글의 내용과 같은 것을 고르십시오.","passage":"외국어 단어를 외울 때 스마트폰 앱을 활용하는 사람이 늘고 있다. 이런 앱들은 사진과 함께 단어를 보여 주거나 발음을 들려주는 등 다양한 방식으로 학습을 도와준다. 틀린 단어를 자동으로 모아서 반복 학습할 수 있게 해 주는 기능도 인기가 많다.","options":["스마트폰 앱은 발음을 들려주지 않는다.","사람들은 단어장을 직접 손으로 써야만 외운다.","앱은 틀린 단어를 자동으로 모아 반복 학습하게 해 준다.","외국어 단어 학습 앱은 최근에 사라지고 있다."],"answer":3,"explain":"«틀린 단어를 자동으로 모아서 반복 학습할 수 있게».<br>✅ <b>③ 앱은 틀린 단어를 자동으로 모아 반복 학습하게 해 준다.</b><br>✖️ 발음도 들려줌; 손으로 쓰는 방식이 아님; 인기가 늘고 있음."},{"n":13,"points":2,"instr":"다음을 순서대로 맞게 배열한 것을 고르십시오.","passage":"(가) 숭례문은 한국의 국보 제1호로 지정된 문화재이다. (나) 그래서 화재나 훼손으로부터 보호하기 위해 철저히 관리되고 있다. (다) 오랜 역사를 지니고 있을 뿐 아니라 건축적 가치도 매우 높다. (라) 이처럼 소중한 문화유산을 지키려는 노력은 앞으로도 계속되어야 한다.","options":["(가)-(다)-(나)-(라)","(다)-(가)-(나)-(라)","(나)-(가)-(다)-(라)","(가)-(나)-(다)-(라)"],"answer":1,"explain":"✅ <b>① (가)-(다)-(나)-(라)</b>: 숭례문 소개 → 가치 설명 → 그래서 보호한다 → 결론(노력은 계속돼야 한다)."},{"n":14,"points":2,"instr":"다음을 순서대로 맞게 배열한 것을 고르십시오.","passage":"(가) 그래서 많은 매장들이 비닐봉지 대신 종이봉투나 다회용 가방을 권장하고 있다. (나) 최근 플라스틱 쓰레기로 인한 환경 오염이 심각한 문제로 떠올랐다. (다) 이러한 작은 실천들이 모여 환경 보호에 큰 도움이 될 수 있다. (라) 손님들도 이런 변화에 적극적으로 동참하는 분위기다.","options":["(다)-(나)-(가)-(라)","(가)-(나)-(라)-(다)","(나)-(라)-(가)-(다)","(나)-(가)-(라)-(다)"],"answer":4,"explain":"✅ <b>④ (나)-(가)-(라)-(다)</b>: 환경 오염 문제 → 그래서 매장의 대응 → 손님들도 동참 → 결론(작은 실천이 도움이 된다)."},{"n":15,"points":2,"instr":"다음을 순서대로 맞게 배열한 것을 고르십시오.","passage":"(가) 처음 외국에 도착했을 때는 언어도 음식도 모든 것이 낯설었다. (나) 그래서 한동안은 집 밖에 나가는 것조차 두려웠다. (다) 하지만 시간이 지나면서 조금씩 익숙해지기 시작했다. (라) 이제는 그곳이 또 하나의 고향처럼 편안하게 느껴진다.","options":["(가)-(나)-(다)-(라)","(나)-(가)-(다)-(라)","(가)-(다)-(나)-(라)","(다)-(가)-(나)-(라)"],"answer":1,"explain":"✅ <b>① (가)-(나)-(다)-(라)</b>: 낯선 환경 → 그래서 두려웠음 → 하지만 익숙해짐 → 결론(이제는 고향처럼 편안함)."},{"n":16,"points":2,"instr":"( )에 들어갈 말로 가장 알맞은 것을 고르십시오.","passage":"고교학점제는 학생이 진로와 적성에 따라 듣고 싶은 과목을 직접 선택해 듣는 제도이다. 이 제도가 시행되면 ( ) 자신에게 맞는 학습 계획을 세울 수 있다. 다만 학교마다 개설할 수 있는 과목 수에 차이가 있어 지역 간 격차에 대한 우려도 있다.","options":["모든 학생이 같은 과목을","학생들이 진로에 맞게","교사들이 수업 시간표를","학교가 일방적으로 정한 과목을"],"answer":2,"explain":"«학생이 진로와 적성에 따라… 과목을 직접 선택해».<br>✅ <b>② 학생들이 진로에 맞게</b> — 본문의 취지와 일치.<br>🧩 고교학점제 = «система зачётных баллов в старшей школе»."},{"n":17,"points":2,"instr":"( )에 들어갈 말로 가장 알맞은 것을 고르십시오.","passage":"여가 계획을 세울 때는 단순히 즐길 거리를 찾는 것보다 ( ) 더 중요하다. 자신이 무엇을 할 때 가장 행복한지 점검하는 시간을 가지면, 시간과 비용을 낭비하지 않고도 만족스러운 휴식을 보낼 수 있다.","options":["많은 돈을 쓰는 것이","유행을 따라가는 것이","자신을 돌아보는 것이","계획을 세우지 않는 것이"],"answer":4,"explain":"«자신이 무엇을 할 때 가장 행복한지 점검하는 시간을».<br>✅ <b>④ 자신을 돌아보는 것이</b> — 다음 문장의 «점검하는 시간»과 연결된다.<br>🧩 점검하다 = «проверять, осматривать»."},{"n":18,"points":2,"instr":"( )에 들어갈 말로 가장 알맞은 것을 고르십시오.","passage":"국제기구인 유엔은 각 회원국이 내는 분담금으로 운영된다. 분담금의 액수는 ( ) 정해지는데, 이를 통해 형평성 있게 비용을 나누고자 한다. 따라서 경제 규모가 큰 나라일수록 더 많은 분담금을 부담하게 된다.","options":["회원국의 인구수에 따라","회원국의 가입 순서에 따라","각 나라의 국민 소득에 따라","나라의 면적 크기에 따라"],"answer":2,"explain":"«경제 규모가 큰 나라일수록 더 많은 분담금을 부담».<br>✅ <b>② 각 나라의 국민 소득에 따라</b> — 경제 규모(소득)와 연결된다.<br>🧩 분담금 = «взнос, доля»; 형평성 = «справедливость, равноправие»."},{"n":19,"points":2,"instr":"( )에 가장 알맞은 것을 고르십시오.","passage":"사람들은 자신의 신념과 다른 정보를 접하면 마음이 불편해진다. 이런 불편함을 줄이기 위해 사람들은 자신의 생각과 맞지 않는 정보는 무시하고 자신의 생각을 지지하는 정보만 받아들이려 한다. ( ) 한번 형성된 믿음은 쉽게 바뀌지 않게 된다.","options":["그 결과","그런데","오히려","반대로"],"answer":1,"explain":"«자신의 생각을 지지하는 정보만 받아들이려 한다» → «믿음은 쉽게 바뀌지 않게 된다» — 결과로 이어지는 흐름.<br>✅ <b>① 그 결과</b><br>🧩 신념 = «убеждение»; 형성되다 = «формироваться»."},{"n":20,"points":2,"instr":"이 글의 내용과 같은 것을 고르십시오.","passage":"사람들은 자신의 신념과 다른 정보를 접하면 마음이 불편해진다. 이런 불편함을 줄이기 위해 사람들은 자신의 생각과 맞지 않는 정보는 무시하고 자신의 생각을 지지하는 정보만 받아들이려 한다. 그 결과 한번 형성된 믿음은 쉽게 바뀌지 않게 된다.","options":["사람들은 자신의 신념과 다른 정보를 적극적으로 찾는다.","한번 형성된 믿음은 쉽게 바뀌지 않는 경향이 있다.","사람들은 모든 정보를 공평하게 받아들인다.","신념과 다른 정보를 접해도 마음은 편안하다."],"answer":2,"explain":"«한번 형성된 믿음은 쉽게 바뀌지 않게 된다».<br>✅ <b>② 한번 형성된 믿음은 쉽게 바뀌지 않는 경향이 있다.</b><br>✖️ 다른 정보는 오히려 무시함; 불편함을 느낌."},{"n":21,"points":2,"instr":"( )에 가장 알맞은 것을 고르십시오.","passage":"가을이 되면 산과 길가의 나무들이 붉고 노랗게 물들어 단풍 구경을 나서는 사람들이 많아진다. 단풍이 드는 시기는 보통 10월 중순부터 11월 초까지인데, 이 시기를 놓치면 ( ) 잎이 모두 떨어져 버린다. 그래서 단풍 명소를 찾는 사람들은 미리 절정 시기를 확인하고 일정을 잡는다.","options":["천천히 색이 변하면서","눈 깜짝할 사이에","아무리 기다려도","해마다 똑같이"],"answer":2,"explain":"«시기를 놓치면 잎이 모두 떨어져 버린다» —짧은 기간에 빠르게 진행됨을 나타낸다.<br>✅ <b>② 눈 깜짝할 사이에</b> = «в мгновение ока» — очень быстро.<br>🧩 절정 = «пик, разгар»."},{"n":22,"points":2,"instr":"이 글의 내용으로 알 수 없는 것을 고르십시오.","passage":"가을이 되면 산과 길가의 나무들이 붉고 노랗게 물들어 단풍 구경을 나서는 사람들이 많아진다. 단풍이 드는 시기는 보통 10월 중순부터 11월 초까지인데, 이 시기를 놓치면 눈 깜짝할 사이에 잎이 모두 떨어져 버린다. 그래서 단풍 명소를 찾는 사람들은 미리 절정 시기를 확인하고 일정을 잡는다.","options":["단풍은 보통 10월 중순부터 시작된다.","날씨에 따라 교통사고 위험이 달라진다.","사람들은 단풍 절정 시기를 미리 확인한다.","단풍이 드는 기간은 비교적 짧은 편이다."],"answer":2,"explain":"본문에 교통사고나 날씨 관련 내용은 없다.<br>✅ <b>② 날씨에 따라 교통사고 위험이 달라진다.</b> — 본문에서 알 수 없는 내용."},{"n":23,"points":2,"instr":"( )에 가장 알맞은 것을 고르십시오.","passage":"처음 마라톤에 도전했을 때는 5킬로미터도 채 못 가서 숨이 차고 다리가 풀렸다. 포기하고 싶은 순간이 한두 번이 아니었지만, ( ) 조금씩 거리를 늘려 나갔다. 결국 여섯 달 만에 처음으로 완주에 성공했을 때의 감격은 지금도 잊을 수 없다.","options":["매일 꾸준히 연습하며","한 번에 포기하면서","속도를 점점 줄이면서","아예 시작도 안 하면서"],"answer":1,"explain":"«조금씩 거리를 늘려 나갔다… 결국 완주에 성공» — 포기하지 않고 꾸준히 노력한 과정.<br>✅ <b>① 매일 꾸준히 연습하며</b><br>🧩 완주 = «финиш, прохождение всей дистанции»."},{"n":24,"points":2,"instr":"이 글에 나타난 글쓴이의 심정으로 가장 알맞은 것을 고르십시오.","passage":"처음 마라톤에 도전했을 때는 5킬로미터도 채 못 가서 숨이 차고 다리가 풀렸다. 포기하고 싶은 순간이 한두 번이 아니었지만, 매일 꾸준히 연습하며 조금씩 거리를 늘려 나갔다. 결국 여섯 달 만에 처음으로 완주에 성공했을 때의 감격은 지금도 잊을 수 없다.","options":["지루하고 따분하다","불안하고 초조하다","뿌듯하고 감격스럽다","무관심하고 냉담하다"],"answer":3,"explain":"«완주에 성공했을 때의 감격은 지금도 잊을 수 없다».<br>✅ <b>③ 뿌듯하고 감격스럽다</b> — 노력 끝에 목표를 이룬 감정."},{"n":25,"points":2,"instr":"다음 신문 기사 제목을 가장 잘 설명한 것을 고르십시오.","passage":"1인 가구 급증… 소형 주택 '품절 대란'","options":["1인 가구가 늘면서 소형 주택을 구하기 어려워졌다.","1인 가구가 줄어 소형 주택이 남아돈다.","소형 주택 가격이 크게 떨어졌다.","1인 가구는 큰 집을 선호한다."],"answer":1,"explain":"품절 대란=«дефицит, всё расхватали» → 1인 가구 증가로 소형 주택 구하기가 어려워짐.<br>✅ <b>① 1인 가구가 늘면서 소형 주택을 구하기 어려워졌다.</b>"},{"n":26,"points":2,"instr":"다음 신문 기사 제목을 가장 잘 설명한 것을 고르십시오.","passage":"건강식품 매출 '쑥쑥'… 면역력에 관심 늘어","options":["건강식품에 대한 관심이 줄고 있다.","사람들이 면역력에 관심을 가지면서 건강식품 판매가 늘었다.","건강식품 가격이 내려가고 있다.","면역력과 건강식품은 관련이 없다."],"answer":2,"explain":"쑥쑥=«быстро расти» → 면역력 관심 증가로 건강식품 매출이 늘었다.<br>✅ <b>② 사람들이 면역력에 관심을 가지면서 건강식품 판매가 늘었다.</b>"},{"n":27,"points":2,"instr":"다음 신문 기사 제목을 가장 잘 설명한 것을 고르십시오.","passage":"폭설로 항공편 줄줄이 결항… 공항 발 묶여","options":["폭설로 비행기들이 정상적으로 운항했다.","날씨가 좋아 항공편이 늘어났다.","폭설 때문에 많은 항공편이 취소되었다.","공항에 사람이 한 명도 없었다."],"answer":3,"explain":"줄줄이 결항=«массовая отмена рейсов подряд» → 폭설로 비행기가 많이 취소됨.<br>✅ <b>③ 폭설 때문에 많은 항공편이 취소되었다.</b>"},{"n":28,"points":2,"instr":"( )에 들어갈 말로 가장 알맞은 것을 고르십시오.","passage":"오래 사용한 물건을 버리지 않고 고쳐서 다시 쓰는 사람들이 늘고 있다. 고치는 데 시간과 비용이 들기는 하지만 ( ) 환경을 지킬 수 있다는 생각으로 이러한 수고를 마다하지 않는다.","options":["쓰레기를 줄이고","새 물건을 사고","돈을 더 쓰고","물건을 버리고"],"answer":1,"explain":"«버리지 않고 고쳐서 다시 쓰는… 환경을 지킬 수 있다» → 쓰레기를 줄이는 행위가 핵심.<br>✅ <b>① 쓰레기를 줄이고</b><br>🧩 마다하지 않다 = «не отказываться (от чего-то трудного)»."},{"n":29,"points":2,"instr":"이 글의 주제로 가장 알맞은 것을 고르십시오.","passage":"오래 사용한 물건을 버리지 않고 고쳐서 다시 쓰는 사람들이 늘고 있다. 고치는 데 시간과 비용이 들기는 하지만 쓰레기를 줄이고 환경을 지킬 수 있다는 생각으로 이러한 수고를 마다하지 않는다.","options":["물건은 새것일 때 가장 가치가 있다.","고치는 것보다 새로 사는 것이 더 경제적이다.","물건을 고쳐 쓰는 것은 환경 보호에 도움이 된다.","수고가 드는 일은 가능한 한 피해야 한다."],"answer":3,"explain":"«쓰레기를 줄이고 환경을 지킬 수 있다는 생각으로».<br>✅ <b>③ 물건을 고쳐 쓰는 것은 환경 보호에 도움이 된다.</b>"},{"n":30,"points":2,"instr":"( )에 들어갈 말로 가장 알맞은 것을 고르십시오.","passage":"식물도 사람처럼 스트레스를 받으면 ( ). 물을 너무 적게 주거나 빛이 부족하면 잎의 색이 변하거나 시들시들해지는데 이는 식물이 보내는 일종의 신호라고 할 수 있다. 따라서 식물을 잘 키우려면 평소와 다른 모습을 잘 살펴보는 것이 중요하다.","options":["더 빨리 자란다","아무 변화가 없다","항상 건강해진다","겉모습에 변화가 나타난다"],"answer":4,"explain":"«잎의 색이 변하거나 시들시들해지는데» — 스트레스를 받으면 겉으로 변화가 드러남.<br>✅ <b>④ 겉모습에 변화가 나타난다</b><br>🧩 시들시들하다 = «вянуть, чахнуть»."},{"n":31,"points":2,"instr":"( )에 들어갈 말로 가장 알맞은 것을 고르십시오.","passage":"청년을 위한 주택 청약 제도는 본래 소득이 적은 청년들의 주거 부담을 줄이기 위해 만들어졌다. 그런데 일부 지역에서는 인기가 높아지면서 ( ) 오히려 소득이 낮은 청년들이 당첨되기가 더 어려워지는 모순적인 상황이 벌어지고 있다.","options":["경쟁률이 낮아져","경쟁이 치열해지면서","신청 자격이 사라져","청약 제도가 폐지되어"],"answer":2,"explain":"«인기가 높아지면서 오히려… 당첨되기가 더 어려워지는».<br>✅ <b>② 경쟁이 치열해지면서</b> — 인기로 인한 경쟁 심화가 모순을 만든다.<br>🧩 청약 = «заявка на жильё»; 당첨되다 = «выиграть (в лотерею жилья)»."},{"n":32,"points":2,"instr":"이 글의 내용과 같은 것을 고르십시오.","passage":"최근 한 번뿐인 인생을 즐기자는 '욜로' 소비를 내세운 카드 상품들이 잇따라 출시되고 있다. 여행이나 취미 활동에 큰 혜택을 주는 방식인데, 이런 카드는 직장인들의 스트레스 해소와 자기만족을 자극하는 마케팅으로 인기를 끌고 있다. 다만 과도한 지출로 이어질 수 있다는 우려도 함께 나온다.","options":["욜로 카드는 저축 혜택에 초점을 맞춘 상품이다.","욜로 카드는 직장인들에게 인기가 없다.","욜로 소비를 내세운 카드는 과소비로 이어질 위험도 있다.","이런 카드는 여행과는 관련이 없다."],"answer":3,"explain":"«과도한 지출로 이어질 수 있다는 우려도 함께 나온다».<br>✅ <b>③ 욜로 소비를 내세운 카드는 과소비로 이어질 위험도 있다.</b><br>✖️ 저축이 아니라 여행·취미에 혜택; 직장인들에게 인기 있음."},{"n":33,"points":2,"instr":"이 글의 내용과 같은 것을 고르십시오.","passage":"한 명의 노인이 다른 노인을 돌보는 '노노케어' 제도가 여러 지역에서 운영되고 있다. 비교적 건강한 노인이 자원봉사자로 등록해 거동이 불편한 노인의 집을 방문해 식사나 청소를 돕는 방식이다. 노인 인력을 활용하면서 동시에 돌봄이 필요한 노인을 지원할 수 있어 좋은 평가를 받고 있다.","options":["노노케어는 청년 자원봉사자만 참여할 수 있다.","노노케어에 참여하면 비용을 지불해야 한다.","노노케어는 노인 인력을 활용하는 새로운 돌봄 방식이다.","노노케어는 일부 도시에서만 시범 운영되고 있다."],"answer":3,"explain":"«노인 인력을 활용하면서 동시에 돌봄이 필요한 노인을 지원».<br>✅ <b>③ 노노케어는 노인 인력을 활용하는 새로운 돌봄 방식이다.</b><br>✖️ 노인이 노인을 돌봄(청년 아님); 자원봉사이므로 무료."},{"n":34,"points":2,"instr":"이 글의 내용과 같은 것을 고르십시오.","passage":"관광산업이 지역 경제에 큰 도움이 되는 것은 분명하지만, 한정된 관광지에 시설 개발이 집중되면 오히려 자연환경이 훼손될 수 있다는 우려가 나온다. 전문가들은 관광객 수를 적절히 제한하거나 친환경적인 개발 방식을 도입해야 지속 가능한 관광이 가능하다고 지적한다.","options":["관광산업은 지역 경제에 전혀 도움이 되지 않는다.","시설 개발이 많을수록 자연환경은 더 좋아진다.","무분별한 개발은 자연환경을 훼손할 수 있다.","전문가들은 관광객 수 제한에 반대한다."],"answer":3,"explain":"«한정된 관광지에 시설 개발이 집중되면 오히려 자연환경이 훼손될 수 있다».<br>✅ <b>③ 무분별한 개발은 자연환경을 훼손할 수 있다.</b><br>✖️ 관광산업은 경제에 도움이 됨; 전문가는 적절한 제한을 지지함."},{"n":35,"points":2,"instr":"이 글의 주제로 가장 알맞은 것을 고르십시오.","passage":"능동적 소비자란 단순히 광고를 보고 제품을 구매하는 데서 그치지 않고, 다양한 후기와 정보를 비교하며 비판적으로 판단하는 소비자를 말한다. 이들은 문제가 있는 제품에 대해 적극적으로 의견을 제시하고, 기업의 생산 방식에까지 영향을 미치기도 한다.","options":["능동적 소비자는 정보를 비교하고 적극적으로 의견을 낸다.","소비자는 광고만 보고 제품을 구매해야 한다.","기업은 소비자의 의견에 영향을 받지 않는다.","후기를 비교하는 소비자는 점점 줄어들고 있다."],"answer":1,"explain":"«다양한 후기와 정보를 비교하며 비판적으로 판단… 적극적으로 의견을 제시».<br>✅ <b>① 능동적 소비자는 정보를 비교하고 적극적으로 의견을 낸다.</b>"},{"n":36,"points":2,"instr":"이 글의 내용과 같은 것을 고르십시오.","passage":"출산율 하락이 사회적 문제로 떠오르면서 정부와 지방자치단체가 다양한 출산 장려 정책을 내놓고 있다. 출산 지원금 지급은 물론, 육아휴직 기간 확대, 어린이집 우선 입소 혜택 등 정책의 범위가 점점 넓어지는 추세다.","options":["출산 장려 정책은 지원금 지급에만 그치고 있다.","출산율은 최근 빠르게 증가하고 있다.","육아휴직 기간을 확대하는 지자체도 있다.","어린이집 우선 입소 혜택은 폐지되었다."],"answer":3,"explain":"«육아휴직 기간 확대, 어린이집 우선 입소 혜택 등 정책의 범위가 점점 넓어지는».<br>✅ <b>③ 육아휴직 기간을 확대하는 지자체도 있다.</b><br>✖️ 지원금만이 아니라 범위가 넓음; 출산율은 하락 중."},{"n":37,"points":2,"instr":"이 글의 내용과 같은 것을 고르십시오.","passage":"자녀가 셋 이상인 다자녀 가정을 위한 지원이 점차 확대되고 있다. 일부 지역에서는 다자녀 가정에 공공시설 이용료를 면제해 주거나 대중교통 요금을 할인해 준다. 이러한 지원이 출산을 결심하는 데 직접적인 영향을 준다는 분석도 나온다.","options":["다자녀 가정 지원은 모든 지역에서 동일하다.","다자녀 가정은 자녀가 둘 이상인 가정을 말한다.","일부 지역은 다자녀 가정에 교통 요금을 할인해 준다.","다자녀 지원 정책은 출산율에 영향을 주지 않는다."],"answer":3,"explain":"«일부 지역에서는… 대중교통 요금을 할인해 준다».<br>✅ <b>③ 일부 지역은 다자녀 가정에 교통 요금을 할인해 준다.</b><br>✖️ 지역마다 다름; 다자녀는 셋 이상; 출산 결심에 영향을 줌."},{"n":38,"points":2,"instr":"이 글의 주제로 가장 알맞은 것을 고르십시오.","passage":"자녀가 셋 이상인 다자녀 가정을 위한 지원이 점차 확대되고 있다. 일부 지역에서는 다자녀 가정에 공공시설 이용료를 면제해 주거나 대중교통 요금을 할인해 준다. 이러한 지원이 출산을 결심하는 데 직접적인 영향을 준다는 분석도 나온다.","options":["다자녀 가정의 생활은 항상 어렵다.","다자녀 가정에 대한 지원 확대가 출산 결심에 영향을 준다.","공공시설 이용료는 모두에게 무료여야 한다.","대중교통 요금은 매년 오르고 있다."],"answer":3,"explain":"«지원이 출산을 결심하는 데 직접적인 영향을 준다는 분석».<br>✅ <b>③ 다자녀 가정에 대한 지원 확대가 출산 결심에 영향을 준다.</b>"},{"n":39,"points":2,"instr":"다음 문장이 들어갈 위치로 가장 알맞은 것을 고르십시오.","passage":"[보기] 그 결과 작년보다 신청자 수가 두 배 가까이 늘었다. ── 시는 청년 1인 가구를 위한 임대주택 지원을 새롭게 시작했다. ㉠ 기존보다 임대료를 낮추고 신청 절차도 간단하게 바꾸었다. ㉡ 이번 정책이 큰 호응을 얻은 것으로 보인다. ㉢ 앞으로도 이러한 지원이 꾸준히 이어지기를 바란다. ㉣","options":["㉠","㉡","㉢","㉣"],"answer":3,"explain":"✅ <b>③ ㉢</b>: «그 결과 신청자가 두 배 늘었다» — 정책 변화(㉠) 다음, «호응을 얻었다»(㉡)는 결론 앞에 위치."},{"n":40,"points":2,"instr":"다음 문장이 들어갈 위치로 가장 알맞은 것을 고르십시오.","passage":"[보기] 하지만 시간이 지나면서 이러한 부작용은 점점 줄어들었다. ── 새로운 신호등 체계가 도입되었을 때 운전자들은 혼란스러워했다. ㉠ 기존 방식과 너무 달라 사고가 늘기도 했다. ㉡ 사람들이 새 방식에 점점 적응하게 된 것이다. ㉢ 이제는 대부분의 운전자가 새 체계를 편하게 이용하고 있다. ㉣","options":["㉠","㉡","㉢","㉣"],"answer":1,"explain":"✅ <b>① ㉠</b>: 도입 초기 혼란과 사고(㉠ 앞) 다음에 «하지만 시간이 지나면서 부작용이 줄었다»가 오고, 이어서 적응 과정(㉡)이 따라온다."},{"n":41,"points":2,"instr":"이 글에 나타난 '나'의 심정으로 가장 알맞은 것을 고르십시오.","passage":"이삿짐을 다 옮기고 나니 텅 빈 방이 낯설게 느껴졌다. 십 년을 살았던 집인데 막상 떠나려니 발걸음이 떼어지지 않았다. 벽에 남은 아이의 키 표시를 손으로 한 번 쓸어 보고서야 비로소 문을 나설 수 있었다.","options":["지루하고 따분하다","아쉽고 서운하다","화가 나고 억울하다","무섭고 불안하다"],"answer":2,"explain":"«발걸음이 떼어지지 않았다», «손으로 한 번 쓸어 보고서야» — 정든 집을 떠나는 데서 오는 감정.<br>✅ <b>② 아쉽고 서운하다</b><br>🧩 발걸음이 떼어지지 않다 = «не может уйти, не отрывая ноги»."},{"n":42,"points":2,"instr":"이 글의 내용과 같은 것을 고르십시오.","passage":"이삿짐을 다 옮기고 나니 텅 빈 방이 낯설게 느껴졌다. 십 년을 살았던 집인데 막상 떠나려니 발걸음이 떼어지지 않았다. 벽에 남은 아이의 키 표시를 손으로 한 번 쓸어 보고서야 비로소 문을 나설 수 있었다.","options":["나는 이 집에서 일 년만 살았다.","나는 이삿짐을 옮기지 않았다.","나는 벽의 표시를 보며 이 집을 떠났다.","나는 새집이 마음에 들지 않았다."],"answer":3,"explain":"«벽에 남은 아이의 키 표시를 손으로 한 번 쓸어 보고서야 비로소 문을 나설 수 있었다».<br>✅ <b>③ 나는 벽의 표시를 보며 이 집을 떠났다.</b><br>✖️ 십 년을 산 집(1년 아님)."},{"n":43,"points":2,"instr":"이 글의 주제로 가장 알맞은 것을 고르십시오.","passage":"이삿짐을 다 옮기고 나니 텅 빈 방이 낯설게 느껴졌다. 십 년을 살았던 집인데 막상 떠나려니 발걸음이 떼어지지 않았다. 벽에 남은 아이의 키 표시를 손으로 한 번 쓸어 보고서야 비로소 문을 나설 수 있었다.","options":["이사는 번거롭고 힘든 일이다.","오래 산 공간에는 추억과 정이 깃든다.","새집은 항상 헌집보다 좋다.","이삿짐 정리는 가족이 함께 해야 한다."],"answer":4,"explain":"십 년 동안 쌓인 추억(아이의 키 표시) 때문에 떠나기 아쉬워하는 마음을 담은 글이다.<br>✅ <b>④ 오래 산 공간에는 추억과 정이 깃든다.</b><br>🧩 깃들다 = «таиться, пребывать (об ощущении, духе места)»."},{"n":44,"points":2,"instr":"이 글의 주제로 가장 알맞은 것을 고르십시오.","passage":"인공지능 기술이 발전하면서 일부 단순 반복 업무는 기계가 대신하게 되었다. 그러나 사람과 사람 사이의 소통이나 창의적인 판단이 필요한 일은 여전히 사람의 손길이 필요하다. 결국 기술 발전은 인간의 노동을 완전히 대체하는 것이 아니라, 사람이 더 가치 있는 일에 집중하도록 돕는 방향으로 나아가고 있다.","options":["인공지능은 모든 직업을 곧 대체할 것이다.","단순 반복 업무는 앞으로도 사람이 해야 한다.","기술 발전은 인간이 더 가치 있는 일에 집중하도록 돕는다.","창의적인 판단은 기계가 더 잘할 수 있다."],"answer":3,"explain":"«사람이 더 가치 있는 일에 집중하도록 돕는 방향으로 나아가고 있다».<br>✅ <b>③ 기술 발전은 인간이 더 가치 있는 일에 집중하도록 돕는다.</b>"},{"n":45,"points":2,"instr":"( )에 들어갈 말로 가장 알맞은 것을 고르십시오.","passage":"인공지능 기술이 발전하면서 일부 단순 반복 업무는 기계가 대신하게 되었다. 그러나 사람과 사람 사이의 소통이나 ( )이 필요한 일은 여전히 사람의 손길이 필요하다. 결국 기술 발전은 인간의 노동을 완전히 대체하는 것이 아니라, 사람이 더 가치 있는 일에 집중하도록 돕는 방향으로 나아가고 있다.","options":["창의적인 판단","단순한 계산","반복적인 작업","기계적인 처리"],"answer":1,"explain":"«사람과 사람 사이의 소통이나… 여전히 사람의 손길이 필요» — 창의성·소통은 기계가 대체하기 어려운 영역.<br>✅ <b>① 창의적인 판단</b>"},{"n":46,"points":2,"instr":"다음 문장이 들어갈 위치로 가장 알맞은 것을 고르십시오.","passage":"[보기] 그러나 정작 그 쓰레기를 줄이는 행동에는 적극적으로 나서지 않는 경우가 많다. ── 많은 사람들이 기후 변화의 심각성에 대해 잘 알고 있다고 말한다. ㉠ 환경 문제에 관심이 있다고 답한 사람의 비율도 해마다 높아지고 있다. ㉡ 앎과 실천 사이의 간극을 줄이려는 노력이 필요한 시점이다. ㉢ 작은 습관의 변화가 모이면 큰 변화를 만들어 낼 수 있다. ㉣","options":["㉠","㉡","㉢","㉣"],"answer":3,"explain":"✅ <b>③ ㉢</b>: «관심이 있다고 답한 비율은 높아짐»(㉡) 다음에 «하지만 실천하지 않는다»가 와야 «앎과 실천의 간극»(㉢ 뒤)으로 자연스럽게 이어진다."},{"n":47,"points":2,"instr":"이 글의 내용과 같은 것을 고르십시오.","passage":"많은 사람들이 기후 변화의 심각성에 대해 잘 알고 있다고 말한다. 환경 문제에 관심이 있다고 답한 사람의 비율도 해마다 높아지고 있다. 그러나 정작 그 쓰레기를 줄이는 행동에는 적극적으로 나서지 않는 경우가 많다. 앎과 실천 사이의 간극을 줄이려는 노력이 필요한 시점이다.","options":["사람들은 기후 변화에 전혀 관심이 없다.","아는 것과 실천하는 것 사이에는 차이가 있다.","환경에 관심 있는 사람의 비율은 매년 줄고 있다.","쓰레기를 줄이는 실천은 누구나 잘 하고 있다."],"answer":3,"explain":"«앎과 실천 사이의 간극을 줄이려는 노력이 필요».<br>✅ <b>③ 아는 것과 실천하는 것 사이에는 차이가 있다.</b> — 표기상 ③번이 정답 위치.<br>✖️ 관심 비율은 매년 높아짐; 실천은 부족함."},{"n":48,"points":2,"instr":"필자가 이 글을 쓴 목적으로 알맞은 것을 고르십시오.","passage":"산업혁명 이후 대량 생산이 가능해지면서 사람들의 소비 방식도 크게 바뀌었다. 필요한 만큼만 사던 시대에서 더 많이, 더 자주 사는 시대로 변화한 것이다. 최근에는 이러한 과소비를 돌아보고 ( ) 사람들이 늘고 있다. 적게 가지고도 충분히 만족하는 삶을 추구하려는 움직임이 새로운 흐름으로 자리 잡고 있다.","options":["대량 생산의 역사를 설명하기 위해","소비 방식의 변화와 새로운 흐름을 알리기 위해","산업혁명의 부작용을 비판하기 위해","과거의 소비 습관으로 돌아가자고 주장하기 위해"],"answer":4,"explain":"산업혁명 이후 소비 방식 변화부터 최근 절제하는 흐름까지 설명하는 글로, 변화와 새로운 흐름을 알리는 목적이 가장 부합한다.<br>✅ <b>④ 소비 방식의 변화와 새로운 흐름을 알리기 위해.</b>"},{"n":49,"points":2,"instr":"( )에 들어갈 말로 가장 알맞은 것을 고르십시오.","passage":"산업혁명 이후 대량 생산이 가능해지면서 사람들의 소비 방식도 크게 바뀌었다. 필요한 만큼만 사던 시대에서 더 많이, 더 자주 사는 시대로 변화한 것이다. 최근에는 이러한 과소비를 돌아보고 ( ) 사람들이 늘고 있다. 적게 가지고도 충분히 만족하는 삶을 추구하려는 움직임이 새로운 흐름으로 자리 잡고 있다.","options":["더 많이 소비하려는","소비를 줄이려는","생산량을 늘리려는","유행을 따라가려는"],"answer":3,"explain":"«적게 가지고도 충분히 만족하는 삶을 추구하려는 움직임».<br>✅ <b>③ 소비를 줄이려는</b> — 본문의 절제 흐름과 일치한다."},{"n":50,"points":2,"instr":"밑줄 친 부분에 나타난 글쓴이의 태도로 알맞은 것을 고르십시오.","passage":"산업혁명 이후 대량 생산이 가능해지면서 사람들의 소비 방식도 크게 바뀌었다. 필요한 만큼만 사던 시대에서 더 많이, 더 자주 사는 시대로 변화한 것이다. 최근에는 이러한 과소비를 돌아보고 <u>적게 가지고도 충분히 만족하는 삶을 추구하려는 움직임</u>이 새로운 흐름으로 자리 잡고 있다.","options":["과소비 풍조를 옹호하고 있다.","절제된 소비 흐름을 긍정적으로 평가하고 있다.","대량 생산 방식을 강하게 비판하고 있다.","소비 변화에 대해 무관심한 태도를 보인다."],"answer":2,"explain":"«충분히 만족하는 삶을 추구하려는 움직임이… 새로운 흐름으로 자리 잡고 있다» — 긍정적 시선으로 서술.<br>✅ <b>② 절제된 소비 흐름을 긍정적으로 평가하고 있다.</b>"}]}},
+    8003: {"mock":true,"no":"Hot TOPIK<br><b>제3회</b>","listening":{"durationMin":60,"total":100,"label":"Hot TOPIK 제3회 · 듣기 (1~50)","questions":[{"n":1,"points":2,"instr":"Прослушайте диалог и определите, где происходит разговор.","options":["미용실","빵집","문구점","세탁소"],"answer":4,"script":"여자: 손님, 셔츠 얼룩이 잘 안 빠질 것 같은데 한번 더 세탁해 볼게요.\n남자: 네, 부탁드려요. 언제쯔음 찾으러 오면 될까요?\n여자: 내일 오후면 다 될 것 같아요.","explain":"🎧 «셔츠 얼룩», «세탁해 볼게요» — речь о пятне на рубашке и стирке.<br>✅ <b>④ 세탁소</b> — разговор в прачечной/химчистке.<br>🧩 얼룩 = «пятно»; 세탁하다 = «стирать»."},{"n":2,"points":2,"instr":"Прослушайте диалог и определите, что делает мужчина.","options":["택배를 보낸다.","우산을 빌린다.","자리를 맡아 둔다.","길을 묻는다."],"answer":1,"script":"남자: 이 상자 좀 부치려고 하는데요, 깨지는 물건이라 포장을 좀 더 단단히 해야 할 것 같아요.\n여자: 네, 안에 완충재를 더 넣어 드릴게요. 보내실 곳 주소 좀 알려주시겠어요?\n남자: 네, 여기 적어 왔어요.","explain":"🎧 «상자 좀 부치려고», «보내실 곳 주소» — отправка посылки.<br>✅ <b>① 택배를 보낸다.</b><br>🧩 부치다 = «отправлять (посылку)»; 완충재 = «амортизирующий наполнитель»."},{"n":3,"points":2,"instr":"Прослушайте новость и выберите верное по содержанию.","options":["원/달러 환율은 지난달보다 하락했다.","환율 상승은 수출 기업에 유리하게 작용한다.","해외여행을 가는 사람들에게는 환율 상승이 유리하다.","환율 상승은 수입 물가에 영향을 주지 않는다."],"answer":2,"script":"여자: 최근 원/달러 환율이 지난달보다 크게 올라 1,350원을 넘어섰습니다. 환율이 오르면 해외여행이나 수입품을 사는 비용은 늘어나지만, 반대로 해외에 물건을 파는 수출 기업에는 유리하게 작용합니다.","explain":"🎧 «해외에 물건을 파는 수출 기업에는 유리하게 작용합니다».<br>✅ <b>② 환율 상승은 수출 기업에 유리하게 작용한다.</b><br>✖️ 환율은 상승했음(하락 아님); 해외여행객에겐 오히려 비용 부담 증가.<br>🧩 환율 = «обменный курс»; 수출 = «экспорт»."},{"n":4,"points":2,"instr":"Прослушайте диалог и выберите подходящее продолжение.","options":["저도 이번 학기에 등록했어요.","시간표가 저랑 잘 안 맞아서 고민이에요.","학원이 너무 멀어서 못 다니겠어요.","수업이 재미없어서 그만뒀어요."],"answer":4,"script":"여자: 어, 그 영어 학원 다닌다고 했지? 어때, 괜찮아?\n남자: 응, 그런데 저녁반 시간이 자꾸 바뀌어서 좀 불편하더라고. 그래서 다음 달부터는 안 다니려고.\n여자:","explain":"🎧 남자가 «다음 달부터는 안 다니려고» 했으므로 여자는 그 이유를 추측하거나 반응해야 한다.<br>✅ <b>④ 수업이 재미없어서 그만뒀어요.</b> — 학원을 그만두는 상황에 대한 반응.<br>🧩 시간표 = «расписание»."},{"n":5,"points":2,"instr":"Прослушайте диалог и выберите подходящее продолжение.","options":["저는 비가 좋아요.","오늘 진짜 더웠죠?","요즘 비가 자주 오네요.","우산을 안 가져왔어요."],"answer":3,"script":"남자: 어제도 비가 오고 오늘도 비가 오고… 요즘 날씨가 왜 이런지 모르겠어요.\n여자:","explain":"🎧 «어제도 오늘도 비가 온다»는 말에 대한 자연스러운 맞장구.<br>✅ <b>③ 요즘 비가 자주 오네요.</b><br>🧩 자주 = «часто»."},{"n":6,"points":2,"instr":"Прослушайте диалог и выберите подходящее продолжение.","options":["네, 일정표를 보내 드릴게요.","그럼 제가 다른 분들께 한번 여쭤볼게요.","회의는 취소하는 게 좋겠어요.","월요일에 다시 연락드릴게요."],"answer":2,"script":"여자: 부장님, 내일 오전 회의 시간을 오후로 옮길 수 있을까요?\n남자: 글쎄요, 다른 참석자들 일정도 확인해 봐야 할 것 같은데요.\n여자:","explain":"🎧 «다른 참석자들 일정도 확인해 봐야»라는 말에 직접 응대하는 자연스러운 다음 말.<br>✅ <b>② 그럼 제가 다른 분들께 한번 여쭤볼게요.</b><br>🧩 일정 = «расписание, график»; 여쭤보다 = «спросить (вежливо)»."},{"n":7,"points":2,"instr":"Прослушайте диалог и выберите подходящее продолжение.","options":["네, 반납일이 며칠 남았는지 확인해 볼게요.","이 책은 도서관에 없는 것 같아요.","대출 카드를 새로 만들어야 해요.","책을 한 권 더 빌리고 싶어요."],"answer":1,"script":"여자: 저번에 빌린 책 반납일이 언제까지였죠? 깜빡 잊어버렸어요.\n남자:","explain":"🎧 «반납일이 언제까지였죠?»라는 질문에 대한 직접적 대응.<br>✅ <b>① 네, 반납일이 며칠 남았는지 확인해 볼게요.</b><br>🧩 반납일 = «дата возврата»; 대출 = «выдача (книги)»."},{"n":8,"points":2,"instr":"Прослушайте диалог и выберите подходящее продолжение.","options":["저는 직접 가게에 가서 살게요.","네, 그 앱으로 한번 시켜 볼게요.","배달비가 너무 비싸서 안 시켰어요.","주문한 음식이 아직 안 왔어요."],"answer":2,"script":"남자: 요즘은 배달 앱으로 신청하면 매장에 직접 안 가도 돼서 편하더라고요.\n여자:","explain":"🎧 배달 앱 이용의 편리함을 추천하는 말에 대한 호응.<br>✅ <b>② 네, 그 앱으로 한번 시켜 볼게요.</b><br>🧩 배달 앱 = «приложение для доставки»."},{"n":9,"points":2,"instr":"Прослушайте и выберите, что женщина сделает дальше.","options":["미용실에 예약을 한다.","머리를 직접 자른다.","미용실 위치를 찾아본다.","머리를 묶는다."],"answer":4,"script":"여자: 머리가 너무 길어서 자르고 싶은데, 오늘은 미용실에 갈 시간이 없네요.\n남자: 그럼 일단 묶고 있다가 주말에 가는 게 어때요?\n여자: 그래야겠어요. 우선 묶고 나갈게요.","explain":"🎧 «우선 묶고 나갈게요».<br>✅ <b>④ 머리를 묶는다.</b><br>🧩 묶다 = «связывать, собирать (волосы)»."},{"n":10,"points":2,"instr":"Прослушайте и выберите, что мужчина сделает дальше.","options":["세차를 한다.","주차장을 찾는다.","차에서 짐을 내린다.","세차장에 전화한다."],"answer":4,"script":"남자: 차가 너무 더러워졌는데, 이 근처에 세차장 있나요?\n여자: 네, 저쪽 모퉁이에 있는데 지금 사람이 많을 수도 있어요. 먼저 전화해서 자리 있는지 확인해 보세요.\n남자: 그게 좋겠네요. 한번 전화해 볼게요.","explain":"🎧 «한번 전화해 볼게요».<br>✅ <b>④ 세차장에 전화한다.</b><br>🧩 모퉁이 = «угол (улицы)»."},{"n":11,"points":2,"instr":"Прослушайте и выберите, что мужчина сделает дальше.","options":["회의 자료를 작성한다.","복사기를 고친다.","회의실을 예약한다.","자료를 복사한다."],"answer":4,"script":"남자: 회의 자료 다 됐는데, 열 장씩 복사해야 하죠?\n여자: 네, 참석자가 열 명이니까 열 장씩 부탁드려요.\n남자: 알겠습니다. 지금 바로 복사기 쪽으로 갈게요.","explain":"🎧 «지금 바로 복사기 쪽으로 갈게요».<br>✅ <b>④ 자료를 복사한다.</b><br>🧩 참석자 = «участник»."},{"n":12,"points":2,"instr":"Прослушайте и выберите, что мужчина сделает дальше.","options":["병원에 예약한다.","처방받은 약을 먹는다.","약국에 들른다.","의사에게 전화한다."],"answer":3,"script":"여자: 어제 처방받은 약 챙겨 왔어요?\n남자: 아, 깜빡하고 안 가져왔어요. 가는 길에 약국 들러서 다시 받아야겠어요.\n여자: 그럼 같이 가요, 저도 들를 데가 있어서요.","explain":"🎧 «가는 길에 약국 들러서 다시 받아야겠어요».<br>✅ <b>③ 약국에 들른다.</b><br>🧩 처방받다 = «получить рецепт»; 챙기다 = «брать, не забывать взять»."},{"n":13,"points":2,"instr":"Прослушайте объявление и выберите верное по содержанию.","options":["음식물 쓰레기는 아무 때나 버릴 수 있다.","재활용품은 일주일에 한 번만 수거한다.","쓰레기는 정해진 요일에만 분리해서 버려야 한다.","쓰레기봉투는 관리실에서 무료로 나눠 준다."],"answer":3,"script":"(안내 방송) 주민 여러분께 안내드립니다. 일반 쓰레기는 매일 저녁 7시부터 9시 사이에 배출해 주시고, 재활용품은 화요일과 금요일에만 분리해서 내놓아 주시기 바랍니다. 정해진 시간과 요일을 지키지 않으면 수거가 되지 않을 수 있으니 주의해 주십시오.","explain":"🎧 «정해진 시간과 요일을 지키지 않으면 수거가 되지 않을 수 있다».<br>✅ <b>③ 쓰레기는 정해진 요일에만 분리해서 버려야 한다.</b><br>✖️ 일반 쓰레기도 시간이 정해져 있음; 재활용은 주 2회."},{"n":14,"points":2,"instr":"Прослушайте объявление и выберите верное по содержанию.","options":["야영장에는 화기 사용이 자유롭다.","지정된 장소가 아니면 불을 피울 수 없다.","야영장에서는 음악을 밤새 크게 틀어도 된다.","야영장 이용 시간은 따로 정해져 있지 않다."],"answer":2,"script":"(안내 방송) 야영장을 이용하시는 분들께 안전 수칙을 안내드립니다. 화기는 지정된 장소에서만 사용해 주시고, 사용 후에는 반드시 완전히 꺼 주시기 바랍니다. 또한 다른 이용객들을 위해 밤 10시 이후에는 음악 소리를 줄여 주시기 바랍니다.","explain":"🎧 «화기는 지정된 장소에서만 사용해 주시고».<br>✅ <b>② 지정된 장소가 아니면 불을 피울 수 없다.</b><br>✖️ 음악은 밤 10시 이후 줄여야 함."},{"n":15,"points":2,"instr":"Прослушайте прогноз погоды и выберите верное по содержанию.","options":["내일은 전국적으로 맑은 날씨가 이어진다.","오늘 오후부터 중부 지방에 비가 내릴 전망이다.","남부 지방은 오늘 종일 흐리고 비가 온다.","내일 기온은 오늘보다 크게 떨어진다."],"answer":1,"script":"여자: 날씨 소식입니다. 오늘 오후부터 중부 지방을 중심으로 비가 시작되겠고, 남부 지방은 대체로 맑은 하늘을 보이겠습니다. 내일은 비가 그치면서 전국이 대체로 맑겠고 기온도 오늘과 비슷하겠습니다.","explain":"🎧 «내일은 비가 그치면서 전국이 대체로 맑겠고».<br>✅ <b>① 내일은 전국적으로 맑은 날씨가 이어진다.</b><br>✖️ 비는 중부 지방에 한정; 남부는 오늘 맑음; 내일 기온은 오늘과 비슷."},{"n":16,"points":2,"instr":"Прослушайте интервью и выберите верное по содержанию.","options":["이 영화는 평론가들에게 좋은 평가를 받지 못했다.","평론가는 이 영화의 연출 방식을 높이 평가했다.","이 영화는 다음 달에 개봉할 예정이다.","이 영화는 원작 소설을 그대로 옮긴 작품이다."],"answer":2,"script":"남자: 이번에 개봉한 영화에 대해 평론가님의 의견이 궁금합니다.\n여자: 네, 원작 소설의 분위기를 영상으로 잘 살려냈다고 봅니다. 특히 감독의 색다른 연출 방식이 인상적이었어요. 다만 원작과 다르게 결말을 일부 바꾼 점은 의견이 갈릴 수 있을 것 같습니다.","explain":"🎧 «감독의 색다른 연출 방식이 인상적이었어요».<br>✅ <b>② 평론가는 이 영화의 연출 방식을 높이 평가했다.</b><br>✖️ 좋은 평가를 받음; 결말은 원작과 다르게 바뀜."},{"n":17,"points":2,"instr":"Прослушайте и выберите главную мысль мужчины.","options":["아이가 원하는 길을 스스로 찾도록 도와줘야 한다.","아이의 진로는 부모가 결정해 줘야 한다.","성적이 좋은 분야로 진로를 정해야 한다.","진로 고민은 빨리 끝내는 것이 좋다."],"answer":1,"script":"여자: 요즘 우리 애가 진로 때문에 고민이 많은 것 같아요. 그냥 안정적인 직업을 권해야 할까요?\n남자: 저는 아이가 정말 하고 싶은 게 뭔지 스스로 찾아볼 시간을 주는 게 더 중요하다고 생각해요. 부모가 정해 주면 나중에 후회할 수도 있잖아요.","explain":"🎧 «아이가 정말 하고 싶은 게 뭔지 스스로 찾아볼 시간을 주는 게».<br>✅ <b>① 아이가 원하는 길을 스스로 찾도록 도와줘야 한다.</b>"},{"n":18,"points":2,"instr":"Прослушайте и выберите главную мысль мужчины.","options":["휴대폰 결제는 보안이 취약해서 위험하다.","현금을 사용하는 습관을 길러야 한다.","결제 방식이 다양할수록 혼란스럽다.","휴대폰 결제는 간편해서 오히려 무계획적인 소비로 이어질 수 있다."],"answer":4,"script":"여자: 요즘은 휴대폰으로 결제하는 게 진짜 편한 것 같아요. 카드도 안 가지고 다녀도 되고요.\n남자: 편하긴 한데, 저는 오히려 그게 더 걱정이에요. 너무 간편하다 보니 돈을 쓴다는 느낌이 잘 안 들어서 계획 없이 쓰게 되는 것 같더라고요.","explain":"🎧 «너무 간편하다 보니… 계획 없이 쓰게 되는 것 같더라고요».<br>✅ <b>④ 휴대폰 결제는 간편해서 오히려 무계획적인 소비로 이어질 수 있다.</b><br>🧩 무계획적 = «бесплановый, необдуманный»."},{"n":19,"points":2,"instr":"Прослушайте и выберите главную мысль мужчины.","options":["회식은 짧고 간단하게 끝내는 것이 좋다.","회식 때는 충분한 대화 시간을 갖는 것이 좋다.","회식 메뉴는 직원들이 직접 골라야 한다.","회식은 자주 할수록 팀워크에 좋다."],"answer":2,"script":"여자: 요즘은 회식을 일찍 끝내는 분위기던데, 어떻게 생각하세요?\n남자: 저는 회식도 업무의 연장이라고 생각해서, 너무 일찍 끝내면 오히려 서로 어색하게 끝나는 것 같아요. 적당히 이야기를 나눌 시간은 필요하다고 봐요.","explain":"🎧 «적당히 이야기를 나눌 시간은 필요하다고 봐요».<br>✅ <b>② 회식 때는 충분한 대화 시간을 갖는 것이 좋다.</b>"},{"n":20,"points":2,"instr":"Прослушайте и выберите главную мысль мужчины.","options":["신입 사원은 실수를 절대 하면 안 된다.","신입 사원에게는 실수할 기회도 필요하다.","경력 사원이 신입보다 일을 더 잘한다.","회사는 신입 사원 교육에 더 투자해야 한다."],"answer":2,"script":"여자: 요즘 들어온 신입 사원이 실수가 좀 많은 것 같아서 걱정이에요.\n남자: 저는 그런 시기를 다 겪어 봐서 그런지, 처음부터 완벽한 사람은 없다고 생각해요. 작은 실수를 해 보면서 배우는 것도 중요하잖아요.","explain":"🎧 «작은 실수를 해 보면서 배우는 것도 중요하잖아요».<br>✅ <b>② 신입 사원에게는 실수할 기회도 필요하다.</b>"},{"n":21,"points":2,"instr":"Прослушайте и выберите главную мысль мужчины.","options":["여행은 계획 없이 떠나는 것이 더 즐겁다.","여행 전에 최소한의 일정은 정해 두는 것이 좋다.","여행지는 항상 사람이 적은 곳이어야 한다.","여행 경비는 미리 다 써 버려야 한다."],"answer":2,"script":"여자: 이번 여행은 그냥 아무 계획 없이 발길 닿는 대로 다녀 보려고 해요.\n남자: 저도 그런 여행 좋아하긴 하는데, 그래도 숙소나 교통편 같은 기본적인 건 미리 정해 두는 게 안전하지 않을까요? 막상 가서 자리가 없으면 곤란하잖아요.","explain":"🎧 «숙소나 교통편 같은 기본적인 건 미리 정해 두는 게 안전하지 않을까요».<br>✅ <b>② 여행 전에 최소한의 일정은 정해 두는 것이 좋다.</b>"},{"n":22,"points":2,"instr":"Прослушайте и выберите верное по содержанию.","options":["여자는 이미 숙소를 모두 예약해 두었다.","남자는 최소한의 준비는 필요하다고 생각한다.","남자도 계획 없는 여행을 싫어한다.","여자는 이번 여행을 포기하기로 했다."],"answer":2,"script":"여자: 이번 여행은 그냥 아무 계획 없이 발길 닿는 대로 다녀 보려고 해요.\n남자: 저도 그런 여행 좋아하긴 하는데, 그래도 숙소나 교통편 같은 기본적인 건 미리 정해 두는 게 안전하지 않을까요? 막상 가서 자리가 없으면 곤란하잖아요.","explain":"🎧 «기본적인 건 미리 정해 두는 게 안전하지 않을까요».<br>✅ <b>② 남자는 최소한의 준비는 필요하다고 생각한다.</b><br>✖️ 여자는 아직 예약을 안 했음; 남자도 즉흥 여행을 좋아함."},{"n":23,"points":2,"instr":"Прослушайте и выберите, что хочет сделать мужчина.","options":["중고 서점에 책을 팔고 싶다.","새 책장을 구입하고 싶다.","읽은 책을 정리하고 싶다.","도서관에서 책을 빌리고 싶다."],"answer":1,"script":"남자: 방에 책이 너무 많아져서 자리가 없어요. 안 읽는 책들은 좀 정리해야겠어요.\n여자: 중고 서점에 팔면 어때요? 깨끗한 책은 값도 꽤 쳐 준대요.\n남자: 그게 좋겠네요. 한번 가져가 볼게요.","explain":"🎧 «중고 서점에 팔면 어때요?» → «그게 좋겠네요. 한번 가져가 볼게요».<br>✅ <b>① 중고 서점에 책을 팔고 싶다.</b>"},{"n":24,"points":2,"instr":"Прослушайте и выберите верное по содержанию.","options":["남자는 책을 중고 서점에 팔기로 했다.","남자는 새 책장을 사려고 한다.","여자는 책 정리를 도와주지 않았다.","남자의 방에는 책이 적은 편이다."],"answer":1,"script":"남자: 방에 책이 너무 많아져서 자리가 없어요. 안 읽는 책들은 좀 정리해야겠어요.\n여자: 중고 서점에 팔면 어때요? 깨끗한 책은 값도 꽤 쳐 준대요.\n남자: 그게 좋겠네요. 한번 가져가 볼게요.","explain":"🎧 «중고 서점에 팔면 어때요? → 그게 좋겠네요».<br>✅ <b>① 남자는 책을 중고 서점에 팔기로 했다.</b><br>✖️ 방에 책이 많은 편(적지 않음)."},{"n":25,"points":2,"instr":"Прослушайте и выберите главную мысль мужчины.","options":["가전제품은 가격이 저렴할수록 좋은 선택이다.","에너지 효율이 좋은 가전제품을 고르는 것이 합리적이다.","오래된 가전제품도 새 제품만큼 효율이 좋다.","에너지 절약은 개인의 노력으로는 한계가 있다."],"answer":2,"script":"여자: 요즘 가전제품 바꿀 때 에너지 효율 등급을 꼼꼼히 보시는 분들이 많더라고요.\n남자: 맞아요, 처음에 조금 비싸도 전기 요금을 따져 보면 결국 더 절약되니까요. 특히 오래 쓰는 제품일수록 효율 좋은 걸 사는 게 합리적인 선택이라고 봐요.","explain":"🎧 «효율 좋은 걸 사는 게 합리적인 선택이라고 봐요».<br>✅ <b>② 에너지 효율이 좋은 가전제품을 고르는 것이 합리적이다.</b>"},{"n":26,"points":2,"instr":"Прослушайте и выберите верное по содержанию.","options":["에너지 효율이 높은 제품은 초기 가격이 더 높을 수 있다.","오래된 제품일수록 에너지 효율이 더 좋다.","에너지 효율 등급은 가격과 관계가 없다.","전기 요금은 가전제품과 상관없이 일정하다."],"answer":1,"script":"여자: 요즘 가전제품 바꿀 때 에너지 효율 등급을 꼼꼼히 보시는 분들이 많더라고요.\n남자: 맞아요, 처음에 조금 비싸도 전기 요금을 따져 보면 결국 더 절약되니까요. 특히 오래 쓰는 제품일수록 효율 좋은 걸 사는 게 합리적인 선택이라고 봐요.","explain":"🎧 «처음에 조금 비싸도».<br>✅ <b>① 에너지 효율이 높은 제품은 초기 가격이 더 높을 수 있다.</b>"},{"n":27,"points":2,"instr":"Прослушайте и выберите, с какой целью говорит мужчина.","options":["이직을 적극적으로 권유하기 위해","면접 준비 방법을 설명하기 위해","이직의 위험성을 강조하기 위해","경력 관리의 중요성을 알리기 위해"],"answer":3,"script":"여자: 다음 달에 더 좋은 조건으로 이직 제안을 받아서 옮기려고 하는데, 어떻게 생각하세요?\n남자: 조건만 보고 옮기기 전에 그 회사가 안정적인지, 새로운 환경에 적응할 수 있을지도 한번 신중히 따져 보는 게 좋을 것 같아요. 급하게 결정하면 후회할 수도 있거든요.","explain":"🎧 «급하게 결정하면 후회할 수도 있거든요» — 신중함을 강조하며 위험을 경고.<br>✅ <b>③ 이직의 위험성을 강조하기 위해</b>"},{"n":28,"points":2,"instr":"Прослушайте и выберите верное по содержанию.","options":["여자는 다음 달에 회사를 옮기려고 한다.","남자는 이직을 적극적으로 권했다.","여자는 이미 새 회사에 출근하고 있다.","남자는 이직 제안을 받은 적이 있다."],"answer":1,"script":"여자: 다음 달에 더 좋은 조건으로 이직 제안을 받아서 옮기려고 하는데, 어떻게 생각하세요?\n남자: 조건만 보고 옮기기 전에 그 회사가 안정적인지, 새로운 환경에 적응할 수 있을지도 한번 신중히 따져 보는 게 좋을 것 같아요. 급하게 결정하면 후회할 수도 있거든요.","explain":"🎧 «다음 달에 더 좋은 조건으로 이직 제안을 받아서 옮기려고».<br>✅ <b>① 여자는 다음 달에 회사를 옮기려고 한다.</b><br>✖️ 남자는 신중함을 권했지 적극 권유한 것 아님."},{"n":29,"points":2,"instr":"Прослушайте и выберите, кто такой мужчина.","options":["스트레스와 호르몬의 관계를 연구하는 사람","식습관 교육을 진행하는 사람","운동 처방을 내리는 사람","수면 장애를 치료하는 사람"],"answer":1,"script":"여자: 스트레스를 받으면 몸에서 코르티솔이라는 호르몬이 분비된다고 들었는데, 정확히 어떤 작용을 하나요?\n남자: 네, 코르티솔은 본래 위기 상황에 대처하도록 돕는 호르몬인데, 스트레스가 만성적으로 지속되면 오히려 식욕과 수면에 나쁜 영향을 줄 수 있습니다. 그래서 최근에는 코르티솔 수치와 식습관 변화의 관계를 집중적으로 연구하고 있습니다.","explain":"🎧 «코르티솔 수치와 식습관 변화의 관계를 집중적으로 연구하고 있습니다».<br>✅ <b>① 스트레스와 호르몬의 관계를 연구하는 사람</b><br>🧩 코르티솔 = «кортизол»; 분비되다 = «выделяться (о гормоне)»."},{"n":30,"points":2,"instr":"Прослушайте и выберите верное по содержанию.","options":["코르티솔은 처음부터 몸에 해로운 호르몬이다.","코르티솔은 위기 상황과는 관련이 없다.","만성적인 스트레스는 식욕에 나쁜 영향을 줄 수 있다.","스트레스는 수면에 전혀 영향을 주지 않는다."],"answer":3,"script":"여자: 스트레스를 받으면 몸에서 코르티솔이라는 호르몬이 분비된다고 들었는데, 정확히 어떤 작용을 하나요?\n남자: 네, 코르티솔은 본래 위기 상황에 대처하도록 돕는 호르몬인데, 스트레스가 만성적으로 지속되면 오히려 식욕과 수면에 나쁜 영향을 줄 수 있습니다. 그래서 최근에는 코르티솔 수치와 식습관 변화의 관계를 집중적으로 연구하고 있습니다.","explain":"🎧 «스트레스가 만성적으로 지속되면 오히려 식욕과 수면에 나쁜 영향을».<br>✅ <b>③ 만성적인 스트레스는 식욕에 나쁜 영향을 줄 수 있다.</b><br>✖️ 코르티솔은 원래 위기 대처를 돕는 호르몬(처음부터 해롭진 않음)."},{"n":31,"points":2,"instr":"Прослушайте и выберите мнение мужчины.","options":["주민들의 동의 없이 시설을 지어도 된다.","소음 문제는 시간이 지나면 자연히 해결된다.","시설 운영 시간을 제한하면 문제가 모두 해결된다.","주민 의견을 충분히 들은 후에 시설 운영 방식을 정해야 한다."],"answer":4,"script":"여자: 새로 생긴 청소년 문화 센터 때문에 밤늦게까지 소음이 심하다는 민원이 계속 들어오고 있습니다.\n남자: 청소년들을 위한 시설이 필요한 건 분명하지만, 운영 시간이나 방식을 정할 때 주변 주민들의 의견도 충분히 반영했어야 한다고 봅니다. 일방적으로 운영하다 보니 갈등이 생긴 것 같습니다.\n여자: 그렇다면 운영 시간을 줄이면 모든 문제가 해결될까요?\n남자: 시간 조정만으로는 부족하고, 주민들과 충분히 협의하는 과정이 우선되어야 합니다.","explain":"🎧 «주변 주민들의 의견도 충분히 반영했어야… 충분히 협의하는 과정이 우선되어야 합니다».<br>✅ <b>④ 주민 의견을 충분히 들은 후에 시설 운영 방식을 정해야 한다.</b>"},{"n":32,"points":2,"instr":"Прослушайте и выберите, как мужчина ведёт разговор.","options":["여자의 의견에 전적으로 동의하고 있다.","상대방의 질문에 대해 자신의 입장을 보완하여 설명하고 있다.","문제의 책임을 청소년들에게 돌리고 있다.","구체적인 통계 자료를 제시하고 있다."],"answer":2,"script":"여자: 새로 생긴 청소년 문화 센터 때문에 밤늦게까지 소음이 심하다는 민원이 계속 들어오고 있습니다.\n남자: 청소년들을 위한 시설이 필요한 건 분명하지만, 운영 시간이나 방식을 정할 때 주변 주민들의 의견도 충분히 반영했어야 한다고 봅니다. 일방적으로 운영하다 보니 갈등이 생긴 것 같습니다.\n여자: 그렇다면 운영 시간을 줄이면 모든 문제가 해결될까요?\n남자: 시간 조정만으로는 부족하고, 주민들과 충분히 협의하는 과정이 우선되어야 합니다.","explain":"🎧 여자의 질문(«시간을 줄이면 해결될까요?»)에 대해 «시간 조정만으로는 부족하고…»라며 자신의 입장을 더 자세히 보완해 설명한다.<br>✅ <b>② 상대방의 질문에 대해 자신의 입장을 보완하여 설명하고 있다.</b>"},{"n":33,"points":2,"instr":"Прослушайте и выберите, о чём идёт речь.","options":["영화관의 역사","영화 관람료 변화 추이","영화 스크린 수의 변화와 산업 동향","외국 영화의 흥행 비결"],"answer":3,"script":"여자: 최근 십 년간 전국 영화 스크린 수가 빠르게 늘어났습니다. 2010년대 초반에는 대형 도시 위주로 영화관이 집중되어 있었지만, 점차 중소 도시까지 멀티플렉스 영화관이 확산되면서 스크린 수가 두 배 가까이 증가했습니다. 이러한 변화는 영화 산업 전반의 매출 증가에도 큰 영향을 주었습니다.","explain":"🎧 «영화 스크린 수가 빠르게 늘어났습니다… 영화 산업 전반의 매출 증가에도 영향».<br>✅ <b>③ 영화 스크린 수의 변화와 산업 동향</b><br>🧩 멀티플렉스 = «мультиплекс»; 확산되다 = «распространяться»."},{"n":34,"points":2,"instr":"Прослушайте и выберите верное по содержанию.","options":["영화 스크린 수는 최근 십 년간 두 배 가까이 늘었다.","2010년대 초반에는 중소 도시에 영화관이 더 많았다.","영화 스크린 수 증가는 매출에 영향을 주지 않았다.","멀티플렉스 영화관은 대형 도시에만 있다."],"answer":1,"script":"여자: 최근 십 년간 전국 영화 스크린 수가 빠르게 늘어났습니다. 2010년대 초반에는 대형 도시 위주로 영화관이 집중되어 있었지만, 점차 중소 도시까지 멀티플렉스 영화관이 확산되면서 스크린 수가 두 배 가까이 증가했습니다. 이러한 변화는 영화 산업 전반의 매출 증가에도 큰 영향을 주었습니다.","explain":"🎧 «스크린 수가 두 배 가까이 증가했습니다».<br>✅ <b>① 영화 스크린 수는 최근 십 년간 두 배 가까이 늘었다.</b><br>✖️ 2010년대 초반엔 대형 도시 위주였음; 매출에도 영향을 줌."},{"n":35,"points":2,"instr":"Прослушайте и выберите, что делает мужчина.","options":["일자리 통계 자료를 분석하고 있다.","청년들의 취업 면접을 진행하고 있다.","외국의 일자리 정책을 비판하고 있다.","토론회에서 정책 방향을 제안하고 있다."],"answer":4,"script":"남자: 청년 일자리 문제를 해결하기 위해서는 단순히 일자리 수를 늘리는 것보다 청년들이 원하는 분야의 직무 역량을 키워 줄 수 있는 교육 지원이 함께 이루어져야 합니다. 기업과 정부가 협력해서 실질적인 직무 교육 프로그램을 마련한다면 고용의 질을 함께 높일 수 있을 것입니다.","explain":"🎧 «교육 지원이 함께 이루어져야… 실질적인 직무 교육 프로그램을 마련한다면» — 정책 방향을 제안.<br>✅ <b>④ 토론회에서 정책 방향을 제안하고 있다.</b>"},{"n":36,"points":2,"instr":"Прослушайте и выберите верное по содержанию.","options":["청년 일자리 문제는 일자리 수만 늘리면 해결된다.","직무 교육 지원은 고용의 질을 높이는 데 도움이 될 수 있다.","기업은 일자리 정책에 협력할 필요가 없다.","청년들은 직무 역량 교육을 원하지 않는다."],"answer":2,"script":"남자: 청년 일자리 문제를 해결하기 위해서는 단순히 일자리 수를 늘리는 것보다 청년들이 원하는 분야의 직무 역량을 키워 줄 수 있는 교육 지원이 함께 이루어져야 합니다. 기업과 정부가 협력해서 실질적인 직무 교육 프로그램을 마련한다면 고용의 질을 함께 높일 수 있을 것입니다.","explain":"🎧 «실질적인 직무 교육 프로그램을 마련한다면 고용의 질을 함께 높일 수 있을 것입니다».<br>✅ <b>② 직무 교육 지원은 고용의 질을 높이는 데 도움이 될 수 있다.</b>"},{"n":37,"points":2,"instr":"Прослушайте и выберите главную мысль женщины.","options":["유기견은 입양보다 보호소에서 지내는 것이 낫다.","유기견 입양 절차는 더 간단해져야 한다.","유기견 입양 전에 충분히 책임을 고민해야 한다.","모든 사람이 반려동물을 키워야 한다."],"answer":3,"script":"남자: 유기견 보호소에 있는 강아지를 입양하고 싶은데, 절차가 너무 복잡한 것 같아서 망설여지더라고요.\n여자: 그 마음은 이해하지만, 저는 오히려 그런 절차가 꼭 필요하다고 생각해요. 충분히 책임질 준비가 됐는지 미리 확인하지 않으면 나중에 또 버려지는 경우가 생기니까요.","explain":"🎧 «충분히 책임질 준비가 됐는지 미리 확인하지 않으면 나중에 또 버려지는 경우가 생기니까요».<br>✅ <b>③ 유기견 입양 전에 충분히 책임을 고민해야 한다.</b>"},{"n":38,"points":2,"instr":"Прослушайте и выберите верное по содержанию.","options":["남자는 유기견 보호소에서 강아지를 데려왔다.","여자는 입양 절차가 간단해져야 한다고 생각한다.","여자는 입양 절차가 책임감 확인에 필요하다고 본다.","남자는 입양 절차에 대해 만족하고 있다."],"answer":3,"script":"남자: 유기견 보호소에 있는 강아지를 입양하고 싶은데, 절차가 너무 복잡한 것 같아서 망설여지더라고요.\n여자: 그 마음은 이해하지만, 저는 오히려 그런 절차가 꼭 필요하다고 생각해요. 충분히 책임질 준비가 됐는지 미리 확인하지 않으면 나중에 또 버려지는 경우가 생기니까요.","explain":"🎧 «그런 절차가 꼭 필요하다고 생각해요».<br>✅ <b>③ 여자는 입양 절차가 책임감 확인에 필요하다고 본다.</b><br>✖️ 남자는 아직 입양하지 않았고 절차에 망설이는 중."},{"n":39,"points":2,"instr":"Прослушайте и выберите, о чём говорилось до этого разговора.","options":["딸기를 촉성재배하면 수확 시기를 앞당길 수 있다.","딸기는 노지에서만 재배할 수 있다.","촉성재배는 비용이 거의 들지 않는다.","딸기 재배는 최근 인기가 줄고 있다."],"answer":1,"script":"여자: 방금 말씀하신 대로 촉성재배를 하면 겨울에도 딸기를 수확할 수 있다는 점이 정말 흥미롭네요.\n남자: 네, 그렇습니다. 비닐하우스 안의 온도와 습도를 인위적으로 조절해서 딸기가 자라는 시기를 앞당기는 방식인데요. 초기 시설 투자 비용이 들긴 하지만, 출하 시기를 앞당길 수 있어서 농가 소득에 도움이 됩니다.","explain":"🎧 «방금 말씀하신 대로 촉성재배를 하면 겨울에도 딸기를 수확할 수 있다» — 여자가 앞서 나온 내용을 되짚는다.<br>✅ <b>① 딸기를 촉성재배하면 수확 시기를 앞당길 수 있다.</b><br>🧩 촉성재배 = «форсированное выращивание (для раннего урожая)»."},{"n":40,"points":2,"instr":"Прослушайте и выберите верное по содержанию.","options":["촉성재배는 노지 재배보다 온도 조절이 필요 없다.","촉성재배 딸기는 여름에만 수확할 수 있다.","촉성재배는 농가 소득에 도움이 되지 않는다.","촉성재배에는 초기 시설 투자 비용이 든다."],"answer":4,"script":"여자: 방금 말씀하신 대로 촉성재배를 하면 겨울에도 딸기를 수확할 수 있다는 점이 정말 흥미롭네요.\n남자: 네, 그렇습니다. 비닐하우스 안의 온도와 습도를 인위적으로 조절해서 딸기가 자라는 시기를 앞당기는 방식인데요. 초기 시설 투자 비용이 들긴 하지만, 출하 시기를 앞당길 수 있어서 농가 소득에 도움이 됩니다.","explain":"🎧 «초기 시설 투자 비용이 들긴 하지만».<br>✅ <b>④ 촉성재배에는 초기 시설 투자 비용이 든다.</b><br>✖️ 온도·습도 조절이 핵심 기술; 겨울 수확이 가능; 농가 소득에 도움이 됨."},{"n":41,"points":2,"instr":"Прослушайте и выберите главную мысль лекции.","options":["황칠나무는 최근에 처음 발견된 식물이다.","황칠나무 수액은 예로부터 천연 도료로 쓰였다.","황칠나무는 더운 지역에서는 자라지 않는다.","황칠나무 도료는 색이 쉽게 변한다."],"answer":2,"script":"여자: 황칠나무는 옻나무와 비슷하게 줄기에서 노란빛이 도는 수액을 채취할 수 있는 나무입니다. 이 수액을 정제해 만든 도료는 황금빛 광택이 오래 유지되고 방부 효과까지 있어, 예로부터 귀한 가구나 공예품을 칠하는 데 사용되어 왔습니다. 다만 채취량이 많지 않아 매우 귀하게 여겨졌습니다.","explain":"🎧 «이 수액을 정제해 만든 도료는… 예로부터 귀한 가구나 공예품을 칠하는 데 사용되어 왔습니다».<br>✅ <b>② 황칠나무 수액은 예로부터 천연 도료로 쓰였다.</b><br>🧩 수액 = «сок (растения)»; 도료 = «лак, краска»."},{"n":42,"points":2,"instr":"Прослушайте и выберите верное по содержанию.","options":["황칠 도료는 채취량이 풍부해서 흔히 쓰였다.","황칠나무는 옻나무와 전혀 다른 모양이다.","황칠나무 수액에는 방부 효과가 있다.","황칠 도료의 광택은 금방 사라진다."],"answer":3,"script":"여자: 황칠나무는 옻나무와 비슷하게 줄기에서 노란빛이 도는 수액을 채취할 수 있는 나무입니다. 이 수액을 정제해 만든 도료는 황금빛 광택이 오래 유지되고 방부 효과까지 있어, 예로부터 귀한 가구나 공예품을 칠하는 데 사용되어 왔습니다. 다만 채취량이 많지 않아 매우 귀하게 여겨졌습니다.","explain":"🎧 «방부 효과까지 있어».<br>✅ <b>③ 황칠나무 수액에는 방부 효과가 있다.</b><br>✖️ 채취량은 적어서 귀했음; 옻나무와 비슷한 모양; 광택은 오래 유지됨."},{"n":43,"points":2,"instr":"Прослушайте и выберите главную мысль рассказа.","options":["제주 흑돼지는 다른 지역에서 더 많이 사육된다.","제주 흑돼지는 일반 돼지보다 사육 기간이 짧다.","제주의 자연환경이 흑돼지 사육 방식에 영향을 주었다.","흑돼지 사육은 최근에 시작된 산업이다."],"answer":3,"script":"남자: 제주의 화산섬 지형은 물 빠짐이 좋은 현무암 토양으로 이루어져 있다. 이런 환경에서 자란 풀과 곤충을 먹이로 활용하며 오랜 세월 흑돼지를 길러 온 것이 제주 축산의 전통이 되었다. 방목과 숲 사육을 병행하는 전통 사육 방식은 지금도 일부 농가에서 이어지고 있다.","explain":"🎧 «제주의 화산섬 지형은… 이런 환경에서… 흑돼지를 길러 온 것이 제주 축산의 전통이 되었다».<br>✅ <b>③ 제주의 자연환경이 흑돼지 사육 방식에 영향을 주었다.</b><br>🧩 현무암 = «базальт»; 방목 = «выпас, свободное содержание»."},{"n":44,"points":2,"instr":"Прослушайте и выберите верное про чёрных свиней Чеджу.","options":["흑돼지는 방목과 숲 사육을 병행해 왔다.","흑돼지는 물 빠짐이 나쁜 토양에서 길러진다.","흑돼지 사육 전통은 최근에 사라졌다.","흑돼지는 풀과 곤충을 먹지 않는다."],"answer":1,"script":"남자: 제주의 화산섬 지형은 물 빠짐이 좋은 현무암 토양으로 이루어져 있다. 이런 환경에서 자란 풀과 곤충을 먹이로 활용하며 오랜 세월 흑돼지를 길러 온 것이 제주 축산의 전통이 되었다. 방목과 숲 사육을 병행하는 전통 사육 방식은 지금도 일부 농가에서 이어지고 있다.","explain":"🎧 «방목과 숲 사육을 병행하는 전통 사육 방식은 지금도».<br>✅ <b>① 흑돼지는 방목과 숲 사육을 병행해 왔다.</b><br>✖️ 토양은 물 빠짐이 좋음; 전통은 지금도 이어짐; 풀과 곤충을 먹이로 활용."},{"n":45,"points":2,"instr":"Прослушайте и выберите верное по содержанию.","options":["이 화가는 처음부터 화단의 인정을 받았다.","이 화가는 시력을 잃은 뒤 그림을 그만두었다.","이 화가는 어려운 상황에서도 작업을 계속해 나갔다.","이 화가는 다른 사람의 작품을 그대로 따라 그렸다."],"answer":3,"script":"여자: 한 화가는 젊은 시절 가난과 무명의 시간을 오래 견뎌야 했다. 전시할 기회조차 얻기 어려웠지만, 그는 매일 같은 자리에서 그림을 그리는 일을 멈추지 않았다. 시력이 점점 나빠지는 어려움 속에서도 그는 손끝의 감각에 의지해 작업을 이어 갔고, 노년에 이르러서야 비로소 그의 화풍이 세상의 주목을 받기 시작했다.","explain":"🎧 «시력이 점점 나빠지는 어려움 속에서도… 작업을 이어 갔고».<br>✅ <b>③ 이 화가는 어려운 상황에서도 작업을 계속해 나갔다.</b>"},{"n":46,"points":2,"instr":"Прослушайте и выберите, каким способом женщина излагает.","options":["화가의 그림 기법을 구체적으로 분석하고 있다.","화가의 작품 가격 변화를 설명하고 있다.","화가의 동료 화가들을 비교하고 있다.","화가의 생애를 시간 순서로 풀어 이야기하고 있다."],"answer":4,"script":"여자: 한 화가는 젊은 시절 가난과 무명의 시간을 오래 견뎌야 했다. 전시할 기회조차 얻기 어려웠지만, 그는 매일 같은 자리에서 그림을 그리는 일을 멈추지 않았다. 시력이 점점 나빠지는 어려움 속에서도 그는 손끝의 감각에 의지해 작업을 이어 갔고, 노년에 이르러서야 비로소 그의 화풍이 세상의 주목을 받기 시작했다.","explain":"젊은 시절 → 시력이 나빠진 시기 → 노년의 인정까지, 시간 순서로 한 화가의 인생을 서술하고 있다.<br>✅ <b>④ 화가의 생애를 시간 순서로 풀어 이야기하고 있다.</b>"},{"n":47,"points":2,"instr":"Прослушайте и выберите верное по содержанию.","options":["인체공학 의자는 모든 사람에게 똑같은 형태로 만들어진다.","인체공학 의자는 가격이 저렴할수록 좋다.","의자의 등받이 각도는 건강과 관계가 없다.","의자를 설계할 때는 사용자의 척추 곡선을 고려한다."],"answer":4,"script":"남자: 오래 앉아서 일하는 사람들이 많아지면서 의자 디자인에도 변화가 생기고 있습니다. 최근의 인체공학 의자는 사람의 척추가 가진 자연스러운 곡선을 그대로 받쳐 줄 수 있도록 등받이 각도와 높이를 세밀하게 조절할 수 있게 설계됩니다. 같은 키와 몸무게라도 척추 곡선이 다르기 때문에, 의자를 고를 때는 직접 앉아서 맞춰 보는 과정이 중요합니다.","explain":"🎧 «사람의 척추가 가진 자연스러운 곡선을 그대로 받쳐 줄 수 있도록».<br>✅ <b>④ 의자를 설계할 때는 사용자의 척추 곡선을 고려한다.</b><br>🧩 척추 = «позвоночник»; 등받이 = «спинка (стула)»."},{"n":48,"points":2,"instr":"Прослушайте и выберите главную мысль мужчины.","options":["의자를 고를 때는 직접 앉아 보고 맞춰 보는 것이 중요하다.","모든 사람은 같은 의자를 사용해도 된다.","의자 디자인은 가격만 고려하면 된다.","척추 곡선은 의자 선택에 영향을 주지 않는다."],"answer":1,"script":"남자: 오래 앉아서 일하는 사람들이 많아지면서 의자 디자인에도 변화가 생기고 있습니다. 최근의 인체공학 의자는 사람의 척추가 가진 자연스러운 곡선을 그대로 받쳐 줄 수 있도록 등받이 각도와 높이를 세밀하게 조절할 수 있게 설계됩니다. 같은 키와 몸무게라도 척추 곡선이 다르기 때문에, 의자를 고를 때는 직접 앉아서 맞춰 보는 과정이 중요합니다.","explain":"🎧 «의자를 고를 때는 직접 앉아서 맞춰 보는 과정이 중요합니다».<br>✅ <b>① 의자를 고를 때는 직접 앉아 보고 맞춰 보는 것이 중요하다.</b>"},{"n":49,"points":2,"instr":"Прослушайте и выберите верное по содержанию.","options":["은은 항균 효과가 없는 금속이다.","은으로 만든 제품은 가격이 매우 저렴하다.","은이 가진 항균 성질이 다양한 제품에 활용되고 있다.","은의 항균 효과는 최근에 처음 발견되었다."],"answer":3,"script":"여자: 은은 예로부터 세균 번식을 억제하는 성질이 있는 것으로 알려져 왔습니다. 옛날 사람들이 은수저를 사용한 것도 이러한 항균 효과 때문이라는 해석이 있습니다. 최근에는 이러한 은의 항균 성질을 활용해 의류 섬유나 주방용품, 의료용 제품에까지 은을 입히는 기술이 다양하게 개발되고 있습니다.","explain":"🎧 «은의 항균 성질을 활용해 의류 섬유나 주방용품, 의료용 제품에까지».<br>✅ <b>③ 은이 가진 항균 성질이 다양한 제품에 활용되고 있다.</b><br>🧩 항균 = «антибактериальный»; 억제하다 = «подавлять»."},{"n":50,"points":2,"instr":"Прослушайте и выберите, каким способом женщина излагает.","options":["은의 부작용 사례를 경고하고 있다.","은의 역사적 활용과 현대의 응용을 함께 설명하고 있다.","은의 가격 변동을 분석하고 있다.","은과 다른 금속을 비교하며 비판하고 있다."],"answer":4,"script":"여자: 은은 예로부터 세균 번식을 억제하는 성질이 있는 것으로 알려져 왔습니다. 옛날 사람들이 은수저를 사용한 것도 이러한 항균 효과 때문이라는 해석이 있습니다. 최근에는 이러한 은의 항균 성질을 활용해 의류 섬유나 주방용품, 의료용 제품에까지 은을 입히는 기술이 다양하게 개발되고 있습니다.","explain":"옛날 은수저 이야기와 최근 응용 기술을 함께 짚어 설명하고 있다.<br>✅ <b>④ 은의 역사적 활용과 현대의 응용을 함께 설명하고 있다.</b>"}]},"writing":{"durationMin":50,"label":"Hot TOPIK 제3회 · 쓰기 (51~54)","tasks":[{"n":51,"points":10,"korInstr":"다음을 읽고 ㉠과 ㉡에 들어갈 말을 각각 한 문장으로 쓰시오. (각 10점)","instr":"Прочитайте переписку в чате между друзьями и впишите в ㉠ и ㉡ по одному законченному предложению. Неформальный разговорный стиль (между друзьями).","passage":"민수: 너 혹시 캠핑용 텐트 있어? 이번 주말에 친구들이랑 캠핑 가려고 하는데.\n지호: 어, 있어! 근데 지금 차에 있어서 ( ㉠ )?\n민수: 그래, 그럼 그때 가지러 갈게. 그리고 혹시 ( ㉡ )? 텐트 치는 법을 잘 몰라서.\n지호: 그건 내가 가서 같이 쳐 줄게. 걱정 마.","blanks":[{"slot":"㉠","model":"내일 줄 수 있을까 / 내일 가져다줘도 될까","check":"«지금 차에 있어서» → нужна форма с вопросом о времени передачи вещи (т.к. сейчас отдать не может). Разговорный стиль: -아/어도 될까?"},{"slot":"㉡","model":"같이 가서 도와줄 수 있어 / 텐트 치는 거 도와줄 수 있어","check":"«텐트 치는 법을 잘 몰라서» → логичная просьба о помощи в постановке палатки. Разговорный стиль: -아/어 줄 수 있어?"}]},{"n":52,"points":10,"korInstr":"다음을 읽고 ㉠과 ㉡에 들어갈 말을 각각 한 문장으로 쓰시오. (각 10점)","instr":"Прочитайте текст о летающих насекомых и впишите в ㉠ и ㉡ по одному законченному предложению. Письменный стиль -ㄴ다/-는다.","passage":"곤충들은 하늘을 날기 위해 다양한 방식으로 몸을 변화시켜 왔다. 일부 곤충은 몸을 가볍게 만들기 위해 ( ㉠ ). 반면 어떤 곤충은 날개를 아주 빠르게 움직여서 ( ㉡ ). 이처럼 같은 하늘을 날더라도 곤충마다 그 방법은 저마다 다르다.","blanks":[{"slot":"㉠","model":"몸속 구조를 단순하게 줄였다 / 뼈대를 가볍게 만들었다","check":"«몸을 가볍게 만들기 위해» → согласование с целью: упростили/облегчили внутреннюю структуру тела. Стиль -ㄴ다: 줄였다 / 만들었다."},{"slot":"㉡","model":"빠른 속도로 비행할 수 있게 되었다 / 균형을 잡으며 날 수 있게 되었다","check":"«날개를 아주 빠르게 움직여서» → результат быстрого движения крыльев — высокая скорость/устойчивый полёт. Стиль -ㄴ다: 되었다."}]},{"n":53,"points":30,"min":200,"max":300,"korInstr":"다음을 참고하여 '고등학생의 주간 평균 게임 이용 시간 변화'에 대한 글을 200~300자로 쓰시오. 단, 글의 제목은 쓰지 마시오. (30점)","instr":"Опишите данные графика об изменении времени, которое старшеклассники тратят на игры (2017 vs 2019), текстом 200–300 знаков. Заголовок не пишите. Письменный стиль -ㄴ다/-는다.","model":"고등학생의 주간 평균 게임 이용 시간 변화를 살펴보면, 모바일 게임 이용 시간은 2017년 5.2시간에서 2019년 7.1시간으로 늘었고, PC 게임 이용 시간은 2017년 3.8시간에서 2019년 4.9시간으로 늘었다. 두 항목 모두 증가했지만 모바일 게임의 증가폭이 더 크게 나타났다. 이를 통해 고등학생들 사이에서 게임을 즐기는 시간이 전반적으로 늘고 있으며, 특히 모바일 게임을 이용하는 비중이 빠르게 커지고 있음을 알 수 있다.","check":"① 대상(고등학생 주간 평균 게임 이용 시간)을 밝혔는가? ② 모바일·PC 게임 각각의 2017→2019 수치 변화를 모두 포함했는가? ③ 모바일 게임의 증가폭이 더 크다는 비교를 언급했는가? ④ 200~300자, 제목 없이, 객관적 문어체 -ㄴ다로 썼는가?","passage":"<svg viewBox='0 0 320 190' width='100%' style='max-width:320px;display:block;margin:4px auto 10px;background:#FFFFFF;border:1px solid #EADDE0;border-radius:10px' xmlns='http://www.w3.org/2000/svg'><line x1='30' y1='150' x2='300' y2='150' stroke='#C9B6BB'/><rect x='55' y='95' width='30' height='55' rx='3' fill='#F2A6AE'/><rect x='95' y='75' width='30' height='75' rx='3' fill='#EE8893'/><rect x='185' y='110' width='30' height='40' rx='3' fill='#F2A6AE'/><rect x='225' y='100' width='30' height='50' rx='3' fill='#EE8893'/><text x='70' y='88' font-size='11' text-anchor='middle' fill='#7A5560'>5.2h</text><text x='110' y='68' font-size='11' text-anchor='middle' fill='#7A5560'>7.1h</text><text x='200' y='103' font-size='11' text-anchor='middle' fill='#7A5560'>3.8h</text><text x='240' y='93' font-size='11' text-anchor='middle' fill='#7A5560'>4.9h</text><text x='90' y='165' font-size='12' text-anchor='middle' fill='#5A4046'>2017년</text><text x='210' y='165' font-size='12' text-anchor='middle' fill='#5A4046'>2019년</text><text x='160' y='20' font-size='12' text-anchor='middle' fill='#5A4046' font-weight='bold'>주간 평균 게임 이용 시간</text></svg><div style='font-size:13px;color:var(--muted);margin:4px 0 10px;text-align:center'>막대(좌측 진한색): 모바일 게임 / 막대(우측 연한색): PC 게임</div>"},{"n":54,"points":50,"min":600,"max":700,"korInstr":"다음을 주제로 하여 자신의 생각을 600~700자로 글을 쓰시오. 단, 문제를 그대로 옮겨 쓰지 마시오. (50점)","instr":"Напишите сочинение 600–700 знаков на тему «что значит настоящий успех и какие условия для него нужны». Раскройте все три вопроса, каждый отдельным абзацем; задание дословно не переписывайте. Письменный стиль -ㄴ다/-는다.","passage":"사람들은 흔히 사회적 지위나 경제적 부를 성공의 기준으로 생각한다. 그러나 성공의 의미는 사람마다 다르게 받아들여질 수 있다. 아래의 내용을 중심으로 '성공이란 무엇이며 진정한 성공을 위해 필요한 조건은 무엇인지'에 대해 자신의 의견을 쓰라.\n• 사람들은 흔히 무엇을 성공의 기준으로 삼는가?\n• 그러한 기준이 가진 한계는 무엇인가?\n• 진정한 성공을 위해 필요한 조건은 무엇인가?","model":"사람들은 보통 높은 지위나 많은 재산을 가진 사람을 성공한 사람이라고 생각한다. 사회적으로 인정받는 직업, 풍족한 경제력은 흔히 성공의 척도로 여겨진다.\n\n그러나 이러한 기준에는 분명한 한계가 있다. 지위나 재산만으로 성공을 판단하면, 그것을 이루지 못한 사람은 모두 실패한 인생을 살았다고 평가받게 된다. 또한 높은 지위나 많은 돈을 가졌다고 해서 반드시 행복하거나 만족스러운 삶을 사는 것도 아니다. 실제로 사회적으로는 성공했다고 평가받지만 스스로는 공허함을 느끼는 사람들도 많다. 이는 성공의 기준을 외부의 평가에만 맞추었기 때문에 생기는 문제라고 할 수 있다.\n\n그렇다면 진정한 성공을 위해서는 어떤 조건이 필요할까? 나는 무엇보다 자신이 하는 일에서 의미와 만족을 느끼는 것이 중요하다고 생각한다. 다른 사람의 기준이 아니라 자신만의 목표를 세우고 그것을 향해 꾸준히 노력하는 과정 자체가 성공의 중요한 부분이 될 수 있다. 또한 주변 사람들과 좋은 관계를 유지하며 함께 성장해 나가는 것도 진정한 성공의 조건이라고 본다. 결국 성공은 타인의 시선이 아니라 자기 자신이 얼마나 만족하는가에 따라 결정되는 것이라고 생각한다.","check":"① 세 질문(성공의 일반적 기준 / 그 기준의 한계 / 진정한 성공의 조건)을 각각 단락으로 구성했는가? ② 서론과 결론이 있는가? ③ 구어체 표현 없이 -ㄴ다체 문어체로 일관되게 썼는가? ④ 600~700자이며 문제를 그대로 베끼지 않았는가?"}]},"reading":{"durationMin":70,"total":100,"label":"Hot TOPIK 제3회 · 읽기 (1~50)","questions":[{"n":1,"points":2,"instr":"( )에 들어갈 가장 알맞은 것을 고르십시오.","passage":"이 식당은 줄을 서서 ( ) 먹을 만큼 인기가 많다.","options":["기다리든지","기다리거나","기다리다가","기다릴 만큼"],"answer":4,"explain":"«얼마나 인기가 많은지» 정도를 나타내는 표현이 필요하다.<br>✅ <b>④ 기다릴 만큼</b> = «настолько, что приходится ждать».<br>🧩 -ㄹ 만큼 — «настолько, что…» (степень)."},{"n":2,"points":2,"instr":"( )에 들어갈 가장 알맞은 것을 고르십시오.","passage":"동생은 시험이 끝나자마자 ( ) 잠들어 버렸다.","options":["눕는 대로","눕다 보니","눕자마자","눕기는커녕"],"answer":3,"explain":"«시험이 끝나자마자»와 같은 구조의 연속 동작 표현이 필요하다.<br>✅ <b>③ 눕자마자</b> = «как только лёг».<br>🧩 -자마자 — «как только…»."},{"n":3,"points":2,"instr":"밑줄 친 부분과 의미가 비슷한 것을 고르십시오.","passage":"갑자기 비가 와서 옷이 <u>다 젖어 버렸다</u>.","options":["다 젖을 뻔했다","다 젖고 말았다","다 젖을 지도 모른다","다 젖은 척했다"],"answer":2,"explain":"-아/어 버렸다 = «полностью, окончательно» (с оттенком сожаления).<br>✅ <b>② 다 젖고 말았다</b> — синоним.<br>✖️ ① «чуть не», ③ «возможно», ④ «делать вид»."},{"n":4,"points":2,"instr":"밑줄 친 부분과 의미가 비슷한 것을 고르십시오.","passage":"부모님께서는 내가 무슨 일을 하든 <u>항상 내 편이 되어 주신다</u>.","options":["언제나 나를 지지해 주신다","가끔 나를 도와주신다","내 의견에 반대하신다","내 일에 관심이 없으시다"],"answer":1,"explain":"«내 편이 되어 주다» = «быть на моей стороне, поддерживать».<br>✅ <b>① 언제나 나를 지지해 주신다</b> — синоним."},{"n":5,"points":2,"instr":"다음은 무엇에 대한 글인지 고르십시오.","passage":"지금 이 순간을 사진으로 남기세요.\n소중한 추억, 평생 간직하세요.","options":["여행사","문구점","사진관","서점"],"answer":3,"explain":"«사진으로 남기세요», «소중한 추억» — 사진을 찍어 두라는 내용.<br>✅ <b>③ 사진관</b>.<br>🧩 간직하다 = «хранить, держать при себе»."},{"n":6,"points":2,"instr":"다음은 무엇에 대한 글인지 고르십시오.","passage":"건강하게 미래로!\n정기 검진으로 작은 변화도 놓치지 마세요.","options":["병원 검진센터","여행사","체육관","약국"],"answer":1,"explain":"«정기 검진», «작은 변화도 놓치지 마세요» — 건강검진을 안내하는 글.<br>✅ <b>① 병원 검진센터</b>.<br>🧩 정기 검진 = «регулярный медосмотр»."},{"n":7,"points":2,"instr":"다음은 무엇에 대한 글인지 고르십시오.","passage":"따뜻한 마음을 나눌 분을 찾습니다.\n주말마다 두 시간, 어르신과 함께해 주세요.","options":["봉사자 모집 공고","아르바이트 채용 공고","행사 초대장","구인 광고"],"answer":1,"explain":"«따뜻한 마음을 나눌 분», «어르신과 함께해 주세요» — 무료로 도울 사람을 구하는 글.<br>✅ <b>① 봉사자 모집 공고</b>.<br>🧩 봉사자 = «волонтёр»; 어르신 = «уважаемый пожилой человек»."},{"n":8,"points":2,"instr":"다음은 무엇에 대한 글인지 고르십시오.","passage":"참가 신청은 30일까지!\n선착순 마감되니 서둘러 신청하세요.","options":["채용 안내","교환 방법","사용 설명서","행사 신청 안내"],"answer":4,"explain":"«참가 신청은 30일까지», «선착순 마감» — 행사 참가 신청을 안내하는 글.<br>✅ <b>④ 행사 신청 안내</b>.<br>🧩 선착순 = «по порядку прибытия/обращения»."},{"n":9,"points":2,"instr":"다음 글의 내용과 같은 것을 고르십시오.","passage":"어버이날 무료 셔틀버스 운행 안내\n· 운행일: 5월 8일(목)\n· 노선: 시청역 ↔ 효도원\n· 배차 간격: 30분\n· 이용: 누구나 무료로 탑승 가능\n· 문의: 02-555-1234","options":["이 셔틀버스는 누구나 무료로 이용할 수 있다.","셔틀버스는 매주 운행된다.","탑승하려면 미리 예약해야 한다.","배차 간격은 한 시간이다."],"answer":1,"explain":"«누구나 무료로 탑승 가능».<br>✅ <b>① 이 셔틀버스는 누구나 무료로 이용할 수 있다.</b><br>✖️ 5월 8일 하루만 운행; 예약 불필요; 배차 간격 30분."},{"n":10,"points":2,"instr":"다음 도표의 내용과 같은 것을 고르십시오.","passage":"<svg viewBox='0 0 300 165' width='100%' style='max-width:300px;display:block;margin:4px auto 10px;background:#FFFFFF;border:1px solid #EADDE0;border-radius:10px' xmlns='http://www.w3.org/2000/svg'><line x1='28' y1='128' x2='288' y2='128' stroke='#C9B6BB'/><rect x='42' y='58' width='36' height='70' rx='3' fill='#EE8893'/><rect x='112' y='78' width='36' height='50' rx='3' fill='#F2A6AE'/><rect x='182' y='98' width='36' height='30' rx='3' fill='#F6C2C7'/><rect x='252' y='113' width='36' height='15' rx='3' fill='#F8D6D9'/><text x='60' y='51' font-size='12' text-anchor='middle' fill='#7A5560'>34%</text><text x='130' y='71' font-size='12' text-anchor='middle' fill='#7A5560'>24%</text><text x='200' y='91' font-size='12' text-anchor='middle' fill='#7A5560'>15%</text><text x='270' y='106' font-size='12' text-anchor='middle' fill='#7A5560'>7%</text><text x='60' y='146' font-size='11' text-anchor='middle' fill='#5A4046'>경영/경제</text><text x='130' y='146' font-size='11' text-anchor='middle' fill='#5A4046'>공학</text><text x='200' y='146' font-size='11' text-anchor='middle' fill='#5A4046'>인문</text><text x='270' y='146' font-size='11' text-anchor='middle' fill='#5A4046'>예술</text></svg>'대학생이 선호하는 전공 분야'를 조사한 결과입니다.","options":["공학 전공보다 인문 전공을 선호하는 비율이 높다.","예술 전공을 선호하는 비율이 인문 전공보다 높다.","경영/경제 전공을 선호하는 비율이 가장 높다.","인문 전공을 선호하는 비율은 전체의 절반이 넘는다."],"answer":3,"explain":"34%(경영/경제)가 가장 높음.<br>✅ <b>③ 경영/경제 전공을 선호하는 비율이 가장 높다.</b><br>✖️ 인문(15%) < 공학(24%); 예술(7%) < 인문(15%); 인문은 절반에 한참 못 미침."},{"n":11,"points":2,"instr":"다음 글의 내용과 같은 것을 고르십시오.","passage":"동네에 작은 독립 서점이 생긴 지 일 년이 되었다. 책뿐만 아니라 작가와의 만남이나 글쓰기 모임 같은 행사도 자주 열린다. 큰 서점에 없는 독특한 책들을 만날 수 있어서 단골손님이 점점 늘고 있다.","options":["이 서점은 큰 서점보다 책의 종류가 많다.","이 서점은 최근에 문을 닫았다.","이 서점에서는 다양한 행사가 열린다.","이 서점에는 단골손님이 거의 없다."],"answer":3,"explain":"«작가와의 만남이나 글쓰기 모임 같은 행사도 자주 열린다».<br>✅ <b>③ 이 서점에서는 다양한 행사가 열린다.</b><br>✖️ 큰 서점보다 책 종류가 많다는 언급은 없음; 단골손님이 늘고 있음."},{"n":12,"points":2,"instr":"다음 글의 내용과 같은 것을 고르십시오.","passage":"처음 마라톤 대회에 나갔을 때는 10킬로미터도 완주하지 못하고 중간에 멈췄다. 하지만 매주 조금씩 거리를 늘려 가며 연습한 끝에 이번 대회에서는 처음으로 풀코스를 완주했다.","options":["이 사람은 처음 대회부터 풀코스를 완주했다.","이 사람은 꾸준한 연습으로 완주에 성공했다.","이 사람은 연습 없이 좋은 성적을 냈다.","이 사람은 마라톤을 한 번도 완주하지 못했다."],"answer":2,"explain":"«매주 조금씩 거리를 늘려 가며 연습한 끝에… 처음으로 풀코스를 완주했다».<br>✅ <b>② 이 사람은 꾸준한 연습으로 완주에 성공했다.</b>"},{"n":13,"points":2,"instr":"다음을 순서대로 맞게 배열한 것을 고르십시오.","passage":"(가) 처음에는 낯설고 입에도 잘 안 맞았다. (나) 외국에서 새로운 음식 문화를 접하게 되었다. (다) 시간이 지나면서 오히려 그 맛을 즐기게 되었다. (라) 이제는 한국에 돌아와서도 종종 그 음식을 찾는다.","options":["(나)-(가)-(다)-(라)","(가)-(나)-(다)-(라)","(나)-(다)-(가)-(라)","(다)-(나)-(가)-(라)"],"answer":1,"explain":"✅ <b>① (나)-(가)-(다)-(라)</b>: 외국 음식 문화 접함 → 처음엔 낯설었음 → 시간 지나며 즐기게 됨 → 지금도 찾는다."},{"n":14,"points":2,"instr":"다음을 순서대로 맞게 배열한 것을 고르십시오.","passage":"(가) 그래서 일단 회의 자료를 처음부터 다시 준비하기 시작했다. (나) 어제 노트북이 갑자기 켜지지 않았다. (다) 다행히 자료가 그대로 남아 있어서 금방 복구할 수 있었다. (라) 그러다 혹시나 하는 마음으로 클라우드를 확인해 보았다.","options":["(가)-(나)-(라)-(다)","(나)-(가)-(라)-(다)","(나)-(라)-(다)-(가)","(라)-(나)-(가)-(다)"],"answer":2,"explain":"✅ <b>② (나)-(가)-(라)-(다)</b>: 노트북 고장 → 그래서 처음부터 다시 준비 시작 → 혹시나 클라우드 확인 → 다행히 복구."},{"n":15,"points":2,"instr":"다음을 순서대로 맞게 배열한 것을 고르십시오.","passage":"(가) 어릴 때부터 식물 키우는 것을 좋아했다. (나) 그러다 작은 텃밭을 직접 가꾸기 시작했다. (다) 요즘은 주말마다 텃밭에 나가는 것이 가장 큰 즐거움이다. (라) 처음에는 화분 몇 개로 시작했다.","options":["(가)-(라)-(나)-(다)","(가)-(나)-(라)-(다)","(라)-(가)-(나)-(다)","(가)-(라)-(다)-(나)"],"answer":1,"explain":"✅ <b>① (가)-(라)-(나)-(다)</b>: 식물을 좋아함 → 화분으로 시작 → 텃밭 가꾸기로 발전 → 지금은 큰 즐거움."},{"n":16,"points":2,"instr":"( )에 들어갈 말로 가장 알맞은 것을 고르십시오.","passage":"최근 한 설문 조사에서 직장인의 절반 이상이 점심시간에 혼자 식사를 한다고 답했다. 이는 ( ) 오히려 혼자만의 시간을 더 선호하는 사람들이 늘고 있다는 것을 보여 준다. 동료와의 관계가 불편해서가 아니라, 짧은 시간이라도 스스로 쉬고 싶어 하는 것이다.","options":["점심시간이 부족해서","동료와 어색해서가 아니라","회사 규정 때문에","식당이 부족해서"],"answer":2,"explain":"«동료와의 관계가 불편해서가 아니라»는 뒤 문장과 자연스럽게 이어진다.<br>✅ <b>② 동료와 어색해서가 아니라</b>"},{"n":17,"points":2,"instr":"( )에 들어갈 말로 가장 알맞은 것을 고르십시오.","passage":"토론을 할 때는 상대방의 의견을 끝까지 듣는 자세가 중요하다. 자신과 다른 의견이라고 해서 ( ) 오히려 더 깊이 있는 결론에 도달할 수 있다. 다양한 시각을 인정할 때 토론은 진정한 의미를 갖는다.","options":["무조건 받아들이면","끝까지 무시하면","듣지 않고 넘기면","바로 반박하기보다는"],"answer":4,"explain":"«오히려 더 깊이 있는 결론에 도달할 수 있다»와 어울리는 태도가 필요하다.<br>✅ <b>④ 바로 반박하기보다는</b> — 반박 대신 경청하는 태도가 깊은 결론으로 이어진다."},{"n":18,"points":2,"instr":"( )에 들어갈 말로 가장 알맞은 것을 고르십시오.","passage":"좋은 토론을 위해서는 ( ) 필요하다. 사실에 근거한 자료를 제시하면 상대방도 더 쉽게 이해하고 받아들일 수 있다. 감정적인 주장만으로는 설득력을 얻기 어렵다.","options":["많은 시간이","화려한 말솜씨가","근거 있는 자료가","많은 인원이"],"answer":3,"explain":"«사실에 근거한 자료를 제시하면»과 연결된다.<br>✅ <b>③ 근거 있는 자료가</b><br>🧩 근거 = «основание, аргумент»."},{"n":19,"points":2,"instr":"다음 글의 내용과 같은 것을 고르십시오.","passage":"한 스타트업이 아파트 단지와 손잡고 재활용품 수거 서비스를 시작했다. 입주민이 앱으로 수거를 신청하면 정해진 시간에 직원이 방문해 재활용품을 가져간다. 수거된 자원은 따로 분류되어 재활용 업체에 판매된다.","options":["이 서비스는 입주민이 앱으로 신청해야 이용할 수 있다.","이 서비스는 모든 아파트에서 무료로 이용할 수 있다.","수거된 재활용품은 그냥 버려진다.","입주민이 직접 재활용 업체에 자원을 판매한다."],"answer":1,"explain":"«입주민이 앱으로 수거를 신청하면 정해진 시간에 직원이 방문».<br>✅ <b>① 이 서비스는 입주민이 앱으로 신청해야 이용할 수 있다.</b><br>✖️ 수거된 자원은 분류되어 판매됨(버려지지 않음); 판매는 업체가 함."},{"n":20,"points":2,"instr":"이 글의 주제로 가장 알맞은 것을 고르십시오.","passage":"한 스타트업이 아파트 단지와 손잡고 재활용품 수거 서비스를 시작했다. 입주민이 앱으로 수거를 신청하면 정해진 시간에 직원이 방문해 재활용품을 가져간다. 수거된 자원은 따로 분류되어 재활용 업체에 판매된다.","options":["재활용품은 직접 분리수거장에 가져가야 한다.","앱을 통한 재활용품 수거 서비스가 등장했다.","아파트 단지는 재활용품 수거를 거부하고 있다.","재활용 업체는 더 이상 자원을 구매하지 않는다."],"answer":3,"explain":"«한 스타트업이 아파트 단지와 손잡고 재활용품 수거 서비스를 시작했다».<br>✅ <b>③ 앱을 통한 재활용품 수거 서비스가 등장했다.</b>"},{"n":21,"points":2,"instr":"( )에 들어갈 가장 알맞은 것을 고르십시오.","passage":"사람들이 어려운 처지의 타인을 돕는 행동은 단순한 동정심에서만 비롯되는 것이 아니다. 연구에 따르면 누군가를 도울 때 느끼는 만족감과 보람도 중요한 동기로 작용한다. 즉 이타적 행동은 ( ) 자신에게도 긍정적인 영향을 준다는 점에서 의미가 있다.","options":["타인에게 손해를 끼치면서도","아무런 대가 없이 이루어지지만","대가를 바라지 않으면서도","상대방을 무시하면서도"],"answer":3,"explain":"앞서 «만족감과 보람도 중요한 동기»라고 했으므로, 대가 없이 돕지만 동시에 자신도 얻는 것이 있다는 흐름이 자연스럽다.<br>✅ <b>③ 대가를 바라지 않으면서도</b>"},{"n":22,"points":2,"instr":"이 글의 내용과 같은 것을 고르십시오.","passage":"사람들이 어려운 처지의 타인을 돕는 행동은 단순한 동정심에서만 비롯되는 것이 아니다. 연구에 따르면 누군가를 도울 때 느끼는 만족감과 보람도 중요한 동기로 작용한다. 즉 이타적 행동은 대가를 바라지 않으면서도 자신에게도 긍정적인 영향을 준다는 점에서 의미가 있다.","options":["이타적 행동은 동정심에서만 나온다.","돕는 행동은 돕는 사람에게도 만족감을 준다.","이타적 행동을 하는 사람은 손해만 본다.","연구에 따르면 이타적 행동에는 동기가 없다."],"answer":4,"explain":"«누군가를 도울 때 느끼는 만족감과 보람도 중요한 동기».<br>✅ <b>④ 돕는 행동은 돕는 사람에게도 만족감을 준다.</b>"},{"n":23,"points":2,"instr":"밑줄 친 부분에 나타난 '나'의 심정으로 가장 알맞은 것을 고르십시오.","passage":"어릴 때부터 막연히 작은 책방을 운영하고 싶다는 꿈을 품고 살았다. 회사 일이 바쁠 때마다 그 생각은 잠시 잊혀졌지만, 퇴근길 골목의 작은 책방을 지나칠 때면 <u>오래전 품었던 그 소망이 다시 가슴 한쪽에서 꿈틀거렸다</u>.","options":["허무하다","답답하다","그립고 설렌다","불안하고 두렵다"],"answer":2,"explain":"오래된 꿈이 다시 떠오르며 «꿈틀거렸다» — 그립고 마음이 설레는 감정.<br>✅ <b>② 그립고 설렌다</b>"},{"n":24,"points":2,"instr":"이 글의 내용과 같은 것을 고르십시오.","passage":"어릴 때부터 막연히 작은 책방을 운영하고 싶다는 꿈을 품고 살았다. 회사 일이 바쁠 때마다 그 생각은 잠시 잊혀졌지만, 퇴근길 골목의 작은 책방을 지나칠 때면 오래전 품었던 그 소망이 다시 가슴 한쪽에서 꿈틀거렸다.","options":["나는 이미 책방을 운영하고 있다.","나는 어릴 때부터 책방 운영을 꿈꿔 왔다.","나는 회사 일을 그만두고 책방을 차렸다.","나는 책방에 관심이 전혀 없다."],"answer":3,"explain":"«어릴 때부터 막연히 작은 책방을 운영하고 싶다는 꿈을 품고 살았다».<br>✅ <b>③ 나는 어릴 때부터 책방 운영을 꿈꿔 왔다.</b>"},{"n":25,"points":2,"instr":"다음 신문 기사의 제목을 가장 잘 설명한 것을 고르십시오.","passage":"중소 제조업체 수출 적자 3년 만에 최고치","options":["중소 제조업체의 수출이 크게 늘어 흑자를 기록했다.","중소 제조업체의 수출 적자가 3년 동안 계속 줄었다.","중소 제조업체의 수출 적자가 최근 3년 중 가장 커졌다.","중소 제조업체는 수출을 전혀 하지 않고 있다."],"answer":3,"explain":"«수출 적자 3년 만에 최고치» = 최근 3년 사이 적자가 가장 큰 상태.<br>✅ <b>③ 중소 제조업체의 수출 적자가 최근 3년 중 가장 커졌다.</b>"},{"n":26,"points":2,"instr":"다음 신문 기사의 제목을 가장 잘 설명한 것을 고르십시오.","passage":"육아휴직 신청, 작년보다 두 배 가까이 늘어","options":["육아휴직을 신청하는 사람이 작년보다 크게 줄었다.","육아휴직을 신청하는 사람이 작년보다 거의 두 배가 되었다.","육아휴직 제도가 작년에 폐지되었다.","육아휴직 신청은 작년과 변화가 없었다."],"answer":4,"explain":"«작년보다 두 배 가까이 늘어» = 신청자 수가 거의 두 배로 증가.<br>✅ <b>④ 육아휴직을 신청하는 사람이 작년보다 거의 두 배가 되었다.</b>"},{"n":27,"points":2,"instr":"다음 신문 기사의 제목을 가장 잘 설명한 것을 고르십시오.","passage":"학교 급식, 지역 농산물 사용 비율 확대 추진","options":["학교 급식에서 지역 농산물 사용을 줄이기로 했다.","학교 급식 제도가 완전히 폐지될 예정이다.","학교는 더 이상 급식을 제공하지 않기로 했다.","학교 급식에서 지역 농산물을 더 많이 사용하려 한다."],"answer":4,"explain":"«지역 농산물 사용 비율 확대 추진» = 지역 농산물을 더 많이 쓰려는 계획.<br>✅ <b>④ 학교 급식에서 지역 농산물을 더 많이 사용하려 한다.</b>"},{"n":28,"points":2,"instr":"( )에 들어갈 가장 알맞은 것을 고르십시오.","passage":"최근 재택근무를 도입하는 기업이 늘면서 출퇴근에 쓰던 시간을 절약할 수 있게 되었다. 그러나 동료와의 소통이 줄어들면서 ( ) 어려움을 겪는 직원도 적지 않다. 그래서 일부 기업은 정기적인 화상 회의를 통해 이러한 문제를 보완하고 있다.","options":["업무 시간이 늘어나는","업무 협업에","연봉이 줄어드는","출퇴근 거리가 늘어나는"],"answer":3,"explain":"«동료와의 소통이 줄어들면서» → 협업에 어려움이 생긴다는 흐름.<br>✅ <b>③ 업무 협업에</b>"},{"n":29,"points":2,"instr":"( )에 들어갈 가장 알맞은 것을 고르십시오.","passage":"긱 이코노미가 확산되면서 정해진 회사에 속하지 않고 여러 일을 동시에 맡아 수입을 얻는 사람들이 늘고 있다. 이러한 형태의 일자리는 시간을 자유롭게 쓸 수 있다는 장점이 있지만, ( ) 단점도 분명히 존재한다.","options":["월급이 매달 일정하게 보장된다는","고용이 불안정하고 소득이 일정하지 않다는","회사 복지를 모두 누릴 수 있다는","정년이 보장된다는"],"answer":3,"explain":"장점(시간 자유) 뒤에 «단점»이 와야 하므로 자유와 대조되는 불안정성이 와야 한다.<br>✅ <b>③ 고용이 불안정하고 소득이 일정하지 않다는</b>"},{"n":30,"points":2,"instr":"( )에 들어갈 가장 알맞은 것을 고르십시오.","passage":"한 설문에서 청년들에게 직업을 선택할 때 가장 중요하게 여기는 요소를 물었다. 그 결과 많은 청년들이 ( ) 답했는데, 이는 과거 세대가 안정성을 가장 중요하게 여겼던 것과는 차이를 보인다. 시대가 변하면서 일에 대한 가치관도 달라지고 있는 것이다.","options":["연봉이 가장 중요하다고","정년이 가장 중요하다고","회사 규모가 가장 중요하다고","개인의 만족과 성장이 가장 중요하다고"],"answer":4,"explain":"«과거 세대가 안정성을 가장 중요하게 여겼던 것과는 차이»이므로, 안정성과 대비되는 «개인의 만족과 성장»이 들어가야 한다.<br>✅ <b>④ 개인의 만족과 성장이 가장 중요하다고</b>"},{"n":31,"points":2,"instr":"( )에 들어갈 가장 알맞은 것을 고르십시오.","passage":"기업들이 신입 사원을 뽑을 때 학벌이나 학점보다 실무 경험을 더 중요하게 보는 경향이 늘고 있다. 이는 ( ) 실제로 일을 잘할 수 있는 인재를 찾으려는 기업의 의도를 보여 준다. 그래서 최근에는 인턴 경험이나 프로젝트 수행 경험이 채용에서 큰 비중을 차지하고 있다.","options":["서류상의 조건보다","학벌과 학점만으로","경력이 전혀 없어도","면접 점수만으로"],"answer":1,"explain":"«학벌이나 학점보다 실무 경험을 더 중요하게»와 이어지는 표현이 필요하다.<br>✅ <b>① 서류상의 조건보다</b>"},{"n":32,"points":2,"instr":"다음 글의 내용과 같은 것을 고르십시오.","passage":"일부 건강식품 광고는 과학적으로 검증되지 않은 효과를 마치 사실인 것처럼 표현한다. '만병통치'라거나 '즉각적인 효과'를 강조하는 문구는 소비자의 판단을 흐리게 할 수 있다. 전문가들은 건강식품을 고를 때 광고 문구보다 성분과 임상 자료를 먼저 확인해야 한다고 조언한다.","options":["모든 건강식품 광고는 과학적으로 검증된 내용만 담고 있다.","일부 건강식품 광고는 검증되지 않은 효과를 사실처럼 표현한다.","전문가들은 광고 문구만 보고 제품을 골라도 된다고 말한다.","건강식품은 성분을 확인할 필요가 없다."],"answer":3,"explain":"«과학적으로 검증되지 않은 효과를 마치 사실인 것처럼 표현한다».<br>✅ <b>③ 일부 건강식품 광고는 검증되지 않은 효과를 사실처럼 표현한다.</b>"},{"n":33,"points":2,"instr":"다음 글의 내용과 같은 것을 고르십시오.","passage":"최근 들어 대학 졸업장만으로는 취업이 보장되지 않는다는 인식이 확산되고 있다. 너무 많은 사람이 같은 수준의 학력을 갖게 되면서 학력의 차별성이 사라지는 이른바 '학력 인플레이션' 현상이 나타나고 있는 것이다. 이로 인해 구직자들은 학력 외에도 다양한 능력을 갖추기 위해 노력하고 있다.","options":["대학 졸업장만 있으면 취업이 보장된다.","학력 인플레이션은 학력의 가치를 더 높여 준다.","많은 사람이 같은 학력을 갖게 되면서 학력의 차별성이 줄었다.","구직자들은 더 이상 학력을 신경 쓰지 않는다."],"answer":3,"explain":"«너무 많은 사람이 같은 수준의 학력을 갖게 되면서 학력의 차별성이 사라지는».<br>✅ <b>③ 많은 사람이 같은 학력을 갖게 되면서 학력의 차별성이 줄었다.</b>"},{"n":34,"points":2,"instr":"다음 글의 내용과 같은 것을 고르십시오.","passage":"유전자 변형을 거친 작물, 즉 GMO 식품에 대한 안전성 논쟁은 오랫동안 이어지고 있다. 일부에서는 식량 부족 문제를 해결할 대안으로 GMO를 지지하지만, 다른 한편에서는 장기적인 안전성이 충분히 검증되지 않았다는 우려를 제기한다. 이 때문에 여러 나라에서 GMO 식품에 대한 표시 의무를 법으로 정해 두고 있다.","options":["GMO 식품에 대해서는 어떤 논쟁도 없다.","여러 나라는 GMO 식품 표시를 법으로 의무화하고 있다.","모든 사람이 GMO 식품의 안전성에 동의한다.","GMO 식품은 식량 부족 문제와 관련이 없다."],"answer":2,"explain":"«여러 나라에서 GMO 식품에 대한 표시 의무를 법으로 정해 두고 있다».<br>✅ <b>② 여러 나라는 GMO 식품 표시를 법으로 의무화하고 있다.</b>"},{"n":35,"points":2,"instr":"다음 글의 주제로 가장 알맞은 것을 고르십시오.","passage":"장애를 단순히 신체적 결함으로만 보던 과거의 시각에서 벗어나, 최근에는 장애를 사회와 환경이 만들어 내는 제약으로 이해하려는 움직임이 늘고 있다. 즉 개인의 몸이 아니라 접근하기 어려운 시설이나 제도가 장애를 만든다는 관점이다. 이러한 시각은 장애인을 위한 환경 개선의 중요성을 다시 일깨워 준다.","options":["장애는 신체적 결함으로만 정의되어야 한다.","장애인을 위한 시설 개선은 불필요하다.","사회 제도는 장애와 아무런 관련이 없다.","장애를 사회적 환경의 문제로 보는 시각이 늘고 있다."],"answer":4,"explain":"«장애를 사회와 환경이 만들어 내는 제약으로 이해하려는 움직임이 늘고 있다».<br>✅ <b>④ 장애를 사회적 환경의 문제로 보는 시각이 늘고 있다.</b>"},{"n":36,"points":2,"instr":"다음 글의 주제로 가장 알맞은 것을 고르십시오.","passage":"혼자 사는 노인의 수가 늘면서 이들을 위한 일자리 지원 사업도 다양해지고 있다. 단순한 경제적 지원을 넘어, 가벼운 활동을 통해 사회와의 연결을 유지하도록 돕는 일자리들이 마련되고 있다. 이는 노인들의 고립감을 줄이는 데에도 긍정적인 역할을 한다.","options":["독거노인은 경제적 지원만 필요로 한다.","노인 일자리 사업은 사회적 고립을 줄이는 데도 도움이 된다.","독거노인의 수는 점점 줄어들고 있다.","노인들은 일자리에 전혀 관심이 없다."],"answer":4,"explain":"«가벼운 활동을 통해 사회와의 연결을 유지… 고립감을 줄이는 데에도 긍정적인 역할».<br>✅ <b>④ 노인 일자리 사업은 사회적 고립을 줄이는 데도 도움이 된다.</b>"},{"n":37,"points":2,"instr":"다음 글의 주제로 가장 알맞은 것을 고르십시오.","passage":"기후 변화로 인한 자연재해나 해수면 상승으로 살던 곳을 떠날 수밖에 없는 사람들, 이른바 '기후 난민'이 늘고 있다. 그러나 이들은 국제법상 난민으로 인정받지 못해 제대로 된 보호를 받지 못하는 경우가 많다. 국제 사회가 이 문제에 책임 있는 대응을 마련해야 한다는 목소리가 커지고 있다.","options":["기후 난민은 이미 충분한 법적 보호를 받고 있다.","기후 변화로 인한 난민 문제에 국제 사회의 대응이 필요하다.","기후 난민의 수는 줄어들고 있다.","기후 변화는 난민 문제와 관련이 없다."],"answer":4,"explain":"«국제 사회가 이 문제에 책임 있는 대응을 마련해야 한다는 목소리가 커지고 있다».<br>✅ <b>④ 기후 변화로 인한 난민 문제에 국제 사회의 대응이 필요하다.</b>"},{"n":38,"points":2,"instr":"다음 글의 주제로 가장 알맞은 것을 고르십시오.","passage":"일회용품 사용을 줄이기 위한 다양한 정책이 시행되고 있지만, 여전히 많은 사람들이 편리함을 이유로 일회용품을 선택한다. 일회용품이 환경에 미치는 영향을 알면서도 습관을 바꾸기는 쉽지 않다는 것이다. 결국 제도적 규제와 함께 개인의 인식 변화가 함께 이루어져야 한다.","options":["일회용품 사용은 환경에 아무런 영향을 주지 않는다.","일회용품 줄이기는 제도와 인식 변화가 함께 필요하다.","사람들은 일회용품을 전혀 사용하지 않는다.","일회용품 관련 정책은 전혀 시행되지 않고 있다."],"answer":2,"explain":"«결국 제도적 규제와 함께 개인의 인식 변화가 함께 이루어져야 한다».<br>✅ <b>② 일회용품 줄이기는 제도와 인식 변화가 함께 필요하다.</b>"},{"n":39,"points":2,"instr":"다음 글에서 ㉠에 들어갈 가장 알맞은 문장을 고르십시오.","passage":"청소년의 게임 이용 시간이 늘면서 게임이 학업 스트레스 해소에 도움이 되는지에 대한 논쟁이 이어지고 있다. 일부 전문가들은 적절한 게임 이용이 스트레스를 줄이는 데 효과적이라고 본다. ( ㉠ ) 반대로 다른 전문가들은 과도한 게임 이용이 오히려 수면 부족과 집중력 저하로 이어져 학업에 부정적인 영향을 줄 수 있다고 경고한다. 결국 중요한 것은 게임 이용 시간을 스스로 조절하는 능력이라고 할 수 있다.","options":["짧은 시간의 게임이 긴장을 풀어 주는 효과가 있다는 것이다.","게임은 학업과 전혀 관련이 없다는 것이다.","청소년은 게임을 하면 안 된다는 것이다.","게임 이용 시간은 계속 줄어들고 있다는 것이다."],"answer":1,"explain":"앞 문장 «적절한 게임 이용이 스트레스를 줄이는 데 효과적»을 뒷받침하는 구체적 설명이 와야 하고, 뒤의 «반대로»와 대조를 이룬다.<br>✅ <b>① 짧은 시간의 게임이 긴장을 풀어 주는 효과가 있다는 것이다.</b>"},{"n":40,"points":2,"instr":"이 글의 내용과 같은 것을 고르십시오.","passage":"청소년의 게임 이용 시간이 늘면서 게임이 학업 스트레스 해소에 도움이 되는지에 대한 논쟁이 이어지고 있다. 일부 전문가들은 적절한 게임 이용이 스트레스를 줄이는 데 효과적이라고 본다. 짧은 시간의 게임이 긴장을 풀어 주는 효과가 있다는 것이다. 반대로 다른 전문가들은 과도한 게임 이용이 오히려 수면 부족과 집중력 저하로 이어져 학업에 부정적인 영향을 줄 수 있다고 경고한다. 결국 중요한 것은 게임 이용 시간을 스스로 조절하는 능력이라고 할 수 있다.","options":["모든 전문가는 게임이 학업에 도움이 된다고 본다.","과도한 게임 이용은 집중력을 높여 준다.","게임 이용 시간을 조절하는 능력이 중요하다.","청소년은 게임을 절대 해서는 안 된다."],"answer":3,"explain":"«결국 중요한 것은 게임 이용 시간을 스스로 조절하는 능력».<br>✅ <b>③ 게임 이용 시간을 조절하는 능력이 중요하다.</b>"},{"n":41,"points":2,"instr":"이 글의 주제로 가장 알맞은 것을 고르십시오.","passage":"청소년의 게임 이용 시간이 늘면서 게임이 학업 스트레스 해소에 도움이 되는지에 대한 논쟁이 이어지고 있다. 일부 전문가들은 적절한 게임 이용이 스트레스를 줄이는 데 효과적이라고 본다. 짧은 시간의 게임이 긴장을 풀어 주는 효과가 있다는 것이다. 반대로 다른 전문가들은 과도한 게임 이용이 오히려 수면 부족과 집중력 저하로 이어져 학업에 부정적인 영향을 줄 수 있다고 경고한다. 결국 중요한 것은 게임 이용 시간을 스스로 조절하는 능력이라고 할 수 있다.","options":["게임은 무조건 학업에 도움이 된다.","게임 이용 시간의 적절한 조절이 중요하다.","청소년은 게임을 해서는 안 된다.","전문가들의 의견은 모두 일치한다."],"answer":2,"explain":"«결국 중요한 것은 게임 이용 시간을 스스로 조절하는 능력».<br>✅ <b>② 게임 이용 시간의 적절한 조절이 중요하다.</b>"},{"n":42,"points":2,"instr":"밑줄 친 부분에 나타난 '나'의 심정으로 가장 알맞은 것을 고르십시오.","passage":"이삿짐을 다 옮기고 텅 빈 옛집을 마지막으로 둘러보았다. 십 년을 살았던 방 안에는 가구가 놓여 있던 자리마다 옅은 흔적만 남아 있었다. 문을 닫고 나오는 순간 <u>알 수 없는 먹먹함이 가슴을 채웠다</u>.","options":["서운하고 아쉽다","화가 나고 억울하다","기대되고 즐겁다","무관심하고 냉정하다"],"answer":1,"explain":"십 년을 산 집을 떠나며 «먹먹함»을 느낀 것은 헤어짐에 대한 서운함과 아쉬움의 감정이다.<br>✅ <b>① 서운하고 아쉽다</b>"},{"n":43,"points":2,"instr":"이 글의 내용과 같은 것을 고르십시오.","passage":"이삿짐을 다 옮기고 텅 빈 옛집을 마지막으로 둘러보았다. 십 년을 살았던 방 안에는 가구가 놓여 있던 자리마다 옅은 흔적만 남아 있었다. 문을 닫고 나오는 순간 알 수 없는 먹먹함이 가슴을 채웠다.","options":["나는 이 집에서 십 년을 살았다.","나는 이 집에 이제 막 입주했다.","이 집에는 아직 가구가 남아 있다.","나는 이사하는 것이 전혀 아쉽지 않았다."],"answer":1,"explain":"«십 년을 살았던 방».<br>✅ <b>① 나는 이 집에서 십 년을 살았다.</b>"},{"n":44,"points":2,"instr":"( )에 들어갈 가장 알맞은 것을 고르십시오.","passage":"과거에는 한 직장에서 오랫동안 함께 일한 동료와 깊은 인간관계를 맺는 경우가 많았다. 그러나 이직이 잦아지고 비대면 업무가 늘어난 요즘에는 ( ) 인간관계의 방식도 변화하고 있다. 짧고 가볍게 맺어지는 관계가 늘면서, 깊이보다는 폭이 넓은 인맥을 추구하는 경향이 나타나고 있다.","options":["과거와 똑같은 방식으로","동료 관계가 더욱 깊어지면서","직장을 옮기지 않으면서","근무 환경이 달라지면서"],"answer":4,"explain":"«이직이 잦아지고 비대면 업무가 늘어난 요즘»이 원인이 되어 인간관계 방식이 바뀐다는 흐름이다.<br>✅ <b>④ 근무 환경이 달라지면서</b>"},{"n":45,"points":2,"instr":"이 글의 주제로 가장 알맞은 것을 고르십시오.","passage":"과거에는 한 직장에서 오랫동안 함께 일한 동료와 깊은 인간관계를 맺는 경우가 많았다. 그러나 이직이 잦아지고 비대면 업무가 늘어난 요즘에는 근무 환경이 달라지면서 인간관계의 방식도 변화하고 있다. 짧고 가볍게 맺어지는 관계가 늘면서, 깊이보다는 폭이 넓은 인맥을 추구하는 경향이 나타나고 있다.","options":["직장 동료 관계는 예나 지금이나 변함이 없다.","근무 환경의 변화에 따라 인간관계의 방식도 달라지고 있다.","비대면 업무는 인간관계에 영향을 주지 않는다.","사람들은 여전히 깊은 인맥만을 추구한다."],"answer":3,"explain":"«근무 환경이 달라지면서 인간관계의 방식도 변화하고 있다».<br>✅ <b>③ 근무 환경의 변화에 따라 인간관계의 방식도 달라지고 있다.</b>"},{"n":46,"points":2,"instr":"필자의 태도로 가장 알맞은 것을 고르십시오.","passage":"많은 학생이 새로운 내용을 배우는 데에는 시간을 충분히 쓰지만, 배운 내용을 다시 복습하는 데에는 소홀한 경우가 많다. 그러나 기억은 시간이 지날수록 빠르게 사라지기 때문에, 적절한 시기에 복습을 반복하는 것이야말로 학습의 효율을 가장 크게 높이는 방법이다. 새로운 내용을 배우는 것보다 복습의 습관을 들이는 것이 장기적으로 더 중요하다고 할 수 있다.","options":["새로운 내용을 배우는 것이 가장 중요하다고 본다.","복습의 중요성을 강조하고 있다.","복습은 학습에 큰 영향을 주지 않는다고 본다.","학생들의 학습 태도에 무관심하다."],"answer":2,"explain":"«복습을 반복하는 것이야말로 학습의 효율을 가장 크게 높이는 방법».<br>✅ <b>② 복습의 중요성을 강조하고 있다.</b>"},{"n":47,"points":2,"instr":"이 글의 내용과 같은 것을 고르십시오.","passage":"많은 학생이 새로운 내용을 배우는 데에는 시간을 충분히 쓰지만, 배운 내용을 다시 복습하는 데에는 소홀한 경우가 많다. 그러나 기억은 시간이 지날수록 빠르게 사라지기 때문에, 적절한 시기에 복습을 반복하는 것이야말로 학습의 효율을 가장 크게 높이는 방법이다. 새로운 내용을 배우는 것보다 복습의 습관을 들이는 것이 장기적으로 더 중요하다고 할 수 있다.","options":["대부분의 학생은 복습에 많은 시간을 쓴다.","기억은 시간이 지나도 거의 사라지지 않는다.","복습을 반복하는 것은 학습 효율을 높이는 데 도움이 된다.","새로운 내용을 배우는 것은 복습보다 중요하지 않다고 단정할 수 없다."],"answer":3,"explain":"«복습을 반복하는 것이야말로 학습의 효율을 가장 크게 높이는 방법».<br>✅ <b>③ 복습을 반복하는 것은 학습 효율을 높이는 데 도움이 된다.</b>"},{"n":48,"points":2,"instr":"필자가 이 글을 쓴 목적으로 가장 알맞은 것을 고르십시오.","passage":"사물놀이는 꽹과리, 장구, 북, 징 네 가지 타악기로 이루어진 한국의 전통 음악이다. 한때는 명맥이 끊길 위기에 놓이기도 했지만, 여러 예술 단체와 교육 기관의 노력으로 다시 대중에게 친숙한 공연 예술로 자리 잡았다. 앞으로도 이러한 전통문화를 지키기 위한 지속적인 관심과 지원이 필요하다.","options":["사물놀이의 악기 구성을 자세히 설명하려고","전통 음악과 현대 음악을 비교하려고","전통문화 보존의 필요성을 알리려고","사물놀이 공연을 홍보하려고"],"answer":3,"explain":"«앞으로도 이러한 전통문화를 지키기 위한 지속적인 관심과 지원이 필요하다»에서 글쓴이의 목적이 드러난다.<br>✅ <b>③ 전통문화 보존의 필요성을 알리려고</b>"},{"n":49,"points":2,"instr":"( )에 들어갈 가장 알맞은 것을 고르십시오.","passage":"사물놀이는 꽹과리, 장구, 북, 징 네 가지 타악기로 이루어진 한국의 전통 음악이다. 한때는 ( ) 위기에 놓이기도 했지만, 여러 예술 단체와 교육 기관의 노력으로 다시 대중에게 친숙한 공연 예술로 자리 잡았다. 앞으로도 이러한 전통문화를 지키기 위한 지속적인 관심과 지원이 필요하다.","options":["인기가 너무 많아지는","명맥이 끊길","해외에서 유행하는","악기 가격이 오르는"],"answer":2,"explain":"뒤에 «노력으로 다시… 자리 잡았다»라는 회복의 흐름이 오므로, 앞에는 위태로운 상황이 와야 한다.<br>✅ <b>② 명맥이 끊길</b>"},{"n":50,"points":2,"instr":"이 글의 내용과 같은 것을 고르십시오.","passage":"사물놀이는 꽹과리, 장구, 북, 징 네 가지 타악기로 이루어진 한국의 전통 음악이다. 한때는 명맥이 끊길 위기에 놓이기도 했지만, 여러 예술 단체와 교육 기관의 노력으로 다시 대중에게 친숙한 공연 예술로 자리 잡았다. 앞으로도 이러한 전통문화를 지키기 위한 지속적인 관심과 지원이 필요하다.","options":["사물놀이는 세 가지 타악기로 이루어진다.","사물놀이는 한 번도 위기를 겪지 않았다.","사물놀이는 더 이상 대중에게 알려져 있지 않다.","사물놀이는 여러 단체의 노력으로 다시 친숙해졌다."],"answer":4,"explain":"«여러 예술 단체와 교육 기관의 노력으로 다시 대중에게 친숙한 공연 예술로 자리 잡았다».<br>✅ <b>④ 사물놀이는 여러 단체의 노력으로 다시 친숙해졌다.</b>"}]}},
+    8004: {"mock":true,"no":"Hot TOPIK<br><b>제4회</b>","title":"Hot TOPIK 제4회","listening":[{"n":1,"points":2,"instr":"Прослушайте диалог и выберите подходящее продолжение.","options":["네, 우산을 가지고 나갈게요.","아니요, 비가 안 와요.","우산은 현관에 있어요.","저는 우산이 없어요."],"answer":4,"script":"남자: 어? 갑자기 비가 쏟아지네. 우산 가지고 나왔어?\n여자: 아니, 안 가지고 나왔는데. 너는?\n남자:","explain":"🎧 여자: «우산 안 가지고 나왔는데. 너는?» — 남자에게도 우산이 있는지 되묻는다.<br>✅ <b>④ 저는 우산이 없어요.</b> — 자신도 우산이 없다고 답하는 자연스러운 흐름."},{"n":2,"points":2,"instr":"Прослушайте диалог и выберите подходящее продолжение.","options":["우산은 이미 버렸어요.","그럼 제가 지금 가지고 나갈게요.","비가 그칠 때까지 기다릴게요.","저도 우산이 필요 없어요."],"answer":2,"script":"여자: 자기야, 미안한데 회사에 우산을 안 가지고 왔어. 비가 너무 많이 오는데 집에 있는 우산 좀 갖다줄 수 있어?\n남자:","explain":"🎧 여자가 «우산 좀 갖다줄 수 있어?»라고 부탁했다.<br>✅ <b>② 그럼 제가 지금 가지고 나갈게요.</b> — 부탁에 응하는 자연스러운 대답."},{"n":3,"points":2,"instr":"Прослушайте новость и выберите верное по содержанию.","options":["노트북 보유율은 4년간 변화가 없었다.","노트북 보유율은 해마다 줄어들고 있다.","노트북 보유율은 4년 전보다 두 배 가까이 늘었다.","이번 조사는 4년 전에만 진행되었다."],"answer":3,"script":"여자: 최근 4년간 가구당 노트북 보유율을 조사한 결과를 보면, 보유율이 해마다 꾸준히 늘어난 것으로 나타났습니다. 4년 전 조사 때보다 약 두 배 가까이 늘어난 수치입니다.","explain":"🎧 «4년 전 조사 때보다 약 두 배 가까이 늘어난 수치입니다».<br>✅ <b>③ 노트북 보유율은 4년 전보다 두 배 가까이 늘었다.</b>"},{"n":4,"points":2,"instr":"Прослушайте диалог и определите, что мужчина делает.","options":["도서관에서 책을 반납하고 있다.","서점에서 책을 사고 있다.","친구에게 책을 빌려주고 있다.","책을 인터넷으로 주문하고 있다."],"answer":1,"script":"남자: 저번에 빌렸던 소설책을 반납하고 싶은데요.\n여자: 네, 회원증 보여 주시겠어요? 반납 처리해 드릴게요.\n남자: 여기 있습니다. 그리고 새로 나온 책도 좀 빌릴 수 있을까요?","explain":"🎧 «빌렸던 소설책을 반납하고 싶은데요», «회원증 보여 주시겠어요».<br>✅ <b>① 도서관에서 책을 반납하고 있다.</b>"},{"n":5,"points":2,"instr":"Прослушайте диалог и определите, где происходит разговор.","options":["옷가게","신발 가게","가방 가게","액세서리 가게"],"answer":2,"script":"여자: 어서 오세요. 찾으시는 사이즈 있으세요?\n남자: 250 사이즈로 운동화 한 번 신어 볼 수 있을까요?\n여자: 네, 잠시만요. 가져다 드릴게요.","explain":"🎧 «250 사이즈로 운동화 한 번 신어 볼 수 있을까요».<br>✅ <b>② 신발 가게</b>."},{"n":6,"points":2,"instr":"Прослушайте диалог и определите, где происходит разговор.","options":["미용실","세탁소","구두 수선점","옷가게"],"answer":4,"script":"여자: 이 셔츠 사이즈가 좀 큰 것 같은데, 더 작은 사이즈도 있나요?\n남자: 네, 한 치수 작은 것도 있어요. 지금 이 제품은 전부 30% 할인 중이라 더 저렴하게 가져가실 수 있어요.","explain":"🎧 «이 셔츠 사이즈», «30% 할인 중».<br>✅ <b>④ 옷가게</b>."},{"n":7,"points":2,"instr":"Прослушайте диалог и определите, где происходит разговор.","options":["가전 매장","인터넷 설치 기사 방문","휴대폰 매장","택배 회사"],"answer":2,"script":"남자: 안녕하세요, 인터넷 설치 신청하신 댁이시죠?\n여자: 네, 맞아요. 어느 쪽에 연결하면 될까요?\n남자: 거실 쪽 벽에 단자가 있으니 그쪽으로 설치해 드릴게요.","explain":"🎧 «인터넷 설치 신청하신 댁이시죠», «그쪽으로 설치해 드릴게요».<br>✅ <b>② 인터넷 설치 기사 방문</b>."},{"n":8,"points":2,"instr":"Прослушайте диалог и определите, где происходит разговор.","options":["피부 관리실","미용실","사진관","옷가게"],"answer":2,"script":"여자: 어떤 스타일로 해 드릴까요?\n남자: 너무 짧지 않게 다듬어 주시고, 앞머리는 가볍게 정리해 주세요.\n여자: 네, 알겠습니다. 머리 감겨 드릴게요.","explain":"🎧 «어떤 스타일로 해 드릴까요», «머리 감겨 드릴게요».<br>✅ <b>② 미용실</b>."},{"n":9,"points":2,"instr":"Прослушайте диалог и определите, где происходит разговор.","options":["편의점","우체국","부동산","은행"],"answer":4,"script":"여자: 계좌 이체를 좀 하려고 하는데요, 어떻게 하면 되나요?\n남자: 번호표 뽑고 잠시 기다려 주시면 창구에서 도와드리겠습니다.","explain":"🎧 «계좌 이체», «창구에서 도와드리겠습니다».<br>✅ <b>④ 은행</b>."},{"n":10,"points":2,"instr":"Прослушайте диалог и выберите подходящее продолжение.","options":["네, 출장 잘 다녀오세요.","비행기 표는 이미 취소했어요.","저는 출장을 안 가요.","호텔은 예약하지 않아도 돼요."],"answer":3,"script":"여자: 김 대리님, 다음 주에 부산 출장 가신다고 들었는데, 비행기 표는 예약하셨어요?\n남자: 아, 저는 이번 출장 명단에서 빠졌어요. 박 과장님이 대신 가시기로 했거든요.\n여자:","explain":"🎧 «저는 이번 출장 명단에서 빠졌어요» — 출장을 가지 않는다는 내용에 자연스럽게 이어진다.<br>✅ <b>③ 저는 출장을 안 가요.</b>"},{"n":11,"points":2,"instr":"Прослушайте диалог и определите, что мужчина собирается делать.","options":["냉장고를 새로 사려고 한다.","세탁기를 고치려고 한다.","에어컨을 설치하려고 한다.","청소기를 반품하려고 한다."],"answer":4,"script":"남자: 지난주에 산 청소기가 자꾸 멈춰서요. 환불이나 교환이 가능할까요?\n여자: 영수증 가지고 계시면 확인해 드리겠습니다. 구입일이 일주일 안이시면 환불도 가능하세요.","explain":"🎧 «청소기가 자꾸 멈춰서요. 환불이나 교환이 가능할까요».<br>✅ <b>④ 청소기를 반품하려고 한다.</b>"},{"n":12,"points":2,"instr":"Прослушайте диалог и выберите подходящее продолжение.","options":["저는 이미 약속이 있어요.","시간이 안 맞으면 어쩔 수 없죠.","그럼 다음 주 토요일은 어때요?","약속을 취소할게요."],"answer":3,"script":"여자: 이번 주 토요일에 시간 괜찮으세요? 같이 저녁 먹을까 했는데.\n남자: 아, 죄송한데 이번 주 토요일은 가족 모임이 있어서 안 될 것 같아요.\n여자:","explain":"🎧 남자가 «이번 주 토요일은… 안 될 것 같아요»라고 했으므로, 다른 날짜를 제안하는 흐름이 자연스럽다.<br>✅ <b>③ 그럼 다음 주 토요일은 어때요?</b>"},{"n":13,"points":2,"instr":"Прослушайте объявление и выберите верное по содержанию.","options":["공연은 시작 시간 이후에도 입장할 수 있다.","공연 중에는 사진 촬영이 금지된다.","공연장 안에서는 음식을 먹을 수 있다.","이 공연은 무료로 관람할 수 있다."],"answer":2,"script":"(안내 방송) 관람객 여러분께 안내드립니다. 공연 시작 후에는 입장이 제한되며, 공연 중 사진 및 영상 촬영은 금지되어 있습니다. 또한 공연장 내에서는 음식물 섭취가 불가능하니 협조해 주시기 바랍니다.","explain":"🎧 «공연 중 사진 및 영상 촬영은 금지되어 있습니다».<br>✅ <b>② 공연 중에는 사진 촬영이 금지된다.</b><br>✖️ 시작 후 입장 제한; 음식물 섭취 불가."},{"n":14,"points":2,"instr":"Прослушайте объявление и выберите верное по содержанию.","options":["도서관은 이번 달부터 24시간 운영된다.","도서관 운영시간이 한 시간 늘어났다.","도서관은 주말에 운영하지 않는다.","도서관 휴관일은 변경되지 않았다."],"answer":4,"script":"(안내 방송) 이용객 여러분께 안내드립니다. 다음 달부터 도서관 운영시간이 오전 9시부터 오후 10시까지로 한 시간 연장됩니다. 휴관일은 기존과 동일하게 매주 월요일입니다.","explain":"🎧 «휴관일은 기존과 동일하게 매주 월요일입니다».<br>✅ <b>④ 도서관 휴관일은 변경되지 않았다.</b><br>✖️ 운영시간은 다음 달부터 한 시간 연장(이미 늘어난 것 아님); 24시간 운영 아님."},{"n":15,"points":2,"instr":"Прослушайте объявление и выберите верное по содержанию.","options":["서울시 대부분 지역의 버스 노선이 변경된다.","서울시는 교통 신호 체계를 새롭게 정비한다.","서울시는 모든 지하철 요금을 인상한다.","서울시는 버스 운행을 전면 중단한다."],"answer":2,"script":"(뉴스) 서울시는 다음 달부터 대부분 지역의 교통 신호 체계를 정비하여 출퇴근 시간 교통 흐름을 개선하기로 했습니다. 이번 정비로 주요 간선도로의 신호 대기 시간이 줄어들 것으로 기대됩니다.","explain":"🎧 «서울시는… 교통 신호 체계를 정비하여».<br>✅ <b>② 서울시는 교통 신호 체계를 새롭게 정비한다.</b>"},{"n":16,"points":2,"instr":"Прослушайте диалог и выберите главную мысль мужчины.","options":["소개팅에서는 진지한 이야기만 해야 한다.","첫 만남에서는 가벼운 주제로 대화하는 것이 좋다.","소개팅은 시간 낭비일 뿐이다.","첫인상은 중요하지 않다."],"answer":2,"script":"여자: 다음 주에 소개팅이 있는데 무슨 얘기를 해야 할지 모르겠어요.\n남자: 처음 만나는 자리니까 너무 무겁거나 진지한 주제보다는, 취미나 관심사처럼 가벼운 이야기로 시작하는 게 자연스러울 것 같아요.","explain":"🎧 «가벼운 이야기로 시작하는 게 자연스러울 것 같아요».<br>✅ <b>② 첫 만남에서는 가벼운 주제로 대화하는 것이 좋다.</b>"},{"n":17,"points":2,"instr":"Прослушайте диалог и выберите главную мысль мужчины.","options":["커피는 건강에 전혀 해롭지 않다.","커피를 완전히 끊는 것이 가장 좋다.","카페인 섭취량을 줄이는 것이 좋다.","커피는 하루에 다섯 잔까지 마셔도 된다."],"answer":3,"script":"여자: 요즘 잠이 잘 안 와서 고민이에요.\n남자: 혹시 커피를 많이 드세요? 카페인을 줄이면 수면에 도움이 될 수 있어요. 완전히 끊을 필요는 없지만 양을 줄여 보는 게 어때요?","explain":"🎧 «카페인을 줄이면 수면에 도움이 될 수 있어요… 양을 줄여 보는 게 어때요».<br>✅ <b>③ 카페인 섭취량을 줄이는 것이 좋다.</b><br>✖️ 완전히 끊을 필요는 없다고 했음."},{"n":18,"points":2,"instr":"Прослушайте диалог и выберите главную мысль мужчины.","options":["걷기 운동은 큰 효과가 없다.","헬스장에서 하는 운동만 효과가 있다.","꾸준히 걷는 것도 건강에 큰 도움이 된다.","운동은 무조건 격렬하게 해야 효과가 있다."],"answer":3,"script":"여자: 요즘 헬스장 다니기가 너무 힘들어서 그냥 걷기만 하고 있어요.\n남자: 그것도 충분히 좋아요. 매일 꾸준히 걷기만 해도 심혈관 건강에 큰 도움이 된다고 하더라고요. 굳이 힘든 운동을 안 해도 괜찮아요.","explain":"🎧 «매일 꾸준히 걷기만 해도 심혈관 건강에 큰 도움이 된다».<br>✅ <b>③ 꾸준히 걷는 것도 건강에 큰 도움이 된다.</b>"},{"n":19,"points":2,"instr":"Прослушайте диалог и выберите главную мысль женщины.","options":["가끔은 직접 만나서 대화하는 것이 중요하다.","문자나 메신저로 대화하는 것이 더 편하다.","친구는 자주 만나지 않아도 상관없다.","전화 통화는 시간 낭비이다."],"answer":1,"script":"남자: 요즘은 다들 바쁘니까 문자나 메신저로만 연락해도 충분한 것 같아요.\n여자: 그래도 가끔은 직접 만나서 얼굴 보고 이야기하는 게 더 깊은 대화를 나눌 수 있는 것 같아요. 글로는 다 전하기 어려운 게 있잖아요.","explain":"🎧 «가끔은 직접 만나서 얼굴 보고 이야기하는 게 더 깊은 대화를 나눌 수 있는».<br>✅ <b>① 가끔은 직접 만나서 대화하는 것이 중요하다.</b>"},{"n":20,"points":2,"instr":"Прослушайте диалог и выберите верное по содержанию.","options":["여자는 명절에 고향에 내려가지 않기로 했다.","남자는 이번 명절에 가족과 함께 보낼 것이다.","두 사람은 명절에 여행을 가기로 했다.","여자는 이번 명절에 혼자 지낼 것이다."],"answer":4,"script":"남자: 이번 명절에는 고향에 내려가세요?\n여자: 아니요, 이번에는 일이 바빠서 그냥 서울에서 혼자 지내려고요. 다음 명절에 내려가려고 해요.\n남자: 그렇군요. 저는 가족들 다 모이기로 했어요.","explain":"🎧 «서울에서 혼자 지내려고요».<br>✅ <b>④ 여자는 이번 명절에 혼자 지낼 것이다.</b>"},{"n":21,"points":2,"instr":"Прослушайте и выберите главную мысль мужчины.","options":["1인 가구가 늘어나는 만큼 관련 정책도 함께 마련되어야 한다.","1인 가구는 일시적인 현상일 뿐이다.","1인 가구 증가는 사회에 아무 영향도 주지 않는다.","1인 가구는 앞으로 줄어들 것이다."],"answer":1,"script":"여자: 최근 통계를 보니까 전체 가구 중 1인 가구 비율이 정말 많이 늘었더라고요.\n남자: 맞아요, 이렇게 1인 가구가 늘어나는 만큼 주거나 복지 정책도 그에 맞게 마련되어야 할 것 같아요. 기존 정책은 대부분 다인 가구 기준이잖아요.","explain":"🎧 «1인 가구가 늘어나는 만큼 주거나 복지 정책도 그에 맞게 마련되어야».<br>✅ <b>① 1인 가구가 늘어나는 만큼 관련 정책도 함께 마련되어야 한다.</b>"},{"n":22,"points":2,"instr":"Прослушайте и выберите верное по содержанию.","options":["기존 정책은 1인 가구를 기준으로 만들어졌다.","1인 가구는 복지 정책이 필요하지 않다.","남자는 1인 가구 증가에 무관심하다.","1인 가구 비율은 최근 크게 늘었다."],"answer":4,"script":"여자: 최근 통계를 보니까 전체 가구 중 1인 가구 비율이 정말 많이 늘었더라고요.\n남자: 맞아요, 이렇게 1인 가구가 늘어나는 만큼 주거나 복지 정책도 그에 맞게 마련되어야 할 것 같아요. 기존 정책은 대부분 다인 가구 기준이잖아요.","explain":"🎧 «전체 가구 중 1인 가구 비율이 정말 많이 늘었더라고요».<br>✅ <b>④ 1인 가구 비율은 최근 크게 늘었다.</b>"},{"n":23,"points":2,"instr":"Прослушайте и выберите, что делает мужчина.","options":["아내를 위해 식단을 챙기고 있다.","임신한 아내 대신 회사에 다니고 있다.","아내에게 운동을 권하고 있다.","병원 예약을 미루고 있다."],"answer":1,"script":"남자: 여보, 오늘 점심은 시금치랑 두부 넣고 된장국 끓여 놨어. 임신 중에는 철분이 중요하다고 해서.\n여자: 고마워요. 요즘 입맛이 없었는데 당신 덕분에 잘 챙겨 먹고 있어요.","explain":"🎧 «임신 중에는 철분이 중요하다고 해서… 된장국 끓여 놨어».<br>✅ <b>① 아내를 위해 식단을 챙기고 있다.</b>"},{"n":24,"points":2,"instr":"Прослушайте и выберите верное по содержанию.","options":["여자는 요즘 입맛이 아주 좋다.","남자는 요리를 전혀 하지 않는다.","여자는 임신 중이다.","여자는 된장국을 좋아하지 않는다."],"answer":3,"script":"남자: 여보, 오늘 점심은 시금치랑 두부 넣고 된장국 끓여 놨어. 임신 중에는 철분이 중요하다고 해서.\n여자: 고마워요. 요즘 입맛이 없었는데 당신 덕분에 잘 챙겨 먹고 있어요.","explain":"🎧 «임신 중에는 철분이 중요하다고 해서».<br>✅ <b>③ 여자는 임신 중이다.</b><br>✖️ 입맛이 없었다고 했음; 남자가 요리함; 된장국 잘 챙겨 먹는다고 함."},{"n":25,"points":2,"instr":"Прослушайте интервью и выберите главную мысль мужчины.","options":["영화관 구독 서비스는 곧 사라질 것이다.","구독 서비스는 비싼 가격 때문에 인기가 없다.","영화관 구독 서비스는 영화 관람 방식을 바꾸고 있다.","영화관은 구독 서비스를 도입하지 않고 있다."],"answer":3,"script":"여자: 최근 영화관에서 도입한 월 구독 서비스가 인기를 끌고 있다고 들었는데요.\n남자: 네, 매달 일정 금액을 내면 정해진 횟수만큼 영화를 볼 수 있는 방식인데, 가격 부담이 줄어서 영화관을 더 자주 찾는 분들이 늘었습니다. 영화 관람 방식 자체가 달라지고 있다고 볼 수 있습니다.","explain":"🎧 «영화 관람 방식 자체가 달라지고 있다고 볼 수 있습니다».<br>✅ <b>③ 영화관 구독 서비스는 영화 관람 방식을 바꾸고 있다.</b>"},{"n":26,"points":2,"instr":"Прослушайте интервью и выберите верное по содержанию.","options":["구독 서비스 도입 후 영화관을 자주 찾는 사람이 늘었다.","구독 서비스는 가격이 비싸서 인기가 없다.","구독 서비스는 횟수 제한이 없다.","영화관은 구독 서비스를 도입할 계획이 없다."],"answer":1,"script":"여자: 최근 영화관에서 도입한 월 구독 서비스가 인기를 끌고 있다고 들었는데요.\n남자: 네, 매달 일정 금액을 내면 정해진 횟수만큼 영화를 볼 수 있는 방식인데, 가격 부담이 줄어서 영화관을 더 자주 찾는 분들이 늘었습니다. 영화 관람 방식 자체가 달라지고 있다고 볼 수 있습니다.","explain":"🎧 «가격 부담이 줄어서 영화관을 더 자주 찾는 분들이 늘었습니다».<br>✅ <b>① 구독 서비스 도입 후 영화관을 자주 찾는 사람이 늘었다.</b>"},{"n":27,"points":2,"instr":"Прослушайте интервью и выберите, с какой целью говорит мужчина.","options":["전기차 구매를 만류하기 위해","전기차의 단점만을 강조하기 위해","전기차 배터리의 안전성 개선 기술을 알리기 위해","배터리 가격 인상을 예고하기 위해"],"answer":3,"script":"여자: 최근 전기차 배터리 안전성에 대한 우려가 많은데, 어떤 변화가 있었나요?\n남자: 최근에는 배터리 내부에 온도를 감지해 위험을 미리 막는 기술이 적용되고 있습니다. 이런 기술 덕분에 과열로 인한 사고 위험이 이전보다 크게 줄었습니다.","explain":"🎧 «온도를 감지해 위험을 미리 막는 기술… 사고 위험이 이전보다 크게 줄었습니다».<br>✅ <b>③ 전기차 배터리의 안전성 개선 기술을 알리기 위해</b>"},{"n":28,"points":2,"instr":"Прослушайте интервью и выберите верное по содержанию.","options":["전기차 배터리 사고는 계속 늘고 있다.","전기차 배터리 기술은 변화가 없었다.","배터리 안전성에 대한 우려는 전혀 없다.","배터리에는 온도를 감지하는 기술이 적용되고 있다."],"answer":4,"script":"여자: 최근 전기차 배터리 안전성에 대한 우려가 많은데, 어떤 변화가 있었나요?\n남자: 최근에는 배터리 내부에 온도를 감지해 위험을 미리 막는 기술이 적용되고 있습니다. 이런 기술 덕분에 과열로 인한 사고 위험이 이전보다 크게 줄었습니다.","explain":"🎧 «배터리 내부에 온도를 감지해 위험을 미리 막는 기술이 적용되고 있습니다».<br>✅ <b>④ 배터리에는 온도를 감지하는 기술이 적용되고 있다.</b>"},{"n":29,"points":2,"instr":"Прослушайте интервью и выберите главную мысль мужчины.","options":["가짜 뉴스는 큰 문제가 되지 않는다.","가짜 뉴스는 줄어들고 있다.","가짜 뉴스는 사회적 신뢰를 크게 해칠 수 있다.","사람들은 가짜 뉴스를 쉽게 구별할 수 있다."],"answer":3,"script":"여자: 최근 가짜 뉴스로 인한 피해가 늘고 있다고 하는데요.\n남자: 네, 출처가 불분명한 정보가 신뢰할 수 있는 뉴스처럼 퍼지면서 사람들의 판단을 흐리게 만들고, 결국 사회 전체의 신뢰를 떨어뜨리는 심각한 문제로 이어지고 있습니다.","explain":"🎧 «결국 사회 전체의 신뢰를 떨어뜨리는 심각한 문제로 이어지고 있습니다».<br>✅ <b>③ 가짜 뉴스는 사회적 신뢰를 크게 해칠 수 있다.</b>"},{"n":30,"points":2,"instr":"Прослушайте интервью и выберите верное по содержанию.","options":["출처가 불분명한 정보가 신뢰할 수 있는 뉴스처럼 퍼지고 있다.","가짜 뉴스로 인한 피해는 줄어들고 있다.","가짜 뉴스는 사람들이 쉽게 구별할 수 있다.","가짜 뉴스는 사회적 신뢰에 영향을 주지 않는다."],"answer":1,"script":"여자: 최근 가짜 뉴스로 인한 피해가 늘고 있다고 하는데요.\n남자: 네, 출처가 불분명한 정보가 신뢰할 수 있는 뉴스처럼 퍼지면서 사람들의 판단을 흐리게 만들고, 결국 사회 전체의 신뢰를 떨어뜨리는 심각한 문제로 이어지고 있습니다.","explain":"🎧 «출처가 불분명한 정보가 신뢰할 수 있는 뉴스처럼 퍼지면서».<br>✅ <b>① 출처가 불분명한 정보가 신뢰할 수 있는 뉴스처럼 퍼지고 있다.</b>"},{"n":31,"points":2,"instr":"Прослушайте дискуссию и выберите мнение мужчины.","options":["자율주행차는 이미 완벽하게 안전하다.","자율주행차 도입은 즉시 전면적으로 이루어져야 한다.","자율주행차에 대한 어떠한 규제도 필요하지 않다.","자율주행차는 아직 충분히 검증되지 않아 신중하게 도입해야 한다."],"answer":4,"script":"여자: 자율주행차 상용화가 머지않았다고 하는데, 어떻게 생각하세요?\n남자: 기술은 빠르게 발전하고 있지만, 아직 모든 도로 환경에서 완벽하게 검증되었다고 보기는 어렵습니다. 단계적으로, 충분한 안전성 검증을 거치면서 신중하게 도입해야 한다고 생각합니다.\n여자: 그럼 지금 당장은 시기상조라고 보시는 거군요.\n남자: 네, 안전이 충분히 확인된 구간부터 점진적으로 넓혀 가는 방식이 맞다고 봅니다.","explain":"🎧 «충분한 안전성 검증을 거치면서 신중하게 도입해야 한다».<br>✅ <b>④ 자율주행차는 아직 충분히 검증되지 않아 신중하게 도입해야 한다.</b>"},{"n":32,"points":2,"instr":"Прослушайте и выберите, как мужчина ведёт разговор.","options":["상대방의 질문에 자신의 입장을 보완하여 설명하고 있다.","여자의 의견에 무조건 반대하고 있다.","구체적인 사고 통계를 제시하고 있다.","화제를 다른 주제로 돌리고 있다."],"answer":1,"script":"여자: 자율주행차 상용화가 머지않았다고 하는데, 어떻게 생각하세요?\n남자: 기술은 빠르게 발전하고 있지만, 아직 모든 도로 환경에서 완벽하게 검증되었다고 보기는 어렵습니다. 단계적으로, 충분한 안전성 검증을 거치면서 신중하게 도입해야 한다고 생각합니다.\n여자: 그럼 지금 당장은 시기상조라고 보시는 거군요.\n남자: 네, 안전이 충분히 확인된 구간부터 점진적으로 넓혀 가는 방식이 맞다고 봅니다.","explain":"여자의 확인 질문(«시기상조라고 보시는 거군요»)에 대해 «안전이 확인된 구간부터 점진적으로…»라며 입장을 보완해 설명한다.<br>✅ <b>① 상대방의 질문에 자신의 입장을 보완하여 설명하고 있다.</b>"},{"n":33,"points":2,"instr":"Прослушайте лекцию и выберите, о чём идёт речь.","options":["산호초 양식 기술의 발전","산호초의 아름다운 색깔의 원인","산호초를 이용한 관광 산업","산호초가 기후변화로 받는 영향과 보호 방안"],"answer":4,"script":"여자: 바다 수온이 상승하면서 산호초가 색을 잃고 죽어 가는 '백화 현상'이 전 세계적으로 심각해지고 있습니다. 산호초는 다양한 해양 생물의 서식지 역할을 하기 때문에, 그 손실은 해양 생태계 전체에 큰 영향을 미칩니다. 이에 따라 수온 변화에 강한 산호 종을 이식하는 등 보호 노력이 이어지고 있습니다.","explain":"🎧 «산호초가 색을 잃고 죽어 가는… 보호 노력이 이어지고 있습니다».<br>✅ <b>④ 산호초가 기후변화로 받는 영향과 보호 방안.</b>"},{"n":34,"points":2,"instr":"Прослушайте лекцию и выберите верное по содержанию.","options":["산호초는 바다 생물의 서식지 역할을 하지 않는다.","수온 상승은 산호초의 백화 현상과 관련이 있다.","산호초 보호를 위한 노력은 전혀 없다.","산호초는 수온 변화에 영향을 받지 않는다."],"answer":2,"script":"여자: 바다 수온이 상승하면서 산호초가 색을 잃고 죽어 가는 '백화 현상'이 전 세계적으로 심각해지고 있습니다. 산호초는 다양한 해양 생물의 서식지 역할을 하기 때문에, 그 손실은 해양 생태계 전체에 큰 영향을 미칩니다. 이에 따라 수온 변화에 강한 산호 종을 이식하는 등 보호 노력이 이어지고 있습니다.","explain":"🎧 «바다 수온이 상승하면서 산호초가 색을 잃고 죽어 가는».<br>✅ <b>② 수온 상승은 산호초의 백화 현상과 관련이 있다.</b>"},{"n":35,"points":2,"instr":"Прослушайте объявление и выберите главную мысль.","options":["유기동물을 입양해 새로운 가족이 되어 주세요.","유기동물 보호소는 운영을 중단합니다.","반려동물 입양에는 비용이 전혀 들지 않습니다.","유기동물은 입양이 금지되어 있습니다."],"answer":1,"script":"(라디오 안내) 지금 이 순간에도 보호소에는 가족을 기다리는 유기동물들이 많습니다. 작은 관심과 사랑이 한 생명에게는 새로운 삶이 될 수 있습니다. 여러분의 따뜻한 마음으로 유기동물에게 새로운 가족이 되어 주시기 바랍니다.","explain":"🎧 «여러분의 따뜻한 마음으로 유기동물에게 새로운 가족이 되어 주시기 바랍니다».<br>✅ <b>① 유기동물을 입양해 새로운 가족이 되어 주세요.</b>"},{"n":36,"points":2,"instr":"Прослушайте объявление и выберите верное по содержанию.","options":["보호소에는 유기동물이 거의 없다.","이 안내는 보호소 폐쇄를 알리는 내용이다.","보호소는 입양을 권장하고 있다.","유기동물 입양은 금지되어 있다."],"answer":3,"script":"(라디오 안내) 지금 이 순간에도 보호소에는 가족을 기다리는 유기동물들이 많습니다. 작은 관심과 사랑이 한 생명에게는 새로운 삶이 될 수 있습니다. 여러분의 따뜻한 마음으로 유기동물에게 새로운 가족이 되어 주시기 바랍니다.","explain":"🎧 «유기동물에게 새로운 가족이 되어 주시기 바랍니다» — 입양을 권장하는 안내.<br>✅ <b>③ 보호소는 입양을 권장하고 있다.</b>"},{"n":37,"points":2,"instr":"Прослушайте диалог и выберите главную мысль мужчины.","options":["한국 제조업은 경쟁력이 갈수록 강해지고 있다.","한국 제조업은 경기 침체로 어려움을 겪고 있다.","제조업 경기 침체는 일시적인 현상이다.","제조업 위기는 산업 구조와 관계없다."],"answer":2,"script":"여자: 최근 제조업 분야 경기가 좋지 않다는 기사를 봤어요.\n남자: 네, 수출 둔화에 해외 경쟁 심화까지 겹치면서 한국 제조업이 전반적으로 어려운 상황에 놓여 있어요. 산업 구조 자체를 다시 점검해야 할 시점이라는 지적도 나오고 있습니다.","explain":"🎧 «한국 제조업이 전반적으로 어려운 상황에 놓여 있어요».<br>✅ <b>② 한국 제조업은 경기 침체로 어려움을 겪고 있다.</b>"},{"n":38,"points":2,"instr":"Прослушайте диалог и выберите верное по содержанию.","options":["제조업 경기 침체는 산업 구조 점검이 필요할 만큼 심각하다.","한국 제조업은 수출이 호조를 보이고 있다.","해외 경쟁은 제조업에 영향을 주지 않는다.","제조업 위기에 대한 지적은 전혀 없다."],"answer":1,"script":"여자: 최근 제조업 분야 경기가 좋지 않다는 기사를 봤어요.\n남자: 네, 수출 둔화에 해외 경쟁 심화까지 겹치면서 한국 제조업이 전반적으로 어려운 상황에 놓여 있어요. 산업 구조 자체를 다시 점검해야 할 시점이라는 지적도 나오고 있습니다.","explain":"🎧 «산업 구조 자체를 다시 점검해야 할 시점이라는 지적도 나오고 있습니다».<br>✅ <b>① 제조업 경기 침체는 산업 구조 점검이 필요할 만큼 심각하다.</b>"},{"n":39,"points":2,"instr":"Прослушайте объявление и выберите верное по содержанию.","options":["공연장에서는 사진 촬영이 자유롭다.","공연장에서는 휴대폰을 사용해도 무방하다.","이 안내는 공연이 끝난 후의 내용이다.","공연 중에는 휴대폰 전원을 꺼 두어야 한다."],"answer":4,"script":"(안내 방송) 공연 관람에 앞서 안내드립니다. 공연 중에는 휴대폰 전원을 꺼 주시거나 무음으로 전환해 주시기 바랍니다. 화면의 불빛과 진동은 다른 관객분들의 관람을 방해할 수 있습니다. 협조해 주셔서 감사합니다.","explain":"🎧 «공연 중에는 휴대폰 전원을 꺼 주시거나 무음으로 전환해 주시기 바랍니다».<br>✅ <b>④ 공연 중에는 휴대폰 전원을 꺼 두어야 한다.</b>"},{"n":40,"points":2,"instr":"Прослушайте объявление еще раз и выберите, каким способом сделано объявление.","options":["관람 후 소감을 묻고 있다.","공연 일정 변경을 알리고 있다.","관람객의 불만을 접수하고 있다.","관람 전 주의 사항을 안내하고 있다."],"answer":4,"script":"(안내 방송) 공연 관람에 앞서 안내드립니다. 공연 중에는 휴대폰 전원을 꺼 주시거나 무음으로 전환해 주시기 바랍니다. 화면의 불빛과 진동은 다른 관객분들의 관람을 방해할 수 있습니다. 협조해 주셔서 감사합니다.","explain":"«공연 관람에 앞서 안내드립니다» — 관람 전에 지켜야 할 사항을 안내하는 방송이다.<br>✅ <b>④ 관람 전 주의 사항을 안내하고 있다.</b>"},{"n":41,"points":2,"instr":"Прослушайте лекцию и выберите главную мысль.","options":["스테이크는 항상 완전히 익혀야 안전하다.","붉은 육즙은 항상 핏물을 의미한다.","스테이크의 색깔만 보고 익힘 정도를 단정해서는 안 된다.","스테이크는 색깔이 진할수록 맛이 좋다."],"answer":3,"script":"여자: 스테이크에서 나오는 붉은 육즙을 보고 덜 익었다고 생각하시는 분들이 많은데요, 사실 그 붉은 액체는 피가 아니라 마이오글로빈이라는 단백질 성분입니다. 즉 색깔만으로 익힘 정도를 판단하는 것은 정확하지 않습니다.","explain":"🎧 «색깔만으로 익힘 정도를 판단하는 것은 정확하지 않습니다».<br>✅ <b>③ 스테이크의 색깔만 보고 익힘 정도를 단정해서는 안 된다.</b>"},{"n":42,"points":2,"instr":"Прослушайте лекцию и выберите верное по содержанию.","options":["스테이크의 붉은 액체는 마이오글로빈이라는 단백질이다.","스테이크의 붉은 액체는 항상 핏물이다.","스테이크는 색깔로만 익힘 정도를 판단할 수 있다.","마이오글로빈은 스테이크에만 존재하는 성분이다."],"answer":1,"script":"여자: 스테이크에서 나오는 붉은 육즙을 보고 덜 익었다고 생각하시는 분들이 많은데요, 사실 그 붉은 액체는 피가 아니라 마이오글로빈이라는 단백질 성분입니다. 즉 색깔만으로 익힘 정도를 판단하는 것은 정확하지 않습니다.","explain":"🎧 «그 붉은 액체는 피가 아니라 마이오글로빈이라는 단백질 성분입니다».<br>✅ <b>① 스테이크의 붉은 액체는 마이오글로빈이라는 단백질이다.</b>"},{"n":43,"points":2,"instr":"Прослушайте документальный рассказ и выберите главную мысль.","options":["모든 곤충은 같은 보호색을 가지고 있다.","곤충의 보호색은 색을 구별하지 못해서 생긴다.","곤충은 보호색이 있어도 쉽게 잡아먹힌다.","일부 곤충은 위장과 보호색을 통해 포식자로부터 살아남는다."],"answer":4,"script":"남자: 나뭇잎과 거의 똑같이 생긴 곤충이나, 나뭇가지처럼 보이도록 몸의 형태를 바꾼 곤충들이 있다. 이러한 위장과 보호색은 포식자의 눈을 피해 생존 확률을 높이는 중요한 전략이다. 오랜 시간 자연 선택을 거치며 이러한 능력이 더욱 정교하게 발달해 왔다.","explain":"🎧 «위장과 보호색은 포식자의 눈을 피해 생존 확률을 높이는 중요한 전략».<br>✅ <b>④ 일부 곤충은 위장과 보호색을 통해 포식자로부터 살아남는다.</b>"},{"n":44,"points":2,"instr":"Прослушайте документальный рассказ и выберите верное по содержанию.","options":["곤충의 위장과 보호색은 최근에 갑자기 생긴 변화이다.","모든 곤충은 나뭇잎과 똑같이 생겼다.","위장과 보호색은 곤충의 생존 확률을 높인다.","곤충은 위장을 해도 쉽게 발견된다."],"answer":3,"script":"남자: 나뭇잎과 거의 똑같이 생긴 곤충이나, 나뭇가지처럼 보이도록 몸의 형태를 바꾼 곤충들이 있다. 이러한 위장과 보호색은 포식자의 눈을 피해 생존 확률을 높이는 중요한 전략이다. 오랜 시간 자연 선택을 거치며 이러한 능력이 더욱 정교하게 발달해 왔다.","explain":"🎧 «위장과 보호색은 포식자의 눈을 피해 생존 확률을 높이는».<br>✅ <b>③ 위장과 보호색은 곤충의 생존 확률을 높인다.</b>"},{"n":45,"points":2,"instr":"Прослушайте лекцию и выберите главную мысль.","options":["수묵화는 색채가 가장 중요한 요소이다.","수묵화는 현대에는 더 이상 그려지지 않는다.","수묵화는 먹의 농담만으로 다양한 표현을 만들어 낸다.","수묵화는 색이 화려할수록 좋은 작품이다."],"answer":3,"script":"여자: 수묵화는 화려한 색채 없이 먹의 짙고 옅은 정도, 즉 농담만으로 사물의 입체감과 분위기를 표현하는 전통 회화 기법입니다. 적은 색으로도 풍부한 표현이 가능하다는 점에서 동양 미술의 독특한 미감을 보여 줍니다.","explain":"🎧 «먹의 짙고 옅은 정도, 즉 농담만으로… 풍부한 표현이 가능».<br>✅ <b>③ 수묵화는 먹의 농담만으로 다양한 표현을 만들어 낸다.</b>"},{"n":46,"points":2,"instr":"Прослушайте лекцию и выберите верное по содержанию.","options":["수묵화는 화려한 색채를 가장 중요하게 여긴다.","수묵화는 동양 미술과 관련이 없다.","수묵화는 먹의 농담으로 입체감을 표현한다.","수묵화는 적은 색으로는 표현이 불가능하다."],"answer":3,"script":"여자: 수묵화는 화려한 색채 없이 먹의 짙고 옅은 정도, 즉 농담만으로 사물의 입체감과 분위기를 표현하는 전통 회화 기법입니다. 적은 색으로도 풍부한 표현이 가능하다는 점에서 동양 미술의 독특한 미감을 보여 줍니다.","explain":"🎧 «먹의 짙고 옅은 정도, 즉 농담만으로 사물의 입체감과 분위기를 표현».<br>✅ <b>③ 수묵화는 먹의 농담으로 입체감을 표현한다.</b>"},{"n":47,"points":2,"instr":"Прослушайте дискуссию и выберите главную мысль мужчины.","options":["1인 가구는 영양 관리를 가장 잘하는 집단이다.","1인 가구는 간편식에 의존해 영양 불균형을 겪기 쉽다.","간편식은 영양 측면에서 아무 문제가 없다.","1인 가구는 요리를 거의 하지 않는 것이 바람직하다."],"answer":2,"script":"여자: 1인 가구가 늘면서 간편식 소비도 함께 늘고 있다고 하는데요.\n남자: 네, 혼자 식사를 준비하기 번거로워 간편식에 의존하는 경우가 많은데, 이런 식습관이 계속되면 나트륨과 지방 섭취는 늘고 필수 영양소는 부족해지는 영양 불균형으로 이어질 수 있습니다.","explain":"🎧 «간편식에 의존… 영양 불균형으로 이어질 수 있습니다».<br>✅ <b>② 1인 가구는 간편식에 의존해 영양 불균형을 겪기 쉽다.</b>"},{"n":48,"points":2,"instr":"Прослушайте дискуссию и выберите верное по содержанию.","options":["간편식은 나트륨과 지방 함량이 낮은 편이다.","1인 가구는 간편식을 거의 먹지 않는다.","혼자 사는 사람은 요리를 더 자주 한다.","간편식 의존은 필수 영양소 부족으로 이어질 수 있다."],"answer":4,"script":"여자: 1인 가구가 늘면서 간편식 소비도 함께 늘고 있다고 하는데요.\n남자: 네, 혼자 식사를 준비하기 번거로워 간편식에 의존하는 경우가 많은데, 이런 식습관이 계속되면 나트륨과 지방 섭취는 늘고 필수 영양소는 부족해지는 영양 불균형으로 이어질 수 있습니다.","explain":"🎧 «필수 영양소는 부족해지는 영양 불균형으로 이어질 수 있습니다».<br>✅ <b>④ 간편식 의존은 필수 영양소 부족으로 이어질 수 있다.</b>"},{"n":49,"points":2,"instr":"Прослушайте лекцию и выберите главную мысль.","options":["된장은 최근에 새로 개발된 식품이다.","된장은 발효 과정 없이 만들어진다.","된장은 메주를 발효시켜 만드는 한국 전통 식품이다.","된장은 외국에서 유래한 식품이다."],"answer":3,"script":"여자: 된장은 콩을 삶아 만든 메주를 일정 기간 발효시켜 만드는 한국의 전통 발효식품입니다. 발효 과정에서 생기는 다양한 미생물과 효소가 깊은 맛과 영양을 더해 주며, 지역과 집안마다 고유한 방식으로 전해져 내려오고 있습니다.","explain":"🎧 «메주를 일정 기간 발효시켜 만드는 한국의 전통 발효식품입니다».<br>✅ <b>③ 된장은 메주를 발효시켜 만드는 한국 전통 식품이다.</b>"},{"n":50,"points":2,"instr":"Прослушайте лекцию и выберите верное по содержанию.","options":["된장은 발효 과정에서 미생물과 효소의 영향을 받는다.","된장은 모든 지역에서 똑같은 방식으로 만들어진다.","된장은 발효 기간이 짧을수록 좋다.","된장은 콩이 아닌 다른 재료로 만들어진다."],"answer":1,"script":"여자: 된장은 콩을 삶아 만든 메주를 일정 기간 발효시켜 만드는 한국의 전통 발효식품입니다. 발효 과정에서 생기는 다양한 미생물과 효소가 깊은 맛과 영양을 더해 주며, 지역과 집안마다 고유한 방식으로 전해져 내려오고 있습니다.","explain":"🎧 «발효 과정에서 생기는 다양한 미생물과 효소가 깊은 맛과 영양을 더해».<br>✅ <b>① 된장은 발효 과정에서 미생물과 효소의 영향을 받는다.</b>"}],"writing":[{"n":51,"points":10,"korInstr":"※ [51~52] 다음 글의 ㉠과 ㉡에 들어갈 말을 각각 한 문장씩 쓰십시오. (각 5점)","instr":"Вставьте в текст подходящие по смыслу предложения вместо ㉠ и ㉡.","passage":"안녕하세요. 저는 우리 대학교 한국어 문화 동아리 '한빛'의 운영진입니다. 이번 학기에 새로운 회원을 모집하오니 많은 관심 부탁드립니다. 이 동아리는 한국어 회화 연습과 한국 문화 체험을 함께하는 모임으로, 초급부터 중급 수준의 학습자라면 ( ㉠ ). 정기 모임은 매주 화요일 오후 6시에 진행되며, 장소는 학생회관 302호입니다. 가입을 원하시는 분은 이번 주 금요일까지 아래 이메일로 신청서를 보내 주시기 바랍니다. ( ㉡ ).","blanks":[{"slot":"㉠","model":"누구나 참여하실 수 있습니다","check":"참가 대상을 안내하는 문장: 초급~중급 학습자 누구나 환영한다는 내용"},{"slot":"㉡","model":"신청해 주신 분께는 담당자가 개별적으로 연락 드리겠습니다","check":"신청 후 처리 방법 안내: 개별 연락 등의 후속 조치를 알리는 내용"}]},{"n":52,"points":10,"korInstr":"","instr":"","passage":"식물은 햇빛의 양에 따라 서로 다른 방식으로 자란다. 햇빛이 충분한 환경에서 자라는 양지 식물은 잎이 작고 두꺼우며 엽록소 농도가 높아 짙은 녹색을 띤다. 반면 그늘진 환경에서 자라는 음지 식물은 ( ㉠ ). 이는 적은 빛으로도 최대한 광합성을 할 수 있도록 적응한 결과이다. 이처럼 같은 종류의 식물이라도 자라는 환경에 따라 ( ㉡ ).","blanks":[{"slot":"㉠","model":"잎이 넓고 얇으며 색이 연한 녹색을 띤다","check":"그늘 식물의 잎 특성을 서술: 잎이 넓고 얇고 색이 연하다는 내용"},{"slot":"㉡","model":"잎의 모양이나 색깔 등 형태적 특성이 달라질 수 있다","check":"환경에 따라 형태적 차이가 생긴다는 결론 문장"}]},{"n":53,"points":30,"min":200,"max":300,"korInstr":"※ [53] 다음 자료를 참고하여 '1인 가구 비율의 변화'에 대한 글을 200~300자로 쓰십시오. 단, 글의 제목을 쓰지 마십시오. (30점)","instr":"Опишите данные графика о доле одиночных домохозяйств. 200–300 символов, без заголовка.","passage":"<div style='font-family:inherit;max-width:520px;margin:0 auto'><svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 500 260' style='width:100%;font-family:inherit'><rect width='500' height='260' fill='#f8f8f8' rx='8'/><text x='250' y='24' text-anchor='middle' font-size='13' font-weight='bold' fill='#333'>1인 가구 비율 변화 (%)</text><!-- y-axis lines --><line x1='70' y1='40' x2='70' y2='210' stroke='#ccc' stroke-width='1'/><line x1='70' y1='210' x2='470' y2='210' stroke='#ccc' stroke-width='1'/><line x1='70' y1='170' x2='470' y2='170' stroke='#ddd' stroke-width='0.5' stroke-dasharray='3,3'/><line x1='70' y1='130' x2='470' y2='130' stroke='#ddd' stroke-width='0.5' stroke-dasharray='3,3'/><line x1='70' y1='90' x2='470' y2='90' stroke='#ddd' stroke-width='0.5' stroke-dasharray='3,3'/><line x1='70' y1='50' x2='470' y2='50' stroke='#ddd' stroke-width='0.5' stroke-dasharray='3,3'/><!-- y labels --><text x='62' y='213' text-anchor='end' font-size='10' fill='#666'>0</text><text x='62' y='173' text-anchor='end' font-size='10' fill='#666'>10</text><text x='62' y='133' text-anchor='end' font-size='10' fill='#666'>20</text><text x='62' y='93' text-anchor='end' font-size='10' fill='#666'>30</text><text x='62' y='53' text-anchor='end' font-size='10' fill='#666'>40</text><!-- bars: 2010=23.9 → height=95.6, 2015=27.2 → 108.8, 2020=31.7 → 126.8, 2025=35.1 → 140.4 --><rect x='95' y='114' width='60' height='96' fill='#5b9bd5' rx='3'/><text x='125' y='110' text-anchor='middle' font-size='11' font-weight='bold' fill='#5b9bd5'>23.9%</text><text x='125' y='225' text-anchor='middle' font-size='11' fill='#555'>2010</text><rect x='195' y='101' width='60' height='109' fill='#5b9bd5' rx='3'/><text x='225' y='97' text-anchor='middle' font-size='11' font-weight='bold' fill='#5b9bd5'>27.2%</text><text x='225' y='225' text-anchor='middle' font-size='11' fill='#555'>2015</text><rect x='295' y='84' width='60' height='126' fill='#2e75b6' rx='3'/><text x='325' y='80' text-anchor='middle' font-size='11' font-weight='bold' fill='#2e75b6'>31.7%</text><text x='325' y='225' text-anchor='middle' font-size='11' fill='#555'>2020</text><rect x='395' y='70' width='60' height='140' fill='#1f4e79' rx='3'/><text x='425' y='66' text-anchor='middle' font-size='11' font-weight='bold' fill='#1f4e79'>35.1%</text><text x='425' y='225' text-anchor='middle' font-size='11' fill='#555'>2025</text><text x='60' y='245' font-size='10' fill='#888'>* 단위: 전체 가구 대비 비율(%)</text></svg><div style='margin-top:12px;padding:10px 14px;background:#fff;border:1px solid #ddd;border-radius:6px;font-size:13px'><b>1인 가구 증가 주요 사유 순위</b><ol style='margin:6px 0 0 16px;padding:0'><li>직장·학업 등 경제적 이유</li><li>자유로운 생활 방식 선호</li><li>배우자와의 사별 또는 이혼</li></ol></div></div>","model":"위 자료에 따르면 1인 가구 비율은 2010년 23.9%에서 2025년 35.1%로 약 11.2%포인트 증가하였다. 이는 15년간 꾸준한 상승세로, 특히 2015년 이후 증가 폭이 더욱 커졌다. 1인 가구가 늘어나는 주요 사유로는 직장이나 학업 등 경제적 이유가 1위를 차지하였으며, 자유로운 생활 방식 선호가 2위, 배우자와의 사별 또는 이혼이 3위로 나타났다. 이러한 추세는 사회 구조의 변화를 반영하고 있다.","check":"① 연도별 비율 수치 포함(2010: 23.9%, 2025: 35.1% 등) ② 증가 추세 서술 ③ 사유 순위 1~3위 언급 ④ 200~300자 분량 ⑤ 제목 없음"},{"n":54,"points":50,"min":600,"max":700,"korInstr":"※ [54] 다음을 주제로 하여 자신의 생각을 600~700자로 글을 쓰십시오. (50점)\n\n현대 사회에서 사람들이 스트레스를 받는 원인은 다양합니다. 그 원인은 무엇이며, 이를 어떻게 해소할 수 있는지 아래의 내용을 중심으로 글을 쓰십시오.\n\n• 현대인이 스트레스를 받는 주요 원인은 무엇인가?\n• 스트레스를 해소하는 방법에는 어떤 것들이 있는가?\n• 스트레스를 잘 관리하는 것이 왜 중요한가?","instr":"Напишите эссе (600–700 символов) о причинах стресса у современных людей и о способах его снятия. Структура: ① причины стресса ② способы снятия ③ важность управления стрессом.","model":"현대 사회에서 스트레스는 매우 보편적인 문제가 되었다. 현대인이 스트레스를 받는 원인은 크게 두 가지로 나눌 수 있다. 첫째, 직장에서의 과도한 업무와 경쟁이다. 빠르게 변화하는 사회 속에서 성과를 내야 한다는 압박감이 크고, 실패에 대한 두려움도 스트레스의 주요 원인이 된다. 둘째, 인간관계에서 오는 갈등이다. 가족, 친구, 동료와의 관계에서 발생하는 오해나 불화는 심리적 부담을 가중시킨다.\n\n스트레스를 해소하는 방법에는 여러 가지가 있다. 규칙적인 운동은 신체적 긴장을 풀어 주는 동시에 기분을 개선하는 효과가 있다. 또한 명상이나 심호흡과 같은 이완 기법은 심리적 안정을 가져다준다. 가까운 사람과 대화를 나누는 것도 감정을 정리하고 위안을 받을 수 있는 좋은 방법이다.\n\n스트레스를 잘 관리하는 것은 건강한 삶을 위해 매우 중요하다. 스트레스가 장기간 지속되면 불면증, 소화 장애, 면역력 저하 등 다양한 신체적 문제로 이어질 수 있으며, 심한 경우 우울증과 같은 정신 건강 문제로 발전할 수도 있다. 따라서 스트레스를 그때그때 적절히 관리하는 것이 건강하고 행복한 삶을 유지하는 데 필수적이다.","check":"① 스트레스 원인 2가지 이상 ② 해소 방법 2가지 이상 ③ 관리 중요성 서술 ④ 600~700자 분량 ⑤ 논리적 단락 구분"}],"reading":[{"n":1,"points":2,"instr":"다음 ( )에 들어갈 가장 알맞은 것을 고르십시오.","passage":"나는 오랫동안 망설인 ( ) 결국 유학을 떠나기로 결심했다.","options":["나머지","와중에","끝에","덕분에"],"answer":3,"explain":"'오랫동안 망설인 끝에'는 긴 고민의 결과로 결정을 내렸다는 뜻이다.<br>✅ <b>③ 끝에</b>"},{"n":2,"points":2,"instr":"다음 ( )에 들어갈 가장 알맞은 것을 고르십시오.","passage":"바쁜 일정 속에서도 건강을 챙겨야 한다고 생각하지만 실제로 ( ) 쉽지 않다.","options":["지키는 경우가","바꾸기가","실천하기가","포기하기가"],"answer":3,"explain":"'건강을 챙기는 것을 실천하기가 쉽지 않다'가 문맥상 자연스럽다.<br>✅ <b>③ 실천하기가</b>"},{"n":3,"points":2,"instr":"다음 안내문을 읽고 내용과 같은 것을 고르십시오.","passage":"<div style='border:1px solid #ccc;border-radius:6px;padding:14px 16px;font-size:0.93em'><b>○○도서관 시설 공사 안내</b><br><br>도서관 내부 시설 개선 공사로 인해 아래 기간 동안 임시 휴관합니다.<br><br>• 휴관 기간: 2025년 7월 7일(월) ~ 7월 18일(금)<br>• 재개관: 2025년 7월 21일(월)<br><br>공사 기간 중 반납은 도서관 외부 반납함을 이용해 주시기 바랍니다.</div>","options":["도서관이 공사 기간 동안 임시 휴관한다.","공사 기간 중 도서 반납은 불가능하다.","재개관은 7월 7일이다.","공사는 도서관 외부에서 진행된다."],"answer":1,"explain":"7월 7일~18일 임시 휴관한다고 명시되어 있다.<br>✅ <b>① 도서관이 공사 기간 동안 임시 휴관한다.</b><br>✖️ 반납함으로 반납 가능; 재개관은 7월 21일; 공사는 내부."},{"n":4,"points":2,"instr":"다음 안내문을 읽고 내용과 같은 것을 고르십시오.","passage":"<div style='border:1px solid #ccc;border-radius:6px;padding:14px 16px;font-size:0.93em'><b>수원 한국어 학당 수강생 모집</b><br><br>• 일 시: 매주 월·수·금 오전 10시<br>• 대 상: 외국인 및 재외동포<br>• 수 준: 초급·중급·고급 과정 운영<br>• 수강료: 월 80,000원 (교재비 포함)<br>• 문 의: 031-000-0000</div>","options":["이 강좌는 한국인만 신청할 수 있다.","수강료에는 교재비가 포함되지 않는다.","초급부터 고급까지 다양한 수준의 강좌가 있다.","수업은 주말에만 진행된다."],"answer":3,"explain":"초급·중급·고급 과정이 모두 운영된다고 명시되어 있다.<br>✅ <b>③ 초급부터 고급까지 다양한 수준의 강좌가 있다.</b><br>✖️ 외국인·재외동포 대상; 교재비 포함; 평일(월·수·금) 운영."},{"n":5,"points":2,"instr":"다음을 순서에 맞게 배열한 것을 고르십시오.","passage":"(가) 나는 지난달부터 수채화를 배우기 시작했다.\n(나) 처음에는 색을 섞는 것조차 어려웠지만 점점 익숙해졌다.\n(다) 바로 오랫동안 해 보고 싶었던 수채화 그리기다.\n(라) 지금은 매주 새로운 그림에 도전하며 즐거운 시간을 보내고 있다.","options":["(가)-(다)-(나)-(라)","(나)-(가)-(다)-(라)","(다)-(가)-(나)-(라)","(라)-(다)-(가)-(나)"],"answer":1,"explain":"(가) 수채화 시작 → (다) 그것이 수채화임을 설명 → (나) 처음엔 어렵다가 익숙해짐 → (라) 현재 즐겁게 함.<br>✅ <b>① (가)-(다)-(나)-(라)</b>"},{"n":6,"points":2,"instr":"다음을 순서에 맞게 배열한 것을 고르십시오.","passage":"(가) 운동을 꾸준히 해야겠다는 다짐을 자주 하게 된다.\n(나) 그러나 바쁜 일상 속에서 시간을 내기가 쉽지 않다.\n(다) 그래서 많은 사람들이 틈새 시간을 활용한 짧은 운동을 선택하고 있다.\n(라) 출퇴근길에 걷거나 점심시간에 간단한 스트레칭을 하는 식이다.","options":["(나)-(가)-(라)-(다)","(가)-(다)-(나)-(라)","(가)-(나)-(다)-(라)","(다)-(나)-(가)-(라)"],"answer":3,"explain":"(가) 운동 다짐 → (나) 시간 내기 어려움 → (다) 틈새 운동 선택 → (라) 구체적 예시.<br>✅ <b>③ (가)-(나)-(다)-(라)</b>"},{"n":7,"points":2,"instr":"다음을 읽고 내용과 같은 것을 고르십시오.","passage":"환경 문제에 대한 관심이 높아지면서 많은 기업들이 친환경 소재를 사용한 제품을 늘리고 있다. 플라스틱 대신 생분해 가능한 소재를 활용하거나, 재생 에너지로 생산된 제품을 출시하는 사례가 증가하고 있다. 이러한 변화는 소비자들의 친환경 소비에 대한 요구가 반영된 결과이다.","options":["기업들이 친환경 제품을 늘리고 있다.","친환경 제품은 기존 제품보다 저렴하다.","소비자들은 친환경 소비에 무관심하다.","플라스틱 제품은 환경에 영향을 주지 않는다."],"answer":1,"explain":"많은 기업들이 친환경 소재 제품을 늘리고 있다고 직접 서술되어 있다.<br>✅ <b>① 기업들이 친환경 제품을 늘리고 있다.</b>"},{"n":8,"points":2,"instr":"다음을 읽고 내용과 같은 것을 고르십시오.","passage":"도시가 발전하면서 자연 공간이 줄어드는 문제가 생기고 있다. 이에 많은 지방자치단체들이 도심 내 공원을 조성해 주민들의 휴식 공간을 마련하고 있다. 공원은 도시민들이 자연을 느끼고 스트레스를 해소할 수 있는 공간으로 자리 잡고 있다.","options":["공원은 도시 개발에 방해가 된다.","공원은 도시민의 휴식 공간으로 활용된다.","도심 내 공원 조성은 줄어들고 있다.","공원은 어린이 전용 공간이다."],"answer":2,"explain":"공원이 주민들의 휴식 공간으로 마련되고 있다고 명시되어 있다.<br>✅ <b>② 공원은 도시민의 휴식 공간으로 활용된다.</b>"},{"n":9,"points":2,"instr":"다음을 읽고 내용과 같은 것을 고르십시오.","passage":"온라인 쇼핑 시장이 빠른 속도로 성장하고 있다. 편리한 결제 시스템과 빠른 배송 서비스가 소비자들의 만족도를 높이면서, 연령에 관계없이 많은 사람들이 온라인 쇼핑을 이용하게 되었다. 특히 모바일 기기의 보급으로 언제 어디서나 쇼핑이 가능해진 것이 성장의 주요 원인으로 꼽힌다.","options":["온라인 쇼핑 시장은 꾸준히 성장하고 있다.","온라인 쇼핑은 특정 연령층만 이용한다.","모바일 쇼핑은 아직 보편화되지 않았다.","온라인 쇼핑은 오프라인보다 배송이 느리다."],"answer":1,"explain":"온라인 쇼핑 시장이 빠른 속도로 성장하고 있다고 직접 서술되어 있다.<br>✅ <b>① 온라인 쇼핑 시장은 꾸준히 성장하고 있다.</b>"},{"n":10,"points":2,"instr":"다음 글의 중심 내용으로 가장 알맞은 것을 고르십시오.","passage":"사람은 하루의 약 3분의 1을 수면으로 보낸다. 충분한 수면은 신체적 회복뿐만 아니라 기억력 향상과 집중력 유지에도 큰 영향을 미친다. 수면이 부족하면 면역력이 떨어지고 만성 피로가 생기며, 장기적으로는 심혈관 질환의 위험도 높아질 수 있다.","options":["수면 부족의 주요 원인","잠을 잘 자는 방법","수면 시간을 줄이는 기술","충분한 수면이 건강에 미치는 영향"],"answer":4,"explain":"수면의 양이 건강에 미치는 긍정적·부정적 영향을 전반적으로 다루고 있다.<br>✅ <b>④ 충분한 수면이 건강에 미치는 영향</b>"},{"n":11,"points":2,"instr":"다음 글의 목적으로 가장 알맞은 것을 고르십시오.","passage":"환경부는 일상에서 실천할 수 있는 분리배출 방법을 새롭게 정비하였습니다. 플라스틱, 유리, 종이 등 각 소재별 올바른 분리배출 방법을 숙지하시어 환경 보호에 함께해 주시기 바랍니다.","options":["분리배출 시설의 위치를 알리기 위해","올바른 분리배출 방법을 안내하기 위해","환경부의 인력 채용을 공고하기 위해","재활용 제품의 구매를 권장하기 위해"],"answer":2,"explain":"분리배출 방법을 숙지해 달라는 안내이므로 목적은 올바른 분리배출 방법 안내이다.<br>✅ <b>② 올바른 분리배출 방법을 안내하기 위해</b>"},{"n":12,"points":2,"instr":"다음을 읽고 내용과 같은 것을 고르십시오.","passage":"최근 직장인들의 업무 스트레스가 사회적 문제로 부각되고 있다. 과도한 업무와 긴 근무 시간이 신체적 피로뿐 아니라 정신 건강에도 악영향을 미치고 있다. 이에 일부 기업들은 유연 근무제를 도입해 직원들의 삶의 질을 높이려는 노력을 기울이고 있다.","options":["직장인의 스트레스 원인은 대부분 개인 생활에 있다.","일부 기업들이 유연 근무제를 도입하고 있다.","모든 기업이 직원 복지에 무관심하다.","직장 스트레스는 신체 건강에 영향을 주지 않는다."],"answer":2,"explain":"일부 기업들이 유연 근무제를 도입한다고 직접 서술되어 있다.<br>✅ <b>② 일부 기업들이 유연 근무제를 도입하고 있다.</b>"},{"n":13,"points":2,"instr":"다음을 읽고 내용과 같은 것을 고르십시오.","passage":"대도시의 교통 혼잡 문제를 해결하기 위한 방안 중 하나로 대중교통 활성화가 꾸준히 논의되고 있다. 버스와 지하철 노선을 확충하고 환승 시스템을 개선하면 승용차 이용자를 대중교통으로 유도할 수 있다. 이는 교통 혼잡을 줄이는 동시에 탄소 배출 감소에도 기여할 수 있다.","options":["대도시의 교통 문제는 이미 해결되었다.","대중교통 확충이 교통 혼잡 완화에 도움이 될 수 있다.","승용차 이용자는 대중교통 이용을 원하지 않는다.","버스와 지하철 노선은 이미 충분히 운영되고 있다."],"answer":2,"explain":"대중교통 활성화로 교통 혼잡을 줄일 수 있다고 서술되어 있다.<br>✅ <b>② 대중교통 확충이 교통 혼잡 완화에 도움이 될 수 있다.</b>"},{"n":14,"points":2,"instr":"다음을 읽고 내용과 같은 것을 고르십시오.","passage":"전통시장은 단순한 쇼핑 공간을 넘어 지역 문화와 역사를 담은 장소이다. 최근에는 청년 상인들이 유입되어 전통과 현대가 어우러진 새로운 형태의 시장으로 변화하고 있다. 각 지역의 전통시장은 해당 지역만의 독특한 음식과 상품을 만날 수 있어 관광지로도 각광받고 있다.","options":["전통시장은 현재 쇠퇴하고 있다.","전통시장에는 청년 상인들이 거의 없다.","전통시장은 현대식 쇼핑몰로 대체되고 있다.","전통시장은 지역 문화와 관광의 역할도 한다."],"answer":4,"explain":"전통시장이 지역 문화를 담고 관광지로도 각광받는다고 서술되어 있다.<br>✅ <b>④ 전통시장은 지역 문화와 관광의 역할도 한다.</b>"},{"n":15,"points":2,"instr":"다음 글의 중심 내용으로 가장 알맞은 것을 고르십시오.","passage":"스마트폰과 소셜 미디어의 발달로 청소년들이 하루 중 상당한 시간을 온라인에서 보내고 있다. 이는 정보 접근성을 높이는 긍정적인 면도 있지만, 과도한 사용은 수면 부족과 학업 집중력 저하로 이어질 수 있다. 따라서 청소년들이 스스로 미디어 사용을 조절하는 능력을 기르는 것이 중요하다.","options":["스마트폰은 청소년 교육에 전혀 도움이 되지 않는다.","소셜 미디어는 청소년의 학업 능력을 향상시킨다.","청소년의 균형 잡힌 미디어 사용 습관이 중요하다.","소셜 미디어 사용을 전면 금지해야 한다."],"answer":3,"explain":"스마트폰 사용의 장단점을 언급한 뒤 '스스로 조절하는 능력'이 중요하다는 결론으로 이어진다.<br>✅ <b>③ 청소년의 균형 잡힌 미디어 사용 습관이 중요하다.</b>"},{"n":16,"points":2,"instr":"다음을 읽고 내용과 같은 것을 고르십시오.","passage":"한국의 발효식품은 오랜 역사를 지니고 있다. 김치, 된장, 간장 등은 수백 년 전부터 한국인의 식탁에 올라온 음식들이다. 발효 과정에서 생성된 유익한 균은 장 건강에 도움을 주며, 최근에는 이러한 건강 효능이 전 세계적으로 주목받고 있다.","options":["발효식품은 최근에 개발된 식품이다.","된장과 간장은 발효식품이 아니다.","발효 과정에서 생성된 균이 장 건강에 도움이 된다.","한국 발효식품은 해외에서 관심을 받지 못하고 있다."],"answer":3,"explain":"발효 과정의 유익한 균이 장 건강에 도움을 준다고 직접 서술되어 있다.<br>✅ <b>③ 발효 과정에서 생성된 균이 장 건강에 도움이 된다.</b>"},{"n":17,"points":2,"instr":"다음을 읽고 내용과 같은 것을 고르십시오.","passage":"원격 의료 서비스가 점차 확대되면서 환자들이 병원을 직접 방문하지 않고도 의사와 상담하고 처방을 받을 수 있게 되었다. 특히 거동이 불편하거나 의료 시설이 부족한 지역의 주민들에게 큰 도움이 되고 있다. 하지만 진단 정확성과 개인 정보 보호에 대한 우려도 함께 제기되고 있다.","options":["원격 의료는 도시 지역에서만 활용된다.","원격 의료는 의료 접근성을 높이는 데 기여한다.","원격 의료로는 처방을 받을 수 없다.","원격 의료에 대한 우려는 전혀 없다."],"answer":2,"explain":"의료 시설이 부족한 지역 주민에게 도움이 된다는 내용으로 의료 접근성 기여를 확인할 수 있다.<br>✅ <b>② 원격 의료는 의료 접근성을 높이는 데 기여한다.</b>"},{"n":18,"points":2,"instr":"다음을 읽고 내용과 같은 것을 고르십시오.","passage":"자원봉사는 사회에 기여하는 가장 기본적인 방법 중 하나이다. 다양한 형태의 자원봉사 활동이 있으며, 병원, 노인 요양 시설, 환경 정화 활동 등에서 많은 사람들이 자신의 시간과 능력을 나누고 있다. 자원봉사는 사회 공동체를 강화하는 동시에 봉사자 개인에게도 보람과 성취감을 준다.","options":["자원봉사는 사회 공동체 강화에 기여한다.","자원봉사는 보수를 받는 활동이다.","자원봉사는 특정 기관에서만 가능하다.","자원봉사자는 개인적 이익을 위해 활동한다."],"answer":1,"explain":"자원봉사가 사회 공동체를 강화한다고 직접 서술되어 있다.<br>✅ <b>① 자원봉사는 사회 공동체 강화에 기여한다.</b>"},{"n":19,"points":2,"instr":"다음을 읽고 내용과 같은 것을 고르십시오.","passage":"독서는 단순히 지식을 얻는 활동을 넘어 생각하는 힘을 키워 주는 행위이다. 다양한 장르의 책을 꾸준히 읽으면 어휘력이 늘고 논리적 사고력도 향상된다. 최근에는 전자책의 보급으로 언제 어디서나 편리하게 독서를 즐길 수 있게 되었다.","options":["독서는 논리적 사고력 향상에 도움이 된다.","독서는 어휘력에 영향을 주지 않는다.","전자책의 보급으로 독서 인구가 줄었다.","독서는 오로지 지식 습득을 위한 활동이다."],"answer":1,"explain":"꾸준히 독서하면 논리적 사고력도 향상된다고 직접 서술되어 있다.<br>✅ <b>① 독서는 논리적 사고력 향상에 도움이 된다.</b>"},{"n":20,"points":2,"instr":"다음 글의 중심 내용으로 가장 알맞은 것을 고르십시오.","passage":"배달 앱의 등장으로 음식을 주문하는 방식이 크게 변화했다. 스마트폰 하나로 다양한 음식을 원하는 시간에 주문하고 집에서 편리하게 받아볼 수 있게 되었다. 이러한 편리함이 소비자들의 생활 패턴을 바꾸고, 요식업 시장에도 큰 변화를 가져왔다.","options":["배달 앱은 식당 업주에게만 이로운 서비스이다.","배달 앱이 음식 주문 방식과 생활 패턴을 변화시켰다.","배달 앱은 음식의 질을 낮추는 원인이다.","소비자들은 배달 앱을 불편하게 생각한다."],"answer":2,"explain":"배달 앱이 주문 방식과 소비자 생활 패턴, 요식업 시장 전반을 변화시켰다는 것이 중심 내용이다.<br>✅ <b>② 배달 앱이 음식 주문 방식과 생활 패턴을 변화시켰다.</b>"},{"n":21,"points":2,"instr":"다음 글의 목적으로 가장 알맞은 것을 고르십시오.","passage":"조선 시대 생활 문화를 주제로 한 특별 전시회가 다음 달부터 국립민속박물관에서 열립니다. 이번 전시에는 조선 시대 의복, 생활 도구, 음식 문화 등 다양한 유물이 전시됩니다. 관람은 무료이며, 단체 관람은 사전 예약이 필요합니다.","options":["전시 유물의 보존 상태를 알리기 위해","전시회 일정과 관람 방법을 안내하기 위해","박물관 직원을 모집하기 위해","조선 시대 역사를 가르치기 위해"],"answer":2,"explain":"전시회 개최 일정, 내용, 관람 방법을 안내하는 글이다.<br>✅ <b>② 전시회 일정과 관람 방법을 안내하기 위해</b>"},{"n":22,"points":2,"instr":"다음 글의 중심 내용으로 가장 알맞은 것을 고르십시오.","passage":"세계화가 진행되면서 서로 다른 문화가 하나의 공간에서 공존하는 경우가 많아졌다. 각 문화는 고유한 가치를 지니고 있으며, 이를 존중하고 이해하는 것이 사회 통합에 중요하다. 문화적 다양성은 창의성을 자극하고 사회 발전에도 긍정적인 기여를 한다.","options":["세계화는 문화의 다양성을 해친다.","모든 문화는 동일한 방식으로 이해되어야 한다.","문화적 다양성을 존중하는 것이 중요하다.","세계화로 인해 전통문화가 사라지고 있다."],"answer":3,"explain":"각 문화를 존중하고 이해하는 것이 중요하며 다양성이 긍정적이라는 것이 중심 내용이다.<br>✅ <b>③ 문화적 다양성을 존중하는 것이 중요하다.</b>"},{"n":23,"points":2,"instr":"다음을 읽고 내용과 같은 것을 고르십시오.","passage":"음식물 쓰레기 문제는 환경 오염의 주요 원인 중 하나이다. 음식물 쓰레기를 줄이기 위해서는 필요한 만큼만 구매하고, 남은 음식을 올바르게 보관하며 최대한 활용하는 습관이 중요하다. 일부 지방자치단체에서는 음식물 쓰레기 감량을 위한 캠페인과 인센티브 제도를 운영하고 있다.","options":["음식물 쓰레기는 환경에 영향을 주지 않는다.","음식물 쓰레기 감량 노력은 개인 수준에서만 이루어진다.","남은 음식을 보관하는 것은 음식물 쓰레기 증가의 원인이다.","일부 지방자치단체가 음식물 쓰레기 감량 캠페인을 운영한다."],"answer":4,"explain":"일부 지방자치단체가 캠페인과 인센티브 제도를 운영한다고 직접 서술되어 있다.<br>✅ <b>④ 일부 지방자치단체가 음식물 쓰레기 감량 캠페인을 운영한다.</b>"},{"n":24,"points":2,"instr":"다음 ( )에 들어갈 내용으로 가장 알맞은 것을 고르십시오.","passage":"의사소통에서 중요한 것은 말하는 내용만이 아니다. 목소리의 높낮이, 표정, 몸짓 등의 비언어적 요소도 상대방에게 큰 영향을 미친다. 특히 얼굴 표정은 감정을 직접적으로 전달하는 수단으로, 같은 말이라도 표정에 따라 ( ).","options":["글로 표현하기 어렵다","이해하기 쉬워진다","기억에 오래 남는다","전혀 다른 의미로 전달될 수 있다"],"answer":4,"explain":"'같은 말이라도 표정에 따라' 의미가 달라질 수 있다는 결론이 자연스럽다.<br>✅ <b>④ 전혀 다른 의미로 전달될 수 있다</b>"},{"n":25,"points":2,"instr":"다음을 읽고 내용과 같은 것을 고르십시오.","passage":"도시 농업은 도시 안에서 식물을 재배하는 활동을 의미한다. 옥상 텃밭, 베란다 정원 등의 형태로 주거 공간에서도 직접 채소나 허브를 키울 수 있다. 도시 농업은 신선한 먹거리 생산 외에도 도시민의 정서적 안정과 공동체 의식 형성에 기여한다고 알려져 있다.","options":["도시 농업은 전문적인 시설이 있어야만 가능하다.","도시 농업은 식량 생산에만 의미가 있다.","도시 농업은 주거 공간에서는 실현하기 어렵다.","도시 농업은 정서적 안정에도 긍정적인 영향을 준다."],"answer":4,"explain":"도시민의 정서적 안정에 기여한다고 직접 서술되어 있다.<br>✅ <b>④ 도시 농업은 정서적 안정에도 긍정적인 영향을 준다.</b>"},{"n":26,"points":2,"instr":"다음을 읽고 내용과 같은 것을 고르십시오.","passage":"공유 경제는 물건이나 서비스를 개인 간에 빌리고 빌려주는 방식으로 운영된다. 자동차, 주택, 전자기기 등 다양한 자원을 공유함으로써 불필요한 소비를 줄일 수 있다. 이는 경제적 절약 효과뿐 아니라 자원 낭비를 줄이는 환경적 효과도 있다.","options":["공유 경제는 기업만 참여할 수 있다.","공유 경제는 불필요한 소비를 줄이는 데 도움이 된다.","공유 경제는 자동차 분야에서만 적용된다.","공유 경제는 경제적 효과만 있다."],"answer":2,"explain":"다양한 자원을 공유해 불필요한 소비를 줄인다고 서술되어 있다.<br>✅ <b>② 공유 경제는 불필요한 소비를 줄이는 데 도움이 된다.</b>"},{"n":27,"points":2,"instr":"다음을 읽고 내용과 같은 것을 고르십시오.","passage":"색상은 사람의 심리와 감정에 영향을 미친다. 파란색은 안정감과 집중력을 높이는 효과가 있으며, 빨간색은 에너지와 열정을 자극한다. 이를 활용해 인테리어, 광고, 치료 분야 등에서 색상을 전략적으로 활용하는 경우가 많아지고 있다.","options":["파란색은 에너지를 자극하는 효과가 있다.","빨간색은 안정감을 주는 색상이다.","색상은 사람의 감정에 영향을 주지 않는다.","색상의 심리적 효과가 다양한 분야에서 활용된다."],"answer":4,"explain":"색상이 인테리어·광고·치료 등 다양한 분야에서 전략적으로 활용된다고 서술되어 있다.<br>✅ <b>④ 색상의 심리적 효과가 다양한 분야에서 활용된다.</b>"},{"n":28,"points":2,"instr":"다음을 읽고 내용과 같은 것을 고르십시오.","passage":"인공지능 기술이 일상생활에 빠르게 파고들고 있다. 스마트폰의 음성 인식 서비스, 스트리밍 서비스의 맞춤형 추천 기능, 무인 결제 시스템 등이 모두 인공지능을 기반으로 한다. 앞으로도 인공지능의 활용 범위는 의료, 교육, 법률 등 다양한 분야로 확대될 것으로 전망된다.","options":["인공지능 기술은 의료 분야에서만 활용된다.","스마트폰의 음성 인식 서비스는 인공지능과 관계없다.","인공지능이 일상의 여러 서비스에 이미 적용되고 있다.","무인 결제 시스템은 아직 보편화되지 않았다."],"answer":3,"explain":"음성 인식, 추천 기능, 무인 결제 등 일상의 여러 서비스에 이미 인공지능이 적용되어 있다.<br>✅ <b>③ 인공지능이 일상의 여러 서비스에 이미 적용되고 있다.</b>"},{"n":29,"points":2,"instr":"다음을 읽고 내용과 같은 것을 고르십시오.","passage":"외국어 학습은 단순히 언어 능력을 키우는 것을 넘어 다른 문화를 이해하고 소통하는 능력을 길러 준다. 특히 어릴 때 외국어를 접하면 발음과 이해력 측면에서 더 효과적으로 습득할 수 있다. 또한 외국어를 배우는 과정에서 사고의 폭이 넓어지고 인지 능력도 향상된다는 연구 결과도 있다.","options":["외국어 학습은 성인이 된 후 시작하는 것이 효과적이다.","외국어 능력은 언어 능력에만 영향을 미친다.","외국어 학습은 인지 능력 향상에도 도움이 된다.","다른 문화 이해는 외국어 학습과 무관하다."],"answer":3,"explain":"외국어 학습이 인지 능력 향상에도 긍정적 영향을 미친다고 연구 결과로 뒷받침된다.<br>✅ <b>③ 외국어 학습은 인지 능력 향상에도 도움이 된다.</b>"},{"n":30,"points":2,"instr":"다음 글의 중심 내용으로 가장 알맞은 것을 고르십시오.","passage":"재택근무와 유연 근무제가 확산되면서 근무 방식에 대한 인식이 달라지고 있다. 기존에는 출퇴근 시간 준수와 사무실 출근이 기본이었지만, 이제는 성과 중심의 업무 방식이 더 주목받고 있다. 연구에 따르면 적절한 자율성이 주어졌을 때 직원의 집중력과 생산성이 오히려 높아지는 경향이 있다.","options":["재택근무는 생산성 저하의 주요 원인이다.","유연 근무제는 모든 직종에 적합하지 않다.","사무실 출근이 업무 효율을 높이는 최선의 방법이다.","자율적인 근무 방식이 직원의 생산성 향상에 기여할 수 있다."],"answer":4,"explain":"자율성을 부여했을 때 생산성이 높아진다는 것이 글 전체의 핵심이다.<br>✅ <b>④ 자율적인 근무 방식이 직원의 생산성 향상에 기여할 수 있다.</b>"},{"n":31,"points":2,"instr":"다음 안내문을 읽고 내용과 같은 것을 고르십시오.","passage":"<div style='border:1px solid #ccc;border-radius:6px;padding:14px 16px;font-size:0.93em'><b>○○구 청소년 독서 캠프 안내</b><br><br>• 일 시: 7월 20일(화) ~ 7월 22일(목), 3일간<br>• 대 상: 관내 중·고등학생<br>• 내 용: 독서 토론, 글쓰기 워크숍, 작가와의 만남<br>• 신청: 도서관 홈페이지 사전 접수<br>• 참가비: 무료</div>","options":["독서 캠프는 성인을 위한 프로그램이다.","독서 캠프에는 글쓰기 워크숍이 포함된다.","신청은 현장에서만 가능하다.","캠프는 하루 동안만 진행된다."],"answer":2,"explain":"내용에 '글쓰기 워크숍'이 포함된다고 명시되어 있다.<br>✅ <b>② 독서 캠프에는 글쓰기 워크숍이 포함된다.</b><br>✖️ 중·고등학생 대상; 홈페이지 사전 접수; 3일 진행."},{"n":32,"points":2,"instr":"다음 글의 중심 내용으로 가장 알맞은 것을 고르십시오.","passage":"전통 공예는 단순한 기술 전수가 아니라 해당 사회의 미적 감각과 생활 방식을 후대에 전달하는 문화적 유산이다. 각 지역의 도자기, 자수, 나전칠기 등은 오랜 시간을 거쳐 발전해 온 고유한 예술 형식이다. 현대 사회에서 전통 공예는 상업화로 인해 변형되는 경우도 있지만, 그 본래의 가치를 보존하려는 노력도 이어지고 있다. 이러한 전통 공예의 계승은 문화 정체성 유지에 있어 중요한 역할을 한다.","options":["전통 공예는 현대적 기법으로 완전히 대체되어야 한다.","전통 공예의 상업화는 전통 보존에 도움이 된다.","전통 공예는 특정 지역에서만 발전해 왔다.","전통 공예는 문화 유산으로서 계승 및 보존이 중요하다."],"answer":4,"explain":"전통 공예가 문화 정체성 유지에 중요한 역할을 한다는 것이 핵심 주장이다.<br>✅ <b>④ 전통 공예는 문화 유산으로서 계승 및 보존이 중요하다.</b>"},{"n":33,"points":2,"instr":"다음을 읽고 내용과 같은 것을 고르십시오.","passage":"노인층의 신체 활동이 건강 유지에 중요하다는 것은 이미 잘 알려져 있다. 규칙적인 가벼운 운동은 근력 유지와 균형 감각 향상에 도움이 되며, 낙상 사고 예방에도 효과적이다. 또한 신체 활동은 인지 기능 저하를 늦추는 데에도 긍정적인 영향을 미치는 것으로 밝혀졌다.","options":["노인에게 격렬한 운동이 가장 효과적이다.","가벼운 운동이 노인의 낙상 사고 예방에 도움이 된다.","신체 활동은 인지 기능에 영향을 주지 않는다.","노인의 신체 활동은 건강 유지에 불필요하다."],"answer":2,"explain":"가벼운 운동이 낙상 사고 예방에 효과적이라고 직접 서술되어 있다.<br>✅ <b>② 가벼운 운동이 노인의 낙상 사고 예방에 도움이 된다.</b>"},{"n":34,"points":2,"instr":"다음을 읽고 내용과 같은 것을 고르십시오.","passage":"한국의 대중문화는 아시아를 넘어 전 세계로 확산되고 있다. K팝 음악과 K드라마는 온라인 플랫폼을 통해 다양한 언어권의 팬들에게 소비되고 있으며, 이에 따라 한국어 학습자 수도 급증하고 있다. 한국 대중문화의 세계적 인기는 한국 음식, 패션, 관광 등 관련 산업에도 긍정적인 영향을 미치고 있다.","options":["K팝은 주로 아시아 지역에서만 인기가 있다.","한국어 학습자 수는 한류와 관련이 없다.","한국 대중문화는 온라인 플랫폼과 무관하게 확산된다.","한국 대중문화의 인기가 관련 산업에도 긍정적 영향을 준다."],"answer":4,"explain":"한국 대중문화의 인기가 음식·패션·관광 등 관련 산업에도 긍정적 영향을 미친다고 서술되어 있다.<br>✅ <b>④ 한국 대중문화의 인기가 관련 산업에도 긍정적 영향을 준다.</b>"},{"n":35,"points":2,"instr":"다음을 읽고 내용과 같은 것을 고르십시오.","passage":"아침 식사는 하루의 에너지를 공급하는 중요한 식사이다. 아침을 먹으면 집중력이 높아지고 오전 중의 활동 능력이 향상된다. 반면 아침을 거르면 혈당이 낮아져 쉽게 피로해지고 오후에 과식으로 이어질 수 있다. 전문가들은 균형 잡힌 아침 식사가 건강 유지에 필수적이라고 강조한다.","options":["아침 식사는 건강에 별 영향을 주지 않는다.","아침을 거르면 오전 활동 능력이 향상된다.","아침 식사는 오후 식사량과 관계없다.","균형 잡힌 아침 식사가 건강에 중요하다."],"answer":4,"explain":"전문가들이 균형 잡힌 아침 식사가 건강 유지에 필수적이라고 강조한다는 내용이 있다.<br>✅ <b>④ 균형 잡힌 아침 식사가 건강에 중요하다.</b>"},{"n":36,"points":2,"instr":"다음 글의 중심 내용으로 가장 알맞은 것을 고르십시오.","passage":"현대인들의 스트레스 증가로 인해 명상과 마음 챙김(마인드풀니스)이 주목받고 있다. 명상은 단 몇 분의 실천만으로도 심리적 안정을 찾는 데 도움이 된다고 알려져 있다. 기업들도 직원 복지 차원에서 명상 프로그램을 도입하는 경우가 늘고 있으며, 관련 앱과 온라인 콘텐츠도 급속도로 증가하고 있다.","options":["명상은 스트레스 해소에 효과가 없다.","명상 프로그램은 개인 차원에서만 운영된다.","명상 관련 콘텐츠는 오프라인에서만 찾을 수 있다.","명상이 스트레스 해소 수단으로 각광받고 있다."],"answer":4,"explain":"명상이 스트레스 해소 수단으로 기업, 앱, 온라인 등 다양한 경로에서 주목받는다는 것이 중심 내용이다.<br>✅ <b>④ 명상이 스트레스 해소 수단으로 각광받고 있다.</b>"},{"n":37,"points":2,"instr":"다음을 읽고 내용과 같은 것을 고르십시오.","passage":"패스트 패션의 문제점이 부각되면서 지속 가능한 패션에 대한 관심이 높아지고 있다. 지속 가능한 패션은 환경을 고려한 소재를 사용하고, 오래 입을 수 있는 고품질 의류를 추구한다. 일부 브랜드는 옷을 수거해 재활용하거나 중고 거래를 활성화하는 방식으로 환경 오염을 줄이려 노력하고 있다.","options":["패스트 패션은 환경 문제와 무관하다.","지속 가능한 패션은 저품질 소재를 사용한다.","의류 재활용은 환경 보호에 도움이 되지 않는다.","일부 브랜드가 옷 재활용을 통해 환경 오염을 줄이려 한다."],"answer":4,"explain":"일부 브랜드가 옷을 수거해 재활용하며 환경 오염 감소를 위해 노력한다고 서술되어 있다.<br>✅ <b>④ 일부 브랜드가 옷 재활용을 통해 환경 오염을 줄이려 한다.</b>"},{"n":38,"points":2,"instr":"다음을 읽고 내용과 같은 것을 고르십시오.","passage":"디지털 리터러시는 디지털 환경에서 정보를 효과적으로 찾고, 분석하고, 활용하는 능력을 의미한다. 정보가 넘쳐나는 현대 사회에서 무엇이 신뢰할 수 있는 정보인지 판단하는 능력은 더욱 중요해졌다. 학교에서도 디지털 리터러시 교육을 강화해 학생들이 올바른 정보 활용 능력을 갖추도록 돕고 있다.","options":["디지털 리터러시는 기술 사용 속도를 의미한다.","디지털 리터러시에는 정보의 신뢰성 판단 능력이 포함된다.","학교에서 디지털 리터러시 교육은 이루어지지 않는다.","디지털 리터러시는 오프라인 환경에서만 필요하다."],"answer":2,"explain":"신뢰할 수 있는 정보인지 판단하는 능력이 중요하다는 내용에서 신뢰성 판단 능력이 디지털 리터러시에 포함됨을 알 수 있다.<br>✅ <b>② 디지털 리터러시에는 정보의 신뢰성 판단 능력이 포함된다.</b>"},{"n":39,"points":2,"instr":"다음 글에서 필자가 말하고자 하는 것으로 가장 알맞은 것을 고르십시오.","passage":"도시화가 빠르게 진행되면서 편리한 생활 환경이 만들어지고 있지만, 동시에 다양한 사회 문제도 나타나고 있다. 주거 비용 상승, 교통 혼잡, 환경 오염 등은 도시 생활의 어두운 면이다. 필자는 도시화의 장점을 살리면서도 이러한 부작용을 최소화하기 위한 균형 잡힌 도시 정책이 필요하다고 생각한다.","options":["도시화의 긍정적 면을 살리되 부작용을 줄이는 정책이 필요하다.","도시화는 반드시 중단되어야 한다.","도시 문제는 개인이 해결해야 한다.","도시화의 부작용은 과장된 것이다."],"answer":1,"explain":"필자는 도시화의 장점을 살리면서 부작용을 최소화하는 균형 잡힌 정책이 필요하다고 직접 밝히고 있다.<br>✅ <b>① 도시화의 긍정적 면을 살리되 부작용을 줄이는 정책이 필요하다.</b>"},{"n":40,"points":2,"instr":"다음 글의 중심 내용으로 가장 알맞은 것을 고르십시오.","passage":"유머는 인간관계에서 중요한 역할을 한다. 웃음은 긴장된 분위기를 풀어 주고, 사람들 사이의 친밀감을 높이는 데 기여한다. 또한 유머 감각이 있는 사람은 사회적 상황에서 더 긍정적인 인상을 주는 경향이 있다. 이처럼 유머는 단순한 재미를 넘어 사회적 기술로 볼 수 있다.","options":["유머는 인간관계에 부정적인 영향을 준다.","웃음은 긴장을 조성하는 역할을 한다.","유머 감각은 타고나는 것으로 개발할 수 없다.","유머는 인간관계를 원활하게 하는 사회적 기술이다."],"answer":4,"explain":"유머가 단순한 재미를 넘어 사회적 기술이라는 것이 글 전체의 핵심이다.<br>✅ <b>④ 유머는 인간관계를 원활하게 하는 사회적 기술이다.</b>"},{"n":41,"points":2,"instr":"※ [41~42] 다음을 읽고 물음에 답하십시오.\n\n다음을 읽고 내용과 같은 것을 고르십시오.","passage":"태평양 한가운데에는 엄청난 양의 플라스틱 쓰레기가 모여 이른바 '쓰레기 섬'을 형성하고 있다. 이 쓰레기의 대부분은 육지에서 바다로 흘러들어온 것으로, 해양 생태계를 심각하게 위협하고 있다. 물고기와 바닷새 등이 플라스틱 조각을 먹이로 오인해 섭취하면 생명을 잃기도 한다. 이 문제를 해결하기 위해 국제 사회는 플라스틱 사용 감소와 해양 정화 활동에 힘을 모으고 있다.","options":["쓰레기 섬은 바다 생태계에 영향을 주지 않는다.","플라스틱 쓰레기 문제는 각 국가가 개별적으로 해결하고 있다.","바닷새는 플라스틱을 먹이로 삼지 않는다.","국제 사회가 해양 쓰레기 문제 해결을 위해 협력하고 있다."],"answer":4,"explain":"국제 사회가 플라스틱 사용 감소와 해양 정화 활동에 힘을 모은다고 서술되어 있다.<br>✅ <b>④ 국제 사회가 해양 쓰레기 문제 해결을 위해 협력하고 있다.</b>"},{"n":42,"points":2,"instr":"위 글의 내용과 같은 것을 고르십시오.","passage":"","options":["태평양 쓰레기의 대부분은 육지에서 흘러들어왔다.","쓰레기 섬은 사람이 만든 인공 섬이다.","플라스틱은 바다 생물에게 해롭지 않다.","쓰레기 섬의 크기는 줄어들고 있다."],"answer":1,"explain":"이 쓰레기의 대부분은 육지에서 바다로 흘러들어온 것이라고 명시되어 있다.<br>✅ <b>① 태평양 쓰레기의 대부분은 육지에서 흘러들어왔다.</b>"},{"n":43,"points":2,"instr":"※ [43~44] 다음을 읽고 물음에 답하십시오.\n\n다음을 읽고 내용과 같은 것을 고르십시오.","passage":"인터넷의 발달로 온라인 교육이 빠르게 확산되고 있다. 시간과 장소에 구애받지 않고 다양한 강의를 들을 수 있다는 점이 가장 큰 장점이다. 그러나 직접 교사와 대면하며 즉각적인 피드백을 받기 어렵고, 자기 관리 능력이 부족한 학습자에게는 집중력 유지가 어려울 수 있다. 이러한 한계를 보완하기 위해 온라인과 오프라인을 결합한 혼합 학습 방식이 주목받고 있다.","options":["온라인 교육은 장소 제약이 크다.","온라인 교육에서는 즉각적인 피드백이 충분히 이루어진다.","혼합 학습 방식은 온라인 교육의 장점을 없앤다.","온라인 교육의 한계를 보완하기 위해 혼합 학습 방식이 등장했다."],"answer":4,"explain":"온라인 교육의 한계를 보완하기 위해 혼합 학습 방식이 주목받는다고 직접 서술되어 있다.<br>✅ <b>④ 온라인 교육의 한계를 보완하기 위해 혼합 학습 방식이 등장했다.</b>"},{"n":44,"points":2,"instr":"위 글의 내용과 같은 것을 고르십시오.","passage":"","options":["온라인 교육은 학습자의 자기 관리 능력과 무관하다.","대면 수업에서는 즉각적인 피드백을 받기 어렵다.","온라인 교육은 시간 제약이 큰 단점이 있다.","시간과 장소에 구애받지 않는 것이 온라인 교육의 장점이다."],"answer":4,"explain":"시간과 장소에 구애받지 않고 강의를 들을 수 있다는 것이 가장 큰 장점이라고 명시되어 있다.<br>✅ <b>④ 시간과 장소에 구애받지 않는 것이 온라인 교육의 장점이다.</b>"},{"n":45,"points":2,"instr":"다음 글의 중심 내용으로 가장 알맞은 것을 고르십시오.","passage":"많은 직장인들이 업무와 개인 생활 간의 균형을 유지하는 데 어려움을 겪고 있다. 장시간 근무와 야근이 일상화된 환경에서는 개인 시간이 줄어들고 삶의 질이 저하된다. 반면 적절한 휴식과 여가 생활은 업무 효율을 높이고 창의성을 증진시키는 효과가 있다. 따라서 일과 삶의 균형을 이루는 것이 개인과 조직 모두에게 유익하다.","options":["장시간 근무가 업무 효율을 높인다.","직장인들은 여가보다 업무를 우선시해야 한다.","일과 삶의 균형이 개인과 조직 모두에 중요하다.","휴식은 업무 능력 향상에 도움이 되지 않는다."],"answer":3,"explain":"일과 삶의 균형이 개인과 조직 모두에게 유익하다는 것이 결론이자 핵심 주장이다.<br>✅ <b>③ 일과 삶의 균형이 개인과 조직 모두에 중요하다.</b>"},{"n":46,"points":2,"instr":"※ [46~47] 다음을 읽고 물음에 답하십시오.\n\n다음을 읽고 내용과 같은 것을 고르십시오.","passage":"인공지능이 음악, 미술, 문학 등 창작 분야에 활용되면서 예술의 본질에 대한 논쟁이 일어나고 있다. 인공지능이 만든 그림이나 음악이 인간의 작품에 비해 기술적으로 뒤지지 않는다는 평가도 있다. 그러나 인공지능이 감정이나 경험 없이 데이터를 기반으로 창작물을 생성한다는 점에서 인간 예술과 근본적으로 다르다는 시각도 있다. 이 문제는 예술의 가치와 창의성의 의미를 다시 생각하게 만든다.","options":["인공지능의 창작물은 기술적으로 인간 작품보다 항상 열등하다.","인공지능이 만든 예술은 감정을 바탕으로 한다.","인공지능 창작 활동은 예술 분야에 영향을 주지 않는다.","인공지능의 창작 활동이 예술의 본질에 대한 논의를 불러일으킨다."],"answer":4,"explain":"인공지능 창작 활동이 예술의 본질에 대한 논쟁을 불러일으킨다고 직접 서술되어 있다.<br>✅ <b>④ 인공지능의 창작 활동이 예술의 본질에 대한 논의를 불러일으킨다.</b>"},{"n":47,"points":2,"instr":"위 글의 내용과 같은 것을 고르십시오.","passage":"","options":["인공지능 창작물과 인간 창작물은 차이가 없다.","인공지능이 창작하는 능력은 아직 없다.","인공지능은 감정을 바탕으로 음악을 만든다.","인공지능은 데이터를 기반으로 창작물을 생성한다."],"answer":4,"explain":"인공지능이 감정이나 경험 없이 데이터를 기반으로 창작물을 생성한다고 명시되어 있다.<br>✅ <b>④ 인공지능은 데이터를 기반으로 창작물을 생성한다.</b>"},{"n":48,"points":2,"instr":"※ [48~50] 다음을 읽고 물음에 답하십시오.\n\n다음을 읽고 내용과 같은 것을 고르십시오.","passage":"한국의 지방 도시들이 인구 감소로 인한 소멸 위기에 처해 있다. 젊은 세대가 교육과 취업 기회를 찾아 수도권으로 집중되면서, 지방에는 노인 인구 비율이 높아지고 있다. 이로 인해 학교, 병원, 공공 서비스 등 지역 기반 시설이 줄어들고 있으며, 이는 다시 인구 유출을 가속화하는 악순환으로 이어진다. 정부는 지방 소멸을 막기 위해 지역 경제 활성화, 청년 유입 정책, 이주 지원 등 다양한 대책을 추진하고 있다.","options":["젊은 세대가 지방으로 이주하는 추세이다.","지방의 인프라 감소가 인구 유출을 가속화하고 있다.","지방 도시의 노인 비율은 감소하고 있다.","정부는 지방 소멸 문제를 방치하고 있다."],"answer":2,"explain":"지역 기반 시설이 줄어드는 것이 다시 인구 유출을 가속화하는 악순환이라고 서술되어 있다.<br>✅ <b>② 지방의 인프라 감소가 인구 유출을 가속화하고 있다.</b>"},{"n":49,"points":2,"instr":"위 글의 내용과 같은 것을 고르십시오.","passage":"","options":["지방 인구 감소는 주거 문제와 무관하다.","지방 소멸 위기는 과장된 현상이다.","수도권 집중은 지방 인프라 확대에 기여한다.","정부가 청년 유입 정책 등으로 지방 소멸에 대응하고 있다."],"answer":4,"explain":"정부가 지방 소멸을 막기 위해 청년 유입 정책 등 다양한 대책을 추진한다고 서술되어 있다.<br>✅ <b>④ 정부가 청년 유입 정책 등으로 지방 소멸에 대응하고 있다.</b>"},{"n":50,"points":2,"instr":"위 글의 중심 내용으로 가장 알맞은 것을 고르십시오.","passage":"","options":["수도권 인구 집중의 원인","지방 경제 회복을 위한 개인의 역할","지방 인구 감소로 인한 소멸 위기와 대응 방안","정부의 청년 고용 정책"],"answer":3,"explain":"지방 도시의 소멸 위기 현상과 이에 대한 정부의 대응이 전체 글의 중심 내용이다.<br>✅ <b>③ 지방 인구 감소로 인한 소멸 위기와 대응 방안</b>"}]},
+
+  8005: {
+    "id": 8005,
+    "mock": true,
+    "no": "Hot TOPIK<br><b>제5회</b>",
+    "title": "Hot TOPIK 제5회",
+    "listening": [
+      {
+        "n": 1,
+        "points": 2,
+        "instr": "※ [1~3] 다음을 듣고 알맞은 그림을 고르십시오. (각 2점)",
+        "script": "여자: 저기요, 이 가방 지퍼가 고장 났는데요. 고칠 수 있을까요?\n남자: 네, 한번 볼게요. 여기 두고 가시면 오늘 오후에 찾아가실 수 있어요.",
+        "options": [
+          "여자가 가방을 들고 가게 앞에 서 있는 장면",
+          "여자가 가게 직원에게 가방 수리를 맡기는 장면",
+          "남자가 혼자 가방 지퍼를 고치는 장면",
+          "여자가 고쳐진 가방을 들고 기뻐하는 장면"
+        ],
+        "answer": 2,
+        "explain": "여자가 직원(남자)에게 지퍼가 고장 난 가방을 맡기는 상황이다.<br>✅ <b>② 여자가 가게 직원에게 가방 수리를 맡기는 장면</b>"
+      },
+      {
+        "n": 2,
+        "points": 2,
+        "instr": "※ [1~3] 다음을 듣고 알맞은 그림을 고르십시오. (각 2점)",
+        "script": "남자: 지금 뭐 해요? 밥 먹으러 안 가요?\n여자: 잠깐만요, 자료를 인쇄하고 있어요. 거의 다 됐어요.",
+        "options": [
+          "남자가 여자에게 음식을 건네주는 장면",
+          "남자와 여자가 함께 식사하는 장면",
+          "여자가 프린터 앞에서 서류를 인쇄하는 장면",
+          "여자가 컴퓨터 화면을 보며 자료를 정리하는 장면"
+        ],
+        "answer": 3,
+        "explain": "여자가 프린터로 자료를 출력하고 있는 상황이다.<br>✅ <b>③ 여자가 프린터 앞에서 서류를 인쇄하는 장면</b>"
+      },
+      {
+        "n": 3,
+        "points": 2,
+        "instr": "※ [1~3] 다음을 듣고 알맞은 그림을 고르십시오. (각 2점)",
+        "script": "여자: 오늘 발표 어땠어?\n남자: 생각보다 잘 됐어. 교수님도 칭찬해 주셨거든.",
+        "options": [
+          "남자가 발표를 마치고 교수님께 칭찬받는 장면",
+          "남자가 강의실에서 발표 자료를 준비하는 장면",
+          "여자가 남자에게 발표 자료를 넘겨주는 장면",
+          "남자와 여자가 도서관에서 함께 공부하는 장면"
+        ],
+        "answer": 1,
+        "explain": "남자가 발표를 잘 마치고 교수님의 칭찬을 받는 상황이다.<br>✅ <b>① 남자가 발표를 마치고 교수님께 칭찬받는 장면</b>"
+      },
+      {
+        "n": 4,
+        "points": 2,
+        "instr": "※ [4~8] 다음 대화를 잘 듣고 이어질 수 있는 말을 고르십시오. (각 2점)",
+        "script": "남자: 주말에 뭐 할 거예요?\n여자: 집에서 쉬려고요. 요즘 너무 피곤해서요.\n남자: 저도 그렇긴 한데, 오랫동안 쉬면 더 피곤하더라고요.",
+        "options": [
+          "맞아요. 조금 걸으러 나가볼까요.",
+          "그럼 저는 혼자 운동할게요.",
+          "주말에도 일해야 할 것 같아요.",
+          "저는 집에서 영화 보는 게 좋아요."
+        ],
+        "answer": 1,
+        "explain": "오랫동안 쉬면 더 피곤하다는 말에 자연스럽게 이어지는 제안이다.<br>✅ <b>① 맞아요. 조금 걸으러 나가볼까요.</b>"
+      },
+      {
+        "n": 5,
+        "points": 2,
+        "instr": "※ [4~8] 다음 대화를 잘 듣고 이어질 수 있는 말을 고르십시오. (각 2점)",
+        "script": "여자: 마트에서 사 온 계란이 몇 개 깨져 있었어요.\n남자: 그래요? 교환해 주는 곳이 있을 텐데요.\n여자: 영수증이 있으니까",
+        "options": [
+          "그냥 버리는 게 좋을 것 같아요.",
+          "한번 사진을 찍어 두세요.",
+          "가서 바꿔 올 수 있겠네요.",
+          "다음에는 조심해서 사야겠어요."
+        ],
+        "answer": 3,
+        "explain": "영수증이 있으니 교환을 받으러 갈 수 있다는 자연스러운 연결이다.<br>✅ <b>③ 가서 바꿔 올 수 있겠네요.</b>"
+      },
+      {
+        "n": 6,
+        "points": 2,
+        "instr": "※ [4~8] 다음 대화를 잘 듣고 이어질 수 있는 말을 고르십시오. (각 2점)",
+        "script": "남자: 이번 주 토요일에 등산 갈 건데 같이 가실래요?\n여자: 좋아요. 어디로 갈 계획이에요?\n남자: 북한산으로 갈까 해요.",
+        "options": [
+          "그럼 제가 교통편을 알아볼게요.",
+          "등산은 너무 힘들 것 같아요.",
+          "날씨가 좋아야 갈 수 있겠어요.",
+          "거기 가본 적이 있어요. 경치가 좋아요."
+        ],
+        "answer": 4,
+        "explain": "북한산 등산 제안에 자연스럽게 이어지는 긍정적인 반응이다.<br>✅ <b>④ 거기 가본 적이 있어요. 경치가 좋아요.</b>"
+      },
+      {
+        "n": 7,
+        "points": 2,
+        "instr": "※ [4~8] 다음 대화를 잘 듣고 이어질 수 있는 말을 고르십시오. (각 2점)",
+        "script": "여자: 오늘 오후에 팀 회의가 있는데 발표 자료 준비됐어요?\n남자: 아직 조금 더 작업이 필요해요.\n여자: 제가 도와드릴까요?",
+        "options": [
+          "아니요, 혼자 다 할 수 있어요.",
+          "회의를 내일로 미루는 건 어때요.",
+          "네, 그렇게 해 주시면 정말 감사하겠어요.",
+          "발표 자료는 제가 준비할게요."
+        ],
+        "answer": 3,
+        "explain": "도움 제안에 감사하며 수락하는 자연스러운 반응이다.<br>✅ <b>③ 네, 그렇게 해 주시면 정말 감사하겠어요.</b>"
+      },
+      {
+        "n": 8,
+        "points": 2,
+        "instr": "※ [4~8] 다음 대화를 잘 듣고 이어질 수 있는 말을 고르십시오. (각 2점)",
+        "script": "남자: 우산 없이 나왔어요? 밖에 비가 많이 오는데요.\n여자: 어떡하죠. 깜빡하고 안 가져왔어요.\n남자: 제 우산 같이 쓰고 가면 어때요?",
+        "options": [
+          "그냥 뛰어가는 게 낫겠어요.",
+          "편의점에서 하나 사야겠어요.",
+          "정말요? 그렇게 해 주시면 감사하죠.",
+          "비가 곧 그칠 것 같은데요."
+        ],
+        "answer": 3,
+        "explain": "우산을 같이 쓰자는 제안에 감사하며 수락하는 자연스러운 반응이다.<br>✅ <b>③ 정말요? 그렇게 해 주시면 감사하죠.</b>"
+      },
+      {
+        "n": 9,
+        "points": 2,
+        "instr": "※ [9~12] 다음을 듣고 내용과 일치하는 것을 고르십시오. (각 2점)",
+        "script": "남자: 안내 말씀 드립니다. 다음 달 1일부터 15일까지 구내식당 리모델링 공사가 진행됩니다. 공사 기간 동안에는 구내식당을 이용하실 수 없으며, 인근 식당을 이용해 주시기 바랍니다. 공사가 끝나는 16일부터는 새로운 모습의 구내식당이 다시 운영될 예정입니다. 직원 여러분의 양해 부탁드립니다.",
+        "options": [
+          "구내식당은 이번 달부터 문을 닫는다.",
+          "리모델링 공사는 한 달 이상 걸린다.",
+          "공사 기간에도 구내식당을 이용할 수 있다.",
+          "16일부터 새로운 구내식당을 이용할 수 있다."
+        ],
+        "answer": 4,
+        "explain": "\"16일부터는 새로운 모습의 구내식당이 다시 운영될 예정\"이라고 했다.<br>✅ <b>④ 16일부터 새로운 구내식당을 이용할 수 있다.</b>"
+      },
+      {
+        "n": 10,
+        "points": 2,
+        "instr": "※ [9~12] 다음을 듣고 내용과 일치하는 것을 고르십시오. (각 2점)",
+        "script": "여자: 최근 연구에 따르면, 바다에 버려지는 플라스틱 쓰레기의 양이 해마다 늘어나고 있습니다. 이 중 많은 양이 미세 플라스틱으로 분해되어 바다 생물의 몸에 축적됩니다. 이는 해산물을 먹는 인간에게도 영향을 미칠 수 있다는 점에서 심각한 문제로 인식되고 있습니다. 따라서 플라스틱 사용을 줄이고 올바른 분리배출을 실천하는 것이 중요합니다.",
+        "options": [
+          "바다 플라스틱 쓰레기의 양은 줄어들고 있다.",
+          "미세 플라스틱은 바다 생물에게만 영향을 준다.",
+          "미세 플라스틱은 사람의 건강에도 영향을 미칠 수 있다.",
+          "플라스틱 분리배출은 현재 의무화되어 있지 않다."
+        ],
+        "answer": 3,
+        "explain": "\"해산물을 먹는 인간에게도 영향을 미칠 수 있다\"고 했다.<br>✅ <b>③ 미세 플라스틱은 사람의 건강에도 영향을 미칠 수 있다.</b>"
+      },
+      {
+        "n": 11,
+        "points": 2,
+        "instr": "※ [9~12] 다음을 듣고 내용과 일치하는 것을 고르십시오. (각 2점)",
+        "script": "남자: 저희 문화 센터에서는 이번 가을에 새로운 강좌를 개설합니다. 한국 전통 음악, 사진 촬영, 수채화 등 다양한 강좌가 마련되어 있습니다. 수강 신청은 온라인과 방문 접수 모두 가능하며, 10월 5일부터 선착순으로 진행됩니다. 자세한 내용은 홈페이지를 확인해 주세요.",
+        "options": [
+          "강좌는 봄에 새로 개설된다.",
+          "수강 신청은 온라인으로도 가능하다.",
+          "수강 신청은 전화로만 가능하다.",
+          "강좌 정보는 문자로만 안내된다."
+        ],
+        "answer": 2,
+        "explain": "\"온라인과 방문 접수 모두 가능\"하다고 했다.<br>✅ <b>② 수강 신청은 온라인으로도 가능하다.</b>"
+      },
+      {
+        "n": 12,
+        "points": 2,
+        "instr": "※ [9~12] 다음을 듣고 내용과 일치하는 것을 고르십시오. (각 2점)",
+        "script": "여자: 한강 시민 공원에서는 매주 토요일 저녁 야외 콘서트가 열립니다. 다음 달부터는 클래식, 재즈, 국악 등 다양한 장르의 공연이 펼쳐질 예정입니다. 입장료는 무료이며 누구나 참여하실 수 있습니다. 공연은 오후 7시에 시작하니 일찍 오셔서 좋은 자리를 잡으시기 바랍니다.",
+        "options": [
+          "콘서트는 매주 일요일에 열린다.",
+          "입장료를 내지 않고 관람할 수 있다.",
+          "공연은 오후 6시에 시작한다.",
+          "실내에서 공연이 진행된다."
+        ],
+        "answer": 2,
+        "explain": "\"입장료는 무료이며 누구나 참여하실 수 있습니다\"라고 했다.<br>✅ <b>② 입장료를 내지 않고 관람할 수 있다.</b>"
+      },
+      {
+        "n": 13,
+        "points": 2,
+        "instr": "※ [13~16] 다음을 듣고 화자의 중심 생각을 고르십시오. (각 2점)",
+        "script": "여자: 요즘 젊은 사람들이 책을 잘 안 읽는 것 같아서 걱정이에요. 스마트폰이나 유튜브가 편리하긴 하지만, 책을 통해 깊이 생각하는 능력을 키우는 게 정말 중요하거든요. 짧은 콘텐츠보다 긴 글을 읽으면서 논리적으로 생각하는 훈련이 필요하다고 봐요.",
+        "options": [
+          "스마트폰은 현대 생활에 꼭 필요한 도구이다.",
+          "유튜브를 통해 다양한 지식을 얻을 수 있다.",
+          "깊이 있는 독서를 통해 사고력을 길러야 한다.",
+          "짧은 동영상이 학습에 더 효과적이다."
+        ],
+        "answer": 3,
+        "explain": "책을 읽으면서 논리적이고 깊은 사고력을 키우는 것이 중요하다는 것이 화자의 핵심 주장이다.<br>✅ <b>③ 깊이 있는 독서를 통해 사고력을 길러야 한다.</b>"
+      },
+      {
+        "n": 14,
+        "points": 2,
+        "instr": "※ [13~16] 다음을 듣고 화자의 중심 생각을 고르십시오. (각 2점)",
+        "script": "남자: 요즘 재택근무를 하는 사람들이 많아졌는데, 저는 출퇴근 시간이 절약되고 집에서 편하게 일할 수 있어서 좋더라고요. 물론 동료들과 직접 소통하기 어렵다는 단점도 있지만, 업무 효율 면에서는 오히려 좋아진 것 같아요. 유연한 근무 환경이 생산성을 높일 수 있다고 생각해요.",
+        "options": [
+          "재택근무는 동료와의 협력을 강화시킨다.",
+          "유연한 근무 환경이 업무 효율을 높일 수 있다.",
+          "재택근무는 모든 직종에 적합하다.",
+          "출퇴근 시간을 줄이는 것이 가장 중요하다."
+        ],
+        "answer": 2,
+        "explain": "유연한 근무 환경이 생산성을 높인다는 것이 화자의 핵심 주장이다.<br>✅ <b>② 유연한 근무 환경이 업무 효율을 높일 수 있다.</b>"
+      },
+      {
+        "n": 15,
+        "points": 2,
+        "instr": "※ [13~16] 다음을 듣고 화자의 중심 생각을 고르십시오. (각 2점)",
+        "script": "여자: 아이들에게 음식을 골고루 먹이는 것이 정말 중요해요. 편식을 하면 영양이 불균형해져서 성장에 좋지 않거든요. 특히 채소를 싫어하는 아이들이 많은데, 요리 방법을 바꾸거나 재미있게 먹을 수 있는 환경을 만들어 주면 도움이 돼요.",
+        "options": [
+          "아이들이 골고루 잘 먹을 수 있도록 도와야 한다.",
+          "아이들이 좋아하는 음식만 주는 것이 좋다.",
+          "채소 위주의 식단이 어린이에게 가장 좋다.",
+          "음식을 먹는 환경보다 영양소가 더 중요하다."
+        ],
+        "answer": 1,
+        "explain": "아이들이 음식을 골고루 먹을 수 있도록 도와야 한다는 것이 화자의 핵심 주장이다.<br>✅ <b>① 아이들이 골고루 잘 먹을 수 있도록 도와야 한다.</b>"
+      },
+      {
+        "n": 16,
+        "points": 2,
+        "instr": "※ [13~16] 다음을 듣고 화자의 중심 생각을 고르십시오. (각 2점)",
+        "script": "남자: 운동을 시작하려는 분들에게 말씀드리고 싶은 게 있어요. 처음부터 너무 무리하게 하지 말고 자신의 체력에 맞게 조금씩 시작하는 게 중요해요. 갑자기 격렬한 운동을 하면 오히려 부상을 입을 수 있거든요. 꾸준히 습관을 들이는 게 가장 효과적이에요.",
+        "options": [
+          "운동은 처음부터 강도를 높여야 효과적이다.",
+          "운동 부상은 대부분 회복이 빠르다.",
+          "체력에 맞는 운동 종목을 선택하는 것이 중요하다.",
+          "자신의 체력에 맞게 점진적으로 운동 습관을 들여야 한다."
+        ],
+        "answer": 4,
+        "explain": "체력에 맞게 조금씩 시작해 꾸준히 습관을 들이는 것이 가장 중요하다는 게 핵심 주장이다.<br>✅ <b>④ 자신의 체력에 맞게 점진적으로 운동 습관을 들여야 한다.</b>"
+      },
+      {
+        "n": 17,
+        "points": 2,
+        "instr": "※ [17~20] 다음을 듣고 내용과 일치하는 것을 고르십시오. (각 2점)",
+        "script": "남자: 저희 회사에서 이번 달 말에 봉사 활동을 진행합니다. 지역 양로원에서 어르신들과 함께하는 프로그램으로, 오전 10시부터 오후 2시까지 진행됩니다. 참여를 원하시는 분은 이번 주 금요일까지 신청해 주시기 바랍니다. 참가 인원은 최대 20명으로 제한됩니다.",
+        "options": [
+          "봉사 활동은 이번 달 초에 진행된다.",
+          "봉사 활동 장소는 지역 병원이다.",
+          "봉사 활동은 오전 10시에 시작한다.",
+          "참가 인원 제한은 없다."
+        ],
+        "answer": 3,
+        "explain": "\"오전 10시부터 오후 2시까지 진행됩니다\"라고 했다.<br>✅ <b>③ 봉사 활동은 오전 10시에 시작한다.</b>"
+      },
+      {
+        "n": 18,
+        "points": 2,
+        "instr": "※ [17~20] 다음을 듣고 내용과 일치하는 것을 고르십시오. (각 2점)",
+        "script": "여자: 저희 도서관에서 어린이 독서 교실을 운영합니다. 7세에서 10세 어린이를 대상으로 하며, 매주 토요일 오전 11시에 시작합니다. 교실 참가는 사전 예약이 필요하며, 홈페이지나 전화로 예약하실 수 있습니다. 정원은 15명이므로 서두르세요.",
+        "options": [
+          "독서 교실은 매주 일요일에 열린다.",
+          "참가 대상은 5세 이상이다.",
+          "사전 예약이 필요하다.",
+          "전화 예약만 가능하다."
+        ],
+        "answer": 3,
+        "explain": "\"사전 예약이 필요하며, 홈페이지나 전화로 예약하실 수 있습니다\"라고 했다.<br>✅ <b>③ 사전 예약이 필요하다.</b>"
+      },
+      {
+        "n": 19,
+        "points": 2,
+        "instr": "※ [17~20] 다음을 듣고 내용과 일치하는 것을 고르십시오. (각 2점)",
+        "script": "남자: 이번 주말에 시청 앞 광장에서 환경 캠페인 행사가 열립니다. 탄소 중립 실천 방법을 소개하는 전시와 함께 어린이 체험 프로그램도 마련되어 있습니다. 참가 신청 없이 누구나 무료로 참가할 수 있으며, 행사는 오전 10시부터 오후 6시까지 진행됩니다.",
+        "options": [
+          "행사는 다음 달에 열린다.",
+          "어린이 체험 프로그램이 마련되어 있다.",
+          "행사 참가에는 사전 신청이 필요하다.",
+          "입장료가 있다."
+        ],
+        "answer": 2,
+        "explain": "\"어린이 체험 프로그램도 마련되어 있다\"고 명시되어 있다.<br>✅ <b>② 어린이 체험 프로그램이 마련되어 있다.</b>"
+      },
+      {
+        "n": 20,
+        "points": 2,
+        "instr": "※ [17~20] 다음을 듣고 내용과 일치하는 것을 고르십시오. (각 2점)",
+        "script": "여자: 저희 피부과 의원에서는 레이저 제모 서비스를 새롭게 시작합니다. 이번 달 말까지 처음 방문하시는 고객께는 첫 번째 시술을 50% 할인해 드립니다. 시술 전 반드시 상담 예약을 하셔야 하며, 예약은 전화 또는 앱을 통해 가능합니다. 자세한 사항은 홈페이지를 참고해 주세요.",
+        "options": [
+          "레이저 제모 서비스는 이미 오래 전부터 운영 중이다.",
+          "이달 말까지 모든 고객에게 할인이 적용된다.",
+          "시술 예약 없이 바로 방문할 수 있다.",
+          "처음 방문하는 고객은 첫 시술을 반값에 받을 수 있다."
+        ],
+        "answer": 4,
+        "explain": "\"처음 방문하시는 고객께는 첫 번째 시술을 50% 할인해 드립니다\"라고 했다.<br>✅ <b>④ 처음 방문하는 고객은 첫 시술을 반값에 받을 수 있다.</b>"
+      },
+      {
+        "n": 21,
+        "points": 2,
+        "instr": "※ [21~22] 다음을 듣고 여자가 이어서 할 행동으로 알맞은 것을 고르십시오. (각 2점)",
+        "script": "남자: 이 보고서 내용이 좀 부족한 것 같은데요. 마케팅 부분에 데이터를 더 추가하면 좋을 것 같아요.\n여자: 그렇군요. 그럼 지난달 판매 데이터를 찾아서 추가해 볼까요?\n남자: 네, 그게 더 설득력 있을 것 같아요. 내일까지 수정 버전을 보내 주실 수 있어요?\n여자: 알겠어요. 지금 바로 시작해 볼게요.",
+        "options": [
+          "회의실을 예약한다.",
+          "남자에게 보고서를 출력해 준다.",
+          "판매 데이터를 찾아 보고서를 수정한다.",
+          "마케팅 팀에 연락한다."
+        ],
+        "answer": 3,
+        "explain": "여자가 \"지금 바로 시작해 볼게요\"라고 했고, 앞서 판매 데이터를 찾아 추가하겠다고 했으므로 보고서를 수정할 것이다.<br>✅ <b>③ 판매 데이터를 찾아 보고서를 수정한다.</b>"
+      },
+      {
+        "n": 22,
+        "points": 2,
+        "instr": "※ [21~22] 다음을 듣고 여자가 이어서 할 행동으로 알맞은 것을 고르십시오. (각 2점)",
+        "script": "남자: 오늘 신입 직원 환영 파티 준비가 다 됐어요?\n여자: 음식은 다 준비됐는데 케이크를 아직 못 샀어요.\n남자: 케이크 가게가 근처에 있는데 제가 다녀올까요?\n여자: 아니요, 괜찮아요. 제가 아까 예약해 뒀거든요. 지금 가서 가져올게요.",
+        "options": [
+          "음식을 더 준비한다.",
+          "파티 장소를 세팅한다.",
+          "케이크 가게를 예약한다.",
+          "케이크 가게에 가서 케이크를 가져온다."
+        ],
+        "answer": 4,
+        "explain": "여자가 \"지금 가서 가져올게요\"라고 했으므로 케이크를 가지러 갈 것이다.<br>✅ <b>④ 케이크 가게에 가서 케이크를 가져온다.</b>"
+      },
+      {
+        "n": 23,
+        "points": 2,
+        "instr": "※ [23~24] 다음을 듣고 남자가 이어서 할 행동으로 알맞은 것을 고르십시오. (각 2점)",
+        "script": "여자: 저 이번 주말에 이사하는데 짐 옮기는 것 좀 도와줄 수 있어요?\n남자: 물론이죠. 몇 시에 시작할 거예요?\n여자: 오전 10시요. 이삿짐 차는 이미 예약했고, 짐 싸는 것도 거의 다 됐어요.\n남자: 알겠어요. 제가 트럭 운전하는 친구도 데려올게요.",
+        "options": [
+          "이삿짐 차를 예약한다.",
+          "짐을 싸기 시작한다.",
+          "트럭 운전하는 친구에게 연락한다.",
+          "이사 업체를 알아본다."
+        ],
+        "answer": 3,
+        "explain": "남자가 \"트럭 운전하는 친구도 데려올게요\"라고 했으므로 친구에게 연락할 것이다.<br>✅ <b>③ 트럭 운전하는 친구에게 연락한다.</b>"
+      },
+      {
+        "n": 24,
+        "points": 2,
+        "instr": "※ [23~24] 다음을 듣고 남자가 이어서 할 행동으로 알맞은 것을 고르십시오. (각 2점)",
+        "script": "여자: 내일 면접이 있는데 입고 갈 정장을 못 찾겠어요.\n남자: 드라이클리닝 맡겨 뒀던 거 아닌가요?\n여자: 맞다! 깜빡했어요. 오늘 찾아와야 하는데...\n남자: 제가 퇴근할 때 들러서 찾아다 드릴까요?\n여자: 정말요? 그럼 감사하죠.",
+        "options": [
+          "정장을 세탁소에 맡긴다.",
+          "세탁소에 들러서 정장을 찾아온다.",
+          "면접 일정을 확인한다.",
+          "새 정장을 구입한다."
+        ],
+        "answer": 2,
+        "explain": "남자가 \"제가 퇴근할 때 들러서 찾아다 드릴까요\"라고 했으므로 세탁소에 들를 것이다.<br>✅ <b>② 세탁소에 들러서 정장을 찾아온다.</b>"
+      },
+      {
+        "n": 25,
+        "points": 2,
+        "instr": "※ [25~26] 다음을 듣고 남자가 이어서 할 행동으로 알맞은 것을 고르십시오. (각 2점)",
+        "script": "여자: 저희 팀 회식 장소로 어디가 좋을까요?\n남자: 지난번에 갔던 삼겹살 집이 어때요? 다들 좋아했잖아요.\n여자: 좋은데 인원이 15명이라 자리가 될지 모르겠어요.\n남자: 제가 전화해서 확인해 볼게요.",
+        "options": [
+          "삼겹살 집 메뉴를 알아본다.",
+          "팀원들에게 장소를 안내한다.",
+          "회식 날짜를 정한다.",
+          "식당에 전화해서 자리를 확인한다."
+        ],
+        "answer": 4,
+        "explain": "남자가 \"제가 전화해서 확인해 볼게요\"라고 했다.<br>✅ <b>④ 식당에 전화해서 자리를 확인한다.</b>"
+      },
+      {
+        "n": 26,
+        "points": 2,
+        "instr": "※ [25~26] 다음을 듣고 남자가 이어서 할 행동으로 알맞은 것을 고르십시오. (각 2점)",
+        "script": "여자: 거래처에 보낼 견적서 작성이 끝났어요?\n남자: 아, 거의 다 됐는데 마지막 수량 부분을 확인해야 해요.\n여자: 재고 목록이 창고에 있는 것 같던데요.\n남자: 그럼 제가 창고에 가서 확인하고 올게요.",
+        "options": [
+          "창고에 가서 재고 목록을 확인한다.",
+          "견적서를 인쇄해서 거래처에 보낸다.",
+          "재고 담당자에게 연락한다.",
+          "수량을 임의로 기재한다."
+        ],
+        "answer": 1,
+        "explain": "남자가 \"창고에 가서 확인하고 올게요\"라고 했다.<br>✅ <b>① 창고에 가서 재고 목록을 확인한다.</b>"
+      },
+      {
+        "n": 27,
+        "points": 2,
+        "instr": "※ [27~30] 다음을 듣고 내용과 일치하는 것을 고르십시오. (각 2점)",
+        "script": "남자: 안녕하세요. 오늘 소개해 드릴 주제는 '탄소 발자국 줄이기'입니다. 탄소 발자국이란 우리가 일상에서 소비하는 에너지나 제품을 통해 발생하는 이산화탄소의 양을 의미합니다. 개인이 탄소 발자국을 줄이기 위해서는 대중교통 이용, 전기 절약, 재활용 실천이 중요합니다. 특히 육류 소비를 줄이는 것만으로도 상당한 탄소 배출을 줄일 수 있다는 연구 결과가 있습니다.",
+        "options": [
+          "탄소 발자국은 기업에서만 발생한다.",
+          "탄소 발자국을 줄이는 방법 중 하나는 대중교통 이용이다.",
+          "개인의 노력으로는 탄소 발자국을 줄이기 어렵다.",
+          "육류 소비는 탄소 배출과 관계가 없다."
+        ],
+        "answer": 2,
+        "explain": "\"대중교통 이용, 전기 절약, 재활용 실천이 중요합니다\"라고 했다.<br>✅ <b>② 탄소 발자국을 줄이는 방법 중 하나는 대중교통 이용이다.</b>"
+      },
+      {
+        "n": 28,
+        "points": 2,
+        "instr": "※ [27~30] 다음을 듣고 내용과 일치하는 것을 고르십시오. (각 2점)",
+        "script": "여자: 요즘 반려동물을 키우는 가정이 늘면서 펫 산업도 크게 성장하고 있습니다. 특히 반려동물 의료비 지출이 눈에 띄게 증가했는데요, 이에 따라 반려동물 보험 상품도 다양해지고 있습니다. 전문가들은 반려동물 보험 가입이 예상치 못한 의료비를 대비하는 좋은 방법이라고 권고하고 있습니다.",
+        "options": [
+          "반려동물 보험 상품이 다양해지고 있다.",
+          "반려동물 의료비는 줄어드는 추세이다.",
+          "반려동물을 키우는 가정이 감소하고 있다.",
+          "전문가들은 반려동물 보험 가입을 반대한다."
+        ],
+        "answer": 1,
+        "explain": "\"반려동물 보험 상품도 다양해지고 있습니다\"라고 했다.<br>✅ <b>① 반려동물 보험 상품이 다양해지고 있다.</b>"
+      },
+      {
+        "n": 29,
+        "points": 2,
+        "instr": "※ [27~30] 다음을 듣고 내용과 일치하는 것을 고르십시오. (각 2점)",
+        "script": "남자: 오늘은 원격 진료 서비스에 대해 말씀드리겠습니다. 원격 진료란 병원에 직접 가지 않고 스마트폰이나 컴퓨터로 의사와 상담하는 것을 말합니다. 이는 거동이 불편한 어르신이나 의료 시설이 부족한 지역 주민들에게 특히 유용합니다. 다만 정확한 진단을 위해서는 직접 진찰이 필요한 경우도 있으므로 보완적으로 활용하는 것이 좋습니다.",
+        "options": [
+          "원격 진료는 병원 방문을 완전히 대체할 수 있다.",
+          "원격 진료는 젊은 층만을 위한 서비스이다.",
+          "원격 진료는 의료 시설이 부족한 지역 주민에게 유용하다.",
+          "원격 진료를 이용하려면 전용 기기가 필요하다."
+        ],
+        "answer": 3,
+        "explain": "\"의료 시설이 부족한 지역 주민들에게 특히 유용합니다\"라고 했다.<br>✅ <b>③ 원격 진료는 의료 시설이 부족한 지역 주민에게 유용하다.</b>"
+      },
+      {
+        "n": 30,
+        "points": 2,
+        "instr": "※ [27~30] 다음을 듣고 내용과 일치하는 것을 고르십시오. (각 2점)",
+        "script": "여자: 최근 기업들의 사회적 책임(CSR)이 중요해지고 있습니다. CSR이란 기업이 이익 추구 외에도 환경 보호, 지역 사회 공헌, 윤리 경영 등을 실천하는 것을 의미합니다. 소비자들은 점점 사회적 책임을 다하는 기업의 제품을 선호하는 경향이 있으며, 이는 기업의 장기적 이미지와 신뢰도에도 긍정적인 영향을 미칩니다.",
+        "options": [
+          "기업의 CSR 활동은 단기적 이익에만 영향을 준다.",
+          "소비자들은 CSR을 기업 선택 시 고려하지 않는다.",
+          "CSR은 환경 보호만을 포함하는 개념이다.",
+          "사회적 책임을 다하는 기업은 소비자로부터 더 선호된다."
+        ],
+        "answer": 4,
+        "explain": "\"소비자들은 사회적 책임을 다하는 기업의 제품을 선호하는 경향이 있다\"고 했다.<br>✅ <b>④ 사회적 책임을 다하는 기업은 소비자로부터 더 선호된다.</b>"
+      },
+      {
+        "n": 31,
+        "points": 2,
+        "instr": "※ [31~32] 다음을 듣고 남자의 중심 생각으로 알맞은 것을 고르십시오. (각 2점)",
+        "script": "여자: 요즘 SNS를 통한 정보 공유가 활발해졌지만, 가짜 뉴스 문제도 심각해졌어요. 어떻게 생각하세요?\n남자: 맞아요. 그래서 저는 SNS에서 정보를 볼 때 항상 출처를 확인하는 습관이 중요하다고 생각해요. 공식 기관이나 믿을 수 있는 언론사 정보인지 확인하고 나서 공유해야 해요. 가짜 뉴스를 무분별하게 퍼뜨리면 사회적으로 큰 혼란이 생기니까요.",
+        "options": [
+          "정보를 공유하기 전에 출처를 꼭 확인해야 한다.",
+          "SNS는 사용하지 않는 게 좋다.",
+          "가짜 뉴스는 큰 문제가 되지 않는다.",
+          "SNS를 통해 다양한 정보를 공유하는 것이 중요하다."
+        ],
+        "answer": 1,
+        "explain": "남자는 출처 확인 습관을 강조하고 있다.<br>✅ <b>① 정보를 공유하기 전에 출처를 꼭 확인해야 한다.</b>"
+      },
+      {
+        "n": 32,
+        "points": 2,
+        "instr": "※ [31~32] 다음을 듣고 남자의 중심 생각으로 알맞은 것을 고르십시오. (각 2점)",
+        "script": "여자: 아이들에게 용돈을 줄 때 어떻게 하시나요?\n남자: 저는 용돈을 그냥 주는 것보다 일정한 규칙을 정해서 주는 게 좋다고 생각해요. 예를 들어 집안일을 돕거나 공부를 열심히 하면 용돈을 더 주는 방식이요. 그래야 아이들이 돈의 가치를 이해하고 경제 관념도 생기거든요.",
+        "options": [
+          "아이들에게 용돈을 주지 않는 것이 좋다.",
+          "용돈의 금액이 클수록 교육 효과가 높다.",
+          "규칙을 정해 용돈을 주면 경제 관념을 기를 수 있다.",
+          "집안일을 하는 대신 용돈을 줘서는 안 된다."
+        ],
+        "answer": 3,
+        "explain": "남자는 규칙에 따른 용돈 지급이 경제 관념 형성에 도움이 된다고 강조하고 있다.<br>✅ <b>③ 규칙을 정해 용돈을 주면 경제 관념을 기를 수 있다.</b>"
+      },
+      {
+        "n": 33,
+        "points": 2,
+        "instr": "※ [33~34] 다음을 듣고 남자의 중심 생각으로 알맞은 것을 고르십시오. (각 2점)",
+        "script": "여자: 최근 재생 에너지에 대한 관심이 높아지고 있는데요, 태양광 발전의 미래에 대해 어떻게 보세요?\n남자: 태양광 발전은 분명히 중요한 에너지원이에요. 하지만 날씨에 따라 발전량이 달라지는 한계가 있어요. 그래서 저는 태양광만으로는 부족하고, 다양한 재생 에너지원을 함께 개발하고 활용해야 한다고 봐요. 에너지 믹스 전략이 필요합니다.",
+        "options": [
+          "다양한 재생 에너지원을 함께 활용해야 한다.",
+          "태양광 발전은 날씨에 영향을 받지 않는다.",
+          "태양광 에너지만으로 충분한 전력 공급이 가능하다.",
+          "재생 에너지는 아직 실용성이 떨어진다."
+        ],
+        "answer": 1,
+        "explain": "남자는 태양광 단독으로는 부족하며 다양한 에너지원을 혼합해야 한다고 주장한다.<br>✅ <b>① 다양한 재생 에너지원을 함께 활용해야 한다.</b>"
+      },
+      {
+        "n": 34,
+        "points": 2,
+        "instr": "※ [33~34] 다음을 듣고 남자의 중심 생각으로 알맞은 것을 고르십시오. (각 2점)",
+        "script": "여자: 최근 청년들의 창업이 늘고 있는데요, 창업에 대해 어떻게 생각하세요?\n남자: 창업은 도전 정신이 필요한 일이에요. 하지만 무턱대고 시작하기보다는 충분한 시장 조사와 사업 계획서 작성이 선행되어야 해요. 또한 초기 자금을 준비하고 멘토를 찾는 것도 중요하죠. 준비 없는 창업은 실패 위험이 높습니다.",
+        "options": [
+          "창업은 젊을 때 무조건 도전해야 한다.",
+          "창업보다 취업이 더 안정적이다.",
+          "창업에는 충분한 준비와 계획이 필요하다.",
+          "창업 자금 마련이 가장 어려운 문제이다."
+        ],
+        "answer": 3,
+        "explain": "남자는 창업 전 충분한 준비와 계획의 중요성을 강조하고 있다.<br>✅ <b>③ 창업에는 충분한 준비와 계획이 필요하다.</b>"
+      },
+      {
+        "n": 35,
+        "points": 2,
+        "instr": "※ [35~36] 다음을 듣고 여자의 중심 생각으로 알맞은 것을 고르십시오. (각 2점)",
+        "script": "남자: 요즘 온라인 교육 콘텐츠가 많아서 굳이 학원에 다닐 필요가 없을 것 같은데요.\n여자: 온라인 강의가 편리하긴 하지만, 저는 여전히 오프라인 학습의 장점이 크다고 생각해요. 선생님과 직접 소통하면서 즉각적인 피드백을 받을 수 있고, 함께 공부하는 친구들로부터 자극을 받을 수 있거든요. 온라인만으로는 이런 환경을 대체하기 어렵죠.",
+        "options": [
+          "온라인 교육 콘텐츠의 질이 더 높다.",
+          "오프라인 학습과 온라인 학습을 병행해야 한다.",
+          "직접 소통하는 오프라인 학습의 장점이 여전히 크다.",
+          "학원보다 혼자 공부하는 것이 더 효과적이다."
+        ],
+        "answer": 3,
+        "explain": "여자는 직접 소통과 피드백이 가능한 오프라인 학습의 장점을 강조한다.<br>✅ <b>③ 직접 소통하는 오프라인 학습의 장점이 여전히 크다.</b>"
+      },
+      {
+        "n": 36,
+        "points": 2,
+        "instr": "※ [35~36] 다음을 듣고 여자의 중심 생각으로 알맞은 것을 고르십시오. (각 2점)",
+        "script": "남자: 요즘 커피숍에서 일하는 분들이 많던데, 카페에서 일하는 게 생산적일까요?\n여자: 저는 카페에서 일하면 오히려 집중이 잘 돼요. 적당한 배경 소음이 창의적인 사고를 자극한다는 연구도 있거든요. 물론 사람마다 다르겠지만, 저에게는 카페 환경이 훨씬 효율적이에요.",
+        "options": [
+          "카페는 창의적 사고에 도움이 될 수 있다.",
+          "카페보다 조용한 도서관이 더 좋다.",
+          "배경 소음은 항상 집중력을 방해한다.",
+          "혼자 일할 때는 집이 가장 좋다."
+        ],
+        "answer": 1,
+        "explain": "여자는 적당한 배경 소음이 있는 카페 환경이 창의적 사고에 도움이 된다고 말하고 있다.<br>✅ <b>① 카페는 창의적 사고에 도움이 될 수 있다.</b>"
+      },
+      {
+        "n": 37,
+        "points": 2,
+        "instr": "※ [37~40] 다음을 듣고 내용과 일치하는 것을 고르십시오. (각 2점)",
+        "script": "남자: 오늘은 도시 농업에 대해 알아보겠습니다. 도시 농업은 도심 내 빌딩 옥상이나 베란다, 공터 등에서 채소나 식물을 재배하는 활동을 말합니다. 신선한 먹거리를 직접 재배할 수 있고, 도시 열섬 효과를 줄이는 데도 도움이 됩니다. 최근에는 학교나 복지관 등에서도 도시 농업 프로그램을 운영하면서 교육적 효과도 주목받고 있습니다.",
+        "options": [
+          "도시 농업은 넓은 농지가 필요하다.",
+          "도시 농업은 열섬 효과를 증가시킨다.",
+          "도시 농업은 학교에서는 운영되지 않는다.",
+          "도시 농업은 신선한 채소를 직접 재배할 수 있다는 장점이 있다."
+        ],
+        "answer": 4,
+        "explain": "\"신선한 먹거리를 직접 재배할 수 있다\"고 했다.<br>✅ <b>④ 도시 농업은 신선한 채소를 직접 재배할 수 있다는 장점이 있다.</b>"
+      },
+      {
+        "n": 38,
+        "points": 2,
+        "instr": "※ [37~40] 다음을 듣고 내용과 일치하는 것을 고르십시오. (각 2점)",
+        "script": "여자: 오늘은 수면의 중요성에 대해 이야기해 보겠습니다. 성인 기준으로 하루 7~8시간의 수면이 권장됩니다. 수면이 부족하면 집중력 저하, 면역력 감소 등의 문제가 생길 수 있습니다. 특히 깊은 수면 단계에서 기억이 정리되고 신체가 회복되므로, 수면의 질도 중요합니다.",
+        "options": [
+          "성인은 하루 5~6시간의 수면이 권장된다.",
+          "깊은 수면에서 기억 정리와 신체 회복이 이루어진다.",
+          "수면 시간만 길면 건강에 좋다.",
+          "수면 부족은 소화 능력에만 영향을 준다."
+        ],
+        "answer": 2,
+        "explain": "\"깊은 수면 단계에서 기억이 정리되고 신체가 회복된다\"고 했다.<br>✅ <b>② 깊은 수면에서 기억 정리와 신체 회복이 이루어진다.</b>"
+      },
+      {
+        "n": 39,
+        "points": 2,
+        "instr": "※ [37~40] 다음을 듣고 내용과 일치하는 것을 고르십시오. (각 2점)",
+        "script": "남자: 최근 발효 식품에 대한 관심이 높아지고 있습니다. 발효 식품은 유익한 균이 음식의 영양소를 분해하면서 만들어집니다. 된장, 김치, 요구르트 등이 대표적인 발효 식품으로, 이러한 식품들은 장 건강에 도움을 주고 면역력을 높이는 효과가 있습니다. 다만 발효 식품은 나트륨 함량이 높은 것들도 있으므로 적당히 섭취하는 것이 좋습니다.",
+        "options": [
+          "발효 식품은 소화에 좋지 않다.",
+          "발효 식품은 장 건강과 면역력에 도움이 된다.",
+          "김치와 요구르트는 발효 식품이 아니다.",
+          "발효 식품은 나트륨이 전혀 없다."
+        ],
+        "answer": 2,
+        "explain": "\"장 건강에 도움을 주고 면역력을 높이는 효과가 있다\"고 했다.<br>✅ <b>② 발효 식품은 장 건강과 면역력에 도움이 된다.</b>"
+      },
+      {
+        "n": 40,
+        "points": 2,
+        "instr": "※ [37~40] 다음을 듣고 내용과 일치하는 것을 고르십시오. (각 2점)",
+        "script": "여자: 오늘은 미술 치료에 대해 소개해 드리겠습니다. 미술 치료는 그림 그리기, 색칠하기, 조각하기 등 예술 활동을 통해 심리적 문제를 치료하는 방법입니다. 언어로 표현하기 어려운 감정이나 트라우마를 예술로 표현함으로써 치유 효과를 얻을 수 있습니다. 최근에는 우울증이나 불안장애 치료에서도 효과를 인정받고 있습니다.",
+        "options": [
+          "미술 치료는 언어로 표현하기 어려운 감정을 예술로 표현하여 치유를 돕는다.",
+          "미술 치료는 전문적인 미술 실력이 필요하다.",
+          "미술 치료는 신체적 질환에만 적용된다.",
+          "미술 치료는 어린이에게만 효과가 있다."
+        ],
+        "answer": 1,
+        "explain": "\"언어로 표현하기 어려운 감정이나 트라우마를 예술로 표현함으로써 치유 효과를 얻을 수 있다\"고 했다.<br>✅ <b>① 미술 치료는 언어로 표현하기 어려운 감정을 예술로 표현하여 치유를 돕는다.</b>"
+      },
+      {
+        "n": 41,
+        "points": 2,
+        "instr": "※ [41~42] 다음을 듣고 물음에 답하십시오.\n\n남자가 강연에서 강조하는 것은 무엇입니까?",
+        "script": "남자: 안녕하세요. 오늘은 '독서의 힘'이라는 주제로 강연을 진행하겠습니다. 독서는 단순히 지식을 얻는 것을 넘어서 사고력과 창의력을 키워 줍니다. 특히 다양한 장르의 책을 읽으면 공감 능력과 인문학적 소양을 기를 수 있습니다. 연구에 따르면, 꾸준히 독서를 하는 사람들이 문제 해결 능력이 더 높다는 결과도 있습니다. 또한 독서는 스트레스 해소에도 효과적이어서, 하루 30분이라도 독서를 습관화하면 삶의 질이 높아질 수 있습니다.",
+        "options": [
+          "꾸준한 독서 습관이 삶의 질을 높인다.",
+          "독서는 지식 습득에만 도움이 된다.",
+          "어린이에게만 독서가 중요하다.",
+          "독서보다 영상 콘텐츠가 더 효과적이다."
+        ],
+        "answer": 1,
+        "explain": "남자는 독서가 사고력, 창의력, 스트레스 해소에 효과적이며 삶의 질을 높인다고 강조한다.<br>✅ <b>① 꾸준한 독서 습관이 삶의 질을 높인다.</b>"
+      },
+      {
+        "n": 42,
+        "points": 2,
+        "instr": "※ [41~42] 다음을 듣고 물음에 답하십시오.\n\n위 강연의 내용과 일치하는 것을 고르십시오.",
+        "script": "",
+        "options": [
+          "독서는 스트레스를 증가시킨다.",
+          "다양한 장르의 책 읽기는 공감 능력 향상에 도움이 된다.",
+          "독서는 창의력에 영향을 주지 않는다.",
+          "꾸준히 독서하는 사람은 문제 해결 능력이 낮다."
+        ],
+        "answer": 2,
+        "explain": "\"다양한 장르의 책을 읽으면 공감 능력과 인문학적 소양을 기를 수 있다\"고 했다.<br>✅ <b>② 다양한 장르의 책 읽기는 공감 능력 향상에 도움이 된다.</b>"
+      },
+      {
+        "n": 43,
+        "points": 2,
+        "instr": "※ [43~44] 다음을 듣고 물음에 답하십시오.\n\n공유 경제의 장점으로 언급된 것은 무엇입니까?",
+        "script": "여자: 오늘은 '공유 경제'에 대해 알아보겠습니다. 공유 경제란 물건이나 서비스를 소유하지 않고 여러 사람이 함께 사용하는 경제 모델을 말합니다. 대표적인 예로 차량 공유 서비스, 숙소 공유 플랫폼, 공유 오피스 등이 있습니다. 공유 경제는 자원 낭비를 줄이고 비용을 절감할 수 있다는 장점이 있습니다. 그러나 기존 산업에 미치는 영향이나 안전 문제, 규제 공백 등의 과제도 남아 있습니다.",
+        "options": [
+          "새로운 물건을 구매할 기회가 늘어난다.",
+          "개인 소유를 강조하는 경제 모델이다.",
+          "기존 산업의 성장을 촉진한다.",
+          "자원 낭비를 줄이고 비용을 절감할 수 있다."
+        ],
+        "answer": 4,
+        "explain": "\"자원 낭비를 줄이고 비용을 절감할 수 있다는 장점이 있다\"고 했다.<br>✅ <b>④ 자원 낭비를 줄이고 비용을 절감할 수 있다.</b>"
+      },
+      {
+        "n": 44,
+        "points": 2,
+        "instr": "※ [43~44] 다음을 듣고 물음에 답하십시오.\n\n위 강연의 주제로 가장 알맞은 것을 고르십시오.",
+        "script": "",
+        "options": [
+          "차량 공유 서비스의 문제점",
+          "전통 경제와 현대 경제의 차이",
+          "공유 경제의 개념과 장단점",
+          "공유 경제 규제 방안"
+        ],
+        "answer": 3,
+        "explain": "강연에서는 공유 경제의 개념, 예시, 장점과 과제를 고루 다루고 있으므로 주제는 개념과 장단점이다.<br>✅ <b>③ 공유 경제의 개념과 장단점</b>"
+      },
+      {
+        "n": 45,
+        "points": 2,
+        "instr": "※ [45~46] 다음을 듣고 물음에 답하십시오.\n\n이 강연의 내용과 일치하는 것을 고르십시오.",
+        "script": "남자: 오늘은 '색채 심리학'에 대해 이야기해 보려 합니다. 색채 심리학은 색깔이 인간의 감정과 행동에 미치는 영향을 연구하는 분야입니다. 예를 들어 빨간색은 에너지와 흥분을 유발하고, 파란색은 안정감과 신뢰를 주는 경향이 있습니다. 이러한 원리는 광고, 인테리어, 의류 디자인 등 다양한 분야에서 활용됩니다. 최근에는 의료 환경에서도 환자의 회복을 돕기 위해 색채 심리학을 적용하는 사례가 늘고 있습니다.",
+        "options": [
+          "빨간색은 안정감을 주는 색이다.",
+          "색채 심리학은 다양한 분야에서 활용된다.",
+          "색채 심리학은 광고에만 적용된다.",
+          "파란색은 흥분과 에너지를 유발한다."
+        ],
+        "answer": 2,
+        "explain": "\"광고, 인테리어, 의류 디자인 등 다양한 분야에서 활용된다\"고 했다.<br>✅ <b>② 색채 심리학은 다양한 분야에서 활용된다.</b>"
+      },
+      {
+        "n": 46,
+        "points": 2,
+        "instr": "※ [45~46] 다음을 듣고 물음에 답하십시오.\n\n위 강연의 주제로 가장 알맞은 것을 고르십시오.",
+        "script": "",
+        "options": [
+          "광고에서의 색상 사용 전략",
+          "의료 환경 개선을 위한 색채 선택",
+          "색상 선택에 따른 인테리어 효과",
+          "색채 심리학의 원리와 다양한 분야에서의 활용"
+        ],
+        "answer": 4,
+        "explain": "색채 심리학의 정의, 색상별 효과, 다양한 분야 적용 사례가 이 강연의 핵심 내용이다.<br>✅ <b>④ 색채 심리학의 원리와 다양한 분야에서의 활용</b>"
+      },
+      {
+        "n": 47,
+        "points": 2,
+        "instr": "※ [47~48] 다음을 듣고 물음에 답하십시오.\n\n이 강연의 내용과 일치하는 것을 고르십시오.",
+        "script": "여자: 오늘은 전통 발효 식품인 된장에 대해 이야기해 보겠습니다. 된장은 콩을 발효시켜 만든 식품으로 수천 년의 역사를 가지고 있습니다. 된장에는 단백질과 아미노산이 풍부하고, 유산균이 포함되어 있어 장 건강에 매우 좋습니다. 최근에는 된장에 포함된 항암 성분이 주목을 받고 있으며, 해외에서도 건강식으로 인기를 끌고 있습니다. 전통 된장은 공장에서 만든 된장보다 발효 기간이 길어 영양적으로 더 우수하다고 평가됩니다.",
+        "options": [
+          "된장은 근래에 만들어진 식품이다.",
+          "된장에는 지방이 주요 영양소이다.",
+          "공장 된장이 전통 된장보다 영양이 더 우수하다.",
+          "된장의 항암 성분이 주목받고 있다."
+        ],
+        "answer": 4,
+        "explain": "\"된장에 포함된 항암 성분이 주목을 받고 있다\"고 했다.<br>✅ <b>④ 된장의 항암 성분이 주목받고 있다.</b>"
+      },
+      {
+        "n": 48,
+        "points": 2,
+        "instr": "※ [47~48] 다음을 듣고 물음에 답하십시오.\n\n위 강연의 주제로 가장 알맞은 것을 고르십시오.",
+        "script": "",
+        "options": [
+          "전통 된장 제조 방법의 변화",
+          "된장의 해외 수출 현황",
+          "콩 발효 식품의 종류",
+          "된장의 역사와 영양적 가치"
+        ],
+        "answer": 4,
+        "explain": "된장의 역사, 영양 성분, 건강 효능 등을 전반적으로 다루고 있으므로 주제는 '역사와 영양적 가치'이다.<br>✅ <b>④ 된장의 역사와 영양적 가치</b>"
+      },
+      {
+        "n": 49,
+        "points": 2,
+        "instr": "※ [49~50] 다음을 듣고 물음에 답하십시오.\n\n이 강연의 내용과 일치하는 것을 고르십시오.",
+        "script": "남자: 오늘은 '스마트 홈'에 대해 알아보겠습니다. 스마트 홈은 인터넷과 인공지능 기술을 이용해 가전제품, 조명, 보안 시스템 등을 자동으로 제어하는 주거 환경을 말합니다. 스마트 홈 기기는 스마트폰 앱이나 음성 명령으로 제어할 수 있어 편의성이 크게 높아집니다. 에너지 사용량을 실시간으로 모니터링하고 자동으로 조절함으로써 전기 요금도 절감할 수 있습니다. 다만 해킹 등 사이버 보안 문제가 과제로 남아 있습니다.",
+        "options": [
+          "스마트 홈은 수동 조작만 가능하다.",
+          "스마트 홈은 에너지 비용 절감에 도움이 된다.",
+          "스마트 홈 기기는 음성 명령으로 제어할 수 없다.",
+          "스마트 홈은 보안 문제가 전혀 없다."
+        ],
+        "answer": 2,
+        "explain": "\"전기 요금도 절감할 수 있다\"고 했다.<br>✅ <b>② 스마트 홈은 에너지 비용 절감에 도움이 된다.</b>"
+      },
+      {
+        "n": 50,
+        "points": 2,
+        "instr": "※ [49~50] 다음을 듣고 물음에 답하십시오.\n\n위 강연의 주제로 가장 알맞은 것을 고르십시오.",
+        "script": "",
+        "options": [
+          "스마트 홈의 보안 취약점 분석",
+          "스마트폰 앱을 통한 가전 제어 방법",
+          "스마트 홈 기기의 종류와 가격",
+          "스마트 홈의 개념, 장점과 과제"
+        ],
+        "answer": 4,
+        "explain": "스마트 홈의 정의, 편의성, 에너지 절감 효과, 그리고 보안 과제까지 종합적으로 다루고 있다.<br>✅ <b>④ 스마트 홈의 개념, 장점과 과제</b>"
+      }
+    ],
+    "writing": [
+      {
+        "n": 51,
+        "points": 10,
+        "korInstr": "다음을 읽고 ㉠과 ㉡에 들어갈 말을 각각 한 문장씩 쓰십시오.",
+        "instr": "Прочитайте текст объявления и вставьте подходящие предложения на месте ㉠ и ㉡ (по одному предложению).",
+        "passage": "환경 동아리 '그린 라이프' 회원 모집 안내\n\n저희 '그린 라이프' 동아리는 환경 보호에 관심 있는 분이라면 (㉠). 주요 활동으로는 캠퍼스 내 분리배출 캠페인, 지역 사회 환경 정화 봉사, 친환경 제품 만들기 체험 등이 있습니다. 또한 한 달에 한 번 환경 관련 전문가를 초청하여 특강도 진행하고 있습니다. 신청서 제출 이후에는 (㉡). 많은 관심과 참여 부탁드립니다.",
+        "blanks": [
+          {
+            "slot": "㉠",
+            "model": "누구나 지원하실 수 있습니다",
+            "check": "가입 조건 없이 누구나 신청·참여할 수 있다는 내용이어야 합니다."
+          },
+          {
+            "slot": "㉡",
+            "model": "담당자가 개별적으로 연락을 드릴 예정입니다",
+            "check": "신청 후 처리 과정이나 결과 안내 방법을 설명하는 내용이어야 합니다."
+          }
+        ]
+      },
+      {
+        "n": 52,
+        "points": 10,
+        "korInstr": "다음을 읽고 ㉠과 ㉡에 들어갈 말을 각각 한 문장씩 쓰십시오.",
+        "instr": "Прочитайте текст и вставьте подходящие предложения на месте ㉠ и ㉡ (по одному предложению).",
+        "passage": "음악은 우리의 감정과 심리에 큰 영향을 미치는 것으로 알려져 있다. 연구에 따르면, 음악을 들으면 스트레스 호르몬인 코르티솔 수치가 낮아지며 기분을 향상시키는 도파민이 분비된다. 특히 빠른 템포의 음악은 (㉠). 반면 느리고 차분한 음악은 마음을 진정시키고 집중력을 높이는 데 효과적이다. 따라서 상황과 목적에 맞는 음악을 선택하면 (㉡).",
+        "blanks": [
+          {
+            "slot": "㉠",
+            "model": "에너지 수준을 높이고 활동적인 기분을 만들어 준다",
+            "check": "빠른 음악이 에너지·활력·운동 능률 등에 미치는 긍정적 효과를 설명하는 문장이어야 합니다."
+          },
+          {
+            "slot": "㉡",
+            "model": "심리적 건강을 더욱 효과적으로 관리할 수 있다",
+            "check": "음악 선택이 심리·감정 관리에 도움이 된다는 결론 문장이어야 합니다."
+          }
+        ]
+      },
+      {
+        "n": 53,
+        "points": 30,
+        "min": 200,
+        "max": 300,
+        "korInstr": "다음을 참고하여 '한국인 성인 1인당 연간 독서량 변화'에 대한 글을 200~300자로 쓰십시오. (단, 글의 제목을 쓰지 마십시오.)",
+        "instr": "Изучите диаграмму и напишите текст (200–300 знаков) об изменении ежегодного количества прочитанных книг на одного взрослого корейца. Заголовок не пишите.",
+        "passage": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"460\" height=\"290\" style=\"font-family:sans-serif\"><text x=\"230\" y=\"22\" text-anchor=\"middle\" font-size=\"14\" font-weight=\"bold\" fill=\"#333\">한국인 성인 1인당 연간 독서량 변화</text><text x=\"230\" y=\"40\" text-anchor=\"middle\" font-size=\"12\" fill=\"#666\">(단위: 권)</text><line x1=\"60\" y1=\"240\" x2=\"420\" y2=\"240\" stroke=\"#999\" stroke-width=\"1.5\"/><line x1=\"60\" y1=\"60\" x2=\"60\" y2=\"240\" stroke=\"#999\" stroke-width=\"1.5\"/><line x1=\"60\" y1=\"180\" x2=\"420\" y2=\"180\" stroke=\"#ddd\" stroke-width=\"1\" stroke-dasharray=\"4,3\"/><line x1=\"60\" y1=\"120\" x2=\"420\" y2=\"120\" stroke=\"#ddd\" stroke-width=\"1\" stroke-dasharray=\"4,3\"/><line x1=\"60\" y1=\"60\" x2=\"420\" y2=\"60\" stroke=\"#ddd\" stroke-width=\"1\" stroke-dasharray=\"4,3\"/><text x=\"52\" y=\"244\" text-anchor=\"end\" font-size=\"11\" fill=\"#666\">0</text><text x=\"52\" y=\"184\" text-anchor=\"end\" font-size=\"11\" fill=\"#666\">3</text><text x=\"52\" y=\"124\" text-anchor=\"end\" font-size=\"11\" fill=\"#666\">6</text><text x=\"52\" y=\"64\" text-anchor=\"end\" font-size=\"11\" fill=\"#666\">9</text><rect x=\"100\" y=\"74\" width=\"70\" height=\"166\" fill=\"#4A90D9\" rx=\"3\"/><text x=\"135\" y=\"68\" text-anchor=\"middle\" font-size=\"13\" font-weight=\"bold\" fill=\"#4A90D9\">8.3</text><text x=\"135\" y=\"260\" text-anchor=\"middle\" font-size=\"12\" fill=\"#333\">2015년</text><rect x=\"195\" y=\"96\" width=\"70\" height=\"144\" fill=\"#5BAD6F\" rx=\"3\"/><text x=\"230\" y=\"90\" text-anchor=\"middle\" font-size=\"13\" font-weight=\"bold\" fill=\"#5BAD6F\">7.2</text><text x=\"230\" y=\"260\" text-anchor=\"middle\" font-size=\"12\" fill=\"#333\">2020년</text><rect x=\"290\" y=\"118\" width=\"70\" height=\"122\" fill=\"#E87C3E\" rx=\"3\"/><text x=\"325\" y=\"112\" text-anchor=\"middle\" font-size=\"13\" font-weight=\"bold\" fill=\"#E87C3E\">6.1</text><text x=\"325\" y=\"260\" text-anchor=\"middle\" font-size=\"12\" fill=\"#333\">2025년</text></svg>",
+        "model": "위 그래프는 한국인 성인 1인당 연간 독서량이 2015년부터 2025년까지 어떻게 변화했는지를 보여 준다. 2015년에는 연간 8.3권이었으나 2020년에는 7.2권으로 감소하였고, 2025년에는 6.1권으로 더욱 줄어들었다. 이처럼 10년 사이에 독서량이 꾸준히 감소한 것은 스마트폰과 동영상 콘텐츠의 보급이 확산되면서 책보다 영상 매체를 선호하는 경향이 강해졌기 때문이다. 또한 바쁜 현대인의 생활 방식으로 인해 독서에 시간을 할애하기 어려워진 점도 원인으로 볼 수 있다.",
+        "check": "① 수치 변화(8.3→7.2→6.1권)를 구체적으로 언급했는가 ② 감소 원인(스마트폰·영상 매체 보급, 바쁜 생활 등)을 적절히 설명했는가 ③ 200~300자 범위를 지켰는가"
+      },
+      {
+        "n": 54,
+        "points": 50,
+        "min": 600,
+        "max": 700,
+        "korInstr": "다음을 주제로 하여 자신의 생각을 쓰십시오.\n\n현대 사회에서 자원봉사 활동의 의미와 중요성",
+        "instr": "Напишите эссе (600–700 знаков) на тему: «Смысл и значимость волонтёрской деятельности в современном обществе». Раскройте: что такое волонтёрство, почему оно важно сегодня, какую пользу приносит обществу и самому волонтёру.",
+        "passage": "",
+        "model": "현대 사회에서 자원봉사 활동은 단순히 시간을 나누는 행위를 넘어 사회적 연대를 강화하는 중요한 의미를 지닌다. 자원봉사란 금전적 보상 없이 자발적으로 타인이나 공동체를 위해 봉사하는 활동으로, 그 형태는 지역 사회 환경 정화부터 노인 및 장애인 돌봄, 재난 피해 지원까지 매우 다양하다.\n\n자원봉사 활동은 사회적 측면에서 큰 가치를 지닌다. 특히 고령화 사회에서는 노인 인구가 늘어남에 따라 돌봄 서비스 수요가 증가하고 있는데, 자원봉사는 이러한 사회적 공백을 메우는 역할을 한다. 또한 다양한 계층의 사람들이 봉사 활동을 통해 서로를 이해하고 소통함으로써 사회 통합을 이루는 데 기여한다.\n\n자원봉사는 봉사자 개인에게도 유익하다. 봉사 활동을 하면서 새로운 기술을 익히고 다양한 사람들과 네트워크를 형성할 수 있으며, 무엇보다 타인을 돕는 과정에서 삶의 보람과 행복감을 느낄 수 있다. 연구에 따르면 자원봉사 경험이 많은 사람일수록 삶의 만족도가 높은 것으로 나타나기도 한다.\n\n결론적으로, 현대 사회에서 자원봉사 활동은 공동체의 지속 가능한 발전을 위해 필수적인 요소이다. 개인의 작은 실천이 모여 더 나은 사회를 만들 수 있다는 점에서, 보다 많은 사람들이 자원봉사에 참여하는 문화가 확산되어야 할 것이다.",
+        "check": "① 자원봉사의 정의와 다양한 형태를 설명했는가 ② 사회적 가치(공동체 연대, 돌봄 공백 해소 등)를 논했는가 ③ 개인적 이점(자기 계발, 행복감)을 언급했는가 ④ 결론에서 확산 필요성을 제시했는가 ⑤ 600~700자 범위를 지켰는가"
+      }
+    ],
+    "reading": [
+      {
+        "n": 1,
+        "points": 2,
+        "instr": "※ [1~2] ( )에 들어갈 말로 알맞은 것을 고르십시오. (각 2점)",
+        "passage": "이 건물의 엘리베이터는 고장이 나서 현재 수리 중입니다. ( ) 계단을 이용해 주시기 바랍니다.",
+        "options": [
+          "그래도",
+          "그러므로",
+          "그런데",
+          "그럼에도"
+        ],
+        "answer": 2,
+        "explain": "엘리베이터가 고장 났으므로 계단을 이용하라는 논리적 결론이다.<br>✅ <b>② 그러므로</b>"
+      },
+      {
+        "n": 2,
+        "points": 2,
+        "instr": "※ [1~2] ( )에 들어갈 말로 알맞은 것을 고르십시오. (각 2점)",
+        "passage": "이 행사는 참가자들이 서로의 경험을 나누고 친목을 도모하기 ( ) 마련되었습니다.",
+        "options": [
+          "위에서",
+          "위에",
+          "위한",
+          "위해"
+        ],
+        "answer": 4,
+        "explain": "'도모하기 위해 마련되었다'는 자연스러운 목적 표현이다.<br>✅ <b>④ 위해</b>"
+      },
+      {
+        "n": 3,
+        "points": 2,
+        "instr": "※ [3~4] 다음을 읽고 내용과 같은 것을 고르십시오. (각 2점)",
+        "passage": "[시립 도서관 이용 안내]\n∙ 도서 대출: 1회 최대 5권, 대출 기간 2주\n∙ 연체료: 1일당 10원\n∙ 회원 가입 시 신분증 지참 필수\n∙ 문의: 도서관 홈페이지 참고",
+        "options": [
+          "도서 대출은 한 번에 3권까지 가능하다.",
+          "도서 대출 기간은 2주이다.",
+          "연체료는 하루에 100원이다.",
+          "회원 가입 시 별도 서류가 필요 없다."
+        ],
+        "answer": 2,
+        "explain": "'대출 기간 2주'라고 명시되어 있다.<br>✅ <b>② 도서 대출 기간은 2주이다.</b>"
+      },
+      {
+        "n": 4,
+        "points": 2,
+        "instr": "※ [3~4] 다음을 읽고 내용과 같은 것을 고르십시오. (각 2점)",
+        "passage": "[건강 검진 안내]\n∙ 대상: 만 40세 이상 시민 (무료)\n∙ 검진 항목: 혈압·혈당·시력·청력 검사 포함\n∙ 신청: 가까운 보건소 방문\n∙ 사전 예약 필수 — 예약 없이 방문 시 검진 불가",
+        "options": [
+          "검진은 만 30세 이상 시민만 받을 수 있다.",
+          "검진을 받으려면 사전에 예약을 해야 한다.",
+          "검진에 청력 검사는 포함되지 않는다.",
+          "검진 비용은 1만 원이다."
+        ],
+        "answer": 2,
+        "explain": "'사전 예약 필수'라고 명시되어 있다.<br>✅ <b>② 검진을 받으려면 사전에 예약을 해야 한다.</b>"
+      },
+      {
+        "n": 5,
+        "points": 2,
+        "instr": "※ [5~6] 다음을 순서에 맞게 배열한 것을 고르십시오. (각 2점)",
+        "passage": "가. 이러한 이유로 요즘 많은 직장인들이 재택근무를 선호하고 있습니다.\n나. 재택근무는 출퇴근 시간을 절약할 수 있다는 큰 장점이 있습니다.\n다. 또한 집에서 편안한 환경에서 일할 수 있어 스트레스가 줄어듭니다.\n라. 물론 동료들과의 직접 소통이 어렵다는 단점도 있습니다.",
+        "options": [
+          "나-다-라-가",
+          "다-나-가-라",
+          "라-나-다-가",
+          "가-다-나-라"
+        ],
+        "answer": 1,
+        "explain": "재택근무의 장점(나) → 추가 장점(다) → 단점 언급(라) → 결론(가) 순서가 자연스럽다.<br>✅ <b>① 나-다-라-가</b>"
+      },
+      {
+        "n": 6,
+        "points": 2,
+        "instr": "※ [5~6] 다음을 순서에 맞게 배열한 것을 고르십시오. (각 2점)",
+        "passage": "가. 충분한 수면을 취하면 기억력과 집중력이 향상됩니다.\n나. 그 결과, 낮 시간 동안 피로를 덜 느끼게 됩니다.\n다. 수면 중에는 뇌가 낮에 습득한 정보를 정리하고 저장하는 과정을 거칩니다.\n라. 이처럼 수면은 우리 몸과 뇌의 회복에 매우 중요한 역할을 합니다.",
+        "options": [
+          "가-나-다-라",
+          "나-가-라-다",
+          "라-다-가-나",
+          "다-가-나-라"
+        ],
+        "answer": 4,
+        "explain": "수면 중 뇌의 작용(다) → 기억력·집중력 향상(가) → 피로 감소 결과(나) → 수면의 중요성 결론(라) 순서가 자연스럽다.<br>✅ <b>④ 다-가-나-라</b>"
+      },
+      {
+        "n": 7,
+        "points": 2,
+        "instr": "※ [7~8] 다음 글을 읽고 내용과 같은 것을 고르십시오. (각 2점)",
+        "passage": "전통 시장은 신선한 식재료와 다양한 물건을 저렴한 가격에 구입할 수 있는 곳입니다. 최근에는 전통 시장의 활성화를 위해 정부와 지방 자치단체에서 다양한 지원 정책을 추진하고 있습니다. 또한 전통 시장만의 독특한 문화와 먹을거리를 체험할 수 있어 관광지로서도 인기를 끌고 있습니다.",
+        "options": [
+          "전통 시장에서는 물건을 비싸게 살 수 있다.",
+          "전통 시장은 관광지로서는 인기가 없다.",
+          "정부와 지자체가 전통 시장 활성화를 지원하고 있다.",
+          "전통 시장에서는 신선한 식재료를 구하기 어렵다."
+        ],
+        "answer": 3,
+        "explain": "'정부와 지방 자치단체에서 다양한 지원 정책을 추진하고 있다'고 했다.<br>✅ <b>③ 정부와 지자체가 전통 시장 활성화를 지원하고 있다.</b>"
+      },
+      {
+        "n": 8,
+        "points": 2,
+        "instr": "※ [7~8] 다음 글을 읽고 내용과 같은 것을 고르십시오. (각 2점)",
+        "passage": "반려동물을 키우면 외로움을 줄이고 정서적 안정을 얻을 수 있습니다. 특히 노인이나 1인 가구 증가로 인해 반려동물의 정서적 역할이 더욱 주목받고 있습니다. 그러나 반려동물을 키우기 위해서는 책임감이 필요하며, 음식, 의료비 등 꾸준한 관리 비용도 고려해야 합니다.",
+        "options": [
+          "반려동물은 외로움을 증가시킨다.",
+          "반려동물 키우기에 비용이 들지 않는다.",
+          "반려동물은 1인 가구에게 정서적 도움이 된다.",
+          "반려동물 의료비는 점점 줄어들고 있다."
+        ],
+        "answer": 3,
+        "explain": "'1인 가구 증가로 인해 반려동물의 정서적 역할이 주목받고 있다'고 했다.<br>✅ <b>③ 반려동물은 1인 가구에게 정서적 도움이 된다.</b>"
+      },
+      {
+        "n": 9,
+        "points": 2,
+        "instr": "※ [9~10] 다음 글의 중심 내용으로 알맞은 것을 고르십시오. (각 2점)",
+        "passage": "점점 더 많은 기업들이 직원들의 일과 삶의 균형(워라밸)을 지원하기 위한 제도를 도입하고 있습니다. 유연 근무제, 재택근무, 사내 어린이집 운영 등이 대표적인 예입니다. 이러한 제도들은 직원들의 만족도와 생산성을 높이는 데 긍정적인 영향을 미치는 것으로 나타났습니다.",
+        "options": [
+          "직원들이 초과 근무를 해야 기업이 발전한다.",
+          "재택근무는 생산성을 낮추는 원인이 된다.",
+          "워라밸 지원 제도는 비용이 너무 많이 든다.",
+          "직원의 일과 삶의 균형을 지원하는 기업 제도가 늘고 있다."
+        ],
+        "answer": 4,
+        "explain": "워라밸 지원 제도의 확산과 긍정적 효과가 이 글의 핵심 내용이다.<br>✅ <b>④ 직원의 일과 삶의 균형을 지원하는 기업 제도가 늘고 있다.</b>"
+      },
+      {
+        "n": 10,
+        "points": 2,
+        "instr": "※ [9~10] 다음 글의 중심 내용으로 알맞은 것을 고르십시오. (각 2점)",
+        "passage": "디지털 기술의 발전으로 이제는 언제 어디서나 금융 서비스를 이용할 수 있게 되었습니다. 스마트폰 하나로 계좌 이체, 대출 신청, 보험 가입 등이 가능해졌으며, 이는 금융 접근성을 크게 높였습니다. 그러나 이와 함께 온라인 금융 사기와 개인 정보 유출 등의 위험도 함께 증가하고 있어 주의가 필요합니다.",
+        "options": [
+          "스마트폰으로 금융 서비스를 이용하면 편리하다.",
+          "온라인 금융 사기는 줄어들고 있는 추세이다.",
+          "디지털 금융은 편리함과 함께 보안 위험도 증가시킨다.",
+          "모든 금융 서비스를 스마트폰으로 해결할 수 있다."
+        ],
+        "answer": 3,
+        "explain": "디지털 금융의 편의성과 동시에 증가하는 보안 위험이 이 글의 핵심 내용이다.<br>✅ <b>③ 디지털 금융은 편리함과 함께 보안 위험도 증가시킨다.</b>"
+      },
+      {
+        "n": 11,
+        "points": 2,
+        "instr": "※ [11~12] 다음을 읽고 내용과 같은 것을 고르십시오. (각 2점)",
+        "passage": "[여름 방학 특별 어학 캠프 안내]\n∙ 대상: 중학생~고등학생\n∙ 기간: 7월 25일~8월 5일 (2주간)\n∙ 장소: 한강 청소년 수련원\n∙ 교육 내용: 영어, 중국어, 일본어 중 선택\n∙ 비용: 1인당 30만 원 (숙식 포함)\n∙ 신청 마감: 7월 10일",
+        "options": [
+          "어학 캠프는 2주 동안 진행된다.",
+          "초등학생도 참가할 수 있다.",
+          "비용에 숙식이 포함되지 않는다.",
+          "신청 마감은 7월 25일이다."
+        ],
+        "answer": 1,
+        "explain": "7월 25일~8월 5일 2주간 진행된다고 명시되어 있다.<br>✅ <b>① 어학 캠프는 2주 동안 진행된다.</b>"
+      },
+      {
+        "n": 12,
+        "points": 2,
+        "instr": "※ [11~12] 다음을 읽고 내용과 같은 것을 고르십시오. (각 2점)",
+        "passage": "[사진 공모전 안내]\n∙ 주제: '우리 동네의 아름다운 풍경'\n∙ 접수 기간: 9월 1일~9월 30일\n∙ 접수 방법: 이메일 접수 (작품 파일 첨부)\n∙ 수상: 대상 1명(50만 원), 우수상 5명(10만 원), 장려상 10명(5만 원)\n∙ 결과 발표: 10월 15일, 홈페이지 공지",
+        "options": [
+          "공모전 주제는 '자연 풍경'이다.",
+          "접수는 우편으로만 가능하다.",
+          "이메일로 작품을 접수할 수 있다.",
+          "결과 발표는 11월에 이루어진다."
+        ],
+        "answer": 3,
+        "explain": "'이메일 접수'라고 명시되어 있다.<br>✅ <b>③ 이메일로 작품을 접수할 수 있다.</b>"
+      },
+      {
+        "n": 13,
+        "points": 2,
+        "instr": "※ [13~15] 다음을 읽고 내용과 같은 것을 고르십시오. (각 2점)",
+        "passage": "전 세계적으로 1인 가구 비율이 증가하고 있다. 특히 한국에서는 2023년 기준 전체 가구 중 1인 가구가 약 35%를 차지하고 있다. 1인 가구가 늘어남에 따라 소포장 식품, 소형 가전, 1인용 서비스 등의 수요도 함께 증가하고 있다. 이에 기업들은 1인 가구를 겨냥한 다양한 제품과 서비스를 출시하고 있다.",
+        "options": [
+          "한국의 1인 가구 비율은 2023년 기준 50%를 넘었다.",
+          "1인 가구 증가로 대형 가전 수요가 늘었다.",
+          "기업들이 1인 가구를 위한 제품과 서비스를 개발하고 있다.",
+          "전 세계적으로 1인 가구 비율은 줄어들고 있다."
+        ],
+        "answer": 3,
+        "explain": "'기업들은 1인 가구를 겨냥한 다양한 제품과 서비스를 출시하고 있다'고 했다.<br>✅ <b>③ 기업들이 1인 가구를 위한 제품과 서비스를 개발하고 있다.</b>"
+      },
+      {
+        "n": 14,
+        "points": 2,
+        "instr": "※ [13~15] 다음을 읽고 내용과 같은 것을 고르십시오. (각 2점)",
+        "passage": "명상은 집중력을 높이고 스트레스를 줄이는 데 효과적인 것으로 알려져 있다. 최근 연구에서는 하루 10분씩 꾸준히 명상을 하면 불안감이 줄어들고 수면의 질이 향상된다는 결과가 나왔다. 특히 호흡에 집중하는 마음 챙김 명상은 별도의 도구나 장소 없이도 어디서나 쉽게 할 수 있어 많은 사람들이 관심을 갖고 있다.",
+        "options": [
+          "명상은 전문 장비가 있어야만 할 수 있다.",
+          "꾸준한 명상이 수면의 질 향상에 도움이 된다.",
+          "명상은 집중력을 낮추는 효과가 있다.",
+          "명상은 특별한 장소에서만 할 수 있다."
+        ],
+        "answer": 2,
+        "explain": "'꾸준히 명상을 하면 수면의 질이 향상된다'고 했다.<br>✅ <b>② 꾸준한 명상이 수면의 질 향상에 도움이 된다.</b>"
+      },
+      {
+        "n": 15,
+        "points": 2,
+        "instr": "※ [13~15] 다음을 읽고 내용과 같은 것을 고르십시오. (각 2점)",
+        "passage": "전기차는 내연기관 자동차에 비해 탄소 배출이 적어 환경 친화적이다. 하지만 충전 인프라가 부족하고 충전에 시간이 오래 걸린다는 단점이 있다. 최근에는 충전 속도를 크게 단축시킨 초급속 충전기가 보급되면서 이러한 불편함이 상당 부분 해소되고 있다. 정부도 전기차 보급 확대를 위해 구매 보조금과 세금 혜택을 제공하고 있다.",
+        "options": [
+          "전기차는 탄소 배출이 내연기관보다 많다.",
+          "충전 인프라는 이미 충분히 구축되어 있다.",
+          "초급속 충전기 보급으로 충전 시간이 크게 줄었다.",
+          "정부는 전기차에 세금 혜택을 주지 않는다."
+        ],
+        "answer": 3,
+        "explain": "'초급속 충전기가 보급되면서 불편함이 해소되고 있다'고 했다.<br>✅ <b>③ 초급속 충전기 보급으로 충전 시간이 크게 줄었다.</b>"
+      },
+      {
+        "n": 16,
+        "points": 2,
+        "instr": "※ [16~18] 다음 글의 주제로 알맞은 것을 고르십시오. (각 2점)",
+        "passage": "현대 사회에서 스마트폰 과의존 문제가 심각해지고 있다. 특히 청소년들이 하루 평균 5시간 이상 스마트폰을 사용하는 것으로 조사되었다. 지나친 스마트폰 사용은 수면 장애, 집중력 저하, 시력 악화 등의 건강 문제를 유발할 수 있다. 전문가들은 디지털 기기 사용 시간을 적절히 조절하는 디지털 리터러시 교육이 필요하다고 강조하고 있다.",
+        "options": [
+          "스마트폰 기술의 발전 방향",
+          "청소년들이 스마트폰을 사용하는 이유",
+          "스마트폰 앱 개발의 중요성",
+          "스마트폰 과의존 문제와 올바른 사용 교육의 필요성"
+        ],
+        "answer": 4,
+        "explain": "스마트폰 과의존의 심각성과 이에 대한 교육 필요성이 이 글의 주제이다.<br>✅ <b>④ 스마트폰 과의존 문제와 올바른 사용 교육의 필요성</b>"
+      },
+      {
+        "n": 17,
+        "points": 2,
+        "instr": "※ [16~18] 다음 글의 주제로 알맞은 것을 고르십시오. (각 2점)",
+        "passage": "음식 배달 앱이 일상화되면서 사람들의 식습관과 생활 방식이 크게 변화하고 있다. 집 밖에 나가지 않고도 다양한 음식을 간편하게 주문할 수 있어 편리하지만, 과도한 일회용 포장재 사용으로 인한 환경 오염 문제도 함께 부각되고 있다. 일부 배달 앱 업체들은 친환경 포장재 도입을 통해 이 문제를 해결하려는 노력을 기울이고 있다.",
+        "options": [
+          "배달 앱의 확산과 환경 문제 해결 노력",
+          "배달 앱은 음식의 질을 높이는 데 기여한다.",
+          "배달 앱 시장의 경쟁이 심화되고 있다.",
+          "일회용 포장재는 재활용이 불가능하다."
+        ],
+        "answer": 1,
+        "explain": "배달 앱 확산의 편리함과 환경 오염 문제, 그리고 해결 노력이 이 글의 주제이다.<br>✅ <b>① 배달 앱의 확산과 환경 문제 해결 노력</b>"
+      },
+      {
+        "n": 18,
+        "points": 2,
+        "instr": "※ [16~18] 다음 글의 주제로 알맞은 것을 고르십시오. (각 2점)",
+        "passage": "한국의 전통 음악인 국악은 오랜 역사와 독창적인 음률을 가지고 있다. 최근에는 국악과 현대 음악을 접목한 '크로스오버' 음악이 주목을 받고 있으며, 젊은 세대들도 국악에 대한 관심을 갖게 되었다. 이러한 흐름은 전통문화의 계승과 현대적 재해석이라는 두 가지 가치를 동시에 추구하는 것이다.",
+        "options": [
+          "국악기의 종류와 연주 방법",
+          "한국 음악과 외국 음악의 차이점",
+          "전통 국악과 현대 음악의 융합 트렌드",
+          "국악 공연 관람 방법 안내"
+        ],
+        "answer": 3,
+        "explain": "전통 국악과 현대 음악의 크로스오버 트렌드가 이 글의 주제이다.<br>✅ <b>③ 전통 국악과 현대 음악의 융합 트렌드</b>"
+      },
+      {
+        "n": 19,
+        "points": 2,
+        "instr": "※ [19~20] 다음을 읽고 ( )에 들어갈 말로 가장 알맞은 것을 고르십시오. (각 2점)",
+        "passage": "최근 소비자들 사이에서 가치 소비 트렌드가 확산되고 있다. 가치 소비란 단순히 가격이나 품질만을 고려하는 것이 아니라, 환경·윤리·사회적 가치를 함께 따지는 소비 방식을 말한다. 특히 MZ세대를 중심으로 ( ) 소비하는 경향이 뚜렷해지고 있으며, 기업들도 이에 부응하기 위해 사회적 책임 경영에 더욱 힘쓰고 있다.",
+        "options": [
+          "저렴한 제품만",
+          "가치관에 맞는 제품을 선별하여",
+          "유명 브랜드 제품을",
+          "이윤을 극대화하면서"
+        ],
+        "answer": 2,
+        "explain": "가치 소비 트렌드의 내용상 '가치관에 맞는 제품을 선별하여'가 가장 자연스럽게 연결된다.<br>✅ <b>② 가치관에 맞는 제품을 선별하여</b>"
+      },
+      {
+        "n": 20,
+        "points": 2,
+        "instr": "※ [19~20] 다음을 읽고 ( )에 들어갈 말로 가장 알맞은 것을 고르십시오. (각 2점)",
+        "passage": "탄소 중립이란 이산화탄소 등 온실가스의 배출량과 흡수량이 균형을 이루어 실질적인 배출량이 '0'이 되는 상태를 말한다. 이를 달성하기 위해 각국 정부와 기업들은 화석 연료 사용을 줄이고, 재생 에너지로 전환하며, 탄소를 흡수하는 산림을 보호하는 등 다양한 ( )을/를 실시하고 있다.",
+        "options": [
+          "소비 장려 캠페인",
+          "에너지 절약 홍보",
+          "관광 활성화 정책",
+          "탄소 감축 정책"
+        ],
+        "answer": 4,
+        "explain": "화석 연료 감축, 재생 에너지 전환, 산림 보호 등은 모두 '탄소 감축 정책'의 내용이다.<br>✅ <b>④ 탄소 감축 정책</b>"
+      },
+      {
+        "n": 21,
+        "points": 2,
+        "instr": "※ [21~22] 다음을 읽고 물음에 답하십시오.\n\n이 글의 내용과 같은 것을 고르십시오.",
+        "passage": "도시 내 공원이나 가로수 등의 녹지 공간은 단순한 미관 개선을 넘어 다양한 효과를 가지고 있다. 녹지 공간은 대기 중 이산화탄소를 흡수하고 산소를 공급함으로써 도시 공기 질 개선에 기여한다. 또한 여름철 도시 열섬 현상을 완화하고 주민들에게 휴식과 운동 공간을 제공하는 역할도 한다. 연구에 따르면 녹지 공간 가까이에 사는 사람들은 스트레스가 낮고 삶의 만족도가 높은 것으로 나타났다.",
+        "options": [
+          "녹지 공간은 도시 공기 질 개선에 도움을 준다.",
+          "도시 녹지는 열섬 현상을 악화시킨다.",
+          "녹지 가까이 사는 사람들의 스트레스는 높다.",
+          "녹지 공간은 미관 개선에만 역할을 한다."
+        ],
+        "answer": 1,
+        "explain": "'이산화탄소를 흡수하고 산소를 공급함으로써 도시 공기 질 개선에 기여한다'고 했다.<br>✅ <b>① 녹지 공간은 도시 공기 질 개선에 도움을 준다.</b>"
+      },
+      {
+        "n": 22,
+        "points": 2,
+        "instr": "위 글의 주제로 가장 알맞은 것을 고르십시오.",
+        "passage": "",
+        "options": [
+          "도시 공원 설계의 원칙",
+          "녹지 공간 관리 방법",
+          "대기 오염의 주요 원인",
+          "도시 녹지 공간의 다양한 효과와 중요성"
+        ],
+        "answer": 4,
+        "explain": "공기 정화, 열섬 완화, 주민 건강 증진 등 녹지 공간의 다양한 효과가 이 글의 주제이다.<br>✅ <b>④ 도시 녹지 공간의 다양한 효과와 중요성</b>"
+      },
+      {
+        "n": 23,
+        "points": 2,
+        "instr": "※ [23~24] 다음을 읽고 물음에 답하십시오.\n\n이 글의 내용과 같은 것을 고르십시오.",
+        "passage": "소셜 미디어의 확산으로 청소년들이 타인의 생활을 끊임없이 접하는 환경이 만들어졌다. 잘 꾸며진 사진과 성공적인 일상을 보여 주는 게시물들은 청소년들로 하여금 자신을 타인과 비교하게 만들고, 이로 인해 자존감이 낮아지는 경우도 있다. 전문가들은 소셜 미디어 사용 시간을 제한하고, 온라인에서 접하는 정보를 비판적으로 바라보는 능력을 기르는 것이 중요하다고 강조한다.",
+        "options": [
+          "소셜 미디어는 청소년의 자존감을 높인다.",
+          "전문가들은 소셜 미디어 사용을 전면 금지해야 한다고 말한다.",
+          "청소년들이 타인과 자신을 비교하며 자존감이 낮아질 수 있다.",
+          "소셜 미디어는 비판적 사고 능력 향상에 전혀 도움이 안 된다."
+        ],
+        "answer": 3,
+        "explain": "'타인과 비교하게 만들고 자존감이 낮아지는 경우도 있다'고 했다.<br>✅ <b>③ 청소년들이 타인과 자신을 비교하며 자존감이 낮아질 수 있다.</b>"
+      },
+      {
+        "n": 24,
+        "points": 2,
+        "instr": "위 글의 주제로 가장 알맞은 것을 고르십시오.",
+        "passage": "",
+        "options": [
+          "소셜 미디어 계정 관리 방법",
+          "소셜 미디어가 청소년 자아 이미지에 미치는 영향과 대처 방법",
+          "청소년의 온라인 게임 중독 문제",
+          "소셜 미디어 플랫폼의 알고리즘 분석"
+        ],
+        "answer": 2,
+        "explain": "소셜 미디어가 청소년 자존감에 미치는 부정적 영향과 대처 방법이 이 글의 주제이다.<br>✅ <b>② 소셜 미디어가 청소년 자아 이미지에 미치는 영향과 대처 방법</b>"
+      },
+      {
+        "n": 25,
+        "points": 2,
+        "instr": "※ [25~26] 다음을 읽고 물음에 답하십시오.\n\n이 글의 내용과 같은 것을 고르십시오.",
+        "passage": "공정 무역이란 개발도상국 생산자들이 적정한 임금을 받고 안전한 환경에서 일할 수 있도록 보장하는 무역 방식이다. 일반 무역에서는 중간 유통 과정에서 생산자에게 돌아가는 이익이 줄어들지만, 공정 무역은 생산자와 직접 거래하여 적정한 가격을 보장한다. 공정 무역 제품에는 커피, 초콜릿, 면화 등이 있으며, 최근에는 소비자들의 윤리적 소비 의식이 높아지면서 공정 무역 제품의 수요가 꾸준히 증가하고 있다.",
+        "options": [
+          "공정 무역은 중간 유통 과정을 늘린다.",
+          "공정 무역 제품의 수요는 감소하고 있다.",
+          "공정 무역 제품에는 커피만 포함된다.",
+          "공정 무역은 생산자에게 적정한 가격을 보장한다."
+        ],
+        "answer": 4,
+        "explain": "'생산자와 직접 거래하여 적정한 가격을 보장한다'고 했다.<br>✅ <b>④ 공정 무역은 생산자에게 적정한 가격을 보장한다.</b>"
+      },
+      {
+        "n": 26,
+        "points": 2,
+        "instr": "위 글의 주제로 가장 알맞은 것을 고르십시오.",
+        "passage": "",
+        "options": [
+          "공정 무역의 개념과 소비자의 역할",
+          "글로벌 무역 협정의 장단점",
+          "개발도상국의 경제 성장 방법",
+          "커피와 초콜릿의 생산 과정"
+        ],
+        "answer": 1,
+        "explain": "공정 무역의 개념, 방식, 제품 종류와 소비자 역할까지 다루고 있으므로 ①이 주제이다.<br>✅ <b>① 공정 무역의 개념과 소비자의 역할</b>"
+      },
+      {
+        "n": 27,
+        "points": 2,
+        "instr": "※ [27~30] 다음 글을 읽고 내용과 같은 것을 고르십시오. (각 2점)",
+        "passage": "걷기는 특별한 장비나 비용 없이 누구나 쉽게 할 수 있는 운동입니다. 하루 30분씩 꾸준히 걷는 것만으로도 심혈관 질환 예방, 체중 감량, 면역력 강화에 도움이 됩니다. 또한 걷기는 야외에서 자연을 접하면서 스트레스를 줄이고 정신 건강에도 긍정적인 영향을 미칩니다. 바쁜 일상에서도 이동 시간을 활용해 걷기 습관을 들이는 것을 권장합니다.",
+        "options": [
+          "걷기는 특수한 장비가 있어야만 할 수 있다.",
+          "걷기는 심혈관 질환 예방에 도움이 된다.",
+          "걷기는 정신 건강에는 영향을 미치지 않는다.",
+          "걷기는 하루 2시간 이상 해야 효과가 있다."
+        ],
+        "answer": 2,
+        "explain": "'심혈관 질환 예방, 체중 감량, 면역력 강화에 도움이 된다'고 했다.<br>✅ <b>② 걷기는 심혈관 질환 예방에 도움이 된다.</b>"
+      },
+      {
+        "n": 28,
+        "points": 2,
+        "instr": "※ [27~30] 다음 글을 읽고 내용과 같은 것을 고르십시오. (각 2점)",
+        "passage": "한국의 전통 건축물인 한옥은 자연과의 조화를 중요시하는 건축 철학을 담고 있습니다. 한옥의 대표적인 특징으로는 목재와 흙 등 자연 소재의 사용, 마당을 통한 자연광 유입, 그리고 온돌이라는 전통 난방 시스템을 들 수 있습니다. 최근에는 한옥의 전통미와 현대적 편의성을 결합한 현대 한옥이 주목받고 있으며, 외국인 관광객들에게도 한국 문화를 체험하는 명소로 인기를 끌고 있습니다.",
+        "options": [
+          "한옥은 자연 소재를 사용하는 특징이 있다.",
+          "온돌은 현대에 새로 개발된 난방 시스템이다.",
+          "현대 한옥은 외국인 관광객에게 인기가 없다.",
+          "한옥은 자연광 유입이 어려운 구조이다."
+        ],
+        "answer": 1,
+        "explain": "'목재와 흙 등 자연 소재의 사용'이 한옥의 특징이라고 했다.<br>✅ <b>① 한옥은 자연 소재를 사용하는 특징이 있다.</b>"
+      },
+      {
+        "n": 29,
+        "points": 2,
+        "instr": "※ [27~30] 다음 글을 읽고 내용과 같은 것을 고르십시오. (각 2점)",
+        "passage": "친환경 소비란 환경에 미치는 영향을 최소화하는 방식으로 제품을 선택하고 사용하는 것을 말합니다. 포장재가 적은 제품, 재활용 가능한 소재로 만들어진 제품, 에너지 효율이 높은 가전제품 등을 선택하는 것이 그 예입니다. 친환경 소비는 개인의 선택이지만, 이러한 작은 실천들이 모이면 환경 보호에 큰 기여를 할 수 있습니다.",
+        "options": [
+          "친환경 소비는 비용이 많이 들어 어렵다.",
+          "에너지 효율이 높은 가전제품 선택이 친환경 소비에 해당한다.",
+          "친환경 소비는 기업에게만 해당되는 이야기이다.",
+          "친환경 소비는 환경에 큰 영향을 주지 않는다."
+        ],
+        "answer": 2,
+        "explain": "'에너지 효율이 높은 가전제품 등을 선택하는 것'이 친환경 소비의 예로 제시되었다.<br>✅ <b>② 에너지 효율이 높은 가전제품 선택이 친환경 소비에 해당한다.</b>"
+      },
+      {
+        "n": 30,
+        "points": 2,
+        "instr": "※ [27~30] 다음 글의 중심 내용으로 알맞은 것을 고르십시오. (각 2점)",
+        "passage": "인공지능 기술의 발전으로 의료 분야에서도 큰 변화가 일어나고 있습니다. 인공지능은 수천 건의 의료 영상을 분석하여 암을 조기에 발견하는 데 활용되고 있으며, 환자의 데이터를 분석해 최적의 치료 방법을 제안하기도 합니다. 의사들은 인공지능을 보조 도구로 활용하여 진단의 정확도를 높이고 있으며, 이는 의료 서비스의 질 향상으로 이어지고 있습니다.",
+        "options": [
+          "인공지능이 의사를 완전히 대체할 것이다.",
+          "인공지능이 의료 분야에서 진단 보조 역할을 하고 있다.",
+          "의료 분야의 인공지능 기술은 아직 발전하지 못했다.",
+          "인공지능 의료 기기의 가격이 매우 비싸다."
+        ],
+        "answer": 2,
+        "explain": "인공지능이 의료 영상 분석, 치료 방법 제안 등 진단 보조 역할을 한다는 것이 이 글의 중심 내용이다.<br>✅ <b>② 인공지능이 의료 분야에서 진단 보조 역할을 하고 있다.</b>"
+      },
+      {
+        "n": 31,
+        "points": 2,
+        "instr": "※ [31~32] 다음을 읽고 물음에 답하십시오.\n\n이 글의 내용과 같은 것을 고르십시오.",
+        "passage": "기후 변화는 주로 이산화탄소, 메탄 등 온실가스의 증가로 인해 발생합니다. 이러한 온실가스는 산업 활동, 교통수단, 농업 등을 통해 배출됩니다. 기후 변화의 결과로 극단적인 기상 이변이 잦아지고, 해수면이 상승하며, 생물 다양성이 감소하는 등의 문제가 나타나고 있습니다. 이를 막기 위해서는 온실가스 배출을 줄이기 위한 국제적인 협력이 필요합니다.",
+        "options": [
+          "기후 변화는 온실가스 증가로 인해 발생한다.",
+          "기후 변화로 인한 해수면 하강이 문제이다.",
+          "온실가스는 자연 현상으로만 발생한다.",
+          "기후 변화는 개별 국가의 노력만으로 해결 가능하다."
+        ],
+        "answer": 1,
+        "explain": "'온실가스의 증가로 인해 발생합니다'라고 명시되어 있다.<br>✅ <b>① 기후 변화는 온실가스 증가로 인해 발생한다.</b>"
+      },
+      {
+        "n": 32,
+        "points": 2,
+        "instr": "위 글의 주제로 가장 알맞은 것을 고르십시오.",
+        "passage": "",
+        "options": [
+          "기후 변화의 경제적 영향 분석",
+          "기후 변화의 원인과 결과, 국제 협력의 필요성",
+          "재생 에너지 기술의 발전 과정",
+          "농업 분야의 탄소 배출 문제"
+        ],
+        "answer": 2,
+        "explain": "기후 변화의 원인, 결과, 국제 협력 필요성이 이 글의 주제이다.<br>✅ <b>② 기후 변화의 원인과 결과, 국제 협력의 필요성</b>"
+      },
+      {
+        "n": 33,
+        "points": 2,
+        "instr": "※ [33~34] 다음을 읽고 물음에 답하십시오.\n\n이 글의 내용과 같은 것을 고르십시오.",
+        "passage": "세계화의 영향으로 각국의 음식 문화가 서로 교류하고 영향을 주고받는 현상이 활발해지고 있습니다. 한국의 김치, 불고기 등이 세계적으로 인기를 얻고 있는 반면, 피자, 버거 등 서구 음식도 한국에서 일상화되었습니다. 이처럼 음식 문화의 세계화는 다양한 맛을 경험할 수 있는 기회를 제공하지만, 전통 음식 문화가 사라질 수 있다는 우려도 있습니다. 따라서 세계 음식을 받아들이면서도 고유의 전통 음식 문화를 보존하는 노력이 필요합니다.",
+        "options": [
+          "음식 세계화로 전통 음식 문화가 강화되었다.",
+          "서구 음식은 한국에서 거의 먹지 않는다.",
+          "음식 세계화는 전통 음식 문화 소멸의 우려를 낳는다.",
+          "세계화로 인해 음식의 다양성이 줄어들고 있다."
+        ],
+        "answer": 3,
+        "explain": "'전통 음식 문화가 사라질 수 있다는 우려도 있다'고 했다.<br>✅ <b>③ 음식 세계화는 전통 음식 문화 소멸의 우려를 낳는다.</b>"
+      },
+      {
+        "n": 34,
+        "points": 2,
+        "instr": "위 글의 주제로 가장 알맞은 것을 고르십시오.",
+        "passage": "",
+        "options": [
+          "한식의 세계 진출 전략",
+          "전통 음식만 먹어야 하는 이유",
+          "세계 각국의 음식 역사",
+          "음식 세계화의 양면성과 전통 문화 보존의 필요성"
+        ],
+        "answer": 4,
+        "explain": "음식 세계화의 긍정적·부정적 측면과 전통 문화 보존 필요성이 이 글의 주제이다.<br>✅ <b>④ 음식 세계화의 양면성과 전통 문화 보존의 필요성</b>"
+      },
+      {
+        "n": 35,
+        "points": 2,
+        "instr": "※ [35~36] 다음을 읽고 물음에 답하십시오.\n\n이 글의 내용과 같은 것을 고르십시오.",
+        "passage": "창의적 사고는 현대 사회에서 매우 중요한 역량으로 여겨지고 있습니다. 하지만 전통적인 교육 방식은 정해진 답을 찾는 훈련에 치중하는 경향이 있어, 창의적 사고를 키우는 데 한계가 있다는 비판이 있습니다. 창의성을 기르기 위해서는 다양한 관점으로 문제를 바라보고 실수를 두려워하지 않는 환경이 필요합니다. 교육 현장에서는 토론, 프로젝트 학습 등을 통해 창의적 사고를 촉진하는 방향으로 변화가 이루어지고 있습니다.",
+        "options": [
+          "전통 교육 방식은 창의성 함양에 효과적이다.",
+          "창의성은 타고나는 것이므로 교육으로 키울 수 없다.",
+          "현대 사회에서 창의성의 중요성은 줄어들고 있다.",
+          "토론과 프로젝트 학습이 창의적 사고 촉진에 활용된다."
+        ],
+        "answer": 4,
+        "explain": "'토론, 프로젝트 학습 등을 통해 창의적 사고를 촉진하는 방향으로 변화가 이루어지고 있다'고 했다.<br>✅ <b>④ 토론과 프로젝트 학습이 창의적 사고 촉진에 활용된다.</b>"
+      },
+      {
+        "n": 36,
+        "points": 2,
+        "instr": "위 글의 주제로 가장 알맞은 것을 고르십시오.",
+        "passage": "",
+        "options": [
+          "암기 중심 교육의 장점",
+          "전통 교육 방식의 우수성",
+          "창의성 교육의 필요성과 방향",
+          "교육 개혁에 반대하는 이유"
+        ],
+        "answer": 3,
+        "explain": "창의적 사고의 중요성과 이를 기르기 위한 교육 방향이 이 글의 주제이다.<br>✅ <b>③ 창의성 교육의 필요성과 방향</b>"
+      },
+      {
+        "n": 37,
+        "points": 2,
+        "instr": "※ [37~38] 다음을 읽고 물음에 답하십시오.\n\n이 글의 내용과 같은 것을 고르십시오.",
+        "passage": "고령화 사회가 가속화되면서 노인 일자리 문제가 사회적 과제로 떠오르고 있습니다. 노인 일자리는 경제적 자립을 통해 노인의 빈곤을 예방하는 역할을 합니다. 또한 일을 통한 사회적 참여는 노인의 정신 건강과 삶의 질을 높이는 데도 기여합니다. 정부와 지방 자치단체에서는 노인에게 맞는 일자리 창출을 위한 다양한 정책을 추진하고 있습니다.",
+        "options": [
+          "노인 일자리 문제는 이미 완전히 해결되었다.",
+          "노인 일자리는 경제적 측면에만 도움이 된다.",
+          "일자리를 통한 사회 참여가 노인의 정신 건강에 도움이 된다.",
+          "정부는 노인 일자리 문제에 관심이 없다."
+        ],
+        "answer": 3,
+        "explain": "'일을 통한 사회적 참여는 노인의 정신 건강과 삶의 질을 높이는 데도 기여한다'고 했다.<br>✅ <b>③ 일자리를 통한 사회 참여가 노인의 정신 건강에 도움이 된다.</b>"
+      },
+      {
+        "n": 38,
+        "points": 2,
+        "instr": "위 글의 주제로 가장 알맞은 것을 고르십시오.",
+        "passage": "",
+        "options": [
+          "노인 인구 증가의 경제적 부담",
+          "고령화 사회에서 청년 취업 문제",
+          "노인 일자리의 중요성과 지원 정책",
+          "은퇴 후 여가 활동 방법"
+        ],
+        "answer": 3,
+        "explain": "노인 일자리의 경제적·정신적 가치와 정부 정책이 이 글의 주제이다.<br>✅ <b>③ 노인 일자리의 중요성과 지원 정책</b>"
+      },
+      {
+        "n": 39,
+        "points": 2,
+        "instr": "※ [39~40] 다음을 읽고 물음에 답하십시오.\n\n이 글의 내용과 같은 것을 고르십시오.",
+        "passage": "도시 재생 사업은 낡고 쇠퇴한 도시 지역을 새롭게 활성화하는 것을 목표로 합니다. 기존 건물을 철거하고 재건축하는 방식이 아니라, 기존 건물과 문화를 보존하면서 인프라를 개선하는 방식을 취합니다. 이를 통해 지역 주민들의 생활 환경이 개선되고, 지역 경제도 활성화될 수 있습니다. 또한 지역 고유의 역사와 문화가 보존되어 관광 자원으로도 활용됩니다.",
+        "options": [
+          "도시 재생 사업은 기존 건물을 모두 철거한다.",
+          "도시 재생은 지역 경제 활성화에 기여하지 않는다.",
+          "도시 재생 사업에서 역사와 문화 보존은 고려 대상이 아니다.",
+          "도시 재생 사업은 지역 문화와 인프라를 함께 개선한다."
+        ],
+        "answer": 4,
+        "explain": "'기존 건물과 문화를 보존하면서 인프라를 개선하는 방식'이라고 했다.<br>✅ <b>④ 도시 재생 사업은 지역 문화와 인프라를 함께 개선한다.</b>"
+      },
+      {
+        "n": 40,
+        "points": 2,
+        "instr": "위 글의 주제로 가장 알맞은 것을 고르십시오.",
+        "passage": "",
+        "options": [
+          "도시 재개발의 필요성",
+          "신도시 건설의 장단점",
+          "도시 철거 후 재건축 방법",
+          "도시 재생 사업의 개념과 효과"
+        ],
+        "answer": 4,
+        "explain": "도시 재생 사업의 목표, 방식, 효과를 종합적으로 다루고 있으므로 ④가 주제이다.<br>✅ <b>④ 도시 재생 사업의 개념과 효과</b>"
+      },
+      {
+        "n": 41,
+        "points": 2,
+        "instr": "※ [41~42] 다음을 읽고 물음에 답하십시오.\n\n이 글의 내용과 같은 것을 고르십시오.",
+        "passage": "한국은 과거에 비해 외국인 인구가 빠르게 늘어나면서 다문화 사회로 변화하고 있습니다. 2023년 현재 국내 거주 외국인 수는 250만 명을 넘었으며, 다양한 문화적 배경을 가진 사람들이 함께 생활하고 있습니다. 이러한 다문화 사회로의 변화는 문화적 다양성을 풍부하게 하고 새로운 시각과 아이디어를 사회에 가져다주는 긍정적인 측면이 있습니다. 반면 언어 장벽, 문화적 오해 등으로 인한 갈등도 발생할 수 있어, 다문화 이해 교육과 상호 존중 문화의 형성이 중요합니다.",
+        "options": [
+          "다문화 사회는 문화적 다양성을 풍부하게 한다.",
+          "한국의 외국인 인구는 감소하고 있다.",
+          "다문화 사회에서는 문화적 갈등이 전혀 없다.",
+          "다문화 이해 교육은 불필요하다."
+        ],
+        "answer": 1,
+        "explain": "'문화적 다양성을 풍부하게 하고 새로운 시각과 아이디어를 사회에 가져다준다'고 했다.<br>✅ <b>① 다문화 사회는 문화적 다양성을 풍부하게 한다.</b>"
+      },
+      {
+        "n": 42,
+        "points": 2,
+        "instr": "위 글의 주제로 가장 알맞은 것을 고르십시오.",
+        "passage": "",
+        "options": [
+          "외국인 노동자 유입의 경제적 효과",
+          "한국 음식 문화의 세계화",
+          "다문화 사회의 특징과 상호 이해의 필요성",
+          "한국 전통 문화의 보존 방법"
+        ],
+        "answer": 3,
+        "explain": "다문화 사회의 긍정적 측면과 갈등, 상호 이해 교육의 필요성이 이 글의 주제이다.<br>✅ <b>③ 다문화 사회의 특징과 상호 이해의 필요성</b>"
+      },
+      {
+        "n": 43,
+        "points": 2,
+        "instr": "※ [43~44] 다음을 읽고 물음에 답하십시오.\n\n이 글의 내용과 같은 것을 고르십시오.",
+        "passage": "최근 학교 교육에서 창업 및 기업가 정신 교육의 중요성이 강조되고 있습니다. 기업가 정신 교육은 단순히 사업을 시작하는 방법을 가르치는 것이 아니라, 문제 해결 능력, 창의성, 도전 정신 등을 키우는 데 목적이 있습니다. 이를 통해 학생들은 미래 사회에 필요한 역량을 갖출 수 있습니다. 일부 학교에서는 실제 소규모 사업을 운영해 보는 실습 프로그램을 도입하여 학생들이 직접 경험을 통해 배울 수 있도록 하고 있습니다.",
+        "options": [
+          "기업가 정신 교육은 사업 시작 방법만 가르친다.",
+          "기업가 정신 교육은 창의성 함양과 관계없다.",
+          "일부 학교에서 실제 사업 운영 실습 프로그램을 도입하고 있다.",
+          "기업가 정신 교육은 미래 역량 개발에 도움이 되지 않는다."
+        ],
+        "answer": 3,
+        "explain": "'실제 소규모 사업을 운영해 보는 실습 프로그램을 도입하고 있다'고 했다.<br>✅ <b>③ 일부 학교에서 실제 사업 운영 실습 프로그램을 도입하고 있다.</b>"
+      },
+      {
+        "n": 44,
+        "points": 2,
+        "instr": "위 글의 주제로 가장 알맞은 것을 고르십시오.",
+        "passage": "",
+        "options": [
+          "청소년 기업가 정신 교육의 의미와 실천 방법",
+          "학교에서의 창업 실패 사례와 교훈",
+          "기업가 정신과 취업 준비의 차이",
+          "창업 환경 개선을 위한 정부 지원 필요성"
+        ],
+        "answer": 1,
+        "explain": "청소년 기업가 정신 교육의 의미(문제 해결·창의성 함양)와 실습 방법이 이 글의 주제이다.<br>✅ <b>① 청소년 기업가 정신 교육의 의미와 실천 방법</b>"
+      },
+      {
+        "n": 45,
+        "points": 2,
+        "instr": "※ [45~46] 다음을 읽고 물음에 답하십시오.\n\n이 글의 내용과 같은 것을 고르십시오.",
+        "passage": "사막화란 기후 변화와 과도한 토지 이용으로 인해 비옥한 토지가 사막으로 변해 가는 현상입니다. 사막화가 진행되면 농업 생산성이 줄어들고 식량 부족 문제로 이어질 수 있습니다. 전 세계 육지 면적의 약 3분의 1이 사막화 위험에 처해 있으며, 이는 수억 명의 생계에 영향을 미칩니다. 국제 사회는 나무 심기, 지속 가능한 농업 방식 도입 등을 통해 사막화를 막으려는 노력을 하고 있습니다.",
+        "options": [
+          "사막화는 오직 기후 변화로만 발생한다.",
+          "사막화로 인해 농업 생산성이 감소할 수 있다.",
+          "전 세계 육지 면적의 절반 이상이 사막화되었다.",
+          "국제 사회는 사막화 문제에 관심이 없다."
+        ],
+        "answer": 2,
+        "explain": "'사막화가 진행되면 농업 생산성이 줄어들고 식량 부족 문제로 이어질 수 있다'고 했다.<br>✅ <b>② 사막화로 인해 농업 생산성이 감소할 수 있다.</b>"
+      },
+      {
+        "n": 46,
+        "points": 2,
+        "instr": "위 글의 주제로 가장 알맞은 것을 고르십시오.",
+        "passage": "",
+        "options": [
+          "기후 변화와 지구 온도 상승의 관계",
+          "사막화 문제의 원인, 영향과 국제적 대응",
+          "농업 기술 발전을 통한 식량 생산 증가",
+          "나무 심기 활동의 효과와 방법"
+        ],
+        "answer": 2,
+        "explain": "사막화의 원인, 영향, 국제 사회의 대응이 이 글의 주제이다.<br>✅ <b>② 사막화 문제의 원인, 영향과 국제적 대응</b>"
+      },
+      {
+        "n": 47,
+        "points": 2,
+        "instr": "※ [47~48] 다음을 읽고 물음에 답하십시오.\n\n이 글의 내용과 같은 것을 고르십시오.",
+        "passage": "인공지능이 다양한 분야에서 인간의 역할을 대신하고 있지만, 예술·작가·상담 등 창의성과 감성이 필요한 직업은 여전히 인간만이 가질 수 있는 영역으로 여겨지고 있습니다. 그러나 최근 인공지능이 그림을 그리고 음악을 작곡하며 소설을 쓰는 등 창작 활동까지 수행하면서 이에 대한 논쟁이 활발해지고 있습니다. 전문가들은 인공지능이 패턴을 학습하여 창작물을 만들 수 있지만, 진정한 감성과 경험에서 비롯된 예술적 가치는 인간만이 창출할 수 있다는 점에서 차이가 있다고 봅니다.",
+        "options": [
+          "인공지능은 창작 활동을 전혀 수행하지 못한다.",
+          "모든 직업이 인공지능으로 대체될 것이다.",
+          "감성이 필요한 직업은 이미 인공지능이 대체했다.",
+          "인공지능의 창작물과 인간 예술 사이에는 본질적 차이가 있다."
+        ],
+        "answer": 4,
+        "explain": "'진정한 감성과 경험에서 비롯된 예술적 가치는 인간만이 창출할 수 있다'고 했다.<br>✅ <b>④ 인공지능의 창작물과 인간 예술 사이에는 본질적 차이가 있다.</b>"
+      },
+      {
+        "n": 48,
+        "points": 2,
+        "instr": "위 글의 주제로 가장 알맞은 것을 고르십시오.",
+        "passage": "",
+        "options": [
+          "인공지능 기술의 현재 발전 수준",
+          "예술 작품 감정 방법의 변화",
+          "인공지능의 경제적 활용 가치",
+          "인공지능과 인간 창의성의 비교와 논쟁"
+        ],
+        "answer": 4,
+        "explain": "인공지능의 창작 활동과 인간 예술의 차이에 대한 논쟁이 이 글의 주제이다.<br>✅ <b>④ 인공지능과 인간 창의성의 비교와 논쟁</b>"
+      },
+      {
+        "n": 49,
+        "points": 2,
+        "instr": "※ [49~50] 다음을 읽고 물음에 답하십시오.\n\n이 글의 내용과 같은 것을 고르십시오.",
+        "passage": "건강에 대한 관심이 높아지면서 건강 기능 식품 시장이 빠르게 성장하고 있습니다. 건강 기능 식품이란 인체에 유용한 기능성 원료나 성분을 이용하여 제조된 식품으로, 면역력 강화, 피로 회복, 피부 건강 등에 도움을 준다고 알려진 제품들이 있습니다. 그러나 건강 기능 식품은 의약품이 아니므로 질병을 치료하는 효과를 기대하기는 어렵습니다. 따라서 건강 기능 식품을 선택할 때는 과장된 광고에 현혹되지 않고, 개인의 건강 상태와 필요에 맞는 제품을 선택하는 것이 중요합니다.",
+        "options": [
+          "건강 기능 식품 시장은 축소되고 있다.",
+          "건강 기능 식품은 의약품과 동일한 치료 효과가 있다.",
+          "건강 기능 식품은 면역력 강화 등에 도움을 줄 수 있다.",
+          "건강 기능 식품은 누구에게나 동일한 효과를 준다."
+        ],
+        "answer": 3,
+        "explain": "'면역력 강화, 피로 회복, 피부 건강 등에 도움을 준다고 알려진 제품들이 있다'고 했다.<br>✅ <b>③ 건강 기능 식품은 면역력 강화 등에 도움을 줄 수 있다.</b>"
+      },
+      {
+        "n": 50,
+        "points": 2,
+        "instr": "위 글의 주제로 가장 알맞은 것을 고르십시오.",
+        "passage": "",
+        "options": [
+          "의약품 시장의 최신 동향",
+          "건강 기능 식품의 부작용 사례",
+          "질병 치료를 위한 건강식품 추천",
+          "건강 기능 식품의 개념과 올바른 선택 방법"
+        ],
+        "answer": 4,
+        "explain": "건강 기능 식품의 정의와 기능, 의약품과의 차이, 올바른 선택 방법이 이 글의 주제이다.<br>✅ <b>④ 건강 기능 식품의 개념과 올바른 선택 방법</b>"
+      }
+    ]
+  },
     7027: {"mock":true,"readingOnly":true,"no":"마디 모의고사 ②<br><b>읽기</b>","reading":{"durationMin":70,"total":50,"label":"Пробный · 읽기 (50) · оригинал ②","questions":[{"n":1,"points":2,"instr":"( )에 들어갈 말로 가장 알맞은 것을 고르십시오.","passage":"친구를 ( ) 카페에서 한 시간이나 기다렸어요.","options":["만나려고","만나서","만나도","만나거나"],"answer":1,"explain":"Ждал, <b>чтобы</b> встретить друга.<br>✅ <b>① 만나려고</b> = «чтобы встретить» (цель)."},{"n":2,"points":2,"instr":"( )에 들어갈 말로 가장 알맞은 것을 고르십시오.","passage":"날씨가 추워서 두꺼운 옷을 ( ) 나갔어요.","options":["입지만","입고","입거나","입어도"],"answer":2,"explain":"Холодно → надел тёплое и вышел.<br>✅ <b>② 입고</b> = «надев и…»."},{"n":3,"points":2,"instr":"밑줄 친 부분과 의미가 비슷한 것을 고르십시오.","passage":"급하게 먹은 <u>탓에</u> 배탈이 났다.","options":["먹은 덕분에","먹은 바람에","먹은 대신에","먹은 김에"],"answer":2,"explain":"탓에 — негативная причина.<br>✅ <b>② 바람에</b> — тоже «из-за (плохой итог)»."},{"n":4,"points":2,"instr":"밑줄 친 부분과 의미가 비슷한 것을 고르십시오.","passage":"하늘을 보니 곧 비가 올 <u>듯하다</u>.","options":["올 뻔하다","온 적이 있다","올 리가 없다","올 것 같다"],"answer":4,"explain":"듯하다 = «похоже».<br>✅ <b>④ 올 것 같다</b> — синоним."},{"n":5,"points":2,"instr":"다음은 무엇에 대한 글인지 고르십시오.","passage":"물 없이도 깨끗하게! 향기로운 거품으로 손을 보호하세요.","options":["치약","샴푸","손 소독제","세탁기"],"answer":3,"explain":"«Чистит без воды, пенка для рук» → дезинфектор для рук.<br>✅ <b>③ 손 소독제</b>."},{"n":6,"points":2,"instr":"다음은 무엇에 대한 글인지 고르십시오.","passage":"버리지 마세요, 다시 쓸 수 있어요. 종이, 캔, 병을 나눠 주세요.","options":["재활용","요리","빨래","운동"],"answer":1,"explain":"«Не выбрасывайте, сортируйте бумагу/банки/бутылки» → переработка.<br>✅ <b>① 재활용</b>."},{"n":7,"points":2,"instr":"다음은 무엇에 대한 글인지 고르십시오.","passage":"조용한 공간에서 집중! 책과 함께하는 하루.","options":["놀이공원","식당","병원","도서관"],"answer":4,"explain":"«Тихое место, день с книгами» → библиотека.<br>✅ <b>④ 도서관</b>."},{"n":8,"points":2,"instr":"다음은 무엇에 대한 글인지 고르십시오.","passage":"한 시간에 한 번, 창문을 열어요. 맑은 공기가 건강을 지킵니다.","options":["요리","환기","청소","운동"],"answer":2,"explain":"«Раз в час открывайте окно, свежий воздух» → проветривание.<br>✅ <b>② 환기</b>."},{"n":9,"points":2,"instr":"다음 글의 내용과 같은 것을 고르십시오.","passage":"한강 벚꽃 축제 / 기간: 4월 5일~4월 9일 / 장소: 한강 공원 / 입장료: 무료 / 야간 개장: 오후 9시까지","options":["축제는 5일 동안 열린다.","입장료를 내야 한다.","밤에는 문을 닫는다.","장소는 시청이다."],"answer":1,"explain":"✅ <b>① 5일 동안</b> (5~9일).<br>✖️ бесплатно, ночью до 21:00, место — парк."},{"n":10,"points":2,"instr":"다음 글의 내용과 같은 것을 고르십시오.","passage":"<svg viewBox='0 0 300 165' width='100%' style='max-width:300px;display:block;margin:4px auto 10px;background:#FFFFFF;border:1px solid #EADDE0;border-radius:10px' xmlns='http://www.w3.org/2000/svg'><line x1='28' y1='128' x2='288' y2='128' stroke='#C9B6BB'/><rect x='42' y='38' width='36' height='90' rx='3' fill='#EE8893'/><rect x='112' y='51' width='36' height='77' rx='3' fill='#F2A6AE'/><rect x='182' y='77' width='36' height='51' rx='3' fill='#F6C2C7'/><rect x='252' y='89' width='36' height='39' rx='3' fill='#F8D6D9'/><text x='60' y='31' font-size='12' text-anchor='middle' fill='#7A5560'>35%</text><text x='130' y='44' font-size='12' text-anchor='middle' fill='#7A5560'>30%</text><text x='200' y='70' font-size='12' text-anchor='middle' fill='#7A5560'>20%</text><text x='270' y='82' font-size='12' text-anchor='middle' fill='#7A5560'>15%</text><text x='60' y='146' font-size='12' text-anchor='middle' fill='#5A4046'>봄</text><text x='130' y='146' font-size='12' text-anchor='middle' fill='#5A4046'>가을</text><text x='200' y='146' font-size='12' text-anchor='middle' fill='#5A4046'>여름</text><text x='270' y='146' font-size='12' text-anchor='middle' fill='#5A4046'>겨울</text></svg> ‘가장 좋아하는 계절’을 조사한 결과입니다.","options":["여름을 가장 좋아한다.","봄을 가장 좋아한다.","겨울이 가을보다 많다.","가을이 봄보다 많다."],"answer":2,"explain":"График: 봄 35% — больше всех.<br>✅ <b>② 봄을 가장 좋아한다</b>."},{"n":11,"points":2,"instr":"다음 글의 내용과 같은 것을 고르십시오.","passage":"어제 도서관에서 우산을 잃어버렸다. 다행히 오늘 아침에 직원이 보관함에 있다고 연락을 주었다. 점심시간에 찾으러 갈 생각이다.","options":["우산을 영영 잃어버렸다.","직원이 연락하지 않았다.","나는 우산을 찾으러 갈 것이다.","어제 우산을 찾았다."],"answer":3,"explain":"✅ <b>③ пойду забрать зонт</b> (в обед)."},{"n":12,"points":2,"instr":"다음 글의 내용과 같은 것을 고르십시오.","passage":"우리 가게는 다음 주부터 영업시간을 한 시간 늘린다. 저녁 늦게 오는 손님이 많기 때문이다. 대신 휴무일은 그대로 유지한다.","options":["가게가 문을 닫는다.","영업시간이 길어진다.","휴무일이 늘어난다.","손님이 줄었다."],"answer":2,"explain":"✅ <b>② часы работы увеличатся</b> на час."},{"n":13,"points":2,"instr":"다음을 순서대로 맞게 배열한 것을 고르십시오.","passage":"(가) 그래서 친구에게 사용법을 물어봤다. (나) 새 휴대폰을 샀다. (다) 친구의 설명을 듣고 쉽게 쓸 수 있었다. (라) 처음에는 사용법을 몰라 당황했다.","options":["(나)-(가)-(라)-(다)","(나)-(라)-(가)-(다)","(라)-(나)-(가)-(다)","(나)-(라)-(다)-(가)"],"answer":2,"explain":"✅ <b>② (나)-(라)-(가)-(다)</b>: купил телефон → сначала растерялся → спросил друга → легко разобрался."},{"n":14,"points":2,"instr":"다음을 순서대로 맞게 배열한 것을 고르십시오.","passage":"(가) 음식을 직접 만들어 먹기로 했다. (나) 매일 배달 음식을 시켜 먹었다. (다) 건강이 점점 나빠지는 것을 느꼈다. (라) 그러자 몸이 가벼워지고 기분도 좋아졌다.","options":["(나)-(가)-(다)-(라)","(다)-(나)-(가)-(라)","(나)-(다)-(가)-(라)","(나)-(다)-(라)-(가)"],"answer":3,"explain":"✅ <b>③ (나)-(다)-(가)-(라)</b>: ел доставку → почувствовал ухудшение → решил готовить сам → стало легче."},{"n":15,"points":2,"instr":"다음을 순서대로 맞게 배열한 것을 고르십시오.","passage":"(가) 표를 미리 예매해 두었다. (나) 주말에 콘서트에 가기로 했다. (다) 덕분에 좋은 자리에서 볼 수 있었다. (라) 콘서트 당일 일찍 도착했다.","options":["(나)-(라)-(가)-(다)","(가)-(나)-(라)-(다)","(나)-(가)-(다)-(라)","(나)-(가)-(라)-(다)"],"answer":4,"explain":"✅ <b>④ (나)-(가)-(라)-(다)</b>: решил пойти → заранее купил билеты → пришёл рано → получил хорошие места."},{"n":16,"points":2,"instr":"( )에 들어갈 말로 가장 알맞은 것을 고르십시오.","passage":"운동을 꾸준히 하면 몸이 건강해진다. 하지만 무리하게 하면 오히려 ( ). 그래서 자신에게 맞는 양을 지키는 것이 중요하다.","options":["더 튼튼해진다","살이 빠진다","다칠 수 있다","기분이 좋아진다"],"answer":3,"explain":"✅ <b>③ 다칠 수 있다</b> — переусердствуешь → можно навредить (далее: важна своя мера)."},{"n":17,"points":2,"instr":"( )에 들어갈 말로 가장 알맞은 것을 고르십시오.","passage":"책을 많이 읽으면 어휘력이 좋아진다. 다양한 표현을 ( ) 글쓰기에도 도움이 된다. 그래서 독서는 좋은 습관이다.","options":["잊어버려서","접하게 되어","피하게 되어","줄여서"],"answer":2,"explain":"✅ <b>② 접하게 되어</b> = знакомишься с выражениями → помогает письму."},{"n":18,"points":2,"instr":"( )에 들어갈 말로 가장 알맞은 것을 고르십시오.","passage":"여행지에서는 그 지역의 음식을 먹어 보는 것이 좋다. 음식에는 그곳의 ( ) 담겨 있기 때문이다. 음식을 통해 문화를 이해할 수 있다.","options":["날씨가","교통이","가격이","문화가"],"answer":4,"explain":"✅ <b>④ 문화가</b> — в еде заключена культура места."},{"n":19,"points":2,"instr":"( )에 들어갈 말로 가장 알맞은 것을 고르십시오.","passage":"요즘 온라인으로 물건을 사는 사람이 많아졌다. 집에서 편하게 주문할 수 있고 가격을 비교하기도 쉽다. ( ) 직접 보지 못하고 사기 때문에 실제 물건이 다를 때도 있다. 그래서 후기를 잘 살펴보는 것이 좋다.","options":["하지만","그래서","또한","예를 들어"],"answer":1,"explain":"✅ <b>① 하지만</b> = «но» — переход к недостатку."},{"n":20,"points":2,"instr":"이 글의 중심 내용으로 알맞은 것을 고르십시오.","passage":"요즘 온라인으로 물건을 사는 사람이 많아졌다. 집에서 편하게 주문할 수 있고 가격을 비교하기도 쉽다. 하지만 직접 보지 못하고 사기 때문에 실제 물건이 다를 때도 있다. 그래서 후기를 잘 살펴보는 것이 좋다.","options":["온라인 쇼핑은 항상 위험하다.","가격 비교는 불가능하다.","온라인 쇼핑은 편리하지만 주의할 점도 있다.","후기는 볼 필요가 없다."],"answer":3,"explain":"✅ <b>③ удобно, но есть на что обратить внимание</b> — главная мысль."},{"n":21,"points":2,"instr":"( )에 들어갈 말로 가장 알맞은 것을 고르십시오.","passage":"이웃집에 불이 났을 때 동생은 ( ) 사람들을 도왔다. 위험한 상황인데도 망설이지 않고 뛰어들었다. 나는 그런 동생이 자랑스러웠다.","options":["발 벗고 나서서","강 건너 불구경하듯","손을 놓고","모르는 척하며"],"answer":1,"explain":"✅ <b>① 발 벗고 나서서</b> = «засучив рукава», активно взялся помогать."},{"n":22,"points":2,"instr":"이 글을 통해 알 수 있는 것을 고르십시오.","passage":"이웃집에 불이 났을 때 동생은 발 벗고 나서서 사람들을 도왔다. 위험한 상황인데도 망설이지 않고 뛰어들었다. 나는 그런 동생이 자랑스러웠다.","options":["동생은 도망쳤다.","동생은 불을 냈다.","나는 동생이 부끄러웠다.","동생은 적극적으로 이웃을 도왔다."],"answer":4,"explain":"✅ <b>④ брат активно помогал соседям</b>."},{"n":23,"points":2,"instr":"이 글의 마지막에 나타난 ‘나’의 심정으로 알맞은 것을 고르십시오.","passage":"면접장을 나오는데 다리가 후들거렸다. 준비한 답을 절반밖에 말하지 못한 것 같았다. 집으로 돌아오는 길 내내 한숨이 나왔다. 그런데 며칠 뒤, 합격했다는 문자를 받고 나는 그 자리에서 펄쩍 뛰었다.","options":["기쁘고 신난다","불안하고 초조하다","화가 나고 억울하다","지루하고 답답하다"],"answer":1,"explain":"✅ <b>① радость и восторг</b> — «펄쩍 뛰었다» (подпрыгнул от радости) после новости о зачислении."},{"n":24,"points":2,"instr":"이 글의 내용과 같은 것을 고르십시오.","passage":"면접장을 나오는데 다리가 후들거렸다. 준비한 답을 절반밖에 말하지 못한 것 같았다. 집으로 돌아오는 길 내내 한숨이 나왔다. 그런데 며칠 뒤, 합격했다는 문자를 받고 나는 그 자리에서 펄쩍 뛰었다.","options":["나는 답을 모두 말했다.","나는 면접에 합격했다.","나는 면접을 보지 않았다.","나는 합격 소식에 실망했다."],"answer":2,"explain":"✅ <b>② я прошёл собеседование</b> (пришло уведомление о зачислении)."},{"n":25,"points":2,"instr":"다음 신문 기사 제목을 가장 잘 설명한 것을 고르십시오.","passage":"첫눈 ‘펑펑’… 도심 교통 마비","options":["눈이 안 와 길이 한산했다.","교통이 원활했다.","첫눈이 많이 내려 도심 교통이 막혔다.","도심에 눈이 녹았다."],"answer":3,"explain":"✅ <b>③</b> 펑펑=обильно, 마비=паралич → первый снег парализовал движение."},{"n":26,"points":2,"instr":"다음 신문 기사 제목을 가장 잘 설명한 것을 고르십시오.","passage":"전기차 판매 ‘쑥쑥’… 충전소는 ‘아직’","options":["전기차 판매가 줄었다.","충전소가 넘쳐난다.","전기차가 사라졌다.","전기차는 늘지만 충전소는 부족하다."],"answer":4,"explain":"✅ <b>④</b> 쑥쑥=быстро растёт, 아직=пока нет → машин больше, а зарядок не хватает."},{"n":27,"points":2,"instr":"다음 신문 기사 제목을 가장 잘 설명한 것을 고르십시오.","passage":"독서 인구 ‘뚝’… 도서관은 ‘북적’","options":["독서 인구가 늘었다.","책 읽는 사람은 줄었지만 도서관 이용은 많다.","도서관이 텅 비었다.","책값이 올랐다."],"answer":2,"explain":"✅ <b>②</b> 뚝=резко упало, 북적=многолюдно → читателей меньше, но библиотеки полны."},{"n":28,"points":2,"instr":"( )에 들어갈 말로 가장 알맞은 것을 고르십시오.","passage":"여행은 새로운 경험을 준다. 낯선 곳에서 다른 문화를 만나면 생각의 폭이 넓어진다. 그래서 여행은 ( ) 좋은 기회가 된다.","options":["돈을 모으는","자신을 성장시키는","집에 머무는","시간을 낭비하는"],"answer":2,"explain":"✅ <b>② вырасти над собой</b> — путешествие расширяет кругозор."},{"n":29,"points":2,"instr":"( )에 들어갈 말로 가장 알맞은 것을 고르십시오.","passage":"사람의 첫인상은 몇 초 만에 결정된다고 한다. 그래서 옷차림이나 표정이 ( ). 하지만 시간이 지나면 진짜 모습이 더 중요해진다.","options":["아무 의미가 없다","점점 사라진다","중요한 역할을 한다","문제를 일으킨다"],"answer":3,"explain":"✅ <b>③ играют важную роль</b> — первое впечатление за секунды."},{"n":30,"points":2,"instr":"( )에 들어갈 말로 가장 알맞은 것을 고르십시오.","passage":"도시에 나무가 많으면 여름에도 시원하다. 나무 그늘이 햇볕을 막아 주고, 잎이 ( ) 공기를 맑게 한다. 그래서 도시에 나무를 심는 일이 중요하다.","options":["더위를 만들어","소음을 키워","물을 막아","나쁜 공기를 걸러"],"answer":4,"explain":"✅ <b>④ фильтруют плохой воздух</b> — листья очищают воздух."},{"n":31,"points":2,"instr":"( )에 들어갈 말로 가장 알맞은 것을 고르십시오.","passage":"운동선수는 경기 전에 충분히 몸을 푼다. 갑자기 무리하면 ( ) 때문이다. 준비 운동은 부상을 막는 중요한 과정이다.","options":["다칠 수 있기","빨라질 수 있기","강해질 수 있기","편해질 수 있기"],"answer":1,"explain":"✅ <b>① можно получить травму</b> — разминка защищает от травм."},{"n":32,"points":2,"instr":"다음 글의 내용과 같은 것을 고르십시오.","passage":"꿀은 오래 두어도 잘 상하지 않는다. 수분이 적고 당분이 많아 세균이 살기 어렵기 때문이다. 그래서 옛날부터 꿀은 약으로도 쓰였다.","options":["꿀은 수분이 많다.","꿀은 금방 상한다.","꿀은 잘 상하지 않는다.","꿀은 약으로 쓸 수 없다."],"answer":3,"explain":"✅ <b>③ мёд почти не портится</b> (мало влаги, много сахара)."},{"n":33,"points":2,"instr":"다음 글의 내용과 같은 것을 고르십시오.","passage":"최근 도시에서 도시 농업이 인기다. 사람들은 옥상이나 베란다에서 채소를 직접 기른다. 작은 공간에서도 신선한 먹거리를 얻을 수 있어 만족도가 높다.","options":["넓은 땅이 있어야 한다.","사람들이 직접 채소를 기른다.","채소를 사 먹기만 한다.","만족도가 낮다."],"answer":2,"explain":"✅ <b>② люди сами выращивают овощи</b> (на крыше/балконе)."},{"n":34,"points":2,"instr":"다음 글의 내용과 같은 것을 고르십시오.","passage":"박쥐는 어두운 동굴에 살지만 길을 잘 찾는다. 눈 대신 소리를 이용하기 때문이다. 박쥐가 내는 소리는 물체에 부딪혀 되돌아오고, 그 소리로 거리를 안다.","options":["박쥐는 소리로 길을 찾는다.","박쥐는 눈으로 길을 찾는다.","박쥐는 밝은 곳에 산다.","박쥐는 소리를 내지 않는다."],"answer":1,"explain":"✅ <b>① летучая мышь находит путь по звуку</b> (эхолокация)."},{"n":35,"points":2,"instr":"이 글의 주제로 알맞은 것을 고르십시오.","passage":"실패는 끝이 아니라 배움의 기회이다. 실패를 통해 무엇이 잘못되었는지 알 수 있고, 다음에는 더 잘할 수 있다. 그러니 실패를 너무 두려워하지 말자.","options":["실패하면 끝이다.","실패는 성장의 기회가 될 수 있다.","실패는 피할 수 없다.","실패는 의미가 없다."],"answer":2,"explain":"✅ <b>② неудача может стать шансом для роста</b>."},{"n":36,"points":2,"instr":"이 글의 주제로 알맞은 것을 고르십시오.","passage":"작은 친절이 사람의 하루를 바꾼다. 따뜻한 말 한마디, 작은 도움이 누군가에게는 큰 힘이 된다. 우리도 주변에 작은 친절을 베풀어 보자.","options":["친절은 소용없다.","도움은 받기만 해야 한다.","말은 중요하지 않다.","작은 친절이 큰 힘이 된다."],"answer":4,"explain":"✅ <b>④ маленькая доброта даёт большую силу</b>."},{"n":37,"points":2,"instr":"이 글의 주제로 알맞은 것을 고르십시오.","passage":"계획을 세우면 시간을 효율적으로 쓸 수 있다. 무엇을 먼저 할지 정해 두면 덜 헤매게 된다. 바쁜 사람일수록 계획의 힘이 크다.","options":["계획은 시간을 효율적으로 쓰게 한다.","계획은 필요 없다.","바쁘면 계획을 세우면 안 된다.","계획은 시간을 낭비한다."],"answer":1,"explain":"✅ <b>① план помогает эффективно тратить время</b>."},{"n":38,"points":2,"instr":"이 글의 주제로 알맞은 것을 고르십시오.","passage":"남의 말을 잘 들어 주는 것도 큰 능력이다. 끝까지 들어 주면 상대는 존중받는다고 느낀다. 좋은 관계는 잘 듣는 것에서 시작된다.","options":["말을 많이 해야 한다.","듣기는 중요하지 않다.","잘 듣는 것이 좋은 관계의 시작이다.","남의 말은 무시해도 된다."],"answer":3,"explain":"✅ <b>③ умение слушать — начало хороших отношений</b>."},{"n":39,"points":2,"instr":"다음 문장이 들어갈 위치로 가장 알맞은 것을 고르십시오.","passage":"[보기] 그러나 무엇이든 지나치면 문제가 된다. ── 물은 우리 몸에 꼭 필요하다. ㉠ 하루에 적당한 양을 마시면 건강에 좋다. ㉡ 물을 너무 많이 마시면 오히려 몸에 무리가 갈 수 있다. ㉢ 그러므로 적당히 마시는 것이 중요하다. ㉣","options":["㉠","㉡","㉢","㉣"],"answer":2,"explain":"✅ <b>② ㉡</b>: «но всё чрезмерное вредит» — перед фразой о вреде избытка воды."},{"n":40,"points":2,"instr":"다음 문장이 들어갈 위치로 가장 알맞은 것을 고르십시오.","passage":"[보기] 그 결과 많은 사람들이 계단을 이용하게 되었다. ── 한 건물에서 재미있는 실험을 했다. ㉠ 계단을 누르면 소리가 나는 피아노 계단을 만든 것이다. ㉡ 사람들은 호기심에 계단을 밟아 보았다. ㉢ 건강에도 좋고 재미도 있는 아이디어였다. ㉣","options":["㉠","㉡","㉢","㉣"],"answer":3,"explain":"✅ <b>③ ㉢</b>: «в результате люди стали ходить по лестнице» — после того как из любопытства стали наступать."},{"n":41,"points":2,"instr":"다음 문장이 들어갈 위치로 가장 알맞은 것을 고르십시오.","passage":"[보기] 예를 들어 미소만으로도 친근함을 전할 수 있다. ── 표정은 말보다 더 많은 것을 전한다. ㉠ 우리는 얼굴을 보고 상대의 기분을 짐작한다. ㉡ 그래서 같은 말도 표정에 따라 다르게 들린다. ㉢ 이처럼 표정은 중요한 의사소통 수단이다. ㉣","options":["㉠","㉡","㉢","㉣"],"answer":1,"explain":"✅ <b>① ㉠</b>: пример (улыбкой передаёшь дружелюбие) идёт сразу после «мимика передаёт больше слов»."},{"n":42,"points":2,"instr":"이 글에 나타난 ‘나’의 심정으로 알맞은 것을 고르십시오.","passage":"할머니께서 보내 주신 택배 상자를 열자 익숙한 냄새가 났다. 직접 말리신 나물과 손으로 꾹꾹 눌러 담은 반찬들이 가득했다. 바쁘다는 핑계로 자주 찾아뵙지 못한 것이 떠올라 마음이 무거워졌다. 나는 상자를 한참 동안 바라보았다.","options":["죄송하고 그립다","즐겁고 신난다","화가 난다","무섭다"],"answer":1,"explain":"✅ <b>① вина и тоска</b> — давно не навещал бабушку, на сердце тяжело."},{"n":43,"points":2,"instr":"이 글의 내용과 같은 것을 고르십시오.","passage":"할머니께서 보내 주신 택배 상자를 열자 익숙한 냄새가 났다. 직접 말리신 나물과 손으로 꾹꾹 눌러 담은 반찬들이 가득했다. 바쁘다는 핑계로 자주 찾아뵙지 못한 것이 떠올라 마음이 무거워졌다. 나는 상자를 한참 동안 바라보았다.","options":["나는 할머니를 자주 찾아뵈었다.","상자는 비어 있었다.","할머니가 직접 만든 음식을 보냈다.","나는 음식을 버렸다."],"answer":3,"explain":"✅ <b>③ бабушка прислала еду своего приготовления</b>."},{"n":44,"points":2,"instr":"( )에 들어갈 말로 가장 알맞은 것을 고르십시오.","passage":"도서관은 단순히 책을 빌리는 곳이 아니다. 요즘 도서관에서는 영화 상영, 강연, 전시 같은 다양한 행사가 열린다. 또한 누구나 무료로 참여할 수 있어 ( ) 공간이 되고 있다. 책을 읽지 않더라도 도서관은 충분히 즐길 만한 곳이다.","options":["지역 주민이 함께 즐기는","책만 빌리는","돈을 내야 하는","조용히 있어야만 하는"],"answer":1,"explain":"✅ <b>① где вместе отдыхают местные жители</b> — бесплатно, для всех."},{"n":45,"points":2,"instr":"이 글의 주제로 알맞은 것을 고르십시오.","passage":"도서관은 단순히 책을 빌리는 곳이 아니다. 요즘 도서관에서는 영화 상영, 강연, 전시 같은 다양한 행사가 열린다. 또한 누구나 무료로 참여할 수 있어 지역 주민이 함께 즐기는 공간이 되고 있다. 책을 읽지 않더라도 도서관은 충분히 즐길 만한 곳이다.","options":["도서관은 책만 빌리는 곳이다.","도서관은 다양한 활동을 즐길 수 있는 공간이다.","도서관은 이용료가 비싸다.","도서관은 사라지고 있다."],"answer":2,"explain":"✅ <b>② библиотека — место для разных активностей</b>."},{"n":46,"points":2,"instr":"필자의 태도로 가장 알맞은 것을 고르십시오.","passage":"재택근무가 늘면서 일하는 방식이 빠르게 바뀌고 있다. 출퇴근 시간을 아낄 수 있다는 점은 분명한 장점이다. 그러나 동료와의 소통이 줄고 일과 휴식의 경계가 흐려지는 문제도 있다. 따라서 새로운 방식의 장점은 살리되 단점을 보완하려는 노력이 필요하다.","options":["변화의 장점을 인정하되 단점 보완을 강조한다.","재택근무를 무조건 반대한다.","변화에 관심이 없다.","단점은 무시해도 된다고 본다."],"answer":1,"explain":"✅ <b>① признаёт плюсы перемен, но подчёркивает компенсацию минусов</b>."},{"n":47,"points":2,"instr":"이 글의 내용과 같은 것을 고르십시오.","passage":"재택근무가 늘면서 일하는 방식이 빠르게 바뀌고 있다. 출퇴근 시간을 아낄 수 있다는 점은 분명한 장점이다. 그러나 동료와의 소통이 줄고 일과 휴식의 경계가 흐려지는 문제도 있다. 따라서 새로운 방식의 장점은 살리되 단점을 보완하려는 노력이 필요하다.","options":["재택근무는 단점이 없다.","재택근무에는 장점과 단점이 모두 있다.","출퇴근 시간이 늘었다.","소통이 더 활발해졌다."],"answer":2,"explain":"✅ <b>② у удалёнки есть и плюсы, и минусы</b>."},{"n":48,"points":2,"instr":"필자가 이 글을 쓴 목적으로 알맞은 것을 고르십시오.","passage":"최근 음식물 쓰레기를 줄이자는 움직임이 활발하다. 한 식당은 손님이 먹을 만큼만 담아 가는 방식을 도입했다. 처음에는 번거롭다는 반응도 있었지만, 남는 음식이 크게 줄자 ( ) 손님이 늘었다. 작은 실천이 쓰레기와 비용을 동시에 줄인 것이다. 이런 방식이 더 많은 곳으로 퍼지길 바란다.","options":["음식물 쓰레기를 줄이는 사례를 알리려고","식당을 광고하려고","손님의 불만을 전하려고","새 메뉴를 소개하려고"],"answer":1,"explain":"✅ <b>① рассказать о примере сокращения пищевых отходов</b>."},{"n":49,"points":2,"instr":"( )에 들어갈 말로 가장 알맞은 것을 고르십시오.","passage":"최근 음식물 쓰레기를 줄이자는 움직임이 활발하다. 한 식당은 손님이 먹을 만큼만 담아 가는 방식을 도입했다. 처음에는 번거롭다는 반응도 있었지만, 남는 음식이 크게 줄자 ( ) 손님이 늘었다. 작은 실천이 쓰레기와 비용을 동시에 줄인 것이다.","options":["끝까지 반대하는","방식에 공감하는","식당을 떠나는","음식을 더 남기는"],"answer":2,"explain":"✅ <b>② поддерживающих подход</b> — отходы упали, число согласных выросло."},{"n":50,"points":2,"instr":"이 글의 내용과 같은 것을 고르십시오.","passage":"최근 음식물 쓰레기를 줄이자는 움직임이 활발하다. 한 식당은 손님이 먹을 만큼만 담아 가는 방식을 도입했다. 처음에는 번거롭다는 반응도 있었지만, 남는 음식이 크게 줄자 방식에 공감하는 손님이 늘었다. 작은 실천이 쓰레기와 비용을 동시에 줄인 것이다.","options":["음식물 쓰레기가 늘었다.","손님이 모두 반대했다.","비용이 더 늘었다.","먹을 만큼만 담는 방식에 공감하는 손님이 늘었다."],"answer":4,"explain":"✅ <b>④ выросло число согласных с подходом «бери сколько съешь»</b>."}]}},
     7026: {"mock":true,"readingOnly":true,"no":"마디 모의고사 ①<br><b>읽기</b>","reading":{"durationMin":70,"total":50,"label":"Пробный · 읽기 (50) · оригинал","questions":[{"n":1,"points":2,"instr":"( )에 들어갈 말로 가장 알맞은 것을 고르십시오.","passage":"아침에 일찍 ( ) 지하철에서 자리에 앉을 수 있었다.","options":["나오려고","나와서","나오거나","나오지만"],"answer":2,"explain":"Встал рано → поэтому смог сесть.<br>✅ <b>② 나와서</b> = «вышел и (поэтому)» — причина.<br>✖️ ① «чтобы выйти», ③ «или», ④ «но» — не по смыслу."},{"n":2,"points":2,"instr":"( )에 들어갈 말로 가장 알맞은 것을 고르십시오.","passage":"하늘을 보니 비가 올 것 ( ) 우산을 가지고 나왔어요.","options":["같지만","같거나","같아서","같아도"],"answer":3,"explain":"Похоже, будет дождь → поэтому взял зонт.<br>✅ <b>③ 같아서</b> = «похоже, что…, поэтому».<br>✖️ остальные связки не дают причины."},{"n":3,"points":2,"instr":"밑줄 친 부분과 의미가 비슷한 것을 고르십시오.","passage":"시험이 <u>어려운 탓에</u> 점수가 낮았다.","options":["어려운 덕분에","어려운 대신에","어려운 김에","어려운 바람에"],"answer":4,"explain":"탓에 — негативная причина «по вине / из-за».<br>✅ <b>④ 바람에</b> — тоже «из-за (плохой итог)».<br>✖️ 덕분에 «благодаря» (положит.), 대신에 «вместо», 김에 «заодно»."},{"n":4,"points":2,"instr":"밑줄 친 부분과 의미가 비슷한 것을 고르십시오.","passage":"그 사람은 모르면서 아는 <u>척했다</u>.","options":["아는 편이다","아는 체했다","아는 셈이다","아는 모양이다"],"answer":2,"explain":"척하다 = делать вид.<br>✅ <b>② 체했다</b> — синоним 척하다.<br>✖️ 편이다 «скорее», 셈이다 «считай что», 모양이다 «похоже»."},{"n":5,"points":2,"instr":"다음은 무엇에 대한 글인지 고르십시오.","passage":"흐르는 물에 30초! 깨끗이 씻으면 감기를 예방할 수 있습니다.","options":["감기약","손 씻기","수도 요금","운동"],"answer":2,"explain":"«30 секунд под водой, мытьё предотвращает простуду» → о мытье рук.<br>✅ <b>② 손 씻기</b>."},{"n":6,"points":2,"instr":"다음은 무엇에 대한 글인지 고르십시오.","passage":"한 잔의 여유, 따뜻한 향기. 아침을 깨우는 진한 맛.","options":["커피","치약","비누","우유"],"answer":1,"explain":"«Чашка, тёплый аромат, насыщенный вкус, будит утро» → кофе.<br>✅ <b>① 커피</b>."},{"n":7,"points":2,"instr":"다음은 무엇에 대한 글인지 고르십시오.","passage":"신어도 발이 편안하게. 가벼운 무게, 미끄럼 방지 바닥.","options":["모자","가방","신발","시계"],"answer":3,"explain":"«Ноге удобно, лёгкие, нескользящая подошва» → обувь.<br>✅ <b>③ 신발</b>."},{"n":8,"points":2,"instr":"다음은 무엇에 대한 글인지 고르십시오.","passage":"끄고 나가요! 작은 습관이 지구를 지킵니다.","options":["교통 안전","건강 관리","독서","전기 절약"],"answer":4,"explain":"«Выключайте свет — привычка бережёт планету» → экономия электричества.<br>✅ <b>④ 전기 절약</b>."},{"n":9,"points":2,"instr":"다음 글의 내용과 같은 것을 고르십시오.","passage":"한국어 말하기 대회 / 일시: 5월 10일 토요일 오후 2시 / 장소: 시민회관 / 참가비: 무료 / 신청: 4월 30일까지 인터넷으로","options":["참가비를 내야 한다.","대회는 토요일에 열린다.","전화로 신청한다.","대회는 오전에 시작한다."],"answer":2,"explain":"✅ <b>② 토요일에 열린다</b> — 5월 10일 토요일.<br>✖️ участие бесплатное, заявка по интернету, начало в 14:00 (день)."},{"n":10,"points":2,"instr":"다음 글의 내용과 같은 것을 고르십시오.","passage":"<svg viewBox='0 0 300 165' width='100%' style='max-width:300px;display:block;margin:4px auto 10px;background:#FFFFFF;border:1px solid #EADDE0;border-radius:10px' xmlns='http://www.w3.org/2000/svg'><line x1='28' y1='128' x2='288' y2='128' stroke='#C9B6BB'/><rect x='42' y='38' width='36' height='90' rx='3' fill='#EE8893'/><rect x='112' y='60' width='36' height='68' rx='3' fill='#F2A6AE'/><rect x='182' y='83' width='36' height='45' rx='3' fill='#F6C2C7'/><rect x='252' y='106' width='36' height='22' rx='3' fill='#F8D6D9'/><text x='60' y='31' font-size='12' text-anchor='middle' fill='#7A5560'>40%</text><text x='130' y='53' font-size='12' text-anchor='middle' fill='#7A5560'>30%</text><text x='200' y='76' font-size='12' text-anchor='middle' fill='#7A5560'>20%</text><text x='270' y='99' font-size='12' text-anchor='middle' fill='#7A5560'>10%</text><text x='60' y='146' font-size='12' text-anchor='middle' fill='#5A4046'>저녁</text><text x='130' y='146' font-size='12' text-anchor='middle' fill='#5A4046'>점심</text><text x='200' y='146' font-size='12' text-anchor='middle' fill='#5A4046'>아침</text><text x='270' y='146' font-size='12' text-anchor='middle' fill='#5A4046'>밤</text></svg> ‘하루 중 휴대폰을 가장 많이 쓰는 시간’을 조사한 결과입니다.","options":["아침이 가장 많다.","점심이 저녁보다 많다.","저녁에 가장 많이 쓴다.","밤이 점심보다 많다."],"answer":3,"explain":"✅ <b>③ 저녁(40%)이 가장 많다</b>.<br>✖️ остальные противоречат цифрам."},{"n":11,"points":2,"instr":"다음 글의 내용과 같은 것을 고르십시오.","passage":"지난주에 우리 동네에 작은 도서관이 문을 열었다. 책뿐만 아니라 영화도 빌릴 수 있다. 회원증을 만들면 누구나 무료로 이용할 수 있다.","options":["책은 돈을 내고 빌린다.","도서관은 오래전에 생겼다.","회원증이 없어도 빌린다.","도서관에서 영화도 빌릴 수 있다."],"answer":4,"explain":"✅ <b>④ 영화도 빌릴 수 있다</b>.<br>✖️ открылась на прошлой неделе, бесплатно по членскому билету."},{"n":12,"points":2,"instr":"다음 글의 내용과 같은 것을 고르십시오.","passage":"우리 회사는 다음 달부터 일주일에 하루는 집에서 일하기로 했다. 직원들은 출퇴근 시간을 아낄 수 있어 좋아한다. 다만 회의는 사무실에서 한다.","options":["회의는 사무실에서 한다.","매일 집에서 일한다.","직원들은 이 제도를 싫어한다.","출퇴근 시간이 늘었다."],"answer":1,"explain":"✅ <b>① 회의는 사무실에서</b>.<br>✖️ из дома один день в неделю, сотрудники довольны, время в пути экономится."},{"n":13,"points":2,"instr":"다음을 순서대로 맞게 배열한 것을 고르십시오.","passage":"(가) 그래서 매일 아침 30분씩 걷기로 했다. (나) 나는 요즘 운동이 부족하다고 느꼈다. (다) 한 달이 지나자 몸이 훨씬 가벼워졌다. (라) 처음에는 힘들었지만 점점 익숙해졌다.","options":["(가)-(나)-(다)-(라)","(나)-(가)-(라)-(다)","(가)-(라)-(나)-(다)","(나)-(다)-(가)-(라)"],"answer":2,"explain":"✅ <b>② (나)-(가)-(라)-(다)</b>: почувствовал нехватку движения → решил ходить → сначала тяжело → через месяц стало легче."},{"n":14,"points":2,"instr":"다음을 순서대로 맞게 배열한 것을 고르십시오.","passage":"(가) 하지만 표가 모두 팔려서 볼 수 없었다. (나) 지난 주말에 영화를 보러 갔다. (다) 그래서 근처 식당에서 저녁만 먹고 돌아왔다. (라) 친구와 함께 영화관에 도착했다.","options":["(나)-(가)-(라)-(다)","(라)-(나)-(가)-(다)","(나)-(라)-(가)-(다)","(나)-(라)-(다)-(가)"],"answer":3,"explain":"✅ <b>③ (나)-(라)-(가)-(다)</b>: пошёл в кино → пришли в кинотеатр → но билеты раскуплены → поэтому только поужинали."},{"n":15,"points":2,"instr":"다음을 순서대로 맞게 배열한 것을 고르십시오.","passage":"(가) 면접 날 아침에 일찍 일어났다. (나) 며칠 동안 예상 질문을 준비했다. (다) 준비한 덕분에 자신 있게 대답할 수 있었다. (라) 지난달에 회사 면접을 봤다.","options":["(라)-(가)-(나)-(다)","(나)-(라)-(가)-(다)","(라)-(나)-(다)-(가)","(라)-(나)-(가)-(다)"],"answer":4,"explain":"✅ <b>④ (라)-(나)-(가)-(다)</b>: было собеседование → готовил вопросы → встал рано в день → ответил уверенно."},{"n":16,"points":2,"instr":"( )에 들어갈 말로 가장 알맞은 것을 고르십시오.","passage":"사람은 누구나 실수를 한다. 중요한 것은 그 후의 태도이다. 실수를 ( ) 다음에는 같은 잘못을 하지 않게 된다.","options":["숨기면","반복하면","무시하면","반성하면"],"answer":4,"explain":"✅ <b>④ 반성하면</b> = если осмыслить → не повторишь ошибку.<br>✖️ скрыть/повторять/игнорировать — не дают такого результата."},{"n":17,"points":2,"instr":"( )에 들어갈 말로 가장 알맞은 것을 고르십시오.","passage":"식물도 빛이 필요하다. 빛이 부족하면 잎이 노랗게 변한다. 그래서 화분은 ( ) 곳에 두는 것이 좋다.","options":["바람이 없는","햇빛이 잘 드는","어두운","물이 많은"],"answer":2,"explain":"✅ <b>② 햇빛이 잘 드는</b> = где много солнца (растению нужен свет)."},{"n":18,"points":2,"instr":"( )에 들어갈 말로 가장 알맞은 것을 고르십시오.","passage":"여행 갈 때 짐이 많으면 불편하다. 꼭 필요한 것만 챙기면 ( ) 다닐 수 있다. 그래서 짐을 쌀 때는 신중하게 골라야 한다.","options":["가볍게","무겁게","천천히","위험하게"],"answer":1,"explain":"✅ <b>① 가볍게</b> = брать только нужное → ходить налегке."},{"n":19,"points":2,"instr":"( )에 들어갈 말로 가장 알맞은 것을 고르십시오.","passage":"요즘 자전거로 출퇴근하는 사람이 늘고 있다. 자전거는 교통비가 들지 않고 건강에도 좋다. ( ) 길이 막혀도 늦을 걱정이 적다. 이런 이유로 자전거 출퇴근은 인기를 얻고 있다.","options":["그러나","예를 들면","또한","그런데"],"answer":3,"explain":"✅ <b>③ 또한</b> = «к тому же» — добавляет ещё одно достоинство.<br>✖️ «однако/например/кстати» не подходят."},{"n":20,"points":2,"instr":"이 글의 중심 내용으로 알맞은 것을 고르십시오.","passage":"요즘 자전거로 출퇴근하는 사람이 늘고 있다. 자전거는 교통비가 들지 않고 건강에도 좋다. 또한 길이 막혀도 늦을 걱정이 적다. 이런 이유로 자전거 출퇴근은 인기를 얻고 있다.","options":["자전거 출퇴근이 인기를 얻고 있다.","자전거는 위험하다.","교통비가 비싸지고 있다.","도시에 자동차가 많아졌다."],"answer":1,"explain":"✅ <b>① велопоездки на работу набирают популярность</b> — главная мысль."},{"n":21,"points":2,"instr":"( )에 들어갈 말로 가장 알맞은 것을 고르십시오.","passage":"동생은 시험에 떨어지고도 ( ) 태연한 표정이었다. 속으로는 많이 속상했을 텐데 가족 앞에서는 웃어 보였다. 나는 그런 동생이 오히려 더 안쓰러웠다.","options":["발 벗고 나서서","아무렇지도 않은 듯","손을 놓고","입을 모아"],"answer":2,"explain":"✅ <b>② 아무렇지도 않은 듯</b> = «как ни в чём не бывало» — спокойное лицо, хотя внутри переживает."},{"n":22,"points":2,"instr":"이 글을 통해 알 수 있는 것을 고르십시오.","passage":"동생은 시험에 떨어지고도 아무렇지도 않은 듯 태연한 표정이었다. 속으로는 많이 속상했을 텐데 가족 앞에서는 웃어 보였다. 나는 그런 동생이 오히려 더 안쓰러웠다.","options":["동생은 속상한 마음을 감추었다.","동생은 시험에 합격했다.","동생은 가족에게 화를 냈다.","나는 동생이 부러웠다."],"answer":1,"explain":"✅ <b>① 동생은 속상함을 감췄다</b> — улыбался, хотя расстроен."},{"n":23,"points":2,"instr":"이 글에 나타난 ‘나’의 심정으로 알맞은 것을 고르십시오.","passage":"버스에 올라타려는 순간 지갑이 없는 것을 알았다. 얼굴이 빨개졌고 뒤에 선 사람들의 시선이 느껴졌다. 그때 한 학생이 조용히 카드를 대 주며 ‘괜찮아요’라고 말했다. 나는 고맙다는 말도 제대로 하지 못한 채 자리에 앉았다.","options":["즐겁고 신난다","화가 나고 억울하다","지루하고 답답하다","고맙고 미안하다"],"answer":4,"explain":"✅ <b>④ благодарность и неловкость</b> — студент выручил, а «я» не смог толком поблагодарить."},{"n":24,"points":2,"instr":"이 글의 내용과 같은 것을 고르십시오.","passage":"버스에 올라타려는 순간 지갑이 없는 것을 알았다. 얼굴이 빨개졌고 뒤에 선 사람들의 시선이 느껴졌다. 그때 한 학생이 조용히 카드를 대 주며 ‘괜찮아요’라고 말했다. 나는 고맙다는 말도 제대로 하지 못한 채 자리에 앉았다.","options":["학생이 버스 요금을 대신 내 주었다.","나는 지갑을 버스에 두고 내렸다.","나는 학생에게 길게 인사했다.","버스에는 사람이 아무도 없었다."],"answer":1,"explain":"✅ <b>① студент оплатил проезд за меня</b> (приложил карту)."},{"n":25,"points":2,"instr":"다음 신문 기사 제목을 가장 잘 설명한 것을 고르십시오.","passage":"주말 나들이객 ‘북적’… 고속도로 몸살","options":["주말에 고속도로가 한가했다.","나들이객이 줄어 도로가 비었다.","주말에 나들이객이 많아 도로가 매우 붐볐다.","고속도로가 공사로 막혔다."],"answer":3,"explain":"✅ <b>③</b> 북적=толпа, 몸살=мучается → дороги забиты из-за множества отдыхающих."},{"n":26,"points":2,"instr":"다음 신문 기사 제목을 가장 잘 설명한 것을 고르십시오.","passage":"채솟값 껑충… 식탁 부담 ↑","options":["채소 가격이 올라 가계 부담이 커졌다.","채소가 싸져서 가정이 좋아했다.","채소 생산이 멈췄다.","식탁이 부족하다."],"answer":1,"explain":"✅ <b>①</b> 껑충=резкий скачок, 부담↑ → цены на овощи выросли, нагрузка на семью."},{"n":27,"points":2,"instr":"다음 신문 기사 제목을 가장 잘 설명한 것을 고르십시오.","passage":"폭염 속 전력 사용 ‘사상 최고’","options":["날씨가 시원해 전기를 적게 썼다.","더위로 전기 사용량이 역대 가장 많았다.","전기 요금이 내렸다.","전력 공급이 끊겼다."],"answer":2,"explain":"✅ <b>②</b> 폭염=жара, 사상 최고=рекорд → потребление электричества рекордное из-за жары."},{"n":28,"points":2,"instr":"( )에 들어갈 말로 가장 알맞은 것을 고르십시오.","passage":"웃음은 몸과 마음에 좋다. 크게 웃으면 스트레스가 줄고 기분이 좋아진다. 또한 웃을 때 쓰는 근육은 운동 효과까지 있어 ( ) 도움이 된다.","options":["건강에도","수면 부족에도","스트레스 증가에도","체중 증가에도"],"answer":1,"explain":"✅ <b>① 건강에도</b> — смех снижает стресс и работает как упражнение → полезен здоровью."},{"n":29,"points":2,"instr":"( )에 들어갈 말로 가장 알맞은 것을 고르십시오.","passage":"도시의 밤이 점점 밝아지고 있다. 밝은 불빛은 편리하지만 너무 강하면 ( ). 실제로 밤에 빛이 너무 많으면 잠을 제대로 자기 어렵다는 연구도 있다.","options":["에너지를 절약해 준다","별을 더 잘 보이게 한다","낮처럼 따뜻해진다","오히려 건강을 해칠 수 있다"],"answer":4,"explain":"✅ <b>④ может навредить здоровью</b> — далее: слишком много света мешает спать."},{"n":30,"points":2,"instr":"( )에 들어갈 말로 가장 알맞은 것을 고르십시오.","passage":"새 언어를 배울 때는 완벽하게 말하려고 애쓰기보다 ( ) 더 중요하다. 틀려도 자꾸 말하다 보면 실력이 는다. 실수를 두려워하면 입이 열리지 않는다.","options":["자주 사용해 보는 것이","문법을 외우는 것이","발음을 숨기는 것이","말을 줄이는 것이"],"answer":1,"explain":"✅ <b>① чаще пробовать использовать</b> — далее: говори, даже с ошибками."},{"n":31,"points":2,"instr":"( )에 들어갈 말로 가장 알맞은 것을 고르십시오.","passage":"동물도 서로 신호를 주고받는다. 예를 들어 꿀벌은 춤을 추어 꽃이 있는 ( ) 동료에게 알린다. 이렇게 동물들은 저마다의 방법으로 의사소통을 한다.","options":["색깔을","위치를","이름을","무게를"],"answer":2,"explain":"✅ <b>② 위치를</b> — пчела танцем сообщает место цветов."},{"n":32,"points":2,"instr":"다음 글의 내용과 같은 것을 고르십시오.","passage":"한글은 1443년에 만들어진 문자이다. 백성이 쉽게 글을 배울 수 있도록 만들어졌다. 글자 모양은 발음 기관의 모양을 본떠 만들어 매우 과학적이다.","options":["한글은 백성을 위해 만들어졌다.","한글은 외국에서 들여왔다.","한글은 배우기 매우 어렵다.","한글 모양에는 원리가 없다."],"answer":1,"explain":"✅ <b>① создан для народа</b>.<br>✖️ создан в Корее, лёгок, в основе — научный принцип."},{"n":33,"points":2,"instr":"다음 글의 내용과 같은 것을 고르십시오.","passage":"최근 ‘제로 웨이스트’ 가게가 늘고 있다. 이곳에서는 포장 없이 필요한 만큼만 살 수 있다. 손님은 직접 용기를 가져와 담아 간다. 쓰레기를 줄이려는 사람들에게 인기가 많다.","options":["물건이 모두 포장되어 있다.","원하는 양보다 많이 사야 한다.","손님이 용기를 직접 가져온다.","쓰레기가 늘어난다."],"answer":3,"explain":"✅ <b>③ покупатель приносит свою тару</b>.<br>✖️ без упаковки, сколько нужно, мусор сокращается."},{"n":34,"points":2,"instr":"다음 글의 내용과 같은 것을 고르십시오.","passage":"고래는 물속에 살지만 물고기가 아니라 포유류이다. 그래서 새끼를 낳아 젖을 먹여 키운다. 또한 숨을 쉬기 위해 가끔 물 위로 올라온다.","options":["고래는 새끼에게 젖을 먹인다.","고래는 물고기이다.","고래는 숨을 쉬지 않는다.","고래는 알을 낳는다."],"answer":1,"explain":"✅ <b>① кит кормит детёныша молоком</b> (млекопитающее)."},{"n":35,"points":2,"instr":"이 글의 주제로 알맞은 것을 고르십시오.","passage":"물건을 오래 쓰는 것은 환경을 지키는 가장 쉬운 방법이다. 새것을 사기 전에 지금 것을 고쳐 쓸 수 있는지 생각해 보자. 작은 실천이 모이면 큰 변화를 만든다.","options":["새 물건은 빨리 사는 것이 좋다.","물건을 오래 쓰면 환경을 지킬 수 있다.","고치는 것은 시간 낭비이다.","환경 문제는 해결할 수 없다."],"answer":2,"explain":"✅ <b>② долго пользоваться вещами = беречь среду</b> — главная мысль."},{"n":36,"points":2,"instr":"이 글의 주제로 알맞은 것을 고르십시오.","passage":"칭찬은 사람을 변화시키는 힘이 있다. 작은 일이라도 진심으로 칭찬하면 상대는 더 잘하고 싶어진다. 비난보다 칭찬이 사람을 움직인다.","options":["진심 어린 칭찬은 사람을 성장시킨다.","칭찬은 효과가 없다.","비난이 칭찬보다 낫다.","칭찬은 자주 하면 안 된다."],"answer":1,"explain":"✅ <b>① искренняя похвала растит человека</b>."},{"n":37,"points":2,"instr":"이 글의 주제로 알맞은 것을 고르십시오.","passage":"충분한 잠은 건강의 기본이다. 잠이 부족하면 집중력이 떨어지고 쉽게 피곤해진다. 바쁘더라도 잠자는 시간을 먼저 지키는 것이 좋다.","options":["잠은 적게 잘수록 좋다.","바쁘면 잠을 줄여야 한다.","집중력은 잠과 관계없다.","건강을 위해 충분한 잠이 중요하다."],"answer":4,"explain":"✅ <b>④ для здоровья важен достаточный сон</b>."},{"n":38,"points":2,"instr":"이 글의 주제로 알맞은 것을 고르십시오.","passage":"혼자 하는 일에도 한계가 있다. 서로 다른 생각을 가진 사람들이 힘을 모으면 더 좋은 결과가 나온다. 협력은 부족한 부분을 채워 준다.","options":["함께 협력하면 더 좋은 결과를 얻는다.","일은 혼자 하는 것이 가장 좋다.","다른 생각은 방해가 된다.","협력은 결과를 나쁘게 만든다."],"answer":1,"explain":"✅ <b>① сотрудничество даёт лучший результат</b>."},{"n":39,"points":2,"instr":"다음 문장이 들어갈 위치로 가장 알맞은 것을 고르십시오.","passage":"[보기] 하지만 시간이 지나자 점점 익숙해졌다. ── 처음 외국에 도착했을 때 모든 것이 낯설었다. ㉠ 음식도 입에 맞지 않고 말도 통하지 않았다. ㉡ 이제는 그곳 생활이 고향처럼 편안하다. ㉢ 낯선 환경도 시간이 약이 되는 것 같다. ㉣","options":["㉠","㉡","㉢","㉣"],"answer":2,"explain":"✅ <b>② ㉡</b>: «но со временем привык» стоит между трудностями (㉠) и «теперь комфортно» (㉡)."},{"n":40,"points":2,"instr":"다음 문장이 들어갈 위치로 가장 알맞은 것을 고르십시오.","passage":"[보기] 그 결과 도시의 공기가 한결 맑아졌다. ── 시는 작년부터 도심에 나무를 많이 심었다. ㉠ 또한 오래된 공장의 매연도 줄이도록 했다. ㉡ 시민들은 예전보다 숨쉬기가 편해졌다고 말한다. ㉢ 앞으로도 이런 노력이 계속되기를 바란다. ㉣","options":["㉠","㉡","㉢","㉣"],"answer":2,"explain":"✅ <b>② ㉡</b>: «в результате воздух стал чище» — после мер (деревья, меньше дыма), перед реакцией жителей."},{"n":41,"points":2,"instr":"다음 문장이 들어갈 위치로 가장 알맞은 것을 고르십시오.","passage":"[보기] 예를 들어 색깔만 봐도 그 과일이 익었는지 알 수 있다. ── 우리는 눈으로 많은 정보를 얻는다. ㉠ 시각은 다른 감각보다 빠르게 판단을 돕는다. ㉡ 그래서 물건을 고를 때도 먼저 눈으로 살핀다. ㉢ 이처럼 눈은 일상에서 중요한 역할을 한다. ㉣","options":["㉠","㉡","㉢","㉣"],"answer":3,"explain":"✅ <b>③ ㉢</b>: пример (по цвету видно зрелость) идёт после «выбираем глазами» (㉢)."},{"n":42,"points":2,"instr":"이 글에 나타난 ‘나’의 심정으로 알맞은 것을 고르십시오.","passage":"교실 문을 열자 친구들이 모두 나를 보며 박수를 쳤다. 칠판에는 ‘생일 축하해’라고 적혀 있었다. 잊고 있던 내 생일을 친구들이 기억하고 있었던 것이다. 코끝이 찡해지면서 나도 모르게 눈물이 났다.","options":["감동스럽다","실망스럽다","지루하다","무섭다"],"answer":1,"explain":"✅ <b>① растроган(а)/тронут(а)</b> — друзья помнили о дне рождения, навернулись слёзы."},{"n":43,"points":2,"instr":"이 글의 내용과 같은 것을 고르십시오.","passage":"교실 문을 열자 친구들이 모두 나를 보며 박수를 쳤다. 칠판에는 ‘생일 축하해’라고 적혀 있었다. 잊고 있던 내 생일을 친구들이 기억하고 있었던 것이다. 코끝이 찡해지면서 나도 모르게 눈물이 났다.","options":["나는 친구들의 생일을 잊었다.","친구들이 나의 생일을 준비해 주었다.","교실에는 아무도 없었다.","나는 박수를 치며 들어갔다."],"answer":2,"explain":"✅ <b>② друзья устроили мне день рождения</b>."},{"n":44,"points":2,"instr":"( )에 들어갈 말로 가장 알맞은 것을 고르십시오.","passage":"걷기는 가장 쉬운 운동이다. 특별한 장비나 돈이 필요 없고 언제 어디서나 할 수 있다. 게다가 무리가 적어 ( ) 부담 없이 시작할 수 있다. 하루 30분만 꾸준히 걸어도 건강에 큰 도움이 된다.","options":["운동선수만","어린아이만","운동을 처음 하는 사람도","건강한 사람만"],"answer":3,"explain":"✅ <b>③ даже новичок в спорте</b> — нагрузка мала, начать может каждый."},{"n":45,"points":2,"instr":"이 글의 주제로 알맞은 것을 고르십시오.","passage":"걷기는 가장 쉬운 운동이다. 특별한 장비나 돈이 필요 없고 언제 어디서나 할 수 있다. 게다가 무리가 적어 운동을 처음 하는 사람도 부담 없이 시작할 수 있다. 하루 30분만 꾸준히 걸어도 건강에 큰 도움이 된다.","options":["걷기는 돈이 많이 든다.","운동은 장비가 있어야 한다.","걷기는 누구나 쉽게 할 수 있는 좋은 운동이다.","걷기는 효과가 없다."],"answer":3,"explain":"✅ <b>③ ходьба — доступное всем хорошее упражнение</b>."},{"n":46,"points":2,"instr":"필자의 태도로 가장 알맞은 것을 고르십시오.","passage":"인공지능 기술이 빠르게 발전하면서 편리함이 커지고 있다. 그러나 우리는 그 이면도 함께 살펴야 한다. 일자리 변화나 개인 정보 보호 같은 문제에 미리 대비하지 않으면 큰 혼란이 올 수 있다. 기술 발전은 환영할 일이지만 그만큼 신중한 준비가 필요하다.","options":["기술 발전을 반기면서도 신중한 대비를 강조한다.","기술 발전을 무조건 반대한다.","기술에 전혀 관심이 없다.","문제를 무시해도 된다고 본다."],"answer":1,"explain":"✅ <b>① приветствует развитие, но требует осторожной подготовки</b>."},{"n":47,"points":2,"instr":"이 글의 내용과 같은 것을 고르십시오.","passage":"인공지능 기술이 빠르게 발전하면서 편리함이 커지고 있다. 그러나 우리는 그 이면도 함께 살펴야 한다. 일자리 변화나 개인 정보 보호 같은 문제에 미리 대비하지 않으면 큰 혼란이 올 수 있다. 기술 발전은 환영할 일이지만 그만큼 신중한 준비가 필요하다.","options":["인공지능은 문제를 일으키지 않는다.","기술 발전에는 대비가 필요하다.","일자리는 전혀 변하지 않는다.","필자는 기술을 반대한다."],"answer":2,"explain":"✅ <b>② развитие требует подготовки</b> (рабочие места, защита данных)."},{"n":48,"points":2,"instr":"필자가 이 글을 쓴 목적으로 알맞은 것을 고르십시오.","passage":"최근 일회용품을 줄이자는 목소리가 높다. 이에 많은 카페가 매장 안에서는 다회용 컵을 쓰기 시작했다. 처음에는 불편하다는 의견도 있었지만 시간이 지나며 ( ) 사람들이 늘었다. 작은 불편이 환경을 지키는 큰 걸음이 된다는 것을 알게 된 것이다.","options":["일회용품을 줄이려는 변화를 알리고 권하기 위해","카페를 광고하기 위해","다회용 컵의 단점을 알리기 위해","불편함을 불평하기 위해"],"answer":1,"explain":"✅ <b>① рассказать о переменах и призвать сокращать одноразовое</b>."},{"n":49,"points":2,"instr":"( )에 들어갈 말로 가장 알맞은 것을 고르십시오.","passage":"최근 일회용품을 줄이자는 목소리가 높다. 이에 많은 카페가 매장 안에서는 다회용 컵을 쓰기 시작했다. 처음에는 불편하다는 의견도 있었지만 시간이 지나며 ( ) 사람들이 늘었다. 작은 불편이 환경을 지키는 큰 걸음이 된다는 것을 알게 된 것이다.","options":["끝까지 반대하는","기꺼이 동참하는","전혀 모르는","불편해서 떠나는"],"answer":2,"explain":"✅ <b>② охотно присоединяющихся</b> — со временем поняли пользу, число выросло."},{"n":50,"points":2,"instr":"이 글의 내용과 같은 것을 고르십시오.","passage":"최근 일회용품을 줄이자는 목소리가 높다. 이에 많은 카페가 매장 안에서는 다회용 컵을 쓰기 시작했다. 처음에는 불편하다는 의견도 있었지만 시간이 지나며 기꺼이 동참하는 사람들이 늘었다. 작은 불편이 환경을 지키는 큰 걸음이 된다는 것을 알게 된 것이다.","options":["모든 사람이 끝까지 반대했다.","카페는 일회용품만 쓴다.","환경에는 도움이 되지 않는다.","다회용 컵 사용에 동참하는 사람이 늘었다."],"answer":4,"explain":"✅ <b>④ число участвующих в многоразовых стаканах выросло</b>."}]}},
     7025: {"mock":true,"readingOnly":true,"no":"국가 경시대회<br><b>읽기</b>","reading":{"durationMin":60,"total":40,"label":"Олимпиада · 읽기 (40)","questions":[{"n":1,"points":1,"instr":"Выберите наиболее подходящее для пропуска ( ).","passage":"어머니 생신인데 외국에 있어서 찾아뵐 수 없어요. 전화( ) 드려야겠어요.","options":["조차","라도","만큼","까지"],"answer":2,"explain":"Не могу приехать на день рождения мамы → «хотя бы позвонить».<br>✅ <b>② 라도</b> = «хотя бы, на худой конец» (выбор меньшего из возможного).<br>✖️ ① 조차 «даже не», ③ 만큼 «настолько», ④ 까지 «вплоть до» — не подходят по смыслу."},{"n":2,"points":1,"instr":"Выберите наиболее подходящее для пропуска ( ).","passage":"내일 중요한 시험이 있는데 늦게 ( ) 형한테 깨워 달라고 했어요.","options":["일어나게","일어날 텐데","일어날까 봐","일어나더라도"],"answer":3,"explain":"Попросил брата разбудить → «боясь, что просплю».<br>✅ <b>③ 일어날까 봐</b> = «боясь, что (поздно встану)».<br>✖️ ① 일어나게 «чтобы встал», ② 일어날 텐데 «вероятно встану, но», ④ 일어나더라도 «даже если встану» — не дают причину просьбы."},{"n":3,"points":1,"instr":"Выберите наиболее подходящее для пропуска ( ).","passage":"날씨가 흐린 걸 보니까 비가 ( ).","options":["오더라고요","오거든요","오면 안 돼요","올 모양이에요"],"answer":4,"explain":"«Судя по тому, что пасмурно (흐린 걸 보니까)» → предположение по признаку.<br>✅ <b>④ 올 모양이에요</b> = «похоже, пойдёт (дождь)».<br>✖️ ① 오더라고요 «(я видел) шёл», ② 오거든요 «ведь идёт», ③ 오면 안 돼요 «нельзя, чтобы шёл» — не выражают догадку."},{"n":4,"points":1,"instr":"Выберите наиболее подходящее для пропуска ( ).","passage":"가을이 되니까 우리 집 감나무에 감이 ( ) 달렸다.","options":["주렁주렁","사각사각","보글보글","퐁당퐁당"],"answer":1,"explain":"Хурма «висит гроздьями» на дереве.<br>✅ <b>① 주렁주렁</b> = звукоподр. «гроздьями, обильно (свисают плоды)».<br>✖️ ② 사각사각 «хруст», ③ 보글보글 «бульканье», ④ 퐁당퐁당 «плюх» — не про висящие плоды."},{"n":5,"points":1,"instr":"Выберите выражение, близкое по смыслу к подчёркнутому.","passage":"미안해요. 음악을 듣느라고 전화 소리를 못 들었어요.\n(밑줄: 듣느라고)","options":["듣겠지만","들어 봤더니","듣는 김에","듣고 있어서"],"answer":4,"explain":"«-느라고» = «из-за того что (был занят) слушанием» (причина-помеха).<br>✅ <b>④ 듣고 있어서</b> = «потому что слушал» — та же причинная связь.<br>✖️ ① «послушаю, но», ② «попробовал послушать и», ③ 김에 «заодно» — другое значение."},{"n":6,"points":1,"instr":"Выберите выражение, близкое по смыслу к подчёркнутому.","passage":"주말에 영화를 봤는데 영화가 눈물이 날 정도로 감동적이었어요.\n(밑줄: 눈물이 날 정도로)","options":["눈물이 나길래","눈물이 날 만큼","눈물이 날 때까지","눈물이 난 덕분에"],"answer":2,"explain":"«-(으)ㄹ 정도로» = «настолько, что» = степень.<br>✅ <b>② 눈물이 날 만큼</b> = «настолько, что наворачивались слёзы» — то же «-(으)ㄹ 만큼».<br>✖️ ① 길래 «раз уж», ③ 때까지 «пока не», ④ 덕분에 «благодаря» — другое."},{"n":7,"points":1,"instr":"Выберите слово, которое подходит в оба пропуска ( ).","passage":"이제 호텔에 들어왔으니까 방에 들어가서 짐을 ( ) 쉬세요.\n쉬면서 쌓인 피로를 ( )고 싶어요.","options":["풀다","넣다","나다","쌓다"],"answer":1,"explain":"짐을 풀다 = «разобрать вещи», 피로를 풀다 = «снять усталость» — глагол 풀다 подходит в оба.<br>✅ <b>① 풀다</b>.<br>✖️ ② 넣다 «класть», ③ 나다 «возникать», ④ 쌓다 «накапливать» — не сочетаются с обоими."},{"n":8,"points":1,"instr":"Выберите пословицу, подходящую к ситуации диалога.","passage":"가: 그분은 참 겸손한 것 같아요. 그렇게 큰 상을 받고도 수상 소감을 겸손하게 말하더라고요.\n나: 맞아요. 그런 겸손한 태도는 배울 만해요.","options":["입에 쓴 약이 몸에 좋다","달면 삼키고 쓰면 뱉는다","우물을 파도 한 우물만 파라","벼는 익을수록 고개를 숙인다"],"answer":4,"explain":"Речь о скромности человека, добившегося многого.<br>✅ <b>④ 벼는 익을수록 고개를 숙인다</b> «спелый колос клонит голову» = чем достойнее человек, тем он скромнее.<br>✖️ ① «горькое лекарство полезно», ② «сладкое глотают, горькое выплёвывают», ③ «копай один колодец» — не про скромность."},{"n":9,"points":1,"instr":"Выберите вариант, совпадающий с содержанием текста.","passage":"한강 공원은 우리 집에서 가깝습니다. 그래서 저는 저녁마다 동생과 한강 공원에 갑니다. 동생은 자전거를 타고 저는 달리기를 합니다.","options":["저는 한강 공원에 가끔 갑니다.","저는 저녁마다 자전거를 탑니다.","한강 공원은 우리 집 근처에 있습니다.","동생은 저녁에 혼자 한강 공원에 갑니다."],"answer":3,"explain":"«공원은 우리 집에서 가깝습니다» = парк рядом с домом.<br>✅ <b>③ 우리 집 근처에 있습니다</b> (рядом с домом).<br>✖️ ① хожу 저녁마다 (каждый вечер), не иногда, ② на велосипеде — брат, я бегаю, ④ ходим вместе, не он один."},{"n":10,"points":1,"instr":"Выберите вариант, совпадающий с содержанием текста.","passage":"저는 어제 지하철에 가방을 놓고 내렸습니다. 그래서 지하철 분실물 센터에 가서 물어봤는데 제 가방이 없었습니다. 오늘 수업이 끝나고 다시 분실물 센터에 가 보려고 합니다.","options":["저는 오늘 수업이 없습니다.","저는 어제 가방을 잃어버렸습니다.","저는 오늘 지하철에서 가방을 찾았습니다.","제 가방은 지하철 분실물센터에 있었습니다."],"answer":2,"explain":"«어제 지하철에 가방을 놓고 내렸다» = вчера забыл сумку в метро.<br>✅ <b>② 어제 가방을 잃어버렸습니다</b> (вчера потерял сумку).<br>✖️ ① сегодня есть занятия (수업이 끝나고), ③ ещё не нашёл, ④ сумки в бюро находок не было."},{"n":11,"points":1,"instr":"Прочитайте и выберите главную мысль текста.","passage":"저는 고등학교를 졸업한 후 외국에서 공부하고 있기 때문에 동창들을 오랫동안 만나지 못했습니다. 그래서 친구들이 보고 싶습니다. 다음 방학에 고향에 가려고 합니다. 빨리 방학이 되면 좋겠습니다.","options":["저는 외국으로 유학을 가야 합니다.","저는 외국에서 공부하는 것이 좋습니다.","저는 방학이 되기 전에 친구들을 볼 겁니다.","저는 방학에 고등학교 친구들을 만나고 싶습니다."],"answer":4,"explain":"Скучает по школьным друзьям, на каникулах поедет домой.<br>✅ <b>④ 방학에 고등학교 친구들을 만나고 싶습니다</b> (хочу встретить друзей на каникулах).<br>✖️ ① «должен ехать учиться» — не мысль, ② про учёбу за границей — не главное, ③ поедет в каникулы, а не «до» них."},{"n":12,"points":1,"instr":"О чём этот текст (реклама)? Выберите.","passage":"포근한 느낌!\n따뜻하게 숙면을 취할 수 있어요.","options":["이불","수건","휴지","안경"],"answer":1,"explain":"«Уютно, тепло, крепкий сон» → про одеяло.<br>✅ <b>① 이불</b> (одеяло).<br>✖️ ② 수건 полотенце, ③ 휴지 салфетки, ④ 안경 очки — не про сон и тепло."},{"n":13,"points":1,"instr":"О чём этот текст? Выберите.","passage":"사용하지 않을 때는 전원을 꺼 주세요.\n미래를 위해 남겨 두세요.","options":["화재 예방","교통 문제","전기 절약","이웃 사랑"],"answer":3,"explain":"«Выключайте питание, когда не пользуетесь; сбережём для будущего» → экономия электричества.<br>✅ <b>③ 전기 절약</b> (экономия электроэнергии).<br>✖️ ① пожарная безопасность, ② транспорт, ④ любовь к ближнему — не о питании/энергии."},{"n":14,"points":1,"instr":"Выберите вариант, совпадающий с содержанием объявления (афиша концерта).","passage":"[Афиша музыкального концерта] Указаны: время, место, условия входа и скидка для жителей района 성북구.","options":["이 음악회는 주말 오전에 열린다.","이 음악회는 누구나 관람할 수 있다.","이 음악회에서는 영화도 볼 수 있다.","성북구에 사는 사람은 할인을 받을 수 있다."],"answer":4,"explain":"По ключу верно: на афише есть скидка для жителей района Сонбук-гу.<br>✅ <b>④ 성북구에 사는 사람은 할인을 받을 수 있다</b> (жителям 성북구 — скидка).<br>✖️ ① время не «утро выходного», ② вход не для всех, ③ кино на концерте не показывают."},{"n":15,"points":1,"instr":"Выберите вариант, совпадающий с содержанием графика (где слушают музыку: 20-летние и 50-летние).","passage":"[График] Где люди 20 и 50 лет слушают музыку: на ходу, дома за делами, во время спорта, в транспорте, в авто.","options":["20대는 길을 걸으면서 음악을 듣는 사람이 가장 많다.","50대는 집안일을 하면서 음악을 듣는 사람이 가장 적다.","20대가 50대보다 운동하면서 음악 듣는 것을 더 선호한다.","50대는 대중교통보다 자동차에서 음악을 듣는 사람이 더 많다."],"answer":4,"explain":"По ключу верно: у 50-летних слушают музыку в авто больше, чем в общественном транспорте.<br>✅ <b>④ 50대는 대중교통보다 자동차에서 듣는 사람이 더 많다</b>.<br>✖️ ①②③ — противоречат данным графика (подмена «больше/меньше» и сравнения возрастов)."},{"n":16,"points":1,"instr":"Выберите вариант, совпадающий с содержанием графика (досуг школьников 2012 vs 2022).","passage":"[График] Доля учеников начальной школы по длительности свободного времени в 2012 и 2022 годах (менее 1 ч, 1–2 ч, 2–3 ч, 3–4 ч).","options":["2012년에는 여가 시간이 2~3시간인 초등학생이 가장 많았다.","2022년에는 여가 시간이 1~2시간인 초등학생이 가장 적었다.","여가 시간이 3~4시간인 초등학생의 비율은 2012년보다 2022년이 높았다.","여가 시간이 1시간 미만인 초등학생의 비율은 2012년에 비해 2022년에 늘었다."],"answer":3,"explain":"По ключу верно: доля школьников с досугом 3–4 часа в 2022 году выше, чем в 2012.<br>✅ <b>③ 3~4시간 비율은 2012년보다 2022년이 높았다</b>.<br>✖️ ①②④ — не соответствуют цифрам графика."},{"n":17,"points":1,"instr":"Выберите подходящее для пропуска ( ).","passage":"어렸을 때부터 심부름을 한 아이가 자라서 성공할 가능성이 높다는 연구 결과가 나왔다. 아이들은 이런 일을 스스로 해내는 과정을 통해 다른 사람에게 무엇이 필요한지 살펴보는 ( ) 되고, 부모가 시킨 일을 완수하면서 성취감을 느끼게 된다. 즉, 심부름을 수행하는 과정에서 문제 해결 능력이 좋아지고, 자신감과 성취감, 책임감도 생길 수 있다.","options":["일을 시키게","능력을 키우게","인상을 받게 되고","성공할 기회를 얻고"],"answer":2,"explain":"Через поручения ребёнок «учится замечать, что нужно другим» → развивает способность.<br>✅ <b>② 능력을 키우게 (되고)</b> = «развивает способность».<br>✖️ ① «заставлять работать», ③ «получать впечатление», ④ «получать шанс на успех» — не вяжутся с «살펴보는 … 되고»."},{"n":18,"points":1,"instr":"О чём этот текст? Выберите.","passage":"어렸을 때부터 심부름을 한 아이가 자라서 성공할 가능성이 높다는 연구 결과가 나왔다. 심부름을 수행하는 과정에서 문제 해결 능력이 좋아지고, 일을 다 완수한 후 칭찬을 통해 자신감과 성취감을 느낄 수 있을 뿐만 아니라 책임감도 생길 수 있다.","options":["심부름을 잘하게 하는 방법","심부름이 필요한 아이의 특징","심부름을 통해 얻을 수 있는 효과","심부름을 시킬 때 어른이 해야 할 일"],"answer":3,"explain":"Текст перечисляет, что даёт ребёнку выполнение поручений (навыки, уверенность, ответственность).<br>✅ <b>③ 심부름을 통해 얻을 수 있는 효과</b> (эффект/польза от поручений).<br>✖️ ① как научить, ② черты ребёнка, ④ что делать взрослому — текст об этом не говорит."},{"n":19,"points":1,"instr":"Выберите место, куда лучше всего вставить предложение из <보기>.","passage":"우리 아파트는 쓰레기 수거장을 관리해 주는 관리 사무소가 없어서 쓰레기 수거장이 항상 지저분하고 냄새가 났습니다. ( ㉠ ) 그런데 어느 날부터 쓰레기장이 점점 깨끗해지기 시작했습니다. ( ㉡ ) 이 주민은 항상 웃으면서 다른 사람이 버린 쓰레기까지 치웠습니다. ( ㉢ ) 이런 모습을 보고 다른 주민들도 쓰레기를 잘 버리고 쓰레기 수거장도 잘 정리했습니다. ( ㉣ ) 그래서 우리 아파트가 깨끗해졌습니다.\n\n<보기> 여성 주민 한 분이 이곳을 정리하고 청소해 주었기 때문입니다.","options":["㉠","㉡","㉢","㉣"],"answer":2,"explain":"После ㉡ идёт «이 주민(этот житель)…» — значит перед ним надо ВВЕСТИ этого жителя.<br>✅ <b>② ㉡</b>: «…стало чище. (Потому что одна жительница убирала это место.) Эта жительница всегда с улыбкой…».<br>✖️ при других вставках «이 주민» остаётся без введённого подлежащего."},{"n":20,"points":1,"instr":"Выберите выражение (4-знак), лучше всего подходящее к содержанию текста.","passage":"한 여성 주민이 솔선해서 쓰레기 수거장을 청소하자 다른 주민들도 따라서 깨끗이 정리하게 되었다는 이야기.","options":["갑론을박","사면초가","고진감래","솔선수범"],"answer":4,"explain":"Жительница первой подала пример, и другие последовали.<br>✅ <b>④ 솔선수범 (率先垂範)</b> = «подавать личный пример, идти впереди».<br>✖️ ① 갑론을박 «жаркий спор», ② 사면초가 «безвыходное положение», ③ 고진감래 «после горького — сладкое» — не подходят."},{"n":21,"points":1,"instr":"Выберите вариант, совпадающий с содержанием текста.","passage":"퇴직 후 20년 가까이 아이들에게 동화책을 읽어 주는 할머니가 있다. 동화책 할머니는 30여 년의 교사 생활을 하고 퇴직 후 봉사 활동을 하고 있다. 또한 이 할머니는 5년 전부터 사회복지 회관에 가서 할머니들에게도 동화를 읽어 주면서 친구가 되어 주고 있다. 할머니들은 동화를 들으면서 어린 시절을 추억할 수 있어서 좋다고 한다.","options":["동화책 할머니는 다른 할머니들에게도 동화책을 읽어 준다.","동화책 할머니는 교사 생활을 하면서 봉사 활동을 하고 있다.","동화책 할머니는 동화책을 읽어 주기 시작한 지 얼마 안 되었다.","아이들은 동화책 할머니가 들려주는 것보다 책을 읽는 것을 좋아한다."],"answer":1,"explain":"«할머니들에게도 동화를 읽어 주면서» — читает сказки и пожилым.<br>✅ <b>① 다른 할머니들에게도 동화책을 읽어 준다</b>.<br>✖️ ② сначала была учителем, ПОТОМ волонтёр (после 퇴직), ③ занимается уже ~20 лет, ④ детям так интереснее, чем читать самим."},{"n":22,"points":1,"instr":"Расставьте (가)~(라) в правильном порядке.","passage":"(가) 그동안 대부분의 사무실은 개인 공간이 보장된 폐쇄형 사무실이었다.\n(나) 오히려 혼란스러워서 직원들의 집중력을 떨어뜨렸기 때문이다.\n(다) 그러나 예상과 달리 이 사무실은 소통과 협업에 도움이 되지 않았다.\n(라) 그런데 팀 작업이 중시되면서 협업과 소통을 위해 개방형 사무실로 바꾸었다.","options":["(가)-(나)-(라)-(다)","(가)-(라)-(다)-(나)","(라)-(가)-(나)-(다)","(라)-(다)-(나)-(가)"],"answer":2,"explain":"(가) вводит тему (раньше — закрытые офисы) → (라) 그런데 перешли к открытым → (다) 그러나 не помогло → (나) причина (наоборот мешало).<br>✅ <b>② (가)-(라)-(다)-(나)</b>.<br>✖️ остальные нарушают связки 그런데/그러나/오히려."},{"n":23,"points":1,"instr":"Расставьте (가)~(라) в правильном порядке.","passage":"(가) 밖으로 나와 빗자루로 눈을 쓸기 시작했다.\n(나) 그래서 눈 쓸기를 멈추고 새하얀 눈 세상을 바라보았다.\n(다) 눈을 쓸다 보니 새하얀 눈 세상을 쓸어버리기가 아까워졌다.\n(라) 아침에 일어나 밖을 내다보니 눈이 와 세상이 온통 새하얗게 변했다.","options":["(가)-(다)-(라)-(나)","(가)-(라)-(다)-(나)","(라)-(가)-(다)-(나)","(라)-(나)-(가)-(다)"],"answer":3,"explain":"(라) утром увидел снег → (가) вышел и стал мести → (다) стало жаль сметать белизну → (나) 그래서 остановился и залюбовался.<br>✅ <b>③ (라)-(가)-(다)-(나)</b>.<br>✖️ первое предложение не может содержать 그래서(나)/начинаться с действия без завязки."},{"n":24,"points":1,"instr":"Выберите вариант, лучше всего объясняющий заголовок новости.","passage":"응급 사이렌에 도로가 쫙, 응급 환자 목숨 살려","options":["도로가 파여서 응급 환자 이송을 위해 달리던 응급차가 사고를 당했다.","도로를 달리던 응급차가 사고가 나서 응급 환자를 구할 수 없게 되었다.","응급 환자의 목숨을 살리기 위해 응급차가 속도를 내어 도로에 문제가 생겼다.","응급차의 사이렌 소리가 나자 차들이 비켜 준 덕분에 응급 환자를 살릴 수 있었다."],"answer":4,"explain":"«도로가 쫙» = машины расступились перед сиреной → спасли пациента.<br>✅ <b>④ 사이렌 소리에 차들이 비켜 준 덕분에 환자를 살렸다</b>.<br>✖️ ①②③ говорят об аварии/проблеме на дороге — заголовок же о спасении."},{"n":25,"points":1,"instr":"Выберите вариант, лучше всего объясняющий заголовок новости.","passage":"'K 게임' 수출·고용 다 잡은 효자 산업 됐다","options":["'K 게임'을 수출하기 전에 게임 산업 분야에 고용 문제가 발생했다.","'K 게임' 산업 부분에 젊은 효자들의 고용을 늘렸더니 수출이 증가하였다.","'K 게임' 분야는 수출도 증가하고 일자리도 증가하여 산업 발전에 기여했다.","'K 게임'의 수출과 고용 증가는 젊은 사람들의 게임에 대한 관심 때문이다."],"answer":3,"explain":"«수출·고용 다 잡은 효자 산업» = и экспорт, и рабочие места выросли — отрасль-«молодец».<br>✅ <b>③ 수출도 증가, 일자리도 증가하여 산업 발전에 기여</b>.<br>✖️ ① «до экспорта была безработица», ② путает 효자(отрасль) с людьми, ④ причину «интерес молодёжи» заголовок не утверждает."},{"n":26,"points":1,"instr":"Выберите вариант, лучше всего объясняющий заголовок новости.","passage":"'콜록콜록' 독감 유행 조짐…\"미리 예방접종\"","options":["독감이 유행할 것으로 예상되니 미리 독감 예방주사를 맞는 것이 좋겠다.","기침을 통해 독감이 퍼지게 되어 미리 예방주사를 맞으려는 사람이 늘었다.","독감이 유행하면서 독감에 걸려 치료를 받으려는 사람들이 병원을 찾고 있다.","독감 예방주사를 미리 맞았는데도 독감에 걸려 기침을 하는 사람이 많아졌다."],"answer":1,"explain":"«유행 조짐(признаки эпидемии)…미리 예방접종» = ожидается грипп → стоит заранее привиться.<br>✅ <b>① 유행이 예상되니 미리 예방주사를 맞는 것이 좋겠다</b>.<br>✖️ ②③④ добавляют факты (рост заболевших, неэффективность прививки), которых в заголовке нет."},{"n":27,"points":1,"instr":"Выберите чувство автора в подчёркнутой части.","passage":"우리 집 막내 앵무새 '미미'가 거실 문을 잠깐 열어 놓은 사이에 밖으로 날아가 버렸다. 집 밖으로 나간 적이 없는 앵무새는 바깥에서 30분 정도 살아남기 힘들기 때문에 그 시간 안에 반드시 찾아야 했다. \"미미야!\" 소리치며 온 동네를 다 찾아다녔다. 비까지 세차게 내리기 시작했다. 미미가 살아 있을 가능성이 점점 희박해졌다. 아무도 없는 집에 돌아와 텅 빈 새장을 보고는 아이처럼 엉엉 울었다.\n(밑줄: 텅 빈 새장을 보고는 아이처럼 엉엉 울었다)","options":["화나고 짜증스럽다","긴장되고 실망스럽다","답답하고 조심스럽다","안타깝고 걱정스럽다"],"answer":4,"explain":"Попугай пропал, дождь, шансы тают, автор рыдает у пустой клетки.<br>✅ <b>④ 안타깝고 걱정스럽다</b> (горестно и тревожно).<br>✖️ ① злость, ② лишь «нервозность/разочарование», ③ «досада и осторожность» — слабее реальных чувств утраты."},{"n":28,"points":1,"instr":"Выберите вариант, совпадающий с содержанием текста.","passage":"앵무새 '미미'가 밖으로 날아가 버려 온 동네를 찾아다니고 중고 거래 어플, 앵무새 카페, 동물 실종 센터에 사례금 글도 올렸다. 실종된 지 나흘째 되던 날, 중고 거래 알림이 울렸고 한 남성이 보낸 사진 속 앵무새가 바로 미미였다. 그 남자와 약속을 하고 미미를 찾아왔다.","options":["앵무새를 30분 동안 데리고 나갔다가 잃어버렸다.","중고 거래 사이트를 통해 잃어버린 앵무새를 찾았다.","앵무새를 찾다가 집에 돌아와 보니 아이가 울고 있었다.","잃어버린 앵무새를 찾으려고 동물 실종 센터에 찾아갔다."],"answer":2,"explain":"«중고 거래 알림…사진 속 앵무새가 미미였다» — нашёл через сайт объявлений.<br>✅ <b>② 중고 거래 사이트를 통해 앵무새를 찾았다</b>.<br>✖️ ① попугай улетел сам, ③ плакал сам автор (как ребёнок), ④ объявление разместил онлайн, лично в центр не ездил."},{"n":29,"points":1,"instr":"Выберите подходящее для пропуска ( ).","passage":"파리는 다리를 비비는 행동을 자주 한다. 이것은 파리가 입이 아니라 다리를 통해 맛과 냄새를 더 많이 느끼기 때문이다. 파리는 다리털에 무엇인가 묻어 있으면 맛과 냄새를 잘 느낄 수 없다. 그래서 틈만 나면 다리를 비벼서 다리털에 묻은 ( ) 것이다.","options":["맛을 잘 느끼는","이물질을 제거하는","냄새를 맡아 보는","음식물을 먹게 되는"],"answer":2,"explain":"Если на волосках лап что-то налипло, муха хуже чувствует → трёт лапки, чтобы это убрать.<br>✅ <b>② 이물질을 제거하는</b> (удаляет налипшее/инородное).<br>✖️ ① «хорошо чувствует вкус» (это цель, а не действие «묻은 …»), ③ нюхает, ④ ест — не вяжутся с «묻은(налипшее)»."},{"n":30,"points":1,"instr":"Выберите подходящее для пропуска ( ).","passage":"사람들은 자신이 알고 있는 것을 상대방도 알고 있을 거라는 착각에 빠지곤 한다. 조직에서 구성원들이 서로 '알고 있겠지'라는 착각에 작은 일이라도 그냥 넘어가다 보면 의도하지 않게 업무에 지장을 주게 되고, 생산성이 떨어진다. 결국 이런 착각이 업무를 망치게 된다. ( ) 구성원들이 업무를 정확하게 판단하고 일의 효율도 높아지는 것이다.","options":["정보를 공유해야","지식이 풍부해야","일의 계획을 잘 세워야","생산성과 효율을 높여야"],"answer":1,"explain":"Проблема — иллюзия «другой и так знает». Решение — обмениваться информацией.<br>✅ <b>① 정보를 공유해야</b> (нужно делиться информацией) → тогда работа точнее, эффективность выше.<br>✖️ ② «нужно много знаний», ③ «хорошо планировать», ④ «повышать эффективность» — не устраняют причину (несообщённое знание)."},{"n":31,"points":2,"instr":"Выберите подходящее для пропуска ( ).","passage":"대부분의 부모나 교사들은 아이들이 싸웠을 때 아이들의 잘잘못을 가려 화해시키려고 한다. 하지만 이렇게 한다고 해서 문제가 해결되는 것은 아니다. 아이들을 서로 화해시키기 위해서는 아이들에게 자신의 상황과 감정에 대해 ( ) 이야기할 기회를 주어 상대방의 입장과 기분을 알게 하는 것이 중요하다. 잘못을 한 아이는 자신의 말과 행동이 상대방에게 어떤 감정을 느끼게 했는지 직접 듣고 진심으로 사과해야 한다.","options":["가슴을 열고","두 팔을 벌리고","어깨가 무거우며","귀에 못이 박히며"],"answer":1,"explain":"Дать детям возможность откровенно рассказать о чувствах.<br>✅ <b>① 가슴을 열고</b> «открыв сердце» = искренне, откровенно.<br>✖️ ② 두 팔을 벌리고 «раскрыв объятия» (буквально), ③ 어깨가 무겁다 «тяжесть ответственности», ④ 귀에 못이 박히다 «уши прожужжали» — не подходят к «искренне рассказать»."},{"n":32,"points":2,"instr":"Выберите главную мысль текста.","passage":"부모나 교사가 아이들의 잘잘못을 가려 화해시키려 해도 문제는 해결되지 않는다. 잘못한 아이가 자신의 말과 행동이 상대방에게 어떤 감정을 느끼게 했는지 직접 듣고 자신의 잘못을 깨달은 후 진심으로 사과해야 상처받은 아이도 용서할 수 있게 된다.","options":["어른들은 상처받은 아이를 우선 이해해 주는 것이 좋다.","아이들 간의 문제는 어른이 개입해야 쉽게 해결될 수 있다.","사과하는 아이가 상처받은 아이의 감정을 이해해야 화해할 수 있다.","어른들은 아이들을 화해시키기 위해 누가 잘못했는지 알려 줘야 한다."],"answer":3,"explain":"Примирение наступает, когда виноватый осознаёт чувства другого и искренне извиняется.<br>✅ <b>③ 사과하는 아이가 상대의 감정을 이해해야 화해할 수 있다</b>.<br>✖️ ①②④ — позиции «разобрать вину/вмешательство взрослого», которые текст как раз критикует."},{"n":33,"points":2,"instr":"Выберите подходящее для пропуска ( ).","passage":"1945년 해방 이후 여성들이 모여 시작한 국극은 1950년대에 인기를 끌었던 공연 예술이다. 여성 소리꾼이 여성과 남성 배역을 모두 소화하는 국악 연극이다. 국극은 소리에 춤과 연기를 더해 대중성과 오락성에 큰 비중을 두며 인기를 끌었다. 그러나 영화가 발달해 대중화되면서 국극의 인기는 떨어지기 시작했다. 게다가 국극단 수가 늘어난 데다 시대감각이 변하는데도 주제나 표현 방식을 바꾸지 않고 ( ) 고루하고 진부하다는 느낌을 주어 급격히 쇠퇴했다.","options":["그대로 고수함으로써","다른 방법을 찾아냄으로써","연기 훈련 방식을 바꿈으로써","영화의 방식을 받아들임으로써"],"answer":1,"explain":"«주제나 표현 방식을 바꾸지 않고 ( )» — не меняя темы → «придерживаясь по-старому» → старомодно.<br>✅ <b>① 그대로 고수함으로써</b> (сохраняя всё как есть).<br>✖️ ②③④ означают перемены, что противоречит «바꾸지 않고(не меняя)»."},{"n":34,"points":2,"instr":"Выберите вариант, совпадающий с содержанием текста.","passage":"국극은 여성 소리꾼이 남녀 배역을 모두 맡는 국악 연극으로 1950년대 인기를 끌었다. 그러나 영화의 발달, 국극단의 난립, 그리고 시대 변화에도 주제·표현을 바꾸지 않은 점 때문에 1950년대 말부터 급격히 쇠퇴하였다.","options":["국극은 판소리의 형식을 그대로 유지하는 것을 중요시했다.","국극이 인기를 얻으면서 영화에 대한 사람들의 관심도 커졌다.","국극은 남자 배우와 여자 배우들의 연기가 조화를 잘 이루고 있다.","국극의 쇠퇴 원인 중 하나는 시대의 변화를 따르지 못했기 때문이다."],"answer":4,"explain":"«시대감각이 변하는데도 바꾸지 않아 쇠퇴» — не успели за временем.<br>✅ <b>④ 쇠퇴 원인 중 하나는 시대 변화를 따르지 못한 것</b>.<br>✖️ ① 국극 ≠ 판소리 (как раз добавляли танец/игру), ② наоборот — кино отняло популярность, ③ роли играют только женщины-소리꾼."},{"n":35,"points":2,"instr":"Выберите слово-связку для пропуска ( ).","passage":"드론의 활용 범위가 넓어지고 있다. 의약품 수송 시험 비행 성공으로 드론이 의약품을 나르고 응급 환자도 이송하는 시대가 곧 열릴 것이라 한다. 드론은 좁은 공간에 착륙할 수 있고, 접근이 어려운 지역에 의약품을 수송하며, 구급차보다 빨리 갈 수 있다. ( ) 의약품 수송 드론을 실용화하려면 아직 해결할 과제가 남아 있다. 열에 민감한 의약품을 보존하며 운반해야 하므로 적정 온도와 기압 유지 실험으로 안정성을 확보해야 한다.","options":["그러나","그리고","그래서","따라서"],"answer":1,"explain":"До пропуска — плюсы дрона; после — «но есть нерешённые задачи». Это контраст.<br>✅ <b>① 그러나</b> (однако).<br>✖️ ② 그리고 «и», ③ 그래서 / ④ 따라서 «поэтому» — выражают следствие, а здесь противопоставление."},{"n":36,"points":2,"instr":"Выберите вариант, совпадающий с содержанием текста.","passage":"의약품 수송 드론은 좁은 공간에 착륙할 수 있고 구급차보다 빨리 응급 현장에 갈 수 있다. 다만 열에 민감한 의약품을 상공에서 보존하며 운반해야 하므로 적정 온도와 기압을 유지하는 실험을 거쳐 안정성을 확보해야 한다.","options":["드론에 비해 구급차가 응급 현장에 더 빨리 도착할 수 있다.","드론으로 의약품을 나를 때 의약품의 온도 유지가 중요하다.","드론을 이용해서 응급 환자를 병원으로 옮기는 건 불가능하다.","드론 착륙에는 기술적 문제 때문에 아직 넓은 공간이 필요하다."],"answer":2,"explain":"«열에 민감한 의약품…적정 온도 유지» — важно сохранять температуру лекарств.<br>✅ <b>② 의약품의 온도 유지가 중요하다</b>.<br>✖️ ① дрон быстрее скорой, ③ перевозить пациентов как раз ожидается возможным, ④ дрон садится на малой площади (좁은 공간)."},{"n":37,"points":2,"instr":"Выберите место, куда лучше всего вставить предложение из <보기>.","passage":"제주도의 밭담이 세계농업유산으로 지정되며 해마다 밭담 축제가 열린다. 밭담은 밭의 경계에 돌을 쌓아 올린 것이다. ( ㉠ ) 예전부터 제주도에서는 돌이 흔해 돌로 담을 쌓아 밭의 경계를 구분 지었다. 제주도에서는 소와 말을 방목해 키웠다. ( ㉡ ) 그래서 소와 말이 밭에 들어와 농사를 망치는 것을 막기 위해 밭담을 쌓았다. ( ㉢ ) 그래서 바람을 막아 땅을 보호하기 위해 밭담을 쌓아 농작물을 길러냈다. ( ㉣ )\n\n<보기> 또한 제주도는 바람이 잦아 농사짓기가 어려운 척박한 환경이었다.","options":["㉠","㉡","㉢","㉣"],"answer":3,"explain":"После ㉢ идёт «그래서 바람을 막아…(поэтому, чтобы защитить от ветра…)». Значит перед ним нужно ввести тему ветра.<br>✅ <b>③ ㉢</b>: «<보기> К тому же на Чеджу часты ветры… → поэтому строили 밭담 для защиты от ветра».<br>✖️ при ㉠/㉡/㉣ упоминание ветра повисает без связи со следующим 그래서."},{"n":38,"points":2,"instr":"Выберите вариант, совпадающий с содержанием текста.","passage":"제주도의 밭담은 밭의 경계에 돌을 쌓은 것으로, 돌이 흔한 제주에서 경계를 짓고, 방목하는 소와 말이 밭에 들어오는 것을 막고, 잦은 바람을 막아 땅과 농작물을 보호하는 역할을 했다. 밭담은 세계농업유산으로 지정되었다.","options":["제주도는 예전부터 말과 소를 밭에 가두어서 키웠다.","제주도에서는 돌이 많지 않아 밭담을 어렵게 쌓았다.","제주도의 밭담은 제주도의 농사에 도움을 주는 역할을 했다.","제주도의 밭담이 올해 세계농업유산으로 지정되어 축제가 열렸다."],"answer":3,"explain":"밭담 защищал поля от скота и ветра → помогал земледелию.<br>✅ <b>③ 밭담은 농사에 도움을 주는 역할을 했다</b>.<br>✖️ ① скот пасли свободно (방목), а담 не пускал его в поле, ② камня было много (돌이 흔해), ④ «올해(в этом году)» — не указано, фестиваль ежегодный (해마다)."},{"n":39,"points":2,"instr":"Выберите цель, с которой написан текст.","passage":"소액 사건 심판은 3000만 원 이하 민사 사건에서 국민의 편의를 위해 간단한 절차로 신속히 소송을 진행하게 한 제도이다. 그런데 판사는 판결서에 판결 이유를 쓰지 않고, 말로도 대부분 설명하지 않는다. 재판 당사자는 판결 근거를 알아야 항소할 수 있는데 이유를 알지 못해 항소가 어렵다. 원래 목적과 달리 국민의 알 권리와 재판받을 권리가 침해당할 수 있다.","options":["소액 사건 심판의 과정을 설명하려고","소액 사건 심판의 문제점을 알리려고","소액 사건 심판의 확대 실시를 요구하려고","소액 사건 심판 당사자의 참여를 비판하려고"],"answer":2,"explain":"Текст показывает, что система ущемляет право на информацию и обжалование → указывает на её проблему.<br>✅ <b>② 문제점을 알리려고</b> (сообщить о проблеме).<br>✖️ ① не просто описание процесса, ③ не призыв расширять, ④ критикует не участников, а недостаток системы."},{"n":40,"points":2,"instr":"Выберите вариант, совпадающий с содержанием текста.","passage":"소액 사건 심판에서 판사는 판결서에 판결 이유를 쓰지 않고 말로도 대부분 설명하지 않는다. 재판 당사자는 판결의 근거를 알아야 항소할 수 있는데 그 이유를 제대로 알지 못해 항소하기가 어렵다.","options":["소송 당사자들은 판사의 판결 이유를 파악하기 어렵다.","소액 사건 심판은 소송 절차가 다른 사건에 비해 복잡하다.","소액 사건 심판은 국민의 알 권리를 위해 만들어진 제도이다.","소액 사건 심판에서 판사는 판결문을 써서 결과를 알려 준다."],"answer":1,"explain":"«판결 이유를 쓰지 않아…근거를 알지 못해» — сторонам трудно понять основание решения.<br>✅ <b>① 당사자들은 판결 이유를 파악하기 어렵다</b>.<br>✖️ ② процедура упрощённая (간단한 절차), ③ создана для удобства/быстроты, а право знать как раз ущемляется, ④ судья НЕ пишет причины в решении."}]}},
@@ -11648,8 +13731,8 @@
     if (k === 'about2') return renderTopik2About(slot);
     if (k === 'writing2') return renderTopik2WritingGuide(slot);
     if (k === 'words2') {
-      slot.innerHTML = topikSectionWrap('📖 Слова', 'Лексика TOPIK II (중급) по темам', `
-        <div class="topik-rules">${TOPIK2_VOCAB_THEMES.map((t, i) => topikVocabThemeHtml(t, i)).join('')}</div>`, false, null);
+      slot.innerHTML = topikSectionWrap('📖 ' + t('topik.t.words'), t('topik.h.words2'), `
+        <div class="topik-rules">${TOPIK2_VOCAB_THEMES.map((th, i) => topikVocabThemeHtml(th, i)).join('')}</div>`, false, null);
       return;
     }
     if (k === 'grammar2') {
@@ -11659,27 +13742,27 @@
           <div class="topik-gram">${g.items.map(it => `
             <div class="topik-gram-row"><span class="topik-gram-k ko">${it[0]}</span><span class="topik-gram-m">${it[1]}</span><span class="topik-gram-e ko">${it[2]}</span></div>`).join('')}</div>
         </div>`).join('');
-      slot.innerHTML = topikSectionWrap('🧩 Грамматика', 'Ключевые конструкции уровней 3–4급 (60)', groups2, false, null);
+      slot.innerHTML = topikSectionWrap('🧩 ' + t('topik.t.grammar'), t('topik.h.grammar2'), groups2, false, null);
       return;
     }
     if (k === 'tips2') {
-      slot.innerHTML = topikSectionWrap('💡 Советы', 'Стратегия по трём разделам TOPIK II', `
+      slot.innerHTML = topikSectionWrap('💡 ' + t('topik.t.tips'), t('topik.h.tips2'), `
         <div class="topik-rules">${topikAccordionHtml(TOPIK2_TIPS, 'topik2-tip')}</div>`, false, null);
       return;
     }
     if (k === 'howto2') {
-      slot.innerHTML = topikSectionWrap('🎯 Как решать', 'Разбор по типам заданий TOPIK II', `
+      slot.innerHTML = topikSectionWrap('🎯 ' + t('topik.t.howto'), t('topik.h.howto2'), `
         <div class="topik-rules">${topikAccordionHtml(TOPIK2_HOWTO, 'topik2-how')}</div>`, false, null);
       return;
     }
     if (k === 'hints2') {
-      slot.innerHTML = topikSectionWrap('✨ Подсказки', 'Мелочи, которые решают на TOPIK II', `
+      slot.innerHTML = topikSectionWrap('✨ ' + t('topik.t.hints'), t('topik.h.hints2'), `
         <div class="topik-rules">${topikAccordionHtml(TOPIK2_HINTS, 'topik2-hint')}</div>`, false, null);
       return;
     }
     if (k === 'words') {
-      slot.innerHTML = topikSectionWrap('📖 Слова', 'Базовая лексика TOPIK I по темам', `
-        <div class="topik-rules">${TOPIK_VOCAB_THEMES.map((t, i) => topikVocabThemeHtml(t, i)).join('')}</div>
+      slot.innerHTML = topikSectionWrap('📖 ' + t('topik.t.words'), t('topik.h.words1'), `
+        <div class="topik-rules">${TOPIK_VOCAB_THEMES.map((th, i) => topikVocabThemeHtml(th, i)).join('')}</div>
         ${topikAdminMatsHtml('vocab', admin)}`, admin, 'vocab');
       return;
     }
@@ -11690,22 +13773,22 @@
           <div class="topik-gram">${g.items.map(it => `
             <div class="topik-gram-row"><span class="topik-gram-k ko">${it[0]}</span><span class="topik-gram-m">${it[1]}</span><span class="topik-gram-e ko">${it[2]}</span></div>`).join('')}</div>
         </div>`).join('');
-      slot.innerHTML = topikSectionWrap('🧩 Грамматика', 'Ключевые конструкции уровней 1–2 (84)', groups + topikAdminMatsHtml('grammar', admin), admin, 'grammar');
+      slot.innerHTML = topikSectionWrap('🧩 ' + t('topik.t.grammar'), t('topik.h.grammar1'), groups + topikAdminMatsHtml('grammar', admin), admin, 'grammar');
       return;
     }
     if (k === 'tips') {
-      slot.innerHTML = topikSectionWrap('💡 Советы', 'Как готовиться и не терять баллы', `
+      slot.innerHTML = topikSectionWrap('💡 ' + t('topik.t.tips'), t('topik.h.tips1'), `
         <div class="topik-rules">${topikAccordionHtml(TOPIK_TIPS, 'topik-tip')}</div>
         ${topikAdminMatsHtml('tip', admin)}`, admin, 'tip');
       return;
     }
     if (k === 'howto') {
-      slot.innerHTML = topikSectionWrap('🎯 Как решать', 'Разбор по типам заданий', `
+      slot.innerHTML = topikSectionWrap('🎯 ' + t('topik.t.howto'), t('topik.h.howto1'), `
         <div class="topik-rules">${topikAccordionHtml(TOPIK_HOWTO, 'topik-how')}</div>`, false, null);
       return;
     }
     if (k === 'hints') {
-      slot.innerHTML = topikSectionWrap('✨ Подсказки', 'Мелочи, которые решают', `
+      slot.innerHTML = topikSectionWrap('✨ ' + t('topik.t.hints'), t('topik.h.hints1'), `
         <div class="topik-rules">${topikAccordionHtml(TOPIK_HINTS, 'topik-hint')}</div>`, false, null);
       return;
     }
@@ -11721,20 +13804,20 @@
           </button>
           <div class="topik-rule-body">${r.body}</div>
         </div>`).join('');
-      slot.innerHTML = topikSectionWrap('📌 Что нужно знать', 'Формат экзамена, баллы и основы письма', `
+      slot.innerHTML = topikSectionWrap('📌 ' + t('topik.t.mustknow'), t('topik.h.mustknow'), `
         <div class="card card-padded topik-about">
-          <p><b>TOPIK</b> (한국어능력시험) — официальный экзамен на знание корейского: нужен для вузов Кореи, визы и работы. Результат — уровень <b>급</b> (1–6).</p>
+          <p>${t('topik.mk.about')}</p>
           <table class="topik-table">
-            <tr><th>Раздел</th><th>Вопросов</th><th>Время</th></tr>
-            <tr><td><span class="ko">듣기</span> · Аудирование</td><td>30</td><td>40 мин</td></tr>
-            <tr><td><span class="ko">읽기</span> · Чтение</td><td>40</td><td>60 мин</td></tr>
+            <tr><th>${t('topik.mk.col.sec')}</th><th>${t('topik.mk.col.q')}</th><th>${t('topik.mk.col.time')}</th></tr>
+            <tr><td><span class="ko">듣기</span> · ${t('topik.mk.listen')}</td><td>30</td><td>40 ${t('topik.mk.min')}</td></tr>
+            <tr><td><span class="ko">읽기</span> · ${t('topik.mk.read')}</td><td>40</td><td>60 ${t('topik.mk.min')}</td></tr>
           </table>
-          <div class="topik-grades">Итог: <b>200</b> баллов · <b>1급</b> от 80 · <b>2급</b> от 140</div>
-          <p class="topik-note">📌 В TOPIK I письма нет. Раздел <b><span class="ko">쓰기</span></b> появляется в TOPIK II — основы ниже подготовят тебя заранее.</p>
+          <div class="topik-grades">${t('topik.mk.grades')}</div>
+          <p class="topik-note">${t('topik.mk.note')}</p>
         </div>
         <div class="section-head" style="margin-top:18px;">
-          <div class="left"><div class="rule"></div><span class="title">쓰기 기초 · Основы письма</span></div>
-          <span class="meta">прочитано <span id="topik-read-count">0/${TOPIK_WRITING_RULES.length}</span></span>
+          <div class="left"><div class="rule"></div><span class="title">${t('topik.mk.basics')}</span></div>
+          <span class="meta">${t('topik.mk.readCount')} <span id="topik-read-count">0/${TOPIK_WRITING_RULES.length}</span></span>
         </div>
         <div class="topik-rules">${rulesHtml}</div>
         ${topikAdminMatsHtml('file', admin)}`, admin, 'file');
@@ -13197,7 +15280,30 @@
   const _tdState = { section:null, level:3, typeId:null };
   function tdReset() { _tdState.section = null; _tdState.typeId = null; if (!_tdState.level) _tdState.level = 3; }
 
-  const READING_TEXTS = [{"id":"energy","emoji":"♻️","titleKo":"신재생에너지","title":"Возобновляемая энергия","theme":"Экология","level":"TOPIK II","sentences":[{"ko":"신재생에너지는 신생에너지, 재생에너지를 합친 말이다.","ru":"Возобновляемая энергия — это объединённое название новой энергии и возобновляемой энергии.","words":[["신재생에너지","возобновляемая энергия"],["는","(частица темы)"],["신생에너지","новая энергия"],["재생에너지","возобновляемая энергия"],["를","(частица объекта)"],["합친","объединённый"],["말","слово"],["이다","быть"]]},{"ko":"신재생에너지는 물, 바람, 햇빛 등 자연의 힘을 이용해서 개발하는 에너지이기 때문에 고갈의 위험이나 환경오염의 가능성이 낮다.","ru":"Возобновляемая энергия разрабатывается с использованием силы природы, такой как вода, ветер и солнечный свет, поэтому риск исчерпания и загрязнения окружающей среды низки.","words":[["물","вода"],["바람","ветер"],["햇빛","солнечный свет"],["등","и так далее"],["자연","природа"],["의","(частица принадлежности)"],["힘","сила"],["을","(частица объекта)"],["이용해서","используя"],["개발하는","разрабатываемая"],["에너지","энергия"],["이기 때문에","потому что"],["고갈","истощение"],["위험","риск"],["나","или"],["환경오염","загрязнение окружающей среды"],["가능성","возможность"],["이","(частица подлежащего)"],["낮다","низкий"]]},{"ko":"이에 따라 최근 새로운 신재생 에너지 개발에 적극 나서고 있는 국가들이 많다.","ru":"В связи с этим в последнее время много стран активно занимаются разработкой новых возобновляемых источников энергии.","words":[["이에 따라","вслед за этим / в связи с этим"],["최근","последнее время"],["새로운","новый"],["신재생 에너지","возобновляемая энергия"],["개발","разработка"],["에","в / на"],["적극","активно"],["나서고 있는","принимающие участие"],["국가들","страны"],["이","(частица подлежащего)"],["많다","много"]]},{"ko":"대표적인 몇 가지 사례를 소개하면 다음과 같다.","ru":"Вот несколько типичных примеров.","words":[["대표적인","типичный"],["몇 가지","несколько"],["사례","пример"],["를","(частица объекта)"],["소개하면","если представить / если рассказать"],["다음","следующий"],["과 같다","как следующее / как далее"]]},{"ko":"먼저 해상 풍력의 강국인 영국을 사례로 들 수 있다.","ru":"Сначала можно привести в пример Великобританию, сильную в морской ветроэнергетике.","words":[["먼저","сначала"],["해상 풍력","офшорная (морская) ветроэнергия"],["의","(частица принадлежности)"],["강국","сильная страна"],["인","являющаяся"],["영국","Великобритания"],["을","(частица объекта)"],["사례","пример"],["로","как"],["들 수 있다","можно привести / можно назвать"]]},{"ko":"해상 풍력 발전은 육지와 가까운 바다에 거대한 풍차를 돌려서 전기를 생산하는 방식이다.","ru":"Офшорная ветроэнергия — это способ производства электроэнергии, при котором вращают гигантские ветряные мельницы в море недалеко от суши.","words":[["해상 풍력 발전","морская ветроэнергетика"],["은","(частица темы)"],["육지","суша"],["와","и / с"],["가까운","близкий"],["바다","море"],["에","в"],["거대한","огромный"],["풍차","ветряная мельница"],["를","(частица объекта)"],["돌려서","вращая"],["전기","электричество"],["를","(частица объекта)"],["생산하는","производящий"],["방식","способ"],["이다","быть"]]},{"ko":"육상 풍력 발전에 비해 토지 구입 비용이 들지 않고, 지형 및 경관 훼손, 소음 발생 등의 피해가 적다는 것이 장점이다.","ru":"По сравнению с наземной ветроэнергией, не требуется покупать землю, и ущерб для рельефа, пейзажа и уровень шума меньше — это преимущество.","words":[["육상 풍력 발전","наземная ветроэнергия"],["에 비해","по сравнению с"],["토지","земля"],["구입","покупка"],["비용","затраты"],["이","(частица подлежащего)"],["들지 않고","не требуется"],["지형","рельеф"],["및","и"],["관","пейзаж"],["훼손","повреждение"],["소음","шум"],["발생","возникновение"],["등","и т. д."],["의","(частица принадлежности)"],["피해","ущерб"],["가","(частица подлежащего)"],["적다는","маленький / незначительный"],["것이","то, что"],["장점","преимущество"],["이다","быть"]]},{"ko":"다음으로 지열을 활용하여 에너지를 생산하는 경우이다.","ru":"Следующий пример — это производство энергии с использованием геотермального тепла.","words":[["다음으로","далее"],["지열","геотермальная энергия / тепло земли"],["을","(частица объекта)"],["활용하여","используя"],["에너지","энергия"],["를","(частица объекта)"],["생산하는","производящий"],["경우","случай"],["이다","быть"]]},{"ko":"뉴질랜드가 대표적인데 뉴질랜드는 화산 및 지진대에 위치하고 있어 지열 발전에 유리하다.","ru":"Типичный пример — Новая Зеландия: она расположена в вулканической и сейсмической зоне, что выгодно для геотермальной энергетики.","words":[["뉴질랜드","Новая Зеландия"],["가","(частица подлежащего)"],["대표적이다","быть типичным"],["는 데","а"],["화산","вулкан"],["및","и"],["지진대","сейсмическая зона"],["에","в"],["위치하고 있어","находиться"],["지열 발전","геотермальная энергия"],["에","для"],["유리하다","быть выгодным"]]},{"ko":"뉴질랜드가 세계 최대 규모로 지열 에너지를 개발할 수 있는 것은 이러한 지형적 조건 덕분이다.","ru":"Новая Зеландия может разрабатывать геотермальную энергию в крупнейших масштабах в мире благодаря таким географическим условиям.","words":[["세계","мир"],["최대","наибольший"],["규모","масштаб"],["로","в"],["개발할 수 있다","может разрабатывать"],["이러한","такие"],["지형적","географический"],["조건","условие"],["덕분이다","благодаря"]]},{"ko":"마지막으로 바이오 에너지가 있다.","ru":"Наконец, существует биоэнергия.","words":[["마지막으로","наконец"],["바이오 에너지","биоэнергия"],["가","(частица подлежащего)"],["있다","есть / существует"]]},{"ko":"가축 분뇨를 이용하여 가스를 생산하는 방식으로 덴마크가 대표적이다.","ru":"Типичный пример — Дания, где производят газ из навоза скота.","words":[["가축","скот"],["분뇨","навоз"],["를","(частица объекта)"],["이용하여","используя"],["가스","газ"],["를","(частица объекта)"],["생산하는","производящий"],["방식","способ"],["으로","посредством"],["덴마크","Дания"],["가","(частица подлежащего)"],["대표적이다","быть типичным"]]},{"ko":"덴마크는 인구의 5배가 넘는 돼지를 사육하고 있어 돼지 분뇨 처리가 늘 문제였는데, 이를 통해 가스를 생산하고 나머지 찌꺼기는 비료로 사용하는 시스템을 갖추고 있다.","ru":"В Дании свиней в 5 раз больше, чем людей, и проблема утилизации навоза была постоянной, но теперь производят газ, а остатки используют как удобрение — у них есть такая система.Слова:인구 — население의 — (частица принадлежности)5배 — в 5 раз가 넘는 — превышающий돼지 — свинья를 — (частица объекта)사육하다 — выращивать","words":[["돼지 분뇨","свиной навоз"],["처리","утилизация"],["가","(частица подлежащего)"],["문제","проблема"],["였는데","была, но"],["이를 통해","через это / с помощью этого"],["나머지","остаток"],["찌꺼기","осадок, остатки"],["비료","удобрение"],["로","как"],["사용하다","использовать"],["시스템","система"],["을 갖추다","быть оснащённым"]]},{"ko":"이러한 노력이 계속된다면 머지않아 에너지 고갈과 환경 오염 문제를 걱정하지 않아도 되는 새로운 에너지의 시대가 열릴 것이다.","ru":"Если такие усилия будут продолжаться, то вскоре наступит новая эра энергии, когда не придётся беспокоиться об истощении ресурсов и загрязнении окружающей среды.","words":[["이러한","такие"],["노력","усилия"],["이","(частица подлежащего)"],["계속된다면","если будут продолжаться"],["머지않아","вскоре"],["에너지 고갈","истощение энергии"],["환경 오염","загрязнение окружающей среды"],["문제","проблема"],["를","(частица объекта)"],["걱정하지 않아도 되다","не нужно беспокоиться"],["새로운","новая"],["시대","эпоха"],["가 열리다","открывается / наступает"],["것이다","будет"]]}]},{"id":"hanok","emoji":"🏯","titleKo":"한옥","title":"Ханок — традиционный дом","theme":"Культура","level":"TOPIK II","sentences":[{"ko":"한옥의 형태는 사용하는 재료와 지방에 따라 다르게 나타난다.","ru":"Форма ханока различается в зависимости от используемых материалов и региона.","words":[["한옥","ханок"],["의","(притяжательная частица)"],["형태","форма"],["는","(частица темы)"],["사용하는","используемый"],["재료","материал"],["와","и"],["지방","регион"],["에 따라","в зависимости от"],["다르게","по-разному"],["나타난다","проявляется / выражается"]]},{"ko":"한옥 중에서도 기와집과 초가집은 가장 보편적으로 찾아볼 수 있는 형태이고 너와집은 강원도 지역에서 많이 볼 수 있는 형태이다.","ru":"Среди ханоков наиболее распространёнными являются киваджип и чхогаджип, а ноуаджип часто встречается в регионе Канвондо.","words":[["한옥","ханок"],["중","среди"],["에서도","даже среди"],["기와집","дом с черепичной крышей"],["과","и"],["초가집","соломенный дом"],["은","(частица темы)"],["가장","самый"],["보편적으로","распространённо"],["찾아볼 수 있다","можно увидеть"],["형태","форма"],["이고","и"],["너와집","дом с деревянной крышей"],["강원도","Канвондо"],["지역","регион"],["에서","в"],["많이","много"],["볼 수 있다","можно увидеть"],["형태이다","форма есть"]]},{"ko":"기와집은 눈과 비에 강한 기와를 덮어서 만들었으며 옛날부터 부와 권위를 상징하는 집이었다.","ru":"Киваджип крыт прочной к дождю и снегу черепицей, и с древности был символом богатства и власти.","words":[["기와집","дом с черепицей"],["은","(частица темы)"],["눈","снег"],["과","и"],["비","дождь"],["에","к"],["강한","устойчивый"],["기와","черепица"],["를","(частица объекта)"],["덮어서","покрыв"],["만들었으며","был сделан, и"],["옛날부터","с древних времён"],["부","богатство"],["와","и"],["권위","авторитет / власть"],["를","(частица объекта)"],["상징하는","символизирующий"],["집","дом"],["이었다","был"]]},{"ko":"초가집은 볏짚으로 지붕을 만든 집으로 서민들이 주로 살았으며 여름에는 햇볕의 열기를 차단해서 시원하고 겨울에는 찬 기운을 막아준다는 이점이 있다.","ru":"Чхогаджип — это дом с соломенной крышей, в котором в основном жили простые люди; летом он защищает от жары, а зимой — от холода.","words":[["초가집","соломенный дом"],["은","(частица темы)"],["볏짚","солома"],["으로","из"],["지붕","крыша"],["을","(частица объекта)"],["만든","сделанный"],["집","дом"],["으로","как"],["서민들","простые люди"],["이","(частица подлежащего)"],["주로","в основном"],["살았으며","жили, и"],["여름","лето"],["에는","в"],["햇볕","солнечный свет"],["의","(притяжательная частица)"],["열기","жара"],["를","(частица объекта)"],["차단해서","блокируя"],["시원하고","прохладный, и"],["겨울","зима"],["에는","в"],["찬","холодный"],["기운","энергия / воздух"],["을","(частица объекта)"],["막아준다는","защищающий"],["이점","преимущество"],["이 있다","есть"]]},{"ko":"또한 너와집은 소나무 나무판으로 지붕을 덮어서 만든 집의 형태로 비가 올 때 습기를 막아주는 장점이 있다.","ru":"Также ноуаджип — это дом с крышей из сосновых досок, хорошо защищающий от влаги во время дождя.","words":[["또한","также"],["너와집","деревянный дом"],["은","(частица темы)"],["소나무","сосна"],["나무판","деревянные доски"],["으로","из"],["지붕","крыша"],["을","(частица объекта)"],["덮어서","накрывая"],["만든","сделанный"],["집","дом"],["의","(притяжательная частица)"],["형태","форма"],["로","как"],["비","дождь"],["가","(частица подлежащего)"],["올 때","когда идёт"],["습기","влага"],["를","(частица объекта)"],["막아주는","защищающий"],["장점","преимущество"],["이 있다","есть"]]},{"ko":"한옥의 형태는 지방에 따라 구조가 달라진다.","ru":"Форма ханока меняется в зависимости от региона.","words":[["한옥","ханок"],["의","(притяжательная частица)"],["형태","форма"],["는","(частица темы)"],["지방","регион"],["에 따라","в зависимости от"],["구조","структура"],["가","(частица подлежащего)"],["달라진다","меняется"]]},{"ko":"북부 지방은 춥고 눈이 많이 오는 날씨에 대비하여 모든 가사 작업을 실내에서 할 수 있는 구조로 마루가 없고 방들이 서로 붙어있는 ㅁ자형이다.","ru":"В северных регионах из-за холодной и снежной погоды строят дома без настила (мару), где все комнаты соединены в форму «ㅁ», чтобы все работы по дому можно было делать внутри.","words":[["북부","север"],["지방","регион"],["은","(частица темы)"],["춥고","холодный, и"],["눈","снег"],["이","(частица подлежащего)"],["많이","много"],["오는","идущий"],["날씨","погода"],["에 대비하여","в подготовке к"],["모든","все"],["가사","домашнее хозяйство"],["작업","работа"],["을","(частица объекта)"],["실내","внутри"],["에서","в"],["할 수 있다","можно делать"],["구조","структура"],["로","в виде"],["마루","настил (традиционный деревянный пол)"],["가","(частица подлежащего)"],["없고","отсутствует, и"],["방들","комнаты"],["서로","друг с другом"],["붙어있는","соединённые"],["ㅁ자형","форма «"],["ㅁ»이다","быть"]]},{"ko":"북부 지방과는 달리 남부 지방은 더운 여름에 바람이 잘 통하도록 지어진 개방적인 구조인 ―자형으로 방, 마루, 부엌이 옆으로 나란히 붙어있다.","ru":"В отличие от северных, в южных регионах строят дома открытой формы «―», где комнаты, настил и кухня идут рядом, чтобы воздух хорошо проходил летом.","words":[["북부 지방","северный регион"],["과는 달리","в отличие от"],["남부 지방","южный регион"],["은","(частица темы)"],["더운","жаркий"],["여름","лето"],["에","в"],["바람","ветер"],["이","(частица подлежащего)"],["잘","хорошо"],["통하도록","чтобы проходил"],["지어진","построенный"],["개방적인","открытый"],["구조","структура"],["인","являющийся"],["―자형","форма «―»"],["으로","в виде"],["방","комната"],["마루","настил"],["부엌","кухня"],["이","(частица подлежащего)"],["옆으로","рядом"],["나란히","в ряд"],["붙어있다","соединены"]]},{"ko":"또한 넓은 대청마루가 집의 중심에 있고 창문과 방문이 많다.","ru":"Также в центре дома находится просторный деревянный пол (дэчхонмару), и там много окон и дверей.","words":[["또한","также"],["넓은","широкий"],["대청마루","большой деревянный настил"],["가","(частица подлежащего)"],["집","дом"],["의","(притяжательная частица)"],["중심","центр"],["에","в"],["있다","есть"],["창문","окно"],["과","и"],["방문","дверь"],["이","(частица подлежащего)"],["많다","много"]]},{"ko":"중부 지방은 보통 ㄱ자형으로 남부 지방의 한옥에 비해서 마루가 안방과 건넌방 사이에 좁게 있고 창문이 적은 것이 특징이다.","ru":"В центральных регионах ханоки обычно имеют форму «ㄱ», и по сравнению с южными домами настил узко расположен между внутренней и внешней комнатами, и окон меньше — это особенность.","words":[["중부 지방","центральный регион"],["은","(частица темы)"],["보통","обычно"],["ㄱ자형","форма «"],["ㄱ»으로","в виде"],["남부 지방","южный регион"],["의","(притяжательная частица)"],["한옥","ханок"],["에 비해서","по сравнению с"],["마루","настил"],["가","(частица подлежащего)"],["안방","внутренняя комната"],["과","и"],["건넌방","внешняя комната"],["사이","между"],["에","в"],["좁게","узко"],["있고","есть, и"],["창문","окно"],["이","(частица подлежащего)"],["적은","немного"],["것","вещь / то"],["특징","особенность"],["이다","быть"]]}]},{"id":"tracking","emoji":"📱","titleKo":"위치 추적","title":"Отслеживание телефона и приватность","theme":"Общество","level":"TOPIK II","sentences":[{"ko":"시에 살고 있는 여대생 A씨(21)는 집으로 가는 도중 공사장 인근을 지나다 어두운 밤길에 그만 발을 헛디뎌 배수로에 빠지고 말았다.","ru":"Студентка A, живущая в городе (21 год), по пути домой проходила рядом со стройкой и в темноте случайно оступилась и упала в водосток.","words":[["시에","в городе"],["살고 있는","живущая"],["여대생","студентка"],["A씨","госпожа A"],["(21)는","(21 лет)"],["집으로","домой"],["가는","идущая"],["도중","по пути"],["공사장","стройка"],["인근을","поблизости"],["지나다","проходить"],["어두운","тёмная"],["밤길에","ночная дорога"],["그만","случайно, неожиданно"],["발을","нога"],["헛디뎌","оступиться"],["배수로에","в дренаж, водосток"],["빠지고 말았다","в итоге упала"]]},{"ko":"몸을 움직일 수 없었던 A씨는 \"도와주세요\"라고 소리쳤으나 야간에 인적이 드문 곳이어서 도와줄 사람이 없었다.","ru":"A, которая не могла пошевелиться, закричала: \"Помогите\", но так как это было малолюдное место ночью, помочь было некому.","words":[["몸을","тело"],["움직일 수 없었던","не могла двигаться"],["도와주세요","помогите"],["라고","(цитата)"],["소리쳤으나","закричала, но"],["야간에","ночью"],["인적이","люди"],["드문","редкие"],["곳이어서","место, поэтому"],["도와줄","помогающий"],["사람이","человек"],["없었다","не было"]]},{"ko":"A씨는 급히 휴대전화로 어머니에게 \"제가 배수로에 빠졌는데 여기가 어디인지 알 수가 없어요\"라고 도움을 청했다.","ru":"A срочно позвонила матери по телефону и попросила помощи, сказав: «Я упала в водосток, но не знаю, где нахожусь».","words":[["급히","срочно"],["휴대전화로","по мобильному телефону"],["어머니에게","матери"],["제가","я"],["배수로에","в водосток"],["빠졌는데","упала"],["여기가","это место"],["어디인지","где именно"],["알 수가 없어요","не знаю"],["도움을","помощь"],["청했다","просила"]]},{"ko":"딸이 위급한 상황에 처했다는 소식을 접한 어머니는 119 구조대에 딸의 휴대전화 추적을 의뢰했고, A씨는 119 구조대의 도움을 받아 구조됐다.","ru":"Получив известие, что её дочь в экстренной ситуации, мать обратилась в службу спасения 119 с просьбой отследить телефон дочери, и A была спасена с их помощью.","words":[["딸이","дочь"],["위급한","экстренный"],["상황에","в ситуации"],["처했다는","оказалась"],["소식을","новость"],["접한","получившая"],["어머니는","мать"],["구조대에","в службу спасения"],["추적을","отслеживание"],["의뢰했고","попросила"],["도움을 받아","получила помощь"],["구조됐다","была спасена"]]},{"ko":"A씨는 당시 위급한 상황에 놓여 있었으나 휴대전화 위치 추적 기술의 도움을 받아 생명을 구할 수 있었다.","ru":"Несмотря на то, что A находилась в опасной ситуации, благодаря технологии отслеживания местоположения телефона ей удалось спастись.","words":[["당시","в то время"],["놓여 있었으나","находилась, но"],["위치","местоположение"],["추적","отслеживание"],["기술의","технология"],["생명을","жизнь"],["구할 수 있었다","удалось спасти"]]},{"ko":"하지만 휴대전화 실시간 위치 추적을 허가하는 것이 기본권을 침해하고 있다라는 내용의 헌법 소원이 제기되었다.","ru":"Однако была подана конституционная жалоба с утверждением, что разрешение на отслеживание местоположения телефона в реальном времени нарушает основные права.","words":[["하지만","однако"],["실시간","в реальном времени"],["허가하는","разрешающее"],["기본권을","основные права"],["침해하고 있다","нарушает"],["내용의","содержание"],["헌법 소원","конституционная жалоба"],["제기되었다","была подана"]]},{"ko":"위치 추적은 사생활의 비밀, 일반적 행동의 자유, 인격권 등을 침해하기 때문에 위헌이라는 것이다.","ru":"Позиция заключается в том, что слежка нарушает тайну частной жизни, свободу действий и личные права, поэтому является неконституционной.","words":[["사생활의","частной жизни"],["비밀","тайна"],["일반적","общий"],["행동의 자유","свобода действий"],["인격권","личные права"],["등을","и т. д."],["침해하기 때문에","потому что нарушает"],["위헌이라는","неконституционным"],["것이다","это"]]},{"ko":"또한 이로 인해 수사권이 남용될 여지도 크다고 지적했다.","ru":"Также было указано, что существует большая вероятность злоупотребления следственными полномочиями.","words":[["또한","также"],["이로 인해","из-за этого"],["수사권이","следственные полномочия"],["남용될","будет злоупотреблено"],["여지도","вероятность"],["크다고","велика"],["지적했다","указали"]]}]},{"id":"consume","emoji":"💸","titleKo":"합리적 소비","title":"Рациональное потребление","theme":"Экономика","level":"TOPIK II","sentences":[{"ko":"소비생활을 잘하려면 반드시 소득 내에서 소비를 해야 한다.","ru":"Чтобы хорошо управлять потреблением, обязательно нужно тратить в пределах дохода.","words":[["소비생활을","потребительская жизнь"],["잘하려면","чтобы хорошо делать"],["반드시","обязательно"],["소득","доход"],["내에서","в пределах"],["소비를","потребление"],["해야 한다","должен делать"]]},{"ko":"만일 소득보다 소비가 많아지면 우리는 빚을 지게 되는 것이다.","ru":"Если расходы превысят доходы, мы окажемся в долгах.","words":[["만일","если"],["소득보다","чем доход"],["소비가","потребление"],["많아지면","увеличивается"],["우리는","мы"],["빚을","долг"],["지게 되는 것이다","окажемся в состоянии"]]},{"ko":"그런데 사고 싶은 물건은 많기 때문에 소득 안에서 소비를 하는 것이 쉽지 않다.","ru":"Но так как хочется много вещей, тратить в рамках дохода бывает сложно.","words":[["그런데","однако"],["사고 싶은","хочу купить"],["물건은","вещи"],["많기 때문에","потому что много"],["소득 안에서","в пределах дохода"],["소비를 하는 것","потреблять"],["이","это"],["쉽지 않다","нелегко"]]},{"ko":"그래서 소비를 할 때는 우선순위를 정해야 한다.","ru":"Поэтому при потреблении нужно расставлять приоритеты.","words":[["그래서","поэтому"],["소비를 할 때는","при потреблении"],["우선순위를","приоритеты"],["정해야 한다","нужно установит"]]},{"ko":"가장 사고 싶은 것, 가장 큰 만족을 주는 것을 잘 골라야 하고, 그것을 선택하면 나머지는 포기해야 한다.","ru":"Нужно хорошо выбрать то, что хочешь больше всего и что приносит наибольшее удовлетворение, а остальные вещи придётся отказаться.","words":[["가장","самый"],["사고 싶은 것","то, что хочется купить"],["가장 큰","самый большой"],["만족을","удовлетворение"],["주는 것","дающий"],["잘","хорошо"],["골라야 하고","выбирать и"],["그것을","это"],["선택하면","если выбрать"],["나머지는","остальное"],["포기해야 한다","нужно отказаться"]]},{"ko":"이러한 소비를 합리적인 소비라고 한다.","ru":"Такой подход к потреблению называют рациональным потреблением.","words":[["이러한","такой"],["소비를","потребление"],["합리적인","рациональный"],["소비라고 한다","называют потреблением"]]},{"ko":"합리적인 소비란, 먼 미래까지 내다보고 가지고 있는 돈을 고려해서 여러 가지 상품 가운데 적절한 물건을 선택하고 최대 만족을 얻는 소비 행위이다.","ru":"Рациональное потребление — это действие, при котором, учитывая свои деньги и смотря в далёкое будущее, выбирают подходящий товар из множества и получают максимальное удовлетворение.","words":[["합리적인","рациональный"],["소비란","потребление есть"],["먼","дальний"],["미래까지","до будущего"],["내다보고","глядя вперед"],["가지고 있는","имеющий"],["돈을","деньги"],["고려해서","учитывая"],["여러 가지","различные"],["상품","товары"],["가운데","среди"],["적절한","подходящий"],["물건을","вещь"],["선택하고","выбирая и"],["최대 만족을","максимальное удовлетворение"],["얻는","получая"],["소비 행위이다","акт потребления"]]},{"ko":"예를 들어, 자기에게 있는 돈을 가지고 무엇을 할지 고민하는 사람이 있다.","ru":"Например, есть человек, который думает, на что потратить имеющиеся у него деньги.","words":[["예를 들어","например"],["자기에게 있는","у себя имеющий"],["돈을","деньги"],["가지고","имея"],["무엇을 할지","что делать"],["고민하는","размышляющий"],["사람이 있다","есть человек"]]},{"ko":"좋아하는 옷도 사고 싶고 재미있는 공연도 보고 싶지만 자기가 가진 돈을 생각해서 한 가지만 해야 한다.","ru":"Он хочет купить любимую одежду и сходить на интересное представление, но, думая о своих деньгах, может выбрать только одно.","words":[["좋아하는","любимый"],["옷도","одежда тоже"],["사고 싶고","хочу купить и"],["재미있는","интересный"],["공연도","представление тоже"],["보고 싶지만","хочу посмотреть, но"],["자기가 가진","имеющий"],["돈을","деньги"],["생각해서","учитывая"],["한 가지만","только одно"],["해야 한다","должен сделать"]]},{"ko":"그러면 이 사람은 무엇을 선택할까?","ru":"Что тогда выберет этот человек?","words":[]},{"ko":"이 사람은 좋아하는 옷을 사서 얻는 이익과 재미있는 공연을 봐서 얻는 이익을 비교하여 좀 더 만족이 큰 것을 고를 것이다.","ru":"Он сравнит выгоду от покупки одежды и от посещения интересного концерта и выберет то, что даст большее удовлетворение.","words":[["이익과","выгоды и"],["비교하여","сравнивая"],["좀 더","немного больше"],["만족이","удовлетворение"],["큰 것을","большее"],["고를 것이다","выберет"]]},{"ko":"즉, 하나를 선택할 때 들어가는 비용과 그것으로부터 얻는 만족감을 비교해서 비용에 비해 이익이 가장 큰 것을 선택할 것이다.","ru":"То есть при выборе он сравнит затраты и получаемое удовлетворение, и выберет то, где выгода максимальна по отношению к затратам.","words":[["즉","то есть"],["하나를","одно"],["선택할 때","при выборе"],["들어가는","входящие"],["비용과","затраты и"],["그것으로부터","от этого"],["얻는","получаемое"],["만족감을","удовлетворение"],["비교해서","сравнивая"],["비용에 비해","по отношению к затратам"],["이익이","выгода"],["가장 큰 것을","самое большое"],["선택할 것이다","выберет"]]},{"ko":"좋아하는 옷을 사는 것과 공연을 보는 것 중에서 어느 것을 선택하는 것이 합리적인 선택일까?","ru":"Что из двух — покупка одежды или поход на концерт — будет рациональным выбором?","words":[["좋아하는 옷을","любимую одежду"],["사는 것과","покупка и"],["공연을","представление"],["보는 것 중에서","из просмотра"],["어느 것을","что именно"],["선택하는 것이","выбрать"],["합리적인 선택일까?","будет рациональным выбором?"]]}]},{"id":"recipe","emoji":"🍢","titleKo":"궁중떡볶이","title":"Королевский ттокпокки (рецепт)","theme":"Кухня","level":"TOPIK I","sentences":[{"ko":"궁중떡볶이","ru":"Королевский ттокпокки","words":[]},{"ko":"재료 | 떡볶이떡 300g, 소고기 100g, 피망 2개, 표고버섯 4개, 양파 ½개, 당근 ½개, 파","ru":"Ингредиенты | рисовые клецки для ттокпокки 300 г, говядина 100 г, болгарский перец 2 шт., шиитаке 4 шт., лук ½ шт., морковь ½ шт., зелёный лук","words":[["재료","ингредиенты"],["떡볶이떡","рисовые клецки для ттокпокки"],["소고기","говядина"],["피망","болгарский перец."],["표고버섯","шиитаке"],["양파","лук ½"],["개","половина."],["당근","морковь"]]},{"ko":"양념재료 | 간장, 설탕, 물엿, 참기름, 후추, 마늘, 깨","ru":"Приправы | соевый соус, сахар, кукурузный сироп, кунжутное масло, чёрный перец, чеснок, кунжут","words":[["양념재료","приправы"],["간장","соевый соус"],["설탕","сахар"],["물엿","кукурузный сироп"],["참기름","кунжутное масло"],["후추","чёрный перец"],["마늘","чеснок"],["깨","кунжут"]]},{"ko":"만드는 방법 |","ru":"Способ приготовления:","words":[["만드는","делающий"],["방법","способ"]]},{"ko":"고기 양념하기","ru":"● Маринование мяса","words":[["고기","мясо"],["양념하기","мариновать"]]},{"ko":"고기 양념장: 간장 3큰술, 설탕 2큰술, 참기름, 마늘, 후추를 만든다","ru":"1. Приготовить маринад для мяса: 3 ст. л. соевого соуса, 2 ст. л. сахара, кунжутное масло, чеснок, чёрный перец.","words":[["고기","мясо"],["양념장","маринад"],["간장","соевый соус"],["큰술","3 столовые ложки"],["설탕","сахар"],["큰술","2 столовые ложки"],["참기름","кунжутное масло"],["마늘","чеснок"],["후추","чёрный перец"],["를","(частица объекта)"],["만든다","приготовить"]]},{"ko":"표고버섯을 썰고 파도 썬다","ru":"2. Нарезать шиитаке и зелёный лук.","words":[["표고버섯을","шиитаке (вин.)"],["썰고","нарезав"],["파도","также зелёный лук"],["썬다","нарезать"]]},{"ko":"표고버섯, 파, 소고기를 양념장에 버무린다","ru":"3. Перемешать шиитаке, лук и говядину с маринадом.","words":[["표고버섯","шиитаке"],["파","зелёный лук"],["소고기를","говядину"],["양념장에","в маринаде"],["버무린다","перемешать"]]},{"ko":"양념이 잘 배게끔 15–20분 정도 재워둔다","ru":"4. Оставить мариноваться примерно 15–20 минут, чтобы маринад хорошо пропитал.","words":[["양념이","маринад (тема)"],["잘","хорошо"],["배게끔","чтобы пропиталось15–20"],["분","15–20 минут"],["정도","примерно"],["재워둔다","оставлять мариноваться"]]},{"ko":"떡 양념하기","ru":"● Маринование клецок","words":[["떡","клецки"],["양념하기","мариновать"]]},{"ko":"말랑말랑한 떡볶이떡을 준비한다","ru":"1. Подготовить мягкие клецки для ттокпокки.","words":[["말랑말랑한","мягкие"],["떡볶이떡을","клецки для ттокпокки"],["준비한다","подготовить"]]},{"ko":"떡에 간장, 참기름을 조금 넣고 양념을 한다","ru":"2. Немного полить клецки соевым соусом и кунжутным маслом и замариновать.","words":[["떡에","клецкам"],["간장","соевый соус"],["참기름을","кунжутное масло"],["조금","немного"],["넣고","положив"],["양념을 한다","замариновать"]]},{"ko":"조리하기","ru":"● Готовка","words":[["조리하기","готовить"]]},{"ko":"채소(당근, 양파, 피망, 파)를 썰어서 준비한다","ru":"1. Нарезать и подготовить овощи (морковь, лук, болгарский перец, лук).","words":[["채소","овощи"],["당근","морковь"],["양파","лук"],["피망","болгарский перец"],["파","зелёный лук"],["를","(частица объекта)"],["썰어서","нарезав"],["준비한다","подготовить"]]},{"ko":"팬에 양파, 피망, 당근을 볶는다. 이때 재료를 따로 볶아야 재료의 맛과 향이 섞이지 않는다","ru":"2. Обжарить в сковороде лук, болгарский перец и морковь. При этом овощи нужно жарить отдельно, чтобы их вкусы и ароматы не смешивались.","words":[["팬에","в сковороде"],["양파","лук"],["피망","болгарский перец"],["당근을","морковь"],["볶는다","обжарить"],["이때","при этом"],["재료를","ингредиенты"],["따로","отдельно"],["볶아야","нужно жарить"],["재료의","ингредиентов"],["맛과","вкус и"],["향이","аромат"],["섞이지 않는다","не смешиваются"]]},{"ko":"양념한 고기를 채소가 있는 팬에 넣고 익을 때까지 볶는다","ru":"3. Положить замаринованное мясо в сковороду с овощами и жарить до готовности.","words":[["양념한","замаринованное"],["고기를","мясо"],["채소가 있는","с овощами"],["팬에","в сковороде"],["넣고","положив"],["익을 때까지","до готовности"],["볶는다","жарить"]]},{"ko":"마지막으로 양념한 떡을 넣고 볶는다","ru":"4. В завершение добавить замаринованные клецки и обжарить.","words":[["마지막으로","в завершение"],["양념한","замаринованные"],["떡을","клецки"],["넣고","положив"],["볶는다","обжарить"]]},{"ko":"설탕, 간장, 깨소금으로 간을 맞춘다","ru":"5. Приправить сахаром, соевым соусом и смесью кунжут–соль. Слова:설탕 — сахар간장 — соевый соус깨소금으로 — смесь кунжут–соль간을 — приправу맞춘다 — регулировать / довести до вкуса","words":[]}]},{"id":"olympic","emoji":"🏅","titleKo":"올림픽 메달","title":"Олимпийские медали и спорт","theme":"Спорт","level":"TOPIK II","sentences":[{"ko":"각 나라의 메달 개수는?","ru":"Сколько медалей у каждой страны?","words":[["각","каждый"],["나라의","страны (родительный падеж)"],["메달","медаль"],["개수는","количество"]]},{"ko":"4년에 한 번씩 열리는 전 세계인의 축제인 올림픽에서 현재 가장 많은 메달을 딴 국가는 어디일까?","ru":"Какая страна сейчас выиграла больше всего медалей на Олимпийских играх — празднике всего мира, который проходит раз в четыре года?","words":[["4년에","раз в 4 года"],["한 번씩","по одному разу"],["열리는","проходящий"],["전 세계인의","всего мира"],["축제인","праздник"],["올림픽에서","на Олимпийских играх"],["현재","сейчас"],["가장 많은","самое большое"],["메달을","медали"],["딴","выигравший"],["국가는","страна (тема)"],["어디일까?","где находится?"]]},{"ko":"가장 많은 메달을 딴 스포츠 강국은 바로 미국이다.","ru":"Страна, выигравшая больше всего медалей, — это США.","words":[["가장 많은","самое большое"],["메달을 딴","выигравший медали"],["스포츠","спорт"],["강국은","держава"],["바로","именно"],["미국이다","США есть"]]},{"ko":"미국은 역대 올림픽에서 모두 2,827개의 메달을 획득해 전체 1위에 올랐고 러시아와 영국이 그 뒤를 잇고 있다.","ru":"США завоевали в истории Олимпийских игр 2827 медалей, заняв первое место, за ними идут Россия и Великобритания.","words":[["미국은","США"],["역대","за всю историю"],["올림픽에서","на Олимпиадах"],["모두","всего"],["2,827개의","2827 штук"],["메달을","медалей"],["획득해","завоевали"],["전체","весь"],["1위에","первое место"],["올랐고","поднялись"],["러시아와","Россия и"],["영국이","Великобритания"],["그 뒤를","за ними"],["잇고 있다","следуют"]]},{"ko":"신흥 스포츠 강국으로 부상하고 있는 한국의 실력은 어떨까?","ru":"Каковы успехи Южной Кореи, которая становится новой спортивной державой?","words":[["신흥","новый, восходящий"],["스포츠","спорт"],["강국으로","как держава"],["부상하고 있는","поднимающийся"],["한국의","корейский"],["실력은","сила, способности"],["어떨까?","каковы?"]]},{"ko":"한국은 금메달 121개, 은메달 112개, 동메달 104개 등 모두 337개의 메달로 전체 17위를 기록하고 있다.","ru":"Южная Корея занимает 17-е место с 337 медалями: 121 золотая, 112 серебряных и 104 бронзовые.","words":[["금메달","золотые медали"],["은메달","серебряные медали"],["동메달","бронзовые медали"],["모두","всего"],["메달로","медалями"],["전체","общий"],["17위를","17 место"],["기록하고 있다","занимает"]]},{"ko":"세계에서 가장 빠른 사람은 누구일까?","ru":"Кто самый быстрый человек в мире?","words":[]},{"ko":"'번개'라는 별명을 가지고 있는 세계 최고의 육상 선수 우사인 볼트는 올림픽에서 무려 8개의 금메달을 딴 엄청난 기록을 가지고 있다.","ru":"Усейн Болт, мировой лучший легкоатлет с прозвищем «Молния», имеет потрясающий рекорд — 8 золотых медалей на Олимпиадах.","words":[["번개라는","с прозвищем «Молния»"],["별명을","прозвище"],["가지고 있는","имеющий"],["세계 최고의","лучший в мире"],["육상 선수","легкоатлет"],["우사인 볼트는","Усейн Болт"],["올림픽에서","на Олимпиадах"],["무려","целых"],["8개의","8 штук"],["금메달을 딴","выигравший золотые медали"],["엄청난","потрясающий"],["기록을","рекорд"],["가지고 있다","иметь"]]},{"ko":"2008년 열린 베이징 올림픽에서는 경기 도중 신발 끈이 풀어져 결승선 10여m를 앞두고 전력 질주를 하지 않았음에도 금메달을 획득했다.","ru":"На Олимпиаде 2008 года в Пекине у него развязались шнурки примерно за 10 метров до финиша, но он всё равно выиграл золотую медаль, не бежав на полную мощность.","words":[["2008년","2008 год"],["열린","проведённый"],["베이징 올림픽에서는","на Пекинской Олимпиаде"],["경기 도중","во время соревнования"],["신발 끈이","шнурки"],["풀어져","развязались"],["결승선","финишная линия"],["10여m를","около 10 метров"],["앞두고","перед"],["전력 질주를","максимальный спринт"],["하지 않았음에도","несмотря на то, что не бегал"],["금메달을","золотую медаль"],["획득했다","получил"]]},{"ko":"그는 앞으로 쉽게 깨지지 않을 것 같은, 100m를 9.58초에 뛰는 남자 100m 육상의 세계 신기록 보유자이기도 하다.","ru":"Он также держит мировой рекорд в беге на 100 м среди мужчин — 9.58 секунды, который, кажется, в ближайшее время не побить.","words":[["그는","он"],["앞으로","в будущем"],["쉽게","легко"],["깨지지 않을 것 같은","кажется, не побьётся"],["100m를","100 метров"],["9.58초에","за 9.58 секунды"],["뛰는","бегающий"],["남자","мужчина"],["육상의","лёгкой атлетики"],["세계 신기록","мировой рекорд"],["보유자이기도 하다","также держатель"]]},{"ko":"구기 종목 중 가장 빠른 종목은 무엇일까?","ru":"Какой самый быстрый вид спорта с мячом?","words":[["구기 종목","вид спорта с мячом"],["중","среди"],["가장 빠른","самый быстрый"],["종목은","вид спорта"],["무엇일까?","что?"]]},{"ko":"공을 사용하는 구기 종목 중에서 공 속도가 가장 빠른 종목은 무엇일까?","ru":"Среди мячевых видов спорта, какой имеет самый быстрый мяч?","words":[["공을 사용하는","использующий мяч"],["구기 종목 중에서","среди видов спорта с мячом"],["공 속도가","скорость мяча"],["가장 빠른","самый быстрый"],["종목은","вид спорта"],["무엇일까?","что?"]]},{"ko":"1위는 배드민턴으로 배드민턴 셔틀콕의 속도는 시속 350km 정도이다.","ru":"Первое место занимает бадминтон — скорость воланчика около 350 км/ч.","words":[["1위는","первое место"],["배드민턴으로","занял бадминтон"],["배드민턴 셔틀콕의","воланчик для бадминтона"],["속도는","скорость"],["시속","километров в час"],["350km 정도이다","около 350 км/ч"]]},{"ko":"프로 야구 선수들의 공이 160km 정도인 것을 보면 2배를 넘는 속도이다.","ru":"Для сравнения, мяч у профессиональных бейсболистов летит примерно со скоростью 160 км/ч — это более чем в два раза медленнее.","words":[["프로","профессиональный"],["야구 선수들의","бейсболистов"],["공이","мяч"],["160km 정도인","около 160 км/ч"],["것을 보면","если сравнить"],["2배를","в 2 раза"],["넘는","превышающую"],["속도이다","скорость"]]},{"ko":"  공의 크기가 가장 큰 축구는 약 120km 정도이다.","ru":"Самый большой мяч в футболе, летит со скоростью около 120 км/ч.","words":[["공의","мяча"],["크기가","размер"],["가장 큰","самый большой"],["축구는","футбол"],["약","примерно"],["정도이다","около 120 км/ч"]]}]},{"id":"science","emoji":"🧊","titleKo":"석빙고와 황금비","title":"Согбинго и золотое сечение","theme":"Наука","level":"TOPIK II","sentences":[{"ko":"자연 냉동고인 석빙고가 더운 여름에도 얼음을 그대로 저장 할 수 있었던 이유는 무엇일까?","ru":"Почему природный холодильник «석빙고» мог сохранять лед даже в жаркое лето?","words":[["자연","природа"],["냉동고인","холодильник (природный)"],["석빙고가","석빙고 (название)"],["더운","жаркий"],["여름에도","даже летом"],["얼음을","лед (винительный падеж)"],["그대로","так же, без изменений"],["저장","хранение"],["할 수 있었던","мог"],["이유는","причина"],["무엇일까?","что же?"]]},{"ko":"이것은 바로 같은 크기의 돌을 아치 모양으로 쌓아 올려 무지개 모양으로 완성한 아치 구조의 천장 때문이다.","ru":"Это из-за свода арочной конструкции потолка, который построен из камней одинакового размера в форме арки, напоминающей радугу.","words":[["이것은","это"],["바로","именно"],["같은","одинаковый"],["크기의","размера"],["돌을","камень"],["아치 모양으로","в форме арки"],["쌓아 올려","сложенный, построенный"],["무지개 모양으로","в форме радуги"],["완성한","завершенный"],["아치 구조의","арочной конструкции"],["천장","потолок"],["때문이다","из-за"]]},{"ko":"보통 석빙고의 천장은 1~2m의 간격을 두고 4~5개의 아치형으로 만들어져 있는데 그 사이 사이에는 움푹 들어간 빈 공간이 있다.","ru":"Обычно потолок 석빙고 сделан из 4-5 арок с интервалом 1–2 метра, а между ними есть углубленные пустоты.","words":[["보통","обычно"],["천장은","потолок (тема)"],["1~2m의","1–2 метра"],["간격을","интервал"],["두고","ставить, держать"],["4~5개의","4–5 штук"],["아치형으로","в форме арки"],["만들어져 있는데","сделан"],["그 사이 사이에는","между ними"],["움푹 들어간","впалый, углубленный"],["빈 공간이","пустое пространство"],["있다","есть"]]},{"ko":"이 빈 공간이 바로 석빙고 내부의 더운 공기를 가두는 역할을 하기 때문에 석빙고는 더운 여름에도 얼음을 저장할 수 있었던 것이다.","ru":"Эти пустоты удерживают горячий воздух внутри 석빙고, благодаря чему лед сохраняется даже летом.","words":[["이","этот"],["빈 공간이","пустое пространство"],["바로","именно"],["석빙고 내부의","внутри 석빙고"],["더운 공기를","горячий воздух"],["가두는","запирающий, удерживающий"],["역할을","роль"],["하기 때문에","потому что"],["석빙고는","석빙고 (тема)"],["더운 여름에도","даже в жаркое лето"],["얼음을","лед"],["저장할 수 있었던 것이다","мог сохранять"]]},{"ko":"그리스의 아테나 언덕 아크로폴리스에 위치한 파르테논 신전은 세계에서 가장 아름다운 건축물로 손꼽히고 있다.","ru":"Парфенон, расположенный на Акрополе на холме Афины в Греции, считается одним из самых красивых сооружений в мире.","words":[["그리스의","греческий"],["아테나","Афина"],["언덕","холм"],["아크로폴리스에","в Акрополе"],["위치한","расположенный"],["파르테논 신전은","храм Парфенон (тема)"],["세계에서","в мире"],["가장 아름다운","самый красивый"],["건축물로","здание"],["손꼽히고 있다","считается"]]},{"ko":"세계 문화 유산 1호인 파르테논 신전이 완벽한 아름다움을 뽐내는 것은 바로 이 건물이 황금비에 맞춰 지어졌기 때문이다.","ru":"Парфенон, являющийся первым объектом Всемирного культурного наследия, демонстрирует совершенную красоту, потому что построен по золотому сечению.","words":[["세계 문화 유산","всемирное культурное наследие"],["1호인","номер один"],["파르테논 신전이","Парфенон"],["완벽한","совершенный"],["아름다움을","красота"],["뽐내는","демонстрирующий"],["것은","то, что"],["바로","именно"],["이 건물이","это здание"],["황금비에","по золотому сечению"],["맞춰 지어졌기 때문이다","построено согласно"]]},{"ko":"황금비란 가로, 세로의 두 길이가 1:1.618의 이상적인 비율을 이루는 것을 의미한다.","ru":"Золотое сечение — это идеальное соотношение длины и ширины 1 к 1.618.","words":[["황금비란","золотое сечение"],["가로","ширина"],["세로의","высота"],["두 길이가","две длины"],["1:1.618의","1 к 1.618"],["이상적인","идеальный"],["비율을","соотношение"],["이루는 것을","образующее"],["의미한다","означает"]]},{"ko":"이 황금비를 이용해 지어진 파르테논 신전은 아름다울 뿐만 아니라 매우 안정적으로 보인다.","ru":"Парфенон, построенный с использованием золотого сечения, выглядит не только красиво, но и очень устойчиво.","words":[["이","этот"],["황금비를","золотое сечение"],["이용해","используя"],["지어진","построенный"],["파르테논 신전은","Парфенон"],["아름다울 뿐만 아니라","не только красивый"],["매우","очень"],["안정적으로","устойчиво"],["보인다","выглядит"]]},{"ko":"황금비는 이러한 이유로 현대 우리의 생활에서도 많이 찾아볼 수 있는데 신용카드, 텔레비전 화면 등이 모두 황금비로 이루어져 있다.","ru":"По этой причине золотое сечение часто встречается и в нашей современной жизни — например, в кредитных картах и экранах телевизоров.","words":[["이러한 이유로","по этой причине"],["현대","современный"],["우리의","наш"],["생활에서도","в жизни"],["많이 찾아볼 수 있는데","часто встречается"],["신용카드","кредитная карта"],["텔레비전 화면","экран телевизора"],["등이","и так далее"],["모두","все"],["황금비로","по золотому сечению"],["이루어져 있다","составлено"]]}]},{"id":"invite","emoji":"📢","titleKo":"재외동포 청소년 초청","title":"Приглашение молодёжи соотечественников","theme":"Объявление","level":"TOPIK II","sentences":[{"ko":"「재외동포재단」에서는 오는 7월에 ‘재외동포 청소년 초청 연수’를 개최합니다.","ru":"Фонд соотечественников за рубежом проводит в июле программу «Приглашение молодёжи соотечественников за рубежом».","words":[["재외동포재단","Фонд соотечественников за рубежом"],["에서는","по отношению к (служебная частица)"],["오는","предстоящий"],["7월에","в июле"],["재외동포","соотечественники за рубежом"],["청소년","молодёжь"],["초청","приглашение"],["연수","учебная программа"],["를","(винительный падеж)"],["개최합니다","проводит"]]},{"ko":"세계 각국의 재외동포 청소년들과 함께 모국의 사회·역사·문화를 체험하는 뜻깊은 자리가 될 것입니다.","ru":"Это будет значимое мероприятие, на котором молодёжь соотечественников из разных стран сможет познакомиться с обществом, историей и культурой родины.","words":[["세계","мир"],["각국의","разных стран"],["재외동포","соотечественники"],["청소년들과","молодёжь (творительный падеж)"],["함께","вместе"],["모국의","родины"],["사회","общество"],["역사","история"],["문화를","культуру"],["체험하는","испытывающей, знакомящейся"],["뜻깊은","значимое"],["자리","место, событие"],["가","(частица темы)"],["될 것입니다","будет"]]},{"ko":"재외동포 청소년들의 많은 관심과 참여를 바랍니다.","ru":"Просим молодёжь соотечественников проявить активный интерес и принять участие.","words":[["재외동포","соотечественники"],["청소년들의","молодёжи (родительный падеж)"],["많은","много"],["관심과","интерес и"],["참여를","участие"],["바랍니다","просим, желаем"]]},{"ko":"연수명: 「2000 재외동포 청소년 초청 연수」","ru":"а. Название: «2000-я программа приглашения молодёжи соотечественников за рубежом»","words":[["연수명","название программы"],["청소년","молодёжи"],["초청","приглашения"],["연수","учебная программа"]]},{"ko":"연수 기간: 7.15.~7.22. (7박 8일)","ru":"б. Сроки: с 15 по 22 июля (7 ночей, 8 дней)","words":[]},{"ko":"장소: 서울, 지방","ru":"в. Место: Сеул и регионы","words":[]},{"ko":"연수 대상: 전 세계 재외동포 청소년 400명","ru":"г. Участники: 400 молодёжи-соотечественников со всего мира","words":[["연수","программа"],["대상","участники"]]},{"ko":"연수 내용: 한국어 캠프, 주요 유적지 및 경제 현장 탐방, 한국 청소년과의 교류","ru":"д. Программа: языковой лагерь, экскурсии по основным историческим памятникам и экономическим объектам, общение с корейской молодёжью","words":[["연수","программа"],["내용","содержание"],["캠프","лагерь"],["주요","основные"],["유적지","памятники"],["및","и"],["경제","экономика"],["현장","объекты"],["탐방","экскурсия"],["청소년과의","с молодёжью"],["교류","обмен, общение"]]},{"ko":"바. 신청 방법9.1. 신청 기간: 2.24.~4.4.9.2. 제출 서류: 참가 신청서, 자기소개서, 추천서9.3. 제출 방법: 현지의 재외공관으로 우편 제출","ru":"е. Как подать заявку:   — сроки подачи: с 24 февраля по 4 апреля   — документы: заявка на участие, автобиография, рекомендательное письмо   — подача: почтовым отправлением в местное консульское учреждение","words":[["제출","подача"],["서류","документы"],["참가 신청서","заявка на участие"],["자기소개서","автобиография"],["추천서","рекомендательное письмо"],["현지의","местного"],["재외공관으로","в консульство"],["우편","почта"]]},{"ko":"사. 선발 우대: 한국어 능력 우수자, 봉사 활동 경험자","ru":"ж. Приоритет при отборе: отличники по корейскому языку, имеющие опыт волонтёрской деятельности","words":[["선발","отбор"],["우대","приоритет"],["능력","способности"],["우수자","отличники"],["봉사","волонтёрство"],["활동","деятельность"],["경험자","имеющие опыт"]]}]},{"id":"cellist","emoji":"🎻","titleKo":"장한나","title":"Чжан Ханна: от виолончели к дирижированию","theme":"Интервью","level":"TOPIK II","sentences":[{"ko":"3세에 피아노를, 6세에 첼로를 시작해 11세에 로스트로포비치 첼로국제콩쿠르에서 심사위원 10명의 전원 일치로 대상 및 현대 음악상 수상자로 선정된 천재 첼리스트 장한나.","ru":"В 3 года начала играть на пианино, в 6 — на виолончели, а в 11 лет стала победительницей и обладательницей приза за современную музыку на международном конкурсе виолончелистов имени Ростроповича — гениальная виолончелистка Чжан Ханна.","words":[["3세에","в 3 года"],["피아노를","пианино"],["6세에","в 6 лет"],["첼로를","виолончель"],["시작해","начала"],["11세에","в 11 лет"],["로스트로포비치","Ростропович"],["첼로국제콩쿠르에서","на международном конкурсе виолончелистов"],["심사위원","жюри"],["10명의","10 человек"],["전원","все"],["일치로","единогласно"],["대상","главный приз"],["및","и"],["현대 음악상","приз за современную музыку"],["수상자로","лауреатом"],["선정된","выбранная"],["천재","гений"],["첼리스트","виолончелистка"],["장한나","Чжан Ханна (имя)"]]},{"ko":"올해는 지휘자로서 데뷔 무대를 갖는다.","ru":"В этом году она дебютирует как дирижёр.","words":[["올해는","в этом году"],["지휘자로서","как дирижёр"],["데뷔 무대를","дебютный концерт"],["갖는다","проводит"]]},{"ko":"지난 27일 성남아트센터에서 첼리스트 장한나가 지휘대에 선 모습을 볼 수 있었다.","ru":"27-го числа в арт-центре Соннам можно было увидеть Чжан Ханну на дирижёрском пульте.","words":[["지난","прошлый"],["성남아트센터에서","в арт-центре Соннам"],["첼리스트","виолончелистка"],["장한나가","Чжан Ханна (тема)"],["지휘대에","на дирижёрском пульте"],["선","стоящая"],["모습을","образ, вид"],["볼 수 있었다","можно было увидеть"]]},{"ko":"그녀는 제1회 성남 국제 청소년 관현악 페스티벌의 마지막 날 한국과 중국, 독일의 연주자로 구성된 연합 청소년 관현악단을 이끌고 베토벤 교향곡 7번과 코리올란 서곡 등을 연주했다.","ru":"В последний день первого международного фестиваля молодёжных оркестров Соннама она руководила объединённым молодёжным оркестром из Кореии, Китая и Германии, исполнив симфонию №7 Бетховена и увертюру «Кориолан».","words":[["그녀는","она"],["제1회","первый"],["성남 국제 청소년 관현악 페스티벌의","международного молодёжного оркестрового фестиваля Соннама"],["마지막 날","последний день"],["한국과","Корея и"],["중국, 독일의","Китай и Германия (родительный падеж)"],["연주자로","исполнителей"],["구성된","составленный"],["연합 청소년 관현악단을","объединённый молодёжный оркестр"],["이끌고","руководила"],["베토벤 교향곡 7번과","симфония №7 Бетховена и"],["코리올란 서곡 등을","увертюра Кориолан и т.д."],["연주했다","исполнила"]]},{"ko":"첼로와 지휘의 차이를 묻는 나의 질문에 그녀는 환하게 웃으며 \"첼로 연주와 지휘의 차이요? 제 손으로 소리를 만든다는 것과 다른 연주자 100명의 몸과 마음, 영혼을 빌려서 소리를 만드는 것의 차이 아닐까요?\"라고 대답했다.","ru":"На мой вопрос о разнице между игрой на виолончели и дирижированием она широко улыбнулась и ответила: «Разница между игрой на виолончели и дирижированием? Разве это не разница между созданием звука своими руками и созданием звука, взяв в долг тела, души и сердца сотни музыкантов?»","words":[["첼로와","виолончели и"],["지휘의","дирижирования"],["차이를","разницу"],["묻는","спрашивающий"],["나의 질문에","на мой вопрос"],["그녀는","она"],["환하게 웃으며","широко улыбаясь"],["첼로 연주와","игра на виолончели и"],["지휘의 차이요?","разница между дирижированием?"],["제 손으로","своими руками"],["소리를 만든다는 것과","создавать звук и"],["다른 연주자 100명의","100 других исполнителей"],["몸과 마음, 영혼을","тело, душу и сердце"],["빌려서","взяв в долг"],["소리를 만드는 것의","создавать звук"],["차이 아닐까요?","разве не разница?"],["라고 대답했다","ответила"]]},{"ko":"그런데 첼리스트가 왜 갑자기 지휘자로 나선다는 것일까?","ru":"Но почему же виолончелистка внезапно стала дирижёром?","words":[["그런데","однако"],["첼리스트가","виолончелистка"],["왜","почему"],["갑자기","вдруг"],["지휘자로","дирижёром"],["나선다는 것일까?","решила стать?"]]},{"ko":"그녀는 유명한 작곡가들의 대표작은 거의 오케스트라곡이라 첼로만으로는 아이들에게 클래식 음악을 소개하는 데 한계가 있다며 오래전부터 지휘자가 되겠다는 꿈을 가졌고 4년 전부터 본격적으로 지휘 공부를 해 왔다고 한다.","ru":"Она говорит, что большинство известных произведений великих композиторов — оркестровые, и поэтому только виолончелью сложно познакомить детей с классической музыкой, поэтому она давно мечтала стать дирижёром и уже 4 года серьёзно занимается дирижированием.","words":[["유명한","известные"],["작곡가들의","композиторов"],["대표작은","основные произведения"],["거의","почти"],["오케스트라곡이라","оркестровые произведения"],["첼로만으로는","только виолончелью"],["아이들에게","детям"],["클래식 음악을","классическую музыку"],["소개하는 데","знакомить"],["한계가 있다며","есть ограничение"],["오래전부터","давно"],["지휘자가 되겠다는","стать дирижёром"],["꿈을 가졌고","мечтала"],["4년 전부터","с 4 лет назад"],["본격적으로","серьёзно"],["지휘 공부를","учёбу дирижированию"],["해 왔다고 한다","занимается"]]},{"ko":"그녀는 또한 자신이 가진 음악적 재능을 어린이를 위해 쓰고 싶었다며 대학 입학 때부터 줄곧 사회 공헌 방법을 고민해 왔고 이번 음악회가 그 일환이라고 설명했다.","ru":"Также она хотела использовать свой музыкальный талант для детей, размышляла о способах социальной помощи с поступления в университет, и объяснила, что этот концерт — часть её деятельности в этом направлении.","words":[["또한","также"],["자신이 가진","имеющий"],["음악적 재능을","музыкальный талант"],["어린이를 위해","для детей"],["쓰고 싶었다며","хотела использовать"],["대학 입학 때부터","с поступления в университет"],["줄곧","постоянно"],["사회 공헌 방법을","способы социальной помощи"],["고민해 왔고","размышляла"],["이번 음악회가","этот концерт"],["그 일환이라고","часть этого"],["설명했다","объяснила"]]},{"ko":"그녀는 지휘를 하면서 작곡가에 대해 더 많이 공부할 수 있었다고 했다.","ru":"Она сказала, что благодаря дирижированию смогла глубже изучить композиторов.","words":[["지휘를 하면서","дирижируя"],["작곡가에 대해","о композиторах"],["더 많이","больше"],["공부할 수 있었다고","могла учиться"],["했다","сказала"]]},{"ko":"첼로를 연주하면서 미처 깨닫지 못했던 브람스의 특징을 교향곡을 통해 알게 되었고, 이것은 자신의 첼로 연주를 더 성숙하게 했다고 한다.","ru":"Через симфонии она узнала особенности Брамса, которые не осознавала при игре на виолончели, и это сделало её исполнение более зрелым.","words":[["첼로를 연주하면서","играя на виолончели"],["미처","заранее, ещё"],["깨닫지 못했던","не осознавала"],["브람스의","Брамса"],["특징을","особенности"],["교향곡을 통해","через симфонии"],["알게 되었고","узнала"],["이것은","это"],["자신의","своей"],["첼로 연주를","игре на виолончели"],["더 성숙하게 했다고 한다","сделало более зрелой"]]},{"ko":"매일 연주와 지휘 연습을 5시간씩 꾸준히 하면서도 음악은 매번 새로운 느낌으로 다가온다고 한다.","ru":"Хотя она ежедневно по 5 часов упорно репетирует игру и дирижирование, музыка каждый раз кажется ей новой.","words":[["매일","каждый день"],["연주와","игра и"],["지휘 연습을","практика дирижирования"],["5시간씩","по 5 часов"],["꾸준히","усердно"],["하면서도","несмотря на"],["음악은","музыка"],["매번","каждый раз"],["새로운 느낌으로","с новым ощущением"],["다가온다고 한다","кажется, приходит"]]},{"ko":"그러한 음악을 자신의 것으로 만들기 위해 그녀는 오늘도 노력을 아끼지 않는다.","ru":"Чтобы сделать такую музыку своей, она и сегодня не жалеет усилий.","words":[["그러한","такая"],["음악을","музыка"],["자신의 것으로","своей"],["만들기 위해","чтобы сделать"],["오늘도","сегодня тоже"],["노력을","усилия"],["아끼지 않는다","не жалеть, не щадить"]]}]},{"id":"movie","emoji":"🎬","titleKo":"국제시장","title":"«Ode to My Father» — отзыв о фильме","theme":"Эссе","level":"TOPIK II","sentences":[{"ko":"가정의 달 오월을 맞아 부모님과 함께 영화관을 찾았다.","ru":"В мае, месяце семьи, я пошёл в кино вместе с родителями.","words":[["가정의 달","месяц семьи"],["오월을","май"],["맞아","в честь, при наступлении"],["부모님과","с родителями"],["함께","вместе"],["영화관을","кинотеатр"],["찾았다","посетил"]]},{"ko":"부모님이 공감하실 수 있는 영화를 찾던 중 한국전쟁 이후부터 현재까지를 시대 배경으로 하는 영화 ‘국제시장’을 예매했다.","ru":"В поисках фильма, который бы тронул родителей, я забронировал билеты на «Ode to My Father», действие которого охватывает период от Корейской войны до наших дней.","words":[["부모님이","родители (тема)"],["공감하실 수 있는","который может их тронуть"],["영화를","фильм"],["찾던 중","в процессе поиска"],["한국전쟁 이후부터","с послевоенного периода"],["현재까지를","до настоящего времени"],["시대 배경으로 하는","использующий эпоху как фон"],["영화","фильм"],["‘국제시장’을","«Гукдже Сиджан» / «Ode to My Father»"],["예매했다","забронировал (билет)"]]},{"ko":"영화의 시작은 한국전쟁으로 시작한다.","ru":"Фильм начинается с Корейской войны.","words":[["영화의","фильма (притяжательное)"],["시작은","начало"],["한국전쟁으로","Корейской войной"],["시작한다","начинается"]]},{"ko":"주인공 덕수의 가족이 흥남에서 부산으로 피난하는 장면으로 시작하는데, 난리 통에 덕수는 여동생 막순의 손을 놓치고, 덕수의 아버지가 막순을 찾는 사이 가족은 헤어져 덕수는 어머니, 어린 남동생과 함께 부산에 도착한다.","ru":"Сцена, где семья главного героя Доксу бежит из Хыннама в Пусан, показывает, что в суматохе он теряет сестру Максун, а пока отец ищет её, семья разделяется, и Доксу с матерью и младшим братом прибывают в Пусан.","words":[["주인공","главный герой"],["덕수의","Доксу (притяжательное)"],["가족이","семья"],["흥남에서","из Хыннама"],["부산으로","в Пусан"],["피난하는","бежащая"],["장면으로","в сцене"],["시작하는데","начинается, но…"],["난리 통에","в хаосе"],["덕수는","Доксу (тема)"],["여동생","младшая сестра"],["막순의","Максун (притяжательное)"],["손을","руку"],["놓치고","отпустив"],["덕수의 아버지가","отец Доксу"],["막순을 찾는","ищет Максун"],["사이","пока"],["가족은","семья"],["헤어져","разделившись"],["어머니, 어린 남동생과 함께","с матерью и младшим братом"],["부산에","в Пусане"],["도착한다","прибывает"]]},{"ko":"부산에는 시집을 와서 국제시장에 자리를 잡은 덕수의 고모가 살고 있었기에, 덕수 모자는 고모의 집에서 신세를 지게 되고 덕수는 아버지를 대신해 가족을 지키겠다는 약속을 지키기 위해 구두닦이 일을 시작한다.","ru":"В Пусане жила тётя Доксу, вышедшая там замуж и устроившаяся у рынка «Гукдже», поэтому Доксу с матерью поселились у неё, а Доксу, чтобы сдержать обещание защищать семью вместо отца, начал работать сапожником.","words":[["부산에는","в Пусане"],["시집을 와서","вышла замуж и приехала"],["국제시장에","у рынка «Гукдже»"],["자리를 잡은","обосновавшаяся"],["덕수의 고모가","тётя Доксу"],["살고 있었기에","жила, поэтому"],["덕수 모자는","Доксу с матерью"],["고모의 집에서","в доме тёти"],["신세를 지게 되고","оказались на её попечении"],["덕수는","Доксу"],["아버지를 대신해","вместо отца"],["가족을 지키겠다는","обещание защищать семью"],["약속을","обещание"],["지키기 위해","чтобы сдержать"],["구두닦이 일을","работу сапожника"],["시작한다","начинает"]]},{"ko":"그 후에는 동생 학비를 벌기 위해 독일 탄광으로 떠나기도 하고, 고모의 가게를 지킬 자금을 마련하기 위해 베트남 전쟁에 참전하면서 가족을 지켜 냈다.","ru":"Затем он уехал в немецкую шахту, чтобы заработать на учёбу брата, и даже участвовал во Вьетнамской войне, чтобы собрать средства для магазина тёти и защитить семью.","words":[["그 후에는","после этого"],["동생","младший брат"],["학비를","на обучение"],["벌기 위해","чтобы заработать"],["독일 탄광으로","в немецкую шахту"],["떠나기도 하고","уезжал также"],["고모의 가게를","магазин тёти"],["지킬","сохранить"],["자금을","средства"],["마련하기 위해","чтобы собрать"],["베트남 전쟁에","во Вьетнамской войне"],["참전하면서","участвуя"],["가족을","семью"],["지켜 냈다","защитил"]]},{"ko":"베트남 전쟁의 총탄이 난무하는 위험한 상황에 덕수가 아내에게 보낸 편지 장면에서 나는 눈물을 쏟고 말았다.","ru":"Во время опасной сцены войны во Вьетнаме, где снаряды сыпались со всех сторон, я расплакался, увидев письмо, которое Доксу посылает жене.","words":[["베트남 전쟁의","Вьетнамской войны (притяжательное)"],["총탄이","снаряды"],["난무하는","сыпящиеся повсюду"],["위험한 상황에","в опасной ситуации"],["덕수가","Доксу (тема)"],["아내에게","жене"],["보낸","отправленное"],["편지 장면에서","сцена письма"],["나는","я"],["눈물을","слёзы"],["쏟고 말았다","разрыдался"]]},{"ko":"“내는 그래 생각한다. 힘든 세월에 태어나가 이 힘든 세상 풍파를 우리 자식이 아니라 우리가 겪은 게 참 다행이라고.”","ru":"«Я так думаю: как хорошо, что эта тяжёлая жизнь пришлась на нас, а не на наших детей».","words":[["내는","я (диалектная форма)"],["그래","так"],["생각한다","думаю"],["힘든 세월에","в тяжёлые времена"],["태어나가","родился"],["이 힘든 세상","этот тяжёлый мир"],["풍파를","бури, невзгоды"],["우리 자식이 아니라","не нашим детям, а"],["우리가","мы"],["겪은 게","пережили"],["참","действительно"],["다행이라고","к счастью"]]},{"ko":"그 장면은 가족을 위해 자신을 희생하며 힘겹게 살아온 우리 아버지들의 마음을 가장 잘 보여 주는 장면이었다.","ru":"Эта сцена лучше всего показывает сердце нашего отца, который жертвовал собой и тяжело трудился ради семьи.","words":[["그 장면은","та сцена (тема)"],["가족을 위해","ради семьи"],["자신을","себя"],["희생하며","жертвуя"],["힘겹게","тяжело"],["살아온","проживших"],["우리 아버지들의","наших отцов"],["마음을","сердце"],["가장 잘","лучше всего"],["보여 주는","показывающая"],["장면이었다","была сцена"]]},{"ko":"비록 내가 겪는 삶이 힘들더라도 자식이 아닌 내가 겪을 수 있어 다행이라고 위안하는 우리들의 평범하지만 위대한 아버지들의 마음이 느껴져 가슴이 뭉클했다.","ru":"Меня глубоко тронула мысль наших простых, но великих отцов, которые утешаются тем, что все эти тяготы приходится пережить им, а не детям.","words":[["비록","хотя"],["내가","я"],["겪는","переживающий"],["삶이","жизнь"],["힘들더라도","хоть и трудна"],["자식이 아닌","не детям"],["겪을 수 있어","могу пережить"],["다행이라고","к счастью"],["위안하는","утешаясь"],["우리들의","наших"],["평범하지만","простых, но"],["위대한","великих"],["아버지들의","отцов"],["마음이","сердце"],["느껴져","чувствовалось"],["가슴이","грудь"],["뭉클했다","сжалось от трогательности"]]},{"ko":"‘국제시장’은 익숙함이 어느새 당연함이 되어버린 아버지의 큰 사랑을 다시 깨닫게 해 주는 영화였다.","ru":"«Ode to My Father» — фильм, который напомнил мне о той безусловной любви отца, которую я давно воспринимал как должное.","words":[["‘국제시장’은","«Ode to My Father» (тема)"],["익숙함이","привычка"],["어느새","незаметно"],["당연함이 되어버린","стала само собой разумеющимся"],["아버지의","отца"],["큰 사랑을","огромную любовь"],["다시","снова"],["깨닫게 해 주는","заставляющую осознать"],["영화였다","был фильм"]]},{"ko":"영화가 끝나고 상영관을 나서는데 평소 무뚝뚝하신 아버지의 눈시울이 붉어진 것을 느낄 수 있었다.","ru":"Когда фильм закончился и мы выходили из зала, я заметил, что обычно сдержанный отец стекленел глазами.","words":[["영화가","фильм"],["끝나고","окончившись"],["상영관을","зал"],["나서는데","выходя"],["평소","обычно"],["무뚝뚝하신","сдержанный (уважит.)"],["아버지의","моего отца"],["눈시울이","край глаза"],["붉어진 것을","покраснели"],["느낄 수 있었다","смог почувствовать"]]},{"ko":"쑥스러우셔서인지 애써 아무렇지 않은 척하시는 아버지의 손을 괜히 쥐어 보았다.","ru":"Возможно, из-за смущения он притворялся спокойным, и я невольно сжал его руку.","words":[["쑥스러우셔서인지","возможно из-за стеснения"],["애써","нарочно"],["아무렇지 않은 척하시는","делающего вид, что всё в порядке"],["아버지의","отца"],["손을","руку"],["괜히","зря"],["쥐어 보았다","сжал, попробовал сжать"]]},{"ko":"격변의 시대, 그 회오리바람 속에서 우리 가정을, 또 나를 지켜 주고 키워 오신 아버지의 못이 박인 투박한 손이 오늘 따라 더욱 크고 따뜻했다.","ru":"В эту пору бурь и перемен грубые в мозолях руки отца, который защищал и растил нашу семью в вихре событий, сегодня казались особенно большими и тёплыми.","words":[["격변의 시대","эпоха перемен"],["그","того"],["회오리바람","вихрь"],["속에서","в"],["우리 가정을","нашу семью"],["또","и"],["나를","меня"],["지켜 주고","защищавший"],["키워 오신","растивший"],["아버지의","отца"],["못이 박인","вмятинами от гвоздей"],["투박한","грубые"],["손이","руки"],["오늘 따라","именно сегодня"],["더욱","ещё более"],["크고","большие"],["따뜻했다","тёплые"]]}]},{"id":"shower","emoji":"🌧️","titleKo":"소나기","title":"«Дождь» (소나기) — отрывок","theme":"Литература","level":"TOPIK II","sentences":[{"ko":"개울물은 날로 여물어갔다.","ru":"Вода в ручье с каждым днём всё глубже прибывала.","words":[["개울물은","вода в ручье"],["날로","с каждым днём"],["여물어갔다","прибывала, становилась глубже"]]},{"ko":"소년은 갈림길에서 아래쪽으로 가 보았다.","ru":"Мальчик на развилке пошёл вниз по тропе.","words":[["소년은","мальчик"],["갈림길에서","на развилке"],["아래쪽으로","вниз"],["가 보았다","пошёл, попробовал пройти"]]},{"ko":"갈밭 머리에서 바라보는 서당골 마을은 쪽빛 하늘 아래 한결 가까워 보였다.","ru":"Видя с края камышового поля, деревня Сотанг골 под лазурным небом казалась гораздо ближе.","words":[["갈밭","камышовое поле"],["머리에서","с края"],["바라보는","глядя"],["서당골 마을은","деревня Сотанггол (тема)"],["쪽빛","лазурный"],["하늘 아래","под небом"],["한결","гораздо"],["가까워 보였다","казалась ближе"]]},{"ko":"어른들의 말이, 내일 소녀네가 양평읍으로 이사 간다는 것이었다.","ru":"По словам взрослых, завтра семья той девочки переезжает в уезд Янпён.","words":[["어른들의","взрослых"],["말이","слова"],["내일","завтра"],["소녀네가","у той девочки (тема)"],["양평읍으로","в уезд Янпён"],["이사 간다는","переезжает"],["것이었다","говорилось"]]},{"ko":"거기 가서는 조그마한 가겟방을 보게 되리라는 것이었다.","ru":"Там, говорят, они снимут маленькую лавку.","words":[["거기","там"],["가서는","пойдя"],["조그마한","маленькую"],["가겟방을","лавку (винит.)"],["보게 되리라는","увидят, окажутся"],["것이었다","говорилось"]]},{"ko":"소년은 저도 모르게 주머니 속 호두알을 만지작거리며, 한 손으로는 수없이 갈꽃을 휘어 꺾고 있었다.","ru":"Сам того не замечая, мальчик крутил в кармане орешек, а другой рукой без счёта ломал камышовые стебли.","words":[["소년은","мальчик"],["저도 모르게","сам не замечая"],["주머니 속","в кармане"],["호두알을","орешек"],["만지작거리며","крутил, теребил"],["한 손으로는","одной рукой"],["수없이","без счёта"],["갈꽃을","камышовые стебли"],["휘어 꺾고 있었다","ломал, сгибал"]]},{"ko":"그날 밤, 소년은 자리에 누워서도 같은 생각뿐이었다.","ru":"Той ночью лёжа в кровати, он не мог думать ни о чём, кроме этого.","words":[["그날 밤","той ночью"],["소년은","мальчик"],["자리에 누워서도","лёжа в кровати"],["같은 생각뿐이었다","думал лишь об одном"]]},{"ko":"내일 소녀네가 이사하는 걸 가 보나 어쩌나.","ru":"Стоит ли завтра сходить и посмотреть, как переезжают те девочка с семьёй?","words":[["내일","завтра"],["소녀네가","та девочка (тема)"],["이사하는 걸","переезд"],["가 보나","пойти посмотреть ли"],["어쩌나","как быть"]]},{"ko":"가면 소녀를 보게 될까 어떨까.","ru":"Интересно, если я пойду, увижу ли её?","words":[["가면","если пойти"],["소녀를","девочку"],["보게 될까","увижу ли"],["어떨까","интересно"]]},{"ko":"그러다가 까무룩 잠이 들었는가 하는데,","ru":"И как-то он задремал, едва успев об этом помыслить,","words":[["그러다가","и вот"],["까무룩","крепко"],["잠이 들었는가 하는데","задремал ли"]]},{"ko":"“허, 참, 세상일도….”","ru":"«Ох, жалко же жизнь…» — пробормотал вернувшийся из деревни отец.","words":[["허","ох"],["참","действительно"],["세상일도","жизнь, дела в мире"]]},{"ko":"“윤 초시 댁도 말이 아니야, 그 많던 전답을 다 팔아 버리고, 대대로 살아오던 집마저 남의 손에 넘기더니, 또 액상까지 당하는 걸 보면….”","ru":"«У семьи Юн Чхо-шхи беда за бедой: всю их щедрую пашню продали, дом родовой отдали чужим, а теперь и неудача какая-то…» — вздыхала мама под тусклым светом лампы.","words":[["윤 초시 댁도","семья Юн Чхо-шхи тоже"],["말이 아니야","беда"],["그 많던 전답을","ту щедрую пашню"],["다 팔아 버리고","всё продали"],["대대로 살아오던 집마저","даже родовой дом"],["남의 손에 넘기더니","отдали чужим"],["또 액상까지 당하는 걸","и ещё невзгоды терпят"],["보면","если посмотреть"]]},{"ko":"“증손이라곤 계집애 그 애 하나뿐이었지요?”","ru":"«Эта девочка была твоей единственной правнучкой, не так ли?»","words":[["증손","правнук"],["계집애","девочка (устар.)"],["그 애","та дитя"],["하나뿐이었지요?","только одна, правда?"]]},{"ko":"“그렇지, 사내애 둘 있던 건 어려서 잃고…”","ru":"«Да, двух сыновей рано потеряли…» — подтвердил отец.","words":[["그렇지","да, правда"],["사내애 둘 있던 건","два сына"],["어려서 잃고","с детства потеряли"]]},{"ko":"“어쩌면 그렇게 자식 복이 없을까?”","ru":"«Как же мало им повезло с детьми?» — раздалось в комнате.","words":[["어쩌면","как же"],["그렇게","так"],["자식 복이","счастье детей"],["없을까?","нет ли?"]]},{"ko":"“글쎄 말이지. 이번 앤 꽤 여러 날 앓는 걸 약도 변변히 못 써 봤다더군. 지금 같아서는 윤 초시네도 대가 끊긴 셈이지… 그런데 참 이번 계집애는 어린 것이 여간 잔망스럽지가 않아. 글쎄, 죽기 전에 이런 말을 했다지 않아? 자기가 죽거든 자기 입던 옷을 꼭 그대로 입혀서 묻어 달라고…”","ru":"«Да уж… Говорят, что она долго болела, и ей и лекарств в норму не давали. Теперь, по сути, у семьи Юн Чхо-шхи кровь прервана… Но эта девочка так хитроумна для своих лет! Слышал: перед смертью велела похоронить себя в той самой одежде, в которой умрёт…» — шептались они.","words":[["글쎄 말이지","вот именно"],["이번 앤","эта девочка"],["꽤 여러 날","довольно много дней"],["앓는 걸","болела"],["약도 변변히 못 써 봤다더군","даже лекарств толком не давали"],["지금 같아서는","в нынешней ситуации"],["윤 초시네도","у Юн Чхо-шхи"],["대가 끊긴 셈이지","род прервался"],["그런데 참","но вот"],["이번 계집애는","эта девочка"],["어린데여간 잔망스럽지가 않아","совсем не по-детски хитра"],["죽기 전에","перед смертью"],["이런 말을 했다지 않아?","говорила же?"],["자기가 죽거든","когда умрёт"],["자기 입던 옷을","одежду, в которой жила"],["꼭 그대로 입혀서","обязательно ей надеть"],["묻어 달라고","велела похоронить в ней"]]}]},{"id":"dream","emoji":"🌟","titleKo":"나의 꿈","title":"«Я хочу поднимать упавших» — о мечте","theme":"Эссе","level":"TOPIK II","sentences":[{"ko":"저는 어릴 때부터 잘 넘어지는 아이였습니다.","ru":"С раннего детства я был(а) ребёнком, который часто падал.","words":[]},{"ko":"그래서 아직 저의 몸에는 작은 상처들이 남아 있습니다.","ru":"Поэтому на моём теле до сих пор остались небольшие шрамы.","words":[]},{"ko":"몇 년 전 저는 체육 시간에 넘어져 1년이 넘는 시간을 고생하였습니다.","ru":"Несколько лет назад я упал(а) на уроке физкультуры и провёл(а) больше года в мучениях.","words":[]},{"ko":"의사 선생님의 잘못된 진단과 잘못된 처방 그리고 저의 부주의 때문이었죠.","ru":"Это случилось из-за неправильного диагноза и рецепта врача, а также моей неосторожности.","words":[]},{"ko":"발이 낫지 않았을 때는 하루하루가 슬프고 괴로웠어요.","ru":"Когда нога не заживала, каждый день был печальным и мучительным.","words":[]},{"ko":"마음껏 뛰어노는 아이들을 보면 외롭기만 했어요.","ru":"Видя, как беззаботно бегают дети, я чувствовал(а) только одиночество.","words":[]},{"ko":"제가 좋아하던 피겨 스케이팅도 그만둬야 했고요.","ru":"Мне пришлось бросить фигурное катание, которым я увлекался(ась).","words":[]},{"ko":"친구들과 오랫동안 같이 뛰어놀지 못해서 친구들과의 우정도 멀어졌어요.","ru":"Из-за того что я долго не мог(ла) бегать с друзьями, наша дружба ослабла.","words":[]},{"ko":"정말 그때는 어두운 동굴 속에 혼자 갇혀 있는 기분이었습니다.","ru":"В тот момент мне казалось, что я один(одна) заперт(а) в тёмной пещере.","words":[]},{"ko":"그러던 시기에 저는 한 재활치료사 할머니를 만나서 운동 치료를 받게 되었습니다.","ru":"В это время я встретил(а) пожилую физиотерапевтку и начал(а) получать лечебную гимнастику.","words":[]},{"ko":"그분은 치료를 해 주실 때 “자, 애리얼! 이렇게 해 보는 거야! 왜, 이 할머니도 이렇게 하고 있는데 너 같은 아이가 벌써 지쳐 있어?”라고 격려해 주셨어요.","ru":"Во время сеансов она вдохновляла меня: «Давай, Ариэль! Так! Почему ты уже устал(а), в то время как эта бабушка всё ещё справляется?»","words":[]},{"ko":"그리고 그분은 직접 시범을 보여 주시며 중심 잡기, 뛰기, 한 발로 점프하기 등을 같이 해 주셨어요.","ru":"А затем она сама показывала упражнения — удержание равновесия, бег, прыжки на одной ноге — и делала их вместе со мной.","words":[]},{"ko":"그때 저는 “나도 자라면 아픈 사람, 넘어지는 사람을 일으켜 주는 사람이 되고 싶다.”는 꿈을 가지게 되었습니다.","ru":"В тот момент во мне зародилась мечта: «Когда вырасту, я хочу помогать больным и падающим людям подниматься.»","words":[]},{"ko":"저는 걸스카우트 활동을 어릴 때부터 계속해 오고 있습니다.","ru":"С малых лет я участвую в деятельности «Девичьих скаутов».","words":[]},{"ko":"홈리스 분들에게 음식을 준비해서 드리고, 부모님의 도움을 받지 못하는 친구들에게 영어를 가르쳐 주기도 했습니다.","ru":"Я готовил(а) еду для бездомных и обучал(а) английскому друзей, не получавших помощи родителей.","words":[]},{"ko":"이런 활동을 통해 저는 경제적·사회적으로 넘어져 있는 사람들도 있다는 것을 알게 되었습니다.","ru":"Благодаря этим мероприятиям я узнал(а), что есть люди, сломленные экономически и социально.","words":[]},{"ko":"그리고 걸스카우트를 통해 봉사와 리더십이 다른 사람들에게 얼마나 큰 영향을 주는지도 깨달았습니다.","ru":"И я понял(а), как сильно служение и лидерство скаутов влияют на других.","words":[]},{"ko":"저는 어른이 되면 많은 사람에게 도움을 주는 영향력 있는 사람이 되고 싶습니다.","ru":"Когда я стану взрослым(ой), я хочу быть человеком, способным помогать многим.","words":[]},{"ko":"직업은 아직 정하지 않았습니다.","ru":"Конкретную профессию я ещё не выбрал(а).","words":[]},{"ko":"제가 어떤 일을 하든 도움이 필요한 곳에 가서 돕고 싶습니다.","ru":"Независимо от рода деятельности, я хочу идти туда, где нужна помощь, и помогать.","words":[]},{"ko":"이웃의 불쌍한 사람들에게 도움을 주는 사회복지사, 다친 사람을 도와주는 재활치료사, 어려운 이를 돕는 변호사……","ru":"Социальный работник, помогающий бедным соседям; физиотерапевт, поддерживающий раненых; адвокат, защищающий нуждающихся…","words":[]},{"ko":"저는 제 꿈을 위해 수없이 생각하고 결심해 왔습니다.","ru":"Для своей мечты я много думал(а) и принимал(а) решения.","words":[]},{"ko":"10번, 100번 고민해도, 결국 사람들에게 도움이 되는 일을 해야 한다는 확신이 섰습니다.","ru":"Сколько бы ни думал(а), я пришёл(шла) к убеждению: нужно заниматься тем, что поможет людям.","words":[]},{"ko":"학생인 저는 공부에 집중해야 하지만, 도움의 손길이 필요한 곳이 있으면 언제든 달려가겠습니다.","ru":"Как ученик(ца), я должен(на) учиться, но если потребуется помощь, я всегда прибегу на подмогу.","words":[]},{"ko":"그러다 보면 더 구체적으로 제 미래에 다가갈 수 있고, 더 많은 이에게 도움이 되는 사람이 될 테니까요.","ru":"Если продолжать так, то смогу приблизиться к своему будущему более конкретно и стать человеком, который помогает большему числу людей.","words":[["그러다 보면","если так продолжать / делая так"],["더","больше"],["구체적으로","конкретно"],["제","моё (вежливая форма)"],["미래에","к будущему"],["다가갈","приблизиться"],["수 있고","можно (мочь)"],["더","ещё (больше)"],["많은","много"],["이에게","людям ("],["에게","дательный падеж, \"кому\")"],["도움이","помощь"],["되는","становиться (от 되다)"],["사람이","человек"],["될 테니까요","потому что стану (объяснение причины)"]]}]}];
+  const READING_TEXTS = [
+    { id:'intro', emoji:'👋', title:'Знакомство', titleKo:'자기소개', theme:'Знакомство', level:'TOPIK I', sentences:[
+      { ko:'안녕하세요? 제 이름은 민지입니다.', ru:'Здравствуйте! Меня зовут Минджи.', words:[['안녕하세요','здравствуйте'],['이름','имя'],['-입니다','быть (вежливо)']] },
+      { ko:'저는 러시아에서 왔습니다.', ru:'Я приехал(а) из России.', words:[['저','я (вежливо)'],['러시아','Россия'],['-에서','из'],['오다','приходить, приезжать']] },
+      { ko:'지금 한국어를 공부합니다.', ru:'Сейчас я изучаю корейский язык.', words:[['지금','сейчас'],['한국어','корейский язык'],['공부하다','учиться, изучать']] },
+      { ko:'한국 음악과 드라마를 좋아합니다.', ru:'Мне нравятся корейская музыка и дорамы.', words:[['음악','музыка'],['드라마','дорама'],['좋아하다','нравиться, любить'],['-과/와','и']] },
+      { ko:'만나서 반갑습니다. 잘 부탁합니다.', ru:'Приятно познакомиться. Прошу любить и жаловать.', words:[['만나다','встречать'],['반갑다','рад(а)'],['잘 부탁합니다','прошу любить и жаловать']] }
+    ]},
+    { id:'myday', emoji:'⏰', title:'Мой день', titleKo:'나의 하루', theme:'Повседневность', level:'TOPIK I', sentences:[
+      { ko:'저는 아침 일곱 시에 일어납니다.', ru:'Я встаю в семь часов утра.', words:[['아침','утро'],['일곱 시','семь часов'],['-에','в (о времени)'],['일어나다','вставать']] },
+      { ko:'세수를 하고 아침을 먹습니다.', ru:'Умываюсь и завтракаю.', words:[['세수하다','умываться'],['-고','и (затем)'],['아침','завтрак'],['먹다','есть']] },
+      { ko:'여덟 시 반에 학교에 갑니다.', ru:'В половине девятого иду в школу.', words:[['여덟 시 반','половина девятого'],['학교','школа'],['가다','идти, ехать']] },
+      { ko:'오후에는 친구와 도서관에서 공부합니다.', ru:'Днём занимаюсь с другом в библиотеке.', words:[['오후','день, после полудня'],['친구','друг'],['도서관','библиотека'],['-에서','в (о месте действия)']] },
+      { ko:'저녁을 먹은 후에 한국어를 복습합니다.', ru:'После ужина повторяю корейский.', words:[['저녁','ужин'],['-은 후에','после того как'],['복습하다','повторять']] },
+      { ko:'밤 열한 시에 잡니다.', ru:'Ложусь спать в одиннадцать вечера.', words:[['밤','ночь'],['열한 시','одиннадцать часов'],['자다','спать']] }
+    ]},
+    { id:'seasons', emoji:'🍂', title:'Четыре сезона', titleKo:'한국의 사계절', theme:'Природа', level:'TOPIK I', sentences:[
+      { ko:'한국에는 사계절이 있습니다.', ru:'В Корее есть четыре времени года.', words:[['사계절','четыре сезона'],['있다','быть, иметься'],['-에는','в (тема)']] },
+      { ko:'봄에는 날씨가 따뜻하고 꽃이 핍니다.', ru:'Весной погода тёплая и цветут цветы.', words:[['봄','весна'],['날씨','погода'],['따뜻하다','тёплый'],['꽃','цветок'],['피다','цвести']] },
+      { ko:'여름에는 덥고 비가 많이 옵니다.', ru:'Летом жарко и идёт много дождя.', words:[['여름','лето'],['덥다','жаркий'],['비가 오다','идёт дождь'],['많이','много']] },
+      { ko:'가을에는 시원하고 단풍이 아름답습니다.', ru:'Осенью прохладно и красивы осенние листья.', words:[['가을','осень'],['시원하다','прохладный'],['단풍','осенняя листва'],['아름답다','красивый']] },
+      { ko:'겨울에는 춥고 눈이 옵니다.', ru:'Зимой холодно и идёт снег.', words:[['겨울','зима'],['춥다','холодный'],['눈이 오다','идёт снег']] }
+    ]},
+    {"id":"energy","emoji":"♻️","titleKo":"신재생에너지","title":"Возобновляемая энергия","theme":"Экология","level":"TOPIK II","sentences":[{"ko":"신재생에너지는 신생에너지, 재생에너지를 합친 말이다.","ru":"Возобновляемая энергия — это объединённое название новой энергии и возобновляемой энергии.","words":[["신재생에너지","возобновляемая энергия"],["는","(частица темы)"],["신생에너지","новая энергия"],["재생에너지","возобновляемая энергия"],["를","(частица объекта)"],["합친","объединённый"],["말","слово"],["이다","быть"]]},{"ko":"신재생에너지는 물, 바람, 햇빛 등 자연의 힘을 이용해서 개발하는 에너지이기 때문에 고갈의 위험이나 환경오염의 가능성이 낮다.","ru":"Возобновляемая энергия разрабатывается с использованием силы природы, такой как вода, ветер и солнечный свет, поэтому риск исчерпания и загрязнения окружающей среды низки.","words":[["물","вода"],["바람","ветер"],["햇빛","солнечный свет"],["등","и так далее"],["자연","природа"],["의","(частица принадлежности)"],["힘","сила"],["을","(частица объекта)"],["이용해서","используя"],["개발하는","разрабатываемая"],["에너지","энергия"],["이기 때문에","потому что"],["고갈","истощение"],["위험","риск"],["나","или"],["환경오염","загрязнение окружающей среды"],["가능성","возможность"],["이","(частица подлежащего)"],["낮다","низкий"]]},{"ko":"이에 따라 최근 새로운 신재생 에너지 개발에 적극 나서고 있는 국가들이 많다.","ru":"В связи с этим в последнее время много стран активно занимаются разработкой новых возобновляемых источников энергии.","words":[["이에 따라","вслед за этим / в связи с этим"],["최근","последнее время"],["새로운","новый"],["신재생 에너지","возобновляемая энергия"],["개발","разработка"],["에","в / на"],["적극","активно"],["나서고 있는","принимающие участие"],["국가들","страны"],["이","(частица подлежащего)"],["많다","много"]]},{"ko":"대표적인 몇 가지 사례를 소개하면 다음과 같다.","ru":"Вот несколько типичных примеров.","words":[["대표적인","типичный"],["몇 가지","несколько"],["사례","пример"],["를","(частица объекта)"],["소개하면","если представить / если рассказать"],["다음","следующий"],["과 같다","как следующее / как далее"]]},{"ko":"먼저 해상 풍력의 강국인 영국을 사례로 들 수 있다.","ru":"Сначала можно привести в пример Великобританию, сильную в морской ветроэнергетике.","words":[["먼저","сначала"],["해상 풍력","офшорная (морская) ветроэнергия"],["의","(частица принадлежности)"],["강국","сильная страна"],["인","являющаяся"],["영국","Великобритания"],["을","(частица объекта)"],["사례","пример"],["로","как"],["들 수 있다","можно привести / можно назвать"]]},{"ko":"해상 풍력 발전은 육지와 가까운 바다에 거대한 풍차를 돌려서 전기를 생산하는 방식이다.","ru":"Офшорная ветроэнергия — это способ производства электроэнергии, при котором вращают гигантские ветряные мельницы в море недалеко от суши.","words":[["해상 풍력 발전","морская ветроэнергетика"],["은","(частица темы)"],["육지","суша"],["와","и / с"],["가까운","близкий"],["바다","море"],["에","в"],["거대한","огромный"],["풍차","ветряная мельница"],["를","(частица объекта)"],["돌려서","вращая"],["전기","электричество"],["를","(частица объекта)"],["생산하는","производящий"],["방식","способ"],["이다","быть"]]},{"ko":"육상 풍력 발전에 비해 토지 구입 비용이 들지 않고, 지형 및 경관 훼손, 소음 발생 등의 피해가 적다는 것이 장점이다.","ru":"По сравнению с наземной ветроэнергией, не требуется покупать землю, и ущерб для рельефа, пейзажа и уровень шума меньше — это преимущество.","words":[["육상 풍력 발전","наземная ветроэнергия"],["에 비해","по сравнению с"],["토지","земля"],["구입","покупка"],["비용","затраты"],["이","(частица подлежащего)"],["들지 않고","не требуется"],["지형","рельеф"],["및","и"],["관","пейзаж"],["훼손","повреждение"],["소음","шум"],["발생","возникновение"],["등","и т. д."],["의","(частица принадлежности)"],["피해","ущерб"],["가","(частица подлежащего)"],["적다는","маленький / незначительный"],["것이","то, что"],["장점","преимущество"],["이다","быть"]]},{"ko":"다음으로 지열을 활용하여 에너지를 생산하는 경우이다.","ru":"Следующий пример — это производство энергии с использованием геотермального тепла.","words":[["다음으로","далее"],["지열","геотермальная энергия / тепло земли"],["을","(частица объекта)"],["활용하여","используя"],["에너지","энергия"],["를","(частица объекта)"],["생산하는","производящий"],["경우","случай"],["이다","быть"]]},{"ko":"뉴질랜드가 대표적인데 뉴질랜드는 화산 및 지진대에 위치하고 있어 지열 발전에 유리하다.","ru":"Типичный пример — Новая Зеландия: она расположена в вулканической и сейсмической зоне, что выгодно для геотермальной энергетики.","words":[["뉴질랜드","Новая Зеландия"],["가","(частица подлежащего)"],["대표적이다","быть типичным"],["는 데","а"],["화산","вулкан"],["및","и"],["지진대","сейсмическая зона"],["에","в"],["위치하고 있어","находиться"],["지열 발전","геотермальная энергия"],["에","для"],["유리하다","быть выгодным"]]},{"ko":"뉴질랜드가 세계 최대 규모로 지열 에너지를 개발할 수 있는 것은 이러한 지형적 조건 덕분이다.","ru":"Новая Зеландия может разрабатывать геотермальную энергию в крупнейших масштабах в мире благодаря таким географическим условиям.","words":[["세계","мир"],["최대","наибольший"],["규모","масштаб"],["로","в"],["개발할 수 있다","может разрабатывать"],["이러한","такие"],["지형적","географический"],["조건","условие"],["덕분이다","благодаря"]]},{"ko":"마지막으로 바이오 에너지가 있다.","ru":"Наконец, существует биоэнергия.","words":[["마지막으로","наконец"],["바이오 에너지","биоэнергия"],["가","(частица подлежащего)"],["있다","есть / существует"]]},{"ko":"가축 분뇨를 이용하여 가스를 생산하는 방식으로 덴마크가 대표적이다.","ru":"Типичный пример — Дания, где производят газ из навоза скота.","words":[["가축","скот"],["분뇨","навоз"],["를","(частица объекта)"],["이용하여","используя"],["가스","газ"],["를","(частица объекта)"],["생산하는","производящий"],["방식","способ"],["으로","посредством"],["덴마크","Дания"],["가","(частица подлежащего)"],["대표적이다","быть типичным"]]},{"ko":"덴마크는 인구의 5배가 넘는 돼지를 사육하고 있어 돼지 분뇨 처리가 늘 문제였는데, 이를 통해 가스를 생산하고 나머지 찌꺼기는 비료로 사용하는 시스템을 갖추고 있다.","ru":"В Дании свиней в 5 раз больше, чем людей, и проблема утилизации навоза была постоянной, но теперь производят газ, а остатки используют как удобрение — у них есть такая система.Слова:인구 — население의 — (частица принадлежности)5배 — в 5 раз가 넘는 — превышающий돼지 — свинья를 — (частица объекта)사육하다 — выращивать","words":[["돼지 분뇨","свиной навоз"],["처리","утилизация"],["가","(частица подлежащего)"],["문제","проблема"],["였는데","была, но"],["이를 통해","через это / с помощью этого"],["나머지","остаток"],["찌꺼기","осадок, остатки"],["비료","удобрение"],["로","как"],["사용하다","использовать"],["시스템","система"],["을 갖추다","быть оснащённым"]]},{"ko":"이러한 노력이 계속된다면 머지않아 에너지 고갈과 환경 오염 문제를 걱정하지 않아도 되는 새로운 에너지의 시대가 열릴 것이다.","ru":"Если такие усилия будут продолжаться, то вскоре наступит новая эра энергии, когда не придётся беспокоиться об истощении ресурсов и загрязнении окружающей среды.","words":[["이러한","такие"],["노력","усилия"],["이","(частица подлежащего)"],["계속된다면","если будут продолжаться"],["머지않아","вскоре"],["에너지 고갈","истощение энергии"],["환경 오염","загрязнение окружающей среды"],["문제","проблема"],["를","(частица объекта)"],["걱정하지 않아도 되다","не нужно беспокоиться"],["새로운","новая"],["시대","эпоха"],["가 열리다","открывается / наступает"],["것이다","будет"]]}]},{"id":"hanok","emoji":"🏯","titleKo":"한옥","title":"Ханок — традиционный дом","theme":"Культура","level":"TOPIK II","sentences":[{"ko":"한옥의 형태는 사용하는 재료와 지방에 따라 다르게 나타난다.","ru":"Форма ханока различается в зависимости от используемых материалов и региона.","words":[["한옥","ханок"],["의","(притяжательная частица)"],["형태","форма"],["는","(частица темы)"],["사용하는","используемый"],["재료","материал"],["와","и"],["지방","регион"],["에 따라","в зависимости от"],["다르게","по-разному"],["나타난다","проявляется / выражается"]]},{"ko":"한옥 중에서도 기와집과 초가집은 가장 보편적으로 찾아볼 수 있는 형태이고 너와집은 강원도 지역에서 많이 볼 수 있는 형태이다.","ru":"Среди ханоков наиболее распространёнными являются киваджип и чхогаджип, а ноуаджип часто встречается в регионе Канвондо.","words":[["한옥","ханок"],["중","среди"],["에서도","даже среди"],["기와집","дом с черепичной крышей"],["과","и"],["초가집","соломенный дом"],["은","(частица темы)"],["가장","самый"],["보편적으로","распространённо"],["찾아볼 수 있다","можно увидеть"],["형태","форма"],["이고","и"],["너와집","дом с деревянной крышей"],["강원도","Канвондо"],["지역","регион"],["에서","в"],["많이","много"],["볼 수 있다","можно увидеть"],["형태이다","форма есть"]]},{"ko":"기와집은 눈과 비에 강한 기와를 덮어서 만들었으며 옛날부터 부와 권위를 상징하는 집이었다.","ru":"Киваджип крыт прочной к дождю и снегу черепицей, и с древности был символом богатства и власти.","words":[["기와집","дом с черепицей"],["은","(частица темы)"],["눈","снег"],["과","и"],["비","дождь"],["에","к"],["강한","устойчивый"],["기와","черепица"],["를","(частица объекта)"],["덮어서","покрыв"],["만들었으며","был сделан, и"],["옛날부터","с древних времён"],["부","богатство"],["와","и"],["권위","авторитет / власть"],["를","(частица объекта)"],["상징하는","символизирующий"],["집","дом"],["이었다","был"]]},{"ko":"초가집은 볏짚으로 지붕을 만든 집으로 서민들이 주로 살았으며 여름에는 햇볕의 열기를 차단해서 시원하고 겨울에는 찬 기운을 막아준다는 이점이 있다.","ru":"Чхогаджип — это дом с соломенной крышей, в котором в основном жили простые люди; летом он защищает от жары, а зимой — от холода.","words":[["초가집","соломенный дом"],["은","(частица темы)"],["볏짚","солома"],["으로","из"],["지붕","крыша"],["을","(частица объекта)"],["만든","сделанный"],["집","дом"],["으로","как"],["서민들","простые люди"],["이","(частица подлежащего)"],["주로","в основном"],["살았으며","жили, и"],["여름","лето"],["에는","в"],["햇볕","солнечный свет"],["의","(притяжательная частица)"],["열기","жара"],["를","(частица объекта)"],["차단해서","блокируя"],["시원하고","прохладный, и"],["겨울","зима"],["에는","в"],["찬","холодный"],["기운","энергия / воздух"],["을","(частица объекта)"],["막아준다는","защищающий"],["이점","преимущество"],["이 있다","есть"]]},{"ko":"또한 너와집은 소나무 나무판으로 지붕을 덮어서 만든 집의 형태로 비가 올 때 습기를 막아주는 장점이 있다.","ru":"Также ноуаджип — это дом с крышей из сосновых досок, хорошо защищающий от влаги во время дождя.","words":[["또한","также"],["너와집","деревянный дом"],["은","(частица темы)"],["소나무","сосна"],["나무판","деревянные доски"],["으로","из"],["지붕","крыша"],["을","(частица объекта)"],["덮어서","накрывая"],["만든","сделанный"],["집","дом"],["의","(притяжательная частица)"],["형태","форма"],["로","как"],["비","дождь"],["가","(частица подлежащего)"],["올 때","когда идёт"],["습기","влага"],["를","(частица объекта)"],["막아주는","защищающий"],["장점","преимущество"],["이 있다","есть"]]},{"ko":"한옥의 형태는 지방에 따라 구조가 달라진다.","ru":"Форма ханока меняется в зависимости от региона.","words":[["한옥","ханок"],["의","(притяжательная частица)"],["형태","форма"],["는","(частица темы)"],["지방","регион"],["에 따라","в зависимости от"],["구조","структура"],["가","(частица подлежащего)"],["달라진다","меняется"]]},{"ko":"북부 지방은 춥고 눈이 많이 오는 날씨에 대비하여 모든 가사 작업을 실내에서 할 수 있는 구조로 마루가 없고 방들이 서로 붙어있는 ㅁ자형이다.","ru":"В северных регионах из-за холодной и снежной погоды строят дома без настила (мару), где все комнаты соединены в форму «ㅁ», чтобы все работы по дому можно было делать внутри.","words":[["북부","север"],["지방","регион"],["은","(частица темы)"],["춥고","холодный, и"],["눈","снег"],["이","(частица подлежащего)"],["많이","много"],["오는","идущий"],["날씨","погода"],["에 대비하여","в подготовке к"],["모든","все"],["가사","домашнее хозяйство"],["작업","работа"],["을","(частица объекта)"],["실내","внутри"],["에서","в"],["할 수 있다","можно делать"],["구조","структура"],["로","в виде"],["마루","настил (традиционный деревянный пол)"],["가","(частица подлежащего)"],["없고","отсутствует, и"],["방들","комнаты"],["서로","друг с другом"],["붙어있는","соединённые"],["ㅁ자형","форма «"],["ㅁ»이다","быть"]]},{"ko":"북부 지방과는 달리 남부 지방은 더운 여름에 바람이 잘 통하도록 지어진 개방적인 구조인 ―자형으로 방, 마루, 부엌이 옆으로 나란히 붙어있다.","ru":"В отличие от северных, в южных регионах строят дома открытой формы «―», где комнаты, настил и кухня идут рядом, чтобы воздух хорошо проходил летом.","words":[["북부 지방","северный регион"],["과는 달리","в отличие от"],["남부 지방","южный регион"],["은","(частица темы)"],["더운","жаркий"],["여름","лето"],["에","в"],["바람","ветер"],["이","(частица подлежащего)"],["잘","хорошо"],["통하도록","чтобы проходил"],["지어진","построенный"],["개방적인","открытый"],["구조","структура"],["인","являющийся"],["―자형","форма «―»"],["으로","в виде"],["방","комната"],["마루","настил"],["부엌","кухня"],["이","(частица подлежащего)"],["옆으로","рядом"],["나란히","в ряд"],["붙어있다","соединены"]]},{"ko":"또한 넓은 대청마루가 집의 중심에 있고 창문과 방문이 많다.","ru":"Также в центре дома находится просторный деревянный пол (дэчхонмару), и там много окон и дверей.","words":[["또한","также"],["넓은","широкий"],["대청마루","большой деревянный настил"],["가","(частица подлежащего)"],["집","дом"],["의","(притяжательная частица)"],["중심","центр"],["에","в"],["있다","есть"],["창문","окно"],["과","и"],["방문","дверь"],["이","(частица подлежащего)"],["많다","много"]]},{"ko":"중부 지방은 보통 ㄱ자형으로 남부 지방의 한옥에 비해서 마루가 안방과 건넌방 사이에 좁게 있고 창문이 적은 것이 특징이다.","ru":"В центральных регионах ханоки обычно имеют форму «ㄱ», и по сравнению с южными домами настил узко расположен между внутренней и внешней комнатами, и окон меньше — это особенность.","words":[["중부 지방","центральный регион"],["은","(частица темы)"],["보통","обычно"],["ㄱ자형","форма «"],["ㄱ»으로","в виде"],["남부 지방","южный регион"],["의","(притяжательная частица)"],["한옥","ханок"],["에 비해서","по сравнению с"],["마루","настил"],["가","(частица подлежащего)"],["안방","внутренняя комната"],["과","и"],["건넌방","внешняя комната"],["사이","между"],["에","в"],["좁게","узко"],["있고","есть, и"],["창문","окно"],["이","(частица подлежащего)"],["적은","немного"],["것","вещь / то"],["특징","особенность"],["이다","быть"]]}]},{"id":"tracking","emoji":"📱","titleKo":"위치 추적","title":"Отслеживание телефона и приватность","theme":"Общество","level":"TOPIK II","sentences":[{"ko":"시에 살고 있는 여대생 A씨(21)는 집으로 가는 도중 공사장 인근을 지나다 어두운 밤길에 그만 발을 헛디뎌 배수로에 빠지고 말았다.","ru":"Студентка A, живущая в городе (21 год), по пути домой проходила рядом со стройкой и в темноте случайно оступилась и упала в водосток.","words":[["시에","в городе"],["살고 있는","живущая"],["여대생","студентка"],["A씨","госпожа A"],["(21)는","(21 лет)"],["집으로","домой"],["가는","идущая"],["도중","по пути"],["공사장","стройка"],["인근을","поблизости"],["지나다","проходить"],["어두운","тёмная"],["밤길에","ночная дорога"],["그만","случайно, неожиданно"],["발을","нога"],["헛디뎌","оступиться"],["배수로에","в дренаж, водосток"],["빠지고 말았다","в итоге упала"]]},{"ko":"몸을 움직일 수 없었던 A씨는 \"도와주세요\"라고 소리쳤으나 야간에 인적이 드문 곳이어서 도와줄 사람이 없었다.","ru":"A, которая не могла пошевелиться, закричала: \"Помогите\", но так как это было малолюдное место ночью, помочь было некому.","words":[["몸을","тело"],["움직일 수 없었던","не могла двигаться"],["도와주세요","помогите"],["라고","(цитата)"],["소리쳤으나","закричала, но"],["야간에","ночью"],["인적이","люди"],["드문","редкие"],["곳이어서","место, поэтому"],["도와줄","помогающий"],["사람이","человек"],["없었다","не было"]]},{"ko":"A씨는 급히 휴대전화로 어머니에게 \"제가 배수로에 빠졌는데 여기가 어디인지 알 수가 없어요\"라고 도움을 청했다.","ru":"A срочно позвонила матери по телефону и попросила помощи, сказав: «Я упала в водосток, но не знаю, где нахожусь».","words":[["급히","срочно"],["휴대전화로","по мобильному телефону"],["어머니에게","матери"],["제가","я"],["배수로에","в водосток"],["빠졌는데","упала"],["여기가","это место"],["어디인지","где именно"],["알 수가 없어요","не знаю"],["도움을","помощь"],["청했다","просила"]]},{"ko":"딸이 위급한 상황에 처했다는 소식을 접한 어머니는 119 구조대에 딸의 휴대전화 추적을 의뢰했고, A씨는 119 구조대의 도움을 받아 구조됐다.","ru":"Получив известие, что её дочь в экстренной ситуации, мать обратилась в службу спасения 119 с просьбой отследить телефон дочери, и A была спасена с их помощью.","words":[["딸이","дочь"],["위급한","экстренный"],["상황에","в ситуации"],["처했다는","оказалась"],["소식을","новость"],["접한","получившая"],["어머니는","мать"],["구조대에","в службу спасения"],["추적을","отслеживание"],["의뢰했고","попросила"],["도움을 받아","получила помощь"],["구조됐다","была спасена"]]},{"ko":"A씨는 당시 위급한 상황에 놓여 있었으나 휴대전화 위치 추적 기술의 도움을 받아 생명을 구할 수 있었다.","ru":"Несмотря на то, что A находилась в опасной ситуации, благодаря технологии отслеживания местоположения телефона ей удалось спастись.","words":[["당시","в то время"],["놓여 있었으나","находилась, но"],["위치","местоположение"],["추적","отслеживание"],["기술의","технология"],["생명을","жизнь"],["구할 수 있었다","удалось спасти"]]},{"ko":"하지만 휴대전화 실시간 위치 추적을 허가하는 것이 기본권을 침해하고 있다라는 내용의 헌법 소원이 제기되었다.","ru":"Однако была подана конституционная жалоба с утверждением, что разрешение на отслеживание местоположения телефона в реальном времени нарушает основные права.","words":[["하지만","однако"],["실시간","в реальном времени"],["허가하는","разрешающее"],["기본권을","основные права"],["침해하고 있다","нарушает"],["내용의","содержание"],["헌법 소원","конституционная жалоба"],["제기되었다","была подана"]]},{"ko":"위치 추적은 사생활의 비밀, 일반적 행동의 자유, 인격권 등을 침해하기 때문에 위헌이라는 것이다.","ru":"Позиция заключается в том, что слежка нарушает тайну частной жизни, свободу действий и личные права, поэтому является неконституционной.","words":[["사생활의","частной жизни"],["비밀","тайна"],["일반적","общий"],["행동의 자유","свобода действий"],["인격권","личные права"],["등을","и т. д."],["침해하기 때문에","потому что нарушает"],["위헌이라는","неконституционным"],["것이다","это"]]},{"ko":"또한 이로 인해 수사권이 남용될 여지도 크다고 지적했다.","ru":"Также было указано, что существует большая вероятность злоупотребления следственными полномочиями.","words":[["또한","также"],["이로 인해","из-за этого"],["수사권이","следственные полномочия"],["남용될","будет злоупотреблено"],["여지도","вероятность"],["크다고","велика"],["지적했다","указали"]]}]},{"id":"consume","emoji":"💸","titleKo":"합리적 소비","title":"Рациональное потребление","theme":"Экономика","level":"TOPIK II","sentences":[{"ko":"소비생활을 잘하려면 반드시 소득 내에서 소비를 해야 한다.","ru":"Чтобы хорошо управлять потреблением, обязательно нужно тратить в пределах дохода.","words":[["소비생활을","потребительская жизнь"],["잘하려면","чтобы хорошо делать"],["반드시","обязательно"],["소득","доход"],["내에서","в пределах"],["소비를","потребление"],["해야 한다","должен делать"]]},{"ko":"만일 소득보다 소비가 많아지면 우리는 빚을 지게 되는 것이다.","ru":"Если расходы превысят доходы, мы окажемся в долгах.","words":[["만일","если"],["소득보다","чем доход"],["소비가","потребление"],["많아지면","увеличивается"],["우리는","мы"],["빚을","долг"],["지게 되는 것이다","окажемся в состоянии"]]},{"ko":"그런데 사고 싶은 물건은 많기 때문에 소득 안에서 소비를 하는 것이 쉽지 않다.","ru":"Но так как хочется много вещей, тратить в рамках дохода бывает сложно.","words":[["그런데","однако"],["사고 싶은","хочу купить"],["물건은","вещи"],["많기 때문에","потому что много"],["소득 안에서","в пределах дохода"],["소비를 하는 것","потреблять"],["이","это"],["쉽지 않다","нелегко"]]},{"ko":"그래서 소비를 할 때는 우선순위를 정해야 한다.","ru":"Поэтому при потреблении нужно расставлять приоритеты.","words":[["그래서","поэтому"],["소비를 할 때는","при потреблении"],["우선순위를","приоритеты"],["정해야 한다","нужно установит"]]},{"ko":"가장 사고 싶은 것, 가장 큰 만족을 주는 것을 잘 골라야 하고, 그것을 선택하면 나머지는 포기해야 한다.","ru":"Нужно хорошо выбрать то, что хочешь больше всего и что приносит наибольшее удовлетворение, а остальные вещи придётся отказаться.","words":[["가장","самый"],["사고 싶은 것","то, что хочется купить"],["가장 큰","самый большой"],["만족을","удовлетворение"],["주는 것","дающий"],["잘","хорошо"],["골라야 하고","выбирать и"],["그것을","это"],["선택하면","если выбрать"],["나머지는","остальное"],["포기해야 한다","нужно отказаться"]]},{"ko":"이러한 소비를 합리적인 소비라고 한다.","ru":"Такой подход к потреблению называют рациональным потреблением.","words":[["이러한","такой"],["소비를","потребление"],["합리적인","рациональный"],["소비라고 한다","называют потреблением"]]},{"ko":"합리적인 소비란, 먼 미래까지 내다보고 가지고 있는 돈을 고려해서 여러 가지 상품 가운데 적절한 물건을 선택하고 최대 만족을 얻는 소비 행위이다.","ru":"Рациональное потребление — это действие, при котором, учитывая свои деньги и смотря в далёкое будущее, выбирают подходящий товар из множества и получают максимальное удовлетворение.","words":[["합리적인","рациональный"],["소비란","потребление есть"],["먼","дальний"],["미래까지","до будущего"],["내다보고","глядя вперед"],["가지고 있는","имеющий"],["돈을","деньги"],["고려해서","учитывая"],["여러 가지","различные"],["상품","товары"],["가운데","среди"],["적절한","подходящий"],["물건을","вещь"],["선택하고","выбирая и"],["최대 만족을","максимальное удовлетворение"],["얻는","получая"],["소비 행위이다","акт потребления"]]},{"ko":"예를 들어, 자기에게 있는 돈을 가지고 무엇을 할지 고민하는 사람이 있다.","ru":"Например, есть человек, который думает, на что потратить имеющиеся у него деньги.","words":[["예를 들어","например"],["자기에게 있는","у себя имеющий"],["돈을","деньги"],["가지고","имея"],["무엇을 할지","что делать"],["고민하는","размышляющий"],["사람이 있다","есть человек"]]},{"ko":"좋아하는 옷도 사고 싶고 재미있는 공연도 보고 싶지만 자기가 가진 돈을 생각해서 한 가지만 해야 한다.","ru":"Он хочет купить любимую одежду и сходить на интересное представление, но, думая о своих деньгах, может выбрать только одно.","words":[["좋아하는","любимый"],["옷도","одежда тоже"],["사고 싶고","хочу купить и"],["재미있는","интересный"],["공연도","представление тоже"],["보고 싶지만","хочу посмотреть, но"],["자기가 가진","имеющий"],["돈을","деньги"],["생각해서","учитывая"],["한 가지만","только одно"],["해야 한다","должен сделать"]]},{"ko":"그러면 이 사람은 무엇을 선택할까?","ru":"Что тогда выберет этот человек?","words":[]},{"ko":"이 사람은 좋아하는 옷을 사서 얻는 이익과 재미있는 공연을 봐서 얻는 이익을 비교하여 좀 더 만족이 큰 것을 고를 것이다.","ru":"Он сравнит выгоду от покупки одежды и от посещения интересного концерта и выберет то, что даст большее удовлетворение.","words":[["이익과","выгоды и"],["비교하여","сравнивая"],["좀 더","немного больше"],["만족이","удовлетворение"],["큰 것을","большее"],["고를 것이다","выберет"]]},{"ko":"즉, 하나를 선택할 때 들어가는 비용과 그것으로부터 얻는 만족감을 비교해서 비용에 비해 이익이 가장 큰 것을 선택할 것이다.","ru":"То есть при выборе он сравнит затраты и получаемое удовлетворение, и выберет то, где выгода максимальна по отношению к затратам.","words":[["즉","то есть"],["하나를","одно"],["선택할 때","при выборе"],["들어가는","входящие"],["비용과","затраты и"],["그것으로부터","от этого"],["얻는","получаемое"],["만족감을","удовлетворение"],["비교해서","сравнивая"],["비용에 비해","по отношению к затратам"],["이익이","выгода"],["가장 큰 것을","самое большое"],["선택할 것이다","выберет"]]},{"ko":"좋아하는 옷을 사는 것과 공연을 보는 것 중에서 어느 것을 선택하는 것이 합리적인 선택일까?","ru":"Что из двух — покупка одежды или поход на концерт — будет рациональным выбором?","words":[["좋아하는 옷을","любимую одежду"],["사는 것과","покупка и"],["공연을","представление"],["보는 것 중에서","из просмотра"],["어느 것을","что именно"],["선택하는 것이","выбрать"],["합리적인 선택일까?","будет рациональным выбором?"]]}]},{"id":"recipe","emoji":"🍢","titleKo":"궁중떡볶이","title":"Королевский ттокпокки (рецепт)","theme":"Кухня","level":"TOPIK I","sentences":[{"ko":"궁중떡볶이","ru":"Королевский ттокпокки","words":[]},{"ko":"재료 | 떡볶이떡 300g, 소고기 100g, 피망 2개, 표고버섯 4개, 양파 ½개, 당근 ½개, 파","ru":"Ингредиенты | рисовые клецки для ттокпокки 300 г, говядина 100 г, болгарский перец 2 шт., шиитаке 4 шт., лук ½ шт., морковь ½ шт., зелёный лук","words":[["재료","ингредиенты"],["떡볶이떡","рисовые клецки для ттокпокки"],["소고기","говядина"],["피망","болгарский перец."],["표고버섯","шиитаке"],["양파","лук ½"],["개","половина."],["당근","морковь"]]},{"ko":"양념재료 | 간장, 설탕, 물엿, 참기름, 후추, 마늘, 깨","ru":"Приправы | соевый соус, сахар, кукурузный сироп, кунжутное масло, чёрный перец, чеснок, кунжут","words":[["양념재료","приправы"],["간장","соевый соус"],["설탕","сахар"],["물엿","кукурузный сироп"],["참기름","кунжутное масло"],["후추","чёрный перец"],["마늘","чеснок"],["깨","кунжут"]]},{"ko":"만드는 방법 |","ru":"Способ приготовления:","words":[["만드는","делающий"],["방법","способ"]]},{"ko":"고기 양념하기","ru":"● Маринование мяса","words":[["고기","мясо"],["양념하기","мариновать"]]},{"ko":"고기 양념장: 간장 3큰술, 설탕 2큰술, 참기름, 마늘, 후추를 만든다","ru":"1. Приготовить маринад для мяса: 3 ст. л. соевого соуса, 2 ст. л. сахара, кунжутное масло, чеснок, чёрный перец.","words":[["고기","мясо"],["양념장","маринад"],["간장","соевый соус"],["큰술","3 столовые ложки"],["설탕","сахар"],["큰술","2 столовые ложки"],["참기름","кунжутное масло"],["마늘","чеснок"],["후추","чёрный перец"],["를","(частица объекта)"],["만든다","приготовить"]]},{"ko":"표고버섯을 썰고 파도 썬다","ru":"2. Нарезать шиитаке и зелёный лук.","words":[["표고버섯을","шиитаке (вин.)"],["썰고","нарезав"],["파도","также зелёный лук"],["썬다","нарезать"]]},{"ko":"표고버섯, 파, 소고기를 양념장에 버무린다","ru":"3. Перемешать шиитаке, лук и говядину с маринадом.","words":[["표고버섯","шиитаке"],["파","зелёный лук"],["소고기를","говядину"],["양념장에","в маринаде"],["버무린다","перемешать"]]},{"ko":"양념이 잘 배게끔 15–20분 정도 재워둔다","ru":"4. Оставить мариноваться примерно 15–20 минут, чтобы маринад хорошо пропитал.","words":[["양념이","маринад (тема)"],["잘","хорошо"],["배게끔","чтобы пропиталось15–20"],["분","15–20 минут"],["정도","примерно"],["재워둔다","оставлять мариноваться"]]},{"ko":"떡 양념하기","ru":"● Маринование клецок","words":[["떡","клецки"],["양념하기","мариновать"]]},{"ko":"말랑말랑한 떡볶이떡을 준비한다","ru":"1. Подготовить мягкие клецки для ттокпокки.","words":[["말랑말랑한","мягкие"],["떡볶이떡을","клецки для ттокпокки"],["준비한다","подготовить"]]},{"ko":"떡에 간장, 참기름을 조금 넣고 양념을 한다","ru":"2. Немного полить клецки соевым соусом и кунжутным маслом и замариновать.","words":[["떡에","клецкам"],["간장","соевый соус"],["참기름을","кунжутное масло"],["조금","немного"],["넣고","положив"],["양념을 한다","замариновать"]]},{"ko":"조리하기","ru":"● Готовка","words":[["조리하기","готовить"]]},{"ko":"채소(당근, 양파, 피망, 파)를 썰어서 준비한다","ru":"1. Нарезать и подготовить овощи (морковь, лук, болгарский перец, лук).","words":[["채소","овощи"],["당근","морковь"],["양파","лук"],["피망","болгарский перец"],["파","зелёный лук"],["를","(частица объекта)"],["썰어서","нарезав"],["준비한다","подготовить"]]},{"ko":"팬에 양파, 피망, 당근을 볶는다. 이때 재료를 따로 볶아야 재료의 맛과 향이 섞이지 않는다","ru":"2. Обжарить в сковороде лук, болгарский перец и морковь. При этом овощи нужно жарить отдельно, чтобы их вкусы и ароматы не смешивались.","words":[["팬에","в сковороде"],["양파","лук"],["피망","болгарский перец"],["당근을","морковь"],["볶는다","обжарить"],["이때","при этом"],["재료를","ингредиенты"],["따로","отдельно"],["볶아야","нужно жарить"],["재료의","ингредиентов"],["맛과","вкус и"],["향이","аромат"],["섞이지 않는다","не смешиваются"]]},{"ko":"양념한 고기를 채소가 있는 팬에 넣고 익을 때까지 볶는다","ru":"3. Положить замаринованное мясо в сковороду с овощами и жарить до готовности.","words":[["양념한","замаринованное"],["고기를","мясо"],["채소가 있는","с овощами"],["팬에","в сковороде"],["넣고","положив"],["익을 때까지","до готовности"],["볶는다","жарить"]]},{"ko":"마지막으로 양념한 떡을 넣고 볶는다","ru":"4. В завершение добавить замаринованные клецки и обжарить.","words":[["마지막으로","в завершение"],["양념한","замаринованные"],["떡을","клецки"],["넣고","положив"],["볶는다","обжарить"]]},{"ko":"설탕, 간장, 깨소금으로 간을 맞춘다","ru":"5. Приправить сахаром, соевым соусом и смесью кунжут–соль. Слова:설탕 — сахар간장 — соевый соус깨소금으로 — смесь кунжут–соль간을 — приправу맞춘다 — регулировать / довести до вкуса","words":[]}]},{"id":"olympic","emoji":"🏅","titleKo":"올림픽 메달","title":"Олимпийские медали и спорт","theme":"Спорт","level":"TOPIK II","sentences":[{"ko":"각 나라의 메달 개수는?","ru":"Сколько медалей у каждой страны?","words":[["각","каждый"],["나라의","страны (родительный падеж)"],["메달","медаль"],["개수는","количество"]]},{"ko":"4년에 한 번씩 열리는 전 세계인의 축제인 올림픽에서 현재 가장 많은 메달을 딴 국가는 어디일까?","ru":"Какая страна сейчас выиграла больше всего медалей на Олимпийских играх — празднике всего мира, который проходит раз в четыре года?","words":[["4년에","раз в 4 года"],["한 번씩","по одному разу"],["열리는","проходящий"],["전 세계인의","всего мира"],["축제인","праздник"],["올림픽에서","на Олимпийских играх"],["현재","сейчас"],["가장 많은","самое большое"],["메달을","медали"],["딴","выигравший"],["국가는","страна (тема)"],["어디일까?","где находится?"]]},{"ko":"가장 많은 메달을 딴 스포츠 강국은 바로 미국이다.","ru":"Страна, выигравшая больше всего медалей, — это США.","words":[["가장 많은","самое большое"],["메달을 딴","выигравший медали"],["스포츠","спорт"],["강국은","держава"],["바로","именно"],["미국이다","США есть"]]},{"ko":"미국은 역대 올림픽에서 모두 2,827개의 메달을 획득해 전체 1위에 올랐고 러시아와 영국이 그 뒤를 잇고 있다.","ru":"США завоевали в истории Олимпийских игр 2827 медалей, заняв первое место, за ними идут Россия и Великобритания.","words":[["미국은","США"],["역대","за всю историю"],["올림픽에서","на Олимпиадах"],["모두","всего"],["2,827개의","2827 штук"],["메달을","медалей"],["획득해","завоевали"],["전체","весь"],["1위에","первое место"],["올랐고","поднялись"],["러시아와","Россия и"],["영국이","Великобритания"],["그 뒤를","за ними"],["잇고 있다","следуют"]]},{"ko":"신흥 스포츠 강국으로 부상하고 있는 한국의 실력은 어떨까?","ru":"Каковы успехи Южной Кореи, которая становится новой спортивной державой?","words":[["신흥","новый, восходящий"],["스포츠","спорт"],["강국으로","как держава"],["부상하고 있는","поднимающийся"],["한국의","корейский"],["실력은","сила, способности"],["어떨까?","каковы?"]]},{"ko":"한국은 금메달 121개, 은메달 112개, 동메달 104개 등 모두 337개의 메달로 전체 17위를 기록하고 있다.","ru":"Южная Корея занимает 17-е место с 337 медалями: 121 золотая, 112 серебряных и 104 бронзовые.","words":[["금메달","золотые медали"],["은메달","серебряные медали"],["동메달","бронзовые медали"],["모두","всего"],["메달로","медалями"],["전체","общий"],["17위를","17 место"],["기록하고 있다","занимает"]]},{"ko":"세계에서 가장 빠른 사람은 누구일까?","ru":"Кто самый быстрый человек в мире?","words":[]},{"ko":"'번개'라는 별명을 가지고 있는 세계 최고의 육상 선수 우사인 볼트는 올림픽에서 무려 8개의 금메달을 딴 엄청난 기록을 가지고 있다.","ru":"Усейн Болт, мировой лучший легкоатлет с прозвищем «Молния», имеет потрясающий рекорд — 8 золотых медалей на Олимпиадах.","words":[["번개라는","с прозвищем «Молния»"],["별명을","прозвище"],["가지고 있는","имеющий"],["세계 최고의","лучший в мире"],["육상 선수","легкоатлет"],["우사인 볼트는","Усейн Болт"],["올림픽에서","на Олимпиадах"],["무려","целых"],["8개의","8 штук"],["금메달을 딴","выигравший золотые медали"],["엄청난","потрясающий"],["기록을","рекорд"],["가지고 있다","иметь"]]},{"ko":"2008년 열린 베이징 올림픽에서는 경기 도중 신발 끈이 풀어져 결승선 10여m를 앞두고 전력 질주를 하지 않았음에도 금메달을 획득했다.","ru":"На Олимпиаде 2008 года в Пекине у него развязались шнурки примерно за 10 метров до финиша, но он всё равно выиграл золотую медаль, не бежав на полную мощность.","words":[["2008년","2008 год"],["열린","проведённый"],["베이징 올림픽에서는","на Пекинской Олимпиаде"],["경기 도중","во время соревнования"],["신발 끈이","шнурки"],["풀어져","развязались"],["결승선","финишная линия"],["10여m를","около 10 метров"],["앞두고","перед"],["전력 질주를","максимальный спринт"],["하지 않았음에도","несмотря на то, что не бегал"],["금메달을","золотую медаль"],["획득했다","получил"]]},{"ko":"그는 앞으로 쉽게 깨지지 않을 것 같은, 100m를 9.58초에 뛰는 남자 100m 육상의 세계 신기록 보유자이기도 하다.","ru":"Он также держит мировой рекорд в беге на 100 м среди мужчин — 9.58 секунды, который, кажется, в ближайшее время не побить.","words":[["그는","он"],["앞으로","в будущем"],["쉽게","легко"],["깨지지 않을 것 같은","кажется, не побьётся"],["100m를","100 метров"],["9.58초에","за 9.58 секунды"],["뛰는","бегающий"],["남자","мужчина"],["육상의","лёгкой атлетики"],["세계 신기록","мировой рекорд"],["보유자이기도 하다","также держатель"]]},{"ko":"구기 종목 중 가장 빠른 종목은 무엇일까?","ru":"Какой самый быстрый вид спорта с мячом?","words":[["구기 종목","вид спорта с мячом"],["중","среди"],["가장 빠른","самый быстрый"],["종목은","вид спорта"],["무엇일까?","что?"]]},{"ko":"공을 사용하는 구기 종목 중에서 공 속도가 가장 빠른 종목은 무엇일까?","ru":"Среди мячевых видов спорта, какой имеет самый быстрый мяч?","words":[["공을 사용하는","использующий мяч"],["구기 종목 중에서","среди видов спорта с мячом"],["공 속도가","скорость мяча"],["가장 빠른","самый быстрый"],["종목은","вид спорта"],["무엇일까?","что?"]]},{"ko":"1위는 배드민턴으로 배드민턴 셔틀콕의 속도는 시속 350km 정도이다.","ru":"Первое место занимает бадминтон — скорость воланчика около 350 км/ч.","words":[["1위는","первое место"],["배드민턴으로","занял бадминтон"],["배드민턴 셔틀콕의","воланчик для бадминтона"],["속도는","скорость"],["시속","километров в час"],["350km 정도이다","около 350 км/ч"]]},{"ko":"프로 야구 선수들의 공이 160km 정도인 것을 보면 2배를 넘는 속도이다.","ru":"Для сравнения, мяч у профессиональных бейсболистов летит примерно со скоростью 160 км/ч — это более чем в два раза медленнее.","words":[["프로","профессиональный"],["야구 선수들의","бейсболистов"],["공이","мяч"],["160km 정도인","около 160 км/ч"],["것을 보면","если сравнить"],["2배를","в 2 раза"],["넘는","превышающую"],["속도이다","скорость"]]},{"ko":"  공의 크기가 가장 큰 축구는 약 120km 정도이다.","ru":"Самый большой мяч в футболе, летит со скоростью около 120 км/ч.","words":[["공의","мяча"],["크기가","размер"],["가장 큰","самый большой"],["축구는","футбол"],["약","примерно"],["정도이다","около 120 км/ч"]]}]},{"id":"science","emoji":"🧊","titleKo":"석빙고와 황금비","title":"Согбинго и золотое сечение","theme":"Наука","level":"TOPIK II","sentences":[{"ko":"자연 냉동고인 석빙고가 더운 여름에도 얼음을 그대로 저장 할 수 있었던 이유는 무엇일까?","ru":"Почему природный холодильник «석빙고» мог сохранять лед даже в жаркое лето?","words":[["자연","природа"],["냉동고인","холодильник (природный)"],["석빙고가","석빙고 (название)"],["더운","жаркий"],["여름에도","даже летом"],["얼음을","лед (винительный падеж)"],["그대로","так же, без изменений"],["저장","хранение"],["할 수 있었던","мог"],["이유는","причина"],["무엇일까?","что же?"]]},{"ko":"이것은 바로 같은 크기의 돌을 아치 모양으로 쌓아 올려 무지개 모양으로 완성한 아치 구조의 천장 때문이다.","ru":"Это из-за свода арочной конструкции потолка, который построен из камней одинакового размера в форме арки, напоминающей радугу.","words":[["이것은","это"],["바로","именно"],["같은","одинаковый"],["크기의","размера"],["돌을","камень"],["아치 모양으로","в форме арки"],["쌓아 올려","сложенный, построенный"],["무지개 모양으로","в форме радуги"],["완성한","завершенный"],["아치 구조의","арочной конструкции"],["천장","потолок"],["때문이다","из-за"]]},{"ko":"보통 석빙고의 천장은 1~2m의 간격을 두고 4~5개의 아치형으로 만들어져 있는데 그 사이 사이에는 움푹 들어간 빈 공간이 있다.","ru":"Обычно потолок 석빙고 сделан из 4-5 арок с интервалом 1–2 метра, а между ними есть углубленные пустоты.","words":[["보통","обычно"],["천장은","потолок (тема)"],["1~2m의","1–2 метра"],["간격을","интервал"],["두고","ставить, держать"],["4~5개의","4–5 штук"],["아치형으로","в форме арки"],["만들어져 있는데","сделан"],["그 사이 사이에는","между ними"],["움푹 들어간","впалый, углубленный"],["빈 공간이","пустое пространство"],["있다","есть"]]},{"ko":"이 빈 공간이 바로 석빙고 내부의 더운 공기를 가두는 역할을 하기 때문에 석빙고는 더운 여름에도 얼음을 저장할 수 있었던 것이다.","ru":"Эти пустоты удерживают горячий воздух внутри 석빙고, благодаря чему лед сохраняется даже летом.","words":[["이","этот"],["빈 공간이","пустое пространство"],["바로","именно"],["석빙고 내부의","внутри 석빙고"],["더운 공기를","горячий воздух"],["가두는","запирающий, удерживающий"],["역할을","роль"],["하기 때문에","потому что"],["석빙고는","석빙고 (тема)"],["더운 여름에도","даже в жаркое лето"],["얼음을","лед"],["저장할 수 있었던 것이다","мог сохранять"]]},{"ko":"그리스의 아테나 언덕 아크로폴리스에 위치한 파르테논 신전은 세계에서 가장 아름다운 건축물로 손꼽히고 있다.","ru":"Парфенон, расположенный на Акрополе на холме Афины в Греции, считается одним из самых красивых сооружений в мире.","words":[["그리스의","греческий"],["아테나","Афина"],["언덕","холм"],["아크로폴리스에","в Акрополе"],["위치한","расположенный"],["파르테논 신전은","храм Парфенон (тема)"],["세계에서","в мире"],["가장 아름다운","самый красивый"],["건축물로","здание"],["손꼽히고 있다","считается"]]},{"ko":"세계 문화 유산 1호인 파르테논 신전이 완벽한 아름다움을 뽐내는 것은 바로 이 건물이 황금비에 맞춰 지어졌기 때문이다.","ru":"Парфенон, являющийся первым объектом Всемирного культурного наследия, демонстрирует совершенную красоту, потому что построен по золотому сечению.","words":[["세계 문화 유산","всемирное культурное наследие"],["1호인","номер один"],["파르테논 신전이","Парфенон"],["완벽한","совершенный"],["아름다움을","красота"],["뽐내는","демонстрирующий"],["것은","то, что"],["바로","именно"],["이 건물이","это здание"],["황금비에","по золотому сечению"],["맞춰 지어졌기 때문이다","построено согласно"]]},{"ko":"황금비란 가로, 세로의 두 길이가 1:1.618의 이상적인 비율을 이루는 것을 의미한다.","ru":"Золотое сечение — это идеальное соотношение длины и ширины 1 к 1.618.","words":[["황금비란","золотое сечение"],["가로","ширина"],["세로의","высота"],["두 길이가","две длины"],["1:1.618의","1 к 1.618"],["이상적인","идеальный"],["비율을","соотношение"],["이루는 것을","образующее"],["의미한다","означает"]]},{"ko":"이 황금비를 이용해 지어진 파르테논 신전은 아름다울 뿐만 아니라 매우 안정적으로 보인다.","ru":"Парфенон, построенный с использованием золотого сечения, выглядит не только красиво, но и очень устойчиво.","words":[["이","этот"],["황금비를","золотое сечение"],["이용해","используя"],["지어진","построенный"],["파르테논 신전은","Парфенон"],["아름다울 뿐만 아니라","не только красивый"],["매우","очень"],["안정적으로","устойчиво"],["보인다","выглядит"]]},{"ko":"황금비는 이러한 이유로 현대 우리의 생활에서도 많이 찾아볼 수 있는데 신용카드, 텔레비전 화면 등이 모두 황금비로 이루어져 있다.","ru":"По этой причине золотое сечение часто встречается и в нашей современной жизни — например, в кредитных картах и экранах телевизоров.","words":[["이러한 이유로","по этой причине"],["현대","современный"],["우리의","наш"],["생활에서도","в жизни"],["많이 찾아볼 수 있는데","часто встречается"],["신용카드","кредитная карта"],["텔레비전 화면","экран телевизора"],["등이","и так далее"],["모두","все"],["황금비로","по золотому сечению"],["이루어져 있다","составлено"]]}]},{"id":"invite","emoji":"📢","titleKo":"재외동포 청소년 초청","title":"Приглашение молодёжи соотечественников","theme":"Объявление","level":"TOPIK II","sentences":[{"ko":"「재외동포재단」에서는 오는 7월에 ‘재외동포 청소년 초청 연수’를 개최합니다.","ru":"Фонд соотечественников за рубежом проводит в июле программу «Приглашение молодёжи соотечественников за рубежом».","words":[["재외동포재단","Фонд соотечественников за рубежом"],["에서는","по отношению к (служебная частица)"],["오는","предстоящий"],["7월에","в июле"],["재외동포","соотечественники за рубежом"],["청소년","молодёжь"],["초청","приглашение"],["연수","учебная программа"],["를","(винительный падеж)"],["개최합니다","проводит"]]},{"ko":"세계 각국의 재외동포 청소년들과 함께 모국의 사회·역사·문화를 체험하는 뜻깊은 자리가 될 것입니다.","ru":"Это будет значимое мероприятие, на котором молодёжь соотечественников из разных стран сможет познакомиться с обществом, историей и культурой родины.","words":[["세계","мир"],["각국의","разных стран"],["재외동포","соотечественники"],["청소년들과","молодёжь (творительный падеж)"],["함께","вместе"],["모국의","родины"],["사회","общество"],["역사","история"],["문화를","культуру"],["체험하는","испытывающей, знакомящейся"],["뜻깊은","значимое"],["자리","место, событие"],["가","(частица темы)"],["될 것입니다","будет"]]},{"ko":"재외동포 청소년들의 많은 관심과 참여를 바랍니다.","ru":"Просим молодёжь соотечественников проявить активный интерес и принять участие.","words":[["재외동포","соотечественники"],["청소년들의","молодёжи (родительный падеж)"],["많은","много"],["관심과","интерес и"],["참여를","участие"],["바랍니다","просим, желаем"]]},{"ko":"연수명: 「2000 재외동포 청소년 초청 연수」","ru":"а. Название: «2000-я программа приглашения молодёжи соотечественников за рубежом»","words":[["연수명","название программы"],["청소년","молодёжи"],["초청","приглашения"],["연수","учебная программа"]]},{"ko":"연수 기간: 7.15.~7.22. (7박 8일)","ru":"б. Сроки: с 15 по 22 июля (7 ночей, 8 дней)","words":[]},{"ko":"장소: 서울, 지방","ru":"в. Место: Сеул и регионы","words":[]},{"ko":"연수 대상: 전 세계 재외동포 청소년 400명","ru":"г. Участники: 400 молодёжи-соотечественников со всего мира","words":[["연수","программа"],["대상","участники"]]},{"ko":"연수 내용: 한국어 캠프, 주요 유적지 및 경제 현장 탐방, 한국 청소년과의 교류","ru":"д. Программа: языковой лагерь, экскурсии по основным историческим памятникам и экономическим объектам, общение с корейской молодёжью","words":[["연수","программа"],["내용","содержание"],["캠프","лагерь"],["주요","основные"],["유적지","памятники"],["및","и"],["경제","экономика"],["현장","объекты"],["탐방","экскурсия"],["청소년과의","с молодёжью"],["교류","обмен, общение"]]},{"ko":"바. 신청 방법9.1. 신청 기간: 2.24.~4.4.9.2. 제출 서류: 참가 신청서, 자기소개서, 추천서9.3. 제출 방법: 현지의 재외공관으로 우편 제출","ru":"е. Как подать заявку:   — сроки подачи: с 24 февраля по 4 апреля   — документы: заявка на участие, автобиография, рекомендательное письмо   — подача: почтовым отправлением в местное консульское учреждение","words":[["제출","подача"],["서류","документы"],["참가 신청서","заявка на участие"],["자기소개서","автобиография"],["추천서","рекомендательное письмо"],["현지의","местного"],["재외공관으로","в консульство"],["우편","почта"]]},{"ko":"사. 선발 우대: 한국어 능력 우수자, 봉사 활동 경험자","ru":"ж. Приоритет при отборе: отличники по корейскому языку, имеющие опыт волонтёрской деятельности","words":[["선발","отбор"],["우대","приоритет"],["능력","способности"],["우수자","отличники"],["봉사","волонтёрство"],["활동","деятельность"],["경험자","имеющие опыт"]]}]},{"id":"cellist","emoji":"🎻","titleKo":"장한나","title":"Чжан Ханна: от виолончели к дирижированию","theme":"Интервью","level":"TOPIK II","sentences":[{"ko":"3세에 피아노를, 6세에 첼로를 시작해 11세에 로스트로포비치 첼로국제콩쿠르에서 심사위원 10명의 전원 일치로 대상 및 현대 음악상 수상자로 선정된 천재 첼리스트 장한나.","ru":"В 3 года начала играть на пианино, в 6 — на виолончели, а в 11 лет стала победительницей и обладательницей приза за современную музыку на международном конкурсе виолончелистов имени Ростроповича — гениальная виолончелистка Чжан Ханна.","words":[["3세에","в 3 года"],["피아노를","пианино"],["6세에","в 6 лет"],["첼로를","виолончель"],["시작해","начала"],["11세에","в 11 лет"],["로스트로포비치","Ростропович"],["첼로국제콩쿠르에서","на международном конкурсе виолончелистов"],["심사위원","жюри"],["10명의","10 человек"],["전원","все"],["일치로","единогласно"],["대상","главный приз"],["및","и"],["현대 음악상","приз за современную музыку"],["수상자로","лауреатом"],["선정된","выбранная"],["천재","гений"],["첼리스트","виолончелистка"],["장한나","Чжан Ханна (имя)"]]},{"ko":"올해는 지휘자로서 데뷔 무대를 갖는다.","ru":"В этом году она дебютирует как дирижёр.","words":[["올해는","в этом году"],["지휘자로서","как дирижёр"],["데뷔 무대를","дебютный концерт"],["갖는다","проводит"]]},{"ko":"지난 27일 성남아트센터에서 첼리스트 장한나가 지휘대에 선 모습을 볼 수 있었다.","ru":"27-го числа в арт-центре Соннам можно было увидеть Чжан Ханну на дирижёрском пульте.","words":[["지난","прошлый"],["성남아트센터에서","в арт-центре Соннам"],["첼리스트","виолончелистка"],["장한나가","Чжан Ханна (тема)"],["지휘대에","на дирижёрском пульте"],["선","стоящая"],["모습을","образ, вид"],["볼 수 있었다","можно было увидеть"]]},{"ko":"그녀는 제1회 성남 국제 청소년 관현악 페스티벌의 마지막 날 한국과 중국, 독일의 연주자로 구성된 연합 청소년 관현악단을 이끌고 베토벤 교향곡 7번과 코리올란 서곡 등을 연주했다.","ru":"В последний день первого международного фестиваля молодёжных оркестров Соннама она руководила объединённым молодёжным оркестром из Кореии, Китая и Германии, исполнив симфонию №7 Бетховена и увертюру «Кориолан».","words":[["그녀는","она"],["제1회","первый"],["성남 국제 청소년 관현악 페스티벌의","международного молодёжного оркестрового фестиваля Соннама"],["마지막 날","последний день"],["한국과","Корея и"],["중국, 독일의","Китай и Германия (родительный падеж)"],["연주자로","исполнителей"],["구성된","составленный"],["연합 청소년 관현악단을","объединённый молодёжный оркестр"],["이끌고","руководила"],["베토벤 교향곡 7번과","симфония №7 Бетховена и"],["코리올란 서곡 등을","увертюра Кориолан и т.д."],["연주했다","исполнила"]]},{"ko":"첼로와 지휘의 차이를 묻는 나의 질문에 그녀는 환하게 웃으며 \"첼로 연주와 지휘의 차이요? 제 손으로 소리를 만든다는 것과 다른 연주자 100명의 몸과 마음, 영혼을 빌려서 소리를 만드는 것의 차이 아닐까요?\"라고 대답했다.","ru":"На мой вопрос о разнице между игрой на виолончели и дирижированием она широко улыбнулась и ответила: «Разница между игрой на виолончели и дирижированием? Разве это не разница между созданием звука своими руками и созданием звука, взяв в долг тела, души и сердца сотни музыкантов?»","words":[["첼로와","виолончели и"],["지휘의","дирижирования"],["차이를","разницу"],["묻는","спрашивающий"],["나의 질문에","на мой вопрос"],["그녀는","она"],["환하게 웃으며","широко улыбаясь"],["첼로 연주와","игра на виолончели и"],["지휘의 차이요?","разница между дирижированием?"],["제 손으로","своими руками"],["소리를 만든다는 것과","создавать звук и"],["다른 연주자 100명의","100 других исполнителей"],["몸과 마음, 영혼을","тело, душу и сердце"],["빌려서","взяв в долг"],["소리를 만드는 것의","создавать звук"],["차이 아닐까요?","разве не разница?"],["라고 대답했다","ответила"]]},{"ko":"그런데 첼리스트가 왜 갑자기 지휘자로 나선다는 것일까?","ru":"Но почему же виолончелистка внезапно стала дирижёром?","words":[["그런데","однако"],["첼리스트가","виолончелистка"],["왜","почему"],["갑자기","вдруг"],["지휘자로","дирижёром"],["나선다는 것일까?","решила стать?"]]},{"ko":"그녀는 유명한 작곡가들의 대표작은 거의 오케스트라곡이라 첼로만으로는 아이들에게 클래식 음악을 소개하는 데 한계가 있다며 오래전부터 지휘자가 되겠다는 꿈을 가졌고 4년 전부터 본격적으로 지휘 공부를 해 왔다고 한다.","ru":"Она говорит, что большинство известных произведений великих композиторов — оркестровые, и поэтому только виолончелью сложно познакомить детей с классической музыкой, поэтому она давно мечтала стать дирижёром и уже 4 года серьёзно занимается дирижированием.","words":[["유명한","известные"],["작곡가들의","композиторов"],["대표작은","основные произведения"],["거의","почти"],["오케스트라곡이라","оркестровые произведения"],["첼로만으로는","только виолончелью"],["아이들에게","детям"],["클래식 음악을","классическую музыку"],["소개하는 데","знакомить"],["한계가 있다며","есть ограничение"],["오래전부터","давно"],["지휘자가 되겠다는","стать дирижёром"],["꿈을 가졌고","мечтала"],["4년 전부터","с 4 лет назад"],["본격적으로","серьёзно"],["지휘 공부를","учёбу дирижированию"],["해 왔다고 한다","занимается"]]},{"ko":"그녀는 또한 자신이 가진 음악적 재능을 어린이를 위해 쓰고 싶었다며 대학 입학 때부터 줄곧 사회 공헌 방법을 고민해 왔고 이번 음악회가 그 일환이라고 설명했다.","ru":"Также она хотела использовать свой музыкальный талант для детей, размышляла о способах социальной помощи с поступления в университет, и объяснила, что этот концерт — часть её деятельности в этом направлении.","words":[["또한","также"],["자신이 가진","имеющий"],["음악적 재능을","музыкальный талант"],["어린이를 위해","для детей"],["쓰고 싶었다며","хотела использовать"],["대학 입학 때부터","с поступления в университет"],["줄곧","постоянно"],["사회 공헌 방법을","способы социальной помощи"],["고민해 왔고","размышляла"],["이번 음악회가","этот концерт"],["그 일환이라고","часть этого"],["설명했다","объяснила"]]},{"ko":"그녀는 지휘를 하면서 작곡가에 대해 더 많이 공부할 수 있었다고 했다.","ru":"Она сказала, что благодаря дирижированию смогла глубже изучить композиторов.","words":[["지휘를 하면서","дирижируя"],["작곡가에 대해","о композиторах"],["더 많이","больше"],["공부할 수 있었다고","могла учиться"],["했다","сказала"]]},{"ko":"첼로를 연주하면서 미처 깨닫지 못했던 브람스의 특징을 교향곡을 통해 알게 되었고, 이것은 자신의 첼로 연주를 더 성숙하게 했다고 한다.","ru":"Через симфонии она узнала особенности Брамса, которые не осознавала при игре на виолончели, и это сделало её исполнение более зрелым.","words":[["첼로를 연주하면서","играя на виолончели"],["미처","заранее, ещё"],["깨닫지 못했던","не осознавала"],["브람스의","Брамса"],["특징을","особенности"],["교향곡을 통해","через симфонии"],["알게 되었고","узнала"],["이것은","это"],["자신의","своей"],["첼로 연주를","игре на виолончели"],["더 성숙하게 했다고 한다","сделало более зрелой"]]},{"ko":"매일 연주와 지휘 연습을 5시간씩 꾸준히 하면서도 음악은 매번 새로운 느낌으로 다가온다고 한다.","ru":"Хотя она ежедневно по 5 часов упорно репетирует игру и дирижирование, музыка каждый раз кажется ей новой.","words":[["매일","каждый день"],["연주와","игра и"],["지휘 연습을","практика дирижирования"],["5시간씩","по 5 часов"],["꾸준히","усердно"],["하면서도","несмотря на"],["음악은","музыка"],["매번","каждый раз"],["새로운 느낌으로","с новым ощущением"],["다가온다고 한다","кажется, приходит"]]},{"ko":"그러한 음악을 자신의 것으로 만들기 위해 그녀는 오늘도 노력을 아끼지 않는다.","ru":"Чтобы сделать такую музыку своей, она и сегодня не жалеет усилий.","words":[["그러한","такая"],["음악을","музыка"],["자신의 것으로","своей"],["만들기 위해","чтобы сделать"],["오늘도","сегодня тоже"],["노력을","усилия"],["아끼지 않는다","не жалеть, не щадить"]]}]},{"id":"movie","emoji":"🎬","titleKo":"국제시장","title":"«Ode to My Father» — отзыв о фильме","theme":"Эссе","level":"TOPIK II","sentences":[{"ko":"가정의 달 오월을 맞아 부모님과 함께 영화관을 찾았다.","ru":"В мае, месяце семьи, я пошёл в кино вместе с родителями.","words":[["가정의 달","месяц семьи"],["오월을","май"],["맞아","в честь, при наступлении"],["부모님과","с родителями"],["함께","вместе"],["영화관을","кинотеатр"],["찾았다","посетил"]]},{"ko":"부모님이 공감하실 수 있는 영화를 찾던 중 한국전쟁 이후부터 현재까지를 시대 배경으로 하는 영화 ‘국제시장’을 예매했다.","ru":"В поисках фильма, который бы тронул родителей, я забронировал билеты на «Ode to My Father», действие которого охватывает период от Корейской войны до наших дней.","words":[["부모님이","родители (тема)"],["공감하실 수 있는","который может их тронуть"],["영화를","фильм"],["찾던 중","в процессе поиска"],["한국전쟁 이후부터","с послевоенного периода"],["현재까지를","до настоящего времени"],["시대 배경으로 하는","использующий эпоху как фон"],["영화","фильм"],["‘국제시장’을","«Гукдже Сиджан» / «Ode to My Father»"],["예매했다","забронировал (билет)"]]},{"ko":"영화의 시작은 한국전쟁으로 시작한다.","ru":"Фильм начинается с Корейской войны.","words":[["영화의","фильма (притяжательное)"],["시작은","начало"],["한국전쟁으로","Корейской войной"],["시작한다","начинается"]]},{"ko":"주인공 덕수의 가족이 흥남에서 부산으로 피난하는 장면으로 시작하는데, 난리 통에 덕수는 여동생 막순의 손을 놓치고, 덕수의 아버지가 막순을 찾는 사이 가족은 헤어져 덕수는 어머니, 어린 남동생과 함께 부산에 도착한다.","ru":"Сцена, где семья главного героя Доксу бежит из Хыннама в Пусан, показывает, что в суматохе он теряет сестру Максун, а пока отец ищет её, семья разделяется, и Доксу с матерью и младшим братом прибывают в Пусан.","words":[["주인공","главный герой"],["덕수의","Доксу (притяжательное)"],["가족이","семья"],["흥남에서","из Хыннама"],["부산으로","в Пусан"],["피난하는","бежащая"],["장면으로","в сцене"],["시작하는데","начинается, но…"],["난리 통에","в хаосе"],["덕수는","Доксу (тема)"],["여동생","младшая сестра"],["막순의","Максун (притяжательное)"],["손을","руку"],["놓치고","отпустив"],["덕수의 아버지가","отец Доксу"],["막순을 찾는","ищет Максун"],["사이","пока"],["가족은","семья"],["헤어져","разделившись"],["어머니, 어린 남동생과 함께","с матерью и младшим братом"],["부산에","в Пусане"],["도착한다","прибывает"]]},{"ko":"부산에는 시집을 와서 국제시장에 자리를 잡은 덕수의 고모가 살고 있었기에, 덕수 모자는 고모의 집에서 신세를 지게 되고 덕수는 아버지를 대신해 가족을 지키겠다는 약속을 지키기 위해 구두닦이 일을 시작한다.","ru":"В Пусане жила тётя Доксу, вышедшая там замуж и устроившаяся у рынка «Гукдже», поэтому Доксу с матерью поселились у неё, а Доксу, чтобы сдержать обещание защищать семью вместо отца, начал работать сапожником.","words":[["부산에는","в Пусане"],["시집을 와서","вышла замуж и приехала"],["국제시장에","у рынка «Гукдже»"],["자리를 잡은","обосновавшаяся"],["덕수의 고모가","тётя Доксу"],["살고 있었기에","жила, поэтому"],["덕수 모자는","Доксу с матерью"],["고모의 집에서","в доме тёти"],["신세를 지게 되고","оказались на её попечении"],["덕수는","Доксу"],["아버지를 대신해","вместо отца"],["가족을 지키겠다는","обещание защищать семью"],["약속을","обещание"],["지키기 위해","чтобы сдержать"],["구두닦이 일을","работу сапожника"],["시작한다","начинает"]]},{"ko":"그 후에는 동생 학비를 벌기 위해 독일 탄광으로 떠나기도 하고, 고모의 가게를 지킬 자금을 마련하기 위해 베트남 전쟁에 참전하면서 가족을 지켜 냈다.","ru":"Затем он уехал в немецкую шахту, чтобы заработать на учёбу брата, и даже участвовал во Вьетнамской войне, чтобы собрать средства для магазина тёти и защитить семью.","words":[["그 후에는","после этого"],["동생","младший брат"],["학비를","на обучение"],["벌기 위해","чтобы заработать"],["독일 탄광으로","в немецкую шахту"],["떠나기도 하고","уезжал также"],["고모의 가게를","магазин тёти"],["지킬","сохранить"],["자금을","средства"],["마련하기 위해","чтобы собрать"],["베트남 전쟁에","во Вьетнамской войне"],["참전하면서","участвуя"],["가족을","семью"],["지켜 냈다","защитил"]]},{"ko":"베트남 전쟁의 총탄이 난무하는 위험한 상황에 덕수가 아내에게 보낸 편지 장면에서 나는 눈물을 쏟고 말았다.","ru":"Во время опасной сцены войны во Вьетнаме, где снаряды сыпались со всех сторон, я расплакался, увидев письмо, которое Доксу посылает жене.","words":[["베트남 전쟁의","Вьетнамской войны (притяжательное)"],["총탄이","снаряды"],["난무하는","сыпящиеся повсюду"],["위험한 상황에","в опасной ситуации"],["덕수가","Доксу (тема)"],["아내에게","жене"],["보낸","отправленное"],["편지 장면에서","сцена письма"],["나는","я"],["눈물을","слёзы"],["쏟고 말았다","разрыдался"]]},{"ko":"“내는 그래 생각한다. 힘든 세월에 태어나가 이 힘든 세상 풍파를 우리 자식이 아니라 우리가 겪은 게 참 다행이라고.”","ru":"«Я так думаю: как хорошо, что эта тяжёлая жизнь пришлась на нас, а не на наших детей».","words":[["내는","я (диалектная форма)"],["그래","так"],["생각한다","думаю"],["힘든 세월에","в тяжёлые времена"],["태어나가","родился"],["이 힘든 세상","этот тяжёлый мир"],["풍파를","бури, невзгоды"],["우리 자식이 아니라","не нашим детям, а"],["우리가","мы"],["겪은 게","пережили"],["참","действительно"],["다행이라고","к счастью"]]},{"ko":"그 장면은 가족을 위해 자신을 희생하며 힘겹게 살아온 우리 아버지들의 마음을 가장 잘 보여 주는 장면이었다.","ru":"Эта сцена лучше всего показывает сердце нашего отца, который жертвовал собой и тяжело трудился ради семьи.","words":[["그 장면은","та сцена (тема)"],["가족을 위해","ради семьи"],["자신을","себя"],["희생하며","жертвуя"],["힘겹게","тяжело"],["살아온","проживших"],["우리 아버지들의","наших отцов"],["마음을","сердце"],["가장 잘","лучше всего"],["보여 주는","показывающая"],["장면이었다","была сцена"]]},{"ko":"비록 내가 겪는 삶이 힘들더라도 자식이 아닌 내가 겪을 수 있어 다행이라고 위안하는 우리들의 평범하지만 위대한 아버지들의 마음이 느껴져 가슴이 뭉클했다.","ru":"Меня глубоко тронула мысль наших простых, но великих отцов, которые утешаются тем, что все эти тяготы приходится пережить им, а не детям.","words":[["비록","хотя"],["내가","я"],["겪는","переживающий"],["삶이","жизнь"],["힘들더라도","хоть и трудна"],["자식이 아닌","не детям"],["겪을 수 있어","могу пережить"],["다행이라고","к счастью"],["위안하는","утешаясь"],["우리들의","наших"],["평범하지만","простых, но"],["위대한","великих"],["아버지들의","отцов"],["마음이","сердце"],["느껴져","чувствовалось"],["가슴이","грудь"],["뭉클했다","сжалось от трогательности"]]},{"ko":"‘국제시장’은 익숙함이 어느새 당연함이 되어버린 아버지의 큰 사랑을 다시 깨닫게 해 주는 영화였다.","ru":"«Ode to My Father» — фильм, который напомнил мне о той безусловной любви отца, которую я давно воспринимал как должное.","words":[["‘국제시장’은","«Ode to My Father» (тема)"],["익숙함이","привычка"],["어느새","незаметно"],["당연함이 되어버린","стала само собой разумеющимся"],["아버지의","отца"],["큰 사랑을","огромную любовь"],["다시","снова"],["깨닫게 해 주는","заставляющую осознать"],["영화였다","был фильм"]]},{"ko":"영화가 끝나고 상영관을 나서는데 평소 무뚝뚝하신 아버지의 눈시울이 붉어진 것을 느낄 수 있었다.","ru":"Когда фильм закончился и мы выходили из зала, я заметил, что обычно сдержанный отец стекленел глазами.","words":[["영화가","фильм"],["끝나고","окончившись"],["상영관을","зал"],["나서는데","выходя"],["평소","обычно"],["무뚝뚝하신","сдержанный (уважит.)"],["아버지의","моего отца"],["눈시울이","край глаза"],["붉어진 것을","покраснели"],["느낄 수 있었다","смог почувствовать"]]},{"ko":"쑥스러우셔서인지 애써 아무렇지 않은 척하시는 아버지의 손을 괜히 쥐어 보았다.","ru":"Возможно, из-за смущения он притворялся спокойным, и я невольно сжал его руку.","words":[["쑥스러우셔서인지","возможно из-за стеснения"],["애써","нарочно"],["아무렇지 않은 척하시는","делающего вид, что всё в порядке"],["아버지의","отца"],["손을","руку"],["괜히","зря"],["쥐어 보았다","сжал, попробовал сжать"]]},{"ko":"격변의 시대, 그 회오리바람 속에서 우리 가정을, 또 나를 지켜 주고 키워 오신 아버지의 못이 박인 투박한 손이 오늘 따라 더욱 크고 따뜻했다.","ru":"В эту пору бурь и перемен грубые в мозолях руки отца, который защищал и растил нашу семью в вихре событий, сегодня казались особенно большими и тёплыми.","words":[["격변의 시대","эпоха перемен"],["그","того"],["회오리바람","вихрь"],["속에서","в"],["우리 가정을","нашу семью"],["또","и"],["나를","меня"],["지켜 주고","защищавший"],["키워 오신","растивший"],["아버지의","отца"],["못이 박인","вмятинами от гвоздей"],["투박한","грубые"],["손이","руки"],["오늘 따라","именно сегодня"],["더욱","ещё более"],["크고","большие"],["따뜻했다","тёплые"]]}]},{"id":"shower","emoji":"🌧️","titleKo":"소나기","title":"«Дождь» (소나기) — отрывок","theme":"Литература","level":"TOPIK II","sentences":[{"ko":"개울물은 날로 여물어갔다.","ru":"Вода в ручье с каждым днём всё глубже прибывала.","words":[["개울물은","вода в ручье"],["날로","с каждым днём"],["여물어갔다","прибывала, становилась глубже"]]},{"ko":"소년은 갈림길에서 아래쪽으로 가 보았다.","ru":"Мальчик на развилке пошёл вниз по тропе.","words":[["소년은","мальчик"],["갈림길에서","на развилке"],["아래쪽으로","вниз"],["가 보았다","пошёл, попробовал пройти"]]},{"ko":"갈밭 머리에서 바라보는 서당골 마을은 쪽빛 하늘 아래 한결 가까워 보였다.","ru":"Видя с края камышового поля, деревня Сотанг골 под лазурным небом казалась гораздо ближе.","words":[["갈밭","камышовое поле"],["머리에서","с края"],["바라보는","глядя"],["서당골 마을은","деревня Сотанггол (тема)"],["쪽빛","лазурный"],["하늘 아래","под небом"],["한결","гораздо"],["가까워 보였다","казалась ближе"]]},{"ko":"어른들의 말이, 내일 소녀네가 양평읍으로 이사 간다는 것이었다.","ru":"По словам взрослых, завтра семья той девочки переезжает в уезд Янпён.","words":[["어른들의","взрослых"],["말이","слова"],["내일","завтра"],["소녀네가","у той девочки (тема)"],["양평읍으로","в уезд Янпён"],["이사 간다는","переезжает"],["것이었다","говорилось"]]},{"ko":"거기 가서는 조그마한 가겟방을 보게 되리라는 것이었다.","ru":"Там, говорят, они снимут маленькую лавку.","words":[["거기","там"],["가서는","пойдя"],["조그마한","маленькую"],["가겟방을","лавку (винит.)"],["보게 되리라는","увидят, окажутся"],["것이었다","говорилось"]]},{"ko":"소년은 저도 모르게 주머니 속 호두알을 만지작거리며, 한 손으로는 수없이 갈꽃을 휘어 꺾고 있었다.","ru":"Сам того не замечая, мальчик крутил в кармане орешек, а другой рукой без счёта ломал камышовые стебли.","words":[["소년은","мальчик"],["저도 모르게","сам не замечая"],["주머니 속","в кармане"],["호두알을","орешек"],["만지작거리며","крутил, теребил"],["한 손으로는","одной рукой"],["수없이","без счёта"],["갈꽃을","камышовые стебли"],["휘어 꺾고 있었다","ломал, сгибал"]]},{"ko":"그날 밤, 소년은 자리에 누워서도 같은 생각뿐이었다.","ru":"Той ночью лёжа в кровати, он не мог думать ни о чём, кроме этого.","words":[["그날 밤","той ночью"],["소년은","мальчик"],["자리에 누워서도","лёжа в кровати"],["같은 생각뿐이었다","думал лишь об одном"]]},{"ko":"내일 소녀네가 이사하는 걸 가 보나 어쩌나.","ru":"Стоит ли завтра сходить и посмотреть, как переезжают те девочка с семьёй?","words":[["내일","завтра"],["소녀네가","та девочка (тема)"],["이사하는 걸","переезд"],["가 보나","пойти посмотреть ли"],["어쩌나","как быть"]]},{"ko":"가면 소녀를 보게 될까 어떨까.","ru":"Интересно, если я пойду, увижу ли её?","words":[["가면","если пойти"],["소녀를","девочку"],["보게 될까","увижу ли"],["어떨까","интересно"]]},{"ko":"그러다가 까무룩 잠이 들었는가 하는데,","ru":"И как-то он задремал, едва успев об этом помыслить,","words":[["그러다가","и вот"],["까무룩","крепко"],["잠이 들었는가 하는데","задремал ли"]]},{"ko":"“허, 참, 세상일도….”","ru":"«Ох, жалко же жизнь…» — пробормотал вернувшийся из деревни отец.","words":[["허","ох"],["참","действительно"],["세상일도","жизнь, дела в мире"]]},{"ko":"“윤 초시 댁도 말이 아니야, 그 많던 전답을 다 팔아 버리고, 대대로 살아오던 집마저 남의 손에 넘기더니, 또 액상까지 당하는 걸 보면….”","ru":"«У семьи Юн Чхо-шхи беда за бедой: всю их щедрую пашню продали, дом родовой отдали чужим, а теперь и неудача какая-то…» — вздыхала мама под тусклым светом лампы.","words":[["윤 초시 댁도","семья Юн Чхо-шхи тоже"],["말이 아니야","беда"],["그 많던 전답을","ту щедрую пашню"],["다 팔아 버리고","всё продали"],["대대로 살아오던 집마저","даже родовой дом"],["남의 손에 넘기더니","отдали чужим"],["또 액상까지 당하는 걸","и ещё невзгоды терпят"],["보면","если посмотреть"]]},{"ko":"“증손이라곤 계집애 그 애 하나뿐이었지요?”","ru":"«Эта девочка была твоей единственной правнучкой, не так ли?»","words":[["증손","правнук"],["계집애","девочка (устар.)"],["그 애","та дитя"],["하나뿐이었지요?","только одна, правда?"]]},{"ko":"“그렇지, 사내애 둘 있던 건 어려서 잃고…”","ru":"«Да, двух сыновей рано потеряли…» — подтвердил отец.","words":[["그렇지","да, правда"],["사내애 둘 있던 건","два сына"],["어려서 잃고","с детства потеряли"]]},{"ko":"“어쩌면 그렇게 자식 복이 없을까?”","ru":"«Как же мало им повезло с детьми?» — раздалось в комнате.","words":[["어쩌면","как же"],["그렇게","так"],["자식 복이","счастье детей"],["없을까?","нет ли?"]]},{"ko":"“글쎄 말이지. 이번 앤 꽤 여러 날 앓는 걸 약도 변변히 못 써 봤다더군. 지금 같아서는 윤 초시네도 대가 끊긴 셈이지… 그런데 참 이번 계집애는 어린 것이 여간 잔망스럽지가 않아. 글쎄, 죽기 전에 이런 말을 했다지 않아? 자기가 죽거든 자기 입던 옷을 꼭 그대로 입혀서 묻어 달라고…”","ru":"«Да уж… Говорят, что она долго болела, и ей и лекарств в норму не давали. Теперь, по сути, у семьи Юн Чхо-шхи кровь прервана… Но эта девочка так хитроумна для своих лет! Слышал: перед смертью велела похоронить себя в той самой одежде, в которой умрёт…» — шептались они.","words":[["글쎄 말이지","вот именно"],["이번 앤","эта девочка"],["꽤 여러 날","довольно много дней"],["앓는 걸","болела"],["약도 변변히 못 써 봤다더군","даже лекарств толком не давали"],["지금 같아서는","в нынешней ситуации"],["윤 초시네도","у Юн Чхо-шхи"],["대가 끊긴 셈이지","род прервался"],["그런데 참","но вот"],["이번 계집애는","эта девочка"],["어린데여간 잔망스럽지가 않아","совсем не по-детски хитра"],["죽기 전에","перед смертью"],["이런 말을 했다지 않아?","говорила же?"],["자기가 죽거든","когда умрёт"],["자기 입던 옷을","одежду, в которой жила"],["꼭 그대로 입혀서","обязательно ей надеть"],["묻어 달라고","велела похоронить в ней"]]}]},{"id":"dream","emoji":"🌟","titleKo":"나의 꿈","title":"«Я хочу поднимать упавших» — о мечте","theme":"Эссе","level":"TOPIK II","sentences":[{"ko":"저는 어릴 때부터 잘 넘어지는 아이였습니다.","ru":"С раннего детства я был(а) ребёнком, который часто падал.","words":[]},{"ko":"그래서 아직 저의 몸에는 작은 상처들이 남아 있습니다.","ru":"Поэтому на моём теле до сих пор остались небольшие шрамы.","words":[]},{"ko":"몇 년 전 저는 체육 시간에 넘어져 1년이 넘는 시간을 고생하였습니다.","ru":"Несколько лет назад я упал(а) на уроке физкультуры и провёл(а) больше года в мучениях.","words":[]},{"ko":"의사 선생님의 잘못된 진단과 잘못된 처방 그리고 저의 부주의 때문이었죠.","ru":"Это случилось из-за неправильного диагноза и рецепта врача, а также моей неосторожности.","words":[]},{"ko":"발이 낫지 않았을 때는 하루하루가 슬프고 괴로웠어요.","ru":"Когда нога не заживала, каждый день был печальным и мучительным.","words":[]},{"ko":"마음껏 뛰어노는 아이들을 보면 외롭기만 했어요.","ru":"Видя, как беззаботно бегают дети, я чувствовал(а) только одиночество.","words":[]},{"ko":"제가 좋아하던 피겨 스케이팅도 그만둬야 했고요.","ru":"Мне пришлось бросить фигурное катание, которым я увлекался(ась).","words":[]},{"ko":"친구들과 오랫동안 같이 뛰어놀지 못해서 친구들과의 우정도 멀어졌어요.","ru":"Из-за того что я долго не мог(ла) бегать с друзьями, наша дружба ослабла.","words":[]},{"ko":"정말 그때는 어두운 동굴 속에 혼자 갇혀 있는 기분이었습니다.","ru":"В тот момент мне казалось, что я один(одна) заперт(а) в тёмной пещере.","words":[]},{"ko":"그러던 시기에 저는 한 재활치료사 할머니를 만나서 운동 치료를 받게 되었습니다.","ru":"В это время я встретил(а) пожилую физиотерапевтку и начал(а) получать лечебную гимнастику.","words":[]},{"ko":"그분은 치료를 해 주실 때 “자, 애리얼! 이렇게 해 보는 거야! 왜, 이 할머니도 이렇게 하고 있는데 너 같은 아이가 벌써 지쳐 있어?”라고 격려해 주셨어요.","ru":"Во время сеансов она вдохновляла меня: «Давай, Ариэль! Так! Почему ты уже устал(а), в то время как эта бабушка всё ещё справляется?»","words":[]},{"ko":"그리고 그분은 직접 시범을 보여 주시며 중심 잡기, 뛰기, 한 발로 점프하기 등을 같이 해 주셨어요.","ru":"А затем она сама показывала упражнения — удержание равновесия, бег, прыжки на одной ноге — и делала их вместе со мной.","words":[]},{"ko":"그때 저는 “나도 자라면 아픈 사람, 넘어지는 사람을 일으켜 주는 사람이 되고 싶다.”는 꿈을 가지게 되었습니다.","ru":"В тот момент во мне зародилась мечта: «Когда вырасту, я хочу помогать больным и падающим людям подниматься.»","words":[]},{"ko":"저는 걸스카우트 활동을 어릴 때부터 계속해 오고 있습니다.","ru":"С малых лет я участвую в деятельности «Девичьих скаутов».","words":[]},{"ko":"홈리스 분들에게 음식을 준비해서 드리고, 부모님의 도움을 받지 못하는 친구들에게 영어를 가르쳐 주기도 했습니다.","ru":"Я готовил(а) еду для бездомных и обучал(а) английскому друзей, не получавших помощи родителей.","words":[]},{"ko":"이런 활동을 통해 저는 경제적·사회적으로 넘어져 있는 사람들도 있다는 것을 알게 되었습니다.","ru":"Благодаря этим мероприятиям я узнал(а), что есть люди, сломленные экономически и социально.","words":[]},{"ko":"그리고 걸스카우트를 통해 봉사와 리더십이 다른 사람들에게 얼마나 큰 영향을 주는지도 깨달았습니다.","ru":"И я понял(а), как сильно служение и лидерство скаутов влияют на других.","words":[]},{"ko":"저는 어른이 되면 많은 사람에게 도움을 주는 영향력 있는 사람이 되고 싶습니다.","ru":"Когда я стану взрослым(ой), я хочу быть человеком, способным помогать многим.","words":[]},{"ko":"직업은 아직 정하지 않았습니다.","ru":"Конкретную профессию я ещё не выбрал(а).","words":[]},{"ko":"제가 어떤 일을 하든 도움이 필요한 곳에 가서 돕고 싶습니다.","ru":"Независимо от рода деятельности, я хочу идти туда, где нужна помощь, и помогать.","words":[]},{"ko":"이웃의 불쌍한 사람들에게 도움을 주는 사회복지사, 다친 사람을 도와주는 재활치료사, 어려운 이를 돕는 변호사……","ru":"Социальный работник, помогающий бедным соседям; физиотерапевт, поддерживающий раненых; адвокат, защищающий нуждающихся…","words":[]},{"ko":"저는 제 꿈을 위해 수없이 생각하고 결심해 왔습니다.","ru":"Для своей мечты я много думал(а) и принимал(а) решения.","words":[]},{"ko":"10번, 100번 고민해도, 결국 사람들에게 도움이 되는 일을 해야 한다는 확신이 섰습니다.","ru":"Сколько бы ни думал(а), я пришёл(шла) к убеждению: нужно заниматься тем, что поможет людям.","words":[]},{"ko":"학생인 저는 공부에 집중해야 하지만, 도움의 손길이 필요한 곳이 있으면 언제든 달려가겠습니다.","ru":"Как ученик(ца), я должен(на) учиться, но если потребуется помощь, я всегда прибегу на подмогу.","words":[]},{"ko":"그러다 보면 더 구체적으로 제 미래에 다가갈 수 있고, 더 많은 이에게 도움이 되는 사람이 될 테니까요.","ru":"Если продолжать так, то смогу приблизиться к своему будущему более конкретно и стать человеком, который помогает большему числу людей.","words":[["그러다 보면","если так продолжать / делая так"],["더","больше"],["구체적으로","конкретно"],["제","моё (вежливая форма)"],["미래에","к будущему"],["다가갈","приблизиться"],["수 있고","можно (мочь)"],["더","ещё (больше)"],["많은","много"],["이에게","людям ("],["에게","дательный падеж, \"кому\")"],["도움이","помощь"],["되는","становиться (от 되다)"],["사람이","человек"],["될 테니까요","потому что стану (объяснение причины)"]]}]}];
   // ════════════════ РАЗДЕЛ «ЧТЕНИЕ» (독해) + 말하기 (читать вслух) ════════════════
   // Данные READING_TEXTS внедрены выше. Каждый текст: { id, emoji, titleKo, title, theme, level, sentences:[{ko,ru,words:[[ko,ru]]}] }.
   const _rdState = { id: null, mode: 'read', showRu: true, cur: 0 };
@@ -13341,13 +15447,224 @@
 
 
   // ════════════════ «Советы по учёбе в Корее» (한국 유학 · 면접) ════════════════
-  // Данные STUDY_KR внедрены выше: { interview:[{ko,ru,aKo,aRu}], tips:[...], soon:[...] }.
-  const _skState = { view: 'home' };
+  // Данные раздела: собеседование в вуз (вопросы + образцы ответов), советы, ближайшие темы.
+  const STUDY_KR = {
+    interview: [
+      { ko: '간단하게 자기소개를 해 주세요.', ru: 'Кратко расскажите о себе.',
+        aKo: '안녕하십니까. 저는 ○○에서 온 △△입니다. 한국 문화와 언어에 관심이 많아 한국으로 유학을 결심했습니다. 성실하게 공부하겠습니다.',
+        aRu: 'Здравствуйте. Меня зовут △△, я из ○○. Я очень интересуюсь корейской культурой и языком, поэтому решил(а) поехать учиться в Корею. Буду усердно учиться.' },
+      { ko: '우리 학교에 지원한 이유는 무엇입니까?', ru: 'Почему вы выбрали наш университет?',
+        aKo: '귀교는 제 전공 분야에서 우수한 교육 환경과 명성을 가지고 있습니다. 특히 ○○ 프로그램이 제 목표와 잘 맞는다고 생각해 지원하게 되었습니다.',
+        aRu: 'Ваш университет обладает отличной образовательной средой и репутацией в моей сфере. Особенно программа ○○ хорошо совпадает с моими целями, поэтому я подал(а) документы.' },
+      { ko: '전공을 선택한 이유는 무엇입니까?', ru: 'Почему вы выбрали эту специальность?',
+        aKo: '어릴 때부터 ○○ 분야에 관심이 많았고, 관련 활동을 하면서 더 깊이 공부하고 싶다는 생각이 들어 이 전공을 선택하게 되었습니다.',
+        aRu: 'С детства меня интересовала сфера ○○, и занимаясь этим, я захотел(а) изучать её глубже — поэтому выбрал(а) эту специальность.' },
+      { ko: '한국에 유학을 오게 된 계기는 무엇입니까?', ru: 'Что побудило вас приехать учиться в Корею?',
+        aKo: '한국의 문화와 콘텐츠를 통해 한국에 관심을 가지게 되었고, 한국의 교육 수준이 높다는 것을 알게 되어 직접 공부해 보고 싶었습니다.',
+        aRu: 'Я заинтересовался(лась) Кореей через её культуру и контент, а узнав о высоком уровне образования, захотел(а) учиться именно здесь.' },
+      { ko: '졸업 후의 계획은 무엇입니까?', ru: 'Каковы ваши планы после выпуска?',
+        aKo: '졸업 후에는 한국에서 배운 지식을 바탕으로 ○○ 분야에서 일하고 싶습니다. 장기적으로는 두 나라의 교류에 도움이 되는 사람이 되고 싶습니다.',
+        aRu: 'После выпуска хочу работать в сфере ○○, опираясь на полученные в Корее знания. В перспективе — стать человеком, полезным для обмена между нашими странами.' },
+      { ko: '본인의 장점과 단점은 무엇입니까?', ru: 'В чём ваши сильные и слабые стороны?',
+        aKo: '제 장점은 성실하고 끈기가 있다는 점입니다. 단점은 완벽을 추구하다 보니 시간이 오래 걸릴 때가 있는데, 계획을 세워 보완하려고 노력하고 있습니다.',
+        aRu: 'Моя сильная сторона — добросовестность и упорство. Слабая — стремясь к идеалу, я порой трачу много времени, но компенсирую это планированием.' },
+      { ko: '한국어 실력은 어느 정도입니까?', ru: 'Каков ваш уровень корейского?',
+        aKo: '현재 토픽 ○급 수준이며, 일상 대화와 강의를 이해하는 데 큰 어려움이 없습니다. 앞으로도 꾸준히 실력을 키우겠습니다.',
+        aRu: 'Сейчас у меня уровень TOPIK ○. Я без особых трудностей понимаю повседневную речь и лекции и продолжаю совершенствоваться.' },
+      { ko: '마지막으로 하고 싶은 말이 있습니까?', ru: 'Хотите что-то сказать напоследок?',
+        aKo: '기회를 주신다면 최선을 다해 공부하고, 학교에 자랑스러운 학생이 되겠습니다. 감사합니다.',
+        aRu: 'Если мне дадут шанс, я буду учиться изо всех сил и стану студентом(кой), которым университет сможет гордиться. Спасибо.' }
+    ],
+    tips: [
+      'Говорите спокойно и вежливо: используйте формальный стиль <span class="ko">-ㅂ니다/습니다</span>.',
+      'Подготовьте самопрезентацию (<span class="ko">자기소개</span>) на 30–40 секунд и отрепетируйте её вслух.',
+      'Свяжите ответы с конкретным вузом и специальностью — покажите, что готовились именно к ним.',
+      'Не заучивайте слово в слово — отвечайте естественно, опираясь на план.',
+      'Если не поняли вопрос, вежливо переспросите: <span class="ko">«다시 한 번 말씀해 주시겠어요?»</span>',
+      'Держите осанку, поддерживайте зрительный контакт и спокойно улыбайтесь.'
+    ],
+    soon: [
+      { emoji: '🏛️', title: 'Рейтинг вузов Кореи', ko: '한국 대학 순위', sub: 'топ-университеты · направления · требования' },
+      { emoji: '🛂', title: 'Студенческая виза D-2', ko: '유학 비자', sub: 'документы · сроки · продление' },
+      { emoji: '🏫', title: 'Языковые курсы 어학당', ko: '어학당', sub: 'как выбрать · стоимость · уровни' },
+      { emoji: '💰', title: 'Стипендии (GKS)', ko: '장학금', sub: 'Global Korea Scholarship и другие' },
+      { emoji: '🏠', title: 'Жильё и общежития', ko: '기숙사 · 자취', sub: 'варианты · цены · советы' }
+    ]
+  };
+  // ── Рейтинг вузов Кореи (реальные ведущие университеты) ──
+  // Требования TOPIK даны ориентировочно — они меняются по годам и факультетам; всегда сверяться на сайте вуза.
+  const KR_UNIVERSITIES = [
+    { id:'snu', name:'Сеульский национальный университет', ko:'서울대학교', abbr:'SNU', city:'Сеул', rank:'№1 в Корее',
+      strong:['Инженерия','Естественные науки','Гуманитарные','Медицина'],
+      topik:'Обычно TOPIK 3+ для поступления, 4–5 для гуманитарных направлений.',
+      site:'https://en.snu.ac.kr',
+      about:'Самый престижный и старейший государственный вуз Кореи, флагман национального образования. Высокий конкурс и сильная научная база.' },
+    { id:'yonsei', name:'Университет Ёнсе', ko:'연세대학교', abbr:'Yonsei', city:'Сеул', rank:'SKY · топ-3',
+      strong:['Бизнес','Медицина','Гуманитарные','Международные отношения'],
+      topik:'TOPIK 3–4 в зависимости от факультета.',
+      site:'https://www.yonsei.ac.kr/en_sc/',
+      about:'Один из вузов «большой тройки» SKY. Сильная бизнес-школа и колледж Underwood с программами на английском.' },
+    { id:'korea', name:'Университет Корё', ko:'고려대학교', abbr:'Korea Univ', city:'Сеул', rank:'SKY · топ-3',
+      strong:['Право','Бизнес','Гуманитарные','Политология'],
+      topik:'TOPIK 3–4 в зависимости от факультета.',
+      site:'https://www.korea.edu/',
+      about:'Третий вуз SKY. Известен сильным юридическим и бизнес-образованием и очень активной студенческой жизнью.' },
+    { id:'kaist', name:'KAIST — институт науки и технологий', ko:'한국과학기술원', abbr:'KAIST', city:'Тэджон', rank:'Наука и технологии №1',
+      strong:['Инженерия','IT','Естественные науки','Стартапы'],
+      topik:'Многие программы на английском — TOPIK часто не требуется.',
+      site:'https://www.kaist.ac.kr/en/',
+      about:'Ведущий технический вуз страны. Обучение во многом на английском, акцент на исследования и технологическое предпринимательство.' },
+    { id:'postech', name:'POSTECH — Пхоханский университет науки и технологий', ko:'포항공과대학교', abbr:'POSTECH', city:'Пхохан', rank:'Наука и технологии',
+      strong:['Инженерия','Физика','Материаловедение','Исследования'],
+      topik:'Программы во многом на английском — TOPIK часто не требуется.',
+      site:'https://www.postech.ac.kr/eng/',
+      about:'Небольшой элитный технический вуз с сильнейшей исследовательской базой и высоким соотношением преподавателей к студентам.' },
+    { id:'skku', name:'Университет Сонгюнгван (SKKU)', ko:'성균관대학교', abbr:'SKKU', city:'Сеул · Сувон', rank:'Топ-5',
+      strong:['Бизнес','Инженерия','Полупроводники','Естественные науки'],
+      topik:'TOPIK 3–4.',
+      site:'https://www.skku.edu/eng/',
+      about:'Один из старейших вузов с современной поддержкой от Samsung. Сильные инженерные и бизнес-программы.' },
+    { id:'hanyang', name:'Университет Ханян', ko:'한양대학교', abbr:'Hanyang', city:'Сеул', rank:'Топ инженерии',
+      strong:['Инженерия','Архитектура','Предпринимательство','IT'],
+      topik:'TOPIK 3–4.',
+      site:'https://www.hanyang.ac.kr/web/eng',
+      about:'Известен сильнейшей инженерной школой и предпринимательской культурой — много выпускников-основателей компаний.' },
+    { id:'khu', name:'Университет Кёнхи', ko:'경희대학교', abbr:'Kyung Hee', city:'Сеул', rank:'Популярен у иностранцев',
+      strong:['Гостеприимство и туризм','Медицина','Корееведение','Межд. программы'],
+      topik:'TOPIK 3+ · при вузе сильный 어학당.',
+      site:'https://www.khu.ac.kr/eng/',
+      about:'Очень популярен у иностранных студентов: красивый кампус и сильные языковые курсы 어학당.' },
+    { id:'sogang', name:'Университет Соган', ko:'서강대학교', abbr:'Sogang', city:'Сеул', rank:'Знаменитый 어학당',
+      strong:['Бизнес','Гуманитарные','Корейский язык','Медиа'],
+      topik:'TOPIK 3+ · один из лучших 어학당 в стране.',
+      site:'https://www.sogang.ac.kr/en/',
+      about:'Иезуитский вуз с одной из лучших программ корейского языка (서강 한국어) и сильной бизнес-школой.' },
+    { id:'ewha', name:'Женский университет Ихва', ko:'이화여자대학교', abbr:'Ewha', city:'Сеул', rank:'Топ женский вуз',
+      strong:['Гуманитарные','Дизайн','Педагогика','Межд. исследования'],
+      topik:'TOPIK 3–4.',
+      site:'https://www.ewha.ac.kr/ewhaen/',
+      about:'Крупнейший и самый престижный женский университет мира. Знаменитый кампус ECC и сильные гуманитарные программы.' }
+  ];
+
+  // ── Практические темы об учёбе в Корее ──
+  const STUDY_KR_INFO = {
+    visa: {
+      emoji:'🛂', title:'Студенческая виза', ko:'유학 비자 · D-2 / D-4', sub:'D-2 · D-4 · документы',
+      lead:'Для учёбы в Корее нужна студенческая виза. Тип зависит от программы.',
+      sections:[
+        { h:'D-2 — для получения степени', items:[
+          'Бакалавриат, магистратура, докторантура, научные программы.',
+          'Оформляется после получения приглашения (입학허가서) от вуза.',
+          'Даёт право на ограниченную подработку — с разрешения вуза.'
+        ]},
+        { h:'D-4 — для языковых курсов 어학당', items:[
+          'Для обучения на языковых курсах при вузе.',
+          'Выдаётся на срок курса, продлевается в иммиграционной службе.',
+          'Подработка — только после 6 месяцев и с разрешения.'
+        ]},
+        { h:'Базовые документы', items:[
+          'Загранпаспорт, фото, заявление на визу.',
+          'Приглашение от вуза (사증발급인정서 / 입학허가서).',
+          'Подтверждение финансов (банковская выписка, обычно от ~10 000 $).',
+          'Документы об образовании с апостилем/легализацией и переводом.'
+        ]},
+        { h:'Важно', items:[
+          'Точный список зависит от консульства — сверяйтесь с сайтом посольства Кореи.',
+          'Подавайте заранее: оформление занимает несколько недель.'
+        ]}
+      ]
+    },
+    scholarship: {
+      emoji:'🎓', title:'Стипендии', ko:'장학금 · GKS', sub:'GKS · вузовские',
+      lead:'Учёбу можно частично или полностью покрыть стипендией.',
+      sections:[
+        { h:'GKS — Global Korea Scholarship', items:[
+          'Государственная стипендия (бывш. KGSP) от NIIED.',
+          'Покрывает обучение, перелёт, ежемесячную стипендию, год языковых курсов и медстраховку.',
+          'Два пути подачи: через посольство Кореи (Embassy track) или напрямую через вуз (University track).',
+          'Высокий конкурс — нужны хорошие оценки и сильное мотивационное письмо.'
+        ]},
+        { h:'Вузовские стипендии', items:[
+          'Скидки на обучение за высокий средний балл и TOPIK.',
+          'Многие вузы дают 30–100% скидки лучшим иностранным студентам.'
+        ]},
+        { h:'Где искать', items:[
+          'Официальный портал: studyinkorea.go.kr.',
+          'Сайт нужного вуза → раздел International / Scholarships.'
+        ]}
+      ]
+    },
+    cost: {
+      emoji:'💰', title:'Стоимость учёбы и жизни', ko:'학비 · 생활비', sub:'обучение · жильё · еда',
+      lead:'Ориентировочные суммы — точные зависят от вуза, города и образа жизни.',
+      sections:[
+        { h:'Обучение (за семестр)', items:[
+          'Языковые курсы 어학당: ~1 300–1 800 $ за 10-недельный семестр.',
+          'Бакалавриат: ~2 500–5 000 $ (гуманитарные дешевле, инженерия и медицина дороже).',
+          'Магистратура: ~2 500–6 000 $.'
+        ]},
+        { h:'Жизнь (в месяц)', items:[
+          'Общежитие: ~250–500 $; аренда студии 원룸: ~400–700 $ + депозит.',
+          'Питание: ~300–450 $; транспорт: ~50–70 $.',
+          'Сеул дороже регионов примерно на 20–40%.'
+        ]},
+        { h:'Совет', items:[
+          'Многие вузы дают скидку на обучение иностранцам с высоким TOPIK.',
+          'Подработка (после разрешения) частично покрывает расходы.'
+        ]}
+      ]
+    },
+    language: {
+      emoji:'🏫', title:'Языковые курсы 어학당', ko:'어학당', sub:'어학당 · уровни 1–6',
+      lead:'어학당 — языковые институты при вузах. Лучший способ подтянуть корейский перед поступлением.',
+      sections:[
+        { h:'Как устроено', items:[
+          'Уровни 1–6: с нуля до продвинутого.',
+          '4 семестра в год, обычно по 10 недель, ~20 часов в неделю.',
+          'После уровня 4–6 проще поступить на degree-программу.'
+        ]},
+        { h:'Известные программы', items:[
+          '서강 한국어 (Sogang) — упор на разговорную речь.',
+          '연세 한국어 (Yonsei) — фундаментальная грамматика.',
+          '경희 · 이화 · 고려 — сильные и популярные у иностранцев.'
+        ]},
+        { h:'Виза', items:[
+          'Для 어학당 оформляется виза D-4.'
+        ]}
+      ]
+    },
+    housing: {
+      emoji:'🏠', title:'Жильё и общежития', ko:'기숙사 · 자취', sub:'기숙사 · 원룸 · 고시원',
+      lead:'Основные варианты жилья для студентов.',
+      sections:[
+        { h:'기숙사 — общежитие', items:[
+          'Самый дешёвый и удобный вариант, прямо на кампусе.',
+          'Мест мало — подавайте сразу после зачисления.'
+        ]},
+        { h:'원룸 / 자취 — своя квартира-студия', items:[
+          'Свобода, но дороже и нужен депозит (보증금), часто крупный.',
+          'Ищут через приложения 직방 / 다방 и агентства недвижимости (부동산).'
+        ]},
+        { h:'고시원 · 하숙', items:[
+          '고시원 — крошечная комната, дёшево и без депозита.',
+          '하숙 — комната с питанием от хозяев, по-домашнему.'
+        ]}
+      ]
+    }
+  };
+
+  const _skState = { view: 'home', uni: null, info: null };
   function openStudyKr() { _skState.view = 'home'; switchScreen('studykr'); }
   function studyKrBack() {
-    if (_skState.view === 'interview') { _skState.view = 'home'; stopSpeech(); renderStudyKr(); window.scrollTo(0, 0); }
-    else switchScreen('profile', true);
+    if (_skState.view === 'uni') { _skState.view = 'unis'; _skState.uni = null; renderStudyKr(); window.scrollTo(0, 0); return; }
+    if (_skState.view === 'unis' || _skState.view === 'info' || _skState.view === 'interview') {
+      _skState.view = 'home'; _skState.uni = null; _skState.info = null; stopSpeech(); renderStudyKr(); window.scrollTo(0, 0); return;
+    }
+    switchScreen('profile', true);
   }
+  function openSkUnis() { _skState.view = 'unis'; renderStudyKr(); window.scrollTo(0, 0); }
+  function openSkUni(id) { _skState.view = 'uni'; _skState.uni = id; renderStudyKr(); window.scrollTo(0, 0); }
+  function openSkInfo(key) { _skState.view = 'info'; _skState.info = key; renderStudyKr(); window.scrollTo(0, 0); }
   function skSpeak(text, btn) {
     // убрать [подстановки] из корейского, чтобы озвучка звучала чисто
     const clean = (text || '').replace(/\[[^\]]*\]/g, ' ').replace(/\s{2,}/g, ' ').trim();
@@ -13356,10 +15673,26 @@
   function renderStudyKr() {
     const hub = document.getElementById('studykr-hub'); if (!hub) return;
     if (_skState.view === 'interview') { renderSkInterview(); return; }
+    if (_skState.view === 'unis') { renderSkUnis(); return; }
+    if (_skState.view === 'uni') { renderSkUni(); return; }
+    if (_skState.view === 'info') { renderSkInfo(); return; }
+    const infoCards = ['visa', 'scholarship', 'cost', 'language', 'housing'].map(k => {
+      const info = STUDY_KR_INFO[k];
+      return `
+        <button type="button" class="kc-card" onclick="openSkInfo('${k}')">
+          <span class="kc-card-emoji" aria-hidden="true">${info.emoji}</span>
+          <span class="kc-card-body">
+            <span class="kc-card-title">${info.title}</span>
+            <span class="kc-card-ko ko">${info.ko}</span>
+            <span class="kc-card-meta"><span class="rd-chip rd-chip-soft">${info.sub}</span></span>
+          </span>
+          <i class="fa-solid fa-chevron-right rd-card-arrow" aria-hidden="true"></i>
+        </button>`;
+    }).join('');
     hub.innerHTML = `
       <div class="rd-intro">
         <div class="rd-intro-ko ko">한국 유학 준비 🎓</div>
-        <p class="rd-intro-txt">Практические материалы для тех, кто едет учиться в Корею. Сейчас готов раздел про <b>собеседование в вуз (면접)</b> — остальные темы скоро.</p>
+        <p class="rd-intro-txt">Практические материалы для тех, кто едет учиться в Корею: вузы, визы, стипендии, языковые курсы и жильё.</p>
       </div>
       <div class="kc-list">
         <button type="button" class="kc-card" onclick="openSkInterview()">
@@ -13371,17 +15704,88 @@
           </span>
           <i class="fa-solid fa-chevron-right rd-card-arrow" aria-hidden="true"></i>
         </button>
-        ${STUDY_KR.soon.map(s => `
-          <div class="kc-card sk-soon" aria-disabled="true">
-            <span class="kc-card-emoji" aria-hidden="true">${s.emoji}</span>
-            <span class="kc-card-body">
-              <span class="kc-card-title">${s.title}</span>
-              <span class="kc-card-ko ko">${s.ko}</span>
-              <span class="kc-card-meta"><span class="rd-chip rd-chip-soft">${s.sub}</span></span>
-            </span>
-            <span class="sk-soon-badge">Скоро</span>
-          </div>`).join('')}
+        <button type="button" class="kc-card" onclick="openSkUnis()">
+          <span class="kc-card-emoji" aria-hidden="true">🏛️</span>
+          <span class="kc-card-body">
+            <span class="kc-card-title">Рейтинг вузов Кореи</span>
+            <span class="kc-card-ko ko">한국 대학 순위</span>
+            <span class="kc-card-meta"><span class="rd-chip">${KR_UNIVERSITIES.length} вузов</span><span class="rd-chip rd-chip-soft">направления · TOPIK</span></span>
+          </span>
+          <i class="fa-solid fa-chevron-right rd-card-arrow" aria-hidden="true"></i>
+        </button>
+        ${infoCards}
       </div>`;
+  }
+  function renderSkUnis() {
+    const hub = document.getElementById('studykr-hub'); if (!hub) return;
+    hub.innerHTML = `
+      <button type="button" class="topik-back" onclick="studyKrBack()"><i class="fa-solid fa-chevron-left"></i> Темы</button>
+      <div class="rd-head">
+        <div class="rd-head-emoji" aria-hidden="true">🏛️</div>
+        <div class="rd-head-info">
+          <h2 class="rd-head-title">Рейтинг вузов Кореи</h2>
+          <div class="rd-head-ko ko">한국 대학 순위</div>
+          <div class="rd-head-meta">${KR_UNIVERSITIES.length} ведущих университетов · нажми, чтобы открыть</div>
+        </div>
+      </div>
+      <div class="kc-list">
+        ${KR_UNIVERSITIES.map((u, i) => `
+          <button type="button" class="kc-card" onclick="openSkUni('${u.id}')">
+            <span class="kc-card-emoji uni-rank" aria-hidden="true">${i + 1}</span>
+            <span class="kc-card-body">
+              <span class="kc-card-title">${u.name}</span>
+              <span class="kc-card-ko ko">${u.ko}</span>
+              <span class="kc-card-meta"><span class="rd-chip">${u.city}</span><span class="rd-chip rd-chip-soft">${u.rank}</span></span>
+            </span>
+            <i class="fa-solid fa-chevron-right rd-card-arrow" aria-hidden="true"></i>
+          </button>`).join('')}
+      </div>
+      <div class="sk-tips" style="margin-top:14px;">
+        <div class="sk-tips-h">ℹ️ Важно</div>
+        <ul class="sk-tips-list"><li>Точные требования по TOPIK и сроки подачи смотри на официальном сайте вуза — они меняются каждый год.</li></ul>
+      </div>`;
+  }
+  function renderSkUni() {
+    const hub = document.getElementById('studykr-hub'); if (!hub) return;
+    const u = KR_UNIVERSITIES.find(x => x.id === _skState.uni);
+    if (!u) { _skState.view = 'unis'; renderSkUnis(); return; }
+    hub.innerHTML = `
+      <button type="button" class="topik-back" onclick="studyKrBack()"><i class="fa-solid fa-chevron-left"></i> Вузы</button>
+      <div class="rd-head">
+        <div class="rd-head-emoji" aria-hidden="true">🏛️</div>
+        <div class="rd-head-info">
+          <h2 class="rd-head-title">${u.name}</h2>
+          <div class="rd-head-ko ko">${u.ko}</div>
+          <div class="rd-head-meta">${u.abbr} · ${u.city} · ${u.rank}</div>
+        </div>
+      </div>
+      <p class="rd-intro-txt" style="margin:0 0 14px;">${u.about}</p>
+      <div class="uni-facts">
+        <div class="uni-fact"><div class="uni-fact-h">📍 Город</div><div class="uni-fact-v">${u.city}</div></div>
+        <div class="uni-fact"><div class="uni-fact-h">🎯 Сильные направления</div><div class="uni-fact-v">${u.strong.join(' · ')}</div></div>
+        <div class="uni-fact"><div class="uni-fact-h">📊 Требования TOPIK</div><div class="uni-fact-v">${u.topik}</div></div>
+      </div>
+      <a class="btn btn-primary btn-block" href="${u.site}" target="_blank" rel="noopener noreferrer" style="margin-top:14px;"><i class="fa-solid fa-arrow-up-right-from-square" style="font-size:12px;"></i> Официальный сайт</a>`;
+  }
+  function renderSkInfo() {
+    const hub = document.getElementById('studykr-hub'); if (!hub) return;
+    const info = STUDY_KR_INFO[_skState.info];
+    if (!info) { _skState.view = 'home'; renderStudyKr(); return; }
+    hub.innerHTML = `
+      <button type="button" class="topik-back" onclick="studyKrBack()"><i class="fa-solid fa-chevron-left"></i> Темы</button>
+      <div class="rd-head">
+        <div class="rd-head-emoji" aria-hidden="true">${info.emoji}</div>
+        <div class="rd-head-info">
+          <h2 class="rd-head-title">${info.title}</h2>
+          <div class="rd-head-ko ko">${info.ko}</div>
+        </div>
+      </div>
+      <p class="rd-intro-txt" style="margin:0 0 14px;">${info.lead}</p>
+      ${info.sections.map(s => `
+        <div class="sk-tips" style="margin-bottom:12px;">
+          <div class="sk-tips-h">${s.h}</div>
+          <ul class="sk-tips-list">${s.items.map(it => `<li>${it}</li>`).join('')}</ul>
+        </div>`).join('')}`;
   }
   function openSkInterview() { _skState.view = 'interview'; renderStudyKr(); window.scrollTo(0, 0); }
   function renderSkInterview() {
@@ -15068,7 +17472,7 @@
           const slidesN = Array.isArray(l.slides) ? l.slides.length : 0;
           const savedStage = (p.stages && Number(p.stages[l.id])) || 0;
           const lpct = slidesN > 0 ? Math.min(100, Math.round(savedStage / slidesN * 100)) : 0;
-          return `${savedStage > 0 ? `<div class="tile-progress"><span style="width:${lpct}%"></span></div>` : ''}<span class="chip chip-berry" style="margin-top:6px;">${savedStage > 0 ? 'Продолжить →' : 'Начать →'}</span>`;
+          return `${savedStage > 0 ? `<div class="tile-progress"><span style="width:${lpct}%"></span></div>` : ''}<span class="chip chip-berry" style="margin-top:6px;">${savedStage > 0 ? t('home.continue') : t('common.start')} →</span>`;
         })() : ''}
       </${tag}>`;
     }).join('');
@@ -15101,7 +17505,7 @@
     const modHdr = document.getElementById('module-header-count');
     if (modHdr) modHdr.textContent = `✓ ${p.completed.length}/${all.length}`;
     const subhdr = document.getElementById('module-subheader');
-    if (subhdr) subhdr.textContent = `${p.completed.length} из ${all.length} уроков`;
+    if (subhdr) subhdr.textContent = t('lessons.count', { done: p.completed.length, total: all.length });
     const pct = Math.round((p.completed.length / all.length) * 100);
     const progressBar = document.getElementById('module-progress-bar');
     if (progressBar) progressBar.style.width = pct + '%';
@@ -15162,8 +17566,8 @@
       slot.innerHTML = `
         <div class="hero" style="text-align:center;">
           <div style="font-size:42px;">🎉</div>
-          <div class="display" style="font-size:22px; color:var(--berry); margin-top:8px;">Все уроки пройдены</div>
-          <div style="font-size:12.5px; color:var(--text2); margin-top:6px;">Поздравляем! Ждём новых уроков от Мади 🌸</div>
+          <div class="display" style="font-size:22px; color:var(--berry); margin-top:8px;">${t('hero.allDone')}</div>
+          <div style="font-size:12.5px; color:var(--text2); margin-top:6px;">${t('hero.allDone.sub')}</div>
         </div>
       `;
       return;
@@ -15179,7 +17583,7 @@
         <img src="assets/bear2.png" alt="" class="duo-mascot duo-mascot-hero" onerror="this.style.display='none'">
         <div style="display:flex; justify-content:space-between; gap: 14px; position: relative; padding-right: 96px;">
           <div style="flex:1; min-width:0;">
-            <div class="page-eyebrow" style="color:var(--text2);">УРОК ${cur.num} · СЕГОДНЯ</div>
+            <div class="page-eyebrow" style="color:var(--text2);">${t('hero.eyebrow', { num: cur.num })}</div>
             <div class="display" style="font-size:26px; line-height:1.05; color:var(--berry); margin-top: 6px;">${cur.title}</div>
             <div style="font-size:13px; color:var(--text2); margin-top: 6px;">
               ${cur.ko ? `<span class="ko" style="font-weight:600;">${cur.ko}</span>` : ''}
@@ -15189,13 +17593,13 @@
         </div>
         <div style="margin-top:20px;">
           <div style="display:flex; justify-content:space-between; font-size:11px; margin-bottom:6px;">
-            <span style="font-weight:700; color:var(--berry); text-transform:uppercase; letter-spacing:.06em;">Урок ${cur.num} из ${all.length}</span>
+            <span style="font-weight:700; color:var(--berry); text-transform:uppercase; letter-spacing:.06em;">${t('hero.counter', { num: cur.num, total: all.length })}</span>
             <span style="color:var(--soft); font-weight:800;">${pct}%</span>
           </div>
           <div class="progress-segments">${segs}</div>
         </div>
         <div style="margin-top:18px; display:flex; justify-content:flex-end; padding-right:104px;">
-          <button class="btn btn-primary">${p.completed.length === 0 ? 'Начать урок' : 'Продолжить'} <i class="fa-solid fa-arrow-right" style="font-size:11px;"></i></button>
+          <button class="btn btn-primary">${p.completed.length === 0 ? t('hero.start') : t('home.continue')} <i class="fa-solid fa-arrow-right" style="font-size:11px;"></i></button>
         </div>
       </div>
     `;
@@ -16691,17 +19095,17 @@
         <div style="padding: 22px 18px 22px;">
           <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:12px;">
             <div>
-              <div class="page-eyebrow">ДОСТИЖЕНИЯ</div>
+              <div class="page-eyebrow">${t('profile.ach')}</div>
               <div class="display" style="font-size:22px; color:var(--berry); margin-top:2px;">${totalUnlocked} / ${totalAll}</div>
-              <div style="font-size:11px; color:var(--soft); margin-top:2px;">${pctAll}% коллекции собрано</div>
+              <div style="font-size:11px; color:var(--soft); margin-top:2px;">${t('ach.collected', {pct: pctAll})}</div>
             </div>
             <div onclick="this.closest('.modal-bg').remove()" style="font-size:26px; color:var(--soft); cursor:pointer; padding:4px;">×</div>
           </div>
           <div class="progress" style="margin-bottom:16px;"><i style="width:${pctAll}%"></i></div>
           <div class="auth-tabs" style="margin-bottom:16px;">
-            <button onclick="showAllAchievements('all')" class="auth-tab ${filter==='all'?'auth-tab-active':''}">Все · ${totalAll}</button>
-            <button onclick="showAllAchievements('unlocked')" class="auth-tab ${filter==='unlocked'?'auth-tab-active':''}">Открыто · ${totalUnlocked}</button>
-            <button onclick="showAllAchievements('locked')" class="auth-tab ${filter==='locked'?'auth-tab-active':''}">Закрыто · ${totalAll - totalUnlocked}</button>
+            <button onclick="showAllAchievements('all')" class="auth-tab ${filter==='all'?'auth-tab-active':''}">${t('ach.tab.all', {n: totalAll})}</button>
+            <button onclick="showAllAchievements('unlocked')" class="auth-tab ${filter==='unlocked'?'auth-tab-active':''}">${t('ach.tab.unlocked', {n: totalUnlocked})}</button>
+            <button onclick="showAllAchievements('locked')" class="auth-tab ${filter==='locked'?'auth-tab-active':''}">${t('ach.tab.locked', {n: totalAll - totalUnlocked})}</button>
           </div>
           ${cats.map(c => {
             const items = grouped[c] || [];
@@ -16746,14 +19150,16 @@
     // Show progress hint for measurable achievements
     const s = stats;
     const pieces = {
-      'streak-': () => `${s.daysEntered} / ${a.id.split('-')[1]} дней`,
-      'time-':   () => `${s.minutesSpent} / ${a.id.split('-')[1]} минут`,
-      'lesson-': () => `${s.lessons} / ${a.id.split('-')[1]} уроков`,
-      'games-':  () => a.id === 'games-all' ? `${['flashcards','match','memory','listen','translate','build','numbers','sentence','kpop'].filter(g => (s.gamePlays||{})[g] >= 1).length} / 9 игр запущено` : `${totalGamePlays(s)} / ${a.id.split('-')[1]}`,
-      'vocab-':  () => `${s.words} / ${a.id.split('-')[1]} слов`,
-      'hangul-tap-':   () => `${s.hangulSyllables} / ${a.id.replace('hangul-tap-','')} слогов`,
-      'hangul-saved-': () => `${s.hangulSaved} / ${a.id.replace('hangul-saved-','')} сохранено`,
-      'level-':  () => `Уровень ${getLevel(s.xp)} / ${a.id.split('-')[1]}`
+      'streak-': () => t('ach.u.days', { cur: s.daysEntered, target: a.id.split('-')[1] }),
+      'time-':   () => t('ach.u.min', { cur: s.minutesSpent, target: a.id.split('-')[1] }),
+      'lesson-': () => t('ach.u.lessons', { cur: s.lessons, target: a.id.split('-')[1] }),
+      'games-':  () => a.id === 'games-all'
+        ? t('ach.u.gamesAll', { cur: ['flashcards','match','memory','listen','translate','build','numbers','sentence','kpop'].filter(g => (s.gamePlays||{})[g] >= 1).length })
+        : t('ach.u.games', { cur: totalGamePlays(s), target: a.id.split('-')[1] }),
+      'vocab-':  () => t('ach.u.vocab', { cur: s.words, target: a.id.split('-')[1] }),
+      'hangul-tap-':   () => t('ach.u.syl', { cur: s.hangulSyllables, target: a.id.replace('hangul-tap-','') }),
+      'hangul-saved-': () => t('ach.u.saved', { cur: s.hangulSaved, target: a.id.replace('hangul-saved-','') }),
+      'level-':  () => t('ach.u.level', { cur: getLevel(s.xp), target: a.id.split('-')[1] })
     };
     const prefixHit = Object.keys(pieces).find(p => a.id.startsWith(p));
     if (!got && prefixHit) progress = pieces[prefixHit]();
@@ -16765,13 +19171,13 @@
         ${a.xp > 0 ? `<div class="chip chip-gold" style="margin-top:12px;">+${a.xp} XP</div>` : ''}
         <div style="margin-top:16px; padding-top:14px; border-top:1px solid var(--line);">
           ${got
-            ? `<div style="color:var(--gold-ink); font-weight:600; font-size:13px;">✓ Открыто</div>`
+            ? `<div style="color:var(--gold-ink); font-weight:600; font-size:13px;">${t('ach.opened')}</div>`
             : progress
-              ? `<div style="font-size:11px; letter-spacing:.16em; color:var(--coral); font-weight:600;">ПРОГРЕСС</div><div style="font-size:14px; color:var(--berry); margin-top:4px; font-weight:600;">${progress}</div>`
-              : `<div style="color:var(--hush); font-size:13px; font-style:italic;">🔒 Закрыто</div>`
+              ? `<div style="font-size:11px; letter-spacing:.16em; color:var(--coral); font-weight:600;">${t('ach.progress')}</div><div style="font-size:14px; color:var(--berry); margin-top:4px; font-weight:600;">${progress}</div>`
+              : `<div style="color:var(--hush); font-size:13px; font-style:italic;">${t('ach.locked')}</div>`
           }
         </div>
-        <button onclick="this.closest('.modal-bg').remove()" class="btn btn-primary btn-block" style="margin-top:16px;">Понятно ✓</button>
+        <button onclick="this.closest('.modal-bg').remove()" class="btn btn-primary btn-block" style="margin-top:16px;">${t('ach.ok')}</button>
       </div>
     `;
     document.body.appendChild(m);
@@ -16780,19 +19186,25 @@
     const el = document.getElementById('home-date-line');
     if (!el) return;
     const now = new Date();
-    const wd = weekdaysRuLong[now.getDay()];
-    const cap = wd.charAt(0).toUpperCase() + wd.slice(1);
-    el.textContent = `${cap}, ${now.getDate()} ${monthsRu[now.getMonth()].toLowerCase()}`;
+    if (APP_LANG === 'ru') {
+      const wd = weekdaysRuLong[now.getDay()];
+      const cap = wd.charAt(0).toUpperCase() + wd.slice(1);
+      el.textContent = `${cap}, ${now.getDate()} ${monthsRu[now.getMonth()].toLowerCase()}`;
+    } else {
+      const loc = APP_LANG === 'uz' ? 'uz-Latn' : 'en';
+      try { el.textContent = now.toLocaleDateString(loc, { weekday: 'long', day: 'numeric', month: 'long' }); }
+      catch (e) { el.textContent = now.toLocaleDateString('en', { weekday: 'long', day: 'numeric', month: 'long' }); }
+    }
   }
   // Greeting word by time of day (shown on Home next to the user's name).
   function renderGreeting() {
     const el = document.getElementById('greet-word');
     if (!el) return;
     const h = new Date().getHours();
-    el.textContent = (h >= 5 && h < 12) ? 'Доброе утро'
-                   : (h >= 12 && h < 18) ? 'Добрый день'
-                   : (h >= 18 && h < 23) ? 'Добрый вечер'
-                   : 'Доброй ночи';
+    el.textContent = (h >= 5 && h < 12) ? t('greet.morning')
+                   : (h >= 12 && h < 18) ? t('greet.day')
+                   : (h >= 18 && h < 23) ? t('greet.evening')
+                   : t('greet.night');
   }
   // Smoothly tween a numeric counter to its new value (with a little pop at the end).
   function animateCount(el, to) {
@@ -16826,10 +19238,10 @@
     if (!lg || !lg.action) { slot.innerHTML = ''; return; }
     // lg.action is an internal function call string (e.g. "startDictation()") — not user input.
     slot.innerHTML = `
-      <button type="button" class="continue-chip" onclick="${lg.action}" aria-label="Продолжить: ${escHtml(lg.label)}">
+      <button type="button" class="continue-chip" onclick="${lg.action}" aria-label="${t('home.continue')}: ${escHtml(lg.label)}">
         <span class="cc-ico"><i class="fa-solid fa-play"></i></span>
         <span class="cc-text">
-          <span class="cc-label">Продолжить</span>
+          <span class="cc-label">${t('home.continue')}</span>
           <span class="cc-sub">${escHtml(lg.label)}</span>
         </span>
         <i class="fa-solid fa-chevron-right cc-arrow" aria-hidden="true"></i>
@@ -16867,7 +19279,7 @@
     setText('profile-rank-label', rank.label);
     setText('profile-level-num', curLvl);
     setText('profile-xp-total', stats.xp);
-    setText('profile-xp-next', `${remaining} XP до уровня ${curLvl + 1}`);
+    setText('profile-xp-next', t('profile.xpToLevel', { n: remaining, lvl: curLvl + 1 }));
     const bar = document.getElementById('profile-xp-bar');
     if (bar) bar.style.width = Math.min(100, prog.pct) + '%';
     const chip = document.getElementById('profile-rank-chip');
@@ -16934,12 +19346,12 @@
           <span style="font-size:12px; font-weight:800; color:${done ? 'var(--gold-ink)' : 'var(--coral)'}; flex-shrink:0;">${cur}/${goal}</span>
         </div>
         <div style="min-width:0; margin-top:auto;">
-          <div style="font-size:13px; font-weight:700; color:var(--berry); line-height:1.15;">${done ? 'Цель достигнута!' : 'Цель на сегодня'}</div>
+          <div style="font-size:13px; font-weight:700; color:var(--berry); line-height:1.15;">${done ? t('home.goal.done') : t('home.goal.today')}</div>
           <div style="height:8px; background:var(--paper); border-radius:999px; overflow:hidden; margin-top:8px;">
             <div style="height:100%; width:${pct}%; background:${done ? '#C9A55C' : 'var(--grad-coral)'}; border-radius:999px; transition:width .5s ease;"></div>
           </div>
           <div style="font-size:9.5px; color:var(--soft); margin-top:5px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
-            ${done ? '🌸 Молодец!' : `Осталось ${goal - cur} XP`}
+            ${done ? t('home.goal.bravo') : t('home.goal.left', { n: goal - cur })}
           </div>
         </div>
       </div>`;
@@ -17074,8 +19486,8 @@
       <div class="modal-card">
         <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:14px;">
           <div>
-            <div class="page-eyebrow">РАНГИ</div>
-            <div class="display" style="font-size:20px; color:var(--berry);">Путь ученицы 🌸</div>
+            <div class="page-eyebrow">${t('ranks.eyebrow')}</div>
+            <div class="display" style="font-size:20px; color:var(--berry);">${t('ranks.title')}</div>
           </div>
           <div onclick="this.closest('.modal-bg').remove()" style="font-size:24px; line-height:1; color:var(--soft); cursor:pointer; padding:4px;">×</div>
         </div>
@@ -17095,10 +19507,10 @@
                   <div style="display:flex; gap:6px; align-items:baseline;">
                     <span style="font-weight:600; color:var(--berry); font-size:14px;">${r.label}</span>
                     <span class="ko" style="font-size:11px; color:var(--coral);">${r.ko}</span>
-                    ${isCur ? '<span class="chip chip-coral" style="font-size:9px; padding:2px 8px;">ТЫ ЗДЕСЬ</span>' : ''}
+                    ${isCur ? `<span class="chip chip-coral" style="font-size:9px; padding:2px 8px;">${t('ranks.here')}</span>` : ''}
                   </div>
                   <div style="font-size:11px; color:var(--soft); margin-top:2px;">${r.desc}</div>
-                  <div style="font-size:10px; color:var(--hush); margin-top:3px; letter-spacing:.04em;">УРОВНИ ${range}</div>
+                  <div style="font-size:10px; color:var(--hush); margin-top:3px; letter-spacing:.04em;">${t('ranks.levels', {range})}</div>
                 </div>
               </div>
             `;
@@ -17143,21 +19555,90 @@
       const key = el.dataset.gameKey;
       const best = Best.get(key);
       const slot = el.querySelector('.best-score');
-      if (slot) slot.textContent = best ? `🏆 ${best.score}/${best.total}` : 'Ещё не играли';
+      if (slot) slot.textContent = best ? `🏆 ${best.score}/${best.total}` : t('games.notPlayed');
     });
+  }
+
+  // ── Избранные игры: звезда на карточке, любимые «всплывают» в верхнюю секцию ──
+  function getGameFavs() { try { return Store.get('gameFavs', []) || []; } catch (_) { return []; } }
+  function _gameFavCards() { return [...document.querySelectorAll('#screen-games .game-card-v2[data-game-key]')]; }
+  function initGameFavorites() {
+    // Один раз: поставить плейсхолдер на «домашнее» место карточки и навесить звезду
+    _gameFavCards().forEach(card => {
+      if (card.dataset.favReady === '1') return;
+      const home = card.parentElement;
+      if (!home) return;
+      const ph = document.createComment('gfav-home'); // якорь исходной позиции (надёжнее индекса)
+      home.insertBefore(ph, card);
+      card._favPh = ph;
+      const star = document.createElement('button');
+      star.type = 'button';
+      star.className = 'gcv-fav-btn';
+      star.innerHTML = '<i class="fa-solid fa-star"></i>';
+      star.addEventListener('click', ev => { ev.stopPropagation(); ev.preventDefault(); toggleGameFav(card.dataset.gameKey); });
+      card.appendChild(star);
+      card.dataset.favReady = '1';
+    });
+    renderGameFavorites();
+  }
+  function toggleGameFav(key) {
+    if (!key) return;
+    let favs = getGameFavs();
+    favs = (favs.indexOf(key) >= 0) ? favs.filter(k => k !== key) : favs.concat([key]);
+    try { Store.set('gameFavs', favs); } catch (_) {}
+    renderGameFavorites();
+  }
+  // Вернуть карточку на исходную позицию — сразу после её плейсхолдера-якоря
+  function _gameFavInsertHome(card) {
+    const ph = card._favPh;
+    if (ph && ph.parentNode) ph.parentNode.insertBefore(card, ph.nextSibling);
+  }
+  function renderGameFavorites() {
+    const favWrap = document.getElementById('games-fav-wrap');
+    const favGrid = document.getElementById('games-fav-grid');
+    if (!favWrap || !favGrid) return;
+    const cards = _gameFavCards();
+    const byKey = {};
+    cards.forEach(c => { byKey[c.dataset.gameKey] = c; });
+    const validFavs = getGameFavs().filter(k => byKey[k]); // отбрасываем устаревшие ключи
+    cards.forEach(card => {
+      const isFav = validFavs.indexOf(card.dataset.gameKey) >= 0;
+      const star = card.querySelector('.gcv-fav-btn');
+      if (star) {
+        star.classList.toggle('on', isFav);
+        const label = t(isFav ? 'games.fav.rm' : 'games.fav.add');
+        star.setAttribute('aria-label', label);
+        star.setAttribute('title', label);
+      }
+      // «Не-избранную» карточку, оказавшуюся в верхней секции, вернуть домой
+      if (!isFav && card.parentElement === favGrid) _gameFavInsertHome(card);
+    });
+    // Избранные — в верхнюю секцию, в порядке добавления
+    validFavs.forEach(k => { const c = byKey[k]; if (c) favGrid.appendChild(c); });
+    favWrap.style.display = validFavs.length ? '' : 'none';
+    tagInteractive(favWrap); // звёзды/карточки в новой секции — доступны с клавиатуры
   }
 
   // ── Hardcoded admins (только эти 2 могут попасть в админ-панель) ──
   // Local seed — kept as a fallback if Firebase is unreachable. Once the cloud
   // copy at shared/admins is populated, getAdminsList() returns that instead.
+  // Пароли админов хранятся ТОЛЬКО как SHA-256 хеш — открытого текста в коде/Firebase нет.
+  // Сменить пароль: вычислить новый хеш и заменить passHash (например в Node: crypto.createHash('sha256').update('новый').digest('hex')).
   const ADMINS = [
-    { name: 'madina',  password: 'mdna2233', email: 'madina@madie.local' },
-    { name: 'madina2', password: 'mdna2233', email: 'madina2@madie.local' }
+    { name: 'madina',  passHash: 'cad46c0e18a7736adf9d7443327c34656cc159117a3f74740a29fffdfd0673ac', email: 'madina@madie.local' },
+    { name: 'madina2', passHash: 'cad46c0e18a7736adf9d7443327c34656cc159117a3f74740a29fffdfd0673ac', email: 'madina2@madie.local' }
   ];
+  // SHA-256 → hex (Web Crypto; работает в защищённом контексте https/localhost)
+  async function sha256Hex(str) {
+    try {
+      const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(String(str)));
+      return [...new Uint8Array(buf)].map(b => b.toString(16).padStart(2, '0')).join('');
+    } catch (e) { return null; }
+  }
   let _cloudAdmins = null; // populated when shared/admins listener fires
   function getAdminsList() {
     if (_cloudAdmins && typeof _cloudAdmins === 'object') {
-      return Object.values(_cloudAdmins).filter(a => a && a.name && a.password);
+      return Object.values(_cloudAdmins).filter(a => a && a.name && (a.passHash || a.password));
     }
     return ADMINS;
   }
@@ -18450,6 +20931,17 @@
     }
     return out;
   }
+  // Сколько уроков реально проведено у ученицы — считаем отметки «Проведён» (done) по всем месяцам
+  function _jrnLessonsDone(sid) {
+    if (!_jrnCache || !_jrnCache.marks) return 0;
+    let n = 0;
+    const pref = sid + '_';
+    Object.values(_jrnCache.marks).forEach(mm => {
+      if (!mm) return;
+      Object.keys(mm).forEach(k => { if (k.indexOf(pref) === 0 && mm[k] && mm[k].s === 'done') n++; });
+    });
+    return n;
+  }
   function renderAdminJournal() {
     _jrnEnsureMonth();
     if (!_jrnCache) {
@@ -18460,7 +20952,11 @@
     const students = Object.entries(_jrnCache.students || {});
     const marks = (_jrnCache.marks || {})[ym] || {};
     const isCurMonth = _jrnMonth.y === TODAY.y && _jrnMonth.m === TODAY.m;
-    const cards = students.map(([sid, st]) => {
+    // Активные сверху, завершившие обучение — вниз списка
+    const _jToday = _jrnTodayIso();
+    const ordered = students.slice().sort((a, b) =>
+      ((a[1].end && a[1].end < _jToday) ? 1 : 0) - ((b[1].end && b[1].end < _jToday) ? 1 : 0));
+    const cards = ordered.map(([sid, st], idx) => {
       const days = (Array.isArray(st.days) ? st.days : Object.values(st.days || {})).slice().sort();
       const slotLine = days.map(d => JRN_DAYS[d - 1]).join(', ') + ` · ${st.from}–${st.to}`;
       const periodLabel = _jrnPeriodLabel(st);
@@ -18468,6 +20964,11 @@
       const todayIso = _jrnTodayIso();
       const ended = st.end && st.end < todayIso;
       const soon = st.start && st.start > todayIso;
+      const lessonsManual = (st.lessons !== undefined && st.lessons !== null && st.lessons !== '') ? Math.max(0, Number(st.lessons) || 0) : null;
+      const lessonsDone = lessonsManual != null ? lessonsManual : _jrnLessonsDone(sid);
+      const payChip = st.paid
+        ? `<span class="chip chip-sage" style="font-size:8.5px; padding:2px 7px;">ОПЛАЧЕНО ✓${st.paidDate ? ' · ' + escHtml(_jrnFmtDate(st.paidDate)) : ''}</span>`
+        : `<span class="chip chip-coral" style="font-size:8.5px; padding:2px 7px;">НЕ ОПЛАЧЕНО</span>`;
       const dateChips = _jrnDatesFor(st, _jrnMonth.y, _jrnMonth.m).map(dd => {
         const mk = marks[`${sid}_${dd}`];
         const style = mk && JRN_MARKS[mk.s] ? JRN_MARKS[mk.s].chip : 'background:var(--paper); color:var(--berry); border:1px solid var(--line);';
@@ -18480,14 +20981,25 @@
           <div style="display:flex; align-items:center; gap:8px;">
             <div style="flex:1; min-width:0;">
               <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
+                <span style="color:var(--hush); font-weight:700; font-size:13px;">${idx + 1}.</span>
                 <span style="font-weight:700; color:var(--berry); font-size:14px;">${escHtml(st.name)}</span>
+                ${soon ? '<span class="chip chip-blush" style="font-size:8.5px; padding:2px 7px;">СКОРО</span>' : ''}
                 ${st.trial ? '<span class="chip chip-gold" style="font-size:8.5px; padding:2px 7px;">ПРОБНЫЙ</span>' : ''}
                 ${ended ? '<span class="chip" style="font-size:8.5px; padding:2px 7px; background:var(--paper); color:var(--soft); border:1px solid var(--line);">ЗАВЕРШЕНО</span>' : ''}
-                ${soon ? '<span class="chip chip-blush" style="font-size:8.5px; padding:2px 7px;">СКОРО</span>' : ''}
+                ${payChip}
               </div>
               <div style="font-size:11px; color:var(--coral); font-weight:600; margin-top:2px;">${escHtml(slotLine)}</div>
               ${periodLabel ? `<div style="font-size:10.5px; color:var(--soft); margin-top:3px;"><i class="fa-regular fa-calendar" style="font-size:9px;"></i> ${escHtml(periodLabel)}</div>` : ''}
               ${durLabel ? `<div style="font-size:10.5px; color:var(--berry); font-weight:600; margin-top:2px;"><i class="fa-regular fa-hourglass-half" style="font-size:9px;"></i> ${escHtml(durLabel)}</div>` : ''}
+              <div style="font-size:10.5px; color:var(--berry); font-weight:600; margin-top:5px; display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
+                <span><i class="fa-solid fa-graduation-cap" style="font-size:9px;"></i> Уроки: проведено</span>
+                <span style="display:inline-flex; align-items:center; gap:5px;">
+                  <button onclick="jrnLessonsAdjust('${sid}', -1)" title="−1 урок" style="width:22px; height:22px; border-radius:7px; border:1px solid var(--line-strong); background:var(--paper); color:var(--coral); font-weight:800; font-size:14px; line-height:1; cursor:pointer; font-family:inherit;">−</button>
+                  <b style="color:var(--coral); min-width:16px; text-align:center; font-size:13px;">${lessonsDone}</b>
+                  <button onclick="jrnLessonsAdjust('${sid}', 1)" title="+1 урок" style="width:22px; height:22px; border-radius:7px; border:1px solid var(--line-strong); background:var(--paper); color:var(--coral); font-weight:800; font-size:14px; line-height:1; cursor:pointer; font-family:inherit;">+</button>
+                </span>
+                ${lessonsManual != null ? `<button onclick="jrnLessonsReset('${sid}')" title="Считать автоматически по календарю" style="background:none; border:none; color:var(--soft); cursor:pointer; font-size:10.5px; padding:2px 4px; font-family:inherit;">↺ авто</button>` : ''}
+              </div>
             </div>
             <button onclick="jrnEditStudent('${sid}')" style="background:none; border:none; color:var(--coral); cursor:pointer; font-size:14px; padding:6px;" title="Изменить"><i class="fa-solid fa-pen-to-square"></i></button>
             <button onclick="jrnDeleteStudent('${sid}')" style="background:none; border:none; color:var(--bad-ink); cursor:pointer; font-size:15px; padding:6px;" title="Удалить">✕</button>
@@ -18515,8 +21027,8 @@
           <i class="fa-solid fa-chevron-right" style="color:var(--coral); font-size:11px;"></i>
         </button>
         <div style="display:flex; gap:5px; flex-wrap:wrap;">${legend}</div>
-        ${cards || '<div style="text-align:center; padding:20px; color:var(--soft); font-size:12px;">Учениц пока нет — добавь первую 🌸</div>'}
         <button onclick="jrnEditStudent()" class="btn btn-primary btn-block">+ Добавить ученицу</button>
+        ${cards || '<div style="text-align:center; padding:20px; color:var(--soft); font-size:12px;">Учениц пока нет — добавь первую 🌸</div>'}
       </div>`;
   }
   function jrnShiftMonth(d) {
@@ -18650,6 +21162,18 @@
               <input id="jrn-st-end" class="input" type="date" value="${escAttr(st?.end || '')}" style="flex:1;" aria-label="Дата окончания обучения">
             </div>
             <div style="font-size:10px; color:var(--hush); margin-top:4px;">С какого и по какое число учится. Можно оставить пустым — без ограничения.</div>
+            <button type="button" onclick="jrnResetPeriod()" class="btn btn-ghost" style="margin-top:6px; font-size:11px; padding:6px 12px;">↺ Сбросить период</button>
+          </div>
+          <div>
+            <div style="font-size:10px; letter-spacing:.14em; color:var(--coral); font-weight:700; margin-bottom:6px;">ОПЛАТА И ПАКЕТ УРОКОВ</div>
+            <label style="display:flex; align-items:center; gap:8px; font-size:12.5px; color:var(--berry); cursor:pointer; margin-bottom:8px;">
+              <input id="jrn-st-paid" type="checkbox" ${st?.paid ? 'checked' : ''} style="width:16px; height:16px; accent-color:var(--coral);"> Оплачено
+            </label>
+            <div style="display:flex; gap:8px; align-items:center;">
+              <input id="jrn-st-paiddate" class="input" type="date" value="${escAttr(st?.paidDate || '')}" style="flex:1;" aria-label="Дата оплаты" title="Дата оплаты">
+              <input id="jrn-st-package" class="input" type="number" min="1" value="${escAttr(String(st?.package || 8))}" style="width:92px;" aria-label="Уроков в пакете" title="Уроков в пакете">
+            </div>
+            <div style="font-size:10px; color:var(--hush); margin-top:4px;">Дата оплаты и сколько уроков в пакете (по умолчанию 8).</div>
           </div>
           <label style="display:flex; align-items:center; gap:8px; font-size:12.5px; color:var(--berry); cursor:pointer;">
             <input id="jrn-st-trial" type="checkbox" ${st?.trial ? 'checked' : ''} style="width:16px; height:16px; accent-color:var(--coral);"> Пробный урок
@@ -18668,6 +21192,14 @@
     el.dataset.on = on ? '0' : '1';
     el.style.cssText = `cursor:pointer; border:none; font-size:11px; padding:7px 12px; ${on ? 'background:var(--blush); color:var(--berry);' : 'background:var(--grad-coral); color:#F2F5FA;'}`;
   }
+  // Сброс периода обучения: очищаем оба поля дат (надёжнее, чем «крестик» в нативном date-picker)
+  function jrnResetPeriod() {
+    const s = document.getElementById('jrn-st-start');
+    const e = document.getElementById('jrn-st-end');
+    if (s) s.value = '';
+    if (e) e.value = '';
+    toast('Период очищен — нажми «Сохранить»', 'var(--sage)');
+  }
   function jrnSaveStudent(sid) {
     const name = (document.getElementById('jrn-st-name')?.value || '').trim();
     const days = [...document.querySelectorAll('#jrn-student-modal [data-day]')]
@@ -18677,17 +21209,45 @@
     const trial = !!document.getElementById('jrn-st-trial')?.checked;
     const start = document.getElementById('jrn-st-start')?.value || '';
     const end = document.getElementById('jrn-st-end')?.value || '';
+    const paid = !!document.getElementById('jrn-st-paid')?.checked;
+    const paidDate = document.getElementById('jrn-st-paiddate')?.value || '';
+    const pkg = parseInt(document.getElementById('jrn-st-package')?.value, 10);
     if (!name) { toast('Введи имя'); return; }
     if (!days.length) { toast('Выбери хотя бы один день'); return; }
     if (!from || !to) { toast('Укажи время урока'); return; }
     if (start && end && end < start) { toast('Дата окончания раньше начала 🌸'); return; }
     const id = sid || ('s' + Date.now());
+    const prevSt = (_jrnCache?.students || {})[id] || {};
     const payload = { name, days, from, to, trial };
     if (start) payload.start = start;
     if (end) payload.end = end;
+    if (paid) payload.paid = true;
+    if (paidDate) payload.paidDate = paidDate;
+    if (pkg > 0) payload.package = pkg;
+    // Сохраняем ручной счётчик проведённых уроков, чтобы правка расписания его не стирала
+    if (prevSt.lessons !== undefined && prevSt.lessons !== null && prevSt.lessons !== '') payload.lessons = prevSt.lessons;
     _jrnWrite('students/' + id, payload);
     document.getElementById('jrn-student-modal')?.remove();
     toast('Расписание сохранено 📅', 'var(--sage)');
+    renderProfileAdminPanel('journal');
+  }
+  // Ручное изменение счётчика «проведено N»: задаёт override (перестаёт считать по календарю)
+  function jrnLessonsAdjust(sid, delta) {
+    if (!ensureAdminAccess() || !_jrnCache) return;
+    const st = (_jrnCache.students || {})[sid];
+    if (!st) return;
+    const cur = (st.lessons !== undefined && st.lessons !== null && st.lessons !== '')
+      ? (Number(st.lessons) || 0)
+      : _jrnLessonsDone(sid);
+    const next = Math.max(0, cur + delta);
+    _jrnWrite('students/' + sid + '/lessons', next);
+    renderProfileAdminPanel('journal');
+  }
+  // Вернуть автоматический подсчёт по отметкам календаря
+  function jrnLessonsReset(sid) {
+    if (!ensureAdminAccess() || !_jrnCache) return;
+    _jrnWrite('students/' + sid + '/lessons', null);
+    toast('Счёт уроков снова по календарю 🌸', 'var(--sage)');
     renderProfileAdminPanel('journal');
   }
   function jrnDeleteStudent(sid) {
@@ -19169,6 +21729,7 @@
     if (email) email.textContent = user.email || (user.guest ? 'гостевой режим' : 'без email');
     const adminBadge = document.getElementById('profile-admin-badge');
     if (adminBadge) adminBadge.style.display = user.isAdmin ? 'inline-flex' : 'none';
+    try { renderMyLevelChip(); } catch (_) {}
     setProfileAdminMode(!!user.isAdmin);
     recordDayEntered();
     attachUserListeners();
@@ -19226,7 +21787,9 @@
       (a.email || '').toLowerCase() === name.toLowerCase()
     );
     if (admin) {
-      if (pass !== admin.password) { toast('Неверный пароль 🔐'); return; }
+      // passHash — основной путь (хеш); admin.password — совместимость со старыми облачными записями
+      const ok = admin.passHash ? ((await sha256Hex(pass)) === admin.passHash) : (pass === admin.password);
+      if (!ok) { toast('Неверный пароль 🔐'); return; }
       const display = admin.name.charAt(0).toUpperCase() + admin.name.slice(1);
       setActiveUser({ name: display, email: admin.email, isAdmin: true });
       toast(`Добро пожаловать, ${display} 🌸`, 'var(--sage)');
@@ -19265,11 +21828,12 @@
     if (pass.length < 6) { toast('Пароль ≥ 6 символов'); return; }
     const termsCb = document.getElementById('rg-terms');
     if (termsCb && !termsCb.checked) { toast('Отметь согласие с условиями использования 📜'); return; }
+    const level = (document.getElementById('rg-level')?.value || '');
     try {
       const cred = await _auth.createUserWithEmailAndPassword(email, pass);
       try { await cred.user.updateProfile({ displayName: name }); } catch (_) {}
       migrateGuestProgress({ name, email: cred.user.email }); // прогресс гостя → в новый аккаунт
-      setActiveUser({ name, email: cred.user.email, uid: cred.user.uid });
+      setActiveUser({ name, email: cred.user.email, uid: cred.user.uid, level });
       toast(`Аккаунт создан 🌸 Привет, ${name}!`, 'var(--sage)');
       try { applyPendingReferral(cred.user.uid, name); } catch (_) {}
     } catch (e) {
@@ -19798,7 +22362,14 @@
     { artist:'BLACKPINK', song:'How You Like That', line:'뱉은 말은 ___ 못 가져', blank:'담아', options:['담아','내어','주어','말해'], translation:'Сказанные слова не ___ обратно', blankRu:'забрать' },
     { artist:'NewJeans', song:'Ditto', line:'I got nothin\'  ___ 너', blank:'없이', options:['없이','함께','그냥','속에'], translation:'У меня ничего нет ___ тебя', blankRu:'без' },
     { artist:'TWICE', song:'What is Love?', line:'사랑이 뭘까 ___ 궁금해', blank:'정말', options:['정말','조금','매일','계속'], translation:'Что такое любовь? ___ интересно', blankRu:'правда' },
-    { artist:'BTS', song:'Dynamite', line:'Cause I, I, I\'m in the ___', blank:'스타라이트', options:['스타라이트','문라이트','선샤인','드림'], translation:'Я в свете ___', blankRu:'звёзд' }
+    { artist:'BTS', song:'Dynamite', line:'Cause I, I, I\'m in the ___', blank:'스타라이트', options:['스타라이트','문라이트','선샤인','드림'], translation:'Я в свете ___', blankRu:'звёзд' },
+    { artist:'PSY', song:'Gangnam Style', line:'오빤 강남 ___', blank:'스타일', options:['스타일','노래','거리','멋'], translation:'Оппа — каннамский ___', blankRu:'стиль' },
+    { artist:'BIGBANG', song:'Lies (거짓말)', line:'___ 거짓말 거짓말', blank:'거짓말', options:['거짓말','사랑해','미안해','안녕'], translation:'___, ложь, ложь', blankRu:'ложь' },
+    { artist:'IU', song:'Good Day (좋은 날)', line:'나는요 오빠가 ___', blank:'좋은걸', options:['좋은걸','미운걸','싫은걸','슬픈걸'], translation:'Мне ведь оппа ___', blankRu:'нравится' },
+    { artist:'Girls’ Generation', song:'Genie (소원을 말해봐)', line:'___ 말해봐', blank:'소원을', options:['소원을','이름을','노래를','진실을'], translation:'Скажи своё ___', blankRu:'желание' },
+    { artist:'BTS', song:'DNA', line:'우리 만남은 수학의 ___', blank:'공식', options:['공식','문제','정답','숫자'], translation:'Наша встреча — математическая ___', blankRu:'формула' },
+    { artist:'BTS', song:'Boy With Luv (작은 것들을 위한 시)', line:'모든 게 ___', blank:'궁금해', options:['궁금해','좋아해','신기해','생각해'], translation:'Мне всё ___', blankRu:'любопытно' },
+    { artist:'Red Velvet', song:'Red Flavor (빨간 맛)', line:'빨간 ___ 궁금해 honey', blank:'맛', options:['맛','색','꽃','말'], translation:'Красный ___, мне интересно, honey', blankRu:'вкус' }
   ];
   let kpopScore = 0, kpopRound = 0, kpopTotal = 4, kpopPool = [];
   function startKpop() {
@@ -21177,9 +23748,9 @@
             ${d.translit ? `<span style="font-size:12px; color:var(--coral); margin-left:8px;">[ ${escHtml(d.translit)} ]</span>` : ''}
             <div style="font-size:14px; font-weight:700; color:var(--ink); margin-top:4px;">${escHtml(d.ru || '')}</div>
           </div>
-          <button onclick="playSyllable('${esc(d.ko)}', this)" class="chat-back-btn" aria-label="Озвучить"><i class="fa-solid fa-volume-up"></i></button>
-          <button onclick="toggleMyWord('${esc(d.ko)}','${esc(d.ru)}','${esc(d.translit)}','📖','dict', this)" class="chat-back-btn" aria-label="В словарик" title="В мой словарик"><i class="fa-regular fa-heart"></i></button>
+          <button onclick="playSyllable('${esc(d.ko)}', this)" class="chat-back-btn" aria-label="Озвучить" style="flex-shrink:0;"><i class="fa-solid fa-volume-up"></i></button>
         </div>
+        <button onclick="toggleMyWord('${esc(d.ko)}','${esc(d.ru)}','${esc(d.translit)}','📖','dict', this)" data-labeled="1" class="btn ${isMyWord(d.ko) ? 'btn-primary' : 'btn-ghost'} btn-block" style="margin-top:12px; font-size:13px;" aria-label="Сохранить в мой словарик">${isMyWord(d.ko) ? '<i class="fa-solid fa-check"></i> Сохранено' : '<i class="fa-regular fa-bookmark"></i> Сохранить в словарик'}</button>
         ${d.explain ? `<div style="font-size:12.5px; color:var(--text2); line-height:1.6; margin-top:10px;">${escHtml(d.explain)}</div>` : ''}
         <div style="font-size:10px; letter-spacing:.14em; color:var(--coral); font-weight:700; margin-top:14px;">📝 ПРИМЕРЫ</div>
         ${examples || '<div style="font-size:11.5px; color:var(--hush); margin-top:4px;">—</div>'}
@@ -22108,6 +24679,9 @@
 
   // ── Пользовательские настройки: применить при старте (лепестки/анимации) ──
   try { applySettings(); } catch (_) {}
+
+  // ── Локализация интерфейса: применить выбранный язык к статичной разметке ──
+  try { applyStaticI18n(); } catch (_) {}
 
   // ── PWA: always register the service worker (app-shell cache + install) ──
   if ('serviceWorker' in navigator) {
