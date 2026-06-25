@@ -29,7 +29,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
 
-<link rel="stylesheet" href="styles.css?v=20260624r">
+<link rel="stylesheet" href="styles.css?v=20260625s">
 </head>
 
 <body>
@@ -140,7 +140,7 @@
 
     <!-- Cultural Banner -->
     <div style="padding: 4px 20px 16px;">
-      <div onclick="showCalendar()" class="card card-press" style="background: linear-gradient(135deg, var(--gold), var(--coral)); border:none; color: var(--cream); padding: 18px; display: flex; gap: 14px; align-items: center;">
+      <div onclick="showCalendar()" class="card card-press culture-banner" style="background: linear-gradient(135deg, var(--gold), var(--coral)); border:none; color: var(--cream); padding: 18px; display: flex; gap: 14px; align-items: center;">
         <div id="culture-emoji" style="width:48px; height:48px; flex-shrink:0; border-radius: 14px; background: rgba(255,255,255,.22); backdrop-filter: blur(8px); display: flex; align-items: center; justify-content: center; font-size: 28px;">🎏</div>
         <div style="flex:1; min-width: 0;">
           <div style="display:flex; align-items:center; gap:8px; opacity:.92;">
@@ -404,7 +404,7 @@
     <header class="topbar">
       <div>
         <div class="page-eyebrow" data-i18n="games.eyebrow">ИГРЫ И ПРАКТИКА</div>
-        <div class="display" style="font-size: 22px; color: var(--berry); margin-top: 2px;" data-i18n="games.count">Выбирай и играй 🌸</div>
+        <h1 class="display" style="font-size: 22px; color: var(--berry); margin-top: 2px;" data-i18n="games.count">Выбирай и играй 🌸</h1>
       </div>
       <div style="display:flex; align-items:center; gap:8px; flex-shrink:0;">
         <span class="chip chip-coral" id="games-level">Lvl 1</span>
@@ -595,7 +595,7 @@
       <div>
         <div class="page-eyebrow" data-i18n="profile.eyebrow">ПРОФИЛЬ</div>
         <div style="display:flex; align-items:center; gap:8px; margin-top:2px;">
-          <div class="display" style="font-size:22px; color:var(--berry);" id="profile-name">Гость</div>
+          <h1 class="display" style="font-size:22px; color:var(--berry);" id="profile-name">Гость</h1>
           <span id="profile-admin-badge" class="chip chip-coral" style="display:none; font-size:9px;">🔑 АДМИН</span>
         </div>
       </div>
@@ -655,11 +655,11 @@
             <div style="display:flex; flex-direction:column; gap:7px; padding:2px 2px 0;">
               <div style="font-size:11px; color:var(--soft); letter-spacing:.04em;" data-i18n="lvl.pick">Твой уровень корейского</div>
               <div id="rg-level-row" style="display:flex; flex-wrap:wrap; gap:6px;">
-                <button type="button" class="lvl-chip" data-level="beginner" onclick="pickRegLevel(this)">초급 · <span data-i18n="lvl.beginner">Начальный</span></button>
-                <button type="button" class="lvl-chip" data-level="inter" onclick="pickRegLevel(this)">중급 · <span data-i18n="lvl.inter">Средний</span></button>
-                <button type="button" class="lvl-chip" data-level="advanced" onclick="pickRegLevel(this)">고급 · <span data-i18n="lvl.advanced">Продвинутый</span></button>
-                <button type="button" class="lvl-chip" data-level="topik1" onclick="pickRegLevel(this)" data-i18n="lvl.topik1">TOPIK 1</button>
-                <button type="button" class="lvl-chip" data-level="topik2" onclick="pickRegLevel(this)" data-i18n="lvl.topik2">TOPIK 2</button>
+                <button type="button" class="lvl-chip" data-level="beginner" aria-pressed="false" onclick="pickRegLevel(this)">초급 · <span data-i18n="lvl.beginner">Начальный</span></button>
+                <button type="button" class="lvl-chip" data-level="inter" aria-pressed="false" onclick="pickRegLevel(this)">중급 · <span data-i18n="lvl.inter">Средний</span></button>
+                <button type="button" class="lvl-chip" data-level="advanced" aria-pressed="false" onclick="pickRegLevel(this)">고급 · <span data-i18n="lvl.advanced">Продвинутый</span></button>
+                <button type="button" class="lvl-chip" data-level="topik1" aria-pressed="false" onclick="pickRegLevel(this)" data-i18n="lvl.topik1">TOPIK 1</button>
+                <button type="button" class="lvl-chip" data-level="topik2" aria-pressed="false" onclick="pickRegLevel(this)" data-i18n="lvl.topik2">TOPIK 2</button>
               </div>
               <input type="hidden" id="rg-level" value="">
             </div>
@@ -797,7 +797,7 @@
     <header class="topbar">
       <div>
         <div class="page-eyebrow" data-i18n="social.eyebrow">ОБЩЕНИЕ</div>
-        <div class="display" style="font-size: 22px; color: var(--berry); margin-top: 2px;" data-i18n="social.title">Друзья и чат 💬</div>
+        <h1 class="display" style="font-size: 22px; color: var(--berry); margin-top: 2px;" data-i18n="social.title">Друзья и чат 💬</h1>
       </div>
       <button onclick="openSettingsModal()" class="chat-back-btn" aria-label="Настройки" title="Настройки" data-i18n-aria="set.title" data-i18n-title="set.title" style="flex-shrink:0;"><i class="fa-solid fa-gear"></i></button>
     </header>
@@ -813,7 +813,7 @@
         <button onclick="switchScreen('profile', true)" class="chat-back-btn" aria-label="Назад в профиль" data-i18n-aria="a11y.back"><i class="fa-solid fa-arrow-left"></i></button>
         <div style="min-width:0;">
           <div class="page-eyebrow" data-i18n="words.eyebrow">ЛИЧНЫЙ СЛОВАРИК</div>
-          <div class="display" style="font-size: 22px; color: var(--berry); margin-top: 2px;" data-i18n="words.title">Мои слова 🌸</div>
+          <h1 class="display" style="font-size: 22px; color: var(--berry); margin-top: 2px;" data-i18n="words.title">Мои слова 🌸</h1>
         </div>
       </div>
       <button onclick="openSettingsModal()" class="chat-back-btn" aria-label="Настройки" title="Настройки" data-i18n-aria="set.title" data-i18n-title="set.title" style="flex-shrink:0;"><i class="fa-solid fa-gear"></i></button>
@@ -846,7 +846,7 @@
         <button onclick="topikBack()" class="chat-back-btn" aria-label="Назад"><i class="fa-solid fa-arrow-left"></i></button>
         <div style="min-width:0;">
           <div class="page-eyebrow">한국어능력시험</div>
-          <div class="display" style="font-size: 22px; color: var(--berry); margin-top: 2px;">Подготовка к ТОПИК</div>
+          <h1 class="display" style="font-size: 22px; color: var(--berry); margin-top: 2px;">Подготовка к ТОПИК</h1>
         </div>
       </div>
       <button onclick="openSettingsModal()" class="chat-back-btn" aria-label="Настройки" title="Настройки" style="flex-shrink:0;"><i class="fa-solid fa-gear"></i></button>
@@ -863,7 +863,7 @@
         <button onclick="selfStudyBack()" class="chat-back-btn" aria-label="Назад"><i class="fa-solid fa-arrow-left"></i></button>
         <div style="min-width:0;">
           <div class="page-eyebrow">자습 · самостоятельно</div>
-          <div class="display" style="font-size: 22px; color: var(--berry); margin-top: 2px;">Самообучение</div>
+          <h1 class="display" style="font-size: 22px; color: var(--berry); margin-top: 2px;">Самообучение</h1>
         </div>
       </div>
       <button onclick="openSettingsModal()" class="chat-back-btn" aria-label="Настройки" title="Настройки" style="flex-shrink:0;"><i class="fa-solid fa-gear"></i></button>
@@ -880,7 +880,7 @@
         <button onclick="topikDeepBack()" class="chat-back-btn" aria-label="Назад"><i class="fa-solid fa-arrow-left"></i></button>
         <div style="min-width:0;">
           <div class="page-eyebrow">심화 · углублённо</div>
-          <div class="display" style="font-size: 22px; color: var(--berry); margin-top: 2px;">Подготовка к ТОПИК</div>
+          <h1 class="display" style="font-size: 22px; color: var(--berry); margin-top: 2px;">Подготовка к ТОПИК</h1>
         </div>
       </div>
       <button onclick="openSettingsModal()" class="chat-back-btn" aria-label="Настройки" title="Настройки" style="flex-shrink:0;"><i class="fa-solid fa-gear"></i></button>
@@ -897,7 +897,7 @@
         <button onclick="readingBack()" class="chat-back-btn" aria-label="Назад"><i class="fa-solid fa-arrow-left"></i></button>
         <div style="min-width:0;">
           <div class="page-eyebrow">독해 · 말하기</div>
-          <div class="display" style="font-size: 22px; color: var(--berry); margin-top: 2px;">Чтение</div>
+          <h1 class="display" style="font-size: 22px; color: var(--berry); margin-top: 2px;">Чтение</h1>
         </div>
       </div>
       <button onclick="openSettingsModal()" class="chat-back-btn" aria-label="Настройки" title="Настройки" style="flex-shrink:0;"><i class="fa-solid fa-gear"></i></button>
@@ -914,7 +914,7 @@
         <button onclick="studyKrBack()" class="chat-back-btn" aria-label="Назад"><i class="fa-solid fa-arrow-left"></i></button>
         <div style="min-width:0;">
           <div class="page-eyebrow">한국 유학 · 면접</div>
-          <div class="display" style="font-size: 22px; color: var(--berry); margin-top: 2px;">Учёба в Корее</div>
+          <h1 class="display" style="font-size: 22px; color: var(--berry); margin-top: 2px;">Учёба в Корее</h1>
         </div>
       </div>
       <button onclick="openSettingsModal()" class="chat-back-btn" aria-label="Настройки" title="Настройки" style="flex-shrink:0;"><i class="fa-solid fa-gear"></i></button>
@@ -929,7 +929,7 @@
     <header class="topbar">
       <div style="min-width:0;">
         <div class="page-eyebrow">АДМИН-ПАНЕЛЬ</div>
-        <div class="display" style="font-size: 22px; color: var(--berry); margin-top: 2px;">Кабинет Мади 🌸</div>
+        <h1 class="display" style="font-size: 22px; color: var(--berry); margin-top: 2px;">Кабинет Мади 🌸</h1>
       </div>
       <button onclick="openSettingsModal()" class="chat-back-btn" aria-label="Настройки" title="Настройки" style="flex-shrink:0;"><i class="fa-solid fa-gear"></i></button>
     </header>
@@ -986,7 +986,7 @@
 </script>
 
 <!-- ─────────────── DATA + LOGIC ─────────────── -->
-<script src="app.js?v=20260624r"></script>
+<script src="app.js?v=20260625s"></script>
 
 </body>
 </html>
