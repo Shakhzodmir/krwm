@@ -335,6 +335,248 @@
     'grp.noConn':      { ru: 'Нет связи с сервером', en: 'No server connection', uz: 'Server bilan aloqa yoʻq' },
     'grp.photoFail':   { ru: 'Не получилось загрузить фото', en: 'Couldn’t upload the photo', uz: 'Rasm yuklanmadi' },
 
+    // ── Относительное время (relativeTime) ──
+    'time.now':       { ru: 'только что', en: 'just now', uz: 'hozirgina' },
+    'time.min':       { ru: '{n} мин назад', en: '{n} min ago', uz: '{n} daq. oldin' },
+    'time.hour':      { ru: '{n} ч назад', en: '{n} h ago', uz: '{n} soat oldin' },
+    'time.yesterday': { ru: 'вчера', en: 'yesterday', uz: 'kecha' },
+    'time.day':       { ru: '{n} дн назад', en: '{n}d ago', uz: '{n} kun oldin' },
+
+    // ── Чат и статусы ──
+    'chat.online':   { ru: 'в сети', en: 'online', uz: 'onlayn' },
+    'chat.offline':  { ru: 'не в сети', en: 'offline', uz: 'oflayn' },
+    'chat.lastSeen': { ru: 'был(а) в сети {time}', en: 'last seen {time}', uz: 'oxirgi marta {time}' },
+    'chat.typing':   { ru: 'печатает', en: 'typing', uz: 'yozmoqda' },
+    'chat.someone':  { ru: 'Кто-то', en: 'Someone', uz: 'Kimdir' },
+    'chat.group':    { ru: 'группа', en: 'group', uz: 'guruh' },
+    'chat.members':  { ru: '{n} участников', en: '{n} members', uz: '{n} aʼzo' },
+    'chat.firstMsg': { ru: 'Напиши первое сообщение 🌸', en: 'Write the first message 🌸', uz: 'Birinchi xabarni yozing 🌸' },
+    'chat.you':      { ru: 'Ты:', en: 'You:', uz: 'Siz:' },
+
+    // ── Карточка профиля (openUserProfile) ──
+    'up.itsYou':       { ru: 'это ты 🌸', en: 'it’s you 🌸', uz: 'bu siz 🌸' },
+    'up.level':        { ru: 'уровень', en: 'level', uz: 'daraja' },
+    'up.inRowRu':      { ru: 'подряд', en: 'in a row', uz: 'ketma-ket' },
+    'up.daysInRow':    { ru: 'дней подряд', en: 'days in a row', uz: 'kun ketma-ket' },
+    'up.wordsLearned': { ru: 'слов выучено', en: 'words learned', uz: 'soʻz oʻrganildi' },
+    'up.about':        { ru: 'О СЕБЕ', en: 'ABOUT', uz: 'OʻZI HAQIDA' },
+    'up.bioEmpty':     { ru: 'Расскажи о себе — тапни, чтобы добавить 🌸', en: 'Tell about yourself — tap to add 🌸', uz: 'Oʻzingiz haqida yozing — qoʻshish uchun bosing 🌸' },
+    'up.teacher':      { ru: '🎓 учитель', en: '🎓 teacher', uz: '🎓 oʻqituvchi' },
+    'up.withUsSince':  { ru: '🌸 с нами с {date}', en: '🌸 with us since {date}', uz: '🌸 biz bilan {date}dan' },
+    'up.writeMsg':     { ru: 'Написать сообщение', en: 'Send a message', uz: 'Xabar yozish' },
+    'up.changeCover':  { ru: 'Сменить обложку', en: 'Change cover', uz: 'Muqovani almashtirish' },
+
+    // ── Общие кнопки/слова ──
+    'common.gotIt': { ru: 'Понятно ✓', en: 'Got it ✓', uz: 'Tushunarli ✓' },
+    'common.next':  { ru: 'Дальше →', en: 'Next →', uz: 'Keyingi →' },
+    'common.back':  { ru: '← Назад', en: '← Back', uz: '← Orqaga' },
+    'common.soon':  { ru: 'Скоро', en: 'Soon', uz: 'Tez orada' },
+    'common.done':  { ru: 'Готово ✓', en: 'Done ✓', uz: 'Tayyor ✓' },
+    'common.check': { ru: 'Проверить', en: 'Check', uz: 'Tekshirish' },
+
+    // ── Домашнее задание ──
+    'hw.title':       { ru: 'Домашнее задание', en: 'Homework', uz: 'Uy vazifasi' },
+    'hw.materials':   { ru: 'МАТЕРИАЛЫ', en: 'MATERIALS', uz: 'MATERIALLAR' },
+    'hw.download':    { ru: 'Скачать', en: 'Download', uz: 'Yuklab olish' },
+    'hw.fileSoon':    { ru: 'Файл скоро добавим 🌸', en: 'The file is coming soon 🌸', uz: 'Fayl tez orada qoʻshiladi 🌸' },
+    'hw.wordsToLearn':{ ru: 'СЛОВА ДЛЯ ЗАУЧИВАНИЯ', en: 'WORDS TO LEARN', uz: 'YODLASH UCHUN SOʻZLAR' },
+    'hw.noLessons':   { ru: 'Уроков пока нет 🌸', en: 'No lessons yet 🌸', uz: 'Hozircha darslar yoʻq 🌸' },
+    'hw.open':        { ru: 'Открыть →', en: 'Open →', uz: 'Ochish →' },
+    'hw.locked':      { ru: 'Откроется после прохождения урока', en: 'Opens after you finish the lesson', uz: 'Dars tugagach ochiladi' },
+    'hw.notFound':    { ru: 'Урок не найден 🌸', en: 'Lesson not found 🌸', uz: 'Dars topilmadi 🌸' },
+    'hw.passFirst':   { ru: 'Сначала пройди урок — потом откроется домашка 🌸', en: 'Finish the lesson first — then homework opens 🌸', uz: 'Avval darsni tugating — keyin uy vazifasi ochiladi 🌸' },
+
+    // ── Движок уроков (chrome; учебный контент — из датасета, не переводим) ──
+    'lesson.lessonU':    { ru: 'УРОК', en: 'LESSON', uz: 'DARS' },
+    'lesson.lesson':     { ru: 'Урок', en: 'Lesson', uz: 'Dars' },
+    'lesson.madie':      { ru: 'Мади', en: 'Madie', uz: 'Madie' },
+    'lesson.teacher':    { ru: 'учитель', en: 'teacher', uz: 'oʻqituvchi' },
+    'lesson.whatLearn':  { ru: 'ЧТО ВЫУЧИМ', en: 'WHAT WE’LL LEARN', uz: 'NIMA OʻRGANAMIZ' },
+    'lesson.go':         { ru: 'Поехали', en: 'Let’s go', uz: 'Boshladik' },
+    'lesson.quizPick':   { ru: 'Выбери правильный звук для каждой буквы', en: 'Pick the right sound for each letter', uz: 'Har bir harf uchun toʻgʻri tovushni tanlang' },
+    'lesson.tapHear':    { ru: 'Тапни карточку — услышишь слово 🔊', en: 'Tap a card — hear the word 🔊', uz: 'Kartani bosing — soʻzni eshiting 🔊' },
+    'lesson.finishLesson':{ ru: 'Завершить урок →', en: 'Finish lesson →', uz: 'Darsni yakunlash →' },
+    'lesson.dialogEb':   { ru: 'ДИАЛОГ', en: 'DIALOGUE', uz: 'DIALOG' },
+    'lesson.listenDialog':{ ru: 'Прослушать диалог', en: 'Play the dialogue', uz: 'Dialogni tinglash' },
+    'lesson.grammarEb':  { ru: 'ГРАММАТИКА', en: 'GRAMMAR', uz: 'GRAMMATIKA' },
+    'lesson.practice':   { ru: 'ПОТРЕНИРУЙСЯ', en: 'PRACTICE', uz: 'MASHQ QILING' },
+    'lesson.buildEb':    { ru: 'СОБЕРИ ФРАЗУ', en: 'BUILD A PHRASE', uz: 'IBORA TUZING' },
+    'lesson.translateKo':{ ru: 'ПЕРЕВЕДИ НА КОРЕЙСКИЙ', en: 'TRANSLATE INTO KOREAN', uz: 'KOREYSCHAGA TARJIMA QILING' },
+    'lesson.listenEb':   { ru: 'АУДИРОВАНИЕ', en: 'LISTENING', uz: 'TINGLAB TUSHUNISH' },
+    'lesson.listenSub':  { ru: 'Нажми ▶ и выбери, что услышал(а)', en: 'Press ▶ and pick what you heard', uz: '▶ ni bosing va eshitganingizni tanlang' },
+    'lesson.listenAria': { ru: 'Прослушать', en: 'Listen', uz: 'Tinglash' },
+    'lesson.tapReplay':  { ru: 'Тапни, чтобы прослушать ещё раз 🔊', en: 'Tap to listen again 🔊', uz: 'Yana eshitish uchun bosing 🔊' },
+    'lesson.passed':     { ru: 'Урок {num} пройден', en: 'Lesson {num} complete', uz: '{num}-dars tugadi' },
+    'lesson.whatNext':   { ru: '🎮 ЧТО ДАЛЬШЕ', en: '🎮 WHAT’S NEXT', uz: '🎮 KEYINGISI' },
+    'lesson.wordsAdded': { ru: 'Слова урока добавлены в игры', en: 'The lesson’s words were added to games', uz: 'Dars soʻzlari oʻyinlarga qoʻshildi' },
+    'lesson.wordsNowIn': { ru: '{n} слов теперь в карточках, мемори, переводе и других играх', en: '{n} words are now in flashcards, memory, translation and other games', uz: '{n} soʻz endi kartalar, xotira, tarjima va boshqa oʻyinlarda' },
+
+    // ── Редактирование профиля ──
+    'common.cancel':   { ru: 'Отмена', en: 'Cancel', uz: 'Bekor qilish' },
+    'common.save':     { ru: 'Сохранить ✓', en: 'Save ✓', uz: 'Saqlash ✓' },
+    'common.showPass': { ru: 'Показать пароль', en: 'Show password', uz: 'Parolni koʻrsatish' },
+    'ep.eyebrow':      { ru: 'РЕДАКТИРОВАНИЕ', en: 'EDITING', uz: 'TAHRIRLASH' },
+    'ep.title':        { ru: 'Мои данные', en: 'My details', uz: 'Maʼlumotlarim' },
+    'ep.cover':        { ru: 'Обложка', en: 'Cover', uz: 'Muqova' },
+    'ep.changePhoto':  { ru: 'Сменить фото', en: 'Change photo', uz: 'Rasmni almashtirish' },
+    'ep.photoHint':    { ru: 'Тапни 📷, чтобы сменить фото и обложку профиля', en: 'Tap 📷 to change your photo and cover', uz: 'Rasm va muqovani almashtirish uchun 📷 ni bosing' },
+    'ep.name':         { ru: 'ИМЯ', en: 'NAME', uz: 'ISM' },
+    'ep.bioPh':        { ru: 'Пару слов о себе — видно друзьям в профиле', en: 'A few words about you — visible to friends', uz: 'Oʻzingiz haqida — doʻstlarga koʻrinadi' },
+    'ep.email':        { ru: 'EMAIL', en: 'EMAIL', uz: 'EMAIL' },
+    'ep.emailLock':    { ru: 'email менять нельзя', en: 'email can’t be changed', uz: 'emailni oʻzgartirib boʻlmaydi' },
+    'ep.newPass':      { ru: 'НОВЫЙ ПАРОЛЬ', en: 'NEW PASSWORD', uz: 'YANGI PAROL' },
+    'ep.passHint':     { ru: 'оставь пустым, чтобы не менять', en: 'leave empty to keep it', uz: 'oʻzgartirmaslik uchun boʻsh qoldiring' },
+    'ep.passPh':       { ru: 'Минимум 6 символов', en: 'At least 6 characters', uz: 'Kamida 6 ta belgi' },
+    'ep.adminNote':    { ru: '🔑 Админ-аккаунт: email и пароль управляются центрально', en: '🔑 Admin account: email and password are managed centrally', uz: '🔑 Admin akkaunti: email va parol markazlashgan boshqariladi' },
+    'ep.nameEmpty':    { ru: 'Имя не может быть пустым', en: 'Name can’t be empty', uz: 'Ism boʻsh boʻlolmaydi' },
+    'ep.adminSaved':   { ru: 'Имя обновлено 🌸 (email и пароль у админов меняются только централизованно)', en: 'Name updated 🌸 (admin email and password change centrally only)', uz: 'Ism yangilandi 🌸 (admin email va paroli faqat markazlashgan oʻzgaradi)' },
+    'ep.nameReserved': { ru: 'Это имя зарезервировано 🔐', en: 'This name is reserved 🔐', uz: 'Bu ism band 🔐' },
+    'ep.passShort':    { ru: 'Пароль ≥ 6 символов', en: 'Password ≥ 6 characters', uz: 'Parol ≥ 6 belgi' },
+    'ep.sessionExpired':{ ru: 'Сессия истекла, войди заново', en: 'Session expired, sign in again', uz: 'Sessiya tugadi, qayta kiring' },
+    'ep.saved':        { ru: 'Профиль обновлён 🌸', en: 'Profile updated 🌸', uz: 'Profil yangilandi 🌸' },
+    'ep.recentLogin':  { ru: 'Для смены пароля нужен свежий вход. Перелогинься.', en: 'Changing the password needs a recent sign-in. Please re-login.', uz: 'Parolni oʻzgartirish uchun yangi kirish kerak. Qayta kiring.' },
+    'ep.saveFail':     { ru: 'Не удалось сохранить: ', en: 'Couldn’t save: ', uz: 'Saqlab boʻlmadi: ' },
+    'auth.guest':      { ru: 'Гость', en: 'Guest', uz: 'Mehmon' },
+    'auth.friend':     { ru: 'друг', en: 'friend', uz: 'doʻst' },
+    'auth.loggedOut':  { ru: 'Вышли из аккаунта 👋', en: 'Logged out 👋', uz: 'Akkauntdan chiqdingiz 👋' },
+    'ep.coverUpdated': { ru: 'Обложка обновлена 🌸', en: 'Cover updated 🌸', uz: 'Muqova yangilandi 🌸' },
+    'ep.photoFail':    { ru: 'Не удалось обработать фото', en: 'Couldn’t process the photo', uz: 'Rasmni qayta ishlab boʻlmadi' },
+
+    // ── Экран результата экзамена + шер-карточка ──
+    'exam.reviewHead':  { ru: 'Разбор ответов', en: 'Answer review', uz: 'Javoblar tahlili' },
+    'exam.yourAnswers': { ru: 'Твои ответы', en: 'Your answers', uz: 'Sizning javoblaringiz' },
+    'exam.correct':     { ru: 'правильно', en: 'correct', uz: 'toʻgʻri' },
+    'exam.incorrect':   { ru: 'неправильно', en: 'incorrect', uz: 'notoʻgʻri' },
+    'exam.shareRes':    { ru: 'Поделиться результатом', en: 'Share result', uz: 'Natijani ulashish' },
+    'exam.ready':       { ru: 'Готово', en: 'Done', uz: 'Tayyor' },
+    'exam.leaveConfirm':{ ru: 'Выйти из теста? Прогресс не сохранится.', en: 'Leave the test? Progress won’t be saved.', uz: 'Testdan chiqasizmi? Progress saqlanmaydi.' },
+    'share.examHeader': { ru: 'ТОПИК I · МОК-ЭКЗАМЕН', en: 'TOPIK I · MOCK EXAM', uz: 'TOPIK I · MOK-IMTIHON' },
+    'share.correctOf':  { ru: 'верно {c} из {n} · {pct}%', en: '{c} of {n} correct · {pct}%', uz: '{n} dan {c} toʻgʻri · {pct}%' },
+    'share.resGreat':   { ru: '🌟 Отличный результат!', en: '🌟 Great result!', uz: '🌟 Ajoyib natija!' },
+    'share.resGood':    { ru: '🌸 Хорошая база!', en: '🌸 Good foundation!', uz: '🌸 Yaxshi poydevor!' },
+    'share.resStart':   { ru: '🌱 Путь начат!', en: '🌱 The journey has begun!', uz: '🌱 Yoʻl boshlandi!' },
+    'share.learnWith':  { ru: 'Учи корейский с Madie', en: 'Learn Korean with Madie', uz: 'Madie bilan koreys tilini oʻrgan' },
+    'share.tagline':    { ru: 'Korean with Madie 🌸 реальные тесты ТОПИК', en: 'Korean with Madie 🌸 real TOPIK tests', uz: 'Korean with Madie 🌸 haqiqiy TOPIK testlari' },
+    'share.imgFail':    { ru: 'Не получилось создать картинку', en: 'Couldn’t create the image', uz: 'Rasm yaratilmadi' },
+    'share.finishFirst':{ ru: 'Сначала заверши тест 🌸', en: 'Finish the test first 🌸', uz: 'Avval testni tugating 🌸' },
+    'share.saved':      { ru: 'Карточка сохранена — выложи в сторис! 📸', en: 'Card saved — post it to your stories! 📸', uz: 'Karta saqlandi — storisga joylang! 📸' },
+    'share.shareTitle': { ru: 'Мой результат ТОПИК', en: 'My TOPIK result', uz: 'TOPIK natijam' },
+    'share.shareText':  { ru: 'Мой результат мок-экзамена ТОПИК I в Korean with Madie 🌸', en: 'My TOPIK I mock exam result in Korean with Madie 🌸', uz: 'Korean with Madie 🌸 dagi TOPIK I mok-imtihon natijam' },
+    'share.defStudent': { ru: 'Ученица Madie', en: 'Madie student', uz: 'Madie oʻquvchisi' },
+    'share.levelN':     { ru: 'Уровень {lvl}', en: 'Level {lvl}', uz: '{lvl}-daraja' },
+    'share.statsLine':  { ru: '🔥 стрик {s} · 📚 {w} слов · 🌸 {d} дней', en: '🔥 streak {s} · 📚 {w} words · 🌸 {d} days', uz: '🔥 striyk {s} · 📚 {w} soʻz · 🌸 {d} kun' },
+    'share.iLearnWith': { ru: 'Учу корейский с Madie', en: 'I’m learning Korean with Madie', uz: 'Madie bilan koreys tilini oʻrganyapman' },
+    'share.progTitle':  { ru: 'Мой прогресс в корейском', en: 'My Korean progress', uz: 'Koreys tilidagi progressim' },
+    'share.progText':   { ru: 'Учу корейский с Korean with Madie 🌸 Уровень {lvl} · {xp} XP · стрик {s} 🔥', en: 'I’m learning Korean with Korean with Madie 🌸 Level {lvl} · {xp} XP · streak {s} 🔥', uz: 'Korean with Madie 🌸 bilan koreys tilini oʻrganyapman · {lvl}-daraja · {xp} XP · striyk {s} 🔥' },
+
+    // ── Онбординг (знакомство + мини-тест) ──
+    'ob.skip':       { ru: 'Пропустить', en: 'Skip', uz: 'Oʻtkazib yuborish' },
+    'ob.next':       { ru: 'Дальше', en: 'Next', uz: 'Keyingi' },
+    'ob.start':      { ru: 'Начнём! 🌸', en: 'Let’s begin! 🌸', uz: 'Boshlaymiz! 🌸' },
+    'ob.slide0.title': { ru: 'Учи корейский<br>с первого шага', en: 'Learn Korean<br>from the first step', uz: 'Koreys tilini<br>birinchi qadamdan' },
+    'ob.slide0.sub':   { ru: 'Хангыль с нуля, уроки от Мади и личный словарик — всё в одном месте, на русском.', en: 'Hangul from scratch, lessons from Madie and a personal vocabulary — all in one place.', uz: 'Hangul noldan, Madie darslari va shaxsiy lugʻat — hammasi bir joyda.' },
+    'ob.slide1.title': { ru: 'Играй —<br>и запоминай', en: 'Play —<br>and remember', uz: 'Oʻyna —<br>va eslab qol' },
+    'ob.slide1.sub':   { ru: '10 мини-игр, K-Pop карточки, стрик и XP. Учёба, к которой хочется возвращаться.', en: '10 mini-games, K-Pop cards, streak and XP. Learning you keep coming back to.', uz: '10 mini-oʻyin, K-Pop kartalar, striyk va XP. Qaytib kelgingiz keladigan taʼlim.' },
+    'ob.slide2.title': { ru: 'Сдай ТОПИК<br>уверенно', en: 'Pass TOPIK<br>with confidence', uz: 'TOPIKni<br>ishonch bilan topshir' },
+    'ob.slide2.sub':   { ru: 'Реальные экзамены прошлых лет с таймером и разбором каждого ответа на русском.', en: 'Real past exams with a timer and a breakdown of every answer.', uz: 'Oʻtgan yillarning haqiqiy imtihonlari — taymer va har bir javob tahlili bilan.' },
+    'ob.aboutYou':    { ru: 'Расскажи о себе', en: 'Tell us about you', uz: 'Oʻzingiz haqida' },
+    'ob.aboutYouSub': { ru: 'Подберём оформление под тебя', en: 'We’ll tailor the look to you', uz: 'Sizga mos dizayn tanlaymiz' },
+    'ob.girl':        { ru: 'Я девушка', en: 'I’m a girl', uz: 'Men qizman' },
+    'ob.boy':         { ru: 'Я парень', en: 'I’m a guy', uz: 'Men yigitman' },
+    'ob.noSay':       { ru: 'Не хочу говорить', en: 'Prefer not to say', uz: 'Aytishni xohlamayman' },
+    'ob.pickOne':     { ru: 'Выбери вариант 🌸', en: 'Pick an option 🌸', uz: 'Variantni tanlang 🌸' },
+    'ob.whyKorean':   { ru: 'Зачем тебе корейский?', en: 'Why are you learning Korean?', uz: 'Koreys tili sizga nima uchun?' },
+    'ob.whyKoreanSub':{ ru: 'Можно выбрать несколько — подстроим занятия под тебя', en: 'Choose several — we’ll adapt your lessons', uz: 'Bir nechtasini tanlash mumkin — darslarni moslaymiz' },
+    'ob.pickGoal':    { ru: 'Выбери хотя бы одну цель 🌸', en: 'Pick at least one goal 🌸', uz: 'Kamida bitta maqsad tanlang 🌸' },
+    'ob.goal.kpop':   { ru: 'K-Pop, дорамы и айдолы', en: 'K-Pop, dramas and idols', uz: 'K-Pop, dramalar va aydollar' },
+    'ob.goal.travel': { ru: 'Путешествия по Корее', en: 'Travel in Korea', uz: 'Koreya boʻylab sayohat' },
+    'ob.goal.study':  { ru: 'Учёба или работа в Корее', en: 'Study or work in Korea', uz: 'Koreyada oʻqish yoki ish' },
+    'ob.goal.topik':  { ru: 'Сдать экзамен TOPIK', en: 'Pass the TOPIK exam', uz: 'TOPIK imtihonini topshirish' },
+    'ob.goal.love':   { ru: 'Просто нравится язык', en: 'I just love the language', uz: 'Til shunchaki yoqadi' },
+    'ob.yourLevel':   { ru: 'Какой у тебя уровень?', en: 'What’s your level?', uz: 'Darajangiz qanday?' },
+    'ob.yourLevelSub':{ ru: 'Честно — так интереснее 🌸', en: 'Be honest — it’s more fun 🌸', uz: 'Rostini ayting — qiziqroq 🌸' },
+    'ob.lvl.zero.t':    { ru: 'Совсем с нуля', en: 'Complete beginner', uz: 'Mutlaqo noldan' },
+    'ob.lvl.zero.s':    { ru: 'Начнём с алфавита — это быстро', en: 'We’ll start with the alphabet — it’s quick', uz: 'Alifbodan boshlaymiz — bu tez' },
+    'ob.lvl.hangul.t':  { ru: 'Знаю хангыль', en: 'I know Hangul', uz: 'Hangulni bilaman' },
+    'ob.lvl.hangul.s':  { ru: 'Читаю по слогам, учу слова', en: 'I read syllables, learning words', uz: 'Boʻgʻinlab oʻqiyman, soʻz oʻrganyapman' },
+    'ob.lvl.basic.t':   { ru: 'Читаю и немного говорю', en: 'I read and speak a little', uz: 'Oʻqiyman va ozgina gapiraman' },
+    'ob.lvl.basic.s':   { ru: 'База есть, хочу дальше', en: 'I have the basics, want more', uz: 'Asos bor, davom etmoqchiman' },
+    'ob.lvl.unknown.t': { ru: 'Не знаю свой уровень', en: 'I don’t know my level', uz: 'Darajamni bilmayman' },
+    'ob.lvl.unknown.s': { ru: 'Пройти мини-тест из 10 вопросов', en: 'Take a 10-question mini-test', uz: '10 savollik mini-test' },
+    'ob.miniTest':    { ru: 'МИНИ-ТЕСТ', en: 'MINI-TEST', uz: 'MINI-TEST' },
+    'ob.enough':      { ru: 'Хватит', en: 'Enough', uz: 'Yetarli' },
+    'ob.verdictHi.title':  { ru: '{sc}/{n} — уверенная база!', en: '{sc}/{n} — a solid base!', uz: '{sc}/{n} — mustahkam asos!' },
+    'ob.verdictHi.sub':    { ru: 'Тебе уже можно готовиться к ТОПИК I — загляни в раздел экзаменов.', en: 'You can already prep for TOPIK I — check the exams section.', uz: 'Allaqachon TOPIK I ga tayyorlanish mumkin — imtihonlar boʻlimiga kiring.' },
+    'ob.verdictMid.title': { ru: '{sc}/{n} — хорошая база', en: '{sc}/{n} — a good base', uz: '{sc}/{n} — yaxshi asos' },
+    'ob.verdictMid.sub':   { ru: 'Хангыль знаком, осталось набрать слова и грамматику. Мади поможет.', en: 'You know Hangul; now build vocabulary and grammar. Madie will help.', uz: 'Hangul tanish, endi soʻz va grammatika kerak. Madie yordam beradi.' },
+    'ob.verdictLow.title': { ru: '{sc}/{n} — начнём с основ', en: '{sc}/{n} — let’s start with the basics', uz: '{sc}/{n} — asosdan boshlaymiz' },
+    'ob.verdictLow.sub':   { ru: 'Идеальная точка старта: алфавит и первые слова. Через месяц не узнаешь себя!', en: 'The perfect starting point: the alphabet and first words. In a month you won’t recognize yourself!', uz: 'Ideal boshlanish: alifbo va birinchi soʻzlar. Bir oyda oʻzingizni tanimaysiz!' },
+    'ob.darkTitle':   { ru: 'Есть тёмная тема', en: 'There’s a dark theme', uz: 'Tungi mavzu bor' },
+    'ob.darkSub':     { ru: 'Графит и синий — строго и без розового', en: 'Graphite and blue — sleek, no pink', uz: 'Grafit va koʻk — qatʼiy, pushtisiz' },
+    'ob.darkOn':      { ru: 'Включить', en: 'Turn on', uz: 'Yoqish' },
+    'ob.darkBack':    { ru: '☀️ Вернуть светлую', en: '☀️ Back to light', uz: '☀️ Yorugʻga qaytarish' },
+    'ob.allReady':    { ru: 'Всё готово!', en: 'All set!', uz: 'Hammasi tayyor!' },
+    'ob.allReadySub': { ru: 'Создай аккаунт, чтобы сохранять прогресс, стрик и соревноваться с друзьями.', en: 'Create an account to save progress, streak and compete with friends.', uz: 'Progress, striyk va doʻstlar bilan musobaqani saqlash uchun akkaunt yarating.' },
+    'ob.createAcc':   { ru: 'Создать аккаунт ✨', en: 'Create account ✨', uz: 'Akkaunt yaratish ✨' },
+    'ob.later':       { ru: 'Позже · просто посмотреть', en: 'Later · just looking', uz: 'Keyinroq · shunchaki koʻraman' },
+    'ob.regToast':    { ru: 'Создай аккаунт — сохраним твой путь 🌸', en: 'Create an account — we’ll save your journey 🌸', uz: 'Akkaunt yarating — yoʻlingizni saqlaymiz 🌸' },
+    'ob.darkOnToast': { ru: 'Тёмная тема включена 🌙', en: 'Dark theme on 🌙', uz: 'Tungi mavzu yoqildi 🌙' },
+    'ob.lightToast':  { ru: 'Светлая тема вернулась 🌸', en: 'Light theme is back 🌸', uz: 'Yorugʻ mavzu qaytdi 🌸' },
+
+    // ── Культур-деталь (정) ──
+    'cult.eyebrow': { ru: 'Непереводимое корейское слово', en: 'An untranslatable Korean word', uz: 'Tarjima qilib boʻlmaydigan koreyscha soʻz' },
+    'cult.p1':      { ru: '<span class="ko" style="font-weight:600;">정</span> — это глубокая привязанность и тёплая связь между людьми, которая <em>растёт со временем</em>.', en: '<span class="ko" style="font-weight:600;">정</span> is a deep attachment and warm bond between people that <em>grows over time</em>.', uz: '<span class="ko" style="font-weight:600;">정</span> — bu odamlar oʻrtasidagi chuqur mehr va iliq rishta, u <em>vaqt oʻtgani sari kuchayadi</em>.' },
+    'cult.p2':      { ru: 'Нельзя перевести одним словом: это и любовь, и дружба, и привычка, и тоска по близкому человеку.', en: 'It can’t be captured in one word: it’s love, friendship, habit and longing for a dear person all at once.', uz: 'Bir soʻz bilan tarjima qilib boʻlmaydi: bu ham muhabbat, ham doʻstlik, ham odat, ham yaqin insonni sogʻinish.' },
+    'cult.quote':   { ru: '«정이 들었어» — «Я привязалась к тебе всей душой»', en: '«정이 들었어» — “I’ve grown deeply attached to you”', uz: '«정이 들었어» — “Senga butun qalbim bilan bogʻlanib qoldim”' },
+    'cult.tip':     { ru: '💡 Корейцы говорят, что 정 может возникнуть даже с местом или едой — не только с людьми.', en: '💡 Koreans say 정 can grow even toward a place or a food — not only people.', uz: '💡 Koreyslar aytadiki, 정 nafaqat odamlarga, balki joy yoki taomga ham paydo boʻlishi mumkin.' },
+
+    // ── Приветственная лента (гость) ──
+    'wf.welcome':  { ru: '🌸 ДОБРО ПОЖАЛОВАТЬ', en: '🌸 WELCOME', uz: '🌸 XUSH KELIBSIZ' },
+    'wf.hi':       { ru: 'Привет! Это твоя лента 🌸', en: 'Hi! This is your feed 🌸', uz: 'Salom! Bu sizning lentangiz 🌸' },
+    'wf.intro':    { ru: 'Здесь будут новости, слова недели и культурные заметки от Мади. А пока — начни с урока или мини-игры!', en: 'Here you’ll find news, words of the week and culture notes from Madie. For now — start with a lesson or a mini-game!', uz: 'Bu yerda yangiliklar, hafta soʻzlari va Madie’dan madaniy eslatmalar boʻladi. Hozircha — darsdan yoki mini-oʻyindan boshlang!' },
+    'wf.start':    { ru: 'Начать учиться →', en: 'Start learning →', uz: 'Oʻrganishni boshlash →' },
+    'wf.wod':      { ru: '🌸 СЛОВО ДНЯ', en: '🌸 WORD OF THE DAY', uz: '🌸 KUN SOʻZI' },
+    'wf.wodGloss': { ru: '[annyeonghaseyo] · Здравствуйте', en: '[annyeonghaseyo] · Hello', uz: '[annyeonghaseyo] · Assalomu alaykum' },
+    'wf.wodNote':  { ru: 'Самое тёплое корейское приветствие 🌸', en: 'The warmest Korean greeting 🌸', uz: 'Eng iliq koreyscha salom 🌸' },
+    'wf.tip':      { ru: '💡 СОВЕТ', en: '💡 TIP', uz: '💡 MASLAHAT' },
+    'wf.tipTitle': { ru: 'Учись понемногу каждый день', en: 'Learn a little every day', uz: 'Har kuni ozdan oʻrgan' },
+    'wf.tipBody':  { ru: 'Поставь цель дня и заходи каждый день — так стрик 🔥 растёт, а новые слова запоминаются легче.', en: 'Set a daily goal and come back every day — your streak 🔥 grows and new words stick more easily.', uz: 'Kunlik maqsad qoʻy va har kuni kir — shunda striyk 🔥 oʻsadi, yangi soʻzlar oson yodlanadi.' },
+
+    // ── Установка PWA + футер ──
+    'pwa.title':    { ru: 'Установи Madie на телефон', en: 'Install Madie on your phone', uz: 'Madie’ni telefoningizga oʻrnating' },
+    'pwa.iosTap':   { ru: 'Нажми', en: 'Tap', uz: 'Bosing' },
+    'pwa.iosShare': { ru: 'Поделиться → «На экран “Домой”»', en: 'Share → “Add to Home Screen”', uz: 'Ulashish → “Bosh ekranga”' },
+    'pwa.benefit':  { ru: 'Своя иконка, быстрый запуск, работает как приложение', en: 'Own icon, quick launch, works like an app', uz: 'Oʻz belgisi, tez ishga tushish, ilova kabi ishlaydi' },
+    'pwa.install':  { ru: 'Установить', en: 'Install', uz: 'Oʻrnatish' },
+    'common.hide':  { ru: 'Скрыть', en: 'Hide', uz: 'Yashirish' },
+    'about.madeBy': { ru: 'Сделано с 🌸 командой Korean with Madie', en: 'Made with 🌸 by the Korean with Madie team', uz: 'Korean with Madie jamoasi tomonidan 🌸 bilan yaratilgan' },
+
+    // ── Календарь праздников ──
+    'cal.eyebrow':     { ru: '한국 달력 · КАЛЕНДАРЬ', en: '한국 달력 · CALENDAR', uz: '한국 달력 · TAQVIM' },
+    'cal.sub':         { ru: '12 месяцев · {n} праздников', en: '12 months · {n} holidays', uz: '12 oy · {n} bayram' },
+    'cal.today':       { ru: 'СЕГОДНЯ', en: 'TODAY', uz: 'BUGUN' },
+    'cal.noneAhead':   { ru: 'Праздников впереди пока нет 🌸', en: 'No holidays ahead yet 🌸', uz: 'Oldinda bayramlar yoʻq 🌸' },
+    'cal.soon':        { ru: 'Скоро', en: 'Soon', uz: 'Tez orada' },
+    'cal.soonMeta':    { ru: 'ближайшие праздники', en: 'upcoming holidays', uz: 'yaqin bayramlar' },
+    'cal.calendar':    { ru: 'Календарь', en: 'Calendar', uz: 'Taqvim' },
+    'cal.all12':       { ru: 'все 12 месяцев', en: 'all 12 months', uz: 'barcha 12 oy' },
+    'cal.legToday':    { ru: 'сегодня', en: 'today', uz: 'bugun' },
+    'cal.legHoliday':  { ru: 'праздник', en: 'holiday', uz: 'bayram' },
+    'cal.legWeekend':  { ru: 'выходной', en: 'weekend', uz: 'dam olish' },
+    'cal.monthHolidays':{ ru: 'Праздники месяца', en: 'Holidays this month', uz: 'Shu oy bayramlari' },
+    'cal.noneThisMonth':{ ru: 'В этом месяце праздников нет 🌸', en: 'No holidays this month 🌸', uz: 'Bu oyda bayram yoʻq 🌸' },
+
+    // ── Приглашение друга (реферал) ──
+    'inv.needLogin': { ru: 'Сначала войди в аккаунт 🌸', en: 'Sign in first 🌸', uz: 'Avval akkauntga kiring 🌸' },
+    'inv.text':      { ru: 'Учу корейский с Madie 🌸 — присоединяйся! Зарегистрируешься по моей ссылке — нам обоим +{xp} XP: {link}', en: 'I’m learning Korean with Madie 🌸 — join me! Sign up with my link and we both get +{xp} XP: {link}', uz: 'Madie bilan koreys tilini oʻrganyapman 🌸 — qoʻshiling! Havolam orqali roʻyxatdan oʻtsangiz, ikkalamizga +{xp} XP: {link}' },
+    'inv.copied':    { ru: 'Ссылка-приглашение скопирована 💌', en: 'Invite link copied 💌', uz: 'Taklif havolasi nusxalandi 💌' },
+
+    // ── Доступность (aria) для карты уроков ──
+    'a11y.lessonDone':    { ru: 'пройден', en: 'completed', uz: 'tugatilgan' },
+    'a11y.lessonCurrent': { ru: 'текущий', en: 'current', uz: 'joriy' },
+    'a11y.lessonOpen':    { ru: 'открыт', en: 'open', uz: 'ochiq' },
+    'a11y.lessonLocked':  { ru: 'закрыт', en: 'locked', uz: 'yopiq' },
+
     // ── Уровень корейского (초급/중급/고급/TOPIK) ──
     'lvl.pick':      { ru: 'Твой уровень корейского', en: 'Your Korean level', uz: 'Koreys tili darajangiz' },
     'lvl.my':        { ru: 'Уровень корейского', en: 'Korean level', uz: 'Koreys tili darajasi' },
@@ -602,7 +844,7 @@
   // Выбор уровня на форме регистрации (chip-кнопки)
   function pickRegLevel(btn) {
     const row = document.getElementById('rg-level-row');
-    if (row) row.querySelectorAll('.lvl-chip').forEach(b => b.classList.toggle('on', b === btn));
+    if (row) row.querySelectorAll('.lvl-chip').forEach(b => { const sel = (b === btn); b.classList.toggle('on', sel); b.setAttribute('aria-pressed', String(sel)); });
     const inp = document.getElementById('rg-level');
     if (inp) inp.value = (btn && btn.dataset.level) || '';
   }
@@ -681,6 +923,11 @@
   function switchScreen(name, restoreScroll) {
     if (name === 'admin' && !isAdmin()) name = 'home'; // кабинет только для админа
     _screenScroll[_curScreen] = _getScroll();
+    // Тап по навигации закрывает оверлеи переписки/профиля участника и поп-ап
+    // входящего сообщения — иначе они «висят» поверх нового экрана.
+    if (document.getElementById('user-profile-page')) closeUserProfile();
+    if (document.getElementById('chat-page')) closeChat();
+    document.querySelectorAll('.chat-popup').forEach(el => el.remove());
     document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
     document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
     document.getElementById('screen-' + name).classList.add('active');
@@ -690,7 +937,7 @@
     if (name === 'games') { syncBestScoreCards(); initGameFavorites(); }
     if (name === 'home') { renderCustomVideos(); renderCustomFeedPosts(); renderHeroLesson(); renderDailyGoal(); renderSrsWidget(); renderContinue(); }
     if (name === 'lessons') { renderModuleSwitcher(); renderCustomLessons(); renderLessonPath(); }
-    if (name === 'profile') { syncAchievementsStrip(); renderWeeklyXpChart(); renderHomeworkList(); renderSavedWords(); renderPlanCard(); renderMyLevelChip(); }
+    if (name === 'profile') { syncAchievementsStrip(); renderWeeklyXpChart(); renderHomeworkList(); renderSavedWords(); renderPlanCard(); renderMyLevelChip(); refreshProfileEmail(); }
     if (name === 'social') renderFriendsAndChat();
     if (name === 'words') renderSavedWords();
     if (name === 'topik') { _topikSection = null; _topikReturn = null; renderTopik(); }
@@ -850,6 +1097,82 @@
   // ── Audio (with proper play/pause toggle) ──
   let currentUtter = null;
   let currentBtn   = null;
+  let currentAudio = null;          // активный <audio> при озвучке через прокси
+
+  // ── Нативный корейский TTS (Google Cloud TTS через Cloudflare Worker) ──
+  // URL воркера задаётся Мади в админке (раздаётся всем через shared/config/ttsProxyUrl)
+  // или через window.KM_TTS_PROXY_URL / localStorage 'km_tts_proxy'. Пусто => фолбэк
+  // на Web Speech API (как раньше): без прокси, без ключей.
+  const _ttsCache = new Map();      // ключ "текст|s/n|voice" -> objectURL
+  const _ttsCacheOrder = [];        // порядок для LRU-ограничения
+  const _TTS_CACHE_MAX = 80;
+  let   _koGen = 0;                  // поколение: любое stop* инкрементит → отменяет «зависшие» fetch
+  function ttsProxyUrl() {
+    let u = '';
+    try { u = (window.KM_TTS_PROXY_URL || localStorage.getItem('km_tts_proxy') || '').toString(); } catch (_) { u = (window.KM_TTS_PROXY_URL || '').toString(); }
+    return u.trim().replace(/\/+$/, '');
+  }
+  function ttsProxyEnabled() {
+    if (!ttsProxyUrl()) return false;
+    if (typeof getSettings === 'function' && getSettings().sound === false) return false;
+    return true;
+  }
+  async function _ttsFetchUrl(text, slow, voice) {
+    const key = text + '|' + (slow ? 's' : 'n') + '|' + (voice || '');
+    if (_ttsCache.has(key)) return _ttsCache.get(key);
+    const params = new URLSearchParams({ text: text, rate: slow ? '0.7' : '1.0' });
+    if (voice) params.set('voice', voice);
+    const resp = await fetch(ttsProxyUrl() + '/tts?' + params.toString());
+    if (!resp.ok) throw new Error('tts proxy ' + resp.status);
+    const blob = await resp.blob();
+    const url = URL.createObjectURL(blob);
+    _ttsCache.set(key, url);
+    _ttsCacheOrder.push(key);
+    if (_ttsCacheOrder.length > _TTS_CACHE_MAX) {
+      const old = _ttsCacheOrder.shift();
+      const u = _ttsCache.get(old);
+      if (u) { try { URL.revokeObjectURL(u); } catch (_) {} _ttsCache.delete(old); }
+    }
+    return url;
+  }
+  function stopAudioPlayback() {
+    if (currentAudio) {
+      try { currentAudio.pause(); currentAudio.onended = currentAudio.onerror = null; } catch (_) {}
+      currentAudio = null;
+    }
+  }
+  // Озвучить ОДНУ корейскую строку: естественный голос через прокси, иначе Web Speech.
+  // opts: { slow, pitch, rate, voice }. cb() — когда строка завершилась (или отменена).
+  function _koSpeakOne(text, opts, cb) {
+    opts = opts || {};
+    const myGen = _koGen;
+    const finish = () => { if (myGen === _koGen) cb && cb(); };
+    if (ttsProxyEnabled()) {
+      _ttsFetchUrl(text, !!opts.slow, opts.voice).then(url => {
+        if (myGen !== _koGen) return;                 // остановлено во время загрузки → тихо выходим
+        const a = new Audio(url);
+        currentAudio = a;
+        a.onended = a.onerror = () => { if (currentAudio === a) currentAudio = null; finish(); };
+        a.play().catch(() => _koSpeakOneWeb(text, opts, finish, myGen));
+      }).catch(() => _koSpeakOneWeb(text, opts, finish, myGen));
+      return;
+    }
+    _koSpeakOneWeb(text, opts, finish, myGen);
+  }
+  function _koSpeakOneWeb(text, opts, finish, myGen) {
+    if (myGen !== _koGen) return;
+    if (!('speechSynthesis' in window)) { finish(); return; }
+    const u = new SpeechSynthesisUtterance(text);
+    u.lang  = 'ko-KR';
+    u.rate  = opts.slow ? 0.6 : (opts.rate != null ? opts.rate : 0.85);
+    u.pitch = opts.pitch != null ? opts.pitch : 1.05;
+    u.onend = u.onerror = () => finish();
+    currentUtter = u;
+    try { window.speechSynthesis.speak(u); } catch (_) { finish(); }
+  }
+  // Голоса Google ko-KR-Neural2 для разведения собеседников в диалогах/скриптах.
+  const TTS_VOICE_F = 'ko-KR-Neural2-A';   // женский (Мади, реплики «여자»/B)
+  const TTS_VOICE_M = 'ko-KR-Neural2-C';   // мужской (реплики «남자»/A)
 
   function setBtnPlaying(btn, isPlaying) {
     if (!btn) return;
@@ -868,29 +1191,26 @@
   }
 
   function stopSpeech() {
+    _koGen++;                                  // отменяем любые «зависшие» прокси-загрузки
     try { speechSynthesis.cancel(); } catch (_) {}
+    stopAudioPlayback();
     setBtnPlaying(currentBtn, false);
     currentUtter = null;
     currentBtn   = null;
   }
 
   function playSyllable(text, btn) {
-    if (!('speechSynthesis' in window)) { toast('Голос недоступен в этом браузере'); return; }
+    if (!ttsProxyEnabled() && !('speechSynthesis' in window)) { toast('Голос недоступен в этом браузере'); return; }
     if (typeof getSettings === 'function' && !getSettings().sound) { toast('Озвучка выключена в настройках 🔇', 'var(--berry)'); return; }
     // Toggle: tapping the same button while playing -> stop
     if (btn && btn === currentBtn && btn.dataset.playing) { stopSpeech(); return; }
     stopSpeech();
-    const u = new SpeechSynthesisUtterance(text);
-    u.lang  = 'ko-KR';
-    u.rate  = (typeof getSettings === 'function' && getSettings().slowVoice) ? 0.6 : 0.85;
-    u.pitch = 1.05;
-    u.onend = u.onerror = () => {
-      if (currentBtn === btn) { setBtnPlaying(btn, false); currentUtter = null; currentBtn = null; }
-    };
-    currentUtter = u;
-    currentBtn   = btn || null;
+    const slow = (typeof getSettings === 'function' && getSettings().slowVoice);
+    currentBtn = btn || null;
     setBtnPlaying(btn, true);
-    speechSynthesis.speak(u);
+    _koSpeakOne(text, { slow: slow, pitch: 1.05, voice: TTS_VOICE_F }, () => {
+      if (currentBtn === btn) { setBtnPlaying(btn, false); currentUtter = null; currentBtn = null; }
+    });
   }
 
   function playMadieVoice(btn) {
@@ -1056,7 +1376,7 @@
     }
     return list;
   }
-  function saveMyWord(ko, ru, translit, emoji, source) {
+  function saveMyWord(ko, ru, translit, emoji, source, type) {
     if (!ko) return false;
     const list = getMyWords();
     const idx = list.findIndex(w => w.ko === ko);
@@ -1065,10 +1385,11 @@
       if (ru && !list[idx].ru) list[idx].ru = ru;
       if (translit && !list[idx].translit) list[idx].translit = translit;
       if (emoji && list[idx].emoji === '🌸') list[idx].emoji = emoji;
+      if (type && !list[idx].type) list[idx].type = type;
       UStore.set('myWords', list);
       return false; // not newly added
     }
-    list.unshift({ ko, ru: ru || '', translit: translit || '', emoji: emoji || '🌸', source: source || 'manual', ts: Date.now() });
+    list.unshift({ ko, ru: ru || '', translit: translit || '', emoji: emoji || '🌸', source: source || 'manual', type: type || 'word', ts: Date.now() });
     UStore.set('myWords', list);
     recordWordSeen(ko);
     return true;
@@ -1081,21 +1402,24 @@
   function isMyWord(ko) {
     return getMyWords().some(w => w.ko === ko);
   }
-  function toggleMyWord(ko, ru, translit, emoji, source, btn) {
+  function toggleMyWord(ko, ru, translit, emoji, source, btn, type) {
     if (isMyWord(ko)) {
       removeMyWord(ko);
       toast(`«${ko}» удалено из словарика`);
     } else {
-      saveMyWord(ko, ru, translit, emoji, source);
-      toast(`🌸 «${ko}» сохранено в словарик`, 'var(--sage)');
+      saveMyWord(ko, ru, translit, emoji, source, type);
+      const note = type === 'grammar' ? 'грамматика' : type === 'phrase' ? 'фраза' : 'слово';
+      toast(`🌸 ${note} «${ko}» — в словарике`, 'var(--sage)');
     }
-    // Re-paint button if provided (поддержка двух видов: иконка-сердечко и подписанная кнопка)
+    // Re-paint button if provided (поддержка видов: лейбл-кнопка, чип-слово разбора, иконка-сердечко)
     if (btn) {
       const saved = isMyWord(ko);
       if (btn.dataset && btn.dataset.labeled === '1') {
         btn.innerHTML = saved ? '<i class="fa-solid fa-check"></i> Сохранено' : '<i class="fa-regular fa-bookmark"></i> Сохранить';
         btn.classList.toggle('btn-primary', saved);
         btn.classList.toggle('btn-ghost', !saved);
+      } else if (btn.classList && btn.classList.contains('rd-word')) {
+        btn.classList.toggle('saved', saved);
       } else {
         btn.innerHTML = saved
           ? '<i class="fa-solid fa-heart" style="color:var(--coral);"></i>'
@@ -1108,7 +1432,14 @@
   // My Words view state (search / sort / multi-select)
   let _wordsQuery = '';
   let _wordsSort = 'recent';        // 'recent' | 'alpha'
+  let _wordsType = 'all';           // 'all' | 'word' | 'grammar' | 'phrase'
   let _wordsSelected = new Set();   // ko of words ticked for "study selected"
+  const WORD_TYPE_META = {
+    word:    { emoji: '📝', label: 'Слова' },
+    grammar: { emoji: '📚', label: 'Грамматика' },
+    phrase:  { emoji: '💬', label: 'Фразы' }
+  };
+  function wordTypeOf(w) { return (w && w.type) || 'word'; } // старые записи без type → слово
 
   function renderSavedWords() {
     const list = getMyWords();
@@ -1129,6 +1460,8 @@
     }
     // Controls (search + sort) are rendered once here; the list re-renders separately
     // so typing in search doesn't recreate (and unfocus) the input.
+    const tcount = { word: 0, grammar: 0, phrase: 0 };
+    list.forEach(w => { tcount[wordTypeOf(w)] = (tcount[wordTypeOf(w)] || 0) + 1; });
     slot.innerHTML = `
       <div class="words-controls">
         <div class="words-search">
@@ -1139,6 +1472,10 @@
           <button type="button" class="words-sort-btn ${_wordsSort==='recent'?'active':''}" onclick="setWordsSort('recent')">Новые</button>
           <button type="button" class="words-sort-btn ${_wordsSort==='alpha'?'active':''}" onclick="setWordsSort('alpha')">А-Я</button>
         </div>
+      </div>
+      <div class="words-types">
+        <button type="button" class="wt-chip ${_wordsType==='all'?'active':''}" onclick="setWordsType('all')">Все · ${list.length}</button>
+        ${['word','grammar','phrase'].map(tp => `<button type="button" class="wt-chip ${_wordsType===tp?'active':''}" onclick="setWordsType('${tp}')">${WORD_TYPE_META[tp].emoji} ${WORD_TYPE_META[tp].label} · ${tcount[tp]}</button>`).join('')}
       </div>
       <div id="saved-words-actionbar" style="display:flex; justify-content:space-between; align-items:center; gap:10px; margin:10px 2px;"></div>
       <div id="saved-words-items" style="display:grid; gap:6px;"></div>`;
@@ -1152,26 +1489,28 @@
     // Drop any selected words that no longer exist.
     const koSet = new Set(list.map(w => w.ko));
     [..._wordsSelected].forEach(k => { if (!koSet.has(k)) _wordsSelected.delete(k); });
+    let filtered = list.slice();
+    if (_wordsType !== 'all') filtered = filtered.filter(w => wordTypeOf(w) === _wordsType);
     const q = _wordsQuery.trim().toLowerCase();
-    let filtered = q
-      ? list.filter(w => String(w.ko).toLowerCase().includes(q)
+    if (q) filtered = filtered.filter(w => String(w.ko).toLowerCase().includes(q)
                       || String(w.ru || '').toLowerCase().includes(q)
-                      || String(w.translit || '').toLowerCase().includes(q))
-      : list.slice();
+                      || String(w.translit || '').toLowerCase().includes(q));
     if (_wordsSort === 'alpha') filtered.sort((a, b) => String(a.ko).localeCompare(String(b.ko), 'ko'));
     else filtered.sort((a, b) => (b.ts || 0) - (a.ts || 0));
 
     const selN = _wordsSelected.size;
     const bar = document.getElementById('saved-words-actionbar');
     if (bar) {
+      const studyableN = list.length; // на флешкартах учим всё: слова, грамматику и фразы
+      const showStudy = selN > 0 || studyableN >= 2;
       const studyAction = selN > 0 ? 'studySelectedWords()' : 'startMyWordsFlashcards()';
-      const studyLabel  = selN > 0 ? `Учить выбранные (${selN})` : `Учить все (${list.length})`;
+      const studyLabel  = selN > 0 ? `Учить выбранные (${selN})` : `Учить все (${studyableN})`;
       bar.innerHTML = `
         <div style="font-size:10.5px; color:var(--soft); min-width:0;">
-          ${q ? `Найдено: <b style="color:var(--coral);">${filtered.length}</b>` : `Всего: <b style="color:var(--coral);">${list.length}</b>`}
+          ${(q || _wordsType !== 'all') ? `Показано: <b style="color:var(--coral);">${filtered.length}</b>` : `Всего: <b style="color:var(--coral);">${list.length}</b>`}
           ${selN > 0 ? ` · выбрано ${selN} <button type="button" onclick="clearWordSelection()" style="background:none; border:none; color:var(--coral); cursor:pointer; font-size:10.5px; text-decoration:underline; padding:0 0 0 4px;">сбросить</button>` : ''}
         </div>
-        ${list.length >= 2 ? `<button type="button" onclick="${studyAction}" class="btn btn-primary" style="padding:7px 14px; font-size:11.5px; flex-shrink:0;"><i class="fa-solid fa-graduation-cap" style="font-size:10px;" aria-hidden="true"></i> ${studyLabel}</button>` : ''}`;
+        ${showStudy ? `<button type="button" onclick="${studyAction}" class="btn btn-primary" style="padding:7px 14px; font-size:11.5px; flex-shrink:0;"><i class="fa-solid fa-graduation-cap" style="font-size:10px;" aria-hidden="true"></i> ${studyLabel}</button>` : ''}`;
     }
 
     if (!filtered.length) {
@@ -1181,6 +1520,7 @@
     itemsSlot.innerHTML = filtered.map(w => {
       const koEsc = String(w.ko).replace(/'/g, "\\'");
       const sel = _wordsSelected.has(w.ko);
+      const tp = wordTypeOf(w); const tm = WORD_TYPE_META[tp] || WORD_TYPE_META.word;
       return `<div class="word-row ${sel ? 'selected' : ''}">
         <label class="word-check" aria-label="Выбрать слово"><input type="checkbox" ${sel ? 'checked' : ''} onchange="toggleWordSelect('${koEsc}', this.checked)"></label>
         <span style="font-size:18px; flex-shrink:0;">${w.emoji || '🌸'}</span>
@@ -1188,13 +1528,15 @@
           <div class="ko" style="font-size:16px; font-weight:700; color:var(--berry); line-height:1.2;">${escHtml(w.ko)}</div>
           ${w.ru || w.translit ? `<div style="font-size:11px; color:var(--soft); margin-top:1px;">${w.translit ? `[${escHtml(w.translit)}] · ` : ''}${escHtml(w.ru || '')}</div>` : ''}
         </div>
-        <button onclick="removeMyWord('${koEsc}')" aria-label="Удалить" style="background:none; border:none; color:var(--soft); cursor:pointer; font-size:18px; line-height:1; padding:4px 6px; flex-shrink:0;">×</button>
+        <span class="wt-badge wt-${tp}" title="${tm.label}">${tm.emoji}</span>
+        <button onclick="removeMyWord('${koEsc}')" aria-label="Удалить" style="background:none; border:none; color:var(--soft); cursor:pointer; font-size:18px; line-height:1; padding:0; flex-shrink:0; width:40px; height:40px; display:flex; align-items:center; justify-content:center; border-radius:10px;">×</button>
       </div>`;
     }).join('');
   }
 
   function onWordsSearch(v) { _wordsQuery = v || ''; renderSavedWordsItems(); }
   function setWordsSort(s) { _wordsSort = s; renderSavedWords(); }
+  function setWordsType(tp) { _wordsType = tp || 'all'; renderSavedWords(); }
   function toggleWordSelect(ko, checked) { if (checked) _wordsSelected.add(ko); else _wordsSelected.delete(ko); renderSavedWordsItems(); }
   function clearWordSelection() { _wordsSelected.clear(); renderSavedWordsItems(); }
   function studySelectedWords() {
@@ -1207,8 +1549,9 @@
   }
 
   function startMyWordsFlashcards() {
+    // «Учить все» — слова, грамматика и фразы: на флешкартах фраза тоже учится (한국어 → перевод).
     const list = getMyWords();
-    if (!list.length) { toast('Сначала сохрани несколько слов 🌸'); return; }
+    if (!list.length) { toast('Словарик пуст — сохрани слово ♡ 🌸'); return; }
     // Build flashcard session from saved words. Words without ru get ko as fallback meaning.
     fcReplayFn = startMyWordsFlashcards;
     startFlashcardSession(list.map(w => ({
@@ -1224,32 +1567,59 @@
   // ── Modals ──
   // ── Korean holidays 2026 (fixed + lunar approximations) ──
   const koreanHolidays = {
-    '01-01': { ko: '신정',           ru: 'Новый год',           emoji: '🎊' },
-    '02-16': { ko: '설날 연휴',       ru: 'Канун Соллаль',        emoji: '🥮' },
-    '02-17': { ko: '설날',           ru: 'Соллаль · Лунный НГ',   emoji: '🥟' },
-    '02-18': { ko: '설날 연휴',       ru: 'После Соллаль',        emoji: '🍵' },
-    '03-01': { ko: '삼일절',          ru: 'День независимости',   emoji: '🇰🇷' },
-    '04-05': { ko: '식목일',          ru: 'День посадки деревьев', emoji: '🌳' },
-    '05-05': { ko: '어린이날',        ru: 'День детей',            emoji: '🎏' },
-    '05-08': { ko: '어버이날',        ru: 'День родителей',        emoji: '🌷' },
-    '05-15': { ko: '스승의 날',        ru: 'День учителя',          emoji: '🌸' },
-    '05-24': { ko: '부처님 오신 날',   ru: 'Рождение Будды',         emoji: '🪷' },
-    '06-06': { ko: '현충일',          ru: 'День памяти',           emoji: '🕊️' },
-    '07-17': { ko: '제헌절',          ru: 'День Конституции',      emoji: '📜' },
-    '08-15': { ko: '광복절',          ru: 'День освобождения',     emoji: '🎆' },
-    '09-24': { ko: '추석 연휴',       ru: 'Канун Чхусок',          emoji: '🌾' },
-    '09-25': { ko: '추석',            ru: 'Чхусок · Урожай',        emoji: '🌕' },
-    '09-26': { ko: '추석 연휴',       ru: 'После Чхусок',          emoji: '🍶' },
-    '10-03': { ko: '개천절',          ru: 'День основания',        emoji: '🏔️' },
-    '10-09': { ko: '한글날',          ru: 'День хангыля',          emoji: '한' },
-    '11-11': { ko: '빼빼로 데이',      ru: 'День Пеппеpo',          emoji: '🥢' },
-    '12-25': { ko: '성탄절',          ru: 'Рождество',             emoji: '🎄' },
-    '12-31': { ko: '제야',            ru: 'Канун Нового года',    emoji: '🔔' }
+    '01-01': { ko: '신정',           ru: 'Новый год',           en: 'New Year',                 uz: 'Yangi yil',                  emoji: '🎊' },
+    '02-16': { ko: '설날 연휴',       ru: 'Канун Соллаль',        en: 'Seollal eve',              uz: 'Seollal arafasi',            emoji: '🥮' },
+    '02-17': { ko: '설날',           ru: 'Соллаль · Лунный НГ',   en: 'Seollal · Lunar New Year', uz: 'Seollal · Qamariy yangi yil', emoji: '🥟' },
+    '02-18': { ko: '설날 연휴',       ru: 'После Соллаль',        en: 'After Seollal',            uz: 'Seollaldan keyin',           emoji: '🍵' },
+    '03-01': { ko: '삼일절',          ru: 'День независимости',   en: 'Independence Movement Day', uz: 'Mustaqillik harakati kuni',  emoji: '🇰🇷' },
+    '04-05': { ko: '식목일',          ru: 'День посадки деревьев', en: 'Arbor Day',                uz: 'Daraxt ekish kuni',          emoji: '🌳' },
+    '05-05': { ko: '어린이날',        ru: 'День детей',            en: 'Children’s Day',           uz: 'Bolalar kuni',               emoji: '🎏' },
+    '05-08': { ko: '어버이날',        ru: 'День родителей',        en: 'Parents’ Day',             uz: 'Ota-onalar kuni',            emoji: '🌷' },
+    '05-15': { ko: '스승의 날',        ru: 'День учителя',          en: 'Teachers’ Day',            uz: 'Oʻqituvchilar kuni',         emoji: '🌸' },
+    '05-24': { ko: '부처님 오신 날',   ru: 'Рождение Будды',         en: 'Buddha’s Birthday',        uz: 'Budda tugʻilgan kun',        emoji: '🪷' },
+    '06-06': { ko: '현충일',          ru: 'День памяти',           en: 'Memorial Day',             uz: 'Xotira kuni',                emoji: '🕊️' },
+    '07-17': { ko: '제헌절',          ru: 'День Конституции',      en: 'Constitution Day',         uz: 'Konstitutsiya kuni',         emoji: '📜' },
+    '08-15': { ko: '광복절',          ru: 'День освобождения',     en: 'Liberation Day',           uz: 'Ozodlik kuni',               emoji: '🎆' },
+    '09-24': { ko: '추석 연휴',       ru: 'Канун Чхусок',          en: 'Chuseok eve',              uz: 'Chuseok arafasi',            emoji: '🌾' },
+    '09-25': { ko: '추석',            ru: 'Чхусок · Урожай',        en: 'Chuseok · Harvest',        uz: 'Chuseok · Hosil',            emoji: '🌕' },
+    '09-26': { ko: '추석 연휴',       ru: 'После Чхусок',          en: 'After Chuseok',            uz: 'Chuseokdan keyin',           emoji: '🍶' },
+    '10-03': { ko: '개천절',          ru: 'День основания',        en: 'National Foundation Day',  uz: 'Milliy tashkil etilish kuni', emoji: '🏔️' },
+    '10-09': { ko: '한글날',          ru: 'День хангыля',          en: 'Hangul Day',               uz: 'Hangul kuni',                emoji: '한' },
+    '11-11': { ko: '빼빼로 데이',      ru: 'День Пепперо',          en: 'Pepero Day',               uz: 'Pepero kuni',                emoji: '🥢' },
+    '12-25': { ko: '성탄절',          ru: 'Рождество',             en: 'Christmas',                uz: 'Rojdestvo',                  emoji: '🎄' },
+    '12-31': { ko: '제야',            ru: 'Канун Нового года',    en: 'New Year’s Eve',           uz: 'Yangi yil arafasi',          emoji: '🔔' }
   };
   const monthsRu = ['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'];
   const monthsKo = ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'];
   const weekdaysRu = ['Пн','Вт','Ср','Чт','Пт','Сб','Вс'];
   const weekdaysRuLong = ['воскресенье','понедельник','вторник','среда','четверг','пятница','суббота'];
+  // Локаль-зависимые имена праздников / месяцев / дней недели
+  function holidayName(h) {
+    if (!h) return '';
+    if (APP_LANG === 'en' && h.en) return h.en;
+    if (APP_LANG === 'uz' && h.uz) return h.uz;
+    return h.ru;
+  }
+  function monthName(idx, short) {
+    if (APP_LANG === 'ru' || typeof APP_LANG === 'undefined') {
+      return short ? monthsRu[idx].toLowerCase().slice(0, 3) : monthsRu[idx];
+    }
+    const loc = APP_LANG === 'uz' ? 'uz-Latn' : 'en';
+    return new Date(2000, idx, 1).toLocaleDateString(loc, { month: short ? 'short' : 'long' });
+  }
+  function weekdayShortList() {
+    if (APP_LANG === 'ru' || typeof APP_LANG === 'undefined') return weekdaysRu;
+    const loc = APP_LANG === 'uz' ? 'uz-Latn' : 'en';
+    return [1, 2, 3, 4, 5, 6, 7].map(d => {              // 2024-01-01 = понедельник → Пн..Вс
+      const s = new Date(2024, 0, d).toLocaleDateString(loc, { weekday: 'short' });
+      return s.charAt(0).toUpperCase() + s.slice(1);
+    });
+  }
+  function weekdayLongName(date) {
+    if (APP_LANG === 'ru' || typeof APP_LANG === 'undefined') return weekdaysRuLong[date.getDay()];
+    const loc = APP_LANG === 'uz' ? 'uz-Latn' : 'en';
+    return date.toLocaleDateString(loc, { weekday: 'long' });
+  }
   const _now = new Date();
   const TODAY = { y: _now.getFullYear(), m: _now.getMonth(), d: _now.getDate() };
 
@@ -1306,7 +1676,7 @@
     if (dateEl)  dateEl.textContent  = diff === 0 ? t('until.today')
                                      : diff >= 1  ? untilLabel(diff)
                                      : `${dd}.${String(mm).padStart(2, '0')}`;
-    if (titleEl) titleEl.textContent = `${h.ko} — ${h.ru}`;
+    if (titleEl) titleEl.textContent = `${h.ko} — ${holidayName(h)}`;
   }
 
   function showCalendar() {
@@ -1315,8 +1685,8 @@
     const upcoming = computeUpcoming(4);
     const nearest = upcoming.find(u => u.diff > 0);
     const nearestLine = nearest
-      ? `Скоро <span class="ko">${nearest.h.ko}</span> ${nearest.h.emoji} — ${untilLabel(nearest.diff).toLowerCase()}`
-      : 'Праздников впереди пока нет 🌸';
+      ? `${t('cal.soon')} <span class="ko">${nearest.h.ko}</span> ${nearest.h.emoji} — ${untilLabel(nearest.diff).toLowerCase()}`
+      : t('cal.noneAhead');
 
     const upcomingCards = upcoming.map(u => {
       const todayMark = u.diff === 0;
@@ -1324,13 +1694,13 @@
         <div onclick="showHolidayInfo('${u.key}')" class="card card-press" style="padding:12px 12px 10px;">
           <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:8px;">
             <span style="font-size:22px; line-height:1;">${u.h.emoji}</span>
-            ${todayMark ? '<span class="chip chip-coral" style="font-size:8px; padding:2px 7px;">СЕГОДНЯ</span>' : ''}
+            ${todayMark ? `<span class="chip chip-coral" style="font-size:8px; padding:2px 7px;">${t('cal.today')}</span>` : ''}
           </div>
           <div class="ko" style="font-weight:700; color:var(--berry); margin-top:8px; font-size:14px; line-height:1.15;">${u.h.ko}</div>
-          <div style="font-size:11px; color:var(--soft); margin-top:1px; line-height:1.3;">${u.h.ru}</div>
+          <div style="font-size:11px; color:var(--soft); margin-top:1px; line-height:1.3;">${holidayName(u.h)}</div>
           <div style="display:flex; justify-content:space-between; align-items:flex-end; margin-top:10px; gap:6px;">
             <span style="font-size:8.5px; color:var(--coral); font-weight:600; letter-spacing:.08em;">${untilLabel(u.diff)}</span>
-            <span style="font-size:12.5px; font-weight:700; color:var(--berry); white-space:nowrap;">${u.dd} ${monthsRu[u.mm-1].toLowerCase().slice(0,3)}</span>
+            <span style="font-size:12.5px; font-weight:700; color:var(--berry); white-space:nowrap;">${u.dd} ${monthName(u.mm-1, true)}</span>
           </div>
         </div>
       `;
@@ -1344,25 +1714,25 @@
         <div style="padding: 22px 18px 20px;">
           <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom: 14px;">
             <div>
-              <div class="page-eyebrow">한국 달력 · КАЛЕНДАРЬ</div>
+              <div class="page-eyebrow">${t('cal.eyebrow')}</div>
               <div class="display" style="font-size:20px; color:var(--berry); margin-top:2px;">2026</div>
-              <div style="font-size:11px; color: var(--soft); margin-top:2px;">12 месяцев · ${Object.keys(koreanHolidays).length} праздников</div>
+              <div style="font-size:11px; color: var(--soft); margin-top:2px;">${t('cal.sub', { n: Object.keys(koreanHolidays).length })}</div>
             </div>
             <div onclick="this.closest('.modal-bg').remove()" style="font-size:26px; line-height:1; color:var(--soft); cursor:pointer; padding:4px;">×</div>
           </div>
 
           <!-- Today card -->
           <div class="card card-padded" style="background: linear-gradient(135deg, var(--coral), var(--rose)); color:white; border:none; margin-bottom:16px;">
-            <span class="chip" style="background:rgba(255,255,255,.28); color:white;">СЕГОДНЯ</span>
+            <span class="chip" style="background:rgba(255,255,255,.28); color:white;">${t('cal.today')}</span>
             <div class="ko" style="font-weight:700; font-size:18px; margin-top:8px;">${TODAY.m+1}월 ${TODAY.d}일</div>
-            <div style="font-size:13px;">${TODAY.d} ${monthsRu[TODAY.m].toLowerCase()} · ${weekdaysRuLong[new Date(TODAY.y, TODAY.m, TODAY.d).getDay()]}</div>
+            <div style="font-size:13px;">${TODAY.d} ${monthName(TODAY.m)} · ${weekdayLongName(new Date(TODAY.y, TODAY.m, TODAY.d))}</div>
             <div style="font-size:11.5px; opacity:.9; margin-top:6px;">${nearestLine}</div>
           </div>
 
           <!-- Upcoming holidays (top block) -->
           <div class="section-head">
-            <div class="left"><div class="rule"></div><span class="title">Скоро</span></div>
-            <span class="meta">ближайшие праздники</span>
+            <div class="left"><div class="rule"></div><span class="title">${t('cal.soon')}</span></div>
+            <span class="meta">${t('cal.soonMeta')}</span>
           </div>
           <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; margin-bottom:18px;">
             ${upcomingCards}
@@ -1370,8 +1740,8 @@
 
           <!-- Month switcher -->
           <div class="section-head">
-            <div class="left"><div class="rule"></div><span class="title">Календарь</span></div>
-            <span class="meta">все 12 месяцев</span>
+            <div class="left"><div class="rule"></div><span class="title">${t('cal.calendar')}</span></div>
+            <span class="meta">${t('cal.all12')}</span>
           </div>
           <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:14px; gap:10px;">
             <button onclick="changeMonth(-1)" class="btn btn-ghost" style="padding:10px 14px; min-width:auto;"><i class="fa-solid fa-chevron-left" style="font-size:11px;"></i></button>
@@ -1384,7 +1754,7 @@
 
           <!-- Weekday header -->
           <div style="display:grid; grid-template-columns:repeat(7,1fr); gap:2px; margin-bottom:4px;">
-            ${weekdaysRu.map((d,i) => `<div style="font-size:10px; color:${i>=5?'var(--coral)':'var(--soft)'}; padding:6px 0; text-align:center; font-weight:600; letter-spacing:.06em;">${d}</div>`).join('')}
+            ${weekdayShortList().map((d,i) => `<div style="font-size:10px; color:${i>=5?'var(--coral)':'var(--soft)'}; padding:6px 0; text-align:center; font-weight:600; letter-spacing:.06em;">${d}</div>`).join('')}
           </div>
 
           <!-- Date grid -->
@@ -1392,15 +1762,15 @@
 
           <!-- Legend -->
           <div style="display:flex; gap:14px; justify-content:center; margin-top:14px; font-size:10px; color:var(--soft);">
-            <span style="display:inline-flex; align-items:center; gap:5px;"><span style="width:8px; height:8px; border-radius:50%; background:var(--grad-coral);"></span> сегодня</span>
-            <span style="display:inline-flex; align-items:center; gap:5px;"><span style="width:6px; height:6px; border-radius:50%; background:var(--gold);"></span> праздник</span>
-            <span style="display:inline-flex; align-items:center; gap:5px;"><span style="width:6px; height:6px; border-radius:50%; background:var(--rose);"></span> выходной</span>
+            <span style="display:inline-flex; align-items:center; gap:5px;"><span style="width:8px; height:8px; border-radius:50%; background:var(--grad-coral);"></span> ${t('cal.legToday')}</span>
+            <span style="display:inline-flex; align-items:center; gap:5px;"><span style="width:6px; height:6px; border-radius:50%; background:var(--gold);"></span> ${t('cal.legHoliday')}</span>
+            <span style="display:inline-flex; align-items:center; gap:5px;"><span style="width:6px; height:6px; border-radius:50%; background:var(--rose);"></span> ${t('cal.legWeekend')}</span>
           </div>
 
           <!-- Holiday list of month -->
           <div id="cal-holidays-wrap" style="margin-top:18px;">
             <div class="section-head">
-              <div class="left"><div class="rule"></div><span class="title">Праздники месяца</span></div>
+              <div class="left"><div class="rule"></div><span class="title">${t('cal.monthHolidays')}</span></div>
             </div>
             <div id="cal-holidays" style="display:grid; gap:8px;"></div>
           </div>
@@ -1424,7 +1794,7 @@
     const grid   = document.getElementById('cal-grid');
     const list   = document.getElementById('cal-holidays');
     if (!grid) return;
-    headRu.textContent = `${monthsRu[calMonth]} ${calYear}`;
+    headRu.textContent = `${monthName(calMonth)} ${calYear}`;
     headKo.textContent = monthsKo[calMonth];
 
     const daysInMonth = new Date(calYear, calMonth + 1, 0).getDate();
@@ -1464,7 +1834,7 @@
       .filter(([k]) => k.startsWith(String(calMonth+1).padStart(2,'0') + '-'))
       .sort(([a],[b]) => a.localeCompare(b));
     if (monthHolidays.length === 0) {
-      list.innerHTML = `<div style="text-align:center; font-size:11.5px; color:var(--soft); padding:14px 0; font-style:italic;">В этом месяце праздников нет 🌸</div>`;
+      list.innerHTML = `<div style="text-align:center; font-size:11.5px; color:var(--soft); padding:14px 0; font-style:italic;">${t('cal.noneThisMonth')}</div>`;
     } else {
       list.innerHTML = monthHolidays.map(([key, h]) => {
         const day = parseInt(key.split('-')[1], 10);
@@ -1474,11 +1844,11 @@
             <div style="width:38px; height:38px; flex-shrink:0; border-radius:12px; background:linear-gradient(140deg, var(--blush), var(--paper)); display:flex; align-items:center; justify-content:center; font-size:20px;">${h.emoji}</div>
             <div style="flex:1; min-width:0;">
               <div class="ko" style="font-weight:700; color:var(--berry); font-size:13.5px;">${h.ko}</div>
-              <div style="font-size:11px; color:var(--soft); margin-top:1px;">${h.ru}</div>
+              <div style="font-size:11px; color:var(--soft); margin-top:1px;">${holidayName(h)}</div>
             </div>
             <div style="text-align:right; flex-shrink:0;">
-              <div style="font-size:13px; font-weight:700; color:${isToday?'var(--coral)':'var(--berry)'};">${day} ${monthsRu[calMonth].toLowerCase().slice(0,3)}</div>
-              ${isToday ? '<div style="font-size:9px; color:var(--coral); font-weight:600; letter-spacing:.1em;">СЕГОДНЯ</div>' : ''}
+              <div style="font-size:13px; font-weight:700; color:${isToday?'var(--coral)':'var(--berry)'};">${day} ${monthName(calMonth, true)}</div>
+              ${isToday ? `<div style="font-size:9px; color:var(--coral); font-weight:600; letter-spacing:.1em;">${t('cal.today')}</div>` : ''}
             </div>
           </div>
         `;
@@ -1490,7 +1860,7 @@
     const h = koreanHolidays[key];
     if (!h) return;
     const [mm, dd] = key.split('-').map(n => parseInt(n,10));
-    toast(`${h.emoji} <span class="ko">${h.ko}</span> · ${h.ru} — ${dd} ${monthsRu[mm-1].toLowerCase()}`);
+    toast(`${h.emoji} <span class="ko">${h.ko}</span> · ${holidayName(h)} — ${dd} ${monthName(mm-1)}`);
   }
 
   function showCultureDetail() {
@@ -1504,17 +1874,17 @@
           <div>
             <div style="font-size:28px;">🎎</div>
             <div class="display" style="font-size:22px; color:var(--berry); margin-top:6px;">정 (jeong)</div>
-            <div style="color: var(--coral); font-size: 12px; margin-top:2px;">Непереводимое корейское слово</div>
+            <div style="color: var(--coral); font-size: 12px; margin-top:2px;">${t('cult.eyebrow')}</div>
           </div>
           <div onclick="this.closest('.modal-bg').remove()" style="font-size:28px; line-height:1; color:var(--soft); cursor:pointer; padding:4px;">×</div>
         </div>
         <div style="font-size:13.5px; color:var(--text2); line-height:1.55; margin-top:18px; display:grid; gap: 10px;">
-          <p><span class="ko" style="font-weight:600;">정</span> — это глубокая привязанность и тёплая связь между людьми, которая <em>растёт со временем</em>.</p>
-          <p>Нельзя перевести одним русским словом: это и любовь, и дружба, и привычка, и тоска по близкому человеку.</p>
-          <p class="ko" style="color:var(--coral); font-style:italic;">«정이 들었어» — «Я привязалась к тебе всей душой»</p>
+          <p>${t('cult.p1')}</p>
+          <p>${t('cult.p2')}</p>
+          <p class="ko" style="color:var(--coral); font-style:italic;">${t('cult.quote')}</p>
         </div>
         <div class="ko-quote" style="margin-top: 16px; font-size: 12px;">
-          💡 Корейцы говорят, что 정 может возникнуть даже с местом или едой — не только с людьми.
+          ${t('cult.tip')}
         </div>
       </div>
     `;
@@ -1597,7 +1967,7 @@
         <span style="font-size:11px; color:var(--soft); line-height:1.25;">${w.ru}</span>
       </div>`).join('');
     const fileHtml = file ? `
-      <div style="font-size:10px; letter-spacing:.18em; color:var(--soft); margin:18px 0 8px;">МАТЕРИАЛЫ</div>
+      <div style="font-size:10px; letter-spacing:.18em; color:var(--soft); margin:18px 0 8px;">${t('hw.materials')}</div>
       <div class="card card-padded" style="display:flex; align-items:center; gap:12px;">
         <div style="width:42px; height:42px; flex-shrink:0; border-radius:12px; background:rgba(201,165,92,.15); display:flex; align-items:center; justify-content:center; font-size:20px;">📄</div>
         <div style="flex:1; min-width:0;">
@@ -1605,25 +1975,25 @@
           <div style="font-size:10.5px; color:var(--soft); margin-top:1px;">${file.note || ''}</div>
         </div>
         ${file.url
-          ? `<a href="${file.url}" download class="btn btn-primary" style="flex-shrink:0; padding:9px 14px; font-size:12px;"><i class="fa-solid fa-download"></i> Скачать</a>`
-          : `<button onclick="toast('Файл скоро добавим 🌸')" class="btn btn-ghost" style="flex-shrink:0; padding:9px 14px; font-size:12px;"><i class="fa-solid fa-download"></i> Скоро</button>`}
+          ? `<a href="${file.url}" download class="btn btn-primary" style="flex-shrink:0; padding:9px 14px; font-size:12px;"><i class="fa-solid fa-download"></i> ${t('hw.download')}</a>`
+          : `<button onclick="toast('${jsStr(t('hw.fileSoon'))}')" class="btn btn-ghost" style="flex-shrink:0; padding:9px 14px; font-size:12px;"><i class="fa-solid fa-download"></i> ${t('common.soon')}</button>`}
       </div>` : '';
     return `
       <div style="display:grid; gap:10px;">${taskHtml}</div>
       ${words.length ? `
-        <div style="font-size:10px; letter-spacing:.18em; color:var(--soft); margin:18px 0 8px;">СЛОВА ДЛЯ ЗАУЧИВАНИЯ · ${words.length}</div>
+        <div style="font-size:10px; letter-spacing:.18em; color:var(--soft); margin:18px 0 8px;">${t('hw.wordsToLearn')} · ${words.length}</div>
         <div style="display:grid; grid-template-columns:1fr 1fr; gap:6px;">${wordsHtml}</div>` : ''}
       ${fileHtml}
     `;
   }
   function openHomework(lessonId) {
     const lesson = getAllLessons().find(l => l.id === lessonId);
-    if (!lesson) { toast('Урок не найден 🌸'); return; }
+    if (!lesson) { toast(t('hw.notFound')); return; }
     // Студенты получают доступ к домашке только после прохождения урока.
     if (!isAdmin()) {
       const progress = getLessonProgress();
       if (!progress.completed.includes(lessonId)) {
-        toast('Сначала пройди урок — потом откроется домашка 🌸', 'var(--coral)');
+        toast(t('hw.passFirst'), 'var(--coral)');
         return;
       }
     }
@@ -1634,23 +2004,28 @@
       <div class="modal-sheet" style="height: 90vh;">
         <div style="padding: 18px 20px; border-bottom: 1px solid var(--line); display:flex; align-items:center; justify-content:space-between; gap:14px; position:sticky; top:0; background: var(--cream); z-index:1;">
           <div style="min-width:0;">
-            <div class="page-eyebrow">УРОК ${lesson.num} · ${lesson.title}</div>
-            <div class="display" style="font-size:19px; color:var(--berry); margin-top:2px;">Домашнее задание</div>
+            <div class="page-eyebrow">${t('lesson.lessonU')} ${lesson.num} · ${lessonTitle(lesson)}</div>
+            <div class="display" style="font-size:19px; color:var(--berry); margin-top:2px;">${t('hw.title')}</div>
           </div>
           <button onclick="this.closest('.modal-bg').remove()" style="background:none; border:none; font-size:22px; color:var(--soft); cursor:pointer; line-height:1;">×</button>
         </div>
         <div style="padding: 22px 20px 32px;">
           ${homeworkBodyHtml(lesson)}
-          <button onclick="this.closest('.modal-bg').remove()" class="btn btn-primary btn-block" style="margin-top:20px;">Понятно ✓</button>
+          <button onclick="this.closest('.modal-bg').remove()" class="btn btn-primary btn-block" style="margin-top:20px;">${t('common.gotIt')}</button>
         </div>
       </div>`;
     document.body.appendChild(m);
+  }
+  function hwCountLabel(tasks, words) {
+    if (APP_LANG === 'ru') return `${tasks} ${pluralRu(tasks, 'задание', 'задания', 'заданий')} · ${words} ${pluralRu(words, 'слово', 'слова', 'слов')}`;
+    if (APP_LANG === 'uz') return `${tasks} topshiriq · ${words} soʻz`;
+    return `${tasks} task${tasks === 1 ? '' : 's'} · ${words} word${words === 1 ? '' : 's'}`;
   }
   function renderHomeworkList() {
     const slot = document.getElementById('homework-list');
     if (!slot) return;
     if (!LESSON_CATALOG.length) {
-      slot.innerHTML = `<div style="font-size:12px; color:var(--soft); text-align:center; padding:14px;">Уроков пока нет 🌸</div>`;
+      slot.innerHTML = `<div style="font-size:12px; color:var(--soft); text-align:center; padding:14px;">${t('hw.noLessons')}</div>`;
       return;
     }
     const admin = isAdmin();
@@ -1665,10 +2040,10 @@
           <div class="card card-padded card-press" onclick="openHomework('${l.id}')" style="display:flex; align-items:center; gap:12px; cursor:pointer; margin-bottom:10px;">
             <div style="width:38px; height:38px; flex-shrink:0; border-radius:12px; background:var(--blush); display:flex; align-items:center; justify-content:center; font-size:18px;">📒</div>
             <div style="flex:1; min-width:0;">
-              <div style="font-weight:600; color:var(--berry); font-size:13px;">Урок ${l.num} · ${l.title}</div>
-              <div style="font-size:10.5px; color:var(--soft); margin-top:1px;">${tasks} задания · ${words} слов</div>
+              <div style="font-weight:600; color:var(--berry); font-size:13px;">${t('lesson.lesson')} ${l.num} · ${lessonTitle(l)}</div>
+              <div style="font-size:10.5px; color:var(--soft); margin-top:1px;">${hwCountLabel(tasks, words)}</div>
             </div>
-            <span class="chip chip-coral" style="flex-shrink:0; font-size:10px;">Открыть →</span>
+            <span class="chip chip-coral" style="flex-shrink:0; font-size:10px;">${t('hw.open')}</span>
           </div>`;
       }
       // Locked card — visually muted, no click handler
@@ -1676,8 +2051,8 @@
         <div class="card card-padded" style="display:flex; align-items:center; gap:12px; margin-bottom:10px; border-style:dashed; background:var(--card); cursor:not-allowed;">
           <div style="width:38px; height:38px; flex-shrink:0; border-radius:12px; background:var(--veil); display:flex; align-items:center; justify-content:center; font-size:14px; color:var(--hush);"><i class="fa-solid fa-lock"></i></div>
           <div style="flex:1; min-width:0; opacity:.55;">
-            <div style="font-weight:500; color:var(--berry); font-size:13px;">Урок ${l.num} · ${l.title}</div>
-            <div style="font-size:10.5px; color:var(--soft); margin-top:1px;">Откроется после прохождения урока</div>
+            <div style="font-weight:500; color:var(--berry); font-size:13px;">${t('lesson.lesson')} ${l.num} · ${lessonTitle(l)}</div>
+            <div style="font-size:10.5px; color:var(--soft); margin-top:1px;">${t('hw.locked')}</div>
           </div>
           <span class="chip" style="flex-shrink:0; font-size:10px; background:var(--veil); color:var(--soft);">🔒</span>
         </div>`;
@@ -1686,7 +2061,7 @@
   function lessonNav(nextLabel, lockNext) {
     return `
       <div style="display:flex; gap:10px; margin-top:22px;">
-        <button onclick="prevLesson()" class="btn btn-ghost" style="flex:1;">← Назад</button>
+        <button onclick="prevLesson()" class="btn btn-ghost" style="flex:1;">${t('common.back')}</button>
         <button ${lockNext ? 'id="quiz-next-btn" disabled' : ''} onclick="nextLesson()" class="btn btn-primary" style="flex:1.6;${lockNext ? ' opacity:.45; pointer-events:none;' : ''}">${nextLabel}</button>
       </div>`;
   }
@@ -1713,7 +2088,7 @@
     if (slide.kind === 'intro') {
       return `
         <div style="text-align:center;">
-          <div class="page-eyebrow">УРОК ${lesson.num}</div>
+          <div class="page-eyebrow">${t('lesson.lessonU')} ${lesson.num}</div>
           <div class="ko" style="font-size:56px; font-weight:800; color:var(--berry); margin-top:10px; line-height:1;">${lesson.ko}</div>
           <div class="display" style="font-size:23px; color:var(--berry); margin-top:8px;">${slide.title}</div>
           <div style="font-size:13px; color:var(--text2); margin-top:6px;">${slide.sub}</div>
@@ -1721,17 +2096,17 @@
         <div class="ko-quote" style="margin-top:22px;">
           <div style="display:flex; align-items:center; gap:10px; margin-bottom:8px;">
             <div style="width:28px; height:28px; background:var(--card); border-radius:50%; border:1px solid var(--gold); display:flex; align-items:center; justify-content:center;">🌸</div>
-            <div style="font-size:13px;"><span style="font-weight:600;">Мади</span> <span style="color:var(--soft); font-size:11px; margin-left:6px;">учитель</span></div>
+            <div style="font-size:13px;"><span style="font-weight:600;">${t('lesson.madie')}</span> <span style="color:var(--soft); font-size:11px; margin-left:6px;">${t('lesson.teacher')}</span></div>
           </div>
           <p>${slide.intro || (lesson && LESSON_INTROS[lesson.id]) || '«Сегодня знакомимся с <span class="ko" style="font-weight:600;">한글</span> — корейской азбукой. Пройдём буквы, послушаем звуки и выучим первые слова. Это магия 🌸 화이팅!»'}</p>
         </div>
         <div style="margin-top:20px;">
-          <div style="font-size:10px; letter-spacing:0.18em; color:var(--soft); padding:0 4px; margin-bottom:8px;">ЧТО ВЫУЧИМ</div>
+          <div style="font-size:10px; letter-spacing:0.18em; color:var(--soft); padding:0 4px; margin-bottom:8px;">${t('lesson.whatLearn')}</div>
           <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:8px;">
             ${(slide.learn||[]).map(([e,t]) => `<div class="card card-padded" style="text-align:center; padding:12px 8px;"><div style="font-size:22px;">${e}</div><div style="font-size:10.5px; margin-top:4px;">${t}</div></div>`).join('')}
           </div>
         </div>
-        <button onclick="nextLesson()" class="btn btn-rose btn-block" style="margin-top:22px;">Поехали <span class="ko">시작!</span> <i class="fa-solid fa-arrow-right" style="font-size:11px;"></i></button>
+        <button onclick="nextLesson()" class="btn btn-rose btn-block" style="margin-top:22px;">${t('lesson.go')} <span class="ko">시작!</span> <i class="fa-solid fa-arrow-right" style="font-size:11px;"></i></button>
       `;
     }
     if (slide.kind === 'info') {
@@ -1754,7 +2129,7 @@
         <div class="ko" style="font-size:13px; color:var(--coral); margin-top:2px;">${slide.sub||''}</div>
         <div style="display:grid; grid-template-columns:${gridCols}; gap:8px; margin-top:16px;">${cells}</div>
         ${hint(slide.note)}
-        ${lessonNav('Понятно ✓')}
+        ${lessonNav(t('common.gotIt'))}
       `;
     }
     if (slide.kind === 'quiz') {
@@ -1762,9 +2137,9 @@
       return `
         <div class="page-eyebrow">${slide.eyebrow}</div>
         <div class="display" style="font-size:21px; color:var(--berry); margin-top:4px;">${slide.title}</div>
-        <div style="font-size:12px; color:var(--coral); margin-top:2px;">Выбери правильный звук для каждой буквы</div>
+        <div style="font-size:12px; color:var(--coral); margin-top:2px;">${t('lesson.quizPick')}</div>
         <div id="quiz-grid" style="display:grid; gap:10px; margin-top:16px;">${rows}</div>
-        ${lessonNav('Дальше →', true)}
+        ${lessonNav(t('common.next'), true)}
       `;
     }
     if (slide.kind === 'words') {
@@ -1778,19 +2153,19 @@
       return `
         <div class="page-eyebrow">${slide.eyebrow}</div>
         <div class="display" style="font-size:22px; color:var(--berry); margin-top:4px;">${slide.title}</div>
-        <div style="font-size:12px; color:var(--coral); margin-top:2px;">Тапни карточку — услышишь слово 🔊</div>
+        <div style="font-size:12px; color:var(--coral); margin-top:2px;">${t('lesson.tapHear')}</div>
         <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:16px;">${cards}</div>
-        ${lessonNav('Дальше →')}
+        ${lessonNav(t('common.next'))}
       `;
     }
     if (slide.kind === 'homework') {
       return `
         <div style="text-align:center;">
           <div style="font-size:42px;">📒</div>
-          <div class="display" style="font-size:23px; color:var(--berry); margin-top:6px;">Домашнее задание</div>
+          <div class="display" style="font-size:23px; color:var(--berry); margin-top:6px;">${t('hw.title')}</div>
         </div>
         <div style="margin-top:18px;">${homeworkBodyHtml(lesson)}</div>
-        ${lessonNav('Завершить урок →')}
+        ${lessonNav(t('lesson.finishLesson'))}
       `;
     }
     // ── Модуль 2: диалог (2 голоса TTS) ──
@@ -1808,13 +2183,13 @@
           </div>`;
       }).join('');
       return `
-        <div class="page-eyebrow">${slide.eyebrow || 'ДИАЛОГ'}</div>
+        <div class="page-eyebrow">${slide.eyebrow || t('lesson.dialogEb')}</div>
         <div class="display" style="font-size:21px; color:var(--berry); margin-top:4px;">${slide.title}</div>
         ${slide.sub ? `<div style="font-size:12px; color:var(--coral); margin-top:2px;">${slide.sub}</div>` : ''}
-        <button onclick="lessonSpeakDialog(this)" class="btn btn-rose btn-block" style="margin-top:14px;"><i class="fa-solid fa-headphones"></i> Прослушать диалог</button>
+        <button onclick="lessonSpeakDialog(this)" class="btn btn-rose btn-block" style="margin-top:14px;"><i class="fa-solid fa-headphones"></i> ${t('lesson.listenDialog')}</button>
         <div class="dlg-list" style="margin-top:14px;">${bubbles}</div>
         ${hint(slide.note)}
-        ${lessonNav('Дальше →')}
+        ${lessonNav(t('common.next'))}
       `;
     }
     // ── Модуль 2: грамматический паттерн + дрилы ──
@@ -1836,15 +2211,15 @@
         </div>`;
       }).join('');
       return `
-        <div class="page-eyebrow">${slide.eyebrow || 'ГРАММАТИКА'}</div>
+        <div class="page-eyebrow">${slide.eyebrow || t('lesson.grammarEb')}</div>
         <div class="display" style="font-size:21px; color:var(--berry); margin-top:4px;">${slide.title}</div>
         ${slide.sub ? `<div style="font-size:12px; color:var(--coral); margin-top:2px;">${slide.sub}</div>` : ''}
         <div class="card card-padded" style="background:rgba(201,165,92,.10); border-color:rgba(201,165,92,.4); margin-top:14px;">
           <div style="font-size:13px; color:var(--berry); line-height:1.6;">${slide.rule}</div>
         </div>
         ${examples ? `<div style="margin-top:8px;">${examples}</div>` : ''}
-        ${drills ? `<div style="margin-top:14px;"><div style="font-size:10px; letter-spacing:.18em; color:var(--soft); margin-bottom:2px;">ПОТРЕНИРУЙСЯ</div>${drills}</div>` : ''}
-        ${lessonNav('Дальше →', !!drills)}
+        ${drills ? `<div style="margin-top:14px;"><div style="font-size:10px; letter-spacing:.18em; color:var(--soft); margin-bottom:2px;">${t('lesson.practice')}</div>${drills}</div>` : ''}
+        ${lessonNav(t('common.next'), !!drills)}
       `;
     }
     // ── Модуль 2: собери предложение из слов ──
@@ -1852,18 +2227,18 @@
       const chips = shuffleArr([...(slide.target || []), ...(slide.pool || [])]);
       const chipHtml = chips.map(w => `<button type="button" class="build-chip" data-w="${escHtml(w)}" onclick="lessonBuildPick(this)">${escHtml(w)}</button>`).join('');
       return `
-        <div class="page-eyebrow">${slide.eyebrow || 'СОБЕРИ ФРАЗУ'}</div>
+        <div class="page-eyebrow">${slide.eyebrow || t('lesson.buildEb')}</div>
         <div class="display" style="font-size:21px; color:var(--berry); margin-top:4px;">${slide.title}</div>
         <div class="card card-padded" style="margin-top:12px; text-align:center;">
-          <div style="font-size:10px; color:var(--soft); letter-spacing:.16em;">ПЕРЕВЕДИ НА КОРЕЙСКИЙ</div>
+          <div style="font-size:10px; color:var(--soft); letter-spacing:.16em;">${t('lesson.translateKo')}</div>
           <div style="font-size:16px; color:var(--berry); font-weight:600; margin-top:6px;">${escHtml(slide.ru)}</div>
         </div>
         <div id="build-answer" class="build-answer" data-target="${(slide.target || []).map(escHtml).join('|')}" data-ru="${escHtml(slide.ru || '')}"></div>
         <div id="build-pool" class="build-pool">${chipHtml}</div>
         <div id="build-feedback" style="text-align:center; font-size:13px; margin-top:10px; min-height:18px;"></div>
         <div style="display:flex; gap:10px; margin-top:8px;">
-          <button onclick="prevLesson()" class="btn btn-ghost" style="flex:1;">← Назад</button>
-          <button id="build-check-btn" onclick="lessonBuildCheck(this)" class="btn btn-primary" style="flex:1.6;">Проверить</button>
+          <button onclick="prevLesson()" class="btn btn-ghost" style="flex:1;">${t('common.back')}</button>
+          <button id="build-check-btn" onclick="lessonBuildCheck(this)" class="btn btn-primary" style="flex:1.6;">${t('common.check')}</button>
         </div>
       `;
     }
@@ -1871,17 +2246,17 @@
     if (slide.kind === 'listen') {
       const opts = shuffleArr([...(slide.options || [])]);
       return `
-        <div class="page-eyebrow">${slide.eyebrow || 'АУДИРОВАНИЕ'}</div>
+        <div class="page-eyebrow">${slide.eyebrow || t('lesson.listenEb')}</div>
         <div class="display" style="font-size:21px; color:var(--berry); margin-top:4px;">${slide.title}</div>
-        <div style="font-size:12px; color:var(--coral); margin-top:2px;">${slide.sub || 'Нажми ▶ и выбери, что услышал(а)'}</div>
+        <div style="font-size:12px; color:var(--coral); margin-top:2px;">${slide.sub || t('lesson.listenSub')}</div>
         <div style="text-align:center; margin:20px 0;">
-          <button onclick="lessonPlay('${jsStr(slide.ko)}', this)" class="listen-play" aria-label="Прослушать"><i class="fa-solid fa-play"></i></button>
-          <div style="font-size:11px; color:var(--soft); margin-top:10px;">Тапни, чтобы прослушать ещё раз 🔊</div>
+          <button onclick="lessonPlay('${jsStr(slide.ko)}', this)" class="listen-play" aria-label="${t('lesson.listenAria')}"><i class="fa-solid fa-play"></i></button>
+          <div style="font-size:11px; color:var(--soft); margin-top:10px;">${t('lesson.tapReplay')}</div>
         </div>
         <div id="quiz-grid" style="display:grid; gap:10px;" data-save-ko="${escHtml(slide.ko || '')}" data-save-ru="${escHtml(slide.ru || '')}">
           ${opts.map(o => `<button class="btn btn-ghost lesson-opt" onclick="lessonChoicePick(this, '${jsStr(o)}', '${jsStr(slide.answer)}')" style="padding:13px;">${escHtml(o)}</button>`).join('')}
         </div>
-        ${lessonNav('Дальше →', true)}
+        ${lessonNav(t('common.next'), true)}
       `;
     }
     // done
@@ -1889,15 +2264,15 @@
     return `
       <div style="text-align:center; padding-top:8px;">
         <div style="font-size:56px;">🌸</div>
-        <div class="display" style="font-size:25px; color:var(--berry); margin-top:8px;">Урок ${lesson.num} пройден</div>
+        <div class="display" style="font-size:25px; color:var(--berry); margin-top:8px;">${t('lesson.passed', { num: lesson.num })}</div>
         <div class="ko" style="font-size:18px; color:var(--coral); margin-top:2px;">잘했어 🌸</div>
         <div style="margin:24px auto 0; width:120px; height:120px; background:var(--card); border:8px solid rgba(201,165,92,.18); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:64px; color:var(--gold-ink);">✓</div>
         <div class="card card-padded" style="background: linear-gradient(135deg, var(--gold), var(--coral)); color:white; border:none; margin:22px 0 0; text-align:left;">
-          <div style="font-size:9.5px; letter-spacing:0.2em; opacity:.85;">🎮 ЧТО ДАЛЬШЕ</div>
-          <div style="font-weight:600; margin-top:4px;">Слова урока добавлены в игры</div>
-          <div style="font-size:11.5px; opacity:.9; margin-top:2px;">${wordCount} слов теперь в карточках, мемори, переводе и других играх</div>
+          <div style="font-size:9.5px; letter-spacing:0.2em; opacity:.85;">${t('lesson.whatNext')}</div>
+          <div style="font-weight:600; margin-top:4px;">${t('lesson.wordsAdded')}</div>
+          <div style="font-size:11.5px; opacity:.9; margin-top:2px;">${t('lesson.wordsNowIn', { n: wordCount })}</div>
         </div>
-        <button onclick="completeLesson()" class="btn btn-primary btn-block" style="margin-top:18px;">Готово ✓</button>
+        <button onclick="completeLesson()" class="btn btn-primary btn-block" style="margin-top:18px;">${t('common.done')}</button>
       </div>
     `;
   }
@@ -1960,13 +2335,15 @@
   // ── Модуль 2: озвучка диалога двумя голосами (по образцу speakExamScript) ──
   let _seqItems = null, _seqIdx = 0, _seqBtn = null;
   function stopKoSequence() {
+    _koGen++;
     _seqItems = null; _seqIdx = 0;
     try { window.speechSynthesis && window.speechSynthesis.cancel(); } catch (_) {}
+    stopAudioPlayback();
     document.querySelectorAll('.dlg-row.speaking').forEach(r => r.classList.remove('speaking'));
     if (_seqBtn) { if (_seqBtn.dataset.idle) _seqBtn.innerHTML = _seqBtn.dataset.idle; _seqBtn.classList.remove('playing'); _seqBtn = null; }
   }
   function speakKoSequence(items, btn) {
-    if (!('speechSynthesis' in window)) { toast('Голос недоступен в этом браузере'); return; }
+    if (!ttsProxyEnabled() && !('speechSynthesis' in window)) { toast('Голос недоступен в этом браузере'); return; }
     if (typeof getSettings === 'function' && !getSettings().sound) { toast('Озвучка выключена в настройках 🔇', 'var(--berry)'); return; }
     if (btn && btn === _seqBtn && _seqItems) { stopKoSequence(); return; } // toggle
     stopSpeech(); stopKoSequence();
@@ -1981,13 +2358,12 @@
       const row = document.querySelector(`.dlg-row[data-dlg-i="${it.i}"]`);
       if (row) { row.classList.add('speaking'); try { row.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); } catch (_) {} }
       _seqIdx++;
-      const u = new SpeechSynthesisUtterance(it.ko);
-      u.lang = 'ko-KR';
-      u.rate = slow ? 0.6 : 0.9;
-      u.pitch = it.who === 'B' ? 1.3 : 0.85;
-      u.onend = () => next();
-      u.onerror = () => next();
-      try { window.speechSynthesis.speak(u); } catch (_) { next(); }
+      _koSpeakOne(it.ko, {
+        slow: slow,
+        rate: slow ? 0.6 : 0.9,
+        pitch: it.who === 'B' ? 1.3 : 0.85,
+        voice: it.who === 'B' ? TTS_VOICE_F : TTS_VOICE_M
+      }, next);
     };
     next();
   }
@@ -2078,7 +2454,7 @@
         fb.innerHTML = '맞아요! Верно 🌸 ' + lessonSaveHeart(koPhrase, ruPhrase, '', '🧩', 'lesson-build', 'lsave-inline');
       }
       addXp(10); toast('잘했어요! +10 XP', 'var(--sage)');
-      btn.textContent = 'Дальше →';
+      btn.textContent = t('common.next');
       btn.onclick = () => nextLesson();
     } else {
       if (fb) { fb.style.color = 'var(--bad-ink)'; fb.textContent = 'Не совсем — попробуй другой порядок 🌸'; }
@@ -2147,7 +2523,7 @@
       <div class="lesson-complete-inner">
         <img src="assets/bear5.png" alt="" class="lesson-complete-bear-big" onerror="this.style.display='none'">
         <div class="page-eyebrow" style="color:var(--coral); letter-spacing:.22em;">УРОК ${lesson.num} ПРОЙДЕН</div>
-        <div class="display" style="font-size:30px; color:var(--berry); margin-top:8px; line-height:1.15;">${lesson.title}</div>
+        <div class="display" style="font-size:30px; color:var(--berry); margin-top:8px; line-height:1.15;">${lessonTitle(lesson)}</div>
         ${lesson.ko ? `<div class="ko" style="font-size:18px; color:var(--soft); margin-top:6px;">${lesson.ko}</div>` : ''}
         ${xpChip}
         <div style="margin-top:18px; font-size:14px; color:var(--soft); line-height:1.55; max-width:320px;">
@@ -2265,7 +2641,7 @@
           </div>
         </div>
         <div style="display:grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-top: 18px;">
-          <button onclick="rateCard(0)" class="btn btn-ghost" style="padding: 10px 6px; font-size: 11px; flex-direction:column; gap: 2px; border-color: #E89BA1; color: #E89BA1;">😵<span style="font-size:9px;">Не помню</span></button>
+          <button onclick="rateCard(0)" class="btn btn-ghost" style="padding: 10px 6px; font-size: 11px; flex-direction:column; gap: 2px; border-color: var(--bad-line); color: var(--bad-ink);">😵<span style="font-size:9px;">Не помню</span></button>
           <button onclick="rateCard(1)" class="btn btn-ghost" style="padding: 10px 6px; font-size: 11px; flex-direction:column; gap: 2px;">🤔<span style="font-size:9px;">С трудом</span></button>
           <button onclick="rateCard(2)" class="btn btn-ghost" style="padding: 10px 6px; font-size: 11px; flex-direction:column; gap: 2px; border-color: var(--sage); color: var(--ok-ink);">🙂<span style="font-size:9px;">Знаю</span></button>
           <button onclick="rateCard(3)" class="btn btn-primary" style="padding: 10px 6px; font-size: 11px; flex-direction:column; gap: 2px;">🌟<span style="font-size:9px;">Идеально!</span></button>
@@ -2426,6 +2802,7 @@
         applyAvatar(url);
         toast('Фото обновлено 📷', 'var(--sage)');
         recordAvatarSet();
+        if (isAdmin()) pushProfilePublicField('avatar', url); // у админа авто-синк отключён — публикуем фото ученицам явно
         pushUserToCloud();
       };
       img.onerror = () => toast('Не удалось обработать фото');
@@ -2456,9 +2833,9 @@
         if (isAdmin()) pushProfilePublicField('cover', url); // у админа авто-синк отключён
         const prev = document.getElementById('ep-cover-preview');
         if (prev) { prev.style.background = `url(${url}) center/cover no-repeat`; prev.classList.add('has-photo'); }
-        toast('Обложка обновлена 🌸', 'var(--sage)');
+        toast(t('ep.coverUpdated'), 'var(--sage)');
       };
-      img.onerror = () => toast('Не удалось обработать фото');
+      img.onerror = () => toast(t('ep.photoFail'));
       img.src = e.target.result;
     };
     reader.readAsDataURL(f);
@@ -2524,10 +2901,10 @@
     x.textAlign = 'center';
     x.fillStyle = '#5C2A33';
     x.font = '700 64px Inter, sans-serif';
-    x.fillText((u.name || 'Ученица Madie').slice(0, 18), W / 2, cardY + 360);
+    x.fillText((u.name || t('share.defStudent')).slice(0, 18), W / 2, cardY + 360);
     x.fillStyle = '#E07686';
     x.font = '600 40px Inter, sans-serif';
-    x.fillText(`${rank.emoji} ${rank.label} · Уровень ${lvl}`, W / 2, cardY + 425);
+    x.fillText(`${rank.emoji} ${rank.label} · ${t('share.levelN', { lvl: lvl })}`, W / 2, cardY + 425);
     // статистика
     x.fillStyle = '#5C2A33';
     x.font = '800 150px Fraunces, Georgia, serif';
@@ -2537,7 +2914,7 @@
     x.fillText('XP', W / 2 + (String(stats.xp).length * 42) + 60, cardY + 585);
     x.fillStyle = 'rgba(92,42,51,.6)';
     x.font = '500 44px Inter, sans-serif';
-    x.fillText(`🔥 стрик ${stats.streak} · 📚 ${stats.words || 0} слов · 🌸 ${stats.daysEntered || 0} дней`, W / 2, cardY + 680);
+    x.fillText(t('share.statsLine', { s: stats.streak, w: stats.words || 0, d: stats.daysEntered || 0 }), W / 2, cardY + 680);
     // мишка + подпись
     const bear = await _loadImg('assets/bear2.png');
     if (bear) {
@@ -2547,17 +2924,17 @@
     x.textAlign = 'left';
     x.fillStyle = '#5C2A33';
     x.font = '700 46px Inter, sans-serif';
-    x.fillText('Учу корейский с Madie', 100, H - 200);
+    x.fillText(t('share.iLearnWith'), 100, H - 200);
     x.fillStyle = 'rgba(92,42,51,.55)';
     x.font = '500 36px Inter, sans-serif';
     x.fillText('Korean with Madie 🌸 화이팅!', 100, H - 140);
     // поделиться / скачать
     c.toBlob(async blob => {
-      if (!blob) { toast('Не получилось создать картинку'); return; }
+      if (!blob) { toast(t('share.imgFail')); return; }
       const file = new File([blob], 'madie-profile.png', { type: 'image/png' });
       if (navigator.canShare && navigator.canShare({ files: [file] })) {
         try {
-          await navigator.share({ files: [file], title: 'Мой прогресс в корейском', text: `Учу корейский с Korean with Madie 🌸 Уровень ${lvl} · ${stats.xp} XP · стрик ${stats.streak} 🔥` });
+          await navigator.share({ files: [file], title: t('share.progTitle'), text: t('share.progText', { lvl: lvl, xp: stats.xp, s: stats.streak }) });
           return;
         } catch (e) { if (e && e.name === 'AbortError') return; }
       }
@@ -2566,7 +2943,7 @@
       a.download = 'madie-profile.png';
       a.click();
       setTimeout(() => URL.revokeObjectURL(a.href), 4000);
-      toast('Карточка сохранена — выложи в сторис! 📸', 'var(--sage)');
+      toast(t('share.saved'), 'var(--sage)');
     }, 'image/png');
   }
 
@@ -2640,9 +3017,10 @@
       email: u.email || '',
       lastSeen: Date.now(),
       joinedAt: stats.firstOpenTs || Date.now(),
-      isAdmin: !!u.isAdmin,
-      level: u.level || ''
+      isAdmin: !!u.isAdmin
     };
+    // level пишем только если он задан — пустой не должен затирать облачную копию.
+    if (u.level) profile.level = u.level;
     try {
       await _db.ref('users/' + uid).update(profile);
     } catch (e) {
@@ -2652,16 +3030,18 @@
   function relativeTime(ts) {
     if (!ts) return '—';
     const diff = Date.now() - ts;
-    if (diff < 60000) return 'только что';
+    const L = (typeof APP_LANG !== 'undefined' && APP_LANG) || 'ru';
+    if (diff < 60000) return t('time.now');
     const mins = Math.floor(diff / 60000);
-    if (mins < 60) return `${mins} мин назад`;
+    if (mins < 60) return t('time.min', { n: mins });
     const hrs = Math.floor(mins / 60);
-    if (hrs < 24) return `${hrs} ч назад`;
+    if (hrs < 24) return t('time.hour', { n: hrs });
     const days = Math.floor(hrs / 24);
-    if (days === 1) return 'вчера';
-    if (days < 7) return `${days} ${pluralDays(days)} назад`;
+    if (days === 1) return t('time.yesterday');
+    if (days < 7) return L === 'ru' ? `${days} ${pluralDays(days)} назад` : t('time.day', { n: days });
     const d = new Date(ts);
-    return `${d.getDate()} ${monthsRu[d.getMonth()].toLowerCase()}`;
+    if (L === 'ru') return `${d.getDate()} ${monthsRu[d.getMonth()].toLowerCase()}`;
+    return d.toLocaleDateString(L === 'uz' ? 'uz-Latn' : 'en', { day: 'numeric', month: 'short' });
   }
 
   // ── Per-user data sync (full mirror to Firebase) ──
@@ -2760,6 +3140,17 @@
     if (!u || u.isAdmin || u.guest) return;
     const uid = firebaseUserId();
     if (!uid || uid === 'guest') return;
+    // Уровень: облако — источник истины (новое устройство / очищенный localStorage).
+    // Подтягиваем ОДИН раз и только если локально не задан, чтобы НЕ перетереть
+    // свежий выбор (setMyLevel пушит в облако с задержкой 600ms).
+    _db.ref('users/' + uid + '/level').once('value').then(snap => {
+      const cloudLvl = snap.val();
+      const cur = Store.get('user');
+      if (cur && !cur.guest && !cur.isAdmin && !cur.level && cloudLvl) {
+        cur.level = cloudLvl; Store.set('user', cur);
+        try { renderMyLevelChip(); } catch (_) {}
+      }
+    }).catch(() => {});
     // Expect a cloud snapshot shortly; show skeletons until it lands (≤4s safety net).
     _cloudSyncPending = true;
     if (_cloudSyncTimeout) clearTimeout(_cloudSyncTimeout);
@@ -2836,7 +3227,7 @@
             syncAchievementsStrip();
             settleCloudSync();
             scheduleAchReconcile();
-          } else if (k === 'lessonProgress' || k === 'lessonProgress_m2') {
+          } else if (k === 'lessonProgress' || k.startsWith('lessonProgress_m')) {
             renderLessonPath();
             renderHeroLesson();
           } else if (k === 'bestScores') {
@@ -2877,7 +3268,7 @@
         <div class="display" style="font-size:24px; color:var(--berry); margin-top:14px; line-height:1.2;">${frozen ? 'Занятия на паузе' : 'Доступ приостановлен'}</div>
         <div style="font-size:13.5px; color:var(--soft); margin-top:10px; line-height:1.6;">
           ${frozen
-            ? 'Твой доступ временно заморожен. Напиши Мади, когда будешь готова продолжить — всё сохранится: XP, стрик и прогресс 🌸'
+            ? `Твой доступ временно заморожен. Напиши Мади, когда будешь ${gw('готова', 'готов')} продолжить — всё сохранится: XP, стрик и прогресс 🌸`
             : 'Похоже, занятия ещё не оплачены. Напиши Мади, чтобы продолжить обучение — прогресс никуда не денется 🌸'}
         </div>
         <div class="ko" style="font-size:13px; color:var(--coral); margin-top:14px;">곧 다시 만나요! · До скорой встречи!</div>
@@ -3143,6 +3534,12 @@
         if (key === 'customLessons') { renderCustomLessons(); renderHeroLesson(); renderLessonPath(); }
         if (key === 'topikMaterials' && document.getElementById('screen-topik')?.classList.contains('active')) renderTopik();
       });
+    });
+    // Нативный TTS: URL воркера, заданный Мади, раздаётся на все устройства.
+    _db.ref('shared/config/ttsProxyUrl').on('value', snap => {
+      const url = (snap.val() || '').toString().trim();
+      try { if (url) localStorage.setItem('km_tts_proxy', url); else localStorage.removeItem('km_tts_proxy'); } catch (_) {}
+      window.KM_TTS_PROXY_URL = url;
     });
   }
   // ── Friends & Chat ──
@@ -3748,14 +4145,14 @@
     const avatarInner = dir.avatar
       ? `<div class="photo-zoom chat-row-av" style="background:url(${dir.avatar}) center/cover no-repeat;"></div>`
       : `<div class="chat-row-av chat-row-av-initial">${escHtml(name.charAt(0).toUpperCase())}</div>`;
-    const avatar = `<div class="friend-avatar-wrap">${avatarInner}${online ? '<span class="friend-online-dot" title="в сети"></span>' : ''}</div>`;
+    const avatar = `<div class="friend-avatar-wrap">${avatarInner}${online ? `<span class="friend-online-dot" title="${t('chat.online')}"></span>` : ''}</div>`;
     // Telegram-style preview: "Ты: …" for my own last message, plain text otherwise.
     let preview;
     if (meta.lastMessage) {
       const mine = meta.lastFrom === myUid();
-      preview = `${mine ? '<span class="chat-row-me">Ты:</span> ' : ''}${escHtml(meta.lastMessage)}`;
+      preview = `${mine ? `<span class="chat-row-me">${t('chat.you')}</span> ` : ''}${escHtml(meta.lastMessage)}`;
     } else {
-      preview = online ? '<span style="color:var(--ok-ink);font-weight:600;">в сети</span>' : 'Напиши первое сообщение 🌸';
+      preview = online ? `<span style="color:var(--ok-ink);font-weight:600;">${t('chat.online')}</span>` : t('chat.firstMsg');
     }
     const timeLabel = chatListTimeLabel(meta.lastAt);
     const pinned = isChatPinned(uid);
@@ -3962,7 +4359,13 @@
 
     // Выбор охвата по умолчанию: если друзей нет — показываем глобальный.
     if (!fids.length && _lbScope === 'friends') _lbScope = 'global';
+    // Рейтинг приезжает асинхронно и вставляется НАД списком чатов. Браузерное
+    // «scroll anchoring» иначе удерживает чаты на месте и прячет верх рейтинга под
+    // шапкой («обрезается»). Возвращаем скролл туда, где он был до вставки.
+    const keepY = _getScroll();
     paintLeaderboard();
+    _setScroll(keepY);
+    requestAnimationFrame(() => _setScroll(keepY));
   }
   function paintLeaderboard() {
     const slot = document.getElementById('week-leaderboard');
@@ -4101,11 +4504,11 @@
     const avatarInner = u.avatar
       ? `<div class="photo-zoom chat-row-av" style="background:url(${u.avatar}) center/cover no-repeat;"></div>`
       : `<div class="chat-row-av chat-row-av-initial">${initial}</div>`;
-    const avatar = `<div class="friend-avatar-wrap">${avatarInner}${online ? '<span class="friend-online-dot" title="в сети"></span>' : ''}</div>`;
+    const avatar = `<div class="friend-avatar-wrap">${avatarInner}${online ? `<span class="friend-online-dot" title="${t('chat.online')}"></span>` : ''}</div>`;
     let preview;
     if (meta.lastMessage) {
       const mine = meta.lastFrom === myUid();
-      preview = `${mine ? '<span class="chat-row-me">Ты:</span> ' : ''}${escHtml(meta.lastMessage)}`;
+      preview = `${mine ? `<span class="chat-row-me">${t('chat.you')}</span> ` : ''}${escHtml(meta.lastMessage)}`;
     } else {
       preview = `${escHtml(u.email || '')} · 🔥 ${(u.stats && u.stats.streak) || 0} · ${xp} XP`;
     }
@@ -4238,9 +4641,9 @@
     if (!lastSeen) return `<span>—</span>`;
     const diff = Date.now() - lastSeen;
     if (diff < ONLINE_WINDOW_MS) {
-      return `<span class="chat-online-dot"></span><span>в сети</span>`;
+      return `<span class="chat-online-dot"></span><span>${t('chat.online')}</span>`;
     }
-    return `<span>был в сети ${relativeTime(lastSeen)}</span>`;
+    return `<span>${t('chat.lastSeen', { time: relativeTime(lastSeen) })}</span>`;
   }
 
   function paintChatHeaderStatus() {
@@ -4253,20 +4656,21 @@
       const typing = Object.entries(_chatTyping || {})
         .filter(([uid, ts]) => uid !== me && now - Number(ts) < 6000);
       if (typing.length) {
-        const nm = (_chatMembers && _chatMembers[typing[0][0]]) || 'Кто-то';
-        slot.innerHTML = `<span class="chat-typing">${escHtml(nm)} печатает<span class="chat-typing-dots"><i></i><i></i><i></i></span></span>`;
+        const nm = (_chatMembers && _chatMembers[typing[0][0]]) || t('chat.someone');
+        slot.innerHTML = `<span class="chat-typing">${escHtml(nm)} ${t('chat.typing')}<span class="chat-typing-dots"><i></i><i></i><i></i></span></span>`;
         slot.classList.add('online');
         return;
       }
       const n = Object.keys(_chatMembers || {}).length;
-      slot.innerHTML = `<span>${n ? `${n} ${pluralRu(n, 'участник', 'участника', 'участников')}` : 'группа'}</span>`;
+      const memLabel = n ? (APP_LANG === 'ru' ? `${n} ${pluralRu(n, 'участник', 'участника', 'участников')}` : t('chat.members', { n })) : t('chat.group');
+      slot.innerHTML = `<span>${memLabel}</span>`;
       slot.classList.remove('online');
       return;
     }
     // Typing takes priority over the online/last-seen line.
-    const t = _chatOtherUid && _chatTyping && Number(_chatTyping[_chatOtherUid]);
-    if (t && (now - t < 6000)) {
-      slot.innerHTML = '<span class="chat-typing">печатает<span class="chat-typing-dots"><i></i><i></i><i></i></span></span>';
+    const typingTs = _chatOtherUid && _chatTyping && Number(_chatTyping[_chatOtherUid]);
+    if (typingTs && (now - typingTs < 6000)) {
+      slot.innerHTML = `<span class="chat-typing">${t('chat.typing')}<span class="chat-typing-dots"><i></i><i></i><i></i></span></span>`;
       slot.classList.add('online');
       return;
     }
@@ -4387,7 +4791,7 @@
         <div id="chat-emoji-panel" class="chat-emoji-panel" style="display:none;"></div>
         <form class="chat-input-row" id="chat-form">
           <button type="button" id="chat-emoji-btn" class="chat-emoji-btn" aria-label="Эмодзи" onclick="toggleEmojiPicker()"><i class="fa-regular fa-face-smile"></i></button>
-          <input id="chat-input" class="chat-input" placeholder="Сообщение…" autocomplete="off" maxlength="2000">
+          <input id="chat-input" class="chat-input" placeholder="Сообщение…" aria-label="Сообщение" autocomplete="off" maxlength="2000">
           <button type="submit" id="chat-send-btn" class="chat-send-btn" aria-label="Отправить"><i class="fa-solid fa-paper-plane"></i></button>
         </form>
       </div>`;
@@ -4620,9 +5024,9 @@
       ? `<div class="up-avatar-img photo-zoom" data-photo-src="${o.avatar}" style="background:url(${o.avatar}) center/cover no-repeat;"></div>`
       : `<div class="up-avatar-initial">${initial}</div>`;
     const online = o.lastSeen && (Date.now() - o.lastSeen) < ONLINE_WINDOW_MS;
-    const status = o.isMe ? 'это ты 🌸'
-      : online ? '<span class="chat-online-dot"></span> в сети'
-      : (o.lastSeen ? 'был(а) в сети ' + relativeTime(o.lastSeen) : 'не в сети');
+    const status = o.isMe ? t('up.itsYou')
+      : online ? `<span class="chat-online-dot"></span> ${t('chat.online')}`
+      : (o.lastSeen ? t('chat.lastSeen', { time: relativeTime(o.lastSeen) }) : t('chat.offline'));
     // Уровень / ранг / стрик
     let chips = '';
     if (o.stats) {
@@ -4630,22 +5034,23 @@
       const rank = getRank(lvl, o.gender);
       const streak = o.stats.streak || 0;
       const words = (o.stats.wordsLearned && o.stats.wordsLearned.length) || o.stats.words || 0;
+      const streakSub = APP_LANG === 'ru' ? `${pluralDays(streak)} подряд` : t('up.daysInRow');
       chips = `<div class="up-chips">
-        <div class="up-chip"><span class="up-chip-ico">${rank.emoji}</span><span><b>${lvl}</b> уровень<br><span class="up-chip-sub">${escHtml(rank.label)}</span></span></div>
-        <div class="up-chip"><span class="up-chip-ico">🔥</span><span><b>${streak}</b><br><span class="up-chip-sub">${pluralDays(streak)} подряд</span></span></div>
-        <div class="up-chip"><span class="up-chip-ico">📚</span><span><b>${words}</b><br><span class="up-chip-sub">слов выучено</span></span></div>
+        <div class="up-chip"><span class="up-chip-ico">${rank.emoji}</span><span><b>${lvl}</b> ${t('up.level')}<br><span class="up-chip-sub">${escHtml(rank.label)}</span></span></div>
+        <div class="up-chip"><span class="up-chip-ico">🔥</span><span><b>${streak}</b><br><span class="up-chip-sub">${streakSub}</span></span></div>
+        <div class="up-chip"><span class="up-chip-ico">📚</span><span><b>${words}</b><br><span class="up-chip-sub">${t('up.wordsLearned')}</span></span></div>
       </div>`;
     }
-    const adminBadge = o.isAdmin ? ' <span class="chip chip-coral" style="font-size:10px;padding:2px 8px;vertical-align:middle;">🎓 учитель</span>' : '';
+    const adminBadge = o.isAdmin ? ` <span class="chip chip-coral" style="font-size:10px;padding:2px 8px;vertical-align:middle;">${t('up.teacher')}</span>` : '';
     const bioBlock = o.bio
-      ? `<div class="up-section"><div class="up-section-label">О СЕБЕ</div><div class="up-bio">${escHtml(o.bio)}</div></div>`
-      : (o.isMe ? `<div class="up-section"><div class="up-section-label">О СЕБЕ</div><div class="up-bio up-bio-empty" onclick="closeUserProfile(); showEditProfile();">Расскажи о себе — тапни, чтобы добавить 🌸</div></div>` : '');
-    const joinLine = o.joinedAt ? `<div class="up-join">🌸 с нами с ${_fmtJoinDate(o.joinedAt)}</div>` : '';
+      ? `<div class="up-section"><div class="up-section-label">${t('up.about')}</div><div class="up-bio">${escHtml(o.bio)}</div></div>`
+      : (o.isMe ? `<div class="up-section"><div class="up-section-label">${t('up.about')}</div><div class="up-bio up-bio-empty" onclick="closeUserProfile(); showEditProfile();">${t('up.bioEmpty')}</div></div>` : '');
+    const joinLine = o.joinedAt ? `<div class="up-join">${t('up.withUsSince', { date: _fmtJoinDate(o.joinedAt) })}</div>` : '';
     const action = o.isMe
-      ? `<button class="up-action up-action-ghost" onclick="closeUserProfile(); showEditProfile();"><i class="fa-solid fa-pen"></i> Редактировать профиль</button>`
-      : `<button class="up-action up-action-primary" onclick="_profileToChat('${escHtml(o.uid)}','${name.replace(/'/g,"&#39;")}')"><i class="fa-solid fa-paper-plane"></i> Написать сообщение</button>`;
+      ? `<button class="up-action up-action-ghost" onclick="closeUserProfile(); showEditProfile();"><i class="fa-solid fa-pen"></i> ${t('set.editProfile')}</button>`
+      : `<button class="up-action up-action-primary" onclick="_profileToChat('${escHtml(o.uid)}','${name.replace(/'/g,"&#39;")}')"><i class="fa-solid fa-paper-plane"></i> ${t('up.writeMsg')}</button>`;
     const editCover = o.isMe
-      ? `<button class="up-cover-edit" onclick="closeUserProfile(); showEditProfile();" aria-label="Сменить обложку" title="Сменить обложку"><i class="fa-solid fa-camera"></i></button>`
+      ? `<button class="up-cover-edit" onclick="closeUserProfile(); showEditProfile();" aria-label="${t('up.changeCover')}" title="${t('up.changeCover')}"><i class="fa-solid fa-camera"></i></button>`
       : '';
     return `
       <div class="up-cover${o.cover ? ' has-photo' : ''}" style="${coverStyle}">
@@ -4664,7 +5069,8 @@
   }
   function _fmtJoinDate(ts) {
     const d = new Date(ts);
-    return `${d.getDate()} ${monthsRu[d.getMonth()].toLowerCase()} ${d.getFullYear()}`;
+    if ((typeof APP_LANG === 'undefined') || APP_LANG === 'ru') return `${d.getDate()} ${monthsRu[d.getMonth()].toLowerCase()} ${d.getFullYear()}`;
+    return d.toLocaleDateString(APP_LANG === 'uz' ? 'uz-Latn' : 'en', { day: 'numeric', month: 'long', year: 'numeric' });
   }
   function openUserProfile(uid) {
     if (!uid) return;
@@ -5228,13 +5634,13 @@
       <div class="card" style="padding:13px 14px; display:flex; align-items:center; gap:12px; background:linear-gradient(135deg, var(--blush), var(--card));">
         <img src="assets/pwa/icon-192.png" alt="" style="width:42px; height:42px; border-radius:12px; flex-shrink:0; box-shadow:var(--shadow-md);">
         <div style="flex:1; min-width:0;">
-          <div style="font-weight:600; color:var(--berry); font-size:13px;">Установи Madie на телефон</div>
+          <div style="font-weight:600; color:var(--berry); font-size:13px;">${t('pwa.title')}</div>
           <div style="font-size:11px; color:var(--soft); margin-top:1px;">${ios && !canPrompt
-            ? 'Нажми <i class="fa-solid fa-arrow-up-from-bracket"></i> Поделиться → «На экран “Домой”»'
-            : 'Своя иконка, быстрый запуск, работает как приложение'}</div>
+            ? `${t('pwa.iosTap')} <i class="fa-solid fa-arrow-up-from-bracket"></i> ${t('pwa.iosShare')}`
+            : t('pwa.benefit')}</div>
         </div>
-        ${canPrompt ? `<button onclick="pwaPromptInstall()" class="btn btn-primary" style="padding:8px 14px; font-size:12px; flex-shrink:0;">Установить</button>` : ''}
-        <button onclick="pwaDismissHint()" aria-label="Скрыть" style="background:none; border:none; color:var(--hush); font-size:14px; cursor:pointer; padding:4px; flex-shrink:0;"><i class="fa-solid fa-xmark"></i></button>
+        ${canPrompt ? `<button onclick="pwaPromptInstall()" class="btn btn-primary" style="padding:8px 14px; font-size:12px; flex-shrink:0;">${t('pwa.install')}</button>` : ''}
+        <button onclick="pwaDismissHint()" aria-label="${t('common.hide')}" style="background:none; border:none; color:var(--hush); font-size:14px; cursor:pointer; padding:4px; flex-shrink:0;"><i class="fa-solid fa-xmark"></i></button>
       </div>`;
     slot.parentNode.insertBefore(card, slot);
   }
@@ -5268,14 +5674,14 @@
   function shareInviteLink() {
     const u = Store.get('user');
     const uid = (typeof firebaseUserId === 'function' ? firebaseUserId() : '') || '';
-    if (!u || u.guest || !uid || uid === 'guest') { toast('Сначала войди в аккаунт 🌸'); return; }
+    if (!u || u.guest || !uid || uid === 'guest') { toast(t('inv.needLogin')); return; }
     const link = location.origin + location.pathname + '?ref=' + encodeURIComponent(uid);
-    const text = `Учу корейский с Madie 🌸 — присоединяйся! Зарегистрируешься по моей ссылке — нам обоим +${REFERRAL_XP} XP: ${link}`;
+    const text = t('inv.text', { xp: REFERRAL_XP, link: link });
     if (navigator.share) {
       navigator.share({ title: 'Korean with Madie', text }).catch(() => {});
     } else {
       navigator.clipboard?.writeText(text).then(
-        () => toast('Ссылка-приглашение скопирована 💌', 'var(--sage)'),
+        () => toast(t('inv.copied'), 'var(--sage)'),
         () => toast(link, 'var(--berry)')
       );
     }
@@ -5324,8 +5730,11 @@
     s.gender = (g === 'm') ? 'm' : 'f';
     UStore.set('settings', s);
     renderSettingsCard();
-    // Перерисовать места с гендерными обращениями (ранг в профиле и т.п.)
+    // Перерисовать ВСЕ места с гендерными обращениями: ранг в шапке/карточке (syncStats),
+    // полоска достижений, открытый профиль и чип уровня.
+    try { syncStats(); } catch (_) {}
     try { syncAchievementsStrip(); } catch (_) {}
+    try { renderMyLevelChip(); } catch (_) {}
     try { if (_curScreen === 'profile') switchScreen('profile', true); } catch (_) {}
     toast(g === 'm' ? 'Готово — обращаемся в мужском роде 🙂' : 'Готово — обращаемся в женском роде 🙂', 'var(--berry)');
   }
@@ -5645,7 +6054,7 @@
           ${p('Мы можем обновлять эти условия. О существенных изменениях сообщим в приложении. Продолжая пользоваться Madie после изменений, ты принимаешь новую версию.')}
           ${h('10. Связь с нами')}
           ${p('Вопросы, идеи и жалобы: «Профиль → Настройки → Написать нам». Читаем всё.')}
-          <div style="text-align:center; padding:18px 0 6px; font-size:11px; color:var(--hush);">Сделано с 🌸 командой Korean with Madie</div>
+          <div style="text-align:center; padding:18px 0 6px; font-size:11px; color:var(--hush);">${t('about.madeBy')}</div>
         </div>
         <button onclick="this.closest('.modal-bg').remove()" class="btn btn-primary btn-block" style="margin-top:12px; flex-shrink:0;">Понятно 🌸</button>
       </div>`;
@@ -6178,6 +6587,78 @@
     'l14-talent':    '«У каждого есть свой <span class="ko">특기</span> — то, что хорошо получается! Расскажем по-корейски, что умеем, а что не очень. Не стесняйся: талант точно есть 🌸 화이팅!»',
     'l15-korean-food':'«Самое вкусное напоследок — <span class="ko">한국 음식</span>! Познакомимся с 8 блюдами, опишем вкусы и научимся советовать, что попробовать. 맛있어요! 🌸»'
   };
+  // Переводы заголовков уроков (навигация) по id — ru берётся из датасета. [en, uz]
+  const LESSON_TITLE_TR = {
+    'l1-hangul': ['Hangul', 'Hangul'],
+    'l2-bachim': ['Batchim', 'Batchim'],
+    'l3-greetings': ['Greetings', 'Salomlashish'],
+    'l4-family': ['Family', 'Oila'],
+    'l5-classroom': ['Classroom', 'Sinf'],
+    'l6-house': ['Home', 'Uy'],
+    'l7-school': ['School', 'Maktab'],
+    'l8-leisure': ['Leisure', 'Dam olish'],
+    'l9-numbers': ['Numbers', 'Raqamlar'],
+    'l10-days': ['Days', 'Kunlar'],
+    'l11-park': ['Amusement park', 'Attraksionlar parki'],
+    'l12-seasons-zoo': ['Seasons & zoo', 'Fasllar va hayvonot bogʻi'],
+    'l13-kitchen': ['Kitchen', 'Oshxona'],
+    'l14-talent': ['Talent', 'Iqtidor'],
+    'l15-korean-food': ['Korean food', 'Koreys taomlari'],
+    'm2-l1': ['Topic & subject', 'Mavzu va ega'],
+    'm2-l2': ['Present tense', 'Hozirgi zamon'],
+    'm2-l3': ['Object of action', 'Harakat obyekti'],
+    'm2-l4': ['Where & where to', 'Qayerda va qayerga'],
+    'm2-l5': ['Past tense', 'Oʻtgan zamon'],
+    'm2-l6': ['Numbers', 'Raqamlar'],
+    'm2-l7': ['Time & days', 'Vaqt va kunlar'],
+    'm2-l8': ['At a café: ordering', 'Kafeda: buyurtma'],
+    'm2-l9': ['Shopping', 'Xaridlar'],
+    'm2-l10': ['Negation', 'Inkor'],
+    'm2-l11': ['Wants & hobbies', 'Istak va hobbi'],
+    'm2-l12': ['Connecting & chatting', 'Bogʻlash va muloqot'],
+    'm3-l1': ['Future & plans', 'Kelajak va rejalar'],
+    'm3-l2': ['Requests & prohibitions', 'Iltimos va taqiqlar'],
+    'm3-l3': ['Where things are', 'Narsalar qayerda'],
+    'm3-l4': ['Going to (do)…', '…uchun boraman'],
+    'm3-l5': ['Describing the world', 'Dunyoni tasvirlash'],
+    'm3-l6': ['Can & able to', 'Bilaman va qila olaman'],
+    'm3-l7': ['Reason', 'Sabab'],
+    'm3-l8': ['Right now', 'Hozir'],
+    'm3-l9': ['Let’s together', 'Keling, birga'],
+    'm3-l10': ['Although… because…', 'Garchi… chunki…'],
+    'm3-l11': ['Formal style', 'Rasmiy uslub'],
+    'm3-l12': ['A day in life', 'Hayotdan bir kun'],
+    'm4-l1': ['Condition', 'Shart'],
+    'm4-l2': ['When · before · after', 'Qachon · oldin · keyin'],
+    'm4-l3': ['Intention', 'Niyat'],
+    'm4-l4': ['Need & must', 'Kerak va shart'],
+    'm4-l5': ['Do it for me', 'Men uchun qiling'],
+    'm4-l6': ['Try · experience', 'Sinab koʻr · tajriba'],
+    'm4-l7': ['Modifiers', 'Aniqlovchilar'],
+    'm4-l8': ['Seems · right?', 'Shekilli · -a?'],
+    'm4-l9': ['Comparison', 'Taqqoslash'],
+    'm4-l10': ['Respect for elders', 'Kattalarga hurmat'],
+    'm4-l11': ['Casual speech', 'Samimiy nutq'],
+    'm4-l12': ['Coherent story', 'Bogʻlangan hikoya'],
+    'm5-l1': ['Background & softening', 'Fon va yumshatish'],
+    'm5-l2': ['Simultaneously', 'Bir vaqtda'],
+    'm5-l3': ['Or · even if', 'Yoki · hatto agar'],
+    'm5-l4': ['Decide · turned out', 'Qaror · shunday boʻldi'],
+    'm5-l5': ['Becoming', 'Aylanish'],
+    'm5-l6': ['Reported speech: fact', 'Oʻzga gap: dalil'],
+    'm5-l7': ['Reported: question & request', 'Oʻzga gap: savol va iltimos'],
+    'm5-l8': ['Passive', 'Majhul nisbat'],
+    'm5-l9': ['Know how · time since', 'Uddalash · qancha vaqt oʻtdi'],
+    'm5-l10': ['Emotions in speech', 'Nutqdagi hissiyot'],
+    'm5-l11': ['While · each time · almost', 'Davomida · har safar · sal boʻlmasa'],
+    'm5-l12': ['Free narration', 'Erkin hikoya']
+  };
+  function lessonTitle(l) {
+    if (!l) return '';
+    const L = (APP_LANG === 'en') ? 0 : (APP_LANG === 'uz') ? 1 : -1;
+    if (L >= 0 && LESSON_TITLE_TR[l.id]) return LESSON_TITLE_TR[l.id][L];
+    return l.title;
+  }
   const LESSON_CATALOG = [
     {
       id:'l1-hangul', num:1,
@@ -7455,13 +7936,62 @@
     const p = getLessonProgress();
     return all.filter(l => p.completed.includes(l.id) || l.id === p.current);
   }
-  // Общий пул слов для игр: слова открытых уроков + запасной набор
-  function gameWordPool() {
-    const lessonWords = unlockedLessons().flatMap(l => Array.isArray(l.vocab) ? l.vocab : []);
-    const seen = new Set(); const out = [];
-    [...lessonWords, ...LEGACY_WORDS].forEach(w => {
-      if (w && w.ko && w.ru && !seen.has(w.ko)) { seen.add(w.ko); out.push(w); }
+  // ── Пул слов для игр: уроки по уровню + самоизучение + сохранённые слова (вкл. фразы) ──
+  // Уровень ученицы → ранг сложности; модуль → ранг (m1–m2 초급, m3–m5 중급, m6 고급).
+  const LEVEL_RANK  = { beginner: 0, inter: 1, advanced: 2, topik1: 3, topik2: 4 };
+  const MODULE_RANK = { m1: 0, m2: 0, m3: 1, m4: 1, m5: 1, m6: 2 };
+  function userLevelRank() { const id = getMyLevelId(); return (id in LEVEL_RANK) ? LEVEL_RANK[id] : -1; }
+  // ID уроков, реально открытых прогрессом в конкретном модуле (по его ключу прогресса).
+  function _moduleUnlockedIds(mid) {
+    const pr = UStore.get(_moduleProgressKey(mid)) || {};
+    const done = Array.isArray(pr.completed) ? pr.completed : [];
+    return new Set([...done, pr.current].filter(Boolean));
+  }
+  // ── Классификаторы слов для игр (какой контент годится для какой механики) ──
+  function _koLen(ko) { return [...String(ko || '')].length; }                            // символы (вкл. пробелы/знаки)
+  function _koSyl(ko) { return [...String(ko || '').replace(/[\s?!.,~·]/g, '')].length; } // только слоги
+  function _wHasEmoji(w) { return !!w && !!w.emoji && w.emoji !== '🌸'; }                  // есть «настоящее» эмодзи (для «Подбери картинку»)
+  function _wShort(w)   { const k = String((w && w.ko) || ''); return !/\s/.test(k) && _koSyl(k) >= 1 && _koSyl(k) <= 6; } // одно короткое слово (память)
+  function _wCompact(w) { const k = String((w && w.ko) || ''); return !/\s/.test(k) && _koSyl(k) >= 2 && _koSyl(k) <= 5; } // сборка из слогов
+  function _wForChoice(w) { return _koLen((w && w.ko) || '') <= 16; }                      // влезает в карточку-вариант (слово или короткая фраза)
+  // Лексика из «Самостоятельного изучения», пригодная для игр: чистый KO-RU нужного уровня.
+  const _SS_KO_OK = /^[가-힣\s?!.,~]+$/; // только хангыль-слоги, пробелы и базовые знаки (не правила/символы ≈ ↔ / ( ))
+  function ssGameWords(maxRank) {
+    const out = [];
+    SELFSTUDY.forEach(sec => {
+      if (sec.game === false) return;               // разделы-правила (произношение, син/антонимы) в игры не идут
+      if (maxRank < (sec.gameLvl || 0)) return;     // по уровню ученицы
+      ssGroups(sec).forEach(g => (g.words || []).forEach(row => {
+        const ko = String(row[0] || '').trim(), ru = String(row[1] || '').trim();
+        if (!ko || !ru || !_SS_KO_OK.test(ko)) return;
+        const ex = String(row[2] || '');
+        out.push({ ko, ru, example: /[가-힣]/.test(ex) ? ex : '' }); // пример держим, только если он по-корейски
+      }));
     });
+    return out;
+  }
+  function gameWordPool() {
+    const admin = isAdmin();
+    const rank = userLevelRank();              // -1 = уровень не выбран
+    const seen = new Set(); const out = [];
+    const add = w => {
+      if (!w || !w.ko || !w.ru || seen.has(w.ko)) return;
+      seen.add(w.ko);
+      out.push({ ko: w.ko, ru: w.ru, translit: w.translit || '', emoji: w.emoji || '🌸', example: w.example || '' });
+    };
+    // 1) Слова уроков: целиком из модулей ≤ выбранного уровня + реально пройденные уроки прочих модулей.
+    Object.keys(LESSON_MODULES).forEach(mid => {
+      const lessons = LESSON_MODULES[mid].lessons || [];
+      const byLevel = admin || (rank >= 0 && (MODULE_RANK[mid] || 0) <= rank);
+      const src = byLevel ? lessons : lessons.filter(l => _moduleUnlockedIds(mid).has(l.id));
+      src.forEach(l => { if (Array.isArray(l.vocab)) l.vocab.forEach(add); });
+    });
+    // 2) Лексика из «Самостоятельного изучения» по уровню (приветствия, фразы, темы…).
+    ssGameWords(admin ? 99 : rank).forEach(add);
+    // 3) Сохранённые слова ученицы — слова, грамматика И фразы (длинные фразы идут в флешкарты/слух/перевод).
+    getMyWords().forEach(w => { if (w && w.ru) add(w); });
+    // 4) Запасной набор — пока слов мало (новичок без прогресса и без выбранного уровня).
+    if (out.length < 8) LEGACY_WORDS.forEach(add);
     return out;
   }
   // Кол-во раундов растёт с числом пройденных уроков (+1 за урок, максимум +6)
@@ -14172,19 +14702,226 @@
     ]}
   ];
 
+  // Начальная лексика по темам — адаптировано из учебника «재외동포를 위한 한국어 1-1»
+  // (NIIED, уровень 1급). Слова сгруппированы по темам юнитов 07–13; KO-RU + примеры.
+  const SS_BEGINNER = [
+    { ico:'🙋', title:'Приветствия и страны (인사 · 나라)', words:[
+      ['안녕하세요?','здравствуйте','정중한 인사'],['안녕?','привет (неформ.)',''],['만나서 반가워요','приятно познакомиться',''],
+      ['이름이 뭐예요?','как тебя зовут?','저는 민수예요.'],['어느 나라 사람이에요?','из какой ты страны?',''],
+      ['안녕히 가세요','до свидания (уходящему)',''],['안녕히 계세요','до свидания (остающемуся)',''],
+      ['한국','Корея',''],['미국','США, Америка',''],['영국','Англия, Великобритания',''],['중국','Китай',''],
+      ['일본','Япония',''],['독일','Германия',''],['프랑스','Франция',''],['브라질','Бразилия',''],['호주','Австралия','']
+    ]},
+    { ico:'👨‍👩‍👧', title:'Семья (가족)', words:[
+      ['어머니','мама, мать',''],['아버지','папа, отец',''],['할머니','бабушка',''],['할아버지','дедушка',''],
+      ['누나','старшая сестра (для парня)',''],['형','старший брат (для парня)',''],
+      ['언니','старшая сестра (для девушки)',''],['오빠','старший брат (для девушки)',''],
+      ['여동생','младшая сестра',''],['남동생','младший брат',''],['나','я',''],['우리','мы, наш',''],
+      ['누구','кто',''],['네','да',''],['아니요','нет','']
+    ]},
+    { ico:'🏫', title:'Класс и положение (교실 · 위치)', words:[
+      ['책','книга',''],['공책','тетрадь',''],['연필','карандаш',''],['지우개','ластик',''],['가방','сумка, рюкзак',''],
+      ['의자','стул',''],['책상','письменный стол, парта',''],['칠판','доска',''],['시계','часы',''],['컴퓨터','компьютер',''],
+      ['앞','перед, впереди','가방이 의자 앞에 있어요.'],['뒤','сзади, позади','가방이 의자 뒤에 있어요.'],
+      ['위','наверху, на','가방이 의자 위에 있어요.'],['아래','внизу, под','가방이 의자 아래에 있어요.'],
+      ['옆','рядом, сбоку','가방이 의자 옆에 있어요.']
+    ]},
+    { ico:'🏠', title:'Дом и дела (집 · 일상)', words:[
+      ['거실','гостиная',''],['방','комната',''],['부엌','кухня',''],
+      ['텔레비전을 봐요','смотрю телевизор',''],['전화를 해요','звоню по телефону',''],['책을 읽어요','читаю книгу',''],
+      ['옷을 입어요','одеваюсь',''],['밥을 먹어요','ем (еду)',''],['우유를 마셔요','пью молоко',''],
+      ['요리를 해요','готовлю (еду)',''],['케이크를 만들어요','пеку торт',''],['공부를 해요','учусь, занимаюсь','']
+    ]},
+    { ico:'🏙️', title:'Места: школа и район (학교 · 동네)', words:[
+      ['교실','класс, аудитория',''],['교무실','учительская',''],['도서관','библиотека',''],['화장실','туалет',''],
+      ['학교','школа',''],['집','дом',''],['가게','магазин, лавка',''],['공원','парк',''],
+      ['병원','больница',''],['유치원','детский сад',''],['아파트','квартира; жилой дом',''],['교회','церковь','']
+    ]}
+  ];
+
+  // Начальная лексика, часть 2 — по темам учебника «재외동포를 위한 한국어 1-2» (NIIED, 1급):
+  // еда, погода, время/распорядок, покупки, транспорт, хобби. KO-RU + примеры (формы -아요/어요 проверены).
+  const SS_BEGINNER2 = [
+    { ico:'🍽️', title:'Еда и ресторан (음식 · 식당)', words:[
+      ['밥','рис; еда',''],['음식','еда, блюдо',''],['김치','кимчхи',''],['비빔밥','пибимпап',''],['불고기','пулькоги',''],
+      ['라면','рамён, лапша',''],['김밥','кимпап',''],['떡볶이','токпокки',''],['과일','фрукты',''],['사과','яблоко',''],
+      ['빵','хлеб',''],['물','вода',''],['커피','кофе',''],['우유','молоко',''],['식당','ресторан, столовая','한국 식당에 가요.'],
+      ['맛있어요','вкусно','이 음식이 맛있어요.'],['매워요','остро','김치가 매워요.'],
+      ['먹어요','ем','밥을 먹어요.'],['마셔요','пью','물을 마셔요.']
+    ]},
+    { ico:'🌤️', title:'Погода и сезоны (날씨 · 계절)', words:[
+      ['날씨','погода',''],['봄','весна',''],['여름','лето',''],['가을','осень',''],['겨울','зима',''],
+      ['비','дождь',''],['눈','снег',''],['바람','ветер',''],['하늘','небо',''],['구름','облако',''],
+      ['따뜻해요','тепло','봄은 따뜻해요.'],['더워요','жарко','여름은 더워요.'],['시원해요','прохладно','가을은 시원해요.'],
+      ['추워요','холодно','겨울은 추워요.'],['맑아요','ясно','하늘이 맑아요.'],['비가 와요','идёт дождь','오늘 비가 와요.']
+    ]},
+    { ico:'⏰', title:'Время и распорядок дня (시간 · 하루)', words:[
+      ['아침','утро; завтрак',''],['점심','полдень; обед',''],['저녁','вечер; ужин',''],['밤','ночь',''],
+      ['오전','до полудня',''],['오후','после полудня',''],['어제','вчера',''],['오늘','сегодня',''],['내일','завтра',''],
+      ['주말','выходные',''],['시간','время; час',''],['일어나요','встаю','아침에 일어나요.'],['자요','сплю','밤에 자요.'],
+      ['공부해요','учусь','학교에서 공부해요.'],['운동해요','занимаюсь спортом','아침에 운동해요.'],['쉬어요','отдыхаю','주말에 쉬어요.']
+    ]},
+    { ico:'🛍️', title:'Покупки и деньги (쇼핑 · 돈)', words:[
+      ['가게','магазин, лавка',''],['시장','рынок',''],['백화점','универмаг',''],['돈','деньги',''],['가격','цена',''],
+      ['원','вона (валюта)',''],['옷','одежда',''],['신발','обувь',''],['모자','шапка, головной убор',''],['우산','зонт',''],
+      ['얼마예요?','сколько стоит?','이거 얼마예요?'],['사요','покупаю','옷을 사요.'],['팔아요','продаю','과일을 팔아요.'],
+      ['비싸요','дорого','가방이 비싸요.'],['싸요','дёшево','이 옷이 싸요.']
+    ]},
+    { ico:'🚌', title:'Транспорт и город (교통 · 도시)', words:[
+      ['버스','автобус',''],['지하철','метро',''],['택시','такси',''],['기차','поезд',''],['비행기','самолёт',''],
+      ['자동차','автомобиль',''],['자전거','велосипед',''],['길','дорога, улица',''],['역','станция',''],['공항','аэропорт',''],
+      ['타요','сажусь, еду (на)','버스를 타요.'],['내려요','выхожу, схожу','여기에서 내려요.'],
+      ['걸어요','иду пешком','공원을 걸어요.'],['가요','иду, еду','학교에 가요.']
+    ]},
+    { ico:'🎨', title:'Хобби и выходные (취미 · 여가)', words:[
+      ['취미','хобби',''],['영화','фильм',''],['음악','музыка',''],['노래','песня',''],['운동','спорт, зарядка',''],
+      ['축구','футбол',''],['수영','плавание',''],['등산','поход в горы',''],['여행','путешествие',''],['사진','фото',''],
+      ['그림','рисунок, картина',''],['게임','игра',''],['봐요','смотрю','영화를 봐요.'],['들어요','слушаю','음악을 들어요.'],
+      ['불러요','пою','노래를 불러요.'],['찍어요','фотографирую','사진을 찍어요.'],['좋아해요','нравится, люблю','축구를 좋아해요.']
+    ]},
+    { ico:'📅', title:'Встречи и планы (약속 · 계획)', words:[
+      ['약속','договорённость, встреча',''],['같이','вместе',''],['언제','когда',''],['어디','где',''],['몇 시','во сколько; который час',''],
+      ['다음','следующий',''],['만나요','встречаюсь','친구를 만나요.'],['약속해요','договариваюсь','친구하고 약속해요.'],
+      ['기다려요','жду','친구를 기다려요.'],['늦어요','опаздываю','약속에 늦어요.'],['바빠요','занят(а)','오늘 바빠요.'],
+      ['시간이 있어요','есть время','내일 시간이 있어요?'],['시간이 없어요','нет времени','오늘 시간이 없어요.'],['같이 가요','пойдём вместе','우리 같이 가요!']
+    ]},
+    { ico:'📞', title:'Телефон и общение (전화)', words:[
+      ['전화','телефон',''],['휴대폰','мобильный телефон',''],['전화번호','номер телефона',''],['문자','смс, сообщение',''],
+      ['메시지','сообщение',''],['여보세요','алло',''],['통화','разговор по телефону',''],['전화해요','звоню','친구에게 전화해요.'],
+      ['받아요','отвечаю; получаю','전화를 받아요.'],['보내요','отправляю','문자를 보내요.'],['끊어요','кладу трубку','전화를 끊어요.'],
+      ['전화를 걸어요','звоню (набираю номер)','친구에게 전화를 걸어요.']
+    ]},
+    { ico:'🩺', title:'Тело и здоровье (몸 · 건강)', words:[
+      ['몸','тело',''],['머리','голова',''],['얼굴','лицо',''],['코','нос',''],['입','рот',''],['귀','ухо',''],
+      ['손','рука, кисть',''],['발','стопа, ступня',''],['배','живот',''],['다리','нога (целиком)',''],['약','лекарство',''],
+      ['감기','простуда',''],['열','температура, жар',''],['건강','здоровье',''],['아파요','болит; больно','머리가 아파요.'],['괜찮아요','нормально, в порядке','이제 괜찮아요.']
+    ]},
+    { ico:'✈️', title:'Путешествие (여행)', words:[
+      ['표','билет',''],['호텔','отель',''],['여권','паспорт',''],['지도','карта',''],['바다','море',''],['산','гора',''],
+      ['외국','заграница, другая страна',''],['구경해요','осматриваю, разглядываю','시내를 구경해요.'],['떠나요','уезжаю, отправляюсь','여행을 떠나요.'],
+      ['도착해요','прибываю','공항에 도착해요.'],['출발해요','отправляюсь, отбываю','기차가 출발해요.'],['예약해요','бронирую','호텔을 예약해요.'],
+      ['즐거워요','весело, приятно','여행이 즐거워요.']
+    ]}
+  ];
+
+  // Лексика 중급 — по темам учебника «재외동포를 위한 한국어 2-1» (NIIED, уровень 2):
+  // инструменты, спорт/игры, одежда/цвета, готовка/дом. дела, школа/предметы, выражения. KO-RU + примеры.
+  const SS_INTER = [
+    { ico:'🎻', title:'Музыка и инструменты (악기 · 음악)', words:[
+      ['악기','музыкальный инструмент',''],['피아노','пианино',''],['기타','гитара',''],['바이올린','скрипка',''],
+      ['첼로','виолончель',''],['드럼','барабаны, ударные',''],['플루트','флейта',''],['공연','выступление, концерт',''],['무대','сцена',''],
+      ['연주해요','играю (на инструменте)','피아노를 연주해요.'],['쳐요','играю (бью струны/клавиши)','기타를 쳐요.'],
+      ['배워요','учусь, осваиваю','바이올린을 배워요.'],['연습해요','тренируюсь, репетирую','매일 연습해요.']
+    ]},
+    { ico:'⚽', title:'Спорт и игры (운동 · 놀이)', words:[
+      ['야구','бейсбол',''],['농구','баскетбол',''],['배구','волейбол',''],['탁구','настольный теннис',''],['태권도','тхэквондо',''],
+      ['줄넘기','прыжки через скакалку',''],['숨바꼭질','прятки',''],['딱지치기','ттакчичхиги (игра в фишки)',''],['공기놀이','конъги (игра с камешками)',''],
+      ['이겨요','побеждаю','시합에서 이겨요.'],['져요','проигрываю','게임에서 져요.'],['잘해요','хорошо умею','농구를 잘해요.'],['놀아요','играю, провожу время','친구하고 같이 놀아요.']
+    ]},
+    { ico:'👕', title:'Одежда и цвета (옷 · 색깔)', words:[
+      ['색깔','цвет',''],['빨간색','красный',''],['노란색','жёлтый',''],['파란색','синий',''],['초록색','зелёный',''],
+      ['검은색','чёрный',''],['하얀색','белый',''],['바지','брюки, штаны',''],['치마','юбка',''],['셔츠','рубашка',''],
+      ['티셔츠','футболка',''],['양말','носки',''],['입어요','надеваю (одежду)','티셔츠를 입어요.'],['신어요','надеваю (обувь/носки)','양말을 신어요.'],
+      ['모자를 써요','надеваю шапку','모자를 써요.'],['벗어요','снимаю','외투를 벗어요.']
+    ]},
+    { ico:'🍳', title:'Готовка и домашние дела (요리 · 집안일)', words:[
+      ['요리','готовка, кулинария',''],['케이크','торт',''],['만들어요','делаю, готовлю','케이크를 만들어요.'],['끓여요','варю, кипячу','라면을 끓여요.'],
+      ['구워요','пеку, жарю','빵을 구워요.'],['썰어요','режу, нарезаю','과일을 썰어요.'],['씻어요','мою','손을 씻어요.'],['청소해요','убираю','방을 청소해요.'],
+      ['설거지해요','мою посуду','저녁에 설거지해요.'],['빨래해요','стираю','주말에 빨래해요.'],['닦아요','вытираю, чищу','책상을 닦아요.'],
+      ['쓸어요','подметаю','마당을 쓸어요.'],['정리해요','навожу порядок','책상을 정리해요.'],['도와줘요','помогаю','엄마를 도와줘요.']
+    ]},
+    { ico:'📚', title:'Школа и предметы (학교 · 과목)', words:[
+      ['과목','учебный предмет',''],['국어','родной язык (предмет)',''],['수학','математика',''],['과학','наука, естествознание',''],
+      ['영어','английский (язык)',''],['미술','изобразительное искусство',''],['체육','физкультура',''],['숙제','домашнее задание',''],
+      ['시험','экзамен, тест',''],['발표','выступление, доклад',''],['전시회','выставка',''],['방학','каникулы',''],
+      ['어려워요','трудно','수학이 어려워요.'],['쉬워요','легко','영어가 쉬워요.'],['가르쳐요','преподаю, учу','선생님이 가르쳐요.'],['발표해요','выступаю с докладом','수업에서 발표해요.']
+    ]},
+    { ico:'💬', title:'Выражения: желания и умения (표현)', words:[
+      ['더','больше, ещё',''],['제일','самый, больше всего',''],['싫어해요','не люблю, не нравится','저는 시험을 싫어해요.'],
+      ['하고 싶어요','хочу (сделать)','축구를 하고 싶어요.'],['할 수 있어요','могу, умею','피아노를 칠 수 있어요.'],['할 수 없어요','не могу','아직 할 수 없어요.'],
+      ['할 줄 알아요','умею (знаю как)','수영할 줄 알아요.'],['할 줄 몰라요','не умею','아직 할 줄 몰라요.'],['해야 해요','нужно (сделать)','숙제를 해야 해요.'],
+      ['같이 할까요?','сделаем вместе?','우리 같이 할까요?']
+    ]}
+  ];
+
+  // Лексика 중급, часть 2 — по темам учебника «재외동포를 위한 한국어 2-2» (NIIED, уровень 2):
+  // внешность/описание, праздники/подарки, здоровье/болезни, транспорт/расстояние.
+  const SS_INTER2 = [
+    { ico:'🧍', title:'Внешность и описание (외모 · 묘사)', words:[
+      ['외모','внешность',''],['키','рост',''],['머리카락','волосы',''],['안경','очки',''],['수염','борода, усы',''],
+      ['키가 커요','высокий (ростом)','형은 키가 커요.'],['키가 작아요','низкий (ростом)','동생은 키가 작아요.'],
+      ['길어요','длинный','머리카락이 길어요.'],['짧아요','короткий','머리가 짧아요.'],['예뻐요','красивая','꽃이 예뻐요.'],
+      ['잘생겼어요','красивый, симпатичный (о парне)','그 배우는 잘생겼어요.'],['날씬해요','стройный','언니는 날씬해요.'],
+      ['닮았어요','похож','엄마를 닮았어요.'],['똑같아요','одинаковый','둘이 똑같아요.']
+    ]},
+    { ico:'🎂', title:'Праздники и подарки (생일 · 선물)', words:[
+      ['생일','день рождения',''],['파티','вечеринка',''],['선물','подарок',''],['축하','поздравление',''],['초','свеча',''],
+      ['풍선','воздушный шар',''],['카드','открытка',''],['축하해요','поздравляю','생일 축하해요!'],
+      ['선물해요','дарю','친구에게 선물해요.'],['줘요','даю','선물을 줘요.'],['초대해요','приглашаю','친구를 초대해요.'],['모여요','собираемся','친구들이 모여요.']
+    ]},
+    { ico:'🏥', title:'Здоровье и болезни (건강 · 병원)', words:[
+      ['의사','врач',''],['간호사','медсестра',''],['주사','укол, инъекция',''],['감기에 걸려요','простужаюсь','감기에 걸렸어요.'],
+      ['열이 나요','поднимается температура','열이 나요.'],['기침을 해요','кашляю','기침을 해요.'],['콧물이 나요','насморк','콧물이 나요.'],
+      ['배가 아파요','болит живот','배가 아파요.'],['다쳐요','получаю травму','다리를 다쳤어요.'],['약을 먹어요','принимаю лекарство','약을 먹어요.'],
+      ['병원에 가요','иду в больницу','병원에 가요.'],['쉬어야 해요','нужно отдыхать','집에서 쉬어야 해요.'],['나아요','выздоравливаю','감기가 나았어요.'],['건강해요','здоров(а)','저는 건강해요.']
+    ]},
+    { ico:'🚲', title:'Транспорт и расстояние (교통 · 거리)', words:[
+      ['거리','расстояние; улица',''],['얼마나','насколько, как (долго/далеко)',''],['똑바로','прямо',''],['시간이 걸려요','занимает время','한 시간 걸려요.'],
+      ['가까워요','близко','학교가 가까워요.'],['멀어요','далеко','집이 멀어요.'],['빨라요','быстрый','지하철이 빨라요.'],['느려요','медленный','버스가 느려요.'],
+      ['걸어서 가요','иду пешком','걸어서 가요.'],['갈아타요','пересаживаюсь','여기에서 갈아타요.'],['길을 건너요','перехожу дорогу','길을 건너요.'],['돌아요','поворачиваю','왼쪽으로 돌아요.']
+    ]}
+  ];
+
+  // Лексика 고급 — по темам учебников «영어권 한국어 3-1 / 3-2» (NIIED, уровень 3):
+  // деньги/банк, экология/природа, праздники/волонтёрство, чувства/желания, манеры/правила.
+  const SS_ADVANCED = [
+    { ico:'💰', title:'Деньги и банк (돈 · 은행)', words:[
+      ['용돈','карманные деньги',''],['은행','банк',''],['통장','счёт; банковская книжка',''],['저금','сбережения',''],['부자','богач',''],
+      ['지갑','кошелёк',''],['거스름돈','сдача',''],['저축해요','откладываю, коплю','용돈을 저축해요.'],['모아요','собираю, коплю','돈을 모아요.'],
+      ['벌어요','зарабатываю','돈을 벌어요.'],['빌려요','беру в долг (у кого-то)','친구에게서 돈을 빌려요.'],['갚아요','возвращаю долг','돈을 갚아요.']
+    ]},
+    { ico:'♻️', title:'Экология и природа (환경 · 자연)', words:[
+      ['쓰레기','мусор',''],['분리수거','раздельный сбор мусора',''],['쓰레기통','мусорное ведро, бак',''],['나무','дерево',''],['자연','природа',''],
+      ['줄여요','сокращаю, уменьшаю','쓰레기를 줄여요.'],['아껴요','берегу, экономлю','물을 아껴요.'],['버려요','выбрасываю','쓰레기를 버려요.'],
+      ['주워요','подбираю','쓰레기를 주워요.'],['심어요','сажаю','나무를 심어요.'],['깨끗해요','чисто','공원이 깨끗해요.'],['더러워요','грязно','길이 더러워요.'],['보호해요','защищаю, оберегаю','환경을 보호해요.']
+    ]},
+    { ico:'🎉', title:'Праздники и волонтёрство (축제 · 봉사)', words:[
+      ['축제','фестиваль',''],['행사','мероприятие',''],['불꽃놀이','фейерверк, салют',''],['봉사','волонтёрство',''],
+      ['참가해요','участвую','축제에 참가해요.'],['열려요','проводится, открывается','축제가 열려요.'],['봉사해요','волонтёрю','주말에 봉사해요.'],
+      ['도와요','помогаю','할머니를 도와요.'],['기부해요','жертвую','돈을 기부해요.'],['신나요','весело, в восторге','축제가 신나요.']
+    ]},
+    { ico:'💭', title:'Чувства и желания (감정 · 바람)', words:[
+      ['걱정','беспокойство',''],['희망','надежда',''],['꿈','мечта; сон',''],['걱정돼요','тревожно','시험이 걱정돼요.'],
+      ['무서워요','страшно','밤이 무서워요.'],['기뻐요','радостно','만나서 기뻐요.'],['슬퍼요','грустно','영화가 슬퍼요.'],['화나요','злюсь','동생 때문에 화나요.'],
+      ['부러워요','завидую','친구가 부러워요.'],['심심해요','скучно','주말에 심심해요.'],['바라요','желаю, надеюсь','합격을 바라요.'],['자랑스러워요','горжусь','형이 자랑스러워요.']
+    ]},
+    { ico:'🤝', title:'Манеры и правила (예절 · 규칙)', words:[
+      ['예절','этикет, манеры',''],['규칙','правило',''],['거짓말','ложь, враньё',''],['약속을 지켜요','держу слово','약속을 지켜요.'],
+      ['인사해요','здороваюсь','어른에게 인사해요.'],['양보해요','уступаю','자리를 양보해요.'],['줄을 서요','стою в очереди','줄을 서요.'],
+      ['조용히 해요','веду себя тихо','도서관에서 조용히 해요.'],['떠들어요','шумлю, болтаю','교실에서 떠들어요.'],['들어가도 돼요?','можно войти?','들어가도 돼요?'],['뛰면 안 돼요','нельзя бегать','뛰면 안 돼요.']
+    ]}
+  ];
+
+  // gameLvl — минимальный ранг ученицы, с которого раздел подмешивается в игры (0 초급, 1 중급, 2 고급).
+  // game:false — раздел-правило (символы/таблицы), в игры не идёт.
   const SELFSTUDY = [
-    { k:'ss-vocab',   ico:'💬', t:'Лексика: мнение',     s:'Согласие · несогласие · аргументы',
+    { k:'ss-basic',   ico:'🌱', t:'Начальная лексика',    s:'한국어 1-1 · приветствия · семья · класс · дом · места', groups:SS_BEGINNER, gameLvl:0 },
+    { k:'ss-basic2',  ico:'🍚', t:'Лексика: быт и темы',  s:'한국어 1-2 · еда · погода · время · покупки · транспорт · хобби · встречи · телефон · здоровье · путешествие', groups:SS_BEGINNER2, gameLvl:0 },
+    { k:'ss-inter',   ico:'🌿', t:'Лексика: 중급',         s:'한국어 2-1 · инструменты · спорт · одежда/цвета · готовка · школа/предметы · выражения', groups:SS_INTER, gameLvl:1 },
+    { k:'ss-inter2',  ico:'🍀', t:'Лексика: 중급 · 2',     s:'한국어 2-2 · внешность · праздники/подарки · здоровье · транспорт/расстояние', groups:SS_INTER2, gameLvl:1 },
+    { k:'ss-adv',     ico:'🌳', t:'Лексика: 고급',         s:'한국어 3-1/3-2 · деньги/банк · экология · праздники/волонтёрство · чувства · манеры', groups:SS_ADVANCED, gameLvl:2 },
+    { k:'ss-vocab',   ico:'💬', t:'Лексика: мнение',     s:'Согласие · несогласие · аргументы', gameLvl:1,
       refTitles:['Мнение: согласие и поддержка','Мнение: несогласие и критика','Аргументация и мнение'], extra:SS_VOCAB_EXTRA },
-    { k:'ss-theme',   ico:'🏛️', t:'Лексика по темам',    s:'Политика · экономика · экология · наука', groups:SS_THEME },
-    { k:'ss-idioms',  ico:'🪄', t:'Идиомы и пословицы',  s:'관용구 · 속담 · образные выражения',
+    { k:'ss-theme',   ico:'🏛️', t:'Лексика по темам',    s:'Политика · экономика · экология · наука', groups:SS_THEME, gameLvl:2 },
+    { k:'ss-idioms',  ico:'🪄', t:'Идиомы и пословицы',  s:'관용구 · 속담 · образные выражения', gameLvl:2,
       refTitles:['Идиомы и пословицы (관용구·속담)'], extra:SS_IDIOMS_EXTRA },
-    { k:'ss-attitude',ico:'🎙️', t:'Отношение говорящего', s:'화자의 태도 · 듣기·읽기', groups:SS_ATTITUDE },
-    { k:'ss-emotion', ico:'💛', t:'Эмоции героя',        s:'읽기 23·42 · чувства · оттенки', groups:SS_EMOTION },
-    { k:'ss-synant',  ico:'🔁', t:'Синонимы и антонимы', s:'유의어 ≈ · 반의어 ↔ · наречия', groups:SS_SYNANT },
-    { k:'ss-verbs',   ico:'🧩', t:'Неправильные глаголы', s:'불규칙 · 8 типов + «не путать»', groups:SS_IRREGULAR },
-    { k:'ss-pron',    ico:'🔤', t:'Произношение',        s:'받침 · 비음화 · 구개음화', groups:SS_PRON },
-    { k:'ss-phrases', ico:'🗣️', t:'Полезные фразы',      s:'каждый день · кафе · магазин · дорога', groups:SS_PHRASES },
-    { k:'ss-numbers', ico:'🔢', t:'Числа, время, даты',  s:'Дни · время · деньги · счётные слова', groups:SS_NUMS }
+    { k:'ss-attitude',ico:'🎙️', t:'Отношение говорящего', s:'화자의 태도 · 듣기·읽기', groups:SS_ATTITUDE, gameLvl:1 },
+    { k:'ss-emotion', ico:'💛', t:'Эмоции героя',        s:'읽기 23·42 · чувства · оттенки', groups:SS_EMOTION, gameLvl:1 },
+    { k:'ss-synant',  ico:'🔁', t:'Синонимы и антонимы', s:'유의어 ≈ · 반의어 ↔ · наречия', groups:SS_SYNANT, game:false },
+    { k:'ss-verbs',   ico:'🧩', t:'Неправильные глаголы', s:'불규칙 · 8 типов + «не путать»', groups:SS_IRREGULAR, gameLvl:1 },
+    { k:'ss-pron',    ico:'🔤', t:'Произношение',        s:'받침 · 비음화 · 구개음화', groups:SS_PRON, game:false },
+    { k:'ss-phrases', ico:'🗣️', t:'Полезные фразы',      s:'каждый день · кафе · магазин · дорога', groups:SS_PHRASES, gameLvl:0 },
+    { k:'ss-numbers', ico:'🔢', t:'Числа, время, даты',  s:'Дни · время · деньги · счётные слова', groups:SS_NUMS, gameLvl:0 }
   ];
 
   function ssGroups(sec) {
@@ -15281,27 +16018,43 @@
   function tdReset() { _tdState.section = null; _tdState.typeId = null; if (!_tdState.level) _tdState.level = 3; }
 
   const READING_TEXTS = [
-    { id:'intro', emoji:'👋', title:'Знакомство', titleKo:'자기소개', theme:'Знакомство', level:'TOPIK I', sentences:[
-      { ko:'안녕하세요? 제 이름은 민지입니다.', ru:'Здравствуйте! Меня зовут Минджи.', words:[['안녕하세요','здравствуйте'],['이름','имя'],['-입니다','быть (вежливо)']] },
-      { ko:'저는 러시아에서 왔습니다.', ru:'Я приехал(а) из России.', words:[['저','я (вежливо)'],['러시아','Россия'],['-에서','из'],['오다','приходить, приезжать']] },
-      { ko:'지금 한국어를 공부합니다.', ru:'Сейчас я изучаю корейский язык.', words:[['지금','сейчас'],['한국어','корейский язык'],['공부하다','учиться, изучать']] },
-      { ko:'한국 음악과 드라마를 좋아합니다.', ru:'Мне нравятся корейская музыка и дорамы.', words:[['음악','музыка'],['드라마','дорама'],['좋아하다','нравиться, любить'],['-과/와','и']] },
-      { ko:'만나서 반갑습니다. 잘 부탁합니다.', ru:'Приятно познакомиться. Прошу любить и жаловать.', words:[['만나다','встречать'],['반갑다','рад(а)'],['잘 부탁합니다','прошу любить и жаловать']] }
+    { id:'intro', emoji:'👋', title:'Знакомство', title_uz:'Tanishuv', titleKo:'자기소개', theme:'Знакомство', theme_uz:'Tanishuv', level:'TOPIK I', sentences:[
+      { ko:'안녕하세요? 제 이름은 민지입니다.', ru:'Здравствуйте! Меня зовут Минджи.', ru_uz:'Assalomu alaykum! Mening ismim Minji.', words:[['안녕하세요','здравствуйте','salom'],['이름','имя','ism'],['-입니다','быть (вежливо)','boʻlmoq (rasmiy)']] },
+      { ko:'저는 러시아에서 왔습니다.', ru:'Я приехал(а) из России.', ru_uz:'Men Rossiyadan keldim.', words:[['저','я (вежливо)','men (rasmiy)'],['러시아','Россия','Rossiya'],['-에서','из','-dan'],['오다','приходить, приезжать','kelmoq']] },
+      { ko:'지금 한국어를 공부합니다.', ru:'Сейчас я изучаю корейский язык.', ru_uz:'Hozir koreys tilini oʻrganyapman.', words:[['지금','сейчас','hozir'],['한국어','корейский язык','koreys tili'],['공부하다','учиться, изучать','oʻrganmoq']] },
+      { ko:'한국 음악과 드라마를 좋아합니다.', ru:'Мне нравятся корейская музыка и дорамы.', ru_uz:'Menga koreys musiqasi va dramalari yoqadi.', words:[['음악','музыка','musiqa'],['드라마','дорама','drama'],['좋아하다','нравиться, любить','yoqmoq'],['-과/와','и','va']] },
+      { ko:'만나서 반갑습니다. 잘 부탁합니다.', ru:'Приятно познакомиться. Прошу любить и жаловать.', ru_uz:'Tanishganimdan xursandman. Iltimos, yaxshi munosabatda boʻling.', words:[['만나다','встречать','uchrashmoq'],['반갑다','рад(а)','xursand'],['잘 부탁합니다','прошу любить и жаловать','iltimos, yaxshi munosabatda boʻling']] }
     ]},
-    { id:'myday', emoji:'⏰', title:'Мой день', titleKo:'나의 하루', theme:'Повседневность', level:'TOPIK I', sentences:[
-      { ko:'저는 아침 일곱 시에 일어납니다.', ru:'Я встаю в семь часов утра.', words:[['아침','утро'],['일곱 시','семь часов'],['-에','в (о времени)'],['일어나다','вставать']] },
-      { ko:'세수를 하고 아침을 먹습니다.', ru:'Умываюсь и завтракаю.', words:[['세수하다','умываться'],['-고','и (затем)'],['아침','завтрак'],['먹다','есть']] },
-      { ko:'여덟 시 반에 학교에 갑니다.', ru:'В половине девятого иду в школу.', words:[['여덟 시 반','половина девятого'],['학교','школа'],['가다','идти, ехать']] },
-      { ko:'오후에는 친구와 도서관에서 공부합니다.', ru:'Днём занимаюсь с другом в библиотеке.', words:[['오후','день, после полудня'],['친구','друг'],['도서관','библиотека'],['-에서','в (о месте действия)']] },
-      { ko:'저녁을 먹은 후에 한국어를 복습합니다.', ru:'После ужина повторяю корейский.', words:[['저녁','ужин'],['-은 후에','после того как'],['복습하다','повторять']] },
-      { ko:'밤 열한 시에 잡니다.', ru:'Ложусь спать в одиннадцать вечера.', words:[['밤','ночь'],['열한 시','одиннадцать часов'],['자다','спать']] }
+    { id:'myday', emoji:'⏰', title:'Мой день', title_uz:'Mening kunim', titleKo:'나의 하루', theme:'Повседневность', theme_uz:'Kundalik hayot', level:'TOPIK I', sentences:[
+      { ko:'저는 아침 일곱 시에 일어납니다.', ru:'Я встаю в семь часов утра.', ru_uz:'Men ertalab soat yettida turaman.', words:[['아침','утро','ertalab'],['일곱 시','семь часов','soat yetti'],['-에','в (о времени)','-da (vaqt)'],['일어나다','вставать','turmoq']] },
+      { ko:'세수를 하고 아침을 먹습니다.', ru:'Умываюсь и завтракаю.', ru_uz:'Yuvinaman va nonushta qilaman.', words:[['세수하다','умываться','yuvinmoq'],['-고','и (затем)','va (keyin)'],['아침','завтрак','nonushta'],['먹다','есть','yemoq']] },
+      { ko:'여덟 시 반에 학교에 갑니다.', ru:'В половине девятого иду в школу.', ru_uz:'Soat sakkiz yarimda maktabga boraman.', words:[['여덟 시 반','половина девятого','sakkiz yarim (8:30)'],['학교','школа','maktab'],['가다','идти, ехать','bormoq']] },
+      { ko:'오후에는 친구와 도서관에서 공부합니다.', ru:'Днём занимаюсь с другом в библиотеке.', ru_uz:'Kunduzi doʻstim bilan kutubxonada oʻqiyman.', words:[['오후','день, после полудня','tushdan keyin'],['친구','друг','doʻst'],['도서관','библиотека','kutubxona'],['-에서','в (о месте действия)','-da (joy)']] },
+      { ko:'저녁을 먹은 후에 한국어를 복습합니다.', ru:'После ужина повторяю корейский.', ru_uz:'Kechki ovqatdan keyin koreyschani takrorlayman.', words:[['저녁','ужин','kechki ovqat'],['-은 후에','после того как','-dan keyin'],['복습하다','повторять','takrorlamoq']] },
+      { ko:'밤 열한 시에 잡니다.', ru:'Ложусь спать в одиннадцать вечера.', ru_uz:'Kechqurun soat oʻn birda uxlayman.', words:[['밤','ночь','tun'],['열한 시','одиннадцать часов','soat oʻn bir'],['자다','спать','uxlamoq']] }
     ]},
-    { id:'seasons', emoji:'🍂', title:'Четыре сезона', titleKo:'한국의 사계절', theme:'Природа', level:'TOPIK I', sentences:[
-      { ko:'한국에는 사계절이 있습니다.', ru:'В Корее есть четыре времени года.', words:[['사계절','четыре сезона'],['있다','быть, иметься'],['-에는','в (тема)']] },
-      { ko:'봄에는 날씨가 따뜻하고 꽃이 핍니다.', ru:'Весной погода тёплая и цветут цветы.', words:[['봄','весна'],['날씨','погода'],['따뜻하다','тёплый'],['꽃','цветок'],['피다','цвести']] },
-      { ko:'여름에는 덥고 비가 많이 옵니다.', ru:'Летом жарко и идёт много дождя.', words:[['여름','лето'],['덥다','жаркий'],['비가 오다','идёт дождь'],['많이','много']] },
-      { ko:'가을에는 시원하고 단풍이 아름답습니다.', ru:'Осенью прохладно и красивы осенние листья.', words:[['가을','осень'],['시원하다','прохладный'],['단풍','осенняя листва'],['아름답다','красивый']] },
-      { ko:'겨울에는 춥고 눈이 옵니다.', ru:'Зимой холодно и идёт снег.', words:[['겨울','зима'],['춥다','холодный'],['눈이 오다','идёт снег']] }
+    { id:'seasons', emoji:'🍂', title:'Четыре сезона', title_uz:'Toʻrt fasl', titleKo:'한국의 사계절', theme:'Природа', theme_uz:'Tabiat', level:'TOPIK I', sentences:[
+      { ko:'한국에는 사계절이 있습니다.', ru:'В Корее есть четыре времени года.', ru_uz:'Koreyada toʻrt fasl bor.', words:[['사계절','четыре сезона','toʻrt fasl'],['있다','быть, иметься','bor boʻlmoq'],['-에는','в (тема)','-da (mavzu)']] },
+      { ko:'봄에는 날씨가 따뜻하고 꽃이 핍니다.', ru:'Весной погода тёплая и цветут цветы.', ru_uz:'Bahorda havo iliq va gullar ochiladi.', words:[['봄','весна','bahor'],['날씨','погода','havo'],['따뜻하다','тёплый','iliq'],['꽃','цветок','gul'],['피다','цвести','ochilmoq']] },
+      { ko:'여름에는 덥고 비가 많이 옵니다.', ru:'Летом жарко и идёт много дождя.', ru_uz:'Yozda issiq va koʻp yomgʻir yogʻadi.', words:[['여름','лето','yoz'],['덥다','жаркий','issiq'],['비가 오다','идёт дождь','yomgʻir yogʻadi'],['많이','много','koʻp']] },
+      { ko:'가을에는 시원하고 단풍이 아름답습니다.', ru:'Осенью прохладно и красивы осенние листья.', ru_uz:'Kuzda salqin va kuzgi barglar chiroyli.', words:[['가을','осень','kuz'],['시원하다','прохладный','salqin'],['단풍','осенняя листва','kuzgi barglar'],['아름답다','красивый','chiroyli']] },
+      { ko:'겨울에는 춥고 눈이 옵니다.', ru:'Зимой холодно и идёт снег.', ru_uz:'Qishda sovuq va qor yogʻadi.', words:[['겨울','зима','qish'],['춥다','холодный','sovuq'],['눈이 오다','идёт снег','qor yogʻadi']] }
+    ]},
+    { id:'energy', emoji:'⚡', title:'Возобновляемая энергия', titleKo:'신재생에너지', theme:'Экология · TOPIK II', level:'TOPIK II', sentences:[
+      { ko:'신재생에너지는 신생에너지, 재생에너지를 합친 말이다.', ru:'«Возобновляемая энергия» — это объединённое название новой и восстанавливаемой энергии.', words:[['신재생에너지','возобновляемая энергия'],['신생에너지','новая энергия'],['재생에너지','восстанавливаемая энергия'],['합치다','объединять'],['말','слово, название'],['-이다','быть']] },
+      { ko:'신재생에너지는 물, 바람, 햇빛 등 자연의 힘을 이용해서 개발하는 에너지이기 때문에 고갈의 위험이나 환경오염의 가능성이 낮다.', ru:'Возобновляемую энергию получают, используя силы природы — воду, ветер, солнечный свет, поэтому риск её исчерпания и загрязнения среды низок.', words:[['물','вода'],['바람','ветер'],['햇빛','солнечный свет'],['등','и так далее'],['자연','природа'],['힘','сила'],['이용하다','использовать'],['개발하다','разрабатывать'],['-기 때문에','потому что'],['고갈','истощение'],['위험','риск'],['환경오염','загрязнение среды'],['가능성','вероятность'],['낮다','низкий']] },
+      { ko:'이에 따라 최근 새로운 신재생 에너지 개발에 적극 나서고 있는 국가들이 많다.', ru:'В связи с этим в последнее время многие страны активно занимаются разработкой новых возобновляемых источников энергии.', words:[['이에 따라','в связи с этим'],['최근','в последнее время'],['새롭다','новый'],['개발','разработка'],['적극','активно'],['나서다','браться, участвовать'],['국가','страна'],['많다','много']] },
+      { ko:'대표적인 몇 가지 사례를 소개하면 다음과 같다.', ru:'Вот несколько типичных примеров.', words:[['대표적','типичный'],['몇 가지','несколько'],['사례','пример, случай'],['소개하다','представлять'],['다음과 같다','следующее, как далее']] },
+      { ko:'먼저 해상 풍력의 강국인 영국을 사례로 들 수 있다.', ru:'Сначала можно привести в пример Великобританию, сильную в морской ветроэнергетике.', words:[['먼저','сначала'],['해상 풍력','морская ветроэнергия'],['강국','сильная страна'],['영국','Великобритания'],['사례','пример'],['들 수 있다','можно привести']] },
+      { ko:'해상 풍력 발전은 육지와 가까운 바다에 거대한 풍차를 돌려서 전기를 생산하는 방식이다.', ru:'Морская ветроэнергетика — это способ выработки электричества вращением гигантских ветряков в море недалеко от суши.', words:[['해상 풍력 발전','морская ветроэнергетика'],['육지','суша'],['가깝다','близкий'],['바다','море'],['거대하다','огромный'],['풍차','ветряк, мельница'],['돌리다','вращать'],['전기','электричество'],['생산하다','производить'],['방식','способ']] },
+      { ko:'육상 풍력 발전에 비해 토지 구입 비용이 들지 않고, 지형 및 경관 훼손, 소음 발생 등의 피해가 적다는 것이 장점이다.', ru:'По сравнению с наземной ветроэнергетикой не нужно покупать землю, а ущерб рельефу, ландшафту и уровень шума меньше — в этом её преимущество.', words:[['육상 풍력 발전','наземная ветроэнергетика'],['-에 비해','по сравнению с'],['토지','земля'],['구입','покупка'],['비용','затраты'],['들다','требоваться (о расходах)'],['지형','рельеф'],['및','и'],['경관','ландшафт'],['훼손','повреждение'],['소음','шум'],['발생','возникновение'],['피해','ущерб'],['적다','малый'],['장점','преимущество']] },
+      { ko:'다음으로 지열을 활용하여 에너지를 생산하는 경우이다.', ru:'Далее — случай выработки энергии с использованием геотермального тепла.', words:[['다음으로','далее'],['지열','геотермальное тепло'],['활용하다','применять, использовать'],['에너지','энергия'],['생산하다','производить'],['경우','случай']] },
+      { ko:'뉴질랜드가 대표적인데 뉴질랜드는 화산 및 지진대에 위치하고 있어 지열 발전에 유리하다.', ru:'Типичный пример — Новая Зеландия: она расположена в зоне вулканов и землетрясений, что выгодно для геотермальной энергетики.', words:[['뉴질랜드','Новая Зеландия'],['대표적','типичный'],['화산','вулкан'],['및','и'],['지진대','сейсмическая зона'],['위치하다','располагаться'],['지열 발전','геотермальная энергетика'],['유리하다','выгодный']] },
+      { ko:'뉴질랜드가 세계 최대 규모로 지열 에너지를 개발할 수 있는 것은 이러한 지형적 조건 덕분이다.', ru:'То, что Новая Зеландия может разрабатывать геотермальную энергию в крупнейших в мире масштабах, — заслуга таких географических условий.', words:[['세계','мир'],['최대','наибольший'],['규모','масштаб'],['개발하다','разрабатывать'],['이러하다','такой'],['지형적','географический'],['조건','условие'],['덕분','благодаря']] },
+      { ko:'마지막으로 바이오 에너지가 있다.', ru:'Наконец, существует биоэнергия.', words:[['마지막으로','наконец'],['바이오 에너지','биоэнергия'],['있다','быть, существовать']] },
+      { ko:'가축 분뇨를 이용하여 가스를 생산하는 방식으로 덴마크가 대표적이다.', ru:'Типичный пример — Дания, где из навоза скота производят газ.', words:[['가축','скот'],['분뇨','навоз'],['이용하다','использовать'],['가스','газ'],['생산하다','производить'],['방식','способ'],['덴마크','Дания'],['대표적','типичный']] },
+      { ko:'덴마크는 인구의 5배가 넘는 돼지를 사육하고 있어 돼지 분뇨 처리가 늘 문제였는데, 이를 통해 가스를 생산하고 나머지 찌꺼기는 비료로 사용하는 시스템을 갖추고 있다.', ru:'В Дании свиней впятеро больше, чем людей, и утилизация навоза была вечной проблемой, но теперь из него получают газ, а остатки идут на удобрение — такая система у них налажена.', words:[['인구','население'],['5배','в пять раз'],['넘다','превышать'],['돼지','свинья'],['사육하다','разводить'],['처리','утилизация'],['늘','всегда'],['문제','проблема'],['이를 통해','с помощью этого'],['나머지','остаток'],['찌꺼기','осадок, остатки'],['비료','удобрение'],['사용하다','использовать'],['시스템','система'],['갖추다','быть оснащённым']] },
+      { ko:'이러한 노력이 계속된다면 머지않아 에너지 고갈과 환경 오염 문제를 걱정하지 않아도 되는 새로운 에너지의 시대가 열릴 것이다.', ru:'Если такие усилия продолжатся, вскоре наступит новая эра энергии, когда не придётся тревожиться об истощении ресурсов и загрязнении среды.', words:[['이러하다','такой'],['노력','усилие'],['계속되다','продолжаться'],['머지않아','вскоре'],['고갈','истощение'],['환경 오염','загрязнение среды'],['걱정하다','тревожиться'],['-지 않아도 되다','можно не…'],['새롭다','новый'],['시대','эпоха, эра'],['열리다','наступать, открываться']] }
     ]},
     {"id":"energy","emoji":"♻️","titleKo":"신재생에너지","title":"Возобновляемая энергия","theme":"Экология","level":"TOPIK II","sentences":[{"ko":"신재생에너지는 신생에너지, 재생에너지를 합친 말이다.","ru":"Возобновляемая энергия — это объединённое название новой энергии и возобновляемой энергии.","words":[["신재생에너지","возобновляемая энергия"],["는","(частица темы)"],["신생에너지","новая энергия"],["재생에너지","возобновляемая энергия"],["를","(частица объекта)"],["합친","объединённый"],["말","слово"],["이다","быть"]]},{"ko":"신재생에너지는 물, 바람, 햇빛 등 자연의 힘을 이용해서 개발하는 에너지이기 때문에 고갈의 위험이나 환경오염의 가능성이 낮다.","ru":"Возобновляемая энергия разрабатывается с использованием силы природы, такой как вода, ветер и солнечный свет, поэтому риск исчерпания и загрязнения окружающей среды низки.","words":[["물","вода"],["바람","ветер"],["햇빛","солнечный свет"],["등","и так далее"],["자연","природа"],["의","(частица принадлежности)"],["힘","сила"],["을","(частица объекта)"],["이용해서","используя"],["개발하는","разрабатываемая"],["에너지","энергия"],["이기 때문에","потому что"],["고갈","истощение"],["위험","риск"],["나","или"],["환경오염","загрязнение окружающей среды"],["가능성","возможность"],["이","(частица подлежащего)"],["낮다","низкий"]]},{"ko":"이에 따라 최근 새로운 신재생 에너지 개발에 적극 나서고 있는 국가들이 많다.","ru":"В связи с этим в последнее время много стран активно занимаются разработкой новых возобновляемых источников энергии.","words":[["이에 따라","вслед за этим / в связи с этим"],["최근","последнее время"],["새로운","новый"],["신재생 에너지","возобновляемая энергия"],["개발","разработка"],["에","в / на"],["적극","активно"],["나서고 있는","принимающие участие"],["국가들","страны"],["이","(частица подлежащего)"],["많다","много"]]},{"ko":"대표적인 몇 가지 사례를 소개하면 다음과 같다.","ru":"Вот несколько типичных примеров.","words":[["대표적인","типичный"],["몇 가지","несколько"],["사례","пример"],["를","(частица объекта)"],["소개하면","если представить / если рассказать"],["다음","следующий"],["과 같다","как следующее / как далее"]]},{"ko":"먼저 해상 풍력의 강국인 영국을 사례로 들 수 있다.","ru":"Сначала можно привести в пример Великобританию, сильную в морской ветроэнергетике.","words":[["먼저","сначала"],["해상 풍력","офшорная (морская) ветроэнергия"],["의","(частица принадлежности)"],["강국","сильная страна"],["인","являющаяся"],["영국","Великобритания"],["을","(частица объекта)"],["사례","пример"],["로","как"],["들 수 있다","можно привести / можно назвать"]]},{"ko":"해상 풍력 발전은 육지와 가까운 바다에 거대한 풍차를 돌려서 전기를 생산하는 방식이다.","ru":"Офшорная ветроэнергия — это способ производства электроэнергии, при котором вращают гигантские ветряные мельницы в море недалеко от суши.","words":[["해상 풍력 발전","морская ветроэнергетика"],["은","(частица темы)"],["육지","суша"],["와","и / с"],["가까운","близкий"],["바다","море"],["에","в"],["거대한","огромный"],["풍차","ветряная мельница"],["를","(частица объекта)"],["돌려서","вращая"],["전기","электричество"],["를","(частица объекта)"],["생산하는","производящий"],["방식","способ"],["이다","быть"]]},{"ko":"육상 풍력 발전에 비해 토지 구입 비용이 들지 않고, 지형 및 경관 훼손, 소음 발생 등의 피해가 적다는 것이 장점이다.","ru":"По сравнению с наземной ветроэнергией, не требуется покупать землю, и ущерб для рельефа, пейзажа и уровень шума меньше — это преимущество.","words":[["육상 풍력 발전","наземная ветроэнергия"],["에 비해","по сравнению с"],["토지","земля"],["구입","покупка"],["비용","затраты"],["이","(частица подлежащего)"],["들지 않고","не требуется"],["지형","рельеф"],["및","и"],["관","пейзаж"],["훼손","повреждение"],["소음","шум"],["발생","возникновение"],["등","и т. д."],["의","(частица принадлежности)"],["피해","ущерб"],["가","(частица подлежащего)"],["적다는","маленький / незначительный"],["것이","то, что"],["장점","преимущество"],["이다","быть"]]},{"ko":"다음으로 지열을 활용하여 에너지를 생산하는 경우이다.","ru":"Следующий пример — это производство энергии с использованием геотермального тепла.","words":[["다음으로","далее"],["지열","геотермальная энергия / тепло земли"],["을","(частица объекта)"],["활용하여","используя"],["에너지","энергия"],["를","(частица объекта)"],["생산하는","производящий"],["경우","случай"],["이다","быть"]]},{"ko":"뉴질랜드가 대표적인데 뉴질랜드는 화산 및 지진대에 위치하고 있어 지열 발전에 유리하다.","ru":"Типичный пример — Новая Зеландия: она расположена в вулканической и сейсмической зоне, что выгодно для геотермальной энергетики.","words":[["뉴질랜드","Новая Зеландия"],["가","(частица подлежащего)"],["대표적이다","быть типичным"],["는 데","а"],["화산","вулкан"],["및","и"],["지진대","сейсмическая зона"],["에","в"],["위치하고 있어","находиться"],["지열 발전","геотермальная энергия"],["에","для"],["유리하다","быть выгодным"]]},{"ko":"뉴질랜드가 세계 최대 규모로 지열 에너지를 개발할 수 있는 것은 이러한 지형적 조건 덕분이다.","ru":"Новая Зеландия может разрабатывать геотермальную энергию в крупнейших масштабах в мире благодаря таким географическим условиям.","words":[["세계","мир"],["최대","наибольший"],["규모","масштаб"],["로","в"],["개발할 수 있다","может разрабатывать"],["이러한","такие"],["지형적","географический"],["조건","условие"],["덕분이다","благодаря"]]},{"ko":"마지막으로 바이오 에너지가 있다.","ru":"Наконец, существует биоэнергия.","words":[["마지막으로","наконец"],["바이오 에너지","биоэнергия"],["가","(частица подлежащего)"],["있다","есть / существует"]]},{"ko":"가축 분뇨를 이용하여 가스를 생산하는 방식으로 덴마크가 대표적이다.","ru":"Типичный пример — Дания, где производят газ из навоза скота.","words":[["가축","скот"],["분뇨","навоз"],["를","(частица объекта)"],["이용하여","используя"],["가스","газ"],["를","(частица объекта)"],["생산하는","производящий"],["방식","способ"],["으로","посредством"],["덴마크","Дания"],["가","(частица подлежащего)"],["대표적이다","быть типичным"]]},{"ko":"덴마크는 인구의 5배가 넘는 돼지를 사육하고 있어 돼지 분뇨 처리가 늘 문제였는데, 이를 통해 가스를 생산하고 나머지 찌꺼기는 비료로 사용하는 시스템을 갖추고 있다.","ru":"В Дании свиней в 5 раз больше, чем людей, и проблема утилизации навоза была постоянной, но теперь производят газ, а остатки используют как удобрение — у них есть такая система.Слова:인구 — население의 — (частица принадлежности)5배 — в 5 раз가 넘는 — превышающий돼지 — свинья를 — (частица объекта)사육하다 — выращивать","words":[["돼지 분뇨","свиной навоз"],["처리","утилизация"],["가","(частица подлежащего)"],["문제","проблема"],["였는데","была, но"],["이를 통해","через это / с помощью этого"],["나머지","остаток"],["찌꺼기","осадок, остатки"],["비료","удобрение"],["로","как"],["사용하다","использовать"],["시스템","система"],["을 갖추다","быть оснащённым"]]},{"ko":"이러한 노력이 계속된다면 머지않아 에너지 고갈과 환경 오염 문제를 걱정하지 않아도 되는 새로운 에너지의 시대가 열릴 것이다.","ru":"Если такие усилия будут продолжаться, то вскоре наступит новая эра энергии, когда не придётся беспокоиться об истощении ресурсов и загрязнении окружающей среды.","words":[["이러한","такие"],["노력","усилия"],["이","(частица подлежащего)"],["계속된다면","если будут продолжаться"],["머지않아","вскоре"],["에너지 고갈","истощение энергии"],["환경 오염","загрязнение окружающей среды"],["문제","проблема"],["를","(частица объекта)"],["걱정하지 않아도 되다","не нужно беспокоиться"],["새로운","новая"],["시대","эпоха"],["가 열리다","открывается / наступает"],["것이다","будет"]]}]},{"id":"hanok","emoji":"🏯","titleKo":"한옥","title":"Ханок — традиционный дом","theme":"Культура","level":"TOPIK II","sentences":[{"ko":"한옥의 형태는 사용하는 재료와 지방에 따라 다르게 나타난다.","ru":"Форма ханока различается в зависимости от используемых материалов и региона.","words":[["한옥","ханок"],["의","(притяжательная частица)"],["형태","форма"],["는","(частица темы)"],["사용하는","используемый"],["재료","материал"],["와","и"],["지방","регион"],["에 따라","в зависимости от"],["다르게","по-разному"],["나타난다","проявляется / выражается"]]},{"ko":"한옥 중에서도 기와집과 초가집은 가장 보편적으로 찾아볼 수 있는 형태이고 너와집은 강원도 지역에서 많이 볼 수 있는 형태이다.","ru":"Среди ханоков наиболее распространёнными являются киваджип и чхогаджип, а ноуаджип часто встречается в регионе Канвондо.","words":[["한옥","ханок"],["중","среди"],["에서도","даже среди"],["기와집","дом с черепичной крышей"],["과","и"],["초가집","соломенный дом"],["은","(частица темы)"],["가장","самый"],["보편적으로","распространённо"],["찾아볼 수 있다","можно увидеть"],["형태","форма"],["이고","и"],["너와집","дом с деревянной крышей"],["강원도","Канвондо"],["지역","регион"],["에서","в"],["많이","много"],["볼 수 있다","можно увидеть"],["형태이다","форма есть"]]},{"ko":"기와집은 눈과 비에 강한 기와를 덮어서 만들었으며 옛날부터 부와 권위를 상징하는 집이었다.","ru":"Киваджип крыт прочной к дождю и снегу черепицей, и с древности был символом богатства и власти.","words":[["기와집","дом с черепицей"],["은","(частица темы)"],["눈","снег"],["과","и"],["비","дождь"],["에","к"],["강한","устойчивый"],["기와","черепица"],["를","(частица объекта)"],["덮어서","покрыв"],["만들었으며","был сделан, и"],["옛날부터","с древних времён"],["부","богатство"],["와","и"],["권위","авторитет / власть"],["를","(частица объекта)"],["상징하는","символизирующий"],["집","дом"],["이었다","был"]]},{"ko":"초가집은 볏짚으로 지붕을 만든 집으로 서민들이 주로 살았으며 여름에는 햇볕의 열기를 차단해서 시원하고 겨울에는 찬 기운을 막아준다는 이점이 있다.","ru":"Чхогаджип — это дом с соломенной крышей, в котором в основном жили простые люди; летом он защищает от жары, а зимой — от холода.","words":[["초가집","соломенный дом"],["은","(частица темы)"],["볏짚","солома"],["으로","из"],["지붕","крыша"],["을","(частица объекта)"],["만든","сделанный"],["집","дом"],["으로","как"],["서민들","простые люди"],["이","(частица подлежащего)"],["주로","в основном"],["살았으며","жили, и"],["여름","лето"],["에는","в"],["햇볕","солнечный свет"],["의","(притяжательная частица)"],["열기","жара"],["를","(частица объекта)"],["차단해서","блокируя"],["시원하고","прохладный, и"],["겨울","зима"],["에는","в"],["찬","холодный"],["기운","энергия / воздух"],["을","(частица объекта)"],["막아준다는","защищающий"],["이점","преимущество"],["이 있다","есть"]]},{"ko":"또한 너와집은 소나무 나무판으로 지붕을 덮어서 만든 집의 형태로 비가 올 때 습기를 막아주는 장점이 있다.","ru":"Также ноуаджип — это дом с крышей из сосновых досок, хорошо защищающий от влаги во время дождя.","words":[["또한","также"],["너와집","деревянный дом"],["은","(частица темы)"],["소나무","сосна"],["나무판","деревянные доски"],["으로","из"],["지붕","крыша"],["을","(частица объекта)"],["덮어서","накрывая"],["만든","сделанный"],["집","дом"],["의","(притяжательная частица)"],["형태","форма"],["로","как"],["비","дождь"],["가","(частица подлежащего)"],["올 때","когда идёт"],["습기","влага"],["를","(частица объекта)"],["막아주는","защищающий"],["장점","преимущество"],["이 있다","есть"]]},{"ko":"한옥의 형태는 지방에 따라 구조가 달라진다.","ru":"Форма ханока меняется в зависимости от региона.","words":[["한옥","ханок"],["의","(притяжательная частица)"],["형태","форма"],["는","(частица темы)"],["지방","регион"],["에 따라","в зависимости от"],["구조","структура"],["가","(частица подлежащего)"],["달라진다","меняется"]]},{"ko":"북부 지방은 춥고 눈이 많이 오는 날씨에 대비하여 모든 가사 작업을 실내에서 할 수 있는 구조로 마루가 없고 방들이 서로 붙어있는 ㅁ자형이다.","ru":"В северных регионах из-за холодной и снежной погоды строят дома без настила (мару), где все комнаты соединены в форму «ㅁ», чтобы все работы по дому можно было делать внутри.","words":[["북부","север"],["지방","регион"],["은","(частица темы)"],["춥고","холодный, и"],["눈","снег"],["이","(частица подлежащего)"],["많이","много"],["오는","идущий"],["날씨","погода"],["에 대비하여","в подготовке к"],["모든","все"],["가사","домашнее хозяйство"],["작업","работа"],["을","(частица объекта)"],["실내","внутри"],["에서","в"],["할 수 있다","можно делать"],["구조","структура"],["로","в виде"],["마루","настил (традиционный деревянный пол)"],["가","(частица подлежащего)"],["없고","отсутствует, и"],["방들","комнаты"],["서로","друг с другом"],["붙어있는","соединённые"],["ㅁ자형","форма «"],["ㅁ»이다","быть"]]},{"ko":"북부 지방과는 달리 남부 지방은 더운 여름에 바람이 잘 통하도록 지어진 개방적인 구조인 ―자형으로 방, 마루, 부엌이 옆으로 나란히 붙어있다.","ru":"В отличие от северных, в южных регионах строят дома открытой формы «―», где комнаты, настил и кухня идут рядом, чтобы воздух хорошо проходил летом.","words":[["북부 지방","северный регион"],["과는 달리","в отличие от"],["남부 지방","южный регион"],["은","(частица темы)"],["더운","жаркий"],["여름","лето"],["에","в"],["바람","ветер"],["이","(частица подлежащего)"],["잘","хорошо"],["통하도록","чтобы проходил"],["지어진","построенный"],["개방적인","открытый"],["구조","структура"],["인","являющийся"],["―자형","форма «―»"],["으로","в виде"],["방","комната"],["마루","настил"],["부엌","кухня"],["이","(частица подлежащего)"],["옆으로","рядом"],["나란히","в ряд"],["붙어있다","соединены"]]},{"ko":"또한 넓은 대청마루가 집의 중심에 있고 창문과 방문이 많다.","ru":"Также в центре дома находится просторный деревянный пол (дэчхонмару), и там много окон и дверей.","words":[["또한","также"],["넓은","широкий"],["대청마루","большой деревянный настил"],["가","(частица подлежащего)"],["집","дом"],["의","(притяжательная частица)"],["중심","центр"],["에","в"],["있다","есть"],["창문","окно"],["과","и"],["방문","дверь"],["이","(частица подлежащего)"],["많다","много"]]},{"ko":"중부 지방은 보통 ㄱ자형으로 남부 지방의 한옥에 비해서 마루가 안방과 건넌방 사이에 좁게 있고 창문이 적은 것이 특징이다.","ru":"В центральных регионах ханоки обычно имеют форму «ㄱ», и по сравнению с южными домами настил узко расположен между внутренней и внешней комнатами, и окон меньше — это особенность.","words":[["중부 지방","центральный регион"],["은","(частица темы)"],["보통","обычно"],["ㄱ자형","форма «"],["ㄱ»으로","в виде"],["남부 지방","южный регион"],["의","(притяжательная частица)"],["한옥","ханок"],["에 비해서","по сравнению с"],["마루","настил"],["가","(частица подлежащего)"],["안방","внутренняя комната"],["과","и"],["건넌방","внешняя комната"],["사이","между"],["에","в"],["좁게","узко"],["있고","есть, и"],["창문","окно"],["이","(частица подлежащего)"],["적은","немного"],["것","вещь / то"],["특징","особенность"],["이다","быть"]]}]},{"id":"tracking","emoji":"📱","titleKo":"위치 추적","title":"Отслеживание телефона и приватность","theme":"Общество","level":"TOPIK II","sentences":[{"ko":"시에 살고 있는 여대생 A씨(21)는 집으로 가는 도중 공사장 인근을 지나다 어두운 밤길에 그만 발을 헛디뎌 배수로에 빠지고 말았다.","ru":"Студентка A, живущая в городе (21 год), по пути домой проходила рядом со стройкой и в темноте случайно оступилась и упала в водосток.","words":[["시에","в городе"],["살고 있는","живущая"],["여대생","студентка"],["A씨","госпожа A"],["(21)는","(21 лет)"],["집으로","домой"],["가는","идущая"],["도중","по пути"],["공사장","стройка"],["인근을","поблизости"],["지나다","проходить"],["어두운","тёмная"],["밤길에","ночная дорога"],["그만","случайно, неожиданно"],["발을","нога"],["헛디뎌","оступиться"],["배수로에","в дренаж, водосток"],["빠지고 말았다","в итоге упала"]]},{"ko":"몸을 움직일 수 없었던 A씨는 \"도와주세요\"라고 소리쳤으나 야간에 인적이 드문 곳이어서 도와줄 사람이 없었다.","ru":"A, которая не могла пошевелиться, закричала: \"Помогите\", но так как это было малолюдное место ночью, помочь было некому.","words":[["몸을","тело"],["움직일 수 없었던","не могла двигаться"],["도와주세요","помогите"],["라고","(цитата)"],["소리쳤으나","закричала, но"],["야간에","ночью"],["인적이","люди"],["드문","редкие"],["곳이어서","место, поэтому"],["도와줄","помогающий"],["사람이","человек"],["없었다","не было"]]},{"ko":"A씨는 급히 휴대전화로 어머니에게 \"제가 배수로에 빠졌는데 여기가 어디인지 알 수가 없어요\"라고 도움을 청했다.","ru":"A срочно позвонила матери по телефону и попросила помощи, сказав: «Я упала в водосток, но не знаю, где нахожусь».","words":[["급히","срочно"],["휴대전화로","по мобильному телефону"],["어머니에게","матери"],["제가","я"],["배수로에","в водосток"],["빠졌는데","упала"],["여기가","это место"],["어디인지","где именно"],["알 수가 없어요","не знаю"],["도움을","помощь"],["청했다","просила"]]},{"ko":"딸이 위급한 상황에 처했다는 소식을 접한 어머니는 119 구조대에 딸의 휴대전화 추적을 의뢰했고, A씨는 119 구조대의 도움을 받아 구조됐다.","ru":"Получив известие, что её дочь в экстренной ситуации, мать обратилась в службу спасения 119 с просьбой отследить телефон дочери, и A была спасена с их помощью.","words":[["딸이","дочь"],["위급한","экстренный"],["상황에","в ситуации"],["처했다는","оказалась"],["소식을","новость"],["접한","получившая"],["어머니는","мать"],["구조대에","в службу спасения"],["추적을","отслеживание"],["의뢰했고","попросила"],["도움을 받아","получила помощь"],["구조됐다","была спасена"]]},{"ko":"A씨는 당시 위급한 상황에 놓여 있었으나 휴대전화 위치 추적 기술의 도움을 받아 생명을 구할 수 있었다.","ru":"Несмотря на то, что A находилась в опасной ситуации, благодаря технологии отслеживания местоположения телефона ей удалось спастись.","words":[["당시","в то время"],["놓여 있었으나","находилась, но"],["위치","местоположение"],["추적","отслеживание"],["기술의","технология"],["생명을","жизнь"],["구할 수 있었다","удалось спасти"]]},{"ko":"하지만 휴대전화 실시간 위치 추적을 허가하는 것이 기본권을 침해하고 있다라는 내용의 헌법 소원이 제기되었다.","ru":"Однако была подана конституционная жалоба с утверждением, что разрешение на отслеживание местоположения телефона в реальном времени нарушает основные права.","words":[["하지만","однако"],["실시간","в реальном времени"],["허가하는","разрешающее"],["기본권을","основные права"],["침해하고 있다","нарушает"],["내용의","содержание"],["헌법 소원","конституционная жалоба"],["제기되었다","была подана"]]},{"ko":"위치 추적은 사생활의 비밀, 일반적 행동의 자유, 인격권 등을 침해하기 때문에 위헌이라는 것이다.","ru":"Позиция заключается в том, что слежка нарушает тайну частной жизни, свободу действий и личные права, поэтому является неконституционной.","words":[["사생활의","частной жизни"],["비밀","тайна"],["일반적","общий"],["행동의 자유","свобода действий"],["인격권","личные права"],["등을","и т. д."],["침해하기 때문에","потому что нарушает"],["위헌이라는","неконституционным"],["것이다","это"]]},{"ko":"또한 이로 인해 수사권이 남용될 여지도 크다고 지적했다.","ru":"Также было указано, что существует большая вероятность злоупотребления следственными полномочиями.","words":[["또한","также"],["이로 인해","из-за этого"],["수사권이","следственные полномочия"],["남용될","будет злоупотреблено"],["여지도","вероятность"],["크다고","велика"],["지적했다","указали"]]}]},{"id":"consume","emoji":"💸","titleKo":"합리적 소비","title":"Рациональное потребление","theme":"Экономика","level":"TOPIK II","sentences":[{"ko":"소비생활을 잘하려면 반드시 소득 내에서 소비를 해야 한다.","ru":"Чтобы хорошо управлять потреблением, обязательно нужно тратить в пределах дохода.","words":[["소비생활을","потребительская жизнь"],["잘하려면","чтобы хорошо делать"],["반드시","обязательно"],["소득","доход"],["내에서","в пределах"],["소비를","потребление"],["해야 한다","должен делать"]]},{"ko":"만일 소득보다 소비가 많아지면 우리는 빚을 지게 되는 것이다.","ru":"Если расходы превысят доходы, мы окажемся в долгах.","words":[["만일","если"],["소득보다","чем доход"],["소비가","потребление"],["많아지면","увеличивается"],["우리는","мы"],["빚을","долг"],["지게 되는 것이다","окажемся в состоянии"]]},{"ko":"그런데 사고 싶은 물건은 많기 때문에 소득 안에서 소비를 하는 것이 쉽지 않다.","ru":"Но так как хочется много вещей, тратить в рамках дохода бывает сложно.","words":[["그런데","однако"],["사고 싶은","хочу купить"],["물건은","вещи"],["많기 때문에","потому что много"],["소득 안에서","в пределах дохода"],["소비를 하는 것","потреблять"],["이","это"],["쉽지 않다","нелегко"]]},{"ko":"그래서 소비를 할 때는 우선순위를 정해야 한다.","ru":"Поэтому при потреблении нужно расставлять приоритеты.","words":[["그래서","поэтому"],["소비를 할 때는","при потреблении"],["우선순위를","приоритеты"],["정해야 한다","нужно установит"]]},{"ko":"가장 사고 싶은 것, 가장 큰 만족을 주는 것을 잘 골라야 하고, 그것을 선택하면 나머지는 포기해야 한다.","ru":"Нужно хорошо выбрать то, что хочешь больше всего и что приносит наибольшее удовлетворение, а остальные вещи придётся отказаться.","words":[["가장","самый"],["사고 싶은 것","то, что хочется купить"],["가장 큰","самый большой"],["만족을","удовлетворение"],["주는 것","дающий"],["잘","хорошо"],["골라야 하고","выбирать и"],["그것을","это"],["선택하면","если выбрать"],["나머지는","остальное"],["포기해야 한다","нужно отказаться"]]},{"ko":"이러한 소비를 합리적인 소비라고 한다.","ru":"Такой подход к потреблению называют рациональным потреблением.","words":[["이러한","такой"],["소비를","потребление"],["합리적인","рациональный"],["소비라고 한다","называют потреблением"]]},{"ko":"합리적인 소비란, 먼 미래까지 내다보고 가지고 있는 돈을 고려해서 여러 가지 상품 가운데 적절한 물건을 선택하고 최대 만족을 얻는 소비 행위이다.","ru":"Рациональное потребление — это действие, при котором, учитывая свои деньги и смотря в далёкое будущее, выбирают подходящий товар из множества и получают максимальное удовлетворение.","words":[["합리적인","рациональный"],["소비란","потребление есть"],["먼","дальний"],["미래까지","до будущего"],["내다보고","глядя вперед"],["가지고 있는","имеющий"],["돈을","деньги"],["고려해서","учитывая"],["여러 가지","различные"],["상품","товары"],["가운데","среди"],["적절한","подходящий"],["물건을","вещь"],["선택하고","выбирая и"],["최대 만족을","максимальное удовлетворение"],["얻는","получая"],["소비 행위이다","акт потребления"]]},{"ko":"예를 들어, 자기에게 있는 돈을 가지고 무엇을 할지 고민하는 사람이 있다.","ru":"Например, есть человек, который думает, на что потратить имеющиеся у него деньги.","words":[["예를 들어","например"],["자기에게 있는","у себя имеющий"],["돈을","деньги"],["가지고","имея"],["무엇을 할지","что делать"],["고민하는","размышляющий"],["사람이 있다","есть человек"]]},{"ko":"좋아하는 옷도 사고 싶고 재미있는 공연도 보고 싶지만 자기가 가진 돈을 생각해서 한 가지만 해야 한다.","ru":"Он хочет купить любимую одежду и сходить на интересное представление, но, думая о своих деньгах, может выбрать только одно.","words":[["좋아하는","любимый"],["옷도","одежда тоже"],["사고 싶고","хочу купить и"],["재미있는","интересный"],["공연도","представление тоже"],["보고 싶지만","хочу посмотреть, но"],["자기가 가진","имеющий"],["돈을","деньги"],["생각해서","учитывая"],["한 가지만","только одно"],["해야 한다","должен сделать"]]},{"ko":"그러면 이 사람은 무엇을 선택할까?","ru":"Что тогда выберет этот человек?","words":[]},{"ko":"이 사람은 좋아하는 옷을 사서 얻는 이익과 재미있는 공연을 봐서 얻는 이익을 비교하여 좀 더 만족이 큰 것을 고를 것이다.","ru":"Он сравнит выгоду от покупки одежды и от посещения интересного концерта и выберет то, что даст большее удовлетворение.","words":[["이익과","выгоды и"],["비교하여","сравнивая"],["좀 더","немного больше"],["만족이","удовлетворение"],["큰 것을","большее"],["고를 것이다","выберет"]]},{"ko":"즉, 하나를 선택할 때 들어가는 비용과 그것으로부터 얻는 만족감을 비교해서 비용에 비해 이익이 가장 큰 것을 선택할 것이다.","ru":"То есть при выборе он сравнит затраты и получаемое удовлетворение, и выберет то, где выгода максимальна по отношению к затратам.","words":[["즉","то есть"],["하나를","одно"],["선택할 때","при выборе"],["들어가는","входящие"],["비용과","затраты и"],["그것으로부터","от этого"],["얻는","получаемое"],["만족감을","удовлетворение"],["비교해서","сравнивая"],["비용에 비해","по отношению к затратам"],["이익이","выгода"],["가장 큰 것을","самое большое"],["선택할 것이다","выберет"]]},{"ko":"좋아하는 옷을 사는 것과 공연을 보는 것 중에서 어느 것을 선택하는 것이 합리적인 선택일까?","ru":"Что из двух — покупка одежды или поход на концерт — будет рациональным выбором?","words":[["좋아하는 옷을","любимую одежду"],["사는 것과","покупка и"],["공연을","представление"],["보는 것 중에서","из просмотра"],["어느 것을","что именно"],["선택하는 것이","выбрать"],["합리적인 선택일까?","будет рациональным выбором?"]]}]},{"id":"recipe","emoji":"🍢","titleKo":"궁중떡볶이","title":"Королевский ттокпокки (рецепт)","theme":"Кухня","level":"TOPIK I","sentences":[{"ko":"궁중떡볶이","ru":"Королевский ттокпокки","words":[]},{"ko":"재료 | 떡볶이떡 300g, 소고기 100g, 피망 2개, 표고버섯 4개, 양파 ½개, 당근 ½개, 파","ru":"Ингредиенты | рисовые клецки для ттокпокки 300 г, говядина 100 г, болгарский перец 2 шт., шиитаке 4 шт., лук ½ шт., морковь ½ шт., зелёный лук","words":[["재료","ингредиенты"],["떡볶이떡","рисовые клецки для ттокпокки"],["소고기","говядина"],["피망","болгарский перец."],["표고버섯","шиитаке"],["양파","лук ½"],["개","половина."],["당근","морковь"]]},{"ko":"양념재료 | 간장, 설탕, 물엿, 참기름, 후추, 마늘, 깨","ru":"Приправы | соевый соус, сахар, кукурузный сироп, кунжутное масло, чёрный перец, чеснок, кунжут","words":[["양념재료","приправы"],["간장","соевый соус"],["설탕","сахар"],["물엿","кукурузный сироп"],["참기름","кунжутное масло"],["후추","чёрный перец"],["마늘","чеснок"],["깨","кунжут"]]},{"ko":"만드는 방법 |","ru":"Способ приготовления:","words":[["만드는","делающий"],["방법","способ"]]},{"ko":"고기 양념하기","ru":"● Маринование мяса","words":[["고기","мясо"],["양념하기","мариновать"]]},{"ko":"고기 양념장: 간장 3큰술, 설탕 2큰술, 참기름, 마늘, 후추를 만든다","ru":"1. Приготовить маринад для мяса: 3 ст. л. соевого соуса, 2 ст. л. сахара, кунжутное масло, чеснок, чёрный перец.","words":[["고기","мясо"],["양념장","маринад"],["간장","соевый соус"],["큰술","3 столовые ложки"],["설탕","сахар"],["큰술","2 столовые ложки"],["참기름","кунжутное масло"],["마늘","чеснок"],["후추","чёрный перец"],["를","(частица объекта)"],["만든다","приготовить"]]},{"ko":"표고버섯을 썰고 파도 썬다","ru":"2. Нарезать шиитаке и зелёный лук.","words":[["표고버섯을","шиитаке (вин.)"],["썰고","нарезав"],["파도","также зелёный лук"],["썬다","нарезать"]]},{"ko":"표고버섯, 파, 소고기를 양념장에 버무린다","ru":"3. Перемешать шиитаке, лук и говядину с маринадом.","words":[["표고버섯","шиитаке"],["파","зелёный лук"],["소고기를","говядину"],["양념장에","в маринаде"],["버무린다","перемешать"]]},{"ko":"양념이 잘 배게끔 15–20분 정도 재워둔다","ru":"4. Оставить мариноваться примерно 15–20 минут, чтобы маринад хорошо пропитал.","words":[["양념이","маринад (тема)"],["잘","хорошо"],["배게끔","чтобы пропиталось15–20"],["분","15–20 минут"],["정도","примерно"],["재워둔다","оставлять мариноваться"]]},{"ko":"떡 양념하기","ru":"● Маринование клецок","words":[["떡","клецки"],["양념하기","мариновать"]]},{"ko":"말랑말랑한 떡볶이떡을 준비한다","ru":"1. Подготовить мягкие клецки для ттокпокки.","words":[["말랑말랑한","мягкие"],["떡볶이떡을","клецки для ттокпокки"],["준비한다","подготовить"]]},{"ko":"떡에 간장, 참기름을 조금 넣고 양념을 한다","ru":"2. Немного полить клецки соевым соусом и кунжутным маслом и замариновать.","words":[["떡에","клецкам"],["간장","соевый соус"],["참기름을","кунжутное масло"],["조금","немного"],["넣고","положив"],["양념을 한다","замариновать"]]},{"ko":"조리하기","ru":"● Готовка","words":[["조리하기","готовить"]]},{"ko":"채소(당근, 양파, 피망, 파)를 썰어서 준비한다","ru":"1. Нарезать и подготовить овощи (морковь, лук, болгарский перец, лук).","words":[["채소","овощи"],["당근","морковь"],["양파","лук"],["피망","болгарский перец"],["파","зелёный лук"],["를","(частица объекта)"],["썰어서","нарезав"],["준비한다","подготовить"]]},{"ko":"팬에 양파, 피망, 당근을 볶는다. 이때 재료를 따로 볶아야 재료의 맛과 향이 섞이지 않는다","ru":"2. Обжарить в сковороде лук, болгарский перец и морковь. При этом овощи нужно жарить отдельно, чтобы их вкусы и ароматы не смешивались.","words":[["팬에","в сковороде"],["양파","лук"],["피망","болгарский перец"],["당근을","морковь"],["볶는다","обжарить"],["이때","при этом"],["재료를","ингредиенты"],["따로","отдельно"],["볶아야","нужно жарить"],["재료의","ингредиентов"],["맛과","вкус и"],["향이","аромат"],["섞이지 않는다","не смешиваются"]]},{"ko":"양념한 고기를 채소가 있는 팬에 넣고 익을 때까지 볶는다","ru":"3. Положить замаринованное мясо в сковороду с овощами и жарить до готовности.","words":[["양념한","замаринованное"],["고기를","мясо"],["채소가 있는","с овощами"],["팬에","в сковороде"],["넣고","положив"],["익을 때까지","до готовности"],["볶는다","жарить"]]},{"ko":"마지막으로 양념한 떡을 넣고 볶는다","ru":"4. В завершение добавить замаринованные клецки и обжарить.","words":[["마지막으로","в завершение"],["양념한","замаринованные"],["떡을","клецки"],["넣고","положив"],["볶는다","обжарить"]]},{"ko":"설탕, 간장, 깨소금으로 간을 맞춘다","ru":"5. Приправить сахаром, соевым соусом и смесью кунжут–соль. Слова:설탕 — сахар간장 — соевый соус깨소금으로 — смесь кунжут–соль간을 — приправу맞춘다 — регулировать / довести до вкуса","words":[]}]},{"id":"olympic","emoji":"🏅","titleKo":"올림픽 메달","title":"Олимпийские медали и спорт","theme":"Спорт","level":"TOPIK II","sentences":[{"ko":"각 나라의 메달 개수는?","ru":"Сколько медалей у каждой страны?","words":[["각","каждый"],["나라의","страны (родительный падеж)"],["메달","медаль"],["개수는","количество"]]},{"ko":"4년에 한 번씩 열리는 전 세계인의 축제인 올림픽에서 현재 가장 많은 메달을 딴 국가는 어디일까?","ru":"Какая страна сейчас выиграла больше всего медалей на Олимпийских играх — празднике всего мира, который проходит раз в четыре года?","words":[["4년에","раз в 4 года"],["한 번씩","по одному разу"],["열리는","проходящий"],["전 세계인의","всего мира"],["축제인","праздник"],["올림픽에서","на Олимпийских играх"],["현재","сейчас"],["가장 많은","самое большое"],["메달을","медали"],["딴","выигравший"],["국가는","страна (тема)"],["어디일까?","где находится?"]]},{"ko":"가장 많은 메달을 딴 스포츠 강국은 바로 미국이다.","ru":"Страна, выигравшая больше всего медалей, — это США.","words":[["가장 많은","самое большое"],["메달을 딴","выигравший медали"],["스포츠","спорт"],["강국은","держава"],["바로","именно"],["미국이다","США есть"]]},{"ko":"미국은 역대 올림픽에서 모두 2,827개의 메달을 획득해 전체 1위에 올랐고 러시아와 영국이 그 뒤를 잇고 있다.","ru":"США завоевали в истории Олимпийских игр 2827 медалей, заняв первое место, за ними идут Россия и Великобритания.","words":[["미국은","США"],["역대","за всю историю"],["올림픽에서","на Олимпиадах"],["모두","всего"],["2,827개의","2827 штук"],["메달을","медалей"],["획득해","завоевали"],["전체","весь"],["1위에","первое место"],["올랐고","поднялись"],["러시아와","Россия и"],["영국이","Великобритания"],["그 뒤를","за ними"],["잇고 있다","следуют"]]},{"ko":"신흥 스포츠 강국으로 부상하고 있는 한국의 실력은 어떨까?","ru":"Каковы успехи Южной Кореи, которая становится новой спортивной державой?","words":[["신흥","новый, восходящий"],["스포츠","спорт"],["강국으로","как держава"],["부상하고 있는","поднимающийся"],["한국의","корейский"],["실력은","сила, способности"],["어떨까?","каковы?"]]},{"ko":"한국은 금메달 121개, 은메달 112개, 동메달 104개 등 모두 337개의 메달로 전체 17위를 기록하고 있다.","ru":"Южная Корея занимает 17-е место с 337 медалями: 121 золотая, 112 серебряных и 104 бронзовые.","words":[["금메달","золотые медали"],["은메달","серебряные медали"],["동메달","бронзовые медали"],["모두","всего"],["메달로","медалями"],["전체","общий"],["17위를","17 место"],["기록하고 있다","занимает"]]},{"ko":"세계에서 가장 빠른 사람은 누구일까?","ru":"Кто самый быстрый человек в мире?","words":[]},{"ko":"'번개'라는 별명을 가지고 있는 세계 최고의 육상 선수 우사인 볼트는 올림픽에서 무려 8개의 금메달을 딴 엄청난 기록을 가지고 있다.","ru":"Усейн Болт, мировой лучший легкоатлет с прозвищем «Молния», имеет потрясающий рекорд — 8 золотых медалей на Олимпиадах.","words":[["번개라는","с прозвищем «Молния»"],["별명을","прозвище"],["가지고 있는","имеющий"],["세계 최고의","лучший в мире"],["육상 선수","легкоатлет"],["우사인 볼트는","Усейн Болт"],["올림픽에서","на Олимпиадах"],["무려","целых"],["8개의","8 штук"],["금메달을 딴","выигравший золотые медали"],["엄청난","потрясающий"],["기록을","рекорд"],["가지고 있다","иметь"]]},{"ko":"2008년 열린 베이징 올림픽에서는 경기 도중 신발 끈이 풀어져 결승선 10여m를 앞두고 전력 질주를 하지 않았음에도 금메달을 획득했다.","ru":"На Олимпиаде 2008 года в Пекине у него развязались шнурки примерно за 10 метров до финиша, но он всё равно выиграл золотую медаль, не бежав на полную мощность.","words":[["2008년","2008 год"],["열린","проведённый"],["베이징 올림픽에서는","на Пекинской Олимпиаде"],["경기 도중","во время соревнования"],["신발 끈이","шнурки"],["풀어져","развязались"],["결승선","финишная линия"],["10여m를","около 10 метров"],["앞두고","перед"],["전력 질주를","максимальный спринт"],["하지 않았음에도","несмотря на то, что не бегал"],["금메달을","золотую медаль"],["획득했다","получил"]]},{"ko":"그는 앞으로 쉽게 깨지지 않을 것 같은, 100m를 9.58초에 뛰는 남자 100m 육상의 세계 신기록 보유자이기도 하다.","ru":"Он также держит мировой рекорд в беге на 100 м среди мужчин — 9.58 секунды, который, кажется, в ближайшее время не побить.","words":[["그는","он"],["앞으로","в будущем"],["쉽게","легко"],["깨지지 않을 것 같은","кажется, не побьётся"],["100m를","100 метров"],["9.58초에","за 9.58 секунды"],["뛰는","бегающий"],["남자","мужчина"],["육상의","лёгкой атлетики"],["세계 신기록","мировой рекорд"],["보유자이기도 하다","также держатель"]]},{"ko":"구기 종목 중 가장 빠른 종목은 무엇일까?","ru":"Какой самый быстрый вид спорта с мячом?","words":[["구기 종목","вид спорта с мячом"],["중","среди"],["가장 빠른","самый быстрый"],["종목은","вид спорта"],["무엇일까?","что?"]]},{"ko":"공을 사용하는 구기 종목 중에서 공 속도가 가장 빠른 종목은 무엇일까?","ru":"Среди мячевых видов спорта, какой имеет самый быстрый мяч?","words":[["공을 사용하는","использующий мяч"],["구기 종목 중에서","среди видов спорта с мячом"],["공 속도가","скорость мяча"],["가장 빠른","самый быстрый"],["종목은","вид спорта"],["무엇일까?","что?"]]},{"ko":"1위는 배드민턴으로 배드민턴 셔틀콕의 속도는 시속 350km 정도이다.","ru":"Первое место занимает бадминтон — скорость воланчика около 350 км/ч.","words":[["1위는","первое место"],["배드민턴으로","занял бадминтон"],["배드민턴 셔틀콕의","воланчик для бадминтона"],["속도는","скорость"],["시속","километров в час"],["350km 정도이다","около 350 км/ч"]]},{"ko":"프로 야구 선수들의 공이 160km 정도인 것을 보면 2배를 넘는 속도이다.","ru":"Для сравнения, мяч у профессиональных бейсболистов летит примерно со скоростью 160 км/ч — это более чем в два раза медленнее.","words":[["프로","профессиональный"],["야구 선수들의","бейсболистов"],["공이","мяч"],["160km 정도인","около 160 км/ч"],["것을 보면","если сравнить"],["2배를","в 2 раза"],["넘는","превышающую"],["속도이다","скорость"]]},{"ko":"  공의 크기가 가장 큰 축구는 약 120km 정도이다.","ru":"Самый большой мяч в футболе, летит со скоростью около 120 км/ч.","words":[["공의","мяча"],["크기가","размер"],["가장 큰","самый большой"],["축구는","футбол"],["약","примерно"],["정도이다","около 120 км/ч"]]}]},{"id":"science","emoji":"🧊","titleKo":"석빙고와 황금비","title":"Согбинго и золотое сечение","theme":"Наука","level":"TOPIK II","sentences":[{"ko":"자연 냉동고인 석빙고가 더운 여름에도 얼음을 그대로 저장 할 수 있었던 이유는 무엇일까?","ru":"Почему природный холодильник «석빙고» мог сохранять лед даже в жаркое лето?","words":[["자연","природа"],["냉동고인","холодильник (природный)"],["석빙고가","석빙고 (название)"],["더운","жаркий"],["여름에도","даже летом"],["얼음을","лед (винительный падеж)"],["그대로","так же, без изменений"],["저장","хранение"],["할 수 있었던","мог"],["이유는","причина"],["무엇일까?","что же?"]]},{"ko":"이것은 바로 같은 크기의 돌을 아치 모양으로 쌓아 올려 무지개 모양으로 완성한 아치 구조의 천장 때문이다.","ru":"Это из-за свода арочной конструкции потолка, который построен из камней одинакового размера в форме арки, напоминающей радугу.","words":[["이것은","это"],["바로","именно"],["같은","одинаковый"],["크기의","размера"],["돌을","камень"],["아치 모양으로","в форме арки"],["쌓아 올려","сложенный, построенный"],["무지개 모양으로","в форме радуги"],["완성한","завершенный"],["아치 구조의","арочной конструкции"],["천장","потолок"],["때문이다","из-за"]]},{"ko":"보통 석빙고의 천장은 1~2m의 간격을 두고 4~5개의 아치형으로 만들어져 있는데 그 사이 사이에는 움푹 들어간 빈 공간이 있다.","ru":"Обычно потолок 석빙고 сделан из 4-5 арок с интервалом 1–2 метра, а между ними есть углубленные пустоты.","words":[["보통","обычно"],["천장은","потолок (тема)"],["1~2m의","1–2 метра"],["간격을","интервал"],["두고","ставить, держать"],["4~5개의","4–5 штук"],["아치형으로","в форме арки"],["만들어져 있는데","сделан"],["그 사이 사이에는","между ними"],["움푹 들어간","впалый, углубленный"],["빈 공간이","пустое пространство"],["있다","есть"]]},{"ko":"이 빈 공간이 바로 석빙고 내부의 더운 공기를 가두는 역할을 하기 때문에 석빙고는 더운 여름에도 얼음을 저장할 수 있었던 것이다.","ru":"Эти пустоты удерживают горячий воздух внутри 석빙고, благодаря чему лед сохраняется даже летом.","words":[["이","этот"],["빈 공간이","пустое пространство"],["바로","именно"],["석빙고 내부의","внутри 석빙고"],["더운 공기를","горячий воздух"],["가두는","запирающий, удерживающий"],["역할을","роль"],["하기 때문에","потому что"],["석빙고는","석빙고 (тема)"],["더운 여름에도","даже в жаркое лето"],["얼음을","лед"],["저장할 수 있었던 것이다","мог сохранять"]]},{"ko":"그리스의 아테나 언덕 아크로폴리스에 위치한 파르테논 신전은 세계에서 가장 아름다운 건축물로 손꼽히고 있다.","ru":"Парфенон, расположенный на Акрополе на холме Афины в Греции, считается одним из самых красивых сооружений в мире.","words":[["그리스의","греческий"],["아테나","Афина"],["언덕","холм"],["아크로폴리스에","в Акрополе"],["위치한","расположенный"],["파르테논 신전은","храм Парфенон (тема)"],["세계에서","в мире"],["가장 아름다운","самый красивый"],["건축물로","здание"],["손꼽히고 있다","считается"]]},{"ko":"세계 문화 유산 1호인 파르테논 신전이 완벽한 아름다움을 뽐내는 것은 바로 이 건물이 황금비에 맞춰 지어졌기 때문이다.","ru":"Парфенон, являющийся первым объектом Всемирного культурного наследия, демонстрирует совершенную красоту, потому что построен по золотому сечению.","words":[["세계 문화 유산","всемирное культурное наследие"],["1호인","номер один"],["파르테논 신전이","Парфенон"],["완벽한","совершенный"],["아름다움을","красота"],["뽐내는","демонстрирующий"],["것은","то, что"],["바로","именно"],["이 건물이","это здание"],["황금비에","по золотому сечению"],["맞춰 지어졌기 때문이다","построено согласно"]]},{"ko":"황금비란 가로, 세로의 두 길이가 1:1.618의 이상적인 비율을 이루는 것을 의미한다.","ru":"Золотое сечение — это идеальное соотношение длины и ширины 1 к 1.618.","words":[["황금비란","золотое сечение"],["가로","ширина"],["세로의","высота"],["두 길이가","две длины"],["1:1.618의","1 к 1.618"],["이상적인","идеальный"],["비율을","соотношение"],["이루는 것을","образующее"],["의미한다","означает"]]},{"ko":"이 황금비를 이용해 지어진 파르테논 신전은 아름다울 뿐만 아니라 매우 안정적으로 보인다.","ru":"Парфенон, построенный с использованием золотого сечения, выглядит не только красиво, но и очень устойчиво.","words":[["이","этот"],["황금비를","золотое сечение"],["이용해","используя"],["지어진","построенный"],["파르테논 신전은","Парфенон"],["아름다울 뿐만 아니라","не только красивый"],["매우","очень"],["안정적으로","устойчиво"],["보인다","выглядит"]]},{"ko":"황금비는 이러한 이유로 현대 우리의 생활에서도 많이 찾아볼 수 있는데 신용카드, 텔레비전 화면 등이 모두 황금비로 이루어져 있다.","ru":"По этой причине золотое сечение часто встречается и в нашей современной жизни — например, в кредитных картах и экранах телевизоров.","words":[["이러한 이유로","по этой причине"],["현대","современный"],["우리의","наш"],["생활에서도","в жизни"],["많이 찾아볼 수 있는데","часто встречается"],["신용카드","кредитная карта"],["텔레비전 화면","экран телевизора"],["등이","и так далее"],["모두","все"],["황금비로","по золотому сечению"],["이루어져 있다","составлено"]]}]},{"id":"invite","emoji":"📢","titleKo":"재외동포 청소년 초청","title":"Приглашение молодёжи соотечественников","theme":"Объявление","level":"TOPIK II","sentences":[{"ko":"「재외동포재단」에서는 오는 7월에 ‘재외동포 청소년 초청 연수’를 개최합니다.","ru":"Фонд соотечественников за рубежом проводит в июле программу «Приглашение молодёжи соотечественников за рубежом».","words":[["재외동포재단","Фонд соотечественников за рубежом"],["에서는","по отношению к (служебная частица)"],["오는","предстоящий"],["7월에","в июле"],["재외동포","соотечественники за рубежом"],["청소년","молодёжь"],["초청","приглашение"],["연수","учебная программа"],["를","(винительный падеж)"],["개최합니다","проводит"]]},{"ko":"세계 각국의 재외동포 청소년들과 함께 모국의 사회·역사·문화를 체험하는 뜻깊은 자리가 될 것입니다.","ru":"Это будет значимое мероприятие, на котором молодёжь соотечественников из разных стран сможет познакомиться с обществом, историей и культурой родины.","words":[["세계","мир"],["각국의","разных стран"],["재외동포","соотечественники"],["청소년들과","молодёжь (творительный падеж)"],["함께","вместе"],["모국의","родины"],["사회","общество"],["역사","история"],["문화를","культуру"],["체험하는","испытывающей, знакомящейся"],["뜻깊은","значимое"],["자리","место, событие"],["가","(частица темы)"],["될 것입니다","будет"]]},{"ko":"재외동포 청소년들의 많은 관심과 참여를 바랍니다.","ru":"Просим молодёжь соотечественников проявить активный интерес и принять участие.","words":[["재외동포","соотечественники"],["청소년들의","молодёжи (родительный падеж)"],["많은","много"],["관심과","интерес и"],["참여를","участие"],["바랍니다","просим, желаем"]]},{"ko":"연수명: 「2000 재외동포 청소년 초청 연수」","ru":"а. Название: «2000-я программа приглашения молодёжи соотечественников за рубежом»","words":[["연수명","название программы"],["청소년","молодёжи"],["초청","приглашения"],["연수","учебная программа"]]},{"ko":"연수 기간: 7.15.~7.22. (7박 8일)","ru":"б. Сроки: с 15 по 22 июля (7 ночей, 8 дней)","words":[]},{"ko":"장소: 서울, 지방","ru":"в. Место: Сеул и регионы","words":[]},{"ko":"연수 대상: 전 세계 재외동포 청소년 400명","ru":"г. Участники: 400 молодёжи-соотечественников со всего мира","words":[["연수","программа"],["대상","участники"]]},{"ko":"연수 내용: 한국어 캠프, 주요 유적지 및 경제 현장 탐방, 한국 청소년과의 교류","ru":"д. Программа: языковой лагерь, экскурсии по основным историческим памятникам и экономическим объектам, общение с корейской молодёжью","words":[["연수","программа"],["내용","содержание"],["캠프","лагерь"],["주요","основные"],["유적지","памятники"],["및","и"],["경제","экономика"],["현장","объекты"],["탐방","экскурсия"],["청소년과의","с молодёжью"],["교류","обмен, общение"]]},{"ko":"바. 신청 방법9.1. 신청 기간: 2.24.~4.4.9.2. 제출 서류: 참가 신청서, 자기소개서, 추천서9.3. 제출 방법: 현지의 재외공관으로 우편 제출","ru":"е. Как подать заявку:   — сроки подачи: с 24 февраля по 4 апреля   — документы: заявка на участие, автобиография, рекомендательное письмо   — подача: почтовым отправлением в местное консульское учреждение","words":[["제출","подача"],["서류","документы"],["참가 신청서","заявка на участие"],["자기소개서","автобиография"],["추천서","рекомендательное письмо"],["현지의","местного"],["재외공관으로","в консульство"],["우편","почта"]]},{"ko":"사. 선발 우대: 한국어 능력 우수자, 봉사 활동 경험자","ru":"ж. Приоритет при отборе: отличники по корейскому языку, имеющие опыт волонтёрской деятельности","words":[["선발","отбор"],["우대","приоритет"],["능력","способности"],["우수자","отличники"],["봉사","волонтёрство"],["활동","деятельность"],["경험자","имеющие опыт"]]}]},{"id":"cellist","emoji":"🎻","titleKo":"장한나","title":"Чжан Ханна: от виолончели к дирижированию","theme":"Интервью","level":"TOPIK II","sentences":[{"ko":"3세에 피아노를, 6세에 첼로를 시작해 11세에 로스트로포비치 첼로국제콩쿠르에서 심사위원 10명의 전원 일치로 대상 및 현대 음악상 수상자로 선정된 천재 첼리스트 장한나.","ru":"В 3 года начала играть на пианино, в 6 — на виолончели, а в 11 лет стала победительницей и обладательницей приза за современную музыку на международном конкурсе виолончелистов имени Ростроповича — гениальная виолончелистка Чжан Ханна.","words":[["3세에","в 3 года"],["피아노를","пианино"],["6세에","в 6 лет"],["첼로를","виолончель"],["시작해","начала"],["11세에","в 11 лет"],["로스트로포비치","Ростропович"],["첼로국제콩쿠르에서","на международном конкурсе виолончелистов"],["심사위원","жюри"],["10명의","10 человек"],["전원","все"],["일치로","единогласно"],["대상","главный приз"],["및","и"],["현대 음악상","приз за современную музыку"],["수상자로","лауреатом"],["선정된","выбранная"],["천재","гений"],["첼리스트","виолончелистка"],["장한나","Чжан Ханна (имя)"]]},{"ko":"올해는 지휘자로서 데뷔 무대를 갖는다.","ru":"В этом году она дебютирует как дирижёр.","words":[["올해는","в этом году"],["지휘자로서","как дирижёр"],["데뷔 무대를","дебютный концерт"],["갖는다","проводит"]]},{"ko":"지난 27일 성남아트센터에서 첼리스트 장한나가 지휘대에 선 모습을 볼 수 있었다.","ru":"27-го числа в арт-центре Соннам можно было увидеть Чжан Ханну на дирижёрском пульте.","words":[["지난","прошлый"],["성남아트센터에서","в арт-центре Соннам"],["첼리스트","виолончелистка"],["장한나가","Чжан Ханна (тема)"],["지휘대에","на дирижёрском пульте"],["선","стоящая"],["모습을","образ, вид"],["볼 수 있었다","можно было увидеть"]]},{"ko":"그녀는 제1회 성남 국제 청소년 관현악 페스티벌의 마지막 날 한국과 중국, 독일의 연주자로 구성된 연합 청소년 관현악단을 이끌고 베토벤 교향곡 7번과 코리올란 서곡 등을 연주했다.","ru":"В последний день первого международного фестиваля молодёжных оркестров Соннама она руководила объединённым молодёжным оркестром из Кореии, Китая и Германии, исполнив симфонию №7 Бетховена и увертюру «Кориолан».","words":[["그녀는","она"],["제1회","первый"],["성남 국제 청소년 관현악 페스티벌의","международного молодёжного оркестрового фестиваля Соннама"],["마지막 날","последний день"],["한국과","Корея и"],["중국, 독일의","Китай и Германия (родительный падеж)"],["연주자로","исполнителей"],["구성된","составленный"],["연합 청소년 관현악단을","объединённый молодёжный оркестр"],["이끌고","руководила"],["베토벤 교향곡 7번과","симфония №7 Бетховена и"],["코리올란 서곡 등을","увертюра Кориолан и т.д."],["연주했다","исполнила"]]},{"ko":"첼로와 지휘의 차이를 묻는 나의 질문에 그녀는 환하게 웃으며 \"첼로 연주와 지휘의 차이요? 제 손으로 소리를 만든다는 것과 다른 연주자 100명의 몸과 마음, 영혼을 빌려서 소리를 만드는 것의 차이 아닐까요?\"라고 대답했다.","ru":"На мой вопрос о разнице между игрой на виолончели и дирижированием она широко улыбнулась и ответила: «Разница между игрой на виолончели и дирижированием? Разве это не разница между созданием звука своими руками и созданием звука, взяв в долг тела, души и сердца сотни музыкантов?»","words":[["첼로와","виолончели и"],["지휘의","дирижирования"],["차이를","разницу"],["묻는","спрашивающий"],["나의 질문에","на мой вопрос"],["그녀는","она"],["환하게 웃으며","широко улыбаясь"],["첼로 연주와","игра на виолончели и"],["지휘의 차이요?","разница между дирижированием?"],["제 손으로","своими руками"],["소리를 만든다는 것과","создавать звук и"],["다른 연주자 100명의","100 других исполнителей"],["몸과 마음, 영혼을","тело, душу и сердце"],["빌려서","взяв в долг"],["소리를 만드는 것의","создавать звук"],["차이 아닐까요?","разве не разница?"],["라고 대답했다","ответила"]]},{"ko":"그런데 첼리스트가 왜 갑자기 지휘자로 나선다는 것일까?","ru":"Но почему же виолончелистка внезапно стала дирижёром?","words":[["그런데","однако"],["첼리스트가","виолончелистка"],["왜","почему"],["갑자기","вдруг"],["지휘자로","дирижёром"],["나선다는 것일까?","решила стать?"]]},{"ko":"그녀는 유명한 작곡가들의 대표작은 거의 오케스트라곡이라 첼로만으로는 아이들에게 클래식 음악을 소개하는 데 한계가 있다며 오래전부터 지휘자가 되겠다는 꿈을 가졌고 4년 전부터 본격적으로 지휘 공부를 해 왔다고 한다.","ru":"Она говорит, что большинство известных произведений великих композиторов — оркестровые, и поэтому только виолончелью сложно познакомить детей с классической музыкой, поэтому она давно мечтала стать дирижёром и уже 4 года серьёзно занимается дирижированием.","words":[["유명한","известные"],["작곡가들의","композиторов"],["대표작은","основные произведения"],["거의","почти"],["오케스트라곡이라","оркестровые произведения"],["첼로만으로는","только виолончелью"],["아이들에게","детям"],["클래식 음악을","классическую музыку"],["소개하는 데","знакомить"],["한계가 있다며","есть ограничение"],["오래전부터","давно"],["지휘자가 되겠다는","стать дирижёром"],["꿈을 가졌고","мечтала"],["4년 전부터","с 4 лет назад"],["본격적으로","серьёзно"],["지휘 공부를","учёбу дирижированию"],["해 왔다고 한다","занимается"]]},{"ko":"그녀는 또한 자신이 가진 음악적 재능을 어린이를 위해 쓰고 싶었다며 대학 입학 때부터 줄곧 사회 공헌 방법을 고민해 왔고 이번 음악회가 그 일환이라고 설명했다.","ru":"Также она хотела использовать свой музыкальный талант для детей, размышляла о способах социальной помощи с поступления в университет, и объяснила, что этот концерт — часть её деятельности в этом направлении.","words":[["또한","также"],["자신이 가진","имеющий"],["음악적 재능을","музыкальный талант"],["어린이를 위해","для детей"],["쓰고 싶었다며","хотела использовать"],["대학 입학 때부터","с поступления в университет"],["줄곧","постоянно"],["사회 공헌 방법을","способы социальной помощи"],["고민해 왔고","размышляла"],["이번 음악회가","этот концерт"],["그 일환이라고","часть этого"],["설명했다","объяснила"]]},{"ko":"그녀는 지휘를 하면서 작곡가에 대해 더 많이 공부할 수 있었다고 했다.","ru":"Она сказала, что благодаря дирижированию смогла глубже изучить композиторов.","words":[["지휘를 하면서","дирижируя"],["작곡가에 대해","о композиторах"],["더 많이","больше"],["공부할 수 있었다고","могла учиться"],["했다","сказала"]]},{"ko":"첼로를 연주하면서 미처 깨닫지 못했던 브람스의 특징을 교향곡을 통해 알게 되었고, 이것은 자신의 첼로 연주를 더 성숙하게 했다고 한다.","ru":"Через симфонии она узнала особенности Брамса, которые не осознавала при игре на виолончели, и это сделало её исполнение более зрелым.","words":[["첼로를 연주하면서","играя на виолончели"],["미처","заранее, ещё"],["깨닫지 못했던","не осознавала"],["브람스의","Брамса"],["특징을","особенности"],["교향곡을 통해","через симфонии"],["알게 되었고","узнала"],["이것은","это"],["자신의","своей"],["첼로 연주를","игре на виолончели"],["더 성숙하게 했다고 한다","сделало более зрелой"]]},{"ko":"매일 연주와 지휘 연습을 5시간씩 꾸준히 하면서도 음악은 매번 새로운 느낌으로 다가온다고 한다.","ru":"Хотя она ежедневно по 5 часов упорно репетирует игру и дирижирование, музыка каждый раз кажется ей новой.","words":[["매일","каждый день"],["연주와","игра и"],["지휘 연습을","практика дирижирования"],["5시간씩","по 5 часов"],["꾸준히","усердно"],["하면서도","несмотря на"],["음악은","музыка"],["매번","каждый раз"],["새로운 느낌으로","с новым ощущением"],["다가온다고 한다","кажется, приходит"]]},{"ko":"그러한 음악을 자신의 것으로 만들기 위해 그녀는 오늘도 노력을 아끼지 않는다.","ru":"Чтобы сделать такую музыку своей, она и сегодня не жалеет усилий.","words":[["그러한","такая"],["음악을","музыка"],["자신의 것으로","своей"],["만들기 위해","чтобы сделать"],["오늘도","сегодня тоже"],["노력을","усилия"],["아끼지 않는다","не жалеть, не щадить"]]}]},{"id":"movie","emoji":"🎬","titleKo":"국제시장","title":"«Ode to My Father» — отзыв о фильме","theme":"Эссе","level":"TOPIK II","sentences":[{"ko":"가정의 달 오월을 맞아 부모님과 함께 영화관을 찾았다.","ru":"В мае, месяце семьи, я пошёл в кино вместе с родителями.","words":[["가정의 달","месяц семьи"],["오월을","май"],["맞아","в честь, при наступлении"],["부모님과","с родителями"],["함께","вместе"],["영화관을","кинотеатр"],["찾았다","посетил"]]},{"ko":"부모님이 공감하실 수 있는 영화를 찾던 중 한국전쟁 이후부터 현재까지를 시대 배경으로 하는 영화 ‘국제시장’을 예매했다.","ru":"В поисках фильма, который бы тронул родителей, я забронировал билеты на «Ode to My Father», действие которого охватывает период от Корейской войны до наших дней.","words":[["부모님이","родители (тема)"],["공감하실 수 있는","который может их тронуть"],["영화를","фильм"],["찾던 중","в процессе поиска"],["한국전쟁 이후부터","с послевоенного периода"],["현재까지를","до настоящего времени"],["시대 배경으로 하는","использующий эпоху как фон"],["영화","фильм"],["‘국제시장’을","«Гукдже Сиджан» / «Ode to My Father»"],["예매했다","забронировал (билет)"]]},{"ko":"영화의 시작은 한국전쟁으로 시작한다.","ru":"Фильм начинается с Корейской войны.","words":[["영화의","фильма (притяжательное)"],["시작은","начало"],["한국전쟁으로","Корейской войной"],["시작한다","начинается"]]},{"ko":"주인공 덕수의 가족이 흥남에서 부산으로 피난하는 장면으로 시작하는데, 난리 통에 덕수는 여동생 막순의 손을 놓치고, 덕수의 아버지가 막순을 찾는 사이 가족은 헤어져 덕수는 어머니, 어린 남동생과 함께 부산에 도착한다.","ru":"Сцена, где семья главного героя Доксу бежит из Хыннама в Пусан, показывает, что в суматохе он теряет сестру Максун, а пока отец ищет её, семья разделяется, и Доксу с матерью и младшим братом прибывают в Пусан.","words":[["주인공","главный герой"],["덕수의","Доксу (притяжательное)"],["가족이","семья"],["흥남에서","из Хыннама"],["부산으로","в Пусан"],["피난하는","бежащая"],["장면으로","в сцене"],["시작하는데","начинается, но…"],["난리 통에","в хаосе"],["덕수는","Доксу (тема)"],["여동생","младшая сестра"],["막순의","Максун (притяжательное)"],["손을","руку"],["놓치고","отпустив"],["덕수의 아버지가","отец Доксу"],["막순을 찾는","ищет Максун"],["사이","пока"],["가족은","семья"],["헤어져","разделившись"],["어머니, 어린 남동생과 함께","с матерью и младшим братом"],["부산에","в Пусане"],["도착한다","прибывает"]]},{"ko":"부산에는 시집을 와서 국제시장에 자리를 잡은 덕수의 고모가 살고 있었기에, 덕수 모자는 고모의 집에서 신세를 지게 되고 덕수는 아버지를 대신해 가족을 지키겠다는 약속을 지키기 위해 구두닦이 일을 시작한다.","ru":"В Пусане жила тётя Доксу, вышедшая там замуж и устроившаяся у рынка «Гукдже», поэтому Доксу с матерью поселились у неё, а Доксу, чтобы сдержать обещание защищать семью вместо отца, начал работать сапожником.","words":[["부산에는","в Пусане"],["시집을 와서","вышла замуж и приехала"],["국제시장에","у рынка «Гукдже»"],["자리를 잡은","обосновавшаяся"],["덕수의 고모가","тётя Доксу"],["살고 있었기에","жила, поэтому"],["덕수 모자는","Доксу с матерью"],["고모의 집에서","в доме тёти"],["신세를 지게 되고","оказались на её попечении"],["덕수는","Доксу"],["아버지를 대신해","вместо отца"],["가족을 지키겠다는","обещание защищать семью"],["약속을","обещание"],["지키기 위해","чтобы сдержать"],["구두닦이 일을","работу сапожника"],["시작한다","начинает"]]},{"ko":"그 후에는 동생 학비를 벌기 위해 독일 탄광으로 떠나기도 하고, 고모의 가게를 지킬 자금을 마련하기 위해 베트남 전쟁에 참전하면서 가족을 지켜 냈다.","ru":"Затем он уехал в немецкую шахту, чтобы заработать на учёбу брата, и даже участвовал во Вьетнамской войне, чтобы собрать средства для магазина тёти и защитить семью.","words":[["그 후에는","после этого"],["동생","младший брат"],["학비를","на обучение"],["벌기 위해","чтобы заработать"],["독일 탄광으로","в немецкую шахту"],["떠나기도 하고","уезжал также"],["고모의 가게를","магазин тёти"],["지킬","сохранить"],["자금을","средства"],["마련하기 위해","чтобы собрать"],["베트남 전쟁에","во Вьетнамской войне"],["참전하면서","участвуя"],["가족을","семью"],["지켜 냈다","защитил"]]},{"ko":"베트남 전쟁의 총탄이 난무하는 위험한 상황에 덕수가 아내에게 보낸 편지 장면에서 나는 눈물을 쏟고 말았다.","ru":"Во время опасной сцены войны во Вьетнаме, где снаряды сыпались со всех сторон, я расплакался, увидев письмо, которое Доксу посылает жене.","words":[["베트남 전쟁의","Вьетнамской войны (притяжательное)"],["총탄이","снаряды"],["난무하는","сыпящиеся повсюду"],["위험한 상황에","в опасной ситуации"],["덕수가","Доксу (тема)"],["아내에게","жене"],["보낸","отправленное"],["편지 장면에서","сцена письма"],["나는","я"],["눈물을","слёзы"],["쏟고 말았다","разрыдался"]]},{"ko":"“내는 그래 생각한다. 힘든 세월에 태어나가 이 힘든 세상 풍파를 우리 자식이 아니라 우리가 겪은 게 참 다행이라고.”","ru":"«Я так думаю: как хорошо, что эта тяжёлая жизнь пришлась на нас, а не на наших детей».","words":[["내는","я (диалектная форма)"],["그래","так"],["생각한다","думаю"],["힘든 세월에","в тяжёлые времена"],["태어나가","родился"],["이 힘든 세상","этот тяжёлый мир"],["풍파를","бури, невзгоды"],["우리 자식이 아니라","не нашим детям, а"],["우리가","мы"],["겪은 게","пережили"],["참","действительно"],["다행이라고","к счастью"]]},{"ko":"그 장면은 가족을 위해 자신을 희생하며 힘겹게 살아온 우리 아버지들의 마음을 가장 잘 보여 주는 장면이었다.","ru":"Эта сцена лучше всего показывает сердце нашего отца, который жертвовал собой и тяжело трудился ради семьи.","words":[["그 장면은","та сцена (тема)"],["가족을 위해","ради семьи"],["자신을","себя"],["희생하며","жертвуя"],["힘겹게","тяжело"],["살아온","проживших"],["우리 아버지들의","наших отцов"],["마음을","сердце"],["가장 잘","лучше всего"],["보여 주는","показывающая"],["장면이었다","была сцена"]]},{"ko":"비록 내가 겪는 삶이 힘들더라도 자식이 아닌 내가 겪을 수 있어 다행이라고 위안하는 우리들의 평범하지만 위대한 아버지들의 마음이 느껴져 가슴이 뭉클했다.","ru":"Меня глубоко тронула мысль наших простых, но великих отцов, которые утешаются тем, что все эти тяготы приходится пережить им, а не детям.","words":[["비록","хотя"],["내가","я"],["겪는","переживающий"],["삶이","жизнь"],["힘들더라도","хоть и трудна"],["자식이 아닌","не детям"],["겪을 수 있어","могу пережить"],["다행이라고","к счастью"],["위안하는","утешаясь"],["우리들의","наших"],["평범하지만","простых, но"],["위대한","великих"],["아버지들의","отцов"],["마음이","сердце"],["느껴져","чувствовалось"],["가슴이","грудь"],["뭉클했다","сжалось от трогательности"]]},{"ko":"‘국제시장’은 익숙함이 어느새 당연함이 되어버린 아버지의 큰 사랑을 다시 깨닫게 해 주는 영화였다.","ru":"«Ode to My Father» — фильм, который напомнил мне о той безусловной любви отца, которую я давно воспринимал как должное.","words":[["‘국제시장’은","«Ode to My Father» (тема)"],["익숙함이","привычка"],["어느새","незаметно"],["당연함이 되어버린","стала само собой разумеющимся"],["아버지의","отца"],["큰 사랑을","огромную любовь"],["다시","снова"],["깨닫게 해 주는","заставляющую осознать"],["영화였다","был фильм"]]},{"ko":"영화가 끝나고 상영관을 나서는데 평소 무뚝뚝하신 아버지의 눈시울이 붉어진 것을 느낄 수 있었다.","ru":"Когда фильм закончился и мы выходили из зала, я заметил, что обычно сдержанный отец стекленел глазами.","words":[["영화가","фильм"],["끝나고","окончившись"],["상영관을","зал"],["나서는데","выходя"],["평소","обычно"],["무뚝뚝하신","сдержанный (уважит.)"],["아버지의","моего отца"],["눈시울이","край глаза"],["붉어진 것을","покраснели"],["느낄 수 있었다","смог почувствовать"]]},{"ko":"쑥스러우셔서인지 애써 아무렇지 않은 척하시는 아버지의 손을 괜히 쥐어 보았다.","ru":"Возможно, из-за смущения он притворялся спокойным, и я невольно сжал его руку.","words":[["쑥스러우셔서인지","возможно из-за стеснения"],["애써","нарочно"],["아무렇지 않은 척하시는","делающего вид, что всё в порядке"],["아버지의","отца"],["손을","руку"],["괜히","зря"],["쥐어 보았다","сжал, попробовал сжать"]]},{"ko":"격변의 시대, 그 회오리바람 속에서 우리 가정을, 또 나를 지켜 주고 키워 오신 아버지의 못이 박인 투박한 손이 오늘 따라 더욱 크고 따뜻했다.","ru":"В эту пору бурь и перемен грубые в мозолях руки отца, который защищал и растил нашу семью в вихре событий, сегодня казались особенно большими и тёплыми.","words":[["격변의 시대","эпоха перемен"],["그","того"],["회오리바람","вихрь"],["속에서","в"],["우리 가정을","нашу семью"],["또","и"],["나를","меня"],["지켜 주고","защищавший"],["키워 오신","растивший"],["아버지의","отца"],["못이 박인","вмятинами от гвоздей"],["투박한","грубые"],["손이","руки"],["오늘 따라","именно сегодня"],["더욱","ещё более"],["크고","большие"],["따뜻했다","тёплые"]]}]},{"id":"shower","emoji":"🌧️","titleKo":"소나기","title":"«Дождь» (소나기) — отрывок","theme":"Литература","level":"TOPIK II","sentences":[{"ko":"개울물은 날로 여물어갔다.","ru":"Вода в ручье с каждым днём всё глубже прибывала.","words":[["개울물은","вода в ручье"],["날로","с каждым днём"],["여물어갔다","прибывала, становилась глубже"]]},{"ko":"소년은 갈림길에서 아래쪽으로 가 보았다.","ru":"Мальчик на развилке пошёл вниз по тропе.","words":[["소년은","мальчик"],["갈림길에서","на развилке"],["아래쪽으로","вниз"],["가 보았다","пошёл, попробовал пройти"]]},{"ko":"갈밭 머리에서 바라보는 서당골 마을은 쪽빛 하늘 아래 한결 가까워 보였다.","ru":"Видя с края камышового поля, деревня Сотанг골 под лазурным небом казалась гораздо ближе.","words":[["갈밭","камышовое поле"],["머리에서","с края"],["바라보는","глядя"],["서당골 마을은","деревня Сотанггол (тема)"],["쪽빛","лазурный"],["하늘 아래","под небом"],["한결","гораздо"],["가까워 보였다","казалась ближе"]]},{"ko":"어른들의 말이, 내일 소녀네가 양평읍으로 이사 간다는 것이었다.","ru":"По словам взрослых, завтра семья той девочки переезжает в уезд Янпён.","words":[["어른들의","взрослых"],["말이","слова"],["내일","завтра"],["소녀네가","у той девочки (тема)"],["양평읍으로","в уезд Янпён"],["이사 간다는","переезжает"],["것이었다","говорилось"]]},{"ko":"거기 가서는 조그마한 가겟방을 보게 되리라는 것이었다.","ru":"Там, говорят, они снимут маленькую лавку.","words":[["거기","там"],["가서는","пойдя"],["조그마한","маленькую"],["가겟방을","лавку (винит.)"],["보게 되리라는","увидят, окажутся"],["것이었다","говорилось"]]},{"ko":"소년은 저도 모르게 주머니 속 호두알을 만지작거리며, 한 손으로는 수없이 갈꽃을 휘어 꺾고 있었다.","ru":"Сам того не замечая, мальчик крутил в кармане орешек, а другой рукой без счёта ломал камышовые стебли.","words":[["소년은","мальчик"],["저도 모르게","сам не замечая"],["주머니 속","в кармане"],["호두알을","орешек"],["만지작거리며","крутил, теребил"],["한 손으로는","одной рукой"],["수없이","без счёта"],["갈꽃을","камышовые стебли"],["휘어 꺾고 있었다","ломал, сгибал"]]},{"ko":"그날 밤, 소년은 자리에 누워서도 같은 생각뿐이었다.","ru":"Той ночью лёжа в кровати, он не мог думать ни о чём, кроме этого.","words":[["그날 밤","той ночью"],["소년은","мальчик"],["자리에 누워서도","лёжа в кровати"],["같은 생각뿐이었다","думал лишь об одном"]]},{"ko":"내일 소녀네가 이사하는 걸 가 보나 어쩌나.","ru":"Стоит ли завтра сходить и посмотреть, как переезжают те девочка с семьёй?","words":[["내일","завтра"],["소녀네가","та девочка (тема)"],["이사하는 걸","переезд"],["가 보나","пойти посмотреть ли"],["어쩌나","как быть"]]},{"ko":"가면 소녀를 보게 될까 어떨까.","ru":"Интересно, если я пойду, увижу ли её?","words":[["가면","если пойти"],["소녀를","девочку"],["보게 될까","увижу ли"],["어떨까","интересно"]]},{"ko":"그러다가 까무룩 잠이 들었는가 하는데,","ru":"И как-то он задремал, едва успев об этом помыслить,","words":[["그러다가","и вот"],["까무룩","крепко"],["잠이 들었는가 하는데","задремал ли"]]},{"ko":"“허, 참, 세상일도….”","ru":"«Ох, жалко же жизнь…» — пробормотал вернувшийся из деревни отец.","words":[["허","ох"],["참","действительно"],["세상일도","жизнь, дела в мире"]]},{"ko":"“윤 초시 댁도 말이 아니야, 그 많던 전답을 다 팔아 버리고, 대대로 살아오던 집마저 남의 손에 넘기더니, 또 액상까지 당하는 걸 보면….”","ru":"«У семьи Юн Чхо-шхи беда за бедой: всю их щедрую пашню продали, дом родовой отдали чужим, а теперь и неудача какая-то…» — вздыхала мама под тусклым светом лампы.","words":[["윤 초시 댁도","семья Юн Чхо-шхи тоже"],["말이 아니야","беда"],["그 많던 전답을","ту щедрую пашню"],["다 팔아 버리고","всё продали"],["대대로 살아오던 집마저","даже родовой дом"],["남의 손에 넘기더니","отдали чужим"],["또 액상까지 당하는 걸","и ещё невзгоды терпят"],["보면","если посмотреть"]]},{"ko":"“증손이라곤 계집애 그 애 하나뿐이었지요?”","ru":"«Эта девочка была твоей единственной правнучкой, не так ли?»","words":[["증손","правнук"],["계집애","девочка (устар.)"],["그 애","та дитя"],["하나뿐이었지요?","только одна, правда?"]]},{"ko":"“그렇지, 사내애 둘 있던 건 어려서 잃고…”","ru":"«Да, двух сыновей рано потеряли…» — подтвердил отец.","words":[["그렇지","да, правда"],["사내애 둘 있던 건","два сына"],["어려서 잃고","с детства потеряли"]]},{"ko":"“어쩌면 그렇게 자식 복이 없을까?”","ru":"«Как же мало им повезло с детьми?» — раздалось в комнате.","words":[["어쩌면","как же"],["그렇게","так"],["자식 복이","счастье детей"],["없을까?","нет ли?"]]},{"ko":"“글쎄 말이지. 이번 앤 꽤 여러 날 앓는 걸 약도 변변히 못 써 봤다더군. 지금 같아서는 윤 초시네도 대가 끊긴 셈이지… 그런데 참 이번 계집애는 어린 것이 여간 잔망스럽지가 않아. 글쎄, 죽기 전에 이런 말을 했다지 않아? 자기가 죽거든 자기 입던 옷을 꼭 그대로 입혀서 묻어 달라고…”","ru":"«Да уж… Говорят, что она долго болела, и ей и лекарств в норму не давали. Теперь, по сути, у семьи Юн Чхо-шхи кровь прервана… Но эта девочка так хитроумна для своих лет! Слышал: перед смертью велела похоронить себя в той самой одежде, в которой умрёт…» — шептались они.","words":[["글쎄 말이지","вот именно"],["이번 앤","эта девочка"],["꽤 여러 날","довольно много дней"],["앓는 걸","болела"],["약도 변변히 못 써 봤다더군","даже лекарств толком не давали"],["지금 같아서는","в нынешней ситуации"],["윤 초시네도","у Юн Чхо-шхи"],["대가 끊긴 셈이지","род прервался"],["그런데 참","но вот"],["이번 계집애는","эта девочка"],["어린데여간 잔망스럽지가 않아","совсем не по-детски хитра"],["죽기 전에","перед смертью"],["이런 말을 했다지 않아?","говорила же?"],["자기가 죽거든","когда умрёт"],["자기 입던 옷을","одежду, в которой жила"],["꼭 그대로 입혀서","обязательно ей надеть"],["묻어 달라고","велела похоронить в ней"]]}]},{"id":"dream","emoji":"🌟","titleKo":"나의 꿈","title":"«Я хочу поднимать упавших» — о мечте","theme":"Эссе","level":"TOPIK II","sentences":[{"ko":"저는 어릴 때부터 잘 넘어지는 아이였습니다.","ru":"С раннего детства я был(а) ребёнком, который часто падал.","words":[]},{"ko":"그래서 아직 저의 몸에는 작은 상처들이 남아 있습니다.","ru":"Поэтому на моём теле до сих пор остались небольшие шрамы.","words":[]},{"ko":"몇 년 전 저는 체육 시간에 넘어져 1년이 넘는 시간을 고생하였습니다.","ru":"Несколько лет назад я упал(а) на уроке физкультуры и провёл(а) больше года в мучениях.","words":[]},{"ko":"의사 선생님의 잘못된 진단과 잘못된 처방 그리고 저의 부주의 때문이었죠.","ru":"Это случилось из-за неправильного диагноза и рецепта врача, а также моей неосторожности.","words":[]},{"ko":"발이 낫지 않았을 때는 하루하루가 슬프고 괴로웠어요.","ru":"Когда нога не заживала, каждый день был печальным и мучительным.","words":[]},{"ko":"마음껏 뛰어노는 아이들을 보면 외롭기만 했어요.","ru":"Видя, как беззаботно бегают дети, я чувствовал(а) только одиночество.","words":[]},{"ko":"제가 좋아하던 피겨 스케이팅도 그만둬야 했고요.","ru":"Мне пришлось бросить фигурное катание, которым я увлекался(ась).","words":[]},{"ko":"친구들과 오랫동안 같이 뛰어놀지 못해서 친구들과의 우정도 멀어졌어요.","ru":"Из-за того что я долго не мог(ла) бегать с друзьями, наша дружба ослабла.","words":[]},{"ko":"정말 그때는 어두운 동굴 속에 혼자 갇혀 있는 기분이었습니다.","ru":"В тот момент мне казалось, что я один(одна) заперт(а) в тёмной пещере.","words":[]},{"ko":"그러던 시기에 저는 한 재활치료사 할머니를 만나서 운동 치료를 받게 되었습니다.","ru":"В это время я встретил(а) пожилую физиотерапевтку и начал(а) получать лечебную гимнастику.","words":[]},{"ko":"그분은 치료를 해 주실 때 “자, 애리얼! 이렇게 해 보는 거야! 왜, 이 할머니도 이렇게 하고 있는데 너 같은 아이가 벌써 지쳐 있어?”라고 격려해 주셨어요.","ru":"Во время сеансов она вдохновляла меня: «Давай, Ариэль! Так! Почему ты уже устал(а), в то время как эта бабушка всё ещё справляется?»","words":[]},{"ko":"그리고 그분은 직접 시범을 보여 주시며 중심 잡기, 뛰기, 한 발로 점프하기 등을 같이 해 주셨어요.","ru":"А затем она сама показывала упражнения — удержание равновесия, бег, прыжки на одной ноге — и делала их вместе со мной.","words":[]},{"ko":"그때 저는 “나도 자라면 아픈 사람, 넘어지는 사람을 일으켜 주는 사람이 되고 싶다.”는 꿈을 가지게 되었습니다.","ru":"В тот момент во мне зародилась мечта: «Когда вырасту, я хочу помогать больным и падающим людям подниматься.»","words":[]},{"ko":"저는 걸스카우트 활동을 어릴 때부터 계속해 오고 있습니다.","ru":"С малых лет я участвую в деятельности «Девичьих скаутов».","words":[]},{"ko":"홈리스 분들에게 음식을 준비해서 드리고, 부모님의 도움을 받지 못하는 친구들에게 영어를 가르쳐 주기도 했습니다.","ru":"Я готовил(а) еду для бездомных и обучал(а) английскому друзей, не получавших помощи родителей.","words":[]},{"ko":"이런 활동을 통해 저는 경제적·사회적으로 넘어져 있는 사람들도 있다는 것을 알게 되었습니다.","ru":"Благодаря этим мероприятиям я узнал(а), что есть люди, сломленные экономически и социально.","words":[]},{"ko":"그리고 걸스카우트를 통해 봉사와 리더십이 다른 사람들에게 얼마나 큰 영향을 주는지도 깨달았습니다.","ru":"И я понял(а), как сильно служение и лидерство скаутов влияют на других.","words":[]},{"ko":"저는 어른이 되면 많은 사람에게 도움을 주는 영향력 있는 사람이 되고 싶습니다.","ru":"Когда я стану взрослым(ой), я хочу быть человеком, способным помогать многим.","words":[]},{"ko":"직업은 아직 정하지 않았습니다.","ru":"Конкретную профессию я ещё не выбрал(а).","words":[]},{"ko":"제가 어떤 일을 하든 도움이 필요한 곳에 가서 돕고 싶습니다.","ru":"Независимо от рода деятельности, я хочу идти туда, где нужна помощь, и помогать.","words":[]},{"ko":"이웃의 불쌍한 사람들에게 도움을 주는 사회복지사, 다친 사람을 도와주는 재활치료사, 어려운 이를 돕는 변호사……","ru":"Социальный работник, помогающий бедным соседям; физиотерапевт, поддерживающий раненых; адвокат, защищающий нуждающихся…","words":[]},{"ko":"저는 제 꿈을 위해 수없이 생각하고 결심해 왔습니다.","ru":"Для своей мечты я много думал(а) и принимал(а) решения.","words":[]},{"ko":"10번, 100번 고민해도, 결국 사람들에게 도움이 되는 일을 해야 한다는 확신이 섰습니다.","ru":"Сколько бы ни думал(а), я пришёл(шла) к убеждению: нужно заниматься тем, что поможет людям.","words":[]},{"ko":"학생인 저는 공부에 집중해야 하지만, 도움의 손길이 필요한 곳이 있으면 언제든 달려가겠습니다.","ru":"Как ученик(ца), я должен(на) учиться, но если потребуется помощь, я всегда прибегу на подмогу.","words":[]},{"ko":"그러다 보면 더 구체적으로 제 미래에 다가갈 수 있고, 더 많은 이에게 도움이 되는 사람이 될 테니까요.","ru":"Если продолжать так, то смогу приблизиться к своему будущему более конкретно и стать человеком, который помогает большему числу людей.","words":[["그러다 보면","если так продолжать / делая так"],["더","больше"],["구체적으로","конкретно"],["제","моё (вежливая форма)"],["미래에","к будущему"],["다가갈","приблизиться"],["수 있고","можно (мочь)"],["더","ещё (больше)"],["많은","много"],["이에게","людям ("],["에게","дательный падеж, \"кому\")"],["도움이","помощь"],["되는","становиться (от 되다)"],["사람이","человек"],["될 테니까요","потому что стану (объяснение причины)"]]}]}];
   // ════════════════ РАЗДЕЛ «ЧТЕНИЕ» (독해) + 말하기 (читать вслух) ════════════════
@@ -15313,6 +16066,8 @@
     else switchScreen('lessons', true);
   }
   function _rdText() { return READING_TEXTS.find(t => t.id === _rdState.id) || null; }
+  // Перевод слова в разборе: uz-глосса (3-й элемент) для uz-локали, иначе ru (2-й). Korean (1-й) не трогаем.
+  function rdWordRu(w) { return (APP_LANG === 'uz' && w[2]) ? w[2] : (w[1] || ''); }
   function renderReading() {
     const hub = document.getElementById('reading-hub');
     if (!hub) return;
@@ -15320,20 +16075,20 @@
     hub.innerHTML = `
       <div class="rd-intro">
         <div class="rd-intro-ko ko">독해 · 말하기</div>
-        <p class="rd-intro-txt">Читай тексты на корейском с переводом и разбором слов, затем тренируй чтение вслух за диктором.</p>
-        <div class="rd-intro-meta">${READING_TEXTS.length} текстов · ${READING_TEXTS.reduce((a, t) => a + t.sentences.length, 0)} предложений</div>
+        <p class="rd-intro-txt">${skUi('Читай тексты на корейском с переводом и разбором слов, затем тренируй чтение вслух за диктором.', 'Koreyscha matnlarni tarjima va soʻzlar tahlili bilan oʻqing, soʻngra diktor ortidan ovoz chiqarib oʻqishni mashq qiling.')}</p>
+        <div class="rd-intro-meta">${READING_TEXTS.length} ${skUi('текстов', 'matn')} · ${READING_TEXTS.reduce((a, t) => a + t.sentences.length, 0)} ${skUi('предложений', 'gap')}</div>
       </div>
       <div class="rd-list">
         ${READING_TEXTS.map(t => `
           <button type="button" class="rd-card" onclick="openReadingText('${t.id}')">
             <span class="rd-card-emoji" aria-hidden="true">${t.emoji}</span>
             <span class="rd-card-body">
-              <span class="rd-card-title">${t.title}</span>
+              <span class="rd-card-title">${skLoc(t, 'title')}</span>
               <span class="rd-card-ko ko">${t.titleKo}</span>
               <span class="rd-card-meta">
-                <span class="rd-chip">${t.theme}</span>
+                <span class="rd-chip">${skLoc(t, 'theme')}</span>
                 <span class="rd-chip rd-chip-soft">${t.level}</span>
-                <span class="rd-card-cnt">${t.sentences.length} предл.</span>
+                <span class="rd-card-cnt">${t.sentences.length} ${skUi('предл.', 'gap')}</span>
               </span>
             </span>
             <i class="fa-solid fa-chevron-right rd-card-arrow" aria-hidden="true"></i>
@@ -15348,18 +16103,18 @@
     const t = _rdText(); const hub = document.getElementById('reading-hub');
     if (!t || !hub) { _rdState.id = null; renderReading(); return; }
     hub.innerHTML = `
-      <button type="button" class="topik-back" onclick="readingBack()"><i class="fa-solid fa-chevron-left"></i> Тексты</button>
+      <button type="button" class="topik-back" onclick="readingBack()"><i class="fa-solid fa-chevron-left"></i> ${skUi('Тексты', 'Matnlar')}</button>
       <div class="rd-head">
         <div class="rd-head-emoji" aria-hidden="true">${t.emoji}</div>
         <div class="rd-head-info">
-          <h2 class="rd-head-title">${t.title}</h2>
+          <h2 class="rd-head-title">${skLoc(t, 'title')}</h2>
           <div class="rd-head-ko ko">${t.titleKo}</div>
-          <div class="rd-head-meta">${t.theme} · ${t.level} · ${t.sentences.length} предл.</div>
+          <div class="rd-head-meta">${skLoc(t, 'theme')} · ${t.level} · ${t.sentences.length} ${skUi('предл.', 'gap')}</div>
         </div>
       </div>
       <div class="rd-tabs" role="tablist">
-        <button type="button" class="rd-tab${_rdState.mode === 'read' ? ' on' : ''}" onclick="rdSetMode('read')">📖 Чтение</button>
-        <button type="button" class="rd-tab${_rdState.mode === 'speak' ? ' on' : ''}" onclick="rdSetMode('speak')">🗣 말하기 · вслух</button>
+        <button type="button" class="rd-tab${_rdState.mode === 'read' ? ' on' : ''}" onclick="rdSetMode('read')">📖 ${skUi('Чтение', 'Oʻqish')}</button>
+        <button type="button" class="rd-tab${_rdState.mode === 'speak' ? ' on' : ''}" onclick="rdSetMode('speak')">🗣 말하기 · ${skUi('вслух', 'ovoz chiqarib')}</button>
       </div>
       <div id="rd-body"></div>`;
     rdRenderBody();
@@ -15375,23 +16130,28 @@
     return `
       <div class="rd-toolbar">
         <button type="button" class="rd-toggle${_rdState.showRu ? ' on' : ''}" onclick="rdToggleRu()">
-          <i class="fa-solid fa-language" aria-hidden="true"></i> ${_rdState.showRu ? 'Перевод: вкл' : 'Перевод: выкл'}
+          <i class="fa-solid fa-language" aria-hidden="true"></i> ${_rdState.showRu ? skUi('Перевод: вкл', 'Tarjima: yoniq') : skUi('Перевод: выкл', 'Tarjima: oʻchiq')}
         </button>
-        <button type="button" class="rd-toggle" onclick="rdPlayAll(this)"><i class="fa-solid fa-play" aria-hidden="true"></i> Озвучить всё</button>
+        <button type="button" class="rd-toggle" onclick="rdPlayAll(this)"><i class="fa-solid fa-play" aria-hidden="true"></i> ${skUi('Озвучить всё', 'Hammasini eshittirish')}</button>
       </div>
-      <div class="rd-block-h">📖 Текст · <span class="ko">${t.titleKo}</span></div>
+      <div class="rd-block-h">📖 ${skUi('Текст', 'Matn')} · <span class="ko">${t.titleKo}</span></div>
       <div class="rd-fulltext ko">${t.sentences.map((s, i) => `<span class="rd-fs" id="rd-fs-${i}" role="button" tabindex="0" onclick="rdSpeakOne(${i}, this)">${s.ko}</span>`).join(' ')}</div>
-      ${_rdState.showRu ? `<div class="rd-block-h">🇷🇺 Перевод</div><div class="rd-fullru">${t.sentences.map(s => s.ru).join(' ')}</div>` : ''}
-      <div class="rd-block-h">🔍 Разбор · слова и грамматика</div>
+      ${_rdState.showRu ? `<div class="rd-block-h">${skUi('🇷🇺 Перевод', '🇺🇿 Tarjima')}</div><div class="rd-fullru">${t.sentences.map(s => skLoc(s, 'ru')).join(' ')}</div>` : ''}
+      <div class="rd-block-h">🔍 ${skUi('Разбор · слова и грамматика', 'Tahlil · soʻz va grammatika')}</div>
       <div class="rd-breakdown">
         ${t.sentences.map((s, i) => `
           <div class="rd-bd">
             <div class="rd-bd-top">
               <button type="button" class="rd-bd-spk" onclick="rdSpeakOne(${i}, this)" aria-label="Озвучить предложение"><i class="fa-solid fa-volume-high" aria-hidden="true"></i></button>
               <span class="rd-bd-ko ko">${s.ko}</span>
+              <button type="button" class="rd-bd-save" onclick="toggleMyWord('${jsStr(s.ko)}','${jsStr(s.ru || '')}','','📑','reading', this, 'phrase')" aria-label="Сохранить фразу в словарик" title="Сохранить фразу">${isMyWord(s.ko) ? '<i class="fa-solid fa-heart" style="color:var(--coral);"></i>' : '<i class="fa-regular fa-heart"></i>'}</button>
             </div>
-            <div class="rd-bd-ru">${s.ru}</div>
-            ${s.words && s.words.length ? `<div class="rd-words">${s.words.map(w => `<span class="rd-word"><b class="ko">${w[0]}</b> ${w[1]}</span>`).join('')}</div>` : ''}
+            <div class="rd-bd-ru">${skLoc(s, 'ru')}</div>
+            ${s.words && s.words.length ? `<div class="rd-words">${s.words.map(w => {
+              const wt = String(w[0]).trim().startsWith('-') ? 'grammar' : 'word';
+              const wr = rdWordRu(w);
+              return `<button type="button" class="rd-word${isMyWord(w[0]) ? ' saved' : ''}" onclick="toggleMyWord('${jsStr(w[0])}','${jsStr(wr)}','','${wt === 'grammar' ? '📚' : '🌸'}','reading', this, '${wt}')" title="Сохранить в словарик"><b class="ko">${w[0]}</b> ${wr}<i class="fa-solid fa-check rd-word-tick" aria-hidden="true"></i></button>`;
+            }).join('')}</div>` : ''}
           </div>`).join('')}
       </div>`;
   }
@@ -15420,17 +16180,17 @@
         <div class="rd-speak-prog">${_rdState.cur + 1} / ${t.sentences.length}</div>
         <div class="rd-speak-card">
           <div class="rd-speak-ko ko">${s.ko}</div>
-          <div class="rd-speak-ru">${s.ru}</div>
+          <div class="rd-speak-ru">${skLoc(s, 'ru')}</div>
           <div class="rd-speak-actions">
-            <button type="button" class="rd-speak-play" onclick="rdSpeakOne(${_rdState.cur}, this)"><i class="fa-solid fa-volume-high" aria-hidden="true"></i> Образец</button>
+            <button type="button" class="rd-speak-play" onclick="rdSpeakOne(${_rdState.cur}, this)"><i class="fa-solid fa-volume-high" aria-hidden="true"></i> ${skUi('Образец', 'Namuna')}</button>
             ${canRec
-              ? `<button type="button" class="rd-speak-rec" onclick="rdRecord(this)"><i class="fa-solid fa-microphone" aria-hidden="true"></i> Прочитать вслух</button>`
-              : `<span class="rd-rec-hint">🎙 Читай вслух за образцом</span>`}
+              ? `<button type="button" class="rd-speak-rec" onclick="rdRecord(this)"><i class="fa-solid fa-microphone" aria-hidden="true"></i> ${skUi('Прочитать вслух', 'Ovoz chiqarib oʻqish')}</button>`
+              : `<span class="rd-rec-hint">${skUi('🎙 Читай вслух за образцом', '🎙 Namuna ortidan ovoz chiqarib oʻqing')}</span>`}
           </div>
         </div>
         <div class="rd-speak-nav">
-          <button type="button" class="rd-nav-btn" onclick="rdSpeakStep(-1)" ${_rdState.cur === 0 ? 'disabled' : ''}><i class="fa-solid fa-chevron-left" aria-hidden="true"></i> Назад</button>
-          <button type="button" class="rd-nav-btn" onclick="rdSpeakStep(1)" ${_rdState.cur === last ? 'disabled' : ''}>Дальше <i class="fa-solid fa-chevron-right" aria-hidden="true"></i></button>
+          <button type="button" class="rd-nav-btn" onclick="rdSpeakStep(-1)" ${_rdState.cur === 0 ? 'disabled' : ''}><i class="fa-solid fa-chevron-left" aria-hidden="true"></i> ${skUi('Назад', 'Orqaga')}</button>
+          <button type="button" class="rd-nav-btn" onclick="rdSpeakStep(1)" ${_rdState.cur === last ? 'disabled' : ''}>${skUi('Дальше', 'Keyingi')} <i class="fa-solid fa-chevron-right" aria-hidden="true"></i></button>
         </div>
       </div>`;
   }
@@ -15450,30 +16210,38 @@
   // Данные раздела: собеседование в вуз (вопросы + образцы ответов), советы, ближайшие темы.
   const STUDY_KR = {
     interview: [
-      { ko: '간단하게 자기소개를 해 주세요.', ru: 'Кратко расскажите о себе.',
+      { ko: '간단하게 자기소개를 해 주세요.', ru: 'Кратко расскажите о себе.', ru_uz: 'Oʻzingiz haqingizda qisqacha gapiring.',
         aKo: '안녕하십니까. 저는 ○○에서 온 △△입니다. 한국 문화와 언어에 관심이 많아 한국으로 유학을 결심했습니다. 성실하게 공부하겠습니다.',
-        aRu: 'Здравствуйте. Меня зовут △△, я из ○○. Я очень интересуюсь корейской культурой и языком, поэтому решил(а) поехать учиться в Корею. Буду усердно учиться.' },
-      { ko: '우리 학교에 지원한 이유는 무엇입니까?', ru: 'Почему вы выбрали наш университет?',
+        aRu: 'Здравствуйте. Меня зовут △△, я из ○○. Я очень интересуюсь корейской культурой и языком, поэтому решил(а) поехать учиться в Корею. Буду усердно учиться.',
+        aRu_uz: 'Assalomu alaykum. Mening ismim △△, men ○○ danman. Koreys madaniyati va tiliga juda qiziqaman, shuning uchun Koreyaga oʻqishga borishni qaror qildim. Tirishqoqlik bilan oʻqiyman.' },
+      { ko: '우리 학교에 지원한 이유는 무엇입니까?', ru: 'Почему вы выбрали наш университет?', ru_uz: 'Nega bizning universitetimizni tanladingiz?',
         aKo: '귀교는 제 전공 분야에서 우수한 교육 환경과 명성을 가지고 있습니다. 특히 ○○ 프로그램이 제 목표와 잘 맞는다고 생각해 지원하게 되었습니다.',
-        aRu: 'Ваш университет обладает отличной образовательной средой и репутацией в моей сфере. Особенно программа ○○ хорошо совпадает с моими целями, поэтому я подал(а) документы.' },
-      { ko: '전공을 선택한 이유는 무엇입니까?', ru: 'Почему вы выбрали эту специальность?',
+        aRu: 'Ваш университет обладает отличной образовательной средой и репутацией в моей сфере. Особенно программа ○○ хорошо совпадает с моими целями, поэтому я подал(а) документы.',
+        aRu_uz: 'Universitetingiz mening sohamda aʼlo taʼlim muhiti va obroʻga ega. Ayniqsa ○○ dasturi maqsadlarimga juda mos keladi, shuning uchun hujjat topshirdim.' },
+      { ko: '전공을 선택한 이유는 무엇입니까?', ru: 'Почему вы выбрали эту специальность?', ru_uz: 'Nega ushbu mutaxassislikni tanladingiz?',
         aKo: '어릴 때부터 ○○ 분야에 관심이 많았고, 관련 활동을 하면서 더 깊이 공부하고 싶다는 생각이 들어 이 전공을 선택하게 되었습니다.',
-        aRu: 'С детства меня интересовала сфера ○○, и занимаясь этим, я захотел(а) изучать её глубже — поэтому выбрал(а) эту специальность.' },
-      { ko: '한국에 유학을 오게 된 계기는 무엇입니까?', ru: 'Что побудило вас приехать учиться в Корею?',
+        aRu: 'С детства меня интересовала сфера ○○, и занимаясь этим, я захотел(а) изучать её глубже — поэтому выбрал(а) эту специальность.',
+        aRu_uz: 'Bolaligimdan ○○ sohasiga qiziqardim, shugʻullanar ekanman, uni chuqurroq oʻrganishni xohladim — shuning uchun bu mutaxassislikni tanladim.' },
+      { ko: '한국에 유학을 오게 된 계기는 무엇입니까?', ru: 'Что побудило вас приехать учиться в Корею?', ru_uz: 'Sizni Koreyaga oʻqishga kelishga nima undadi?',
         aKo: '한국의 문화와 콘텐츠를 통해 한국에 관심을 가지게 되었고, 한국의 교육 수준이 높다는 것을 알게 되어 직접 공부해 보고 싶었습니다.',
-        aRu: 'Я заинтересовался(лась) Кореей через её культуру и контент, а узнав о высоком уровне образования, захотел(а) учиться именно здесь.' },
-      { ko: '졸업 후의 계획은 무엇입니까?', ru: 'Каковы ваши планы после выпуска?',
+        aRu: 'Я заинтересовался(лась) Кореей через её культуру и контент, а узнав о высоком уровне образования, захотел(а) учиться именно здесь.',
+        aRu_uz: 'Koreya bilan uning madaniyati va kontenti orqali qiziqib qoldim, taʼlim darajasi yuqori ekanini bilib, aynan shu yerda oʻqishni xohladim.' },
+      { ko: '졸업 후의 계획은 무엇입니까?', ru: 'Каковы ваши планы после выпуска?', ru_uz: 'Bitirgandan keyingi rejalaringiz qanday?',
         aKo: '졸업 후에는 한국에서 배운 지식을 바탕으로 ○○ 분야에서 일하고 싶습니다. 장기적으로는 두 나라의 교류에 도움이 되는 사람이 되고 싶습니다.',
-        aRu: 'После выпуска хочу работать в сфере ○○, опираясь на полученные в Корее знания. В перспективе — стать человеком, полезным для обмена между нашими странами.' },
-      { ko: '본인의 장점과 단점은 무엇입니까?', ru: 'В чём ваши сильные и слабые стороны?',
+        aRu: 'После выпуска хочу работать в сфере ○○, опираясь на полученные в Корее знания. В перспективе — стать человеком, полезным для обмена между нашими странами.',
+        aRu_uz: 'Bitirgach, Koreyada olgan bilimlarimga tayanib ○○ sohasida ishlamoqchiman. Istiqbolda — ikki davlat oʻrtasidagi almashinuvga foydali inson boʻlmoqchiman.' },
+      { ko: '본인의 장점과 단점은 무엇입니까?', ru: 'В чём ваши сильные и слабые стороны?', ru_uz: 'Kuchli va kuchsiz tomonlaringiz nimada?',
         aKo: '제 장점은 성실하고 끈기가 있다는 점입니다. 단점은 완벽을 추구하다 보니 시간이 오래 걸릴 때가 있는데, 계획을 세워 보완하려고 노력하고 있습니다.',
-        aRu: 'Моя сильная сторона — добросовестность и упорство. Слабая — стремясь к идеалу, я порой трачу много времени, но компенсирую это планированием.' },
-      { ko: '한국어 실력은 어느 정도입니까?', ru: 'Каков ваш уровень корейского?',
+        aRu: 'Моя сильная сторона — добросовестность и упорство. Слабая — стремясь к идеалу, я порой трачу много времени, но компенсирую это планированием.',
+        aRu_uz: 'Kuchli tomonim — halollik va matonat. Kuchsiz tomonim — mukammallikka intilib, baʼzan koʻp vaqt sarflayman, lekin buni rejalashtirish bilan toʻgʻrilayman.' },
+      { ko: '한국어 실력은 어느 정도입니까?', ru: 'Каков ваш уровень корейского?', ru_uz: 'Koreys tili darajangiz qanday?',
         aKo: '현재 토픽 ○급 수준이며, 일상 대화와 강의를 이해하는 데 큰 어려움이 없습니다. 앞으로도 꾸준히 실력을 키우겠습니다.',
-        aRu: 'Сейчас у меня уровень TOPIK ○. Я без особых трудностей понимаю повседневную речь и лекции и продолжаю совершенствоваться.' },
-      { ko: '마지막으로 하고 싶은 말이 있습니까?', ru: 'Хотите что-то сказать напоследок?',
+        aRu: 'Сейчас у меня уровень TOPIK ○. Я без особых трудностей понимаю повседневную речь и лекции и продолжаю совершенствоваться.',
+        aRu_uz: 'Hozir mening darajam TOPIK ○. Kundalik nutq va maʼruzalarni katta qiyinchiliksiz tushunaman va malakamni oshirib boryapman.' },
+      { ko: '마지막으로 하고 싶은 말이 있습니까?', ru: 'Хотите что-то сказать напоследок?', ru_uz: 'Oxirida biror narsa aytmoqchimisiz?',
         aKo: '기회를 주신다면 최선을 다해 공부하고, 학교에 자랑스러운 학생이 되겠습니다. 감사합니다.',
-        aRu: 'Если мне дадут шанс, я буду учиться изо всех сил и стану студентом(кой), которым университет сможет гордиться. Спасибо.' }
+        aRu: 'Если мне дадут шанс, я буду учиться изо всех сил и стану студентом(кой), которым университет сможет гордиться. Спасибо.',
+        aRu_uz: 'Agar menga imkoniyat berilsa, bor kuchim bilan oʻqiyman va universitet faxrlanadigan talaba boʻlaman. Rahmat.' }
     ],
     tips: [
       'Говорите спокойно и вежливо: используйте формальный стиль <span class="ko">-ㅂ니다/습니다</span>.',
@@ -15483,6 +16251,14 @@
       'Если не поняли вопрос, вежливо переспросите: <span class="ko">«다시 한 번 말씀해 주시겠어요?»</span>',
       'Держите осанку, поддерживайте зрительный контакт и спокойно улыбайтесь.'
     ],
+    tips_uz: [
+      'Xotirjam va xushmuomala gapiring: rasmiy <span class="ko">-ㅂ니다/습니다</span> uslubidan foydalaning.',
+      'Oʻz-oʻzini tanishtirishni (<span class="ko">자기소개</span>) 30–40 soniyaga tayyorlang va ovoz chiqarib mashq qiling.',
+      'Javoblaringizni aniq OTM va mutaxassislikka bogʻlang — aynan ularga tayyorlanganingizni koʻrsating.',
+      'Soʻzma-soʻz yodlamang — rejaga tayanib, tabiiy javob bering.',
+      'Savolni tushunmasangiz, xushmuomalalik bilan qayta soʻrang: <span class="ko">«다시 한 번 말씀해 주시겠어요?»</span>',
+      'Qaddingizni tik tuting, koʻz aloqasini saqlang va xotirjam tabassum qiling.'
+    ],
     soon: [
       { emoji: '🏛️', title: 'Рейтинг вузов Кореи', ko: '한국 대학 순위', sub: 'топ-университеты · направления · требования' },
       { emoji: '🛂', title: 'Студенческая виза D-2', ko: '유학 비자', sub: 'документы · сроки · продление' },
@@ -15491,163 +16267,233 @@
       { emoji: '🏠', title: 'Жильё и общежития', ko: '기숙사 · 자취', sub: 'варианты · цены · советы' }
     ]
   };
+  // ── Локализация контента «Учёбы в Корее» (RU → UZ). Узбекский — для uz-локали, иначе RU. ──
+  function skLoc(obj, field) {
+    if (!obj) return '';
+    if (APP_LANG === 'uz' && obj[field + '_uz'] != null) return obj[field + '_uz'];
+    return obj[field] != null ? obj[field] : '';
+  }
+  function skLocA(obj, field) {
+    if (!obj) return [];
+    if (APP_LANG === 'uz' && Array.isArray(obj[field + '_uz'])) return obj[field + '_uz'];
+    return Array.isArray(obj[field]) ? obj[field] : [];
+  }
+  // Короткая подпись интерфейса раздела (ru → uz). en пока показывает ru.
+  function skUi(ru, uz) { return APP_LANG === 'uz' ? uz : ru; }
   // ── Рейтинг вузов Кореи (реальные ведущие университеты) ──
   // Требования TOPIK даны ориентировочно — они меняются по годам и факультетам; всегда сверяться на сайте вуза.
   const KR_UNIVERSITIES = [
-    { id:'snu', name:'Сеульский национальный университет', ko:'서울대학교', abbr:'SNU', city:'Сеул', rank:'№1 в Корее',
-      strong:['Инженерия','Естественные науки','Гуманитарные','Медицина'],
-      topik:'Обычно TOPIK 3+ для поступления, 4–5 для гуманитарных направлений.',
+    { id:'snu', name:'Сеульский национальный университет', name_uz:'Seul milliy universiteti', ko:'서울대학교', abbr:'SNU', city:'Сеул', city_uz:'Seul', rank:'№1 в Корее', rank_uz:'Koreyada №1',
+      strong:['Инженерия','Естественные науки','Гуманитарные','Медицина'], strong_uz:['Muhandislik','Tabiiy fanlar','Gumanitar fanlar','Tibbiyot'],
+      topik:'Обычно TOPIK 3+ для поступления, 4–5 для гуманитарных направлений.', topik_uz:'Odatda kirish uchun TOPIK 3+, gumanitar yoʻnalishlar uchun 4–5.',
       site:'https://en.snu.ac.kr',
-      about:'Самый престижный и старейший государственный вуз Кореи, флагман национального образования. Высокий конкурс и сильная научная база.' },
-    { id:'yonsei', name:'Университет Ёнсе', ko:'연세대학교', abbr:'Yonsei', city:'Сеул', rank:'SKY · топ-3',
-      strong:['Бизнес','Медицина','Гуманитарные','Международные отношения'],
-      topik:'TOPIK 3–4 в зависимости от факультета.',
+      about:'Самый престижный и старейший государственный вуз Кореи, флагман национального образования. Высокий конкурс и сильная научная база.', about_uz:'Koreyaning eng nufuzli va eng eski davlat oliygohi, milliy taʼlim yetakchisi. Yuqori tanlov va kuchli ilmiy baza.' },
+    { id:'yonsei', name:'Университет Ёнсе', name_uz:'Yonsei universiteti', ko:'연세대학교', abbr:'Yonsei', city:'Сеул', city_uz:'Seul', rank:'SKY · топ-3', rank_uz:'SKY · top-3',
+      strong:['Бизнес','Медицина','Гуманитарные','Международные отношения'], strong_uz:['Biznes','Tibbiyot','Gumanitar fanlar','Xalqaro munosabatlar'],
+      topik:'TOPIK 3–4 в зависимости от факультета.', topik_uz:'Fakultetga qarab TOPIK 3–4.',
       site:'https://www.yonsei.ac.kr/en_sc/',
-      about:'Один из вузов «большой тройки» SKY. Сильная бизнес-школа и колледж Underwood с программами на английском.' },
-    { id:'korea', name:'Университет Корё', ko:'고려대학교', abbr:'Korea Univ', city:'Сеул', rank:'SKY · топ-3',
-      strong:['Право','Бизнес','Гуманитарные','Политология'],
-      topik:'TOPIK 3–4 в зависимости от факультета.',
+      about:'Один из вузов «большой тройки» SKY. Сильная бизнес-школа и колледж Underwood с программами на английском.', about_uz:'«Katta uchlik» SKY oliygohlaridan biri. Kuchli biznes-maktab va ingliz tilidagi dasturlarga ega Underwood kolleji.' },
+    { id:'korea', name:'Университет Корё', name_uz:'Korea universiteti', ko:'고려대학교', abbr:'Korea Univ', city:'Сеул', city_uz:'Seul', rank:'SKY · топ-3', rank_uz:'SKY · top-3',
+      strong:['Право','Бизнес','Гуманитарные','Политология'], strong_uz:['Huquq','Biznes','Gumanitar fanlar','Siyosatshunoslik'],
+      topik:'TOPIK 3–4 в зависимости от факультета.', topik_uz:'Fakultetga qarab TOPIK 3–4.',
       site:'https://www.korea.edu/',
-      about:'Третий вуз SKY. Известен сильным юридическим и бизнес-образованием и очень активной студенческой жизнью.' },
-    { id:'kaist', name:'KAIST — институт науки и технологий', ko:'한국과학기술원', abbr:'KAIST', city:'Тэджон', rank:'Наука и технологии №1',
-      strong:['Инженерия','IT','Естественные науки','Стартапы'],
-      topik:'Многие программы на английском — TOPIK часто не требуется.',
+      about:'Третий вуз SKY. Известен сильным юридическим и бизнес-образованием и очень активной студенческой жизнью.', about_uz:'Uchinchi SKY oliygohi. Kuchli yuridik va biznes taʼlimi hamda juda faol talabalar hayoti bilan mashhur.' },
+    { id:'kaist', name:'KAIST — институт науки и технологий', name_uz:'KAIST — fan va texnologiyalar instituti', ko:'한국과학기술원', abbr:'KAIST', city:'Тэджон', city_uz:'Tedjon', rank:'Наука и технологии №1', rank_uz:'Fan va texnologiyada №1',
+      strong:['Инженерия','IT','Естественные науки','Стартапы'], strong_uz:['Muhandislik','IT','Tabiiy fanlar','Startaplar'],
+      topik:'Многие программы на английском — TOPIK часто не требуется.', topik_uz:'Koʻp dasturlar ingliz tilida — TOPIK koʻpincha talab qilinmaydi.',
       site:'https://www.kaist.ac.kr/en/',
-      about:'Ведущий технический вуз страны. Обучение во многом на английском, акцент на исследования и технологическое предпринимательство.' },
-    { id:'postech', name:'POSTECH — Пхоханский университет науки и технологий', ko:'포항공과대학교', abbr:'POSTECH', city:'Пхохан', rank:'Наука и технологии',
-      strong:['Инженерия','Физика','Материаловедение','Исследования'],
-      topik:'Программы во многом на английском — TOPIK часто не требуется.',
+      about:'Ведущий технический вуз страны. Обучение во многом на английском, акцент на исследования и технологическое предпринимательство.', about_uz:'Mamlakatning yetakchi texnik oliygohi. Taʼlim asosan ingliz tilida, ilmiy izlanish va texnologik tadbirkorlikka urgʻu.' },
+    { id:'postech', name:'POSTECH — Пхоханский университет науки и технологий', name_uz:'POSTECH — Pxohan fan va texnologiyalar universiteti', ko:'포항공과대학교', abbr:'POSTECH', city:'Пхохан', city_uz:'Pxohan', rank:'Наука и технологии', rank_uz:'Fan va texnologiyalar',
+      strong:['Инженерия','Физика','Материаловедение','Исследования'], strong_uz:['Muhandislik','Fizika','Materialshunoslik','Ilmiy izlanish'],
+      topik:'Программы во многом на английском — TOPIK часто не требуется.', topik_uz:'Dasturlar asosan ingliz tilida — TOPIK koʻpincha talab qilinmaydi.',
       site:'https://www.postech.ac.kr/eng/',
-      about:'Небольшой элитный технический вуз с сильнейшей исследовательской базой и высоким соотношением преподавателей к студентам.' },
-    { id:'skku', name:'Университет Сонгюнгван (SKKU)', ko:'성균관대학교', abbr:'SKKU', city:'Сеул · Сувон', rank:'Топ-5',
-      strong:['Бизнес','Инженерия','Полупроводники','Естественные науки'],
-      topik:'TOPIK 3–4.',
+      about:'Небольшой элитный технический вуз с сильнейшей исследовательской базой и высоким соотношением преподавателей к студентам.', about_uz:'Eng kuchli ilmiy bazaga ega kichik elita texnik oliygoh, oʻqituvchi-talaba nisbati yuqori.' },
+    { id:'skku', name:'Университет Сонгюнгван (SKKU)', name_uz:'Songgyungwan universiteti (SKKU)', ko:'성균관대학교', abbr:'SKKU', city:'Сеул · Сувон', city_uz:'Seul · Suvon', rank:'Топ-5', rank_uz:'Top-5',
+      strong:['Бизнес','Инженерия','Полупроводники','Естественные науки'], strong_uz:['Biznes','Muhandislik','Yarimoʻtkazgichlar','Tabiiy fanlar'],
+      topik:'TOPIK 3–4.', topik_uz:'TOPIK 3–4.',
       site:'https://www.skku.edu/eng/',
-      about:'Один из старейших вузов с современной поддержкой от Samsung. Сильные инженерные и бизнес-программы.' },
-    { id:'hanyang', name:'Университет Ханян', ko:'한양대학교', abbr:'Hanyang', city:'Сеул', rank:'Топ инженерии',
-      strong:['Инженерия','Архитектура','Предпринимательство','IT'],
-      topik:'TOPIK 3–4.',
+      about:'Один из старейших вузов с современной поддержкой от Samsung. Сильные инженерные и бизнес-программы.', about_uz:'Samsung tomonidan zamonaviy qoʻllab-quvvatlanadigan eng eski oliygohlardan biri. Kuchli muhandislik va biznes dasturlari.' },
+    { id:'hanyang', name:'Университет Ханян', name_uz:'Hanyang universiteti', ko:'한양대학교', abbr:'Hanyang', city:'Сеул', city_uz:'Seul', rank:'Топ инженерии', rank_uz:'Muhandislik yetakchisi',
+      strong:['Инженерия','Архитектура','Предпринимательство','IT'], strong_uz:['Muhandislik','Arxitektura','Tadbirkorlik','IT'],
+      topik:'TOPIK 3–4.', topik_uz:'TOPIK 3–4.',
       site:'https://www.hanyang.ac.kr/web/eng',
-      about:'Известен сильнейшей инженерной школой и предпринимательской культурой — много выпускников-основателей компаний.' },
-    { id:'khu', name:'Университет Кёнхи', ko:'경희대학교', abbr:'Kyung Hee', city:'Сеул', rank:'Популярен у иностранцев',
-      strong:['Гостеприимство и туризм','Медицина','Корееведение','Межд. программы'],
-      topik:'TOPIK 3+ · при вузе сильный 어학당.',
+      about:'Известен сильнейшей инженерной школой и предпринимательской культурой — много выпускников-основателей компаний.', about_uz:'Eng kuchli muhandislik maktabi va tadbirkorlik madaniyati bilan mashhur — koʻplab bitiruvchilari kompaniya asoschilari.' },
+    { id:'khu', name:'Университет Кёнхи', name_uz:'Kyunghi universiteti', ko:'경희대학교', abbr:'Kyung Hee', city:'Сеул', city_uz:'Seul', rank:'Популярен у иностранцев', rank_uz:'Chet elliklar orasida mashhur',
+      strong:['Гостеприимство и туризм','Медицина','Корееведение','Межд. программы'], strong_uz:['Mehmondoʻstlik va turizm','Tibbiyot','Koreyashunoslik','Xalqaro dasturlar'],
+      topik:'TOPIK 3+ · при вузе сильный 어학당.', topik_uz:'TOPIK 3+ · oliygoh qoshida kuchli 어학당.',
       site:'https://www.khu.ac.kr/eng/',
-      about:'Очень популярен у иностранных студентов: красивый кампус и сильные языковые курсы 어학당.' },
-    { id:'sogang', name:'Университет Соган', ko:'서강대학교', abbr:'Sogang', city:'Сеул', rank:'Знаменитый 어학당',
-      strong:['Бизнес','Гуманитарные','Корейский язык','Медиа'],
-      topik:'TOPIK 3+ · один из лучших 어학당 в стране.',
+      about:'Очень популярен у иностранных студентов: красивый кампус и сильные языковые курсы 어학당.', about_uz:'Chet ellik talabalar orasida juda mashhur: chiroyli kampus va kuchli til kurslari 어학당.' },
+    { id:'sogang', name:'Университет Соган', name_uz:'Sogang universiteti', ko:'서강대학교', abbr:'Sogang', city:'Сеул', city_uz:'Seul', rank:'Знаменитый 어학당', rank_uz:'Mashhur 어학당',
+      strong:['Бизнес','Гуманитарные','Корейский язык','Медиа'], strong_uz:['Biznes','Gumanitar fanlar','Koreys tili','Media'],
+      topik:'TOPIK 3+ · один из лучших 어학당 в стране.', topik_uz:'TOPIK 3+ · mamlakatdagi eng yaxshi 어학당lardan biri.',
       site:'https://www.sogang.ac.kr/en/',
-      about:'Иезуитский вуз с одной из лучших программ корейского языка (서강 한국어) и сильной бизнес-школой.' },
-    { id:'ewha', name:'Женский университет Ихва', ko:'이화여자대학교', abbr:'Ewha', city:'Сеул', rank:'Топ женский вуз',
-      strong:['Гуманитарные','Дизайн','Педагогика','Межд. исследования'],
-      topik:'TOPIK 3–4.',
+      about:'Иезуитский вуз с одной из лучших программ корейского языка (서강 한국어) и сильной бизнес-школой.', about_uz:'Iyezuit oliygohi — koreys tili boʻyicha eng yaxshi dasturlardan biri (서강 한국어) va kuchli biznes-maktabga ega.' },
+    { id:'ewha', name:'Женский университет Ихва', name_uz:'Ihva ayollar universiteti', ko:'이화여자대학교', abbr:'Ewha', city:'Сеул', city_uz:'Seul', rank:'Топ женский вуз', rank_uz:'Yetakchi ayollar oliygohi',
+      strong:['Гуманитарные','Дизайн','Педагогика','Межд. исследования'], strong_uz:['Gumanitar fanlar','Dizayn','Pedagogika','Xalqaro tadqiqotlar'],
+      topik:'TOPIK 3–4.', topik_uz:'TOPIK 3–4.',
       site:'https://www.ewha.ac.kr/ewhaen/',
-      about:'Крупнейший и самый престижный женский университет мира. Знаменитый кампус ECC и сильные гуманитарные программы.' }
+      about:'Крупнейший и самый престижный женский университет мира. Знаменитый кампус ECC и сильные гуманитарные программы.', about_uz:'Dunyodagi eng yirik va nufuzli ayollar universiteti. Mashhur ECC kampusi va kuchli gumanitar dasturlar.' }
   ];
 
   // ── Практические темы об учёбе в Корее ──
   const STUDY_KR_INFO = {
     visa: {
-      emoji:'🛂', title:'Студенческая виза', ko:'유학 비자 · D-2 / D-4', sub:'D-2 · D-4 · документы',
-      lead:'Для учёбы в Корее нужна студенческая виза. Тип зависит от программы.',
+      emoji:'🛂', title:'Студенческая виза', title_uz:'Talaba vizasi', ko:'유학 비자 · D-2 / D-4', sub:'D-2 · D-4 · документы', sub_uz:'D-2 · D-4 · hujjatlar',
+      lead:'Для учёбы в Корее нужна студенческая виза. Тип зависит от программы.', lead_uz:'Koreyada oʻqish uchun talaba vizasi kerak. Turi dasturga bogʻliq.',
       sections:[
-        { h:'D-2 — для получения степени', items:[
+        { h:'D-2 — для получения степени', h_uz:'D-2 — daraja olish uchun', items:[
           'Бакалавриат, магистратура, докторантура, научные программы.',
           'Оформляется после получения приглашения (입학허가서) от вуза.',
           'Даёт право на ограниченную подработку — с разрешения вуза.'
+        ], items_uz:[
+          'Bakalavr, magistratura, doktorantura, ilmiy dasturlar.',
+          'OTMdan taklif (입학허가서) olingach rasmiylashtiriladi.',
+          'Cheklangan qoʻshimcha ishlashga ruxsat beradi — OTM ruxsati bilan.'
         ]},
-        { h:'D-4 — для языковых курсов 어학당', items:[
+        { h:'D-4 — для языковых курсов 어학당', h_uz:'D-4 — til kurslari 어학당 uchun', items:[
           'Для обучения на языковых курсах при вузе.',
           'Выдаётся на срок курса, продлевается в иммиграционной службе.',
           'Подработка — только после 6 месяцев и с разрешения.'
+        ], items_uz:[
+          'OTM qoshidagi til kurslarida oʻqish uchun.',
+          'Kurs muddatiga beriladi, migratsiya xizmatida uzaytiriladi.',
+          'Qoʻshimcha ish — faqat 6 oydan keyin va ruxsat bilan.'
         ]},
-        { h:'Базовые документы', items:[
+        { h:'Базовые документы', h_uz:'Asosiy hujjatlar', items:[
           'Загранпаспорт, фото, заявление на визу.',
           'Приглашение от вуза (사증발급인정서 / 입학허가서).',
           'Подтверждение финансов (банковская выписка, обычно от ~10 000 $).',
           'Документы об образовании с апостилем/легализацией и переводом.'
+        ], items_uz:[
+          'Xorijiy passport, foto, viza arizasi.',
+          'OTM taklifi (사증발급인정서 / 입학허가서).',
+          'Moliyaviy tasdiq (bank koʻchirmasi, odatda ~10 000 $ dan).',
+          'Apostil/legalizatsiya va tarjima bilan taʼlim hujjatlari.'
         ]},
-        { h:'Важно', items:[
+        { h:'Важно', h_uz:'Muhim', items:[
           'Точный список зависит от консульства — сверяйтесь с сайтом посольства Кореи.',
           'Подавайте заранее: оформление занимает несколько недель.'
+        ], items_uz:[
+          'Aniq roʻyxat konsullikka bogʻliq — Koreya elchixonasi sayti bilan tekshiring.',
+          'Oldindan topshiring: rasmiylashtirish bir necha hafta oladi.'
         ]}
       ]
     },
     scholarship: {
-      emoji:'🎓', title:'Стипендии', ko:'장학금 · GKS', sub:'GKS · вузовские',
-      lead:'Учёбу можно частично или полностью покрыть стипендией.',
+      emoji:'🎓', title:'Стипендии', title_uz:'Stipendiyalar', ko:'장학금 · GKS', sub:'GKS · вузовские', sub_uz:'GKS · OTM stipendiyalari',
+      lead:'Учёбу можно частично или полностью покрыть стипендией.', lead_uz:'Oʻqishni qisman yoki toʻliq stipendiya bilan qoplash mumkin.',
       sections:[
-        { h:'GKS — Global Korea Scholarship', items:[
+        { h:'GKS — Global Korea Scholarship', h_uz:'GKS — Global Korea Scholarship', items:[
           'Государственная стипендия (бывш. KGSP) от NIIED.',
           'Покрывает обучение, перелёт, ежемесячную стипендию, год языковых курсов и медстраховку.',
           'Два пути подачи: через посольство Кореи (Embassy track) или напрямую через вуз (University track).',
           'Высокий конкурс — нужны хорошие оценки и сильное мотивационное письмо.'
+        ], items_uz:[
+          'NIIED davlat stipendiyasi (avvalgi KGSP).',
+          'Oʻqish, parvoz, oylik stipendiya, bir yil til kurslari va tibbiy sugʻurtani qoplaydi.',
+          'Ikki yoʻl: Koreya elchixonasi orqali (Embassy track) yoki bevosita OTM orqali (University track).',
+          'Yuqori tanlov — yaxshi baholar va kuchli motivatsion xat kerak.'
         ]},
-        { h:'Вузовские стипендии', items:[
+        { h:'Вузовские стипендии', h_uz:'OTM stipendiyalari', items:[
           'Скидки на обучение за высокий средний балл и TOPIK.',
           'Многие вузы дают 30–100% скидки лучшим иностранным студентам.'
+        ], items_uz:[
+          'Yuqori oʻrtacha ball va TOPIK uchun oʻqish chegirmalari.',
+          'Koʻp OTMlar eng yaxshi chet ellik talabalarga 30–100% chegirma beradi.'
         ]},
-        { h:'Где искать', items:[
+        { h:'Где искать', h_uz:'Qayerdan qidirish', items:[
           'Официальный портал: studyinkorea.go.kr.',
           'Сайт нужного вуза → раздел International / Scholarships.'
+        ], items_uz:[
+          'Rasmiy portal: studyinkorea.go.kr.',
+          'Kerakli OTM sayti → International / Scholarships boʻlimi.'
         ]}
       ]
     },
     cost: {
-      emoji:'💰', title:'Стоимость учёбы и жизни', ko:'학비 · 생활비', sub:'обучение · жильё · еда',
-      lead:'Ориентировочные суммы — точные зависят от вуза, города и образа жизни.',
+      emoji:'💰', title:'Стоимость учёбы и жизни', title_uz:'Oʻqish va yashash narxi', ko:'학비 · 생활비', sub:'обучение · жильё · еда', sub_uz:'oʻqish · turar joy · ovqat',
+      lead:'Ориентировочные суммы — точные зависят от вуза, города и образа жизни.', lead_uz:'Taxminiy summalar — aniqi OTM, shahar va turmush tarziga bogʻliq.',
       sections:[
-        { h:'Обучение (за семестр)', items:[
+        { h:'Обучение (за семестр)', h_uz:'Oʻqish (bir semestr)', items:[
           'Языковые курсы 어학당: ~1 300–1 800 $ за 10-недельный семестр.',
           'Бакалавриат: ~2 500–5 000 $ (гуманитарные дешевле, инженерия и медицина дороже).',
           'Магистратура: ~2 500–6 000 $.'
+        ], items_uz:[
+          'Til kurslari 어학당: 10 haftalik semestr uchun ~1 300–1 800 $.',
+          'Bakalavr: ~2 500–5 000 $ (gumanitar arzonroq, muhandislik va tibbiyot qimmatroq).',
+          'Magistratura: ~2 500–6 000 $.'
         ]},
-        { h:'Жизнь (в месяц)', items:[
+        { h:'Жизнь (в месяц)', h_uz:'Yashash (oyiga)', items:[
           'Общежитие: ~250–500 $; аренда студии 원룸: ~400–700 $ + депозит.',
           'Питание: ~300–450 $; транспорт: ~50–70 $.',
           'Сеул дороже регионов примерно на 20–40%.'
+        ], items_uz:[
+          'Yotoqxona: ~250–500 $; studiya 원룸 ijarasi: ~400–700 $ + zalog.',
+          'Ovqat: ~300–450 $; transport: ~50–70 $.',
+          'Seul mintaqalardan taxminan 20–40% qimmatroq.'
         ]},
-        { h:'Совет', items:[
+        { h:'Совет', h_uz:'Maslahat', items:[
           'Многие вузы дают скидку на обучение иностранцам с высоким TOPIK.',
           'Подработка (после разрешения) частично покрывает расходы.'
+        ], items_uz:[
+          'Koʻp OTMlar yuqori TOPIKga ega chet elliklarga oʻqish chegirmasini beradi.',
+          'Qoʻshimcha ish (ruxsatdan keyin) xarajatlarni qisman qoplaydi.'
         ]}
       ]
     },
     language: {
-      emoji:'🏫', title:'Языковые курсы 어학당', ko:'어학당', sub:'어학당 · уровни 1–6',
-      lead:'어학당 — языковые институты при вузах. Лучший способ подтянуть корейский перед поступлением.',
+      emoji:'🏫', title:'Языковые курсы 어학당', title_uz:'Til kurslari 어학당', ko:'어학당', sub:'어학당 · уровни 1–6', sub_uz:'어학당 · 1–6 darajalar',
+      lead:'어학당 — языковые институты при вузах. Лучший способ подтянуть корейский перед поступлением.', lead_uz:'어학당 — OTM qoshidagi til institutlari. Kirishdan oldin koreyschani mustahkamlashning eng yaxshi yoʻli.',
       sections:[
-        { h:'Как устроено', items:[
+        { h:'Как устроено', h_uz:'Qanday tashkil etilgan', items:[
           'Уровни 1–6: с нуля до продвинутого.',
           '4 семестра в год, обычно по 10 недель, ~20 часов в неделю.',
           'После уровня 4–6 проще поступить на degree-программу.'
+        ], items_uz:[
+          '1–6 darajalar: noldan ilgʻorgacha.',
+          'Yiliga 4 semestr, odatda 10 haftadan, haftasiga ~20 soat.',
+          '4–6 darajadan keyin degree-dasturga kirish osonroq.'
         ]},
-        { h:'Известные программы', items:[
+        { h:'Известные программы', h_uz:'Mashhur dasturlar', items:[
           '서강 한국어 (Sogang) — упор на разговорную речь.',
           '연세 한국어 (Yonsei) — фундаментальная грамматика.',
           '경희 · 이화 · 고려 — сильные и популярные у иностранцев.'
+        ], items_uz:[
+          '서강 한국어 (Sogang) — ogʻzaki nutqqa urgʻu.',
+          '연세 한국어 (Yonsei) — fundamental grammatika.',
+          '경희 · 이화 · 고려 — kuchli va chet elliklar orasida mashhur.'
         ]},
-        { h:'Виза', items:[
+        { h:'Виза', h_uz:'Viza', items:[
           'Для 어학당 оформляется виза D-4.'
+        ], items_uz:[
+          '어학당 uchun D-4 vizasi rasmiylashtiriladi.'
         ]}
       ]
     },
     housing: {
-      emoji:'🏠', title:'Жильё и общежития', ko:'기숙사 · 자취', sub:'기숙사 · 원룸 · 고시원',
-      lead:'Основные варианты жилья для студентов.',
+      emoji:'🏠', title:'Жильё и общежития', title_uz:'Turar joy va yotoqxonalar', ko:'기숙사 · 자취', sub:'기숙사 · 원룸 · 고시원', sub_uz:'기숙사 · 원룸 · 고시원',
+      lead:'Основные варианты жилья для студентов.', lead_uz:'Talabalar uchun asosiy turar joy variantlari.',
       sections:[
-        { h:'기숙사 — общежитие', items:[
+        { h:'기숙사 — общежитие', h_uz:'기숙사 — yotoqxona', items:[
           'Самый дешёвый и удобный вариант, прямо на кампусе.',
           'Мест мало — подавайте сразу после зачисления.'
+        ], items_uz:[
+          'Eng arzon va qulay variant, toʻgʻridan-toʻgʻri kampusda.',
+          'Joylar kam — qabuldan soʻng darhol topshiring.'
         ]},
-        { h:'원룸 / 자취 — своя квартира-студия', items:[
+        { h:'원룸 / 자취 — своя квартира-студия', h_uz:'원룸 / 자취 — oʻzingizning studiyangiz', items:[
           'Свобода, но дороже и нужен депозит (보증금), часто крупный.',
           'Ищут через приложения 직방 / 다방 и агентства недвижимости (부동산).'
+        ], items_uz:[
+          'Erkinlik, lekin qimmatroq va zalog (보증금), koʻpincha katta, kerak.',
+          '직방 / 다방 ilovalari va koʻchmas mulk agentliklari (부동산) orqali qidiriladi.'
         ]},
-        { h:'고시원 · 하숙', items:[
+        { h:'고시원 · 하숙', h_uz:'고시원 · 하숙', items:[
           '고시원 — крошечная комната, дёшево и без депозита.',
           '하숙 — комната с питанием от хозяев, по-домашнему.'
+        ], items_uz:[
+          '고시원 — kichkina xona, arzon va zalogsiz.',
+          '하숙 — egalaridan ovqat bilan xona, uy sharoitida.'
         ]}
       ]
     }
@@ -15682,9 +16528,9 @@
         <button type="button" class="kc-card" onclick="openSkInfo('${k}')">
           <span class="kc-card-emoji" aria-hidden="true">${info.emoji}</span>
           <span class="kc-card-body">
-            <span class="kc-card-title">${info.title}</span>
+            <span class="kc-card-title">${skLoc(info, 'title')}</span>
             <span class="kc-card-ko ko">${info.ko}</span>
-            <span class="kc-card-meta"><span class="rd-chip rd-chip-soft">${info.sub}</span></span>
+            <span class="kc-card-meta"><span class="rd-chip rd-chip-soft">${skLoc(info, 'sub')}</span></span>
           </span>
           <i class="fa-solid fa-chevron-right rd-card-arrow" aria-hidden="true"></i>
         </button>`;
@@ -15692,24 +16538,24 @@
     hub.innerHTML = `
       <div class="rd-intro">
         <div class="rd-intro-ko ko">한국 유학 준비 🎓</div>
-        <p class="rd-intro-txt">Практические материалы для тех, кто едет учиться в Корею: вузы, визы, стипендии, языковые курсы и жильё.</p>
+        <p class="rd-intro-txt">${skUi('Практические материалы для тех, кто едет учиться в Корею: вузы, визы, стипендии, языковые курсы и жильё.', 'Koreyaga oʻqishga ketayotganlar uchun amaliy materiallar: OTMlar, vizalar, stipendiyalar, til kurslari va turar joy.')}</p>
       </div>
       <div class="kc-list">
         <button type="button" class="kc-card" onclick="openSkInterview()">
           <span class="kc-card-emoji" aria-hidden="true">🎤</span>
           <span class="kc-card-body">
-            <span class="kc-card-title">Собеседование в вуз</span>
+            <span class="kc-card-title">${skUi('Собеседование в вуз', 'OTM suhbati')}</span>
             <span class="kc-card-ko ko">대학 면접</span>
-            <span class="kc-card-meta"><span class="rd-chip">${STUDY_KR.interview.length} вопросов</span><span class="rd-chip rd-chip-soft">KO-RU + озвучка</span></span>
+            <span class="kc-card-meta"><span class="rd-chip">${STUDY_KR.interview.length} ${skUi('вопросов', 'savol')}</span><span class="rd-chip rd-chip-soft">${skUi('KO-RU + озвучка', 'KO-RU + ovoz')}</span></span>
           </span>
           <i class="fa-solid fa-chevron-right rd-card-arrow" aria-hidden="true"></i>
         </button>
         <button type="button" class="kc-card" onclick="openSkUnis()">
           <span class="kc-card-emoji" aria-hidden="true">🏛️</span>
           <span class="kc-card-body">
-            <span class="kc-card-title">Рейтинг вузов Кореи</span>
+            <span class="kc-card-title">${skUi('Рейтинг вузов Кореи', 'Koreya OTMlari reytingi')}</span>
             <span class="kc-card-ko ko">한국 대학 순위</span>
-            <span class="kc-card-meta"><span class="rd-chip">${KR_UNIVERSITIES.length} вузов</span><span class="rd-chip rd-chip-soft">направления · TOPIK</span></span>
+            <span class="kc-card-meta"><span class="rd-chip">${KR_UNIVERSITIES.length} ${skUi('вузов', 'OTM')}</span><span class="rd-chip rd-chip-soft">${skUi('направления · TOPIK', 'yoʻnalishlar · TOPIK')}</span></span>
           </span>
           <i class="fa-solid fa-chevron-right rd-card-arrow" aria-hidden="true"></i>
         </button>
@@ -15719,13 +16565,13 @@
   function renderSkUnis() {
     const hub = document.getElementById('studykr-hub'); if (!hub) return;
     hub.innerHTML = `
-      <button type="button" class="topik-back" onclick="studyKrBack()"><i class="fa-solid fa-chevron-left"></i> Темы</button>
+      <button type="button" class="topik-back" onclick="studyKrBack()"><i class="fa-solid fa-chevron-left"></i> ${skUi('Темы', 'Mavzular')}</button>
       <div class="rd-head">
         <div class="rd-head-emoji" aria-hidden="true">🏛️</div>
         <div class="rd-head-info">
-          <h2 class="rd-head-title">Рейтинг вузов Кореи</h2>
+          <h2 class="rd-head-title">${skUi('Рейтинг вузов Кореи', 'Koreya OTMlari reytingi')}</h2>
           <div class="rd-head-ko ko">한국 대학 순위</div>
-          <div class="rd-head-meta">${KR_UNIVERSITIES.length} ведущих университетов · нажми, чтобы открыть</div>
+          <div class="rd-head-meta">${KR_UNIVERSITIES.length} ${skUi('ведущих университетов · нажми, чтобы открыть', 'yetakchi universitet · ochish uchun bosing')}</div>
         </div>
       </div>
       <div class="kc-list">
@@ -15733,16 +16579,16 @@
           <button type="button" class="kc-card" onclick="openSkUni('${u.id}')">
             <span class="kc-card-emoji uni-rank" aria-hidden="true">${i + 1}</span>
             <span class="kc-card-body">
-              <span class="kc-card-title">${u.name}</span>
+              <span class="kc-card-title">${skLoc(u, 'name')}</span>
               <span class="kc-card-ko ko">${u.ko}</span>
-              <span class="kc-card-meta"><span class="rd-chip">${u.city}</span><span class="rd-chip rd-chip-soft">${u.rank}</span></span>
+              <span class="kc-card-meta"><span class="rd-chip">${skLoc(u, 'city')}</span><span class="rd-chip rd-chip-soft">${skLoc(u, 'rank')}</span></span>
             </span>
             <i class="fa-solid fa-chevron-right rd-card-arrow" aria-hidden="true"></i>
           </button>`).join('')}
       </div>
       <div class="sk-tips" style="margin-top:14px;">
-        <div class="sk-tips-h">ℹ️ Важно</div>
-        <ul class="sk-tips-list"><li>Точные требования по TOPIK и сроки подачи смотри на официальном сайте вуза — они меняются каждый год.</li></ul>
+        <div class="sk-tips-h">ℹ️ ${skUi('Важно', 'Muhim')}</div>
+        <ul class="sk-tips-list"><li>${skUi('Точные требования по TOPIK и сроки подачи смотри на официальном сайте вуза — они меняются каждый год.', 'TOPIK boʻyicha aniq talablar va hujjat topshirish muddatlarini OTM rasmiy saytida koʻring — ular har yili oʻzgaradi.')}</li></ul>
       </div>`;
   }
   function renderSkUni() {
@@ -15750,54 +16596,54 @@
     const u = KR_UNIVERSITIES.find(x => x.id === _skState.uni);
     if (!u) { _skState.view = 'unis'; renderSkUnis(); return; }
     hub.innerHTML = `
-      <button type="button" class="topik-back" onclick="studyKrBack()"><i class="fa-solid fa-chevron-left"></i> Вузы</button>
+      <button type="button" class="topik-back" onclick="studyKrBack()"><i class="fa-solid fa-chevron-left"></i> ${skUi('Вузы', 'OTMlar')}</button>
       <div class="rd-head">
         <div class="rd-head-emoji" aria-hidden="true">🏛️</div>
         <div class="rd-head-info">
-          <h2 class="rd-head-title">${u.name}</h2>
+          <h2 class="rd-head-title">${skLoc(u, 'name')}</h2>
           <div class="rd-head-ko ko">${u.ko}</div>
-          <div class="rd-head-meta">${u.abbr} · ${u.city} · ${u.rank}</div>
+          <div class="rd-head-meta">${u.abbr} · ${skLoc(u, 'city')} · ${skLoc(u, 'rank')}</div>
         </div>
       </div>
-      <p class="rd-intro-txt" style="margin:0 0 14px;">${u.about}</p>
+      <p class="rd-intro-txt" style="margin:0 0 14px;">${skLoc(u, 'about')}</p>
       <div class="uni-facts">
-        <div class="uni-fact"><div class="uni-fact-h">📍 Город</div><div class="uni-fact-v">${u.city}</div></div>
-        <div class="uni-fact"><div class="uni-fact-h">🎯 Сильные направления</div><div class="uni-fact-v">${u.strong.join(' · ')}</div></div>
-        <div class="uni-fact"><div class="uni-fact-h">📊 Требования TOPIK</div><div class="uni-fact-v">${u.topik}</div></div>
+        <div class="uni-fact"><div class="uni-fact-h">📍 ${skUi('Город', 'Shahar')}</div><div class="uni-fact-v">${skLoc(u, 'city')}</div></div>
+        <div class="uni-fact"><div class="uni-fact-h">🎯 ${skUi('Сильные направления', 'Kuchli yoʻnalishlar')}</div><div class="uni-fact-v">${skLocA(u, 'strong').join(' · ')}</div></div>
+        <div class="uni-fact"><div class="uni-fact-h">📊 ${skUi('Требования TOPIK', 'TOPIK talablari')}</div><div class="uni-fact-v">${skLoc(u, 'topik')}</div></div>
       </div>
-      <a class="btn btn-primary btn-block" href="${u.site}" target="_blank" rel="noopener noreferrer" style="margin-top:14px;"><i class="fa-solid fa-arrow-up-right-from-square" style="font-size:12px;"></i> Официальный сайт</a>`;
+      <a class="btn btn-primary btn-block" href="${u.site}" target="_blank" rel="noopener noreferrer" style="margin-top:14px;"><i class="fa-solid fa-arrow-up-right-from-square" style="font-size:12px;"></i> ${skUi('Официальный сайт', 'Rasmiy sayt')}</a>`;
   }
   function renderSkInfo() {
     const hub = document.getElementById('studykr-hub'); if (!hub) return;
     const info = STUDY_KR_INFO[_skState.info];
     if (!info) { _skState.view = 'home'; renderStudyKr(); return; }
     hub.innerHTML = `
-      <button type="button" class="topik-back" onclick="studyKrBack()"><i class="fa-solid fa-chevron-left"></i> Темы</button>
+      <button type="button" class="topik-back" onclick="studyKrBack()"><i class="fa-solid fa-chevron-left"></i> ${skUi('Темы', 'Mavzular')}</button>
       <div class="rd-head">
         <div class="rd-head-emoji" aria-hidden="true">${info.emoji}</div>
         <div class="rd-head-info">
-          <h2 class="rd-head-title">${info.title}</h2>
+          <h2 class="rd-head-title">${skLoc(info, 'title')}</h2>
           <div class="rd-head-ko ko">${info.ko}</div>
         </div>
       </div>
-      <p class="rd-intro-txt" style="margin:0 0 14px;">${info.lead}</p>
+      <p class="rd-intro-txt" style="margin:0 0 14px;">${skLoc(info, 'lead')}</p>
       ${info.sections.map(s => `
         <div class="sk-tips" style="margin-bottom:12px;">
-          <div class="sk-tips-h">${s.h}</div>
-          <ul class="sk-tips-list">${s.items.map(it => `<li>${it}</li>`).join('')}</ul>
+          <div class="sk-tips-h">${skLoc(s, 'h')}</div>
+          <ul class="sk-tips-list">${skLocA(s, 'items').map(it => `<li>${it}</li>`).join('')}</ul>
         </div>`).join('')}`;
   }
   function openSkInterview() { _skState.view = 'interview'; renderStudyKr(); window.scrollTo(0, 0); }
   function renderSkInterview() {
     const hub = document.getElementById('studykr-hub'); if (!hub) return;
     hub.innerHTML = `
-      <button type="button" class="topik-back" onclick="studyKrBack()"><i class="fa-solid fa-chevron-left"></i> Темы</button>
+      <button type="button" class="topik-back" onclick="studyKrBack()"><i class="fa-solid fa-chevron-left"></i> ${skUi('Темы', 'Mavzular')}</button>
       <div class="rd-head">
         <div class="rd-head-emoji" aria-hidden="true">🎤</div>
         <div class="rd-head-info">
-          <h2 class="rd-head-title">Собеседование в вуз</h2>
+          <h2 class="rd-head-title">${skUi('Собеседование в вуз', 'OTM suhbati')}</h2>
           <div class="rd-head-ko ko">대학 면접 · 예상 질문과 답변</div>
-          <div class="rd-head-meta">${STUDY_KR.interview.length} вопросов · нажми вопрос, чтобы увидеть образец ответа</div>
+          <div class="rd-head-meta">${STUDY_KR.interview.length} ${skUi('вопросов · нажми вопрос, чтобы увидеть образец ответа', 'savol · namunaviy javobni koʻrish uchun savolni bosing')}</div>
         </div>
       </div>
       <div class="sk-list">
@@ -15805,19 +16651,19 @@
           <div class="sk-item" id="sk-item-${i}">
             <button type="button" class="sk-q" onclick="skToggle(${i})">
               <span class="sk-q-n">${i + 1}</span>
-              <span class="sk-q-body"><span class="sk-q-ko ko">${q.ko}</span><span class="sk-q-ru">${q.ru}</span></span>
+              <span class="sk-q-body"><span class="sk-q-ko ko">${q.ko}</span><span class="sk-q-ru">${skLoc(q, 'ru')}</span></span>
               <i class="fa-solid fa-chevron-down sk-q-chev" aria-hidden="true"></i>
             </button>
             <div class="sk-a" id="sk-a-${i}" hidden>
-              <div class="sk-a-label">📝 Образец ответа <button type="button" class="sk-a-spk" onclick="skSpeakAnswer(${i}, this)"><i class="fa-solid fa-volume-high"></i> Слушать</button></div>
+              <div class="sk-a-label">📝 ${skUi('Образец ответа', 'Namunaviy javob')} <button type="button" class="sk-a-spk" onclick="skSpeakAnswer(${i}, this)"><i class="fa-solid fa-volume-high"></i> ${skUi('Слушать', 'Tinglash')}</button></div>
               <div class="sk-a-ko ko">${q.aKo}</div>
-              <div class="sk-a-ru">${q.aRu}</div>
+              <div class="sk-a-ru">${skLoc(q, 'aRu')}</div>
             </div>
           </div>`).join('')}
       </div>
       <div class="sk-tips">
-        <div class="sk-tips-h">💡 Как отвечать</div>
-        <ul class="sk-tips-list">${STUDY_KR.tips.map(t => `<li>${t}</li>`).join('')}</ul>
+        <div class="sk-tips-h">💡 ${skUi('Как отвечать', 'Qanday javob berish')}</div>
+        <ul class="sk-tips-list">${skLocA(STUDY_KR, 'tips').map(t => `<li>${t}</li>`).join('')}</ul>
       </div>`;
   }
   function skSpeakAnswer(i, btn) { const q = STUDY_KR.interview[i]; if (q) skSpeak(q.aKo, btn); }
@@ -17019,13 +17865,15 @@
   // ── Озвучка транскрипта 듣기 через Web Speech (ko-KR) — для экзаменов без аудиофайла (напр. EBS) ──
   let _examSpeakLines = null, _examSpeakIdx = 0, _examSpeakBtn = null;
   function stopExamScript() {
+    _koGen++;
     try { speechSynthesis.cancel(); } catch (_) {}
+    stopAudioPlayback();
     _examSpeakLines = null; _examSpeakIdx = 0;
     if (_examSpeakBtn && _examSpeakBtn.dataset.idle) { _examSpeakBtn.classList.remove('playing'); _examSpeakBtn.innerHTML = _examSpeakBtn.dataset.idle; }
     _examSpeakBtn = null;
   }
   function speakExamScript(btn) {
-    if (!('speechSynthesis' in window)) { toast('Голос недоступен в этом браузере'); return; }
+    if (!ttsProxyEnabled() && !('speechSynthesis' in window)) { toast('Голос недоступен в этом браузере'); return; }
     const st = _examState; if (!st) return;
     const q = st.questions[st.idx];
     if (!q || !q.script) return;
@@ -17039,15 +17887,10 @@
     const next = () => {
       if (!_examSpeakLines || _examSpeakIdx >= _examSpeakLines.length) { stopExamScript(); return; }
       let line = _examSpeakLines[_examSpeakIdx++];
-      let pitch = 1.05, text = line;
-      const m = line.match(/^(남자|여자|남|여)\s*[:：]\s*(.*)$/); // снять метку говорящего, развести голоса по высоте
-      if (m) { text = m[2]; pitch = /남/.test(m[1]) ? 0.8 : 1.25; }
-      const u = new SpeechSynthesisUtterance(text);
-      u.lang = 'ko-KR';
-      u.rate = slow ? 0.6 : 0.92;
-      u.pitch = pitch;
-      u.onend = next; u.onerror = next;
-      speechSynthesis.speak(u);
+      let pitch = 1.05, text = line, voice = TTS_VOICE_F;
+      const m = line.match(/^(남자|여자|남|여)\s*[:：]\s*(.*)$/); // снять метку говорящего, развести голоса
+      if (m) { text = m[2]; const male = /남/.test(m[1]); pitch = male ? 0.8 : 1.25; voice = male ? TTS_VOICE_M : TTS_VOICE_F; }
+      _koSpeakOne(text, { slow: slow, rate: slow ? 0.6 : 0.92, pitch: pitch, voice: voice }, next);
     };
     next();
   }
@@ -17155,9 +17998,9 @@
           <div class="exam-score-note">${score >= 70 ? '🌟 Отличный результат!' : score >= 50 ? '👍 Хорошо, продолжай!' : '🌱 Тренируйся — всё получится!'}</div>
           ${byTime ? '<div class="exam-score-time">⏱ Время вышло</div>' : ''}
         </div>
-        <div class="exam-review-head">Разбор ответов</div>
+        <div class="exam-review-head">${t('exam.reviewHead')}</div>
         <div class="exam-review">${review}</div>
-        <div class="exam-tbl-head">Твои ответы</div>
+        <div class="exam-tbl-head">${t('exam.yourAnswers')}</div>
         <div class="exam-ansgrid">${st.questions.map((q, i) => {
           const mine = st.answers[q.n];
           const ok = mine === q.answer;
@@ -17166,9 +18009,9 @@
           const right = !ok ? `<span class="exam-ans-right">✓${TOPIK_CIRCLED[q.answer - 1]}</span>` : '';
           return `<div class="exam-ans ${cls}"><span class="exam-ans-n">${i + 1}</span><span class="exam-ans-pick">${pick}</span>${right}</div>`;
         }).join('')}</div>
-        <div class="exam-tbl-legend"><span><span class="dot" style="background:rgba(122,158,118,.5)"></span>правильно</span><span><span class="dot" style="background:rgba(201,89,89,.45)"></span>неправильно</span></div>
-        <button type="button" class="btn btn-rose btn-block" style="margin-top:18px;" onclick="shareExamCard()"><i class="fa-solid fa-share-nodes"></i> Поделиться результатом</button>
-        <button type="button" class="btn btn-primary btn-block" style="margin-top:10px;" onclick="closeExam()">Готово</button>
+        <div class="exam-tbl-legend"><span><span class="dot" style="background:rgba(122,158,118,.5)"></span>${t('exam.correct')}</span><span><span class="dot" style="background:rgba(201,89,89,.45)"></span>${t('exam.incorrect')}</span></div>
+        <button type="button" class="btn btn-rose btn-block" style="margin-top:18px;" onclick="shareExamCard()"><i class="fa-solid fa-share-nodes"></i> ${t('exam.shareRes')}</button>
+        <button type="button" class="btn btn-primary btn-block" style="margin-top:10px;" onclick="closeExam()">${t('exam.ready')}</button>
       </div>`;
     st.lastResult = { score, correct, pct };
     ov.scrollTop = 0;
@@ -17186,7 +18029,7 @@
   }
   async function shareExamCard() {
     const st = _examState;
-    if (!st || !st.lastResult) { toast('Сначала заверши тест 🌸'); return;}
+    if (!st || !st.lastResult) { toast(t('share.finishFirst')); return;}
     const { score, correct, pct } = st.lastResult;
     const W = 1080, H = 1350;
     const c = document.createElement('canvas');
@@ -17221,7 +18064,7 @@
     x.textAlign = 'center';
     x.fillStyle = '#E07686';
     x.font = '600 34px Inter, sans-serif';
-    x.fillText('ТОПИК I · МОК-ЭКЗАМЕН', W / 2, cardY + 92);
+    x.fillText(t('share.examHeader'), W / 2, cardY + 92);
     x.fillStyle = '#5C2A33';
     x.font = '700 56px "Noto Sans KR", sans-serif';
     x.fillText(st.label, W / 2, cardY + 180);
@@ -17233,9 +18076,9 @@
     x.fillText('/' + st.total, W / 2 + 175, cardY + 415);
     x.fillStyle = 'rgba(92,42,51,.6)';
     x.font = '500 44px Inter, sans-serif';
-    x.fillText(`верно ${correct} из ${st.questions.length} · ${pct}%`, W / 2, cardY + 510);
+    x.fillText(t('share.correctOf', { c: correct, n: st.questions.length, pct: pct }), W / 2, cardY + 510);
     x.font = '52px serif';
-    x.fillText(score >= 70 ? '🌟 Отличный результат!' : score >= 50 ? '🌸 Хорошая база!' : '🌱 Путь начат!', W / 2, cardY + 600);
+    x.fillText(score >= 70 ? t('share.resGreat') : score >= 50 ? t('share.resGood') : t('share.resStart'), W / 2, cardY + 600);
     // мишка
     const bear = await _loadImg('assets/bear2.png');
     if (bear) {
@@ -17246,17 +18089,17 @@
     x.textAlign = 'left';
     x.fillStyle = '#5C2A33';
     x.font = '700 46px Inter, sans-serif';
-    x.fillText('Учи корейский с Madie', 100, H - 200);
+    x.fillText(t('share.learnWith'), 100, H - 200);
     x.fillStyle = 'rgba(92,42,51,.55)';
     x.font = '500 36px Inter, sans-serif';
-    x.fillText('Korean with Madie 🌸 реальные тесты ТОПИК', 100, H - 140);
+    x.fillText(t('share.tagline'), 100, H - 140);
     // поделиться / скачать
     c.toBlob(async blob => {
-      if (!blob) { toast('Не получилось создать картинку'); return; }
+      if (!blob) { toast(t('share.imgFail')); return; }
       const file = new File([blob], 'madie-topik-result.png', { type: 'image/png' });
       if (navigator.canShare && navigator.canShare({ files: [file] })) {
         try {
-          await navigator.share({ files: [file], title: 'Мой результат ТОПИК', text: 'Мой результат мок-экзамена ТОПИК I в Korean with Madie 🌸' });
+          await navigator.share({ files: [file], title: t('share.shareTitle'), text: t('share.shareText') });
           return;
         } catch (e) { if (e && e.name === 'AbortError') return; }
       }
@@ -17266,7 +18109,7 @@
       a.download = 'madie-topik-result.png';
       a.click();
       setTimeout(() => URL.revokeObjectURL(a.href), 4000);
-      toast('Карточка сохранена — выложи в сторис! 📸', 'var(--sage)');
+      toast(t('share.saved'), 'var(--sage)');
     }, 'image/png');
   }
   function closeExam() {
@@ -17274,7 +18117,7 @@
     stopExamScript();
     const finished = _examState && _examState.finished;
     if (_examState && !finished) {
-      if (!confirm('Выйти из теста? Прогресс не сохранится.')) { startExamTimer(); return; }
+      if (!confirm(t('exam.leaveConfirm'))) { startExamTimer(); return; }
     }
     _examState = null;
     document.body.style.overflow = '';
@@ -17461,13 +18304,13 @@
       // Enter/Space, видимый focus-ring и понятная подпись для скринридера.
       const tag = interactive ? 'button' : 'div';
       const typeAttr = interactive ? 'type="button"' : '';
-      const safeTitle = String(l.title || '').replace(/"/g, '&quot;');
-      const ariaStatus = completed ? 'пройден' : current ? 'текущий' : admin ? 'открыт' : 'закрыт';
-      const aria = `aria-label="Урок ${l.num} — ${safeTitle} (${ariaStatus})"`;
+      const safeTitle = String(lessonTitle(l) || '').replace(/"/g, '&quot;');
+      const ariaStatus = completed ? t('a11y.lessonDone') : current ? t('a11y.lessonCurrent') : admin ? t('a11y.lessonOpen') : t('a11y.lessonLocked');
+      const aria = `aria-label="${t('lesson.lesson')} ${l.num} — ${safeTitle} (${ariaStatus})"`;
       return `<${tag} ${typeAttr} ${onclick} ${aria} style="position:absolute; left:${pos[i].x - 46}px; top:${pos[i].y}px; cursor:${cursor}; text-align:center; width:92px; background:none; border:none; padding:0; color:inherit; font-family:inherit; ${!interactive ? 'opacity:.75;' : ''}">
         ${bearHtml}
         <div class="lesson-tile ${status}">${body}</div>
-        <div style="font-size:11.5px; font-weight:${current ? 700 : 500}; color:${titleColor}; margin-top:8px; line-height:1.2;">${l.title}</div>
+        <div style="font-size:11.5px; font-weight:${current ? 700 : 500}; color:${titleColor}; margin-top:8px; line-height:1.2;">${lessonTitle(l)}</div>
         ${current ? (() => {
           const slidesN = Array.isArray(l.slides) ? l.slides.length : 0;
           const savedStage = (p.stages && Number(p.stages[l.id])) || 0;
@@ -17532,7 +18375,7 @@
         <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:14px;">
           <div>
             <div class="page-eyebrow">УРОК ${l.num} · ПОВТОРЕНИЕ</div>
-            <div class="display" style="font-size: 22px; color: var(--berry); margin-top: 4px; line-height:1.2;">${l.title}</div>
+            <div class="display" style="font-size: 22px; color: var(--berry); margin-top: 4px; line-height:1.2;">${lessonTitle(l)}</div>
           </div>
           <div onclick="this.closest('.modal-bg').remove()" style="font-size:24px; color:var(--soft); cursor:pointer;">×</div>
         </div>
@@ -17584,7 +18427,7 @@
         <div style="display:flex; justify-content:space-between; gap: 14px; position: relative; padding-right: 96px;">
           <div style="flex:1; min-width:0;">
             <div class="page-eyebrow" style="color:var(--text2);">${t('hero.eyebrow', { num: cur.num })}</div>
-            <div class="display" style="font-size:26px; line-height:1.05; color:var(--berry); margin-top: 6px;">${cur.title}</div>
+            <div class="display" style="font-size:26px; line-height:1.05; color:var(--berry); margin-top: 6px;">${lessonTitle(cur)}</div>
             <div style="font-size:13px; color:var(--text2); margin-top: 6px;">
               ${cur.ko ? `<span class="ko" style="font-weight:600;">${cur.ko}</span>` : ''}
               ${cur.ru ? ` · <em>${cur.ru}</em>` : ''}
@@ -17724,26 +18567,26 @@
     return `
       <div class="feed-card feed-card-rose">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
-          <span class="chip chip-coral">🌸 ДОБРО ПОЖАЛОВАТЬ</span>
+          <span class="chip chip-coral">${t('wf.welcome')}</span>
         </div>
-        <div style="font-weight:700; color:var(--berry); font-size:16px;">Привет! Это твоя лента 🌸</div>
-        <div style="font-size:13px; color:var(--soft); margin-top:6px; line-height:1.5;">Здесь будут новости, слова недели и культурные заметки от Мади. А пока — начни с урока или мини-игры!</div>
-        <button type="button" onclick="switchScreen('lessons')" class="btn btn-primary btn-block" style="margin-top:12px;">Начать учиться →</button>
+        <div style="font-weight:700; color:var(--berry); font-size:16px;">${t('wf.hi')}</div>
+        <div style="font-size:13px; color:var(--soft); margin-top:6px; line-height:1.5;">${t('wf.intro')}</div>
+        <button type="button" onclick="switchScreen('lessons')" class="btn btn-primary btn-block" style="margin-top:12px;">${t('wf.start')}</button>
       </div>
       <div class="feed-card">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
-          <span class="chip chip-gold">🌸 СЛОВО ДНЯ</span>
+          <span class="chip chip-gold">${t('wf.wod')}</span>
         </div>
         <div class="ko" style="font-size:30px; font-weight:700; color:var(--berry); line-height:1.1;">안녕하세요</div>
-        <div style="font-size:12px; color:var(--soft); margin-top:4px;">[annyeonghaseyo] · Здравствуйте</div>
-        <div class="ko-quote" style="margin-top:12px;">Самое тёплое корейское приветствие 🌸</div>
+        <div style="font-size:12px; color:var(--soft); margin-top:4px;">${t('wf.wodGloss')}</div>
+        <div class="ko-quote" style="margin-top:12px;">${t('wf.wodNote')}</div>
       </div>
       <div class="feed-card">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
-          <span class="chip chip-berry">💡 СОВЕТ</span>
+          <span class="chip chip-berry">${t('wf.tip')}</span>
         </div>
-        <div style="font-weight:700; color:var(--berry); font-size:15px;">Учись понемногу каждый день</div>
-        <div style="font-size:13px; color:var(--soft); margin-top:6px; line-height:1.5;">Поставь цель дня и заходи каждый день — так стрик 🔥 растёт, а новые слова запоминаются легче.</div>
+        <div style="font-weight:700; color:var(--berry); font-size:15px;">${t('wf.tipTitle')}</div>
+        <div style="font-size:13px; color:var(--soft); margin-top:6px; line-height:1.5;">${t('wf.tipBody')}</div>
       </div>`;
   }
   function renderCustomFeedPosts() {
@@ -18217,7 +19060,7 @@
   function socialUserName() {
     const u = Store.get('user');
     if (u && u.name) return u.name;
-    return 'Гостья';
+    return gw('Гостья', 'Гость');
   }
 
   // Live cache of user avatars by social uid. Comments only store the avatar
@@ -18225,13 +19068,15 @@
   // each author across all their past comments/replies.
   const _userAvatars = {};
   const _watchedAvatars = new Set();
+  const _avatarOffs = {};                       // uid → функция отписки от avatar-слушателя
   function watchUserAvatar(uid) {
     if (!uid || _watchedAvatars.has(uid)) return;
     // Skip guest/local-only ids — they don't live under users/{uid}
     if (uid.startsWith('g_')) return;
     if (typeof _db === 'undefined') return;
     _watchedAvatars.add(uid);
-    _db.ref(`users/${uid}/avatar`).on('value', snap => {
+    const ref = _db.ref(`users/${uid}/avatar`);
+    const handler = snap => {
       const v = snap.val() || null;
       if (v !== _userAvatars[uid]) {
         _userAvatars[uid] = v;
@@ -18240,7 +19085,17 @@
         Object.keys(_structureHashCache).forEach(k => delete _structureHashCache[k]);
         refreshFeedSocial();
       }
-    });
+    };
+    ref.on('value', handler);
+    _avatarOffs[uid] = () => { try { ref.off('value', handler); } catch (_) {} };
+  }
+  // Отписаться от всех avatar-слушателей и сбросить кэш — при logout/смене пользователя,
+  // иначе слушатели прежней личности продолжают дёргать refreshFeedSocial (утечка).
+  function detachAvatarWatchers() {
+    Object.values(_avatarOffs).forEach(off => { try { off(); } catch (_) {} });
+    Object.keys(_avatarOffs).forEach(k => delete _avatarOffs[k]);
+    _watchedAvatars.clear();
+    Object.keys(_userAvatars).forEach(k => delete _userAvatars[k]);
   }
   function watchAvatarsForComments() {
     Object.values(_feedComments).forEach(list => {
@@ -18381,7 +19236,7 @@
           </div>
           <div class="feed-comment-text">${escAttrSafe(c.text)}</div>
           <div class="comment-actions">
-            <button class="comment-action comment-like-btn ${iLiked ? 'liked' : ''}" data-pid="${pid}" data-cid="${c.id}" onclick="toggleCommentLike('${pid}', '${c.id}', this)">
+            <button class="comment-action comment-like-btn ${iLiked ? 'liked' : ''}" data-pid="${pid}" data-cid="${c.id}" aria-label="Нравится" onclick="toggleCommentLike('${pid}', '${c.id}', this)">
               <i class="${iLiked ? 'fa-solid' : 'fa-regular'} fa-heart"></i>
               <span class="comment-like-count">${likeN || ''}</span>
             </button>
@@ -18445,7 +19300,7 @@
           </div>
           <div class="feed-comment-text">${escAttrSafe(r.text)}</div>
           <div class="comment-actions">
-            <button class="comment-action reply-like-btn ${iLiked ? 'liked' : ''}" data-pid="${pid}" data-cid="${cid}" data-rid="${r.rid}" onclick="toggleReplyLike('${pid}', '${cid}', '${r.rid}', this)">
+            <button class="comment-action reply-like-btn ${iLiked ? 'liked' : ''}" data-pid="${pid}" data-cid="${cid}" data-rid="${r.rid}" aria-label="Нравится" onclick="toggleReplyLike('${pid}', '${cid}', '${r.rid}', this)">
               <i class="${iLiked ? 'fa-solid' : 'fa-regular'} fa-heart"></i>
               <span class="reply-like-count">${likeN || ''}</span>
             </button>
@@ -18869,6 +19724,61 @@
     streak:'Дни', time:'Время', lessons:'Уроки', games:'Игры',
     perfect:'Идеал', vocab:'Слова', hangul:'Хангыль', speak:'Произношение', level:'Уровни', special:'Особые'
   };
+  // Переводы достижений (en/uz) по id — ru берётся из ACHIEVEMENTS. [title, desc]
+  const ACH_TR = {
+    'streak-1':   { en:['First step','Open the app'], uz:['Birinchi qadam','Ilovaga kiring'] },
+    'streak-3':   { en:['Three days in a row','3 different days in the app'], uz:['Uch kun ketma-ket','Ilovada 3 xil kun'] },
+    'streak-7':   { en:['Week of power','7 days with the app'], uz:['Kuch haftasi','Ilova bilan 7 kun'] },
+    'streak-14':  { en:['Two weeks','14 days — a solid habit'], uz:['Ikki hafta','14 kun — mustahkam odat'] },
+    'streak-30':  { en:['Month of persistence','30 days in the journal'], uz:['Sabr oyi','Kundalikda 30 kun'] },
+    'streak-100': { en:['A hundred — that’s you','100 days in the app'], uz:['Yuztalik — bu sen','Ilovada 100 kun'] },
+    'time-30':    { en:['Half an hour together','30 minutes with Madie'], uz:['Birga yarim soat','Madie bilan 30 daqiqa'] },
+    'time-120':   { en:['Two hours','120 minutes of practice'], uz:['Ikki soat','120 daqiqa mashq'] },
+    'time-300':   { en:['5 hours of mastery','300 minutes in the app'], uz:['5 soat mahorat','Ilovada 300 daqiqa'] },
+    'time-600':   { en:['10 hours of immersion','600 minutes with Korean'], uz:['10 soat chuqurlashish','Koreys tili bilan 600 daqiqa'] },
+    'time-1500':  { en:['25 hours','1500 minutes together'], uz:['25 soat','Birga 1500 daqiqa'] },
+    'lesson-1':   { en:['First lesson','Complete your first lesson'], uz:['Birinchi dars','Birinchi darsni tugating'] },
+    'lesson-5':   { en:['5 lessons','Complete 5 lessons'], uz:['5 dars','5 darsni tugating'] },
+    'lesson-10':  { en:['10 lessons','10 lessons done'], uz:['10 dars','10 dars tugadi'] },
+    'lesson-30':  { en:['Lesson expert','30 lessons completed'], uz:['Dars ustasi','30 dars tugadi'] },
+    'games-1':    { en:['First game','Play any mini-game'], uz:['Birinchi oʻyin','Istalgan mini-oʻyinni oʻynang'] },
+    'games-10':   { en:['10 games','Play games 10 times'], uz:['10 oʻyin','Oʻyinlarni 10 marta oʻynang'] },
+    'games-50':   { en:['50 games','Play 50 times'], uz:['50 oʻyin','50 marta oʻynang'] },
+    'games-all':  { en:['Tried everything','Play each of the 9 games'], uz:['Hammasini sinab koʻrdi','9 oʻyinning har birini oʻynang'] },
+    'perfect-match':     { en:['Picture champion','5/5 in “Match the Picture”'], uz:['Rasm chempioni','«Rasmni tanla»da 5/5'] },
+    'perfect-memory':    { en:['Perfect memory','Memory with no extra moves'], uz:['Mukammal xotira','Xotira — ortiqcha yurishsiz'] },
+    'perfect-listen':    { en:['Perfect ear','5/5 in “Listening”'], uz:['Mukammal eshitish','«Eshit»da 5/5'] },
+    'perfect-translate': { en:['Translator','6/6 in “Quick Translate”'], uz:['Tarjimon','«Tez tarjima»da 6/6'] },
+    'perfect-build':     { en:['Syllable master','5/5 in “Build a Word”'], uz:['Boʻgʻin ustasi','«Soʻz tuz»da 5/5'] },
+    'perfect-numbers':   { en:['Numbers in pocket','6/6 in “Numbers”'], uz:['Raqamlar choʻntakda','«Raqamlar»da 6/6'] },
+    'perfect-sentence':  { en:['Grammarian','4/4 in “Build a Phrase”'], uz:['Grammatik','«Ibora tuz»da 4/4'] },
+    'perfect-kpop':      { en:['K-Pop fan','4/4 in K-Pop Fill'], uz:['K-Pop muxlisi','K-Pop Fillda 4/4'] },
+    'vocab-10':   { en:['10 words','Learn 10 different words'], uz:['10 soʻz','10 xil soʻz oʻrganing'] },
+    'vocab-50':   { en:['50 words','50 words collected'], uz:['50 soʻz','50 soʻz yigʻildi'] },
+    'vocab-100':  { en:['A hundred words','100 words learned'], uz:['Yuz soʻz','100 soʻz oʻrganildi'] },
+    'vocab-300':  { en:['Dictionary','300 words — a real dictionary'], uz:['Lugʻat','300 soʻz — haqiqiy lugʻat'] },
+    'hangul-tap-10':  { en:['First syllables','Build 10 syllables in Hangul Lab'], uz:['Birinchi boʻgʻinlar','Hangul Labda 10 boʻgʻin tuzing'] },
+    'hangul-tap-50':  { en:['Syllable mechanic','50 syllables in the builder'], uz:['Boʻgʻin mexanigi','Konstruktorda 50 boʻgʻin'] },
+    'hangul-saved-5': { en:['Collector','Save 5 syllables to cards'], uz:['Kolleksioner','5 boʻgʻinni kartaga saqlang'] },
+    'speak-1':        { en:['First word aloud','Say a word into the mic'], uz:['Birinchi soʻz ovoz chiqarib','Mikrofonga soʻz ayting'] },
+    'speak-10':       { en:['Voice grows stronger','10 correctly pronounced words'], uz:['Ovoz kuchaymoqda','10 ta toʻgʻri talaffuz'] },
+    'speak-50':       { en:['Speaking fluently','50 correct pronunciations'], uz:['Ravon gapiraman','50 ta toʻgʻri talaffuz'] },
+    'speak-streak-5': { en:['Five in a row','5 correct pronunciations in a row'], uz:['Besh ketma-ket','Ketma-ket 5 ta toʻgʻri talaffuz'] },
+    'level-5':    { en:['Level 5','Reach level 5'], uz:['5-daraja','5-darajaga yeting'] },
+    'level-10':   { en:['Level 10','Reach level 10'], uz:['10-daraja','10-darajaga yeting'] },
+    'level-20':   { en:['Level 20','Reach level 20'], uz:['20-daraja','20-darajaga yeting'] },
+    'profile':    { en:['It’s me','Upload a profile photo'], uz:['Bu men','Profil rasmini yuklang'] },
+    'calendar':   { en:['Calendar buff','Open the Korean holiday calendar'], uz:['Taqvim bilimdoni','Koreys bayramlari taqvimini oching'] },
+    'culture':    { en:['Curiosity','Open the “Culture” block'], uz:['Qiziquvchanlik','«Madaniyat» blokini oching'] }
+  };
+  const ACH_CAT_TR = {
+    en: { streak:'Days', time:'Time', lessons:'Lessons', games:'Games', perfect:'Perfect', vocab:'Words', hangul:'Hangul', speak:'Speaking', level:'Levels', special:'Special' },
+    uz: { streak:'Kunlar', time:'Vaqt', lessons:'Darslar', games:'Oʻyinlar', perfect:'Ideal', vocab:'Soʻzlar', hangul:'Hangul', speak:'Talaffuz', level:'Darajalar', special:'Maxsus' }
+  };
+  function _achLang() { return (APP_LANG === 'en' || APP_LANG === 'uz') ? APP_LANG : null; }
+  function achTitle(a) { const L = _achLang(); return (L && ACH_TR[a.id] && ACH_TR[a.id][L]) ? ACH_TR[a.id][L][0] : a.title; }
+  function achDesc(a)  { const L = _achLang(); return (L && ACH_TR[a.id] && ACH_TR[a.id][L]) ? ACH_TR[a.id][L][1] : a.desc; }
+  function achCatLabel(cat) { const L = _achLang(); return (L && ACH_CAT_TR[L] && ACH_CAT_TR[L][cat]) ? ACH_CAT_TR[L][cat] : (ACH_CAT_LABEL[cat] || cat); }
 
   function totalGamePlays(s) {
     const gp = s.gamePlays || {};
@@ -18960,8 +19870,8 @@
       <div style="font-size:34px; flex-shrink:0;">${a.icon}</div>
       <div style="min-width:0;">
         <div style="font-size:9px; letter-spacing:.2em; color:var(--gold-ink); font-weight:700;">⭐ ДОСТИЖЕНИЕ</div>
-        <div style="font-weight:700; color:var(--berry); font-size:14px; margin-top:1px;">${a.title}</div>
-        <div style="font-size:11px; color:var(--soft); margin-top:1px;">${a.desc}</div>
+        <div style="font-weight:700; color:var(--berry); font-size:14px; margin-top:1px;">${achTitle(a)}</div>
+        <div style="font-size:11px; color:var(--soft); margin-top:1px;">${achDesc(a)}</div>
         ${a.xp > 0 ? `<div style="font-size:11px; color:var(--coral); font-weight:700; margin-top:3px;">+${a.xp} XP</div>` : ''}
       </div>
     `;
@@ -19065,7 +19975,7 @@
     strip.innerHTML = recent.map(a => `
       <div onclick="showAllAchievements()" style="flex-shrink:0; width:60px; cursor:pointer;">
         <div style="width:60px; height:60px; border-radius:16px; background: linear-gradient(140deg, var(--gold), var(--coral)); display:flex; align-items:center; justify-content:center; font-size:26px; box-shadow: 0 4px 12px -4px rgba(var(--accent-rgb),.5);">${a.icon}</div>
-        <div style="font-size:9.5px; color:var(--berry); text-align:center; margin-top:4px; line-height:1.15; font-weight:600; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${a.title}</div>
+        <div style="font-size:9.5px; color:var(--berry); text-align:center; margin-top:4px; line-height:1.15; font-weight:600; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${achTitle(a)}</div>
       </div>
     `).join('');
   }
@@ -19112,7 +20022,7 @@
             if (items.length === 0) return '';
             return `
               <div class="section-head" style="margin-top:10px;">
-                <div class="left"><div class="rule"></div><span class="title">${ACH_CAT_LABEL[c] || c}</span></div>
+                <div class="left"><div class="rule"></div><span class="title">${achCatLabel(c)}</span></div>
                 <span class="meta">${items.filter(a => unlocked.includes(a.id)).length}/${items.length}</span>
               </div>
               <div style="display:grid; grid-template-columns: repeat(4, 1fr); gap:8px; margin-bottom:14px;">
@@ -19126,7 +20036,7 @@
                   const progBar = (ppct > 0 && ppct < 100) ? `<div class="ach-mini-prog"><span style="width:${ppct}%"></span></div>` : '';
                   return `<div onclick="showAchievementDetail('${a.id}')" style="aspect-ratio:1; ${style} border-radius:14px; display:flex; flex-direction:column; align-items:center; justify-content:center; cursor:pointer; padding:6px; text-align:center;">
                     <div style="font-size:24px; line-height:1;">${a.icon}</div>
-                    <div style="font-size:8.5px; font-weight:600; margin-top:3px; line-height:1.1; opacity:${got?1:.7};">${a.title}</div>
+                    <div style="font-size:8.5px; font-weight:600; margin-top:3px; line-height:1.1; opacity:${got?1:.7};">${achTitle(a)}</div>
                     ${progBar}
                   </div>`;
                 }).join('')}
@@ -19166,8 +20076,8 @@
     m.innerHTML = `
       <div class="modal-card" style="max-width: 340px; text-align:center;">
         <div style="font-size:64px; line-height:1;">${a.icon}</div>
-        <div class="display" style="font-size:22px; color:var(--berry); margin-top:8px;">${a.title}</div>
-        <div style="font-size:13px; color:var(--soft); margin-top:6px; line-height:1.45;">${a.desc}</div>
+        <div class="display" style="font-size:22px; color:var(--berry); margin-top:8px;">${achTitle(a)}</div>
+        <div style="font-size:13px; color:var(--soft); margin-top:6px; line-height:1.45;">${achDesc(a)}</div>
         ${a.xp > 0 ? `<div class="chip chip-gold" style="margin-top:12px;">+${a.xp} XP</div>` : ''}
         <div style="margin-top:16px; padding-top:14px; border-top:1px solid var(--line);">
           ${got
@@ -19340,7 +20250,7 @@
     const pct = Math.min(100, Math.round((cur / goal) * 100));
     const done = cur >= goal;
     slot.innerHTML = `
-      <div onclick="openDailyGoalSettings()" class="card card-press" style="flex:1; min-width:0; padding:14px; cursor:pointer; display:flex; flex-direction:column; gap:8px; ${done ? 'background:linear-gradient(135deg, rgba(229,180,60,.20), rgba(255,255,255,.7));' : ''}">
+      <div onclick="openDailyGoalSettings()" class="card card-press${done ? ' goal-done' : ''}" style="flex:1; min-width:0; padding:14px; cursor:pointer; display:flex; flex-direction:column; gap:8px; ${done ? 'background:linear-gradient(135deg, rgba(229,180,60,.20), rgba(255,255,255,.7));' : ''}">
         <div style="display:flex; align-items:center; justify-content:space-between;">
           <span style="font-size:21px;">${done ? '🎉' : '🎯'}</span>
           <span style="font-size:12px; font-weight:800; color:${done ? 'var(--gold-ink)' : 'var(--coral)'}; flex-shrink:0;">${cur}/${goal}</span>
@@ -19466,11 +20376,28 @@
     { min: 13, emoji: '🌟', label: 'Мастер',      labelM: 'Мастер',     ko: '사범',   desc: 'Свободно говоришь о повседневном' },
     { min: 19, emoji: '👑', label: 'Сэнсэй',      labelM: 'Сэнсэй',     ko: '사부',   desc: 'Тебе можно учить других' }
   ];
-  // getRank(level [, metaGender]) — label склоняется по полу. Для текущего юзера
-  // берётся его пол из настроек; для ученика в админке — передай meta.gender 'Ж'/'М'.
+  // Переводы рангов (en/uz, без рода) по индексу — ru берётся из RANKS с учётом пола.
+  const RANK_TR = [
+    { en:['Beginner','First steps in Korean'],            uz:['Boshlovchi','Koreys tilida birinchi qadamlar'] },
+    { en:['Apprentice','Getting to know Hangul'],          uz:['Shogird','Hangul bilan tanishyapsiz'] },
+    { en:['Student','Reading syllables confidently'],      uz:['Oʻquvchi','Boʻgʻinlarni ishonch bilan oʻqiysiz'] },
+    { en:['Connoisseur','You understand basic phrases'],   uz:['Bilimdon','Asosiy iboralarni tushunasiz'] },
+    { en:['Master','You speak about everyday life fluently'], uz:['Usta','Kundalik hayot haqida ravon gapirasiz'] },
+    { en:['Sensei','You can teach others'],                uz:['Sensey','Boshqalarni oʻrgatishingiz mumkin'] }
+  ];
+  function _rankLang() { return (APP_LANG === 'en' || APP_LANG === 'uz') ? APP_LANG : null; }
+  // Локализованные название/описание ранга по его индексу в RANKS.
+  function rankLabelAt(r, i) { const L = _rankLang(); return (L && RANK_TR[i] && RANK_TR[i][L]) ? RANK_TR[i][L][0] : gw(r.label, r.labelM); }
+  function rankDescAt(r, i)  { const L = _rankLang(); return (L && RANK_TR[i] && RANK_TR[i][L]) ? RANK_TR[i][L][1] : r.desc; }
+  // getRank(level [, metaGender]) — для ru label склоняется по полу; для en/uz берётся
+  // безродовой перевод. Для текущего юзера пол из настроек; в админке — meta.gender 'Ж'/'М'.
   function getRank(level, metaGender) {
-    let r = RANKS[0];
-    for (const x of RANKS) if (level >= x.min) r = x;
+    let r = RANKS[0], idx = 0;
+    RANKS.forEach((x, i) => { if (level >= x.min) { r = x; idx = i; } });
+    const L = _rankLang();
+    if (L && RANK_TR[idx] && RANK_TR[idx][L]) {
+      return { ...r, label: RANK_TR[idx][L][0], desc: RANK_TR[idx][L][1] };
+    }
     const label = (metaGender === 'Ж' || metaGender === 'М')
       ? gwFor(metaGender, r.label, r.labelM)
       : gw(r.label, r.labelM);
@@ -19505,11 +20432,11 @@
                 <div style="font-size:28px;">${r.emoji}</div>
                 <div style="flex:1; min-width:0;">
                   <div style="display:flex; gap:6px; align-items:baseline;">
-                    <span style="font-weight:600; color:var(--berry); font-size:14px;">${r.label}</span>
+                    <span style="font-weight:600; color:var(--berry); font-size:14px;">${rankLabelAt(r, i)}</span>
                     <span class="ko" style="font-size:11px; color:var(--coral);">${r.ko}</span>
                     ${isCur ? `<span class="chip chip-coral" style="font-size:9px; padding:2px 8px;">${t('ranks.here')}</span>` : ''}
                   </div>
-                  <div style="font-size:11px; color:var(--soft); margin-top:2px;">${r.desc}</div>
+                  <div style="font-size:11px; color:var(--soft); margin-top:2px;">${rankDescAt(r, i)}</div>
                   <div style="font-size:10px; color:var(--hush); margin-top:3px; letter-spacing:.04em;">${t('ranks.levels', {range})}</div>
                 </div>
               </div>
@@ -19778,7 +20705,7 @@
             <div style="display:flex; align-items:flex-start; justify-content:space-between; gap:12px;">
               <div style="flex:1; min-width:0;">
                 <span class="chip chip-gold">📖 НОВЫЙ УРОК</span>
-                <div style="font-weight:600; color:var(--berry); font-size:14px; margin-top:8px;">${escHtml(l.title)}</div>
+                <div style="font-weight:600; color:var(--berry); font-size:14px; margin-top:8px;">${escHtml(lessonTitle(l))}</div>
                 ${l.koPhrase ? `<div class="ko" style="font-size:13px; color:var(--coral); margin-top:4px; font-weight:600;">${escHtml(l.koPhrase)}</div>` : ''}
                 ${l.ru ? `<div style="font-size:11.5px; color:var(--soft); margin-top:2px; font-style:italic;">${escHtml(l.ru)}</div>` : ''}
               </div>
@@ -19801,7 +20728,7 @@
         <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:14px;">
           <div>
             <div class="page-eyebrow">УРОК ОТ МАДИ</div>
-            <div class="display" style="font-size: 22px; color: var(--berry); margin-top: 4px; line-height:1.2;">${escHtml(l.title)}</div>
+            <div class="display" style="font-size: 22px; color: var(--berry); margin-top: 4px; line-height:1.2;">${escHtml(lessonTitle(l))}</div>
           </div>
           <div onclick="this.closest('.modal-bg').remove()" style="font-size:24px; color:var(--soft); cursor:pointer;">×</div>
         </div>
@@ -19827,7 +20754,7 @@
   // Админ-панель: хаб с разделами (Школа / Контент) на экране «Админ».
   // Хаб → раздел → назад. Ничего не свалено в одну простыню вкладок.
   let adminCurrentTab = 'hub';
-  const ADMIN_TAB_LABELS = { flashcards:'📚 Слова', kpop:'🎵 K-Pop', video:'🎬 Видео', lesson:'📖 Уроки', feed:'📰 Лента', topik:'🎓 ТОПИК', users:'👥 Ученики', journal:'📅 Журнал', inbox:'💌 Письма' };
+  const ADMIN_TAB_LABELS = { flashcards:'📚 Слова', kpop:'🎵 K-Pop', video:'🎬 Видео', lesson:'📖 Уроки', feed:'📰 Лента', topik:'🎓 ТОПИК', users:'👥 Ученики', journal:'📅 Журнал', inbox:'💌 Письма', stats:'📊 Аналитика' };
   function renderAdminHub() {
     const unread = _feedbackCache ? Object.values(_feedbackCache).filter(f => f && !f.done).length : 0;
     const card = (tab, ico, title, sub, badge) => `
@@ -19843,6 +20770,7 @@
         ${card('journal', '📅', 'Журнал', 'расписание · отметки')}
         ${card('users', '👥', 'Ученики', 'анкеты · оплата')}
         ${card('inbox', '💌', 'Письма', 'от учениц', unread || '')}
+        ${card('stats', '📊', 'Аналитика', 'статистика школы')}
       </div>
       <div class="section-head" style="margin-top:20px;"><div class="left"><div class="rule"></div><span class="title">Контент</span></div><span class="meta">видно ученицам</span></div>
       <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:10px;">
@@ -19862,8 +20790,453 @@
           <i class="fa-solid fa-upload"></i> Импорт
           <input type="file" accept="application/json,.json" onchange="adminImportAll(event)" style="display:none;">
         </label>
+      </div>
+      <div style="background:linear-gradient(135deg, var(--blush), var(--petal)); border-radius:14px; padding:12px; margin-top:18px;">
+        <div style="font-size:12px; font-weight:700; color:var(--berry); margin-bottom:6px;"><i class="fa-solid fa-volume-high"></i> Озвучка — живой корейский голос</div>
+        <div style="font-size:10.5px; color:var(--soft); line-height:1.5; margin-bottom:8px;">Вставь адрес TTS-воркера (Cloudflare) — у всех учениц включится естественный голос <b>ko-KR</b>. Пусто — встроенный голос браузера. Инструкция: <code>serverless/tts-proxy/README.md</code>.</div>
+        <input id="admin-tts-proxy" class="input" placeholder="https://km-tts.поддомен.workers.dev" value="${escAttrSafe(ttsProxyUrl())}" style="font-size:12px;">
+        <div style="display:flex; gap:8px; margin-top:8px;">
+          <button onclick="adminSaveTtsProxy()" class="btn btn-primary" style="flex:1; padding:8px 10px; font-size:11.5px;"><i class="fa-solid fa-check"></i> Сохранить</button>
+          <button onclick="adminTestTtsProxy(this)" class="btn btn-ghost" style="flex:1; padding:8px 10px; font-size:11.5px;"><i class="fa-solid fa-play"></i> Проверить</button>
+        </div>
       </div>`;
   }
+  // Сохранить адрес TTS-воркера: локально + раздать всем через Firebase shared/config.
+  function adminSaveTtsProxy() {
+    if (!ensureAdminAccess()) return;
+    const inp = document.getElementById('admin-tts-proxy');
+    if (!inp) return;
+    const url = (inp.value || '').trim().replace(/\/+$/, '');
+    if (url && !/^https?:\/\//i.test(url)) { toast('Адрес должен начинаться с https://', 'var(--berry)'); return; }
+    try { if (url) localStorage.setItem('km_tts_proxy', url); else localStorage.removeItem('km_tts_proxy'); } catch (_) {}
+    window.KM_TTS_PROXY_URL = url;
+    if (typeof _db !== 'undefined') {
+      _db.ref('shared/config/ttsProxyUrl').set(url || null).catch(e => console.warn('tts proxy save', e));
+    }
+    toast(url ? 'Голос подключён 🌸 у всех учениц' : 'Вернули голос браузера', 'var(--ok-ink)');
+  }
+  // Проверить воркер: озвучить тестовую фразу прямо сейчас.
+  function adminTestTtsProxy(btn) {
+    const inp = document.getElementById('admin-tts-proxy');
+    const url = (inp ? inp.value : '').trim().replace(/\/+$/, '');
+    if (!url) { toast('Сначала вставь адрес воркера', 'var(--berry)'); return; }
+    const prev = window.KM_TTS_PROXY_URL;
+    window.KM_TTS_PROXY_URL = url;
+    const fb = '안녕하세요. 마디와 함께 한국어 화이팅!';
+    fetch(url.replace(/\/+$/, '') + '/tts?text=' + encodeURIComponent(fb) + '&voice=' + TTS_VOICE_F)
+      .then(r => { if (!r.ok) throw new Error(r.status); return r.blob(); })
+      .then(blob => { const a = new Audio(URL.createObjectURL(blob)); a.play().catch(() => {}); toast('Воркер отвечает ✅', 'var(--ok-ink)'); })
+      .catch(err => { window.KM_TTS_PROXY_URL = prev; toast('Не отвечает: ' + err.message + ' — проверь адрес и ключ', 'var(--berry)'); });
+  }
+
+  // ── Admin: Аналитика школы (#10) — агрегаты из Firebase, без нового бэкенда ──
+  // Подписи мини-игр для разбивки «чем пользуются» (ключи = gameKey из recordGamePlay).
+  const GAME_LABELS = {
+    flashcards: '🎴 Флешкарты',
+    match:      '🖼️ Подбери картинку',
+    build:      '🧩 Собери слово',
+    listen:     '👂 На слух',
+    kpop:       '🎵 K-Pop Fill',
+    memory:     '🧠 Память',
+    translate:  '⚡ Быстрый перевод',
+    numbers:    '🔢 Числа',
+    sentence:   '📝 Собери фразу',
+    dictation:  '✍️ Слушай и пиши',
+    writing:    '✏️ Пиши буквы'
+  };
+  // Кол-во пройденных уроков из записи пользователя (массивы Firebase могут приходить объектами).
+  function _dashLessonsDone(u) {
+    let n = 0;
+    ['lessonProgress', 'lessonProgress_m2', 'lessonProgress_m3', 'lessonProgress_m4', 'lessonProgress_m5'].forEach(k => {
+      const p = u[k];
+      if (!p) return;
+      const c = p.completed;
+      if (Array.isArray(c)) n += c.length;
+      else if (c && typeof c === 'object') n += Object.keys(c).length;
+    });
+    return n || ((u.stats && u.stats.lessons) || 0);
+  }
+  // Площадки дашборда: 'admin-stats-body' (экран Кабинета) и 'profile-stats-body' (профиль).
+  function renderAdminStats(bodyId) {
+    bodyId = bodyId || 'admin-stats-body';
+    setTimeout(() => loadAdminStats(bodyId), 0);
+    return `
+      <div class="admin-form" style="display:grid; gap:14px;">
+        <div style="background: linear-gradient(135deg, var(--blush), var(--petal)); border-radius: 14px; padding: 10px 12px; font-size: 11px; line-height: 1.5; color: var(--berry);">
+          <strong>📊 Аналитика школы.</strong> Сводка по ученицам, активности, играм и функциям. Данные из Firebase в реальном времени.
+        </div>
+        <div id="${bodyId}" style="display:grid; grid-template-columns:minmax(0,1fr); gap:14px;">
+          <div style="text-align:center; padding:26px 12px; color:var(--soft); font-size:12.5px;">Считаю статистику… 🌸</div>
+        </div>
+      </div>`;
+  }
+  async function loadAdminStats(bodyId) {
+    bodyId = bodyId || 'admin-stats-body';
+    const body = document.getElementById(bodyId);
+    if (!body) return;
+    if (typeof _db === 'undefined') {
+      body.innerHTML = `<div style="text-align:center; padding:24px 12px; color:var(--soft); font-size:12.5px;">Firebase не подключён</div>`;
+      return;
+    }
+    let usersObj = _adminUsersCache;
+    if (!usersObj || !Object.keys(usersObj).length) {
+      try {
+        const snap = await _db.ref('users').once('value');
+        usersObj = snap.val() || {};
+        _adminUsersCache = usersObj;
+      } catch (e) {
+        console.warn(e);
+        const el = document.getElementById(bodyId);
+        if (el) el.innerHTML = `<div style="text-align:center; padding:24px 12px; color:var(--soft); font-size:12.5px;">Не удалось загрузить 😔</div>`;
+        return;
+      }
+    }
+    const el = document.getElementById(bodyId);
+    if (el) el.innerHTML = renderAdminStatsHtml(usersObj);
+  }
+  function renderAdminStatsHtml(usersObj) {
+    const list = Object.entries(usersObj || {}).map(([uid, u]) => Object.assign({ uid: uid }, u)).filter(u => !u.isAdmin);
+    const total = list.length;
+    if (!total) {
+      return `<div style="text-align:center; padding:26px 12px; color:var(--soft); font-size:12.5px;">Учениц пока нет 🌱</div>`;
+    }
+    const now = Date.now(), DAY = 86400000;
+    const active1  = list.filter(u => u.lastSeen && now - u.lastSeen <= DAY).length;
+    const active7  = list.filter(u => u.lastSeen && now - u.lastSeen <= 7 * DAY).length;
+    const active30 = list.filter(u => u.lastSeen && now - u.lastSeen <= 30 * DAY).length;
+    const new30    = list.filter(u => u.joinedAt && now - u.joinedAt <= 30 * DAY).length;
+
+    const accCounts = { paid: 0, unpaid: 0, frozen: 0 };
+    list.forEach(u => { const a = accessOf(u); accCounts[a] = (accCounts[a] || 0) + 1; });
+
+    const planCounts = { free: 0, master: 0, proai: 0 };
+    list.forEach(u => { const id = (u.plan && PLANS[u.plan.id]) ? u.plan.id : 'free'; planCounts[id] = (planCounts[id] || 0) + 1; });
+
+    const lvlCounts = {}; let lvlNone = 0;
+    list.forEach(u => { const id = u.level || ''; if (!id) { lvlNone++; return; } lvlCounts[id] = (lvlCounts[id] || 0) + 1; });
+
+    const catCounts = {}; STUDENT_CATS.forEach(c => catCounts[c] = 0); let catNone = 0;
+    list.forEach(u => { const c = (u.meta && u.meta.category) || ''; if (c) catCounts[c] = (catCounts[c] || 0) + 1; else catNone++; });
+
+    let xpSum = 0, streakSum = 0, streakMax = 0, lvlSum = 0;
+    list.forEach(u => {
+      const xp = (u.stats && u.stats.xp) || 0; xpSum += xp; lvlSum += getLevel(xp);
+      const st = (u.stats && u.stats.streak) || 0; streakSum += st; if (st > streakMax) streakMax = st;
+    });
+    const avgStreak = Math.round(streakSum / total * 10) / 10;
+    const avgLevel  = Math.round(lvlSum / total * 10) / 10;
+
+    const top = list.slice().sort((a, b) => ((b.stats && b.stats.xp) || 0) - ((a.stats && a.stats.xp) || 0)).slice(0, 5);
+
+    // ── Действия учениц: игры, охват функций, минуты, слова, активность по дням ──
+    const gameAgg = {}; let totalGamePlays = 0;
+    const reach = { games: 0, lessons: 0, hangul: 0, pron: 0, ai: 0, focus: 0, words: 0, calendar: 0, culture: 0, avatar: 0 };
+    let minutesSum = 0, wordsSum = 0, lessonsSumAll = 0, focusSum = 0, pronAttempts = 0, pronCorrect = 0;
+    const dayAgg = {};
+    list.forEach(u => {
+      const st = u.stats || {};
+      const gp = (st.gamePlays && typeof st.gamePlays === 'object') ? st.gamePlays : {};
+      let uPlays = 0;
+      Object.keys(gp).forEach(k => { const v = gp[k] || 0; gameAgg[k] = (gameAgg[k] || 0) + v; totalGamePlays += v; uPlays += v; });
+      if (uPlays > 0) reach.games++;
+      const lessonsDone = _dashLessonsDone(u); lessonsSumAll += lessonsDone;
+      if (lessonsDone > 0) reach.lessons++;
+      if ((st.hangulSyllables || 0) > 0 || (st.hangulSaved || 0) > 0) reach.hangul++;
+      if ((st.pronunciationAttempts || 0) > 0) { reach.pron++; pronAttempts += st.pronunciationAttempts || 0; pronCorrect += st.pronunciationCorrect || 0; }
+      if ((st.aiLessonUsed || 0) > 0) reach.ai++;
+      const fs = st.focusSessions || 0; focusSum += fs; if (fs > 0) reach.focus++;
+      const wcount = (Array.isArray(st.wordsLearned) ? st.wordsLearned.length : 0) || st.words || 0;
+      wordsSum += wcount; if (wcount > 0) reach.words++;
+      if (st.openedCalendar) reach.calendar++;
+      if (st.openedCulture) reach.culture++;
+      if (st.hasAvatar) reach.avatar++;
+      minutesSum += st.minutesSpent || 0;
+      const xbd = (st.xpByDay && typeof st.xpByDay === 'object') ? st.xpByDay : {};
+      Object.keys(xbd).forEach(d => { dayAgg[d] = (dayAgg[d] || 0) + (xbd[d] || 0); });
+    });
+    const hoursSum = Math.round(minutesSum / 60 * 10) / 10;
+    const pronPct = pronAttempts > 0 ? Math.round(pronCorrect / pronAttempts * 100) : 0;
+
+    const fbAll    = (typeof _feedbackCache !== 'undefined' && _feedbackCache) ? Object.keys(_feedbackCache).length : 0;
+    const fbUnread = (typeof _feedbackCache !== 'undefined' && _feedbackCache) ? Object.values(_feedbackCache).filter(f => f && !f.done).length : 0;
+
+    let lessonsTotal = 0;
+    if (typeof _jrnCache !== 'undefined' && _jrnCache && _jrnCache.students) {
+      Object.keys(_jrnCache.students).forEach(sid => { lessonsTotal += _jrnLessonsDone(sid); });
+    }
+
+    // Регистрации по месяцам (последние 6)
+    const base = new Date(); base.setDate(1);
+    const months = [];
+    for (let i = 5; i >= 0; i--) {
+      const dt = new Date(base.getFullYear(), base.getMonth() - i, 1);
+      months.push({ y: dt.getFullYear(), m: dt.getMonth(), label: dt.toLocaleDateString('ru-RU', { month: 'short' }), n: 0 });
+    }
+    list.forEach(u => {
+      if (!u.joinedAt) return;
+      const dt = new Date(u.joinedAt);
+      months.forEach(mo => { if (dt.getFullYear() === mo.y && dt.getMonth() === mo.m) mo.n++; });
+    });
+    const regMax = Math.max(1, ...months.map(m => m.n));
+
+    // ── helpers ──
+    const fmt = n => (Number(n) || 0).toLocaleString('ru-RU');
+    const pctOf = (n, d) => d > 0 ? Math.round(n / d * 100) : 0;
+    const plU = n => { const a = n % 10, b = n % 100; if (a === 1 && b !== 11) return 'ученица'; if (a >= 2 && a <= 4 && (b < 10 || b >= 20)) return 'ученицы'; return 'учениц'; };
+    const _dxFlowers = ['🌸', '🌷', '🌼', '🌺', '🌻', '🪷', '💐', '🌹'];
+    const dxAva = (u) => {
+      const a = (u && u.avatar ? String(u.avatar) : '').trim();
+      if (/^(https?:|data:|blob:|\/)/.test(a)) return `<img class="dx-ava-img" src="${escAttrSafe(a)}" alt="">`;
+      if (a) return escAttrSafe(a);
+      const s = (u && u.name) || '';
+      let h = 0; for (let i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) >>> 0;
+      return _dxFlowers[h % _dxFlowers.length];
+    };
+    const sec = (ico, title, badge, inner, cls) => `
+      <section class="dx-sec ${cls || ''}">
+        <header class="dx-sec-head">
+          <div class="dx-sec-title"><span class="dx-sec-ico">${ico}</span><h3>${title}</h3></div>
+          ${badge ? `<span class="dx-pill">${badge}</span>` : ''}
+        </header>
+        <div class="dx-sec-body">${inner}</div>
+      </section>`;
+    const barList = (items, opts) => {
+      opts = opts || {};
+      if (!items.length) return `<div class="dx-empty">${opts.empty || 'Пока пусто 🌱'}</div>`;
+      const max = Math.max(1, ...items.map(i => i.value));
+      return `<div class="dx-bars">` + items.map((it, idx) => {
+        const pct = it.value === 0 ? 0 : Math.max(it.value / max * 100, 5);
+        const lead = it.value === max && it.value > 0;
+        return `
+          <div class="dx-bar">
+            ${opts.rank ? `<span class="dx-rank${idx < 3 ? ' top' : ''}">${idx + 1}</span>` : ''}
+            ${it.icon ? `<span class="dx-bar-ico">${it.icon}</span>` : ''}
+            <div class="dx-bar-main">
+              <div class="dx-bar-top">
+                <span class="dx-bar-name">${it.name}${it.sub ? `<span class="dx-bar-sub">${it.sub}</span>` : ''}</span>
+                <span class="dx-bar-val${lead ? ' lead' : ''}${it.value === 0 ? ' zero' : ''}">${it.value}${opts.suffix || ''}</span>
+              </div>
+              <div class="dx-track"><div class="dx-fill" style="width:${pct}%"></div></div>
+            </div>
+          </div>`;
+      }).join('') + `</div>`;
+    };
+    const splitIco = (lbl) => { const sp = lbl.indexOf(' '); return sp > 0 ? { icon: lbl.slice(0, sp), name: lbl.slice(sp + 1) } : { icon: '', name: lbl }; };
+    const vbars = (data, opts) => {
+      opts = opts || {};
+      const max = Math.max(1, ...data.map(d => d.value));
+      return `<div class="dx-vbars" style="--h:${opts.h || 100}px">` + data.map(d => `
+        <div class="dx-vbar" title="${opts.title ? opts.title(d) : ''}">
+          ${opts.showVal ? `<span class="dx-vbar-val">${d.value || ''}</span>` : ''}
+          <span class="dx-vbar-fill${d.value ? '' : ' empty'}" style="height:${d.value ? Math.round(d.value / max * 100) : 2}%"></span>
+          <span class="dx-vbar-lbl">${d.label}</span>
+        </div>`).join('') + `</div>`;
+    };
+    const statCard = (ico, val, lbl) => `<div class="dx-stat"><span class="dx-stat-ico">${ico}</span><span class="dx-stat-val">${val}</span><span class="dx-stat-lbl">${lbl}</span></div>`;
+
+    // ── Сейчас в сети (lastSeen ≤ 10 мин) ──
+    const ONLINE_WIN = 10 * 60 * 1000;
+    const onlineList = list.filter(u => u.lastSeen && now - u.lastSeen <= ONLINE_WIN).sort((a, b) => (b.lastSeen || 0) - (a.lastSeen || 0));
+    const lastActive = list.reduce((m, u) => Math.max(m, u.lastSeen || 0), 0);
+    const onlineBanner = onlineList.length ? `
+      <div class="dx-online">
+        <div class="dx-online-l">
+          <span class="dx-live-dot"></span>
+          <span class="dx-online-txt">Сейчас в сети <b>${onlineList.length}</b> ${plU(onlineList.length)}</span>
+        </div>
+        <div class="dx-online-r">
+          <div class="dx-ava-stack">${onlineList.slice(0, 8).map(u => `<span class="dx-ava dx-ava-on" title="${escAttrSafe(u.name || '')} · онлайн">${dxAva(u)}</span>`).join('')}</div>
+          <span class="dx-online-names">${onlineList.slice(0, 4).map(u => escAttrSafe(u.name || '—')).join(', ')}</span>
+        </div>
+      </div>` : `
+      <div class="dx-online dx-online-empty">
+        <div class="dx-online-l"><span class="dx-moon">🌙</span><span class="dx-online-txt">Сейчас никого нет в сети</span></div>
+        ${lastActive ? `<span class="dx-online-names">последняя активность ${relativeTime(lastActive)}</span>` : ''}
+      </div>`;
+
+    // ── KPI-карточки ──
+    const kpi = (ico, val, lbl, trend) => `
+      <div class="dx-kpi">
+        <span class="dx-kpi-ico">${ico}</span>
+        <div class="dx-kpi-val">${val}</div>
+        <div class="dx-kpi-lbl">${lbl}</div>
+        ${trend ? `<span class="dx-kpi-trend">${trend}</span>` : ''}
+      </div>`;
+    const kpis = `<div class="dx-kpis">
+      ${kpi('👭', total, 'Всего учениц', new30 ? `+${new30} за месяц` : 'школа')}
+      ${kpi('🟢', active1, 'Активны сегодня', onlineList.length ? `${onlineList.length} в сети` : 'за 24 часа')}
+      ${kpi('🗓️', active7, 'Активны 7 дней', `${pctOf(active7, total)}% охват`)}
+      ${kpi('📅', active30, 'Активны 30 дней', `${pctOf(active30, total)}% охват`)}
+      ${kpi('🌱', new30, 'Новых за 30 дней', 'за месяц')}
+      ${kpi('🔥', avgStreak, 'Средний стрик', 'дней подряд')}
+      ${kpi('⭐', avgLevel, 'Средний уровень', 'Lv')}
+      ${kpi('⏱️', hoursSum + 'ч', 'Часов в приложении', 'за всё время')}
+      ${kpi('🎮', totalGamePlays, 'Сыграно партий', 'за всё время')}
+    </div>`;
+
+    // ── Активность за 14 дней (суммарный XP по дням) ──
+    const days = [];
+    for (let i = 13; i >= 0; i--) {
+      const dt = new Date(now - i * DAY);
+      const iso = dt.toISOString().slice(0, 10);
+      days.push({ iso, label: String(dt.getDate()), value: dayAgg[iso] || 0 });
+    }
+    const activeDays = days.filter(d => d.value > 0).length;
+    const activityChart = vbars(days, { h: 92, title: d => `${d.iso}: ${d.value} XP` });
+
+    // ── Новые ученицы по месяцам ──
+    const new6 = months.reduce((s, m) => s + m.n, 0);
+    const monthlyChart = vbars(months.map(m => ({ label: m.label, value: m.n })), { h: 96, showVal: true });
+
+    // ── Популярные игры (суммарные партии по типам) ──
+    const gameKeys = Object.keys(gameAgg).filter(k => gameAgg[k] > 0).sort((a, b) => gameAgg[b] - gameAgg[a]);
+    const gameItems = gameKeys.map(k => { const s = splitIco(GAME_LABELS[k] || k); return { icon: s.icon || '🎮', name: escAttrSafe(s.name), value: gameAgg[k] }; });
+
+    // ── Чем пользуются (охват функций) ──
+    const usageRows = [
+      ['🎮 Играли в игры', reach.games],
+      ['📖 Проходили уроки', reach.lessons],
+      ['💬 Сохраняли слова', reach.words],
+      ['🖼️ Ставили аватар', reach.avatar],
+      ['🔤 Hangul Lab', reach.hangul],
+      ['🗓️ Открывали календарь', reach.calendar],
+      ['🤖 ИИ-урок', reach.ai],
+      ['🏮 Смотрели культуру', reach.culture],
+      ['🎤 Произношение', reach.pron],
+      ['🎯 Фокус-сессии', reach.focus]
+    ].sort((a, b) => b[1] - a[1]);
+    const usageItems = usageRows.map(r => { const s = splitIco(r[0]); return { icon: s.icon, name: escAttrSafe(s.name), sub: `· ${pctOf(r[1], total)}%`, value: r[1] }; });
+
+    // ── Доступ (донат-диаграмма) ──
+    const donutSegs = [
+      { name: `${ACCESS_INFO.paid.emoji} Оплачено`, value: accCounts.paid, color: '#3fae6e' },
+      { name: `${ACCESS_INFO.frozen.emoji} Заморозка`, value: accCounts.frozen, color: '#5aa9e0' },
+      { name: `${ACCESS_INFO.unpaid.emoji} Не оплачено`, value: accCounts.unpaid, color: '#e0607d' }
+    ];
+    const donutTotal = donutSegs.reduce((s, x) => s + x.value, 0);
+    let _donAcc = 0;
+    const donutRings = donutSegs.filter(s => s.value > 0).map(s => {
+      const frac = donutTotal > 0 ? s.value / donutTotal : 0;
+      const off = (25 - _donAcc * 100).toFixed(2); _donAcc += frac;
+      return `<circle cx="21" cy="21" r="15.915" fill="none" stroke="${s.color}" stroke-width="5.5" pathLength="100" stroke-dasharray="${(frac * 100).toFixed(2)} ${(100 - frac * 100).toFixed(2)}" stroke-dashoffset="${off}"></circle>`;
+    }).join('');
+    const donutInner = `
+      <div class="dx-donut-wrap">
+        <div class="dx-donut">
+          <svg viewBox="0 0 42 42" aria-hidden="true">
+            <circle cx="21" cy="21" r="15.915" fill="none" stroke="var(--blush)" stroke-width="5.5"></circle>
+            ${donutRings}
+          </svg>
+          <div class="dx-donut-center"><span class="dx-donut-num">${donutTotal}</span><span class="dx-donut-lbl">${plU(donutTotal)}</span></div>
+        </div>
+        <div class="dx-donut-legend">
+          ${donutSegs.map(s => `<div class="dx-leg"><span class="dx-leg-dot" style="background:${s.color}"></span><span class="dx-leg-name">${s.name}</span><span class="dx-leg-val">${s.value}</span></div>`).join('')}
+        </div>
+      </div>`;
+
+    // ── Тарифы / Уровень / Категория ──
+    const planItems = [
+      { name: `${PLANS.free.emoji} ${PLANS.free.name}`, value: planCounts.free },
+      { name: `${PLANS.proai.emoji} ${PLANS.proai.name}`, value: planCounts.proai },
+      { name: `${PLANS.master.emoji} ${PLANS.master.name}`, value: planCounts.master }
+    ];
+    const lvlIds = Object.keys(lvlCounts);
+    const lvlItems = lvlIds.map(id => ({ name: escAttrSafe(levelLabel(id) || id), value: lvlCounts[id] }));
+    if (lvlNone) lvlItems.push({ name: '— не указан', value: lvlNone });
+    const catKeys = STUDENT_CATS.filter(c => catCounts[c] > 0);
+    const catItems = catKeys.map(c => ({ name: escAttrSafe(c), value: catCounts[c] }));
+    if (catNone) catItems.push({ name: '— без категории', value: catNone });
+
+    // ── Топ-5 по XP ──
+    const medals = ['🥇', '🥈', '🥉'];
+    const lbMax = Math.max(1, ...top.map(u => (u.stats && u.stats.xp) || 0));
+    const lbInner = top.map((u, i) => {
+      const xp = (u.stats && u.stats.xp) || 0, lvl = getLevel(xp), rank = getRank(lvl, u.meta && u.meta.gender);
+      return `
+        <div class="dx-lb">
+          <div class="dx-lb-fill" style="width:${Math.round(xp / lbMax * 100)}%"></div>
+          <div class="dx-lb-row">
+            <span class="dx-lb-rank">${medals[i] || (i + 1)}</span>
+            <span class="dx-ava dx-ava-sm">${dxAva(u)}</span>
+            <div class="dx-lb-info"><span class="dx-lb-name">${escAttrSafe(u.name || 'Без имени')}</span><span class="dx-lb-lvl">${rank.emoji} Lv ${lvl}</span></div>
+            <span class="dx-lb-xp">${fmt(xp)} XP</span>
+          </div>
+        </div>`;
+    }).join('');
+
+    // ── Итоги школы ──
+    const totalsInner = `<div class="dx-stats">
+      ${statCard('✨', fmt(xpSum), 'Суммарный XP')}
+      ${statCard('💬', fmt(wordsSum), 'Слов выучено')}
+      ${statCard('📖', lessonsSumAll, 'Уроков пройдено')}
+      ${statCard('🎤', pronPct + '%', 'Точность произношения')}
+      ${statCard('🔥', streakMax, 'Лучший стрик')}
+      ${statCard('📅', lessonsTotal, 'Проведено уроков')}
+      ${statCard('🎯', focusSum, 'Фокус-сессий')}
+      ${statCard('💌', `${fbUnread}/${fbAll}`, 'Писем (непрочит./всего)')}
+    </div>`;
+
+    // ── Подробная таблица: каждое действие по каждой ученице ──
+    const sorted = list.slice().sort((a, b) => (b.lastSeen || 0) - (a.lastSeen || 0));
+    const tableRows = sorted.map(u => {
+      const st = u.stats || {};
+      const xp = st.xp || 0;
+      const gp = (st.gamePlays && typeof st.gamePlays === 'object') ? Object.values(st.gamePlays).reduce((s, v) => s + (v || 0), 0) : 0;
+      const wcount = (Array.isArray(st.wordsLearned) ? st.wordsLearned.length : 0) || st.words || 0;
+      const mins = st.minutesSpent || 0;
+      const last = u.lastSeen ? relativeTime(u.lastSeen) : '—';
+      const online = u.lastSeen && now - u.lastSeen <= ONLINE_WIN;
+      const lvlTxt = u.level ? (levelLabel(u.level) || u.level) : '—';
+      return `
+        <tr>
+          <td><span class="dx-tbl-name"><span class="dx-ava dx-ava-xs${online ? ' dx-ava-on' : ''}">${dxAva(u)}</span><span class="dx-tbl-nm">${escAttrSafe(u.name || 'Без имени')}</span></span></td>
+          <td>${lvlTxt}</td>
+          <td>${last}</td>
+          <td class="num">${st.streak || 0}</td>
+          <td class="num">${_dashLessonsDone(u)}</td>
+          <td class="num">${gp}</td>
+          <td class="num">${wcount}</td>
+          <td class="num">${mins}м</td>
+          <td class="num">${fmt(xp)}</td>
+        </tr>`;
+    }).join('');
+    const tableInner = `
+      <div class="dx-tbl-legend">🔥 стрик · 📖 уроки · 🎮 игры · 💬 слова · ⏱️ минуты · XP</div>
+      <div class="dash-tbl-wrap">
+        <table class="dash-tbl dx-tbl">
+          <thead><tr>
+            <th>Имя</th><th>Уровень</th><th>Была</th>
+            <th class="num">🔥</th><th class="num">📖</th><th class="num">🎮</th>
+            <th class="num">💬</th><th class="num">⏱️</th><th class="num">XP</th>
+          </tr></thead>
+          <tbody>${tableRows}</tbody>
+        </table>
+      </div>`;
+
+    return `
+      ${onlineBanner}
+      ${kpis}
+      <div class="dx-grid2">
+        ${sec('📈', 'Активность за 14 дней', `${activeDays} активн.`, activityChart)}
+        ${sec('📊', 'Новые ученицы по месяцам', new6 ? `+${new6}` : '', monthlyChart)}
+      </div>
+      <div class="dx-grid2">
+        ${sec('🎮', 'Популярные игры', `${totalGamePlays} партий`, barList(gameItems, { rank: true, empty: 'Пока никто не играл 🌱' }))}
+        ${sec('🍀', 'Чем пользуются', `охват из ${total}`, barList(usageItems, {}))}
+      </div>
+      <div class="dx-grid4">
+        ${sec('💳', 'Доступ', '', donutInner)}
+        ${sec('🌸', 'Тарифы', '', barList(planItems, {}))}
+        ${sec('🌐', 'Уровень корейского', '', barList(lvlItems, { empty: 'Уровень не выбран' }))}
+        ${sec('📚', 'Категория (Мади)', '', barList(catItems, { empty: 'Категории не проставлены' }))}
+      </div>
+      <div class="dx-grid23">
+        ${sec('🏆', 'Топ-5 по XP', '', lbInner, 'dx-col2')}
+        ${sec('🌷', 'Итоги школы', '', totalsInner, 'dx-col3')}
+      </div>
+      ${sec('📋', 'Ученицы подробно', `${total}`, tableInner, 'dx-full')}`;
+  }
+
   function renderProfileAdminPanel(tab) {
     if (!isAdmin()) return;
     const slot = document.getElementById('admin-screen-slot');
@@ -19886,6 +21259,7 @@
       else if (tab === 'users') body = renderAdminUsers();
       else if (tab === 'journal') body = renderAdminJournal();
       else if (tab === 'inbox') body = renderAdminInbox();
+      else if (tab === 'stats') body = renderAdminStats();
       slot.innerHTML = `
         <div style="display:flex; align-items:center; gap:10px; margin-bottom:14px;">
           <button onclick="renderProfileAdminPanel('hub')" class="chat-back-btn" aria-label="Все разделы" title="Все разделы"><i class="fa-solid fa-arrow-left"></i></button>
@@ -21711,9 +23085,43 @@
       }
     }
   }
+  // Email профиля из всех доступных источников: локальный user → активная
+  // Firebase-сессия → облачный справочник. Решает случай «есть gmail, а показывает
+  // „без email“», когда локальный объект user потерял поле (вход/синк без email).
+  function profileEmailValue() {
+    const u = Store.get('user') || {};
+    if (u.email) return u.email;
+    if (u.guest) return '';
+    if (typeof _auth !== 'undefined' && _auth.currentUser && _auth.currentUser.email) return _auth.currentUser.email;
+    const uid = (typeof firebaseUserId === 'function') ? firebaseUserId() : null;
+    if (uid && uid !== 'guest' && _usersDirCache && _usersDirCache[uid] && _usersDirCache[uid].email) return _usersDirCache[uid].email;
+    return '';
+  }
+  function refreshProfileEmail() {
+    const el = document.getElementById('profile-email');
+    if (!el) return;
+    const u = Store.get('user');
+    const email = profileEmailValue();
+    // Восстановили email из сессии/облака — записываем обратно в user и публикуем,
+    // чтобы он закрепился и пропал «без email» навсегда.
+    if (email && u && !u.email && !u.guest) {
+      u.email = email; Store.set('user', u);
+      try { pushProfilePublicField('email', email); } catch (_) {}
+    }
+    el.textContent = email || (u && u.guest ? 'гостевой режим' : 'без email');
+  }
   function setActiveUser(user) {
     detachUserListeners();
     detachFriendsListeners();
+    detachAvatarWatchers();   // сбросить avatar-слушателей прежней личности
+    // Сохраняем профильные поля (level и др.), если входим в ТОТ ЖЕ аккаунт,
+    // а вызывающий передал минимальный объект {name,email,uid} без level —
+    // иначе вход/восстановление сессии сбрасывает выбранный уровень.
+    const _prev = Store.get('user');
+    if (_prev && !user.guest && !user.isAdmin && !_prev.guest && !_prev.isAdmin
+        && _prev.email && user.email && _prev.email === user.email) {
+      if ((user.level === undefined || user.level === '') && _prev.level) user.level = _prev.level;
+    }
     Store.set('user', user);
     // Reload all per-user state from this user's namespace
     loadUserData();
@@ -21725,8 +23133,7 @@
     const content = document.getElementById('profile-content');
     if (auth) auth.style.display = 'none';
     if (content) content.style.display = 'block';
-    const email = document.getElementById('profile-email');
-    if (email) email.textContent = user.email || (user.guest ? 'гостевой режим' : 'без email');
+    refreshProfileEmail();
     const adminBadge = document.getElementById('profile-admin-badge');
     if (adminBadge) adminBadge.style.display = user.isAdmin ? 'inline-flex' : 'none';
     try { renderMyLevelChip(); } catch (_) {}
@@ -21753,16 +23160,30 @@
     document.body.classList.toggle('admin-nav', on); // компактные подписи в bottomnav
     const slot = document.getElementById('profile-admin-settings');
     if (on) {
+      const unread = (typeof _feedbackCache !== 'undefined' && _feedbackCache)
+        ? Object.values(_feedbackCache).filter(f => f && !f.done).length : 0;
+      const usersCount = (typeof _adminUsersCache !== 'undefined' && _adminUsersCache)
+        ? Object.values(_adminUsersCache).filter(u => u && !u.isAdmin).length : 0;
+      const quick = (tab, ico, title, desc, badge) => `
+        <button onclick="showAdminPanel('${tab}')" class="dx-cab">
+          ${badge ? `<span class="dx-cab-badge">${badge}</span>` : ''}
+          <span class="dx-cab-ico">${ico}</span>
+          <span class="dx-cab-title">${title}</span>
+          <span class="dx-cab-desc">${desc}</span>
+        </button>`;
       if (slot) slot.innerHTML = `
-        <div onclick="switchScreen('admin')" class="card card-press card-padded" style="cursor:pointer; display:flex; align-items:center; gap:14px; background: var(--grad-coral); border:none; color:#F2F5FA;">
-          <div style="width:44px; height:44px; flex-shrink:0; border-radius:14px; background:rgba(255,255,255,.18); display:flex; align-items:center; justify-content:center; font-size:20px;"><i class="fa-solid fa-user-gear"></i></div>
-          <div style="flex:1; min-width:0;">
-            <div style="font-weight:700; font-size:14.5px;">Кабинет Мади</div>
-            <div style="font-size:11px; opacity:.85; margin-top:2px;">Контент · ученики · журнал · письма</div>
-          </div>
-          <i class="fa-solid fa-chevron-right" style="font-size:12px; opacity:.85;"></i>
+        <div class="section-head"><div class="left"><div class="rule"></div><span class="title">📊 Аналитика школы</span></div><span class="meta">в реальном времени</span></div>
+        ${renderAdminStats('profile-stats-body')}
+        <div class="section-head" style="margin-top:22px;"><div class="left"><div class="rule"></div><span class="title">Кабинет</span></div><span class="meta">управление школой</span></div>
+        <div class="dx-cab-grid">
+          ${quick('journal', '📅', 'Журнал', 'Расписание уроков')}
+          ${quick('users', '👭', 'Ученики', usersCount ? `${usersCount} ${(function(n){const a=n%10,b=n%100;if(a===1&&b!==11)return 'активна';if(a>=2&&a<=4&&(b<10||b>=20))return 'активны';return 'активных';})(usersCount)}` : 'Список и статусы')}
+          ${quick('inbox', '💌', 'Письма', unread ? `${unread} новых` : 'Сообщения', unread || '')}
+          ${quick('feed', '📰', 'Лента', 'Обновления')}
+          ${quick('flashcards', '📚', 'Контент', 'Уроки и игры')}
+          ${quick('hub', '🏫', 'Всё', 'Управление школой')}
         </div>`;
-      renderProfileAdminPanel();
+      renderProfileAdminPanel('hub');
     } else {
       if (slot) slot.innerHTML = '';
       const adm = document.getElementById('admin-screen-slot');
@@ -21911,51 +23332,51 @@
       <div class="modal-card" style="max-width: 380px;">
         <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:14px;">
           <div>
-            <div class="page-eyebrow">РЕДАКТИРОВАНИЕ</div>
-            <div class="display" style="font-size: 20px; color: var(--berry); margin-top: 4px;">Мои данные</div>
+            <div class="page-eyebrow">${t('ep.eyebrow')}</div>
+            <div class="display" style="font-size: 20px; color: var(--berry); margin-top: 4px;">${t('ep.title')}</div>
           </div>
           <div onclick="this.closest('.modal-bg').remove()" style="font-size:24px; color:var(--soft); cursor:pointer; padding:4px;">×</div>
         </div>
         <div class="ep-cover-card">
           <div id="ep-cover-preview" class="ep-cover-preview"></div>
-          <button type="button" class="ep-cover-cam" onclick="document.getElementById('ep-cover-file').click()" aria-label="Сменить обложку"><i class="fa-solid fa-camera"></i> Обложка</button>
+          <button type="button" class="ep-cover-cam" onclick="document.getElementById('ep-cover-file').click()" aria-label="${t('up.changeCover')}"><i class="fa-solid fa-camera"></i> ${t('ep.cover')}</button>
           <input type="file" accept="image/*" id="ep-cover-file" style="display:none;" onchange="changeCover(event)">
           <div class="ep-avatar-wrap">
             <div id="ep-avatar-preview" class="ep-avatar-prev">${escAttr(user.name).charAt(0).toUpperCase()}</div>
-            <button type="button" class="ep-avatar-cam" onclick="document.getElementById('ep-avatar-file').click()" aria-label="Сменить фото"><i class="fa-solid fa-camera"></i></button>
+            <button type="button" class="ep-avatar-cam" onclick="document.getElementById('ep-avatar-file').click()" aria-label="${t('ep.changePhoto')}"><i class="fa-solid fa-camera"></i></button>
             <input type="file" accept="image/*" id="ep-avatar-file" style="display:none;" onchange="changeAvatar(event)">
           </div>
         </div>
-        <div style="font-size:10.5px; color:var(--soft); margin:34px 0 14px; text-align:center;">Тапни 📷, чтобы сменить фото и обложку профиля</div>
+        <div style="font-size:10.5px; color:var(--soft); margin:34px 0 14px; text-align:center;">${t('ep.photoHint')}</div>
         <div style="display:grid; gap:12px;">
           <div>
-            <label style="font-size:10px; letter-spacing:.16em; color:var(--coral); font-weight:600;">ИМЯ</label>
+            <label style="font-size:10px; letter-spacing:.16em; color:var(--coral); font-weight:600;">${t('ep.name')}</label>
             <input id="ep-name" class="input" value="${escAttr(user.name)}" style="margin-top:4px;">
           </div>
           <div>
-            <label style="font-size:10px; letter-spacing:.16em; color:var(--coral); font-weight:600;">О СЕБЕ</label>
-            <textarea id="ep-bio" class="input" rows="3" maxlength="200" placeholder="Пару слов о себе — видно друзьям в профиле" style="margin-top:4px; resize:none; min-height:64px; line-height:1.4;" oninput="var c=document.getElementById('ep-bio-count'); if(c) c.textContent=this.value.length;"></textarea>
+            <label style="font-size:10px; letter-spacing:.16em; color:var(--coral); font-weight:600;">${t('up.about')}</label>
+            <textarea id="ep-bio" class="input" rows="3" maxlength="200" placeholder="${escAttr(t('ep.bioPh'))}" style="margin-top:4px; resize:none; min-height:64px; line-height:1.4;" oninput="var c=document.getElementById('ep-bio-count'); if(c) c.textContent=this.value.length;"></textarea>
             <div style="font-size:10px; color:var(--hush); margin-top:2px; text-align:right;"><span id="ep-bio-count">0</span>/200</div>
           </div>
           ${isAdmin ? '' : `
           <div>
-            <label style="font-size:10px; letter-spacing:.16em; color:var(--coral); font-weight:600;">EMAIL</label>
+            <label style="font-size:10px; letter-spacing:.16em; color:var(--coral); font-weight:600;">${t('ep.email')}</label>
             <input id="ep-email" class="input" type="email" value="${escAttr(user.email||'')}" readonly style="margin-top:4px; opacity:.7;">
-            <div style="font-size:10.5px; color:var(--soft); margin-top:2px;">email менять нельзя</div>
+            <div style="font-size:10.5px; color:var(--soft); margin-top:2px;">${t('ep.emailLock')}</div>
           </div>`}
           <div>
-            <label style="font-size:10px; letter-spacing:.16em; color:var(--coral); font-weight:600;">НОВЫЙ ПАРОЛЬ</label>
-            <div style="font-size:10.5px; color:var(--soft); margin-top:2px;">оставь пустым, чтобы не менять</div>
+            <label style="font-size:10px; letter-spacing:.16em; color:var(--coral); font-weight:600;">${t('ep.newPass')}</label>
+            <div style="font-size:10.5px; color:var(--soft); margin-top:2px;">${t('ep.passHint')}</div>
             <div class="pass-wrap" style="margin-top:4px;">
-              <input id="ep-pass" class="input" type="password" placeholder="Минимум 6 символов">
-              <button type="button" class="pass-toggle" onclick="togglePass(this)" aria-label="Показать пароль" tabindex="-1"><i class="fa-solid fa-eye"></i></button>
+              <input id="ep-pass" class="input" type="password" placeholder="${escAttr(t('ep.passPh'))}">
+              <button type="button" class="pass-toggle" onclick="togglePass(this)" aria-label="${t('common.showPass')}" tabindex="-1"><i class="fa-solid fa-eye"></i></button>
             </div>
           </div>
-          <div style="font-size:10.5px; color:var(--coral); font-weight:600;">${isAdmin ? '🔑 Админ-аккаунт: email и пароль управляются центрально' : ''}</div>
+          <div style="font-size:10.5px; color:var(--coral); font-weight:600;">${isAdmin ? t('ep.adminNote') : ''}</div>
         </div>
         <div style="display:flex; gap:8px; margin-top:18px;">
-          <button onclick="document.getElementById('edit-profile').remove()" class="btn btn-ghost" style="flex:1;">Отмена</button>
-          <button onclick="saveProfileEdits()" class="btn btn-primary" style="flex:1.5;">Сохранить ✓</button>
+          <button onclick="document.getElementById('edit-profile').remove()" class="btn btn-ghost" style="flex:1;">${t('common.cancel')}</button>
+          <button onclick="saveProfileEdits()" class="btn btn-primary" style="flex:1.5;">${t('common.save')}</button>
         </div>
       </div>
     `;
@@ -21986,7 +23407,7 @@
     const newEmailEl = document.getElementById('ep-email');
     const newEmail = newEmailEl ? (newEmailEl.value || '').trim() : (user.email || '');
     const newPass = (document.getElementById('ep-pass').value || '');
-    if (!newName) { toast('Имя не может быть пустым'); return; }
+    if (!newName) { toast(t('ep.nameEmpty')); return; }
     // «О себе» сохраняем для всех (учитель-админ тоже виден ученикам в чате)
     const bioEl = document.getElementById('ep-bio');
     if (bioEl) saveUserBio((bioEl.value || '').trim());
@@ -21996,15 +23417,15 @@
       Store.set('user', user);
       setActiveUser(user);
       document.getElementById('edit-profile').remove();
-      toast('Имя обновлено 🌸 (email и пароль у админов меняются только централизованно)', 'var(--sage)');
+      toast(t('ep.adminSaved'), 'var(--sage)');
       return;
     }
     // Regular user — update via Firebase Auth
-    if (RESERVED_NAMES.includes(newName.toLowerCase())) { toast('Это имя зарезервировано 🔐'); return; }
-    if (newPass && newPass.length < 6) { toast('Пароль ≥ 6 символов'); return; }
+    if (RESERVED_NAMES.includes(newName.toLowerCase())) { toast(t('ep.nameReserved')); return; }
+    if (newPass && newPass.length < 6) { toast(t('ep.passShort')); return; }
     const fbUser = _auth.currentUser;
     if (!fbUser) {
-      toast('Сессия истекла, войди заново');
+      toast(t('ep.sessionExpired'));
       return;
     }
     (async () => {
@@ -22019,13 +23440,13 @@
         Store.set('user', user);
         setActiveUser(user);
         document.getElementById('edit-profile')?.remove();
-        toast('Профиль обновлён 🌸', 'var(--sage)');
+        toast(t('ep.saved'), 'var(--sage)');
       } catch (e) {
         console.warn('save profile error:', e);
         if (e.code === 'auth/requires-recent-login') {
-          toast('Для смены пароля нужен свежий вход. Перелогинься.');
+          toast(t('ep.recentLogin'));
         } else {
-          toast('Не удалось сохранить: ' + (e.message || e.code || ''));
+          toast(t('ep.saveFail') + (e.message || e.code || ''));
         }
       }
     })();
@@ -22036,14 +23457,15 @@
     detachUserListeners();
     detachFriendsListeners();
     detachChatListener();
+    detachAvatarWatchers();   // отписаться от avatar-слушателей при выходе
     _friendsCache = {}; _inboxCache = {}; _unreadFromCache = {}; _groupsCache = {};
     Store.del('user');
     // Reload data for guest namespace
     loadUserData();
     const un = document.getElementById('user-name');
     const pn = document.getElementById('profile-name');
-    if (un) un.textContent = 'друг';
-    if (pn) pn.textContent = 'Гость';
+    if (un) un.textContent = t('auth.friend');
+    if (pn) pn.textContent = t('auth.guest');
     const auth = document.getElementById('auth-section');
     const content = document.getElementById('profile-content');
     if (auth) auth.style.display = 'block';
@@ -22052,14 +23474,14 @@
     refreshFeedSocial();
     // После выхода — на страницу входа (экран профиля показывает форму логина)
     try { switchScreen('profile'); } catch (_) {}
-    toast('Вышли из аккаунта 👋');
+    toast(t('auth.loggedOut'));
   }
 
   // ── Heart-save button for vocab in games ──────────────────
   // Renders a tiny heart in the top-right corner of a word card.
   // Tapping toggles the word in/out of "Мои слова" without firing
   // the parent card's click handler.
-  function wordHeartBtn(ko, ru, translit, emoji, source) {
+  function wordHeartBtn(ko, ru, translit, emoji, source, type) {
     if (!ko) return '';
     const saved = isMyWord(ko);
     const icon = saved
@@ -22067,7 +23489,7 @@
       : '<i class="fa-regular fa-heart" style="color:var(--hush);"></i>';
     const esc = s => String(s||'').replace(/'/g, "\\'").replace(/"/g, '&quot;');
     return `<button
-      onclick="event.stopPropagation(); toggleMyWord('${esc(ko)}','${esc(ru)}','${esc(translit)}','${esc(emoji)}','${esc(source)}', this)"
+      onclick="event.stopPropagation(); toggleMyWord('${esc(ko)}','${esc(ru)}','${esc(translit)}','${esc(emoji)}','${esc(source)}', this, '${esc(type||'word')}')"
       aria-label="В словарик"
       title="Сохранить в Мои слова"
       class="word-heart-btn"
@@ -22109,7 +23531,7 @@
           <div class="page-eyebrow">${title}</div>
           <div style="font-size:11px; color:var(--soft); margin-top:2px;">${subtitle}</div>
         </div>
-        <div onclick="${close}" style="font-size:24px; line-height:1; color:var(--soft); cursor:pointer; padding:4px;">×</div>
+        <div onclick="${close}" aria-label="Закрыть" style="font-size:24px; line-height:1; color:var(--soft); cursor:pointer; padding:4px;">×</div>
       </div>
       <div style="display:flex; gap:4px; margin-bottom:18px;">
         ${Array.from({length: total}, (_,i) => `<span style="flex:1; height:4px; border-radius:999px; background:${i < progress ? 'var(--coral)' : 'rgba(var(--rose-rgb),.25)'};"></span>`).join('')}
@@ -22154,7 +23576,9 @@
   let matchData = [];
   let matchScore = 0, matchRound = 0, matchTotal = 5, matchPool = [];
   function startMatch() {
-    matchData = gameWordPool().map(w => ({ word:w.ko, emoji:w.emoji||'🌸', meaning:w.ru }));
+    // «Подбери картинку» работает по эмодзи: берём слова с настоящим эмодзи, а если их мало — весь пул.
+    const pool = gameWordPool(); const emo = pool.filter(_wHasEmoji);
+    matchData = (emo.length >= 4 ? emo : pool).map(w => ({ word:w.ko, emoji:w.emoji||'🌸', meaning:w.ru }));
     matchTotal = Math.min(scaledRounds(5), matchData.length);
     matchScore = 0; matchRound = 0;
     matchPool = shuffleArr(matchData).slice(0, matchTotal);
@@ -22180,8 +23604,8 @@
       <div style="text-align:center; margin-bottom:18px; position:relative; padding-top:6px;">
         ${wordHeartBtn(correct.word, correct.meaning, '', correct.emoji || '🌸', 'match')}
         <div style="font-size:11px; color:var(--soft); letter-spacing:.16em;">КАКОЕ ЗНАЧЕНИЕ У</div>
-        <div class="ko" style="font-size:46px; font-weight:800; color:var(--berry); margin-top:6px; line-height:1;">${correct.word}</div>
-        <div style="font-size:13px; color:var(--coral); margin-top:4px; font-style:italic;">«${correct.meaning}»</div>
+        <div class="ko" style="font-size:46px; font-weight:800; color:var(--berry); margin-top:6px; line-height:1;">${escHtml(correct.word)}</div>
+        <div style="font-size:13px; color:var(--coral); margin-top:4px; font-style:italic;">«${escHtml(correct.meaning)}»</div>
       </div>
       <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
         ${choices.map(c => `
@@ -22222,7 +23646,7 @@
   let buildData = [];
   let buildScore = 0, buildRound = 0, buildTotal = 5, buildPool = [], buildPicked = [], buildTiles = [];
   function startBuild() {
-    buildData = gameWordPool().filter(w => w.ko.length >= 2).map(w => ({ word:w.ko, meaning:w.ru }));
+    buildData = gameWordPool().filter(_wCompact).map(w => ({ word:w.ko, meaning:w.ru }));
     buildTotal = Math.min(scaledRounds(5), buildData.length);
     buildScore = 0; buildRound = 0;
     buildPool = shuffleArr(buildData).slice(0, buildTotal);
@@ -22297,7 +23721,7 @@
   let listenData = [];
   let listenScore = 0, listenRound = 0, listenTotal = 5, listenPool = [];
   function startListen() {
-    listenData = gameWordPool().map(w => ({ word:w.ko, meaning:w.ru }));
+    listenData = gameWordPool().filter(_wForChoice).map(w => ({ word:w.ko, meaning:w.ru }));
     listenTotal = Math.min(scaledRounds(5), listenData.length);
     listenScore = 0; listenRound = 0;
     listenPool = shuffleArr(listenData).slice(0, listenTotal);
@@ -22311,17 +23735,17 @@
     gameModal(`
       ${gameHeader('🎧 НА СЛУХ', 'послушай и выбери правильное слово', listenRound, listenTotal)}
       <div style="text-align:center; margin-bottom:18px;">
-        <button onclick="playSyllable('${correct.word}', this)" style="width:100px; height:100px; border-radius:50%; background: linear-gradient(140deg, var(--coral), var(--gold)); color:white; border:none; cursor:pointer; font-size:38px; box-shadow: var(--shadow-lg), inset 0 1px 0 rgba(255,255,255,.3); margin:0 auto; display:flex; align-items:center; justify-content:center;">
+        <button onclick="playSyllable('${jsStr(correct.word)}', this)" style="width:100px; height:100px; border-radius:50%; background: linear-gradient(140deg, var(--coral), var(--gold)); color:white; border:none; cursor:pointer; font-size:38px; box-shadow: var(--shadow-lg), inset 0 1px 0 rgba(255,255,255,.3); margin:0 auto; display:flex; align-items:center; justify-content:center;">
           <i class="fa-solid fa-volume-up"></i>
         </button>
         <div style="font-size:11px; color:var(--soft); margin-top:10px; letter-spacing:.16em;">ТАПНИ ЧТОБЫ ПЕРЕСЛУШАТЬ</div>
       </div>
       <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
         ${choices.map(c => `
-          <div onclick="pickListen(this, '${c.word}', '${correct.word}')" class="card card-press" style="padding:20px 12px; text-align:center; cursor:pointer; position:relative;">
+          <div onclick="pickListen(this, '${jsStr(c.word)}', '${jsStr(correct.word)}')" class="card card-press" style="padding:20px 12px; text-align:center; cursor:pointer; position:relative;">
             ${wordHeartBtn(c.word, c.meaning, '', '🌸', 'listen')}
-            <div class="ko" style="font-size:28px; font-weight:800; color:var(--berry); line-height:1;">${c.word}</div>
-            <div style="font-size:11.5px; color:var(--soft); margin-top:6px;">${c.meaning}</div>
+            <div class="ko" style="font-size:28px; font-weight:800; color:var(--berry); line-height:1;">${escHtml(c.word)}</div>
+            <div style="font-size:11.5px; color:var(--soft); margin-top:6px;">${escHtml(c.meaning)}</div>
           </div>
         `).join('')}
       </div>
@@ -22429,7 +23853,7 @@
   let memoryData = [];
   let memCards = [], memFlipped = [], memMatched = 0, memMoves = 0, memPairs = 6;
   function startMemory() {
-    memoryData = gameWordPool().map(w => ({ ko:w.ko, ru:w.ru }));
+    memoryData = gameWordPool().filter(_wShort).map(w => ({ ko:w.ko, ru:w.ru }));
     // Всегда 8 пар = 16 карточек = ровная сетка 4×4
     memPairs = Math.min(8, memoryData.length);
     const picked = shuffleArr(memoryData).slice(0, memPairs);
@@ -22586,7 +24010,7 @@
   function startCrossword(levelKey) {
     const L = CW_LEVELS[levelKey] || CW_LEVELS.easy;
     // Кандидаты: слова 2–4 слога из пула, уникальные, рандом
-    const base = gameWordPool().filter(w => { const n = [...w.ko].length; return n >= 2 && n <= 4; });
+    const base = gameWordPool().filter(w => { const n = [...w.ko].length; return !/\s/.test(w.ko) && n >= 2 && n <= 4; });
     if (base.length < 2) { toast('Пройди пару уроков — нужно больше слов 🌸'); return; }
     // несколько попыток генерации (берём лучшую по числу слов)
     let placed = null;
@@ -22779,7 +24203,7 @@
     const size = L.size;
     // Слова из пула: 2–4 слога, влезают в сетку; рандомно
     const pool = shuffleArr(gameWordPool().filter(w => {
-      const n = [...w.ko].length; return n >= 2 && n <= Math.min(4, size);
+      const n = [...w.ko].length; return !/\s/.test(w.ko) && n >= 2 && n <= Math.min(4, size);
     }));
     const targets = [];
     const grid = {}; // key -> syllable
@@ -22908,7 +24332,7 @@
   let translateData = [];
   let trScore = 0, trRound = 0, trTotal = 6, trPool = [];
   function startTranslate() {
-    translateData = gameWordPool().map(w => ({ ru:w.ru, ko:w.ko }));
+    translateData = gameWordPool().filter(_wForChoice).map(w => ({ ru:w.ru, ko:w.ko }));
     trTotal = Math.min(scaledRounds(6), translateData.length);
     trScore = 0; trRound = 0;
     trPool = shuffleArr(translateData).slice(0, trTotal);
@@ -22934,13 +24358,13 @@
       <div style="text-align:center; margin-bottom:18px; position:relative; padding-top:6px;">
         ${wordHeartBtn(correct.ko, correct.ru, '', '🌸', 'translate')}
         <div style="font-size:11px; color:var(--soft); letter-spacing:.16em;">КАК БУДЕТ ПО-КОРЕЙСКИ</div>
-        <div class="display" style="font-size:30px; color:var(--berry); margin-top:6px;">«${correct.ru}»</div>
+        <div class="display" style="font-size:30px; color:var(--berry); margin-top:6px;">«${escHtml(correct.ru)}»</div>
       </div>
       <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
         ${choices.map(c => `
-          <div onclick="pickTranslate(this, '${c.ko}', '${correct.ko}')" class="card card-press" style="padding:20px 12px; text-align:center; cursor:pointer; position:relative;">
+          <div onclick="pickTranslate(this, '${jsStr(c.ko)}', '${jsStr(correct.ko)}')" class="card card-press" style="padding:20px 12px; text-align:center; cursor:pointer; position:relative;">
             ${wordHeartBtn(c.ko, c.ru, '', '🌸', 'translate')}
-            <div class="ko" style="font-size:24px; font-weight:800; color:var(--berry); line-height:1.1;">${c.ko}</div>
+            <div class="ko" style="font-size:24px; font-weight:800; color:var(--berry); line-height:1.1;">${escHtml(c.ko)}</div>
           </div>
         `).join('')}
       </div>
@@ -23605,7 +25029,7 @@
       if (p[0]) cards.push({ ko: p[0], tr: p[1] || '', ru: p[2] || '' });
     });
     if (!cards.length) return '';
-    const esc = s => String(s || '').replace(/'/g, "\\'").replace(/"/g, '&quot;');
+    const esc = s => String(s || '').replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/"/g, '&quot;');
     return `<div style="display:grid; gap:6px; margin-top:10px;">${cards.map(c => `
       <div style="display:flex; align-items:center; gap:10px; background:var(--card); border:1px solid var(--line); border-radius:12px; padding:8px 10px;">
         <div style="flex:1; min-width:0;">
@@ -23628,7 +25052,7 @@
       const body = _aiFmt(String(text).split('\n').filter(l => !/^\s*CARD:/i.test(l)).join('\n').trim());
       const cards = _aiCardsHtml(text);
       const ko = _aiKoreanOf(text);
-      const esc = s => String(s || '').replace(/'/g, "\\'").replace(/"/g, '&quot;');
+      const esc = s => String(s || '').replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/"/g, '&quot;');
       const speak = ko ? `<button onclick="playSyllable('${esc(ko)}', this)" class="chip" style="cursor:pointer; border:none; background:var(--blush); color:var(--berry); font-size:10px; padding:4px 10px; margin-top:8px;"><i class="fa-solid fa-volume-up" style="font-size:9px;"></i> Озвучить корейское</button>` : '';
       html = `<div style="align-self:flex-start; max-width:88%; background:var(--card); border:1px solid var(--line); border-radius:16px 16px 16px 4px; padding:10px 14px; font-size:13.5px; line-height:1.55; color:var(--ink);">${body}${cards}${speak}</div>`;
     }
@@ -23726,11 +25150,11 @@
   function _dictChips(list, accent) {
     const arr = Array.isArray(list) ? list.filter(x => x && x.ko) : [];
     if (!arr.length) return '<span style="font-size:11.5px; color:var(--hush);">—</span>';
-    const esc = s => String(s || '').replace(/'/g, "\\'").replace(/"/g, '&quot;');
+    const esc = s => String(s || '').replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/"/g, '&quot;');
     return arr.map(x => `<button onclick="document.getElementById('dict-q').value='${esc(x.ko)}'; dictLookup();" class="chip ${accent}" style="cursor:pointer; border:none; font-size:11px; padding:5px 11px;"><span class="ko" style="font-weight:700;">${escHtml(x.ko)}</span>${x.ru ? ` · ${escHtml(x.ru)}` : ''}</button>`).join(' ');
   }
   function _dictRender(d) {
-    const esc = s => String(s || '').replace(/'/g, "\\'").replace(/"/g, '&quot;');
+    const esc = s => String(s || '').replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/"/g, '&quot;');
     const examples = (Array.isArray(d.examples) ? d.examples : []).slice(0, 2).map(ex => `
       <div style="background:var(--paper); border-radius:12px; padding:10px 12px; margin-top:6px;">
         <div style="display:flex; align-items:center; gap:8px;">
@@ -24200,8 +25624,8 @@
     const uid = (typeof firebaseUserId === 'function' ? firebaseUserId() : '') || '';
     if (!u || u.guest || !uid || uid === 'guest') return;
     const ref = _db.ref('shared/studyRoom/' + uid);
-    ref.set({ name: u.name || 'Ученик', startedAt: Date.now(), until: _focusEndAt });
-    try { ref.onDisconnect().remove(); } catch (_) {}
+    ref.set({ name: u.name || 'Ученик', startedAt: Date.now(), until: _focusEndAt }).catch(e => console.warn('joinStudyRoom set failed:', e));
+    try { ref.onDisconnect().remove().catch(() => {}); } catch (_) {}
   }
   function leaveStudyRoom() {
     if (typeof _db === 'undefined') return;
@@ -24311,7 +25735,7 @@
   // ── Онбординг: знакомство → цели → уровень → мини-ТОПИК → аккаунт ──
   const OB_SLIDES = [
     { img: 'assets/bear1.png', emojis: ['🌸', '✨', '📖'], title: 'Учи корейский<br>с первого шага', sub: 'Хангыль с нуля, уроки от Мади и личный словарик — всё в одном месте, на русском.' },
-    { img: 'assets/bear2.png', emojis: ['🎮', '🎵', '🔥'], title: 'Играй —<br>и запоминай', sub: '10 мини-игр, K-Pop карточки, стрик и XP. Учёба, в которую возвращаешься сама.' },
+    { img: 'assets/bear2.png', emojis: ['🎮', '🎵', '🔥'], title: 'Играй —<br>и запоминай', sub: '10 мини-игр, K-Pop карточки, стрик и XP. Учёба, к которой хочется возвращаться.' },
     { img: 'assets/bear5.png', emojis: ['🎓', '📜', '🌸'], title: 'Сдай ТОПИК<br>уверенно', sub: 'Реальные экзамены прошлых лет с таймером и разбором каждого ответа на русском.' }
   ];
   const OB_GOALS = [
@@ -24351,7 +25775,7 @@
     if (toRegister && !Store.get('user')) {
       switchScreen('profile');
       try { showAuthTab('register'); } catch (_) {}
-      toast('Создай аккаунт — сохраним твой путь 🌸', 'var(--berry)');
+      toast(t('ob.regToast'), 'var(--berry)');
     }
   }
   function obEnableDark() {
@@ -24359,9 +25783,9 @@
     s.darkTheme = !s.darkTheme;
     UStore.set('settings', s);
     applySettings();
-    toast(s.darkTheme ? 'Тёмная тема включена 🌙' : 'Светлая тема вернулась 🌸', 'var(--berry)');
+    toast(s.darkTheme ? t('ob.darkOnToast') : t('ob.lightToast'), 'var(--berry)');
     const b = document.getElementById('ob-dark-btn');
-    if (b) b.textContent = s.darkTheme ? '☀️ Вернуть светлую' : 'Включить';
+    if (b) b.textContent = s.darkTheme ? t('ob.darkBack') : t('ob.darkOn');
   }
   function paintOnboard() {
     const el = document.getElementById('onboard');
@@ -24371,7 +25795,7 @@
     if (_obStep <= 2) {
       const s = OB_SLIDES[_obStep];
       el.innerHTML = `
-        <div class="ob-top">${dots(_obStep)}<button class="ob-skip" onclick="obSkip()">Пропустить</button></div>
+        <div class="ob-top">${dots(_obStep)}<button class="ob-skip" onclick="obSkip()">${t('ob.skip')}</button></div>
         <div class="ob-body">
           <div class="ob-art">
             <div class="ob-circle"></div>
@@ -24380,73 +25804,73 @@
             <span class="ob-emoji" style="top:30px; right:-4px;">${s.emojis[1]}</span>
             <span class="ob-emoji" style="bottom:14px; right:10px;">${s.emojis[2]}</span>
           </div>
-          <div class="ob-title">${s.title}</div>
-          <div class="ob-sub">${s.sub}</div>
+          <div class="ob-title">${t('ob.slide' + _obStep + '.title')}</div>
+          <div class="ob-sub">${t('ob.slide' + _obStep + '.sub')}</div>
         </div>
         <div class="ob-foot">
-          <button class="btn btn-primary btn-block" onclick="_obStep++; paintOnboard()">${_obStep === 2 ? 'Начнём! 🌸' : 'Дальше'}</button>
+          <button class="btn btn-primary btn-block" onclick="_obStep++; paintOnboard()">${_obStep === 2 ? t('ob.start') : t('ob.next')}</button>
         </div>`;
       return;
     }
     // Шаг 3: кто ты (для персонализации и темы)
     if (_obStep === 3) {
       el.innerHTML = `
-        <div class="ob-top">${dots(3)}<button class="ob-skip" onclick="obSkip()">Пропустить</button></div>
+        <div class="ob-top">${dots(3)}<button class="ob-skip" onclick="obSkip()">${t('ob.skip')}</button></div>
         <div class="ob-body" style="justify-content:flex-start; padding-top:26px; text-align:left; align-items:stretch;">
-          <div class="ob-title" style="text-align:center;">Расскажи о себе</div>
-          <div class="ob-sub" style="text-align:center; margin:8px auto 20px;">Подберём оформление под тебя</div>
+          <div class="ob-title" style="text-align:center;">${t('ob.aboutYou')}</div>
+          <div class="ob-sub" style="text-align:center; margin:8px auto 20px;">${t('ob.aboutYouSub')}</div>
           <button class="ob-opt ${_obGender === 'f' ? 'sel' : ''}" onclick="obPickGender('f')">
-            <span class="ob-ico">👩</span>Я девушка
+            <span class="ob-ico">👩</span>${t('ob.girl')}
             <i class="fa-solid fa-check ob-check"></i>
           </button>
           <button class="ob-opt ${_obGender === 'm' ? 'sel' : ''}" onclick="obPickGender('m')">
-            <span class="ob-ico">👨</span>Я парень
+            <span class="ob-ico">👨</span>${t('ob.boy')}
             <i class="fa-solid fa-check ob-check"></i>
           </button>
           <button class="ob-opt ${_obGender === 'x' ? 'sel' : ''}" onclick="obPickGender('x')">
-            <span class="ob-ico">🌸</span>Не хочу говорить
+            <span class="ob-ico">🌸</span>${t('ob.noSay')}
             <i class="fa-solid fa-check ob-check"></i>
           </button>
         </div>
         <div class="ob-foot">
-          <button class="btn btn-primary btn-block" onclick="if(_obGender){_obStep++; paintOnboard()}else{toast('Выбери вариант 🌸')}">Дальше</button>
+          <button class="btn btn-primary btn-block" onclick="if(_obGender){_obStep++; paintOnboard()}else{toast('${jsStr(t('ob.pickOne'))}')}">${t('ob.next')}</button>
         </div>`;
       return;
     }
     // Шаг 4: цели (мульти-выбор)
     if (_obStep === 4) {
       el.innerHTML = `
-        <div class="ob-top">${dots(4)}<button class="ob-skip" onclick="obSkip()">Пропустить</button></div>
+        <div class="ob-top">${dots(4)}<button class="ob-skip" onclick="obSkip()">${t('ob.skip')}</button></div>
         <div class="ob-body" style="justify-content:flex-start; padding-top:26px; text-align:left; align-items:stretch;">
-          <div class="ob-title" style="text-align:center;">Зачем тебе корейский?</div>
-          <div class="ob-sub" style="text-align:center; margin:8px auto 20px;">Можно выбрать несколько — подстроим занятия под тебя</div>
-          ${OB_GOALS.map(([k, ico, label]) => `
+          <div class="ob-title" style="text-align:center;">${t('ob.whyKorean')}</div>
+          <div class="ob-sub" style="text-align:center; margin:8px auto 20px;">${t('ob.whyKoreanSub')}</div>
+          ${OB_GOALS.map(([k, ico]) => `
             <button class="ob-opt ${_obGoals.includes(k) ? 'sel' : ''}" onclick="obToggleGoal('${k}')">
-              <span class="ob-ico">${ico}</span>${label}
+              <span class="ob-ico">${ico}</span>${t('ob.goal.' + k)}
               <i class="fa-solid fa-check ob-check"></i>
             </button>`).join('')}
         </div>
         <div class="ob-foot">
-          <button class="btn btn-primary btn-block" onclick="if(_obGoals.length){_obStep++; paintOnboard()}else{toast('Выбери хотя бы одну цель 🌸')}">Дальше</button>
+          <button class="btn btn-primary btn-block" onclick="if(_obGoals.length){_obStep++; paintOnboard()}else{toast('${jsStr(t('ob.pickGoal'))}')}">${t('ob.next')}</button>
         </div>`;
       return;
     }
     // Шаг 5: уровень
     if (_obStep === 5) {
       el.innerHTML = `
-        <div class="ob-top">${dots(5)}<button class="ob-skip" onclick="obSkip()">Пропустить</button></div>
+        <div class="ob-top">${dots(5)}<button class="ob-skip" onclick="obSkip()">${t('ob.skip')}</button></div>
         <div class="ob-body" style="justify-content:flex-start; padding-top:26px; text-align:left; align-items:stretch;">
-          <div class="ob-title" style="text-align:center;">Какой у тебя уровень?</div>
-          <div class="ob-sub" style="text-align:center; margin:8px auto 20px;">Честно — так интереснее 🌸</div>
-          ${OB_LEVELS.map(([k, ico, label, sub]) => `
+          <div class="ob-title" style="text-align:center;">${t('ob.yourLevel')}</div>
+          <div class="ob-sub" style="text-align:center; margin:8px auto 20px;">${t('ob.yourLevelSub')}</div>
+          ${OB_LEVELS.map(([k, ico]) => `
             <button class="ob-opt ${_obLevel === k ? 'sel' : ''}" onclick="obPickLevel('${k}')">
               <span class="ob-ico">${ico}</span>
-              <span style="min-width:0;">${label}<br><span style="font-size:11px; font-weight:500; color:var(--soft);">${sub}</span></span>
+              <span style="min-width:0;">${t('ob.lvl.' + k + '.t')}<br><span style="font-size:11px; font-weight:500; color:var(--soft);">${t('ob.lvl.' + k + '.s')}</span></span>
               <i class="fa-solid fa-check ob-check"></i>
             </button>`).join('')}
         </div>
         <div class="ob-foot">
-          <button class="btn btn-primary btn-block" onclick="obAfterLevel()">Дальше</button>
+          <button class="btn btn-primary btn-block" onclick="obAfterLevel()">${t('ob.next')}</button>
         </div>`;
       return;
     }
@@ -24455,8 +25879,8 @@
       const q = _obQuiz.qs[_obQuiz.idx];
       el.innerHTML = `
         <div class="ob-top">
-          <div style="font-size:11px; letter-spacing:.16em; color:var(--soft); font-weight:600;">МИНИ-ТЕСТ · ${_obQuiz.idx + 1} / ${_obQuiz.qs.length}</div>
-          <button class="ob-skip" onclick="obQuizFinish()">Хватит</button>
+          <div style="font-size:11px; letter-spacing:.16em; color:var(--soft); font-weight:600;">${t('ob.miniTest')} · ${_obQuiz.idx + 1} / ${_obQuiz.qs.length}</div>
+          <button class="ob-skip" onclick="obQuizFinish()">${t('ob.enough')}</button>
         </div>
         <div class="ob-body" style="justify-content:flex-start; padding-top:18px; text-align:left; align-items:stretch;">
           <div style="display:flex; gap:4px; margin-bottom:16px;">${_obQuiz.qs.map((_, i) => `<span style="flex:1; height:4px; border-radius:999px; background:${i < _obQuiz.idx ? 'var(--coral)' : 'rgba(var(--rose-rgb),.25)'};"></span>`).join('')}</div>
@@ -24473,9 +25897,9 @@
     let levelLine = '';
     if (_obQuiz) {
       const sc = _obQuiz.score, n = _obQuiz.qs.length;
-      const verdict = sc >= 8 ? ['🌳', `${sc}/${n} — уверенная база!`, 'Тебе уже можно готовиться к ТОПИК I — загляни в раздел экзаменов.']
-        : sc >= 5 ? ['🌸', `${sc}/${n} — хорошая база`, 'Хангыль знаком, осталось набрать слова и грамматику. Мади поможет.']
-        : ['🌱', `${sc}/${n} — начнём с основ`, 'Идеальная точка старта: алфавит и первые слова. Через месяц не узнаешь себя!'];
+      const verdict = sc >= 8 ? ['🌳', t('ob.verdictHi.title', { sc: sc, n: n }), t('ob.verdictHi.sub')]
+        : sc >= 5 ? ['🌸', t('ob.verdictMid.title', { sc: sc, n: n }), t('ob.verdictMid.sub')]
+        : ['🌱', t('ob.verdictLow.title', { sc: sc, n: n }), t('ob.verdictLow.sub')];
       levelLine = `
         <div class="card card-padded" style="margin:0 0 16px; text-align:center; background:linear-gradient(160deg, var(--card), var(--paper));">
           <div style="font-size:38px;">${verdict[0]}</div>
@@ -24496,17 +25920,17 @@
         <div class="card card-padded" style="margin:0 0 16px; display:flex; align-items:center; gap:12px; background:linear-gradient(140deg, #202126, #2B2F39); border:none;">
           <span style="font-size:26px; flex-shrink:0;">🌙</span>
           <div style="flex:1; min-width:0; text-align:left;">
-            <div style="font-weight:700; color:#E7EBF4; font-size:13.5px;">Есть тёмная тема</div>
-            <div style="font-size:11px; color:rgba(231,235,244,.6); margin-top:2px;">Графит и синий — строго и без розового</div>
+            <div style="font-weight:700; color:#E7EBF4; font-size:13.5px;">${t('ob.darkTitle')}</div>
+            <div style="font-size:11px; color:rgba(231,235,244,.6); margin-top:2px;">${t('ob.darkSub')}</div>
           </div>
-          <button id="ob-dark-btn" onclick="obEnableDark()" class="btn" style="background:#6B8BD6; color:white; border:none; padding:9px 14px; font-size:12px; flex-shrink:0;">Включить</button>
+          <button id="ob-dark-btn" onclick="obEnableDark()" class="btn" style="background:#6B8BD6; color:white; border:none; padding:9px 14px; font-size:12px; flex-shrink:0;">${t('ob.darkOn')}</button>
         </div>` : ''}
-        <div class="ob-title" style="text-align:center; font-size:22px;">Всё готово!</div>
-        <div class="ob-sub" style="text-align:center; margin:8px auto 0;">Создай аккаунт, чтобы сохранять прогресс, стрик и соревноваться с друзьями.</div>
+        <div class="ob-title" style="text-align:center; font-size:22px;">${t('ob.allReady')}</div>
+        <div class="ob-sub" style="text-align:center; margin:8px auto 0;">${t('ob.allReadySub')}</div>
       </div>
       <div class="ob-foot">
-        <button class="btn btn-primary btn-block" onclick="finishOnboarding(true)">Создать аккаунт ✨</button>
-        <button class="btn btn-ghost btn-block" style="margin-top:10px;" onclick="finishOnboarding(false)">Позже · просто посмотреть</button>
+        <button class="btn btn-primary btn-block" onclick="finishOnboarding(true)">${t('ob.createAcc')}</button>
+        <button class="btn btn-ghost btn-block" style="margin-top:10px;" onclick="finishOnboarding(false)">${t('ob.later')}</button>
       </div>`;
   }
   function obToggleGoal(k) {
@@ -24517,7 +25941,7 @@
   function obPickGender(g) { _obGender = g; paintOnboard(); }
   function obPickLevel(k) { _obLevel = k; paintOnboard(); }
   function obAfterLevel() {
-    if (!_obLevel) { toast('Выбери вариант 🌸'); return; }
+    if (!_obLevel) { toast(t('ob.pickOne')); return; }
     if (_obLevel === 'unknown' || (_obGoals.includes('topik') && _obLevel !== 'zero')) {
       obStartMiniQuiz();
     } else {
@@ -24733,7 +26157,9 @@
       }
     } else {
       // No Firebase session — clear stale local user (without toast)
-      if (local && !local.isAdmin && !local.guest) {
+      // Kakao-сессией управляет Supabase (fbUser всегда null) — её здесь не трогаем,
+      // иначе вошедший через Kakao разлогинивается при каждой перезагрузке.
+      if (local && !local.isAdmin && !local.guest && local.provider !== 'kakao') {
         detachUserListeners();
         detachFriendsListeners();
         detachChatListener();
