@@ -261,6 +261,38 @@
     'ss.cards':       { ru: 'карточек', en: 'cards', uz: 'karta' },
     'ss.empty':       { ru: 'Пока пусто. Сохрани слово ♡ из карточек или 한글 Lab 🌸', en: 'Empty for now. Save a word ♡ from cards or 한글 Lab 🌸', uz: 'Hozircha boʻsh. Kartochkalardan yoki 한글 Lab dan ♡ bilan soʻz saqlang 🌸' },
     'lesson.tileNum': { ru: 'Урок {n}', en: 'Lesson {n}', uz: '{n}-dars' },
+    'topik.heroSub1': { ru: '초급 · уровни 1–2급 · 듣기 + 읽기', en: '초급 · levels 1–2급 · 듣기 + 읽기', uz: '초급 · 1–2급 darajalar · 듣기 + 읽기' },
+    'td.pickLevel':   { ru: 'Выбери уровень и тип задания', en: 'Choose a level and task type', uz: 'Daraja va topshiriq turini tanlang' },
+    'td.studied':     { ru: 'изучено', en: 'studied', uz: 'oʻrganildi' },
+    'td.realTasks':   { ru: 'Реальные задания из прошлых тестов', en: 'Real tasks from past tests', uz: 'Oʻtgan testlardagi haqiqiy topshiriqlar' },
+    'td.lvl3': { ru: '1–24 · базовый уровень', en: '1–24 · basic level', uz: '1–24 · boshlangʻich daraja' },
+    'td.lvl4': { ru: '25–34 · газеты и выводы', en: '25–34 · news & conclusions', uz: '25–34 · gazetalar va xulosalar' },
+    'td.lvl5': { ru: '35–43 · тема и проза', en: '35–43 · theme & prose', uz: '35–43 · mavzu va nasr' },
+    'td.lvl6': { ru: '44–50 · публицистика (논설문)', en: '44–50 · op-ed (논설문)', uz: '44–50 · publitsistika (논설문)' },
+    'exam.qno':       { ru: 'Вопрос', en: 'Question', uz: 'Savol' },
+    'exam.pts':       { ru: 'балла', en: 'pts', uz: 'ball' },
+    'exam.noAnswer':  { ru: 'Без ответа: {n}. Завершить тест?', en: 'Unanswered: {n}. Finish the test?', uz: 'Javobsiz: {n}. Testni tugatasizmi?' },
+    'exam.finishQ':   { ru: 'Завершить тест?', en: 'Finish the test?', uz: 'Testni tugatasizmi?' },
+    'exam.result':    { ru: 'Результат', en: 'Result', uz: 'Natija' },
+    'exam.correctOf': { ru: 'Верно {c} из {n}', en: '{c} correct of {n}', uz: '{n} tadan {c} ta toʻgʻri' },
+    'exam.noteGreat': { ru: '🌟 Отличный результат!', en: '🌟 Excellent result!', uz: '🌟 Aʼlo natija!' },
+    'exam.noteGood':  { ru: '👍 Хорошо, продолжай!', en: '👍 Good, keep going!', uz: '👍 Yaxshi, davom eting!' },
+    'exam.noteTry':   { ru: '🌱 Тренируйся — всё получится!', en: '🌱 Keep practicing — you’ll get there!', uz: '🌱 Mashq qiling — albatta uddalaysiz!' },
+    'exam.answered':  { ru: 'отвечено', en: 'answered', uz: 'javob berildi' },
+    'feed.all':       { ru: 'Вся лента ({n}) →', en: 'All posts ({n}) →', uz: 'Barcha lenta ({n}) →' },
+    'feed.studentTag':{ ru: '🌸 ученик', en: '🌸 student', uz: '🌸 oʻquvchi' },
+    'feed.studentName':{ ru: 'Ученик', en: 'Student', uz: 'Oʻquvchi' },
+    'feed.you':       { ru: '· ты', en: '· you', uz: '· siz' },
+    'feed.hide':      { ru: 'Скрыть', en: 'Hide', uz: 'Yashirish' },
+    'feed.show':      { ru: 'Посмотреть', en: 'View', uz: 'Koʻrish' },
+    'feed.like':      { ru: 'Нравится', en: 'Like', uz: 'Yoqdi' },
+    'feed.replyTo':   { ru: 'Ответ {name}…', en: 'Reply to {name}…', uz: '{name}ga javob…' },
+    'feed.noName':    { ru: 'Без имени', en: 'No name', uz: 'Ismsiz' },
+    'rd.savePhrase':  { ru: 'Сохранить фразу в словарик', en: 'Save phrase to dictionary', uz: 'Iborani lugʻatga saqlash' },
+    'rd.savePhraseShort': { ru: 'Сохранить фразу', en: 'Save phrase', uz: 'Iborani saqlash' },
+    'srs.none':       { ru: 'Сейчас нет карточек к повторению 🌸', en: 'No cards to review right now 🌸', uz: 'Hozir takrorlash uchun karta yoʻq 🌸' },
+    'media.video':    { ru: 'видео', en: 'videos', uz: 'video' },
+    'lesson.eyebrowReview': { ru: 'УРОК {n} · ПОВТОРЕНИЕ', en: 'LESSON {n} · REVIEW', uz: '{n}-DARS · TAKRORLASH' },
 
     // ── Игры ──
     'games.eyebrow':   { ru: 'ИГРЫ И ПРАКТИКА', en: 'GAMES & PRACTICE', uz: 'OʻYIN VA AMALIYOT' },
@@ -3477,7 +3509,7 @@
   }
   function startDueFlashcards() {
     const due = srsDueList();
-    if (!due.length) { toast('Сейчас нет карточек к повторению 🌸', 'var(--sage)'); renderSrsWidget(); return; }
+    if (!due.length) { toast(t('srs.none'), 'var(--sage)'); renderSrsWidget(); return; }
     fcReplayFn = startDueFlashcards;
     startFlashcardSession(due);
   }
@@ -20871,7 +20903,7 @@
       <div class="topik-hero">
         <div class="topik-hero-badge">TOPIK <b>I</b></div>
         <div class="topik-hero-title ko">한국어능력시험</div>
-        <div class="topik-hero-sub">초급 · уровни 1–2급 · 듣기 + 읽기</div>
+        <div class="topik-hero-sub">${t('topik.heroSub1')}</div>
       </div>
       <button type="button" class="topik-exam-card" onclick="openTopikSection('exams')">
         <div class="topik-exam-ico">📝</div>
@@ -23176,9 +23208,9 @@
     }
   ];
   const TOPIK_DEEP_SECTIONS = [
-    { k:'reading',   ico:'📖', t:'읽기 · Чтение',  s:'18 типов · вопросы 1–50', types:TOPIK_DEEP_READING, ready:true },
-    { k:'listening', ico:'🎧', t:'듣기 · Аудир.',  s:'скоро', ready:false },
-    { k:'writing',   ico:'✍️', t:'쓰기 · Письмо',  s:'скоро', ready:false }
+    { k:'reading',   ico:'📖', t:'읽기 · Чтение', t_uz:'읽기 · Oʻqish',  s:'18 типов · вопросы 1–50', s_uz:'18 tur · 1–50 savollar', types:TOPIK_DEEP_READING, ready:true },
+    { k:'listening', ico:'🎧', t:'듣기 · Аудир.', t_uz:'듣기 · Tinglash',  s:'скоро', s_uz:'tez orada', ready:false },
+    { k:'writing',   ico:'✍️', t:'쓰기 · Письмо', t_uz:'쓰기 · Yozish',  s:'скоро', s_uz:'tez orada', ready:false }
   ];
   const TD_LEVELS = [3, 4, 5, 6];
   const _tdState = { section:null, level:3, typeId:null };
@@ -23207,7 +23239,7 @@
       { ko:'가을에는 시원하고 단풍이 아름답습니다.', ru:'Осенью прохладно и красивы осенние листья.', ru_uz:'Kuzda salqin va kuzgi barglar chiroyli.', words:[['가을','осень','kuz'],['시원하다','прохладный','salqin'],['단풍','осенняя листва','kuzgi barglar'],['아름답다','красивый','chiroyli']] },
       { ko:'겨울에는 춥고 눈이 옵니다.', ru:'Зимой холодно и идёт снег.', ru_uz:'Qishda sovuq va qor yogʻadi.', words:[['겨울','зима','qish'],['춥다','холодный','sovuq'],['눈이 오다','идёт снег','qor yogʻadi']] }
     ]},
-    { id:'energy', emoji:'⚡', title:'Возобновляемая энергия', titleKo:'신재생에너지', theme:'Экология · TOPIK II', level:'TOPIK II', sentences:[
+    { id:'energy', emoji:'⚡', title:'Возобновляемая энергия', title_uz:'Qayta tiklanadigan energiya', titleKo:'신재생에너지', theme:'Экология · TOPIK II', theme_uz:'Ekologiya · TOPIK II', level:'TOPIK II', sentences:[
       { ko:'신재생에너지는 신생에너지, 재생에너지를 합친 말이다.', ru:'«Возобновляемая энергия» — это объединённое название новой и восстанавливаемой энергии.', words:[['신재생에너지','возобновляемая энергия'],['신생에너지','новая энергия'],['재생에너지','восстанавливаемая энергия'],['합치다','объединять'],['말','слово, название'],['-이다','быть']] },
       { ko:'신재생에너지는 물, 바람, 햇빛 등 자연의 힘을 이용해서 개발하는 에너지이기 때문에 고갈의 위험이나 환경오염의 가능성이 낮다.', ru:'Возобновляемую энергию получают, используя силы природы — воду, ветер, солнечный свет, поэтому риск её исчерпания и загрязнения среды низок.', words:[['물','вода'],['바람','ветер'],['햇빛','солнечный свет'],['등','и так далее'],['자연','природа'],['힘','сила'],['이용하다','использовать'],['개발하다','разрабатывать'],['-기 때문에','потому что'],['고갈','истощение'],['위험','риск'],['환경오염','загрязнение среды'],['가능성','вероятность'],['낮다','низкий']] },
       { ko:'이에 따라 최근 새로운 신재생 에너지 개발에 적극 나서고 있는 국가들이 많다.', ru:'В связи с этим в последнее время многие страны активно занимаются разработкой новых возобновляемых источников энергии.', words:[['이에 따라','в связи с этим'],['최근','в последнее время'],['새롭다','новый'],['개발','разработка'],['적극','активно'],['나서다','браться, участвовать'],['국가','страна'],['많다','много']] },
@@ -23311,7 +23343,7 @@
             <div class="rd-bd-top">
               <button type="button" class="rd-bd-spk" onclick="rdSpeakOne(${i}, this)" aria-label="${t('ui.181')}"><i class="fa-solid fa-volume-high" aria-hidden="true"></i></button>
               <span class="rd-bd-ko ko">${s.ko}</span>
-              <button type="button" class="rd-bd-save" onclick="toggleMyWord('${jsStr(s.ko)}','${jsStr(s.ru || '')}','','📑','reading', this, 'phrase')" aria-label="Сохранить фразу в словарик" title="Сохранить фразу">${isMyWord(s.ko) ? '<i class="fa-solid fa-heart" style="color:var(--coral);"></i>' : '<i class="fa-regular fa-heart"></i>'}</button>
+              <button type="button" class="rd-bd-save" onclick="toggleMyWord('${jsStr(s.ko)}','${jsStr(s.ru || '')}','','📑','reading', this, 'phrase')" aria-label="${t('rd.savePhrase')}" title="${t('rd.savePhraseShort')}">${isMyWord(s.ko) ? '<i class="fa-solid fa-heart" style="color:var(--coral);"></i>' : '<i class="fa-regular fa-heart"></i>'}</button>
             </div>
             <div class="rd-bd-ru">${skLoc(s, 'ru')}</div>
             ${s.words && s.words.length ? `<div class="rd-words">${s.words.map(w => {
@@ -23874,16 +23906,16 @@
       </div>
       <div class="topik-menu-grid">
         ${TOPIK_DEEP_SECTIONS.map(s => `
-          <button type="button" class="topik-menu-card${s.ready ? '' : ' td-soon'}" onclick="tdPickSection('${s.k}')" aria-label="${s.t}">
+          <button type="button" class="topik-menu-card${s.ready ? '' : ' td-soon'}" onclick="tdPickSection('${s.k}')" aria-label="${skLoc(s,'t')}">
             <span class="topik-menu-ico" aria-hidden="true">${s.ico}</span>
-            <span class="topik-menu-t">${s.t}</span>
-            <span class="topik-menu-s">${s.s}</span>
+            <span class="topik-menu-t">${skLoc(s,'t')}</span>
+            <span class="topik-menu-s">${skLoc(s,'s')}</span>
             ${s.ready ? '' : '<span class="td-soon-tag">' + t('ui.186') + '</span>'}
           </button>`).join('')}
       </div>`;
   }
   function tdLevelHint(lvl) {
-    return lvl === 3 ? '1–24 · базовый уровень' : lvl === 4 ? '25–34 · газеты и выводы' : lvl === 5 ? '35–43 · тема и проза' : '44–50 · публицистика (논설문)';
+    return lvl === 3 ? t('td.lvl3') : lvl === 4 ? t('td.lvl4') : lvl === 5 ? t('td.lvl5') : t('td.lvl6');
   }
   function tdRenderTypes(slot) {
     const sec = TOPIK_DEEP_SECTIONS.find(s => s.k === _tdState.section);
@@ -23893,7 +23925,7 @@
     const done = ready.filter(t => tdIsDone(t.id)).length;
     slot.innerHTML = `
       <button type="button" class="topik-back" onclick="topikDeepBack()"><i class="fa-solid fa-chevron-left"></i> ${t('ui.180')}</button>
-      <div class="topik-sec-head"><h2 class="topik-sec-title">${sec.ico} ${sec.t}</h2><p class="topik-sec-sub">Выбери уровень и тип задания${ready.length ? ` · изучено ${done}/${ready.length}` : ''}</p></div>
+      <div class="topik-sec-head"><h2 class="topik-sec-title">${sec.ico} ${skLoc(sec,'t')}</h2><p class="topik-sec-sub">${t('td.pickLevel')}${ready.length ? ` · ${t('td.studied')} ${done}/${ready.length}` : ''}</p></div>
       <div class="td-levels" role="group" aria-label="${t('ui.187')}">
         ${TD_LEVELS.map(n => `<button type="button" class="td-level-btn${n === lvl ? ' active' : ''}" onclick="tdSetLevel(${n})" aria-pressed="${n === lvl}">${n}급</button>`).join('')}
       </div>
@@ -23978,7 +24010,7 @@
       ? real.map((ex, i) => tdRealExampleHtml(ex, i)).join('')
       : (ty.examples || []).map((ex, i) => tdExampleHtml(ex, i)).join('');
     const exHead = useReal
-      ? `📝 Реальные задания из прошлых тестов <span class="td-ex-count">${real.length} из 9 회차</span>`
+      ? `📝 ${t('td.realTasks')} <span class="td-ex-count">${real.length} / 9 회차</span>`
       : '📝 Примеры · нажми вариант для проверки';
     const isDone = tdIsDone(ty.id);
     slot.innerHTML = `
@@ -24985,7 +25017,7 @@
         </div>
         ${audioHtml}
       </div>
-      <div class="exam-progress"><span id="exam-answered">${Object.keys(st.answers).length}</span>/${st.questions.length} отвечено</div>
+      <div class="exam-progress"><span id="exam-answered">${Object.keys(st.answers).length}</span>/${st.questions.length} ${t('exam.answered')}</div>
       <div class="exam-body" id="exam-body"></div>
       <details class="exam-pal-wrap"><summary>${t('ui.203')} (<span id="exam-pal-count">${Object.keys(st.answers).length}</span>/${st.questions.length})</summary><div class="exam-palette" id="exam-palette">${palette}</div></details>
       <div class="exam-foot" id="exam-foot"></div>`;
@@ -25085,7 +25117,7 @@
     }).join('');
     const body = document.getElementById('exam-body');
     body.innerHTML = `
-      <div class="exam-qno">Вопрос ${st.idx + 1} ${q.n !== st.idx + 1 ? `<span class="exam-q-orig">№${q.n}</span>` : ''} <span class="exam-pts">${q.points} балла</span></div>
+      <div class="exam-qno">${t('exam.qno')} ${st.idx + 1} ${q.n !== st.idx + 1 ? `<span class="exam-q-orig">№${q.n}</span>` : ''} <span class="exam-pts">${q.points} ${t('exam.pts')}</span></div>
       <div class="exam-instr">${q.instr || ''}</div>
       ${listenBtn}
       ${image}${passage}
@@ -25124,7 +25156,7 @@
   function confirmFinishExam() {
     const st = _examState; if (!st) return;
     const left = st.questions.length - Object.keys(st.answers).length;
-    const msg = left > 0 ? `Без ответа: ${left}. Завершить тест?` : 'Завершить тест?';
+    const msg = left > 0 ? t('exam.noAnswer', { n: left }) : t('exam.finishQ');
     if (confirm(msg)) finishExam(false);
   }
   function finishExam(byTime) {
@@ -25160,13 +25192,13 @@
     ov.innerHTML = `
       <div class="exam-top">
         <button type="button" class="exam-close" onclick="closeExam()" aria-label="${t('ui.023')}"><i class="fa-solid fa-xmark"></i></button>
-        <div class="exam-title">Результат · ${st.label}</div>
+        <div class="exam-title">${t('exam.result')} · ${st.label}</div>
       </div>
       <div class="exam-results">
         <div class="exam-score-card">
           <div class="exam-score-big">${score}<span>/${st.total}</span></div>
-          <div class="exam-score-sub">Верно ${correct} из ${st.questions.length} · ${pct}%</div>
-          <div class="exam-score-note">${score >= 70 ? '🌟 Отличный результат!' : score >= 50 ? '👍 Хорошо, продолжай!' : '🌱 Тренируйся — всё получится!'}</div>
+          <div class="exam-score-sub">${t('exam.correctOf', { c: correct, n: st.questions.length })} · ${pct}%</div>
+          <div class="exam-score-note">${score >= 70 ? t('exam.noteGreat') : score >= 50 ? t('exam.noteGood') : t('exam.noteTry')}</div>
           ${byTime ? '<div class="exam-score-time">' + t('ui.209') + '</div>' : ''}
         </div>
         <div class="exam-review-head">${t('exam.reviewHead')}</div>
@@ -25545,7 +25577,7 @@
       <div class="modal-card" style="max-width:380px;">
         <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:14px;">
           <div>
-            <div class="page-eyebrow">УРОК ${l.num} · ПОВТОРЕНИЕ</div>
+            <div class="page-eyebrow">${t('lesson.eyebrowReview', { n: l.num })}</div>
             <div class="display" style="font-size: 22px; color: var(--berry); margin-top: 4px; line-height:1.2;">${lessonTitle(l)}</div>
           </div>
           <div onclick="this.closest('.modal-bg').remove()" style="font-size:24px; color:var(--soft); cursor:pointer;">×</div>
@@ -25797,7 +25829,7 @@
     let shown, footer = '';
     if (!feedShowAll) {
       shown = merged.slice(0, 5);
-      if (total > 5) footer = `<div><button onclick="showAllFeed()" class="btn btn-ghost btn-block">Вся лента (${total}) →</button></div>`;
+      if (total > 5) footer = `<div><button onclick="showAllFeed()" class="btn btn-ghost btn-block">${t('feed.all', { n: total })}</button></div>`;
     } else {
       const pages = Math.ceil(total / FEED_PER_PAGE);
       if (feedPage > pages - 1) feedPage = pages - 1;
@@ -25861,8 +25893,8 @@
       <div class="feed-student-head">
         ${av ? `<img class="feed-student-av" src="${av}" alt="">` : `<div class="feed-student-av feed-student-av-initial">${escHtml((p.name || '?').charAt(0).toUpperCase())}</div>`}
         <div style="flex:1; min-width:0;">
-          <div class="feed-student-name">${escHtml(p.name || 'Ученик')}${isAuthor ? ' <span class="feed-student-you">· ты</span>' : ''}</div>
-          <div class="feed-student-time">🌸 ученик · ${escHtml(when)}</div>
+          <div class="feed-student-name">${escHtml(p.name || t('feed.studentName'))}${isAuthor ? ` <span class="feed-student-you">${t('feed.you')}</span>` : ''}</div>
+          <div class="feed-student-time">${t('feed.studentTag')} · ${escHtml(when)}</div>
         </div>
         ${canDelete
           ? `<button class="feed-student-act" onclick="deleteUserPost('${pid}')" aria-label="${t('ui.233')}" title="${t('ui.018')}"><i class="fa-solid fa-trash-can"></i></button>`
@@ -26372,6 +26404,8 @@
   // Which comment IDs have their replies block currently expanded (preserved across re-renders)
   const _expandedReplies = new Set();
   function pluralReplies(n) {
+    if (APP_LANG === 'uz') return 'javob';
+    if (APP_LANG === 'en') return n === 1 ? 'reply' : 'replies';
     const m100 = n % 100, m10 = n % 10;
     if (m100 >= 11 && m100 <= 14) return 'ответов';
     if (m10 === 1) return 'ответ';
@@ -26396,19 +26430,19 @@
     const iLiked = !!likes[me];
     const replies = repliesArray(c);
     const repliesOpen = _expandedReplies.has(c.id);
-    const repToggleLabel = repliesOpen ? `Скрыть ${pluralReplies(replies.length)}` : `Посмотреть ${replies.length} ${pluralReplies(replies.length)}`;
+    const repToggleLabel = repliesOpen ? `${t('feed.hide')} ${pluralReplies(replies.length)}` : `${t('feed.show')} ${replies.length} ${pluralReplies(replies.length)}`;
     return `
       <div class="feed-comment-item" data-cid="${c.id}">
         <div class="${avClass}" style="${avStyle}">${avContent}</div>
         <div class="feed-comment-bubble">
           <div class="feed-comment-head">
-            <span class="feed-comment-name">${escAttrSafe(c.name || 'Без имени')}</span>
+            <span class="feed-comment-name">${escAttrSafe(c.name || t('feed.noName'))}</span>
             <span class="feed-comment-time">${relativeTime(c.ts)}</span>
             ${delBtn}
           </div>
           <div class="feed-comment-text">${escAttrSafe(c.text)}</div>
           <div class="comment-actions">
-            <button class="comment-action comment-like-btn ${iLiked ? 'liked' : ''}" data-pid="${pid}" data-cid="${c.id}" aria-label="Нравится" onclick="toggleCommentLike('${pid}', '${c.id}', this)">
+            <button class="comment-action comment-like-btn ${iLiked ? 'liked' : ''}" data-pid="${pid}" data-cid="${c.id}" aria-label="${t('feed.like')}" onclick="toggleCommentLike('${pid}', '${c.id}', this)">
               <i class="${iLiked ? 'fa-solid' : 'fa-regular'} fa-heart"></i>
               <span class="comment-like-count">${likeN || ''}</span>
             </button>
@@ -26425,7 +26459,7 @@
             <div class="comment-replies ${repliesOpen ? 'open' : ''}" data-cid="${c.id}">${replies.map(r => renderReplyItem(pid, c.id, r)).join('')}</div>
           ` : ''}
           <div class="reply-form-wrap" data-cid="${c.id}">
-            <input class="reply-input" maxlength="500" placeholder="Ответ ${escAttrSafe(c.name || '')}…" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();submitReply('${pid}', '${c.id}', this);}">
+            <input class="reply-input" maxlength="500" placeholder="${t('feed.replyTo', { name: escAttrSafe(c.name || '') })}" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();submitReply('${pid}', '${c.id}', this);}">
             <button class="reply-send" onclick="submitReply('${pid}', '${c.id}', this)" aria-label="${t('ui.111')}"><i class="fa-solid fa-paper-plane"></i></button>
           </div>
         </div>
@@ -27846,7 +27880,7 @@
     slot.innerHTML = `
       <div class="section-head" style="margin-top:8px;">
         <div class="left"><div class="rule"></div><span class="title">${t('ui.282')}</span></div>
-        <span class="meta">${total} видео</span>
+        <span class="meta">${total} ${t('media.video')}</span>
       </div>
       <div style="display:grid; gap:14px;">${shown.map(videoCardHtml).join('')}</div>
       ${footer}
