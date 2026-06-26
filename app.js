@@ -252,6 +252,15 @@
     'mod.m6.nav':   { ru: 'Модуль 6 · Тонкости', en: 'Module 6 · Subtleties', uz: '6-modul · Nozikliklar' },
     'mod.m6.hName': { ru: 'Высокий уровень', en: 'Advanced level', uz: 'Yuqori daraja' },
     'mod.m6.hSub':  { ru: '고급 · 5급 · нюансы, предположения, сожаления', en: '고급 · 5급 · nuances, assumptions, regrets', uz: '고급 · 5급 · nozikliklar, taxminlar, afsuslar' },
+    'mod.m7.nav':   { ru: 'Модуль 7 · B1', en: 'Module 7 · B1', uz: '7-modul · B1' },
+    'mod.m7.hName': { ru: 'Уверенный B1', en: 'Confident B1', uz: 'Ishonchli B1' },
+    'mod.m7.hSub':  { ru: '4급 · знакомства · профессии · культура', en: '4급 · acquaintance · professions · culture', uz: '4급 · tanishuv · kasblar · madaniyat' },
+    'mod.m8.nav':   { ru: 'Модуль 8 · C1', en: 'Module 8 · C1', uz: '8-modul · C1' },
+    'mod.m8.hName': { ru: 'Продвинутый C1', en: 'Advanced C1', uz: 'Ilgʻor C1' },
+    'mod.m8.hSub':  { ru: '6급 · наука, общество, экономика, искусство, литература', en: '6급 · science, society, economy, art, literature', uz: '6급 · fan, jamiyat, iqtisod, sanʼat, adabiyot' },
+    'ss.cards':       { ru: 'карточек', en: 'cards', uz: 'karta' },
+    'ss.empty':       { ru: 'Пока пусто. Сохрани слово ♡ из карточек или 한글 Lab 🌸', en: 'Empty for now. Save a word ♡ from cards or 한글 Lab 🌸', uz: 'Hozircha boʻsh. Kartochkalardan yoki 한글 Lab dan ♡ bilan soʻz saqlang 🌸' },
+    'lesson.tileNum': { ru: 'Урок {n}', en: 'Lesson {n}', uz: '{n}-dars' },
 
     // ── Игры ──
     'games.eyebrow':   { ru: 'ИГРЫ И ПРАКТИКА', en: 'GAMES & PRACTICE', uz: 'OʻYIN VA AMALIYOT' },
@@ -2213,7 +2222,7 @@
     if (!slot) return;
     if (!list.length) {
       _wordsSelected.clear();
-      slot.innerHTML = `<div style="font-size:11.5px; color:var(--soft); text-align:center; padding:14px; font-style:italic;">Пока пусто. Сохрани слово ♡ из карточек или 한글 Lab 🌸</div>`;
+      slot.innerHTML = `<div style="font-size:11.5px; color:var(--soft); text-align:center; padding:14px; font-style:italic;">${t('ss.empty')}</div>`;
       return;
     }
     // Controls (search + sort) are rendered once here; the list re-renders separately
@@ -22063,23 +22072,23 @@
   // gameLvl — минимальный ранг ученицы, с которого раздел подмешивается в игры (0 초급, 1 중급, 2 고급).
   // game:false — раздел-правило (символы/таблицы), в игры не идёт.
   const SELFSTUDY = [
-    { k:'ss-basic',   ico:'🌱', t:'Начальная лексика',    s:'한국어 1-1 · приветствия · семья · класс · дом · места', groups:SS_BEGINNER, gameLvl:0 },
-    { k:'ss-basic2',  ico:'🍚', t:'Лексика: быт и темы',  s:'한국어 1-2 · еда · погода · время · покупки · транспорт · хобби · встречи · телефон · здоровье · путешествие', groups:SS_BEGINNER2, gameLvl:0 },
-    { k:'ss-inter',   ico:'🌿', t:'Лексика: 중급',         s:'한국어 2-1 · инструменты · спорт · одежда/цвета · готовка · школа/предметы · выражения', groups:SS_INTER, gameLvl:1 },
-    { k:'ss-inter2',  ico:'🍀', t:'Лексика: 중급 · 2',     s:'한국어 2-2 · внешность · праздники/подарки · здоровье · транспорт/расстояние', groups:SS_INTER2, gameLvl:1 },
-    { k:'ss-adv',     ico:'🌳', t:'Лексика: 고급',         s:'한국어 3-1/3-2 · деньги/банк · экология · праздники/волонтёрство · чувства · манеры', groups:SS_ADVANCED, gameLvl:2 },
-    { k:'ss-vocab',   ico:'💬', t:'Лексика: мнение',     s:'Согласие · несогласие · аргументы', gameLvl:1,
+    { k:'ss-basic',   ico:'🌱', t:'Начальная лексика', t_uz:'Boshlangʻich leksika',    s:'한국어 1-1 · приветствия · семья · класс · дом · места', s_uz:'한국어 1-1 · salomlashish · oila · sinf · uy · joylar', groups:SS_BEGINNER, gameLvl:0 },
+    { k:'ss-basic2',  ico:'🍚', t:'Лексика: быт и темы', t_uz:'Leksika: turmush va mavzular',  s:'한국어 1-2 · еда · погода · время · покупки · транспорт · хобби · встречи · телефон · здоровье · путешествие', s_uz:'한국어 1-2 · ovqat · ob-havo · vaqt · xaridlar · transport · xobbi · uchrashuvlar · telefon · salomatlik · sayohat', groups:SS_BEGINNER2, gameLvl:0 },
+    { k:'ss-inter',   ico:'🌿', t:'Лексика: 중급', t_uz:'Leksika: 중급',         s:'한국어 2-1 · инструменты · спорт · одежда/цвета · готовка · школа/предметы · выражения', s_uz:'한국어 2-1 · asboblar · sport · kiyim/ranglar · pazandalik · maktab/fanlar · iboralar', groups:SS_INTER, gameLvl:1 },
+    { k:'ss-inter2',  ico:'🍀', t:'Лексика: 중급 · 2', t_uz:'Leksika: 중급 · 2',     s:'한국어 2-2 · внешность · праздники/подарки · здоровье · транспорт/расстояние', s_uz:'한국어 2-2 · tashqi koʻrinish · bayramlar/sovgʻalar · salomatlik · transport/masofa', groups:SS_INTER2, gameLvl:1 },
+    { k:'ss-adv',     ico:'🌳', t:'Лексика: 고급', t_uz:'Leksika: 고급',         s:'한국어 3-1/3-2 · деньги/банк · экология · праздники/волонтёрство · чувства · манеры', s_uz:'한국어 3-1/3-2 · pul/bank · ekologiya · bayramlar/koʻngillilik · his-tuygʻular · odob', groups:SS_ADVANCED, gameLvl:2 },
+    { k:'ss-vocab',   ico:'💬', t:'Лексика: мнение', t_uz:'Leksika: fikr',     s:'Согласие · несогласие · аргументы', s_uz:'Rozilik · eʼtiroz · dalillar', gameLvl:1,
       refTitles:['Мнение: согласие и поддержка','Мнение: несогласие и критика','Аргументация и мнение'], extra:SS_VOCAB_EXTRA },
-    { k:'ss-theme',   ico:'🏛️', t:'Лексика по темам',    s:'Политика · экономика · общество · медицина · наука · экология', groups:SS_THEME, gameLvl:2 },
-    { k:'ss-idioms',  ico:'🪄', t:'Идиомы и пословицы',  s:'관용구 · 속담 · образные выражения', gameLvl:2,
+    { k:'ss-theme',   ico:'🏛️', t:'Лексика по темам', t_uz:'Mavzular boʻyicha leksika',    s:'Политика · экономика · общество · медицина · наука · экология', s_uz:'Siyosat · iqtisod · jamiyat · tibbiyot · fan · ekologiya', groups:SS_THEME, gameLvl:2 },
+    { k:'ss-idioms',  ico:'🪄', t:'Идиомы и пословицы', t_uz:'Idiomalar va maqollar',  s:'관용구 · 속담 · образные выражения', s_uz:'관용구 · 속담 · obrazli iboralar', gameLvl:2,
       refTitles:['Идиомы и пословицы (관용구·속담)'], extra:SS_IDIOMS_EXTRA },
-    { k:'ss-attitude',ico:'🎙️', t:'Отношение говорящего', s:'화자의 태도 · 듣기·읽기', groups:SS_ATTITUDE, gameLvl:1 },
-    { k:'ss-emotion', ico:'💛', t:'Эмоции героя',        s:'읽기 23·42 · чувства · оттенки', groups:SS_EMOTION, gameLvl:1 },
-    { k:'ss-synant',  ico:'🔁', t:'Синонимы и антонимы', s:'유의어 ≈ · 반의어 ↔ · наречия', groups:SS_SYNANT, game:false },
-    { k:'ss-verbs',   ico:'🧩', t:'Неправильные глаголы', s:'불규칙 · 8 типов + «не путать»', groups:SS_IRREGULAR, gameLvl:1 },
-    { k:'ss-pron',    ico:'🔤', t:'Произношение',        s:'받침 · 비음화 · 구개음화', groups:SS_PRON, game:false },
-    { k:'ss-phrases', ico:'🗣️', t:'Полезные фразы',      s:'каждый день · кафе · магазин · дорога', groups:SS_PHRASES, gameLvl:0 },
-    { k:'ss-numbers', ico:'🔢', t:'Числа, время, даты',  s:'Дни · время · деньги · счётные слова', groups:SS_NUMS, gameLvl:0 }
+    { k:'ss-attitude',ico:'🎙️', t:'Отношение говорящего', t_uz:'Soʻzlovchining munosabati', s:'화자의 태도 · 듣기·읽기', groups:SS_ATTITUDE, gameLvl:1 },
+    { k:'ss-emotion', ico:'💛', t:'Эмоции героя', t_uz:'Qahramon hissiyotlari',        s:'읽기 23·42 · чувства · оттенки', s_uz:'읽기 23·42 · his-tuygʻular · nozikliklar', groups:SS_EMOTION, gameLvl:1 },
+    { k:'ss-synant',  ico:'🔁', t:'Синонимы и антонимы', t_uz:'Sinonim va antonimlar', s:'유의어 ≈ · 반의어 ↔ · наречия', s_uz:'유의어 ≈ · 반의어 ↔ · ravishlar', groups:SS_SYNANT, game:false },
+    { k:'ss-verbs',   ico:'🧩', t:'Неправильные глаголы', t_uz:'Notoʻgʻri feʼllar', s:'불규칙 · 8 типов + «не путать»', s_uz:'불규칙 · 8 tur + «adashtirmaslik»', groups:SS_IRREGULAR, gameLvl:1 },
+    { k:'ss-pron',    ico:'🔤', t:'Произношение', t_uz:'Talaffuz',        s:'받침 · 비음화 · 구개음화', groups:SS_PRON, game:false },
+    { k:'ss-phrases', ico:'🗣️', t:'Полезные фразы', t_uz:'Foydali iboralar',      s:'каждый день · кафе · магазин · дорога', s_uz:'har kuni · kafe · doʻkon · yoʻl', groups:SS_PHRASES, gameLvl:0 },
+    { k:'ss-numbers', ico:'🔢', t:'Числа, время, даты', t_uz:'Sonlar, vaqt, sanalar',  s:'Дни · время · деньги · счётные слова', s_uz:'Kunlar · vaqt · pul · sanoq soʻzlari', groups:SS_NUMS, gameLvl:0 }
   ];
 
   function ssGroups(sec) {
@@ -22120,10 +22129,10 @@
       </div>
       <div class="topik-menu-grid">
         ${SELFSTUDY.map(x => `
-          <button type="button" class="topik-menu-card" onclick="openSsSection('${x.k}')" aria-label="${x.t}">
+          <button type="button" class="topik-menu-card" onclick="openSsSection('${x.k}')" aria-label="${skLoc(x,'t')}">
             <span class="topik-menu-ico" aria-hidden="true">${x.ico}</span>
-            <span class="topik-menu-t">${x.t}</span>
-            <span class="topik-menu-s">${x.s}</span>
+            <span class="topik-menu-t">${skLoc(x,'t')}</span>
+            <span class="topik-menu-s">${skLoc(x,'s')}</span>
           </button>`).join('')}
       </div>`;
   }
@@ -22134,7 +22143,7 @@
     const total = groups.reduce((n, g) => n + g.words.length, 0);
     slot.innerHTML = `
       <button type="button" class="topik-back" onclick="ssHome()"><i class="fa-solid fa-chevron-left"></i> ${t('ui.180')}</button>
-      <div class="topik-sec-head"><h2 class="topik-sec-title">${sec.ico} ${sec.t}</h2><p class="topik-sec-sub">${sec.s} · ${total} карточек</p></div>
+      <div class="topik-sec-head"><h2 class="topik-sec-title">${sec.ico} ${skLoc(sec,'t')}</h2><p class="topik-sec-sub">${skLoc(sec,'s')} · ${total} ${t('ss.cards')}</p></div>
       <div class="topik-rules">${groups.map(g => ssThemeHtml(g)).join('')}</div>`;
   }
   // ─────────────── Подготовка к ТОПИК · углублённый (심화): разбор по типам ───────────────
@@ -25445,7 +25454,7 @@
           koSize = longest <= 2 ? 24 : longest <= 3 ? 20 : 17;
         }
         body = `
-          <div class="tile-eyebrow">Урок ${l.num}</div>
+          <div class="tile-eyebrow">${t('lesson.tileNum',{n:l.num})}</div>
           <div class="tile-main ko" style="font-size:${koSize}px; line-height:1.05;">${koHtml}</div>
         `;
       } else {
