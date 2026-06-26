@@ -6038,3 +6038,6 @@
   @media (max-width: 360px) {
     #consonants-grid, #vowels-grid { gap: 6px !important; }
   }
+  /* Инлайновые SVG-графики в заданиях экзаменов TOPIK (쓰기 53, 듣기/읽기):
+     адаптивная ширина, иначе фикс. <svg width="460"> уезжает за край на мобиле. */
+  .exam-passage svg, .td-passage svg { max-width: 100%; height: auto; display: block; margin: 0 auto; }
