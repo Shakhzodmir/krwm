@@ -5488,8 +5488,8 @@
 
   function openGroupChat(gid, title) {
     if (!isLoggedInForChat()) { toast(t('ui.102')); return; }
-    const t = title || (_groupsCache && _groupsCache[gid] && _groupsCache[gid].title) || 'Группа';
-    _openConversation({ isGroup: true, key: gid, chatId: gid, title: t });
+    const gtitle = title || (_groupsCache && _groupsCache[gid] && _groupsCache[gid].title) || 'Группа';
+    _openConversation({ isGroup: true, key: gid, chatId: gid, title: gtitle });
   }
 
   function pluralRu(n, one, few, many) {
@@ -15490,7 +15490,7 @@
     body.innerHTML = _rdState.mode === 'read' ? rdReadHtml(t) : rdSpeakHtml(t);
   }
   // ── Режим «Чтение» (독해) ──
-  function rdReadHtml(t) {
+  function rdReadHtml(txt) {
     return `
       <div class="rd-toolbar">
         <button type="button" class="rd-toggle${_rdState.showRu ? ' on' : ''}" onclick="rdToggleRu()">
@@ -15498,12 +15498,12 @@
         </button>
         <button type="button" class="rd-toggle" onclick="rdPlayAll(this)"><i class="fa-solid fa-play" aria-hidden="true"></i> ${skUi('Озвучить всё', 'Hammasini eshittirish')}</button>
       </div>
-      <div class="rd-block-h">📖 ${skUi('Текст', 'Matn')} · <span class="ko">${t.titleKo}</span></div>
-      <div class="rd-fulltext ko">${t.sentences.map((s, i) => `<span class="rd-fs" id="rd-fs-${i}" role="button" tabindex="0" onclick="rdSpeakOne(${i}, this)">${s.ko}</span>`).join(' ')}</div>
-      ${_rdState.showRu ? `<div class="rd-block-h">${skUi('🇷🇺 Перевод', '🇺🇿 Tarjima')}</div><div class="rd-fullru">${t.sentences.map(s => skLoc(s, 'ru')).join(' ')}</div>` : ''}
+      <div class="rd-block-h">📖 ${skUi('Текст', 'Matn')} · <span class="ko">${txt.titleKo}</span></div>
+      <div class="rd-fulltext ko">${txt.sentences.map((s, i) => `<span class="rd-fs" id="rd-fs-${i}" role="button" tabindex="0" onclick="rdSpeakOne(${i}, this)">${s.ko}</span>`).join(' ')}</div>
+      ${_rdState.showRu ? `<div class="rd-block-h">${skUi('🇷🇺 Перевод', '🇺🇿 Tarjima')}</div><div class="rd-fullru">${txt.sentences.map(s => skLoc(s, 'ru')).join(' ')}</div>` : ''}
       <div class="rd-block-h">🔍 ${skUi('Разбор · слова и грамматика', 'Tahlil · soʻz va grammatika')}</div>
       <div class="rd-breakdown">
-        ${t.sentences.map((s, i) => `
+        ${txt.sentences.map((s, i) => `
           <div class="rd-bd">
             <div class="rd-bd-top">
               <button type="button" class="rd-bd-spk" onclick="rdSpeakOne(${i}, this)" aria-label="${t('ui.181')}"><i class="fa-solid fa-volume-high" aria-hidden="true"></i></button>
@@ -16051,8 +16051,8 @@
   }
   function tdSetLevel(n) { _tdState.level = n; tdRender(); }
   function tdOpenType(id) {
-    const t = TOPIK_DEEP_READING.find(x => x.id === id);
-    if (!t || !t.ready) { toast(t('ui.183')); return; }
+    const ty = TOPIK_DEEP_READING.find(x => x.id === id);
+    if (!ty || !ty.ready) { toast(t('ui.183')); return; }
     _tdState.typeId = id; tdRender(); window.scrollTo(0, 0);
   }
   function tdRender() {
@@ -16148,13 +16148,13 @@
       </div>`;
   }
   function tdRenderType(slot) {
-    const t = TOPIK_DEEP_READING.find(x => x.id === _tdState.typeId);
-    if (!t) { _tdState.typeId = null; tdRender(); return; }
+    const ty = TOPIK_DEEP_READING.find(x => x.id === _tdState.typeId);
+    if (!ty) { _tdState.typeId = null; tdRender(); return; }
     const banks = [];
-    if (t.grammar)  banks.push({ ico:'📖', title:'Грамматика',      sub:t('ui.190'), rows:t.grammar });
-    if (t.vocab)    banks.push({ ico:'📚', title:'Ключевые слова',   sub:t('ui.191'), rows:t.vocab });
-    if (t.idioms)   banks.push({ ico:'🪄', title:'Идиомы',          sub:t('ui.192'), rows:t.idioms });
-    if (t.keywords) banks.push({ ico:'🔑', title:'Слова-маркеры',   sub:t('ui.193'), rows:t.keywords });
+    if (ty.grammar)  banks.push({ ico:'📖', title:'Грамматика',      sub:t('ui.190'), rows:ty.grammar });
+    if (ty.vocab)    banks.push({ ico:'📚', title:'Ключевые слова',   sub:t('ui.191'), rows:ty.vocab });
+    if (ty.idioms)   banks.push({ ico:'🪄', title:'Идиомы',          sub:t('ui.192'), rows:ty.idioms });
+    if (ty.keywords) banks.push({ ico:'🔑', title:'Слова-маркеры',   sub:t('ui.193'), rows:ty.keywords });
     const banksHtml = banks.map(b => `
         <div class="topik-rule td-bank">
           <button type="button" class="topik-rule-head" onclick="this.parentElement.classList.toggle('open')">
@@ -16169,29 +16169,29 @@
               <div class="topik-word"><span class="topik-word-ko ko">${r[0]}</span><span class="topik-word-ru">${r[1] || ''}</span>${r[2] ? `<span class="topik-word-ex ko">${r[2]}</span>` : ''}</div>`).join('')}</div>
           </div>
         </div>`).join('');
-    const real = tdRealExamples(t);
+    const real = tdRealExamples(ty);
     const useReal = real.length > 0;
     const exHtml = useReal
       ? real.map((ex, i) => tdRealExampleHtml(ex, i)).join('')
-      : (t.examples || []).map((ex, i) => tdExampleHtml(ex, i)).join('');
+      : (ty.examples || []).map((ex, i) => tdExampleHtml(ex, i)).join('');
     const exHead = useReal
       ? `📝 Реальные задания из прошлых тестов <span class="td-ex-count">${real.length} из 9 회차</span>`
       : '📝 Примеры · нажми вариант для проверки';
-    const isDone = tdIsDone(t.id);
+    const isDone = tdIsDone(ty.id);
     slot.innerHTML = `
       <button type="button" class="topik-back" onclick="topikDeepBack()"><i class="fa-solid fa-chevron-left"></i> ${t('ui.194')}</button>
       <div class="topik-sec-head">
-        <h2 class="topik-sec-title">${t.ico} ${t.title}</h2>
-        <p class="topik-sec-sub">읽기 · ${_tdState.level}급 · вопросы ${t.range} · <span class="ko">${t.ko}</span></p>
+        <h2 class="topik-sec-title">${ty.ico} ${ty.title}</h2>
+        <p class="topik-sec-sub">읽기 · ${_tdState.level}급 · вопросы ${ty.range} · <span class="ko">${ty.ko}</span></p>
       </div>
       <div class="td-block">
         <div class="td-block-h">📌 ${t('ui.195')}</div>
-        <ol class="td-strategy">${(t.strategy || []).map(s => `<li>${s}</li>`).join('')}</ol>
+        <ol class="td-strategy">${(ty.strategy || []).map(s => `<li>${s}</li>`).join('')}</ol>
       </div>
       ${banksHtml ? `<div class="td-banks">${banksHtml}</div>` : ''}
       <div class="td-block-h" style="margin-top:18px;">${exHead}</div>
       <div class="td-ex-list">${exHtml}</div>
-      <button type="button" class="td-done-btn${isDone ? ' on' : ''}" id="td-done-chip" onclick="tdDoneClick('${t.id}')">
+      <button type="button" class="td-done-btn${isDone ? ' on' : ''}" id="td-done-chip" onclick="tdDoneClick('${ty.id}')">
         <i class="fa-solid fa-check"></i> <span>${isDone ? 'Изучено ✓' : 'Отметить изученным'}</span>
       </button>`;
   }
@@ -17915,13 +17915,13 @@
       word:         { chip:'chip-gold',  label:t('ui.227'), bg:'feed-card-rose' },
       kpop:         { chip:'chip-gold',  label:'🎵 K-POP',        bg:'' }
     };
-    const t = typeStyle[p.type] || typeStyle.announcement;
+    const ts = typeStyle[p.type] || typeStyle.announcement;
     const dateStr = p.date ? new Date(p.date).toLocaleDateString('ru-RU', { day:'numeric', month:'long' }) : '';
     const pid = p.id;
     return `
-      <div class="feed-card ${t.bg}" data-post-id="${pid}">
+      <div class="feed-card ${ts.bg}" data-post-id="${pid}">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
-          <span class="chip ${t.chip}">${t.label}</span>
+          <span class="chip ${ts.chip}">${ts.label}</span>
           <span style="font-size:11px; color: var(--soft);">${dateStr}</span>
         </div>
         ${feedPostBody(p, pid)}
@@ -19357,7 +19357,7 @@
     if (filter === 'unlocked') list = all.filter(a => unlocked.includes(a.id));
     else if (filter === 'locked') list = all.filter(a => !unlocked.includes(a.id));
     // Group by category preserving order
-    const cats = ['streak','time','lessons','games','perfect','vocab','hangul','level','special'];
+    const cats = ['streak','time','lessons','games','perfect','vocab','hangul','speak','level','special'];
     const grouped = {};
     cats.forEach(c => grouped[c] = []);
     list.forEach(a => { (grouped[a.cat] = grouped[a.cat] || []).push(a); });
@@ -23914,8 +23914,8 @@
     setTimeout(() => playSyllable(buildSyllable(t.c, t.v), null), 350);
   }
   function drawDictation() {
-    const t = dictPool[dictRound];
-    const syll = buildSyllable(t.c, t.v);
+    const cur = dictPool[dictRound];
+    const syll = buildSyllable(cur.c, cur.v);
     const preview = (dictCons && dictVowel) ? buildSyllable(dictCons, dictVowel)
                   : (dictCons || '') + (dictVowel || '') || '?';
     const consBtns = consonants.map(c =>
@@ -23946,16 +23946,16 @@
     drawDictation();
   }
   function checkDictation() {
-    const t = dictPool[dictRound];
+    const cur = dictPool[dictRound];
     if (!dictCons || !dictVowel) { toast(t('ui.524')); return; }
-    const correct = (dictCons === t.c && dictVowel === t.v);
-    const answer = buildSyllable(t.c, t.v);
+    const correct = (dictCons === cur.c && dictVowel === cur.v);
+    const answer = buildSyllable(cur.c, cur.v);
     if (correct) {
       dictScore++; addXp(8);
       recordHangulInteraction();
       toast(`정답! ${answer} ✨`, 'var(--sage)');
     } else {
-      toast(t('ui.525', {answer: `${answer} [${(translitMap[t.c]||'')+(translitMap[t.v]||'')}]`}));
+      toast(t('ui.525', {answer: `${answer} [${(translitMap[cur.c]||'')+(translitMap[cur.v]||'')}]`}));
     }
     setTimeout(() => { dictRound++; renderDictation(); }, 1100);
   }
