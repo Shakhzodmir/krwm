@@ -29,7 +29,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
 
-<link rel="stylesheet" href="styles.css?v=20260625s">
+<link rel="stylesheet" href="styles.css?v=20260626b">
 </head>
 
 <body>
@@ -62,7 +62,7 @@
 <div class="app-shell" data-screen-label="App">
 
   <!-- DESKTOP SIDEBAR (visible only on ≥1024px) -->
-  <aside class="sidenav" aria-label="Главная навигация">
+  <aside class="sidenav" aria-label="Главная навигация" data-i18n-aria="a11y.mainNav">
     <div class="sidenav-brand">
       <div class="sidenav-mark"><img src="assets/logo-app.png" alt="" style="width:100%; height:100%; object-fit:cover; border-radius:inherit; display:block;"></div>
       <div>
@@ -70,7 +70,7 @@
         <div class="sidenav-sub" data-i18n="brand.tagline">с первого шага</div>
       </div>
     </div>
-    <div class="sidenav-section-label">НАВИГАЦИЯ</div>
+    <div class="sidenav-section-label" data-i18n="ix.navSection">НАВИГАЦИЯ</div>
     <nav class="sidenav-list">
       <button class="nav-item active" data-screen="home"    onclick="switchScreen('home')"><i class="fa-solid fa-house"></i><span data-i18n="nav.home">Главная</span></button>
       <button class="nav-item" data-screen="games"   onclick="switchScreen('games')"><i class="fa-solid fa-gamepad"></i><span data-i18n="nav.games">Игры</span></button>
@@ -83,7 +83,7 @@
     </nav>
     <div class="sidenav-stats" id="sidenav-stats">
       <div class="sidenav-stats-row">
-        <span>🔥 Стрик</span>
+        <span data-i18n="ix.streak">🔥 Стрик</span>
         <strong id="side-streak">0</strong>
       </div>
       <div class="sidenav-stats-row">
@@ -91,13 +91,13 @@
         <strong id="side-xp">0</strong>
       </div>
       <div class="sidenav-stats-row">
-        <span>⭐ Уровень</span>
+        <span data-i18n="ix.level">⭐ Уровень</span>
         <strong id="side-level">1</strong>
       </div>
     </div>
     <div class="sidenav-quote">
       <span class="ko">화이팅!</span><br>
-      <span style="font-size: 10.5px; color: var(--soft);">шаг за шагом</span>
+      <span style="font-size: 10.5px; color: var(--soft);" data-i18n="ix.stepByStep">шаг за шагом</span>
     </div>
   </aside>
 
@@ -243,7 +243,7 @@
         </span>
       </button>
       <button type="button" onclick="openTopikGroup('mock')" class="topik-entry topik-entry-half be-mock" aria-label="Пробные и другие тесты" data-i18n-aria="lessons.mockExams">
-        <span class="topik-entry-badge">МОК</span>
+        <span class="topik-entry-badge" data-i18n="ix.mock">МОК</span>
         <span class="topik-entry-text">
           <span class="topik-entry-title" data-i18n="lessons.mockExams">Пробные и другие</span>
           <span class="topik-entry-sub">모의고사 · EBS · Hot TOPIK</span>
@@ -596,7 +596,7 @@
         <div class="page-eyebrow" data-i18n="profile.eyebrow">ПРОФИЛЬ</div>
         <div style="display:flex; align-items:center; gap:8px; margin-top:2px;">
           <h1 class="display" style="font-size:22px; color:var(--berry);" id="profile-name">Гость</h1>
-          <span id="profile-admin-badge" class="chip chip-coral" style="display:none; font-size:9px;">🔑 АДМИН</span>
+          <span id="profile-admin-badge" class="chip chip-coral" style="display:none; font-size:9px;" data-i18n="ix.adminBadge">🔑 АДМИН</span>
         </div>
       </div>
       <div style="display:flex; align-items:center; gap:8px; flex-shrink:0;">
@@ -843,13 +843,13 @@
   <section id="screen-topik" class="screen" data-screen-label="08 TOPIK">
     <header class="topbar">
       <div style="display:flex; align-items:center; gap:10px; min-width:0;">
-        <button onclick="topikBack()" class="chat-back-btn" aria-label="Назад"><i class="fa-solid fa-arrow-left"></i></button>
+        <button onclick="topikBack()" class="chat-back-btn" aria-label="Назад" data-i18n-aria="a11y.back"><i class="fa-solid fa-arrow-left"></i></button>
         <div style="min-width:0;">
           <div class="page-eyebrow">한국어능력시험</div>
-          <h1 class="display" style="font-size: 22px; color: var(--berry); margin-top: 2px;">Подготовка к ТОПИК</h1>
+          <h1 class="display" style="font-size: 22px; color: var(--berry); margin-top: 2px;" data-i18n="home.topik">Подготовка к ТОПИК</h1>
         </div>
       </div>
-      <button onclick="openSettingsModal()" class="chat-back-btn" aria-label="Настройки" title="Настройки" style="flex-shrink:0;"><i class="fa-solid fa-gear"></i></button>
+      <button onclick="openSettingsModal()" class="chat-back-btn" aria-label="Настройки" title="Настройки" data-i18n-aria="set.title" data-i18n-title="set.title" style="flex-shrink:0;"><i class="fa-solid fa-gear"></i></button>
     </header>
     <div style="padding: 16px 20px 28px;">
       <div id="topik-hub"></div>
@@ -860,13 +860,13 @@
   <section id="screen-selfstudy" class="screen" data-screen-label="Self-study">
     <header class="topbar">
       <div style="display:flex; align-items:center; gap:10px; min-width:0;">
-        <button onclick="selfStudyBack()" class="chat-back-btn" aria-label="Назад"><i class="fa-solid fa-arrow-left"></i></button>
+        <button onclick="selfStudyBack()" class="chat-back-btn" aria-label="Назад" data-i18n-aria="a11y.back"><i class="fa-solid fa-arrow-left"></i></button>
         <div style="min-width:0;">
-          <div class="page-eyebrow">자습 · самостоятельно</div>
-          <h1 class="display" style="font-size: 22px; color: var(--berry); margin-top: 2px;">Самообучение</h1>
+          <div class="page-eyebrow" data-i18n="ix.selfEyebrow">자습 · самостоятельно</div>
+          <h1 class="display" style="font-size: 22px; color: var(--berry); margin-top: 2px;" data-i18n="ix.selfTitle">Самообучение</h1>
         </div>
       </div>
-      <button onclick="openSettingsModal()" class="chat-back-btn" aria-label="Настройки" title="Настройки" style="flex-shrink:0;"><i class="fa-solid fa-gear"></i></button>
+      <button onclick="openSettingsModal()" class="chat-back-btn" aria-label="Настройки" title="Настройки" data-i18n-aria="set.title" data-i18n-title="set.title" style="flex-shrink:0;"><i class="fa-solid fa-gear"></i></button>
     </header>
     <div style="padding: 16px 20px 28px;">
       <div id="selfstudy-hub"></div>
@@ -877,13 +877,13 @@
   <section id="screen-topikdeep" class="screen" data-screen-label="TOPIK deep">
     <header class="topbar">
       <div style="display:flex; align-items:center; gap:10px; min-width:0;">
-        <button onclick="topikDeepBack()" class="chat-back-btn" aria-label="Назад"><i class="fa-solid fa-arrow-left"></i></button>
+        <button onclick="topikDeepBack()" class="chat-back-btn" aria-label="Назад" data-i18n-aria="a11y.back"><i class="fa-solid fa-arrow-left"></i></button>
         <div style="min-width:0;">
-          <div class="page-eyebrow">심화 · углублённо</div>
-          <h1 class="display" style="font-size: 22px; color: var(--berry); margin-top: 2px;">Подготовка к ТОПИК</h1>
+          <div class="page-eyebrow" data-i18n="ix.deepEyebrow">심화 · углублённо</div>
+          <h1 class="display" style="font-size: 22px; color: var(--berry); margin-top: 2px;" data-i18n="home.topik">Подготовка к ТОПИК</h1>
         </div>
       </div>
-      <button onclick="openSettingsModal()" class="chat-back-btn" aria-label="Настройки" title="Настройки" style="flex-shrink:0;"><i class="fa-solid fa-gear"></i></button>
+      <button onclick="openSettingsModal()" class="chat-back-btn" aria-label="Настройки" title="Настройки" data-i18n-aria="set.title" data-i18n-title="set.title" style="flex-shrink:0;"><i class="fa-solid fa-gear"></i></button>
     </header>
     <div style="padding: 16px 20px 28px;">
       <div id="topikdeep-hub"></div>
@@ -894,13 +894,13 @@
   <section id="screen-reading" class="screen" data-screen-label="Reading">
     <header class="topbar">
       <div style="display:flex; align-items:center; gap:10px; min-width:0;">
-        <button onclick="readingBack()" class="chat-back-btn" aria-label="Назад"><i class="fa-solid fa-arrow-left"></i></button>
+        <button onclick="readingBack()" class="chat-back-btn" aria-label="Назад" data-i18n-aria="a11y.back"><i class="fa-solid fa-arrow-left"></i></button>
         <div style="min-width:0;">
           <div class="page-eyebrow">독해 · 말하기</div>
-          <h1 class="display" style="font-size: 22px; color: var(--berry); margin-top: 2px;">Чтение</h1>
+          <h1 class="display" style="font-size: 22px; color: var(--berry); margin-top: 2px;" data-i18n="ix.readingTitle">Чтение</h1>
         </div>
       </div>
-      <button onclick="openSettingsModal()" class="chat-back-btn" aria-label="Настройки" title="Настройки" style="flex-shrink:0;"><i class="fa-solid fa-gear"></i></button>
+      <button onclick="openSettingsModal()" class="chat-back-btn" aria-label="Настройки" title="Настройки" data-i18n-aria="set.title" data-i18n-title="set.title" style="flex-shrink:0;"><i class="fa-solid fa-gear"></i></button>
     </header>
     <div style="padding: 16px 20px 28px;">
       <div id="reading-hub"></div>
@@ -911,13 +911,13 @@
   <section id="screen-studykr" class="screen" data-screen-label="Study in Korea">
     <header class="topbar">
       <div style="display:flex; align-items:center; gap:10px; min-width:0;">
-        <button onclick="studyKrBack()" class="chat-back-btn" aria-label="Назад"><i class="fa-solid fa-arrow-left"></i></button>
+        <button onclick="studyKrBack()" class="chat-back-btn" aria-label="Назад" data-i18n-aria="a11y.back"><i class="fa-solid fa-arrow-left"></i></button>
         <div style="min-width:0;">
           <div class="page-eyebrow">한국 유학 · 면접</div>
-          <h1 class="display" style="font-size: 22px; color: var(--berry); margin-top: 2px;">Учёба в Корее</h1>
+          <h1 class="display" style="font-size: 22px; color: var(--berry); margin-top: 2px;" data-i18n="ix.studyTitle">Учёба в Корее</h1>
         </div>
       </div>
-      <button onclick="openSettingsModal()" class="chat-back-btn" aria-label="Настройки" title="Настройки" style="flex-shrink:0;"><i class="fa-solid fa-gear"></i></button>
+      <button onclick="openSettingsModal()" class="chat-back-btn" aria-label="Настройки" title="Настройки" data-i18n-aria="set.title" data-i18n-title="set.title" style="flex-shrink:0;"><i class="fa-solid fa-gear"></i></button>
     </header>
     <div style="padding: 16px 20px 28px;">
       <div id="studykr-hub"></div>
@@ -928,10 +928,10 @@
   <section id="screen-admin" class="screen" data-screen-label="09 Admin">
     <header class="topbar">
       <div style="min-width:0;">
-        <div class="page-eyebrow">АДМИН-ПАНЕЛЬ</div>
-        <h1 class="display" style="font-size: 22px; color: var(--berry); margin-top: 2px;">Кабинет Мади 🌸</h1>
+        <div class="page-eyebrow" data-i18n="ix.adminEyebrow">АДМИН-ПАНЕЛЬ</div>
+        <h1 class="display" style="font-size: 22px; color: var(--berry); margin-top: 2px;" data-i18n="ix.adminTitle">Кабинет Мади 🌸</h1>
       </div>
-      <button onclick="openSettingsModal()" class="chat-back-btn" aria-label="Настройки" title="Настройки" style="flex-shrink:0;"><i class="fa-solid fa-gear"></i></button>
+      <button onclick="openSettingsModal()" class="chat-back-btn" aria-label="Настройки" title="Настройки" data-i18n-aria="set.title" data-i18n-title="set.title" style="flex-shrink:0;"><i class="fa-solid fa-gear"></i></button>
     </header>
     <div style="padding: 20px;">
       <div id="admin-screen-slot"></div>
@@ -944,7 +944,7 @@
   <div id="ambient-petals"></div>
 
   <!-- BOTTOM NAV (mobile + tablet only) -->
-  <nav class="bottomnav" aria-label="Основная навигация">
+  <nav class="bottomnav" aria-label="Основная навигация" data-i18n-aria="a11y.primaryNav">
     <button type="button" class="nav-item active" data-screen="home"    data-i18n-aria="nav.home"     onclick="switchScreen('home')"><i class="fa-solid fa-house" aria-hidden="true"></i><span data-i18n="nav.home">Главная</span></button>
     <button type="button" class="nav-item"        data-screen="games"   data-i18n-aria="nav.games"    onclick="switchScreen('games')"><i class="fa-solid fa-gamepad" aria-hidden="true"></i><span data-i18n="nav.games">Игры</span></button>
     <button type="button" class="nav-item"        data-screen="lessons" data-i18n-aria="nav.lessons"  onclick="switchScreen('lessons')"><i class="fa-solid fa-book-open" aria-hidden="true"></i><span data-i18n="nav.lessons">Уроки</span></button>
@@ -986,7 +986,7 @@
 </script>
 
 <!-- ─────────────── DATA + LOGIC ─────────────── -->
-<script src="app.js?v=20260625s"></script>
+<script src="app.js?v=20260626b"></script>
 
 </body>
 </html>
