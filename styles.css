@@ -741,6 +741,10 @@
     height: 100dvh;
     z-index: 200;
     background: var(--cream);
+    /* Клипуем любой горизонтальный выход за край (на мобильном overflow:hidden
+       раньше включался только с 768px — отсюда «чат вылезал за границу телефона»).
+       Вертикальная прокрутка живёт внутри .chat-body. */
+    overflow: hidden;
     animation: chatPageIn .25s cubic-bezier(.22,1,.36,1);
   }
   @keyframes chatPageIn {
@@ -1051,10 +1055,12 @@
 
   .chat-bubble {
     max-width: 78%;
+    min-width: 0;
     padding: 9px 13px 7px;
     border-radius: 18px;
     line-height: 1.4;
     word-wrap: break-word;
+    overflow-wrap: anywhere;   /* длинная ссылка/слово без пробелов не распирает пузырь */
     box-shadow: 0 2px 6px -2px rgba(92,42,51,.12);
     position: relative;
   }
@@ -4469,6 +4475,27 @@
     box-shadow: 0 0 0 var(--duo-blush) !important;
   }
 
+  /* ── Живые кнопки: подъём при наведении + световой блик, как у карточек-входов
+     на «Уроках» (.topik-entry). Нажатие сохраняет 3D-продавливание (translateY на
+     «губу»). Блик полупрозрачный и проходит поверх подписи — читаемость сохраняется. */
+  .btn { overflow: hidden; }
+  .btn::after {
+    content: ""; position: absolute; inset: 0; z-index: 2; pointer-events: none;
+    border-radius: inherit;
+    background: linear-gradient(115deg, transparent 40%, rgba(255,255,255,.20) 48%, rgba(255,255,255,.34) 50%, rgba(255,255,255,.20) 52%, transparent 60%);
+    transform: translateX(-135%);
+    transition: transform .55s var(--ease-out);
+  }
+  .btn:hover::after, .btn:active::after { transform: translateX(135%); }
+  /* Лёгкий подъём при наведении; :active с !important (выше) перекроет его при нажатии */
+  .btn:hover { transform: translateY(-2px); }
+  /* Блик неуместен на disabled и на состояниях обратной связи квиза (там своя анимация) */
+  .btn:disabled::after, .btn[disabled]::after,
+  .btn.quiz-correct-pop::after, .btn.quiz-wrong-shake::after { display: none; }
+  /* «Меньше движения»: гасим блик и подъём; мгновенное нажатие оставляем */
+  body.calm-motion .btn::after { display: none; }
+  body.calm-motion .btn:hover { transform: none; }
+
   /* ── QUIZ FEEDBACK (correct / wrong) ─────────────────────
      We use !important on background + border-color because
      .btn-ghost / .card sets them with !important too. Without
@@ -5707,6 +5734,65 @@
     --duo-cream:      #161618;
     --duo-paper:      #1B1C1F;
     --duo-blush:      #2B2F39;
+    /* Текст на тёмном золоте/sage (.btn-gold/.chip-gold): светлый, иначе берри #5C2A33
+       давал 2.1:1. Теперь #FBF4E4 → 4.9:1 (AA). Перебивает свотчевый duo-ink-line. */
+    --duo-ink-line:   #FBF4E4;
+    /* Тёмный «жёсткий» акцент: эти значения раньше были захардкожены в правилах
+       ниже (switch, exam.sel, play, прогресс, hero, topik-entry…) и НЕ перекрашивались
+       под свотч. Теперь это токены → каждый ct-X.theme-dark задаёт свой цвет.
+       --dk-fill: яркая заливка без текста; --dk-fill-deep: глубокая заливка с мелким
+       белым текстом/иконкой (бейдж, ▶); --dk-ink: светлый акцент-текст; --dk-surf/2:
+       приподнятые тёмные поверхности (hero, topik-entry, flashcard-back…). */
+    --dk-fill:        #5874B8;
+    --dk-fill-deep:   #3D5288;
+    --dk-ink:         #AFC4EF;
+    --dk-surf:        #222A3C;
+    --dk-surf-2:      #2E3A52;
+  }
+  /* ───── ТЁМНАЯ ВЕРСИЯ КАЖДОГО СВОТЧА ─────
+     body.ct-X.theme-dark (специфичность 0,2,1) перебивает базовую тёмную (0,1,1):
+     сохраняем проверенные тёмные поверхности/текст/тени/статусы, но перекрашиваем
+     АКЦЕНТ под цвет темы. Контраст выверен: акцент-текст на карточке ≥4.2:1,
+     белый на кнопке-заливке ≥5.2:1, белый на акценте-фоне (play-кнопки) ≥3.2:1. */
+  body.ct-emerald.theme-dark {
+    --coral:#2E988A; --plum:#4BB6A6;
+    --accent-rgb:46,152,138; --rose:#3A6A62; --rose-rgb:92,201,182; --petal:#2A453F; --petal-rgb:58,106,98; --blush:#1E2F2B;
+    --grad-coral:#1F7468; --grad-warm:#1B6359; --grad-berry:#14302C;
+    --shadow-glow:0 0 0 4px rgba(46,152,138,.18), 0 10px 28px -10px rgba(46,152,138,.4);
+    --duo-coral:#1F7468; --duo-coral-deep:#155349; --duo-rose:#2C7A6E; --duo-rose-deep:#1C5A50; --duo-berry:#1F7468; --duo-berry-deep:#16453E; --duo-blush:#1E2F2B;
+    --dk-fill:#2E988A; --dk-fill-deep:#1F7468; --dk-ink:#4BB6A6; --dk-surf:#16322D; --dk-surf-2:#1B3D37;
+  }
+  body.ct-blossom.theme-dark {
+    --coral:#C75BA0; --plum:#D77FB8;
+    --accent-rgb:199,91,160; --rose:#6E4460; --rose-rgb:230,143,197; --petal:#4A2C40; --petal-rgb:110,68,96; --blush:#2E2229;
+    --grad-coral:#A53A82; --grad-warm:#913874; --grad-berry:#2A1726;
+    --shadow-glow:0 0 0 4px rgba(199,91,160,.18), 0 10px 28px -10px rgba(199,91,160,.4);
+    --duo-coral:#A53A82; --duo-coral-deep:#7C2C61; --duo-rose:#B84E96; --duo-rose-deep:#8A3A6E; --duo-berry:#A53A82; --duo-berry-deep:#6E2856; --duo-blush:#2E2229;
+    --dk-fill:#C75BA0; --dk-fill-deep:#A53A82; --dk-ink:#D77FB8; --dk-surf:#2C1A26; --dk-surf-2:#3A2230;
+  }
+  body.ct-lime.theme-dark {
+    --coral:#6E9132; --plum:#8AAE52;
+    --accent-rgb:110,145,50; --rose:#5A6A38; --rose-rgb:166,200,90; --petal:#36421E; --petal-rgb:90,106,56; --blush:#25291C;
+    --grad-coral:#4A6320; --grad-warm:#41571C; --grad-berry:#1A1F12;
+    --shadow-glow:0 0 0 4px rgba(110,145,50,.18), 0 10px 28px -10px rgba(110,145,50,.4);
+    --duo-coral:#4A6320; --duo-coral-deep:#334816; --duo-rose:#5C7A26; --duo-rose-deep:#415C1A; --duo-berry:#4A6320; --duo-berry-deep:#2C3F14; --duo-blush:#25291C;
+    --dk-fill:#6E9132; --dk-fill-deep:#4A6320; --dk-ink:#8AAE52; --dk-surf:#1F261A; --dk-surf-2:#2A3420;
+  }
+  body.ct-sky.theme-dark {
+    --coral:#4892D0; --plum:#6FAEE0;
+    --accent-rgb:72,146,208; --rose:#3A6280; --rose-rgb:120,180,235; --petal:#243E52; --petal-rgb:58,98,128; --blush:#1E2A36;
+    --grad-coral:#1E6FB4; --grad-warm:#1A609E; --grad-berry:#15283A;
+    --shadow-glow:0 0 0 4px rgba(72,146,208,.18), 0 10px 28px -10px rgba(72,146,208,.4);
+    --duo-coral:#1E6FB4; --duo-coral-deep:#16558C; --duo-rose:#2974AE; --duo-rose-deep:#1E6298; --duo-berry:#1E6FB4; --duo-berry-deep:#184C7E; --duo-blush:#1E2A36;
+    --dk-fill:#4892D0; --dk-fill-deep:#1E6FB4; --dk-ink:#6FAEE0; --dk-surf:#1B2A3A; --dk-surf-2:#243A52;
+  }
+  body.ct-mono.theme-dark {
+    --coral:#8E8E8E; --plum:#ABABAB; --sage:#B8B8B8; --gold:#B8B8B8; --gold-ink:#D0D0D0;
+    --accent-rgb:142,142,142; --rose:#5E5E5E; --rose-rgb:170,170,170; --petal:#3A3A3A; --petal-rgb:94,94,94; --blush:#262626;
+    --grad-coral:#5A5A5A; --grad-warm:#4E4E4E; --grad-berry:#141414;
+    --shadow-glow:0 0 0 4px rgba(142,142,142,.18), 0 10px 28px -10px rgba(142,142,142,.4);
+    --duo-coral:#5A5A5A; --duo-coral-deep:#3A3A3A; --duo-rose:#6E6E6E; --duo-rose-deep:#4A4A4A; --duo-berry:#5A5A5A; --duo-berry-deep:#333333; --duo-blush:#262626;
+    --dk-fill:#8E8E8E; --dk-fill-deep:#5A5A5A; --dk-ink:#ABABAB; --dk-surf:#242424; --dk-surf-2:#2E2E2E;
   }
   body.theme-dark, body.theme-dark .app-shell { background: var(--linen); color: var(--ink); }
   body.theme-dark .card,
@@ -5736,11 +5822,11 @@
   body.theme-dark .ob-art .ob-circle { background: #24262C; box-shadow: inset 0 0 0 1px var(--line); }
   body.theme-dark .topbar-mark, body.theme-dark .sidenav-mark { background: #E9EDF5; }
   body.theme-dark .switch { background-color: rgba(231,235,244,.18); }
-  body.theme-dark .switch.on { background-color: #6B8BD6; box-shadow: 0 4px 12px -4px rgba(107,139,214,.6); }
+  body.theme-dark .switch.on { background-color: var(--dk-fill); box-shadow: 0 4px 12px -4px rgba(var(--accent-rgb),.6); }
   body.theme-dark .toast { background: #2B2F39; color: #E7EBF4; }
-  body.theme-dark .exam-opt.sel { border-color: #6B8BD6; background: rgba(107,139,214,.16); }
-  body.theme-dark .exam-opt.sel .exam-opt-tx, body.theme-dark .exam-opt.sel .exam-opt-num { color: #AFC4EF; }
-  body.theme-dark .hero { background: #222A3C !important; border-color: var(--line) !important; }
+  body.theme-dark .exam-opt.sel { border-color: var(--dk-fill); background: rgba(var(--accent-rgb),.16); }
+  body.theme-dark .exam-opt.sel .exam-opt-tx, body.theme-dark .exam-opt.sel .exam-opt-num { color: var(--dk-ink); }
+  body.theme-dark .hero { background: var(--dk-surf) !important; border-color: var(--line) !important; }
   body.theme-dark .exam-top { background: rgba(22,22,24,.94); }
   body.theme-dark .exam-audio { background: rgba(22,22,24,.94); }
   body.theme-dark .sidenav .nav-item:hover { background: rgba(231,235,244,.07); }
@@ -5830,38 +5916,38 @@
   body.theme-dark .ko-quote { background: #222631; box-shadow: inset 0 1px 0 rgba(255,255,255,.04); }
   /* Фокус-кольцо: дуга одним цветом (SVG-градиент гасим одинаковыми стопами) */
   body.theme-dark .focus-ring .bg { stroke: rgba(231,235,244,.10); }
-  body.theme-dark #focusGrad stop:first-child { stop-color: #5874B8; }
-  body.theme-dark #focusGrad stop:last-child  { stop-color: #5874B8; }
+  body.theme-dark #focusGrad stop:first-child { stop-color: var(--dk-fill); }
+  body.theme-dark #focusGrad stop:last-child  { stop-color: var(--dk-fill); }
   /* Инлайновые градиенты из светлой темы: в тёмной — сплошной тёмно-синий
      с белым текстом (или ровная тёмная поверхность для blush/petal-пар). */
   body.theme-dark [style*="var(--gold), var(--coral)"],
   body.theme-dark [style*="var(--coral), var(--gold)"],
   body.theme-dark [style*="var(--coral),var(--gold)"],
   body.theme-dark [style*="var(--rose), var(--gold)"],
-  body.theme-dark [style*="var(--coral), var(--rose)"] { background: #3D5288 !important; color: #F2F5FA !important; }
-  body.theme-dark [style*="var(--berry), var(--coral)"] { background: #2E3A52 !important; color: #F2F5FA !important; }
+  body.theme-dark [style*="var(--coral), var(--rose)"] { background: var(--dk-fill-deep) !important; color: #F2F5FA !important; }
+  body.theme-dark [style*="var(--berry), var(--coral)"] { background: var(--dk-surf-2) !important; color: #F2F5FA !important; }
   body.theme-dark [style*="var(--blush), var(--petal)"],
   body.theme-dark [style*="var(--blush), var(--rose)"],
   body.theme-dark [style*="var(--blush), var(--paper)"],
   body.theme-dark [style*="var(--blush), var(--card)"] { background: var(--blush) !important; }
   body.theme-dark [style*="var(--card), var(--paper)"] { background: var(--card) !important; }
   /* Зачистка оставшихся градиентов классов: тёмная тема = сплошные цвета */
-  body.theme-dark .topik-entry { background: #2E3A52; box-shadow: 0 10px 26px -10px rgba(0,0,0,.5); }
-  body.theme-dark .topik-exam-card { background: #2E3A52; box-shadow: 0 14px 30px -12px rgba(0,0,0,.5); }
-  body.theme-dark .aplayer-play { background: #3D5288; }
-  body.theme-dark .flashcard-back { background: #2E3A52; }
-  body.theme-dark .game-card-kpop { background: #222A3C !important; }
-  body.theme-dark .btn-mic.mic-listening { background: #3D5288; }
+  body.theme-dark .topik-entry { background: var(--dk-surf-2); box-shadow: 0 10px 26px -10px rgba(0,0,0,.5); }
+  body.theme-dark .topik-exam-card { background: var(--dk-surf-2); box-shadow: 0 14px 30px -12px rgba(0,0,0,.5); }
+  body.theme-dark .aplayer-play { background: var(--dk-fill-deep); }
+  body.theme-dark .flashcard-back { background: var(--dk-surf-2); }
+  body.theme-dark .game-card-kpop { background: var(--dk-surf) !important; }
+  body.theme-dark .btn-mic.mic-listening { background: var(--dk-fill-deep); }
   body.theme-dark .progress > i { background: var(--duo-coral) !important; }
-  body.theme-dark .progress-segments > span.done { background: #5874B8; }
-  body.theme-dark .profile-nav-badge { background: #3D5288; }
+  body.theme-dark .progress-segments > span.done { background: var(--dk-fill); }
+  body.theme-dark .profile-nav-badge { background: var(--dk-fill-deep); }
   body.theme-dark .gcv-emoji-icon { background: var(--blush); }
   body.theme-dark .home-greet-avatar { background: var(--blush); }
-  body.theme-dark .continue-chip { background: rgba(107,139,214,.10); }
-  body.theme-dark .wxc-bar { background: #5874B8; }
-  body.theme-dark .sidenav .nav-item.active { background: rgba(107,139,214,.14); }
-  body.theme-dark .nav-item.active i { background: rgba(107,139,214,.14); }
-  body.theme-dark .section-head .rule { background: rgba(143,167,222,.45); }
+  body.theme-dark .continue-chip { background: rgba(var(--accent-rgb),.10); }
+  body.theme-dark .wxc-bar { background: var(--dk-fill); }
+  body.theme-dark .sidenav .nav-item.active { background: rgba(var(--accent-rgb),.14); }
+  body.theme-dark .nav-item.active i { background: rgba(var(--accent-rgb),.14); }
+  body.theme-dark .section-head .rule { background: rgba(var(--rose-rgb),.45); }
   body.theme-dark .chat-body { background: var(--linen); }
   /* ЧАТ, тёмная тема: попап входящего сообщения был светлым со светлым текстом —
      нечитабельно. Тёмная карточка + видимые рамки/тени. */
@@ -5888,19 +5974,19 @@
   /* Тарифы, тёмная тема: сплошные тёмные поверхности, без градиентов */
   body.theme-dark .plan-page { background: var(--linen); }
   body.theme-dark .plan-card { background: var(--card); }
-  body.theme-dark .plan-profile-card.plan-profile-paid { background: #222A3C; border-color: #46587A; }
+  body.theme-dark .plan-profile-card.plan-profile-paid { background: var(--dk-surf); border-color: var(--rose); }
   body.theme-dark .plan-card.plan-featured { box-shadow: 0 14px 36px -14px rgba(0,0,0,.55); }
   body.theme-dark .plan-promo { background: rgba(201,169,78,.12); border-color: rgba(201,169,78,.4); }
   /* WCAG AA: мелкие цветные метки — тонированный фон + светлый текст,
      вместо белого текста на светлых акцентах. !important перебивает duo-слой. */
-  body.theme-dark .chip-coral { background: rgba(107,139,214,.16) !important; color: #AFC4EF !important; border-color: rgba(107,139,214,.35) !important; box-shadow: none !important; }
+  body.theme-dark .chip-coral { background: rgba(var(--accent-rgb),.16) !important; color: var(--dk-ink) !important; border-color: rgba(var(--accent-rgb),.35) !important; box-shadow: none !important; }
   body.theme-dark .chip-gold  { background: rgba(201,169,78,.16) !important;  color: #DCC788 !important; border-color: rgba(201,169,78,.35) !important; }
   body.theme-dark .chip-sage  { background: rgba(143,201,138,.14) !important; color: #A9D4B0 !important; border-color: rgba(143,201,138,.35) !important; }
   body.theme-dark .chip-berry { background: rgba(143,167,222,.16) !important; color: #BBCBF1 !important; border-color: rgba(143,167,222,.35) !important; }
   body.theme-dark .chip-blush { background: rgba(231,235,244,.08) !important; color: #C7CEDD !important; border-color: rgba(231,235,244,.18) !important; }
-  body.theme-dark .btn-ghost  { color: #AFC4EF !important; }
-  body.theme-dark .btn-ghost:hover { color: #C5D4F4 !important; }
-  body.theme-dark .page-eyebrow { color: #8FA7DE !important; }
+  body.theme-dark .btn-ghost  { color: var(--dk-ink) !important; }
+  body.theme-dark .btn-ghost:hover { color: var(--dk-ink) !important; filter: brightness(1.14); }
+  body.theme-dark .page-eyebrow { color: var(--plum) !important; }
   body.theme-dark .tile-eyebrow { color: #F2F5FA !important; }
   body.theme-dark .rom { color: #F2F5FA; opacity: .96; }
   /* Золотые кнопки: в тьме фон тёмное золото — текст светлый (5.0:1) */
