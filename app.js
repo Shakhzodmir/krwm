@@ -6524,8 +6524,8 @@
     // Обновляем активный свотч на месте, без перерисовки карточки
     document.querySelectorAll('#settings-card .theme-swatch-wrap').forEach(b =>
       b.classList.toggle('active', b.dataset.theme === key));
-    const t = COLOR_THEMES.find(t => t.key === key);
-    toast(t('ui.135',{name: t.name}), 'var(--berry)');
+    const theme = COLOR_THEMES.find(th => th.key === key);
+    toast(t('ui.135',{name: theme ? theme.name : ''}), 'var(--berry)');
   }
   // Ночь для авто-тёмной темы: с 20:00 до 08:00
   function isNightTime() {
@@ -13457,30 +13457,30 @@
   function renderW2() {
     const ov = document.getElementById('topik-exam-overlay');
     if (!ov || !_w2State) return;
-    const tasksHtml = _w2State.tasks.map(t => {
-      const id = String(t.n);
-      const long = !!t.min;
+    const tasksHtml = _w2State.tasks.map(task => {
+      const id = String(task.n);
+      const long = !!task.min;
       let body;
-      if (t.blanks) {
+      if (task.blanks) {
         // 51~52: один текст с двумя пропусками ㉠/㉡ — заполняем оба
-        body = `<div style="display:grid; gap:10px; margin-top:2px;">` + t.blanks.map(b => `
+        body = `<div style="display:grid; gap:10px; margin-top:2px;">` + task.blanks.map(b => `
             <div>
               <div style="font-size:13px; font-weight:800; color:var(--coral); margin-bottom:4px;">${b.slot}</div>
               <input id="w2-in-${id}-${b.slot}" class="input ko" placeholder="${t('ui.173',{slot: b.slot})}" autocomplete="off">
             </div>`).join('') + `</div>`;
       } else if (long) {
-        body = `<textarea id="w2-in-${id}" class="input ko" rows="${t.n === 54 ? 10 : 6}" oninput="w2Input('${id}')" placeholder="${t.min}–${t.max} знаков · стиль -ㄴ다/-는다" style="resize:vertical; line-height:1.7;"></textarea>`;
+        body = `<textarea id="w2-in-${id}" class="input ko" rows="${task.n === 54 ? 10 : 6}" oninput="w2Input('${id}')" placeholder="${task.min}–${task.max} знаков · стиль -ㄴ다/-는다" style="resize:vertical; line-height:1.7;"></textarea>`;
       } else { body = ''; }
       return `
         <div class="card card-padded" style="margin-bottom:14px;">
           <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
-            <div style="font-weight:800;">№${t.n} <span class="chip" style="font-size:10px; margin-left:6px;">${t.points} б.</span></div>
+            <div style="font-weight:800;">№${task.n} <span class="chip" style="font-size:10px; margin-left:6px;">${task.points} б.</span></div>
             ${long ? `<span id="w2-cnt-${id}" style="font-size:11px; color:var(--soft);">${t('ui.174')}</span>` : ''}
           </div>
-          ${t.korInstr ? `<div class="ko" style="font-size:12.5px; font-weight:700; color:var(--berry); margin-bottom:6px;">${t.korInstr}</div>` : ''}
-          ${t.instr ? `<div style="font-size:12.5px; color:var(--text2); margin-bottom:8px;">${t.instr}</div>` : ''}
-          ${t.image ? `<img src="${t.image}" alt="${t('ui.175',{n: t.n})}" style="width:100%; border-radius:12px; border:1px solid var(--line); margin-bottom:10px; background:#fff;">` : ''}
-          ${t.passage ? `<div class="exam-passage ko" style="margin-bottom:10px; white-space:pre-wrap;">${t.passage}</div>` : ''}
+          ${task.korInstr ? `<div class="ko" style="font-size:12.5px; font-weight:700; color:var(--berry); margin-bottom:6px;">${task.korInstr}</div>` : ''}
+          ${task.instr ? `<div style="font-size:12.5px; color:var(--text2); margin-bottom:8px;">${task.instr}</div>` : ''}
+          ${task.image ? `<img src="${task.image}" alt="${t('ui.175',{n: task.n})}" style="width:100%; border-radius:12px; border:1px solid var(--line); margin-bottom:10px; background:#fff;">` : ''}
+          ${task.passage ? `<div class="exam-passage ko" style="margin-bottom:10px; white-space:pre-wrap;">${task.passage}</div>` : ''}
           ${body}
         </div>`;
     }).join('');
@@ -13503,10 +13503,10 @@
     clearInterval(_w2Timer);
     const ov = document.getElementById('topik-exam-overlay');
     if (!ov) return;
-    const rows = _w2State.tasks.map(t => {
-      const id = String(t.n);
-      if (t.blanks) {
-        const inner = t.blanks.map(b => {
+    const rows = _w2State.tasks.map(task => {
+      const id = String(task.n);
+      if (task.blanks) {
+        const inner = task.blanks.map(b => {
           const my = (document.getElementById('w2-in-' + id + '-' + b.slot)?.value || '').trim();
           return `
             <div style="margin-bottom:12px;">
@@ -13519,24 +13519,24 @@
         }).join('');
         return `
           <div class="card card-padded" style="margin-bottom:12px;">
-            <div style="margin-bottom:8px;"><b>№${t.n}</b> <span class="chip" style="font-size:10px; margin-left:4px;">${t.points} б.</span></div>
+            <div style="margin-bottom:8px;"><b>№${task.n}</b> <span class="chip" style="font-size:10px; margin-left:4px;">${task.points} б.</span></div>
             ${inner}
           </div>`;
       }
       const my = (document.getElementById('w2-in-' + id)?.value || '').trim();
       const cnt = my.replace(/\s/g, '').length;
-      const lenNote = t.min ? `<span style="font-size:11px; color:${cnt < t.min ? 'var(--bad-ink)' : 'var(--ok-ink)'};">${cnt} зн. ${cnt < t.min ? '· меньше минимума!' : '✓'}</span>` : '';
+      const lenNote = task.min ? `<span style="font-size:11px; color:${cnt < task.min ? 'var(--bad-ink)' : 'var(--ok-ink)'};">${cnt} зн. ${cnt < task.min ? '· меньше минимума!' : '✓'}</span>` : '';
       return `
         <div class="card card-padded" style="margin-bottom:12px;">
           <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
-            <b>№${t.n}</b> <span class="chip" style="font-size:10px; margin-left:4px;">${t.points} б.</span>${lenNote}
+            <b>№${task.n}</b> <span class="chip" style="font-size:10px; margin-left:4px;">${task.points} б.</span>${lenNote}
           </div>
           <div style="font-size:12px; color:var(--soft); margin-bottom:4px;">${t('ui.177')}</div>
           <div class="ko" style="white-space:pre-wrap; font-size:13.5px; line-height:1.7; background:var(--veil); border-radius:10px; padding:10px 12px;">${escHtml(my) || '<i style="color:var(--hush)">— пусто —</i>'}</div>
-          ${t.model ? `
+          ${task.model ? `
             <div style="font-size:12px; color:var(--soft); margin:10px 0 4px;">모범답안 · образцовый ответ:</div>
-            <div class="ko" style="white-space:pre-wrap; font-size:13.5px; line-height:1.7; background:rgba(var(--accent-rgb),.08); border-radius:10px; padding:10px 12px;">${t.model}</div>` : ''}
-          ${t.check ? `<div style="font-size:12px; color:var(--text2); margin-top:10px; line-height:1.55;">✅ Проверь себя: ${t.check}</div>` : ''}
+            <div class="ko" style="white-space:pre-wrap; font-size:13.5px; line-height:1.7; background:rgba(var(--accent-rgb),.08); border-radius:10px; padding:10px 12px;">${task.model}</div>` : ''}
+          ${task.check ? `<div style="font-size:12px; color:var(--text2); margin-top:10px; line-height:1.55;">✅ Проверь себя: ${task.check}</div>` : ''}
         </div>`;
     }).join('');
     ov.querySelector('.exam-results').innerHTML = `
@@ -16096,15 +16096,15 @@
       </div>
       <p class="td-levels-hint"><b>${lvl}급</b> · вопросы ${tdLevelHint(lvl)}</p>
       <div class="td-types">
-        ${types.map(t => `
-          <button type="button" class="td-type${t.ready ? '' : ' td-soon'}${t.ready && tdIsDone(t.id) ? ' td-type-done' : ''}" onclick="tdOpenType('${t.id}')" aria-label="${t('ui.188',{range: t.range, title: t.title})}">
-            <span class="td-type-badge">${t.range}</span>
+        ${types.map(ty => `
+          <button type="button" class="td-type${ty.ready ? '' : ' td-soon'}${ty.ready && tdIsDone(ty.id) ? ' td-type-done' : ''}" onclick="tdOpenType('${ty.id}')" aria-label="${t('ui.188',{range: ty.range, title: ty.title})}">
+            <span class="td-type-badge">${ty.range}</span>
             <span class="td-type-main">
-              <span class="td-type-title">${t.ico} ${t.title}</span>
-              <span class="td-type-ko ko">${t.ko}</span>
-              <span class="td-type-skill">${t.skill}</span>
+              <span class="td-type-title">${ty.ico} ${ty.title}</span>
+              <span class="td-type-ko ko">${ty.ko}</span>
+              <span class="td-type-skill">${ty.skill}</span>
             </span>
-            ${t.ready ? (tdIsDone(t.id) ? '<span class="td-type-check" title="' + t('ui.189') + '"><i class="fa-solid fa-circle-check"></i></span>' : '<i class="fa-solid fa-chevron-right td-type-arrow" aria-hidden="true"></i>') : '<span class="td-soon-tag">' + t('ui.186') + '</span>'}
+            ${ty.ready ? (tdIsDone(ty.id) ? '<span class="td-type-check" title="' + t('ui.189') + '"><i class="fa-solid fa-circle-check"></i></span>' : '<i class="fa-solid fa-chevron-right td-type-arrow" aria-hidden="true"></i>') : '<span class="td-soon-tag">' + t('ui.186') + '</span>'}
           </button>`).join('')}
       </div>`;
   }
