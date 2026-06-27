@@ -716,6 +716,8 @@
     'profile.myWords.sub': { ru: 'Личный словарик · повторяй и пополняй', en: 'Personal dictionary · review and add', uz: 'Shaxsiy lugʻat · takrorlang va toʻldiring' },
     'profile.studyKr':     { ru: 'Учёба в Корее', en: 'Studying in Korea', uz: 'Koreyada oʻqish' },
     'profile.studyKr.sub': { ru: 'Вузы · визы · стипендии · собеседование 면접', en: 'Universities · visas · scholarships · interview 면접', uz: 'OTMlar · vizalar · stipendiyalar · suhbat 면접' },
+    'profile.textbook':     { ru: 'Учебник', en: 'Textbook', uz: 'Darslik' },
+    'profile.textbook.sub': { ru: 'Корейский с нуля · 2 книги с уроками и заданиями', en: 'Korean from scratch · 2 books with lessons and exercises', uz: 'Noldan koreys tili · darslar va topshiriqli 2 kitob' },
     'profile.homework':    { ru: 'ДОМАШНЕЕ ЗАДАНИЕ', en: 'HOMEWORK', uz: 'UY VAZIFASI' },
     'profile.share':       { ru: 'Поделиться прогрессом', en: 'Share progress', uz: 'Progressni ulashish' },
     'profile.invite':      { ru: '💌 Пригласить друга · +200 XP обоим', en: '💌 Invite a friend · +200 XP for both', uz: '💌 Doʻstni taklif qilish · ikkalaga +200 XP' },
@@ -833,6 +835,13 @@
     'topik.about2.sub':     { ru: 'TOPIK II — формат и уровни', en: 'TOPIK II — format and levels', uz: 'TOPIK II — format va darajalar' },
     'topik.writing2.title': { ru: '✍️ Как писать 쓰기', en: '✍️ How to write 쓰기', uz: '✍️ 쓰기 qanday yoziladi' },
     'topik.writing2.sub':   { ru: 'Задания 51–54 · критерии оценивания', en: 'Tasks 51–54 · grading criteria', uz: '51–54 topshiriqlar · baholash mezonlari' },
+
+    // Экран выбора уровня (точка входа «Подготовка к ТОПИК» с главной)
+    'topik.chooser.sub':    { ru: 'Выбери уровень экзамена', en: 'Choose your exam level', uz: 'Imtihon darajasini tanlang' },
+    'topik.lvl1.t':         { ru: 'TOPIK I · 초급', en: 'TOPIK I · beginner', uz: 'TOPIK I · boshlangʻich' },
+    'topik.lvl1.s':         { ru: 'Реальные экзамены 회차 · 듣기 · 읽기 + материалы 1~2급', en: 'Real exams 회차 · 듣기 · 읽기 + 1~2급 materials', uz: 'Haqiqiy imtihonlar 회차 · 듣기 · 읽기 + 1~2급 materiallar' },
+    'topik.lvl2.t':         { ru: 'TOPIK II · 중·고급', en: 'TOPIK II · inter/advanced', uz: 'TOPIK II · oʻrta/yuqori' },
+    'topik.lvl2.s':         { ru: 'Материалы 3~6급 + пробные 모의고사 (듣기·쓰기·읽기)', en: '3~6급 materials + mock 모의고사 (듣기·쓰기·읽기)', uz: '3~6급 materiallar + sinov 모의고사 (듣기·쓰기·읽기)' },
     "ui.000": { ru: "Голос недоступен в этом браузере", en: "Voice is not available in this browser", uz: "Bu brauzerda ovoz mavjud emas" },
     "ui.001": { ru: "Распознавание речи доступно в Chrome/Edge 🎤", en: "Speech recognition works in Chrome/Edge 🎤", uz: "Nutqni aniqlash Chrome/Edge brauzerlarida ishlaydi 🎤" },
     "ui.002": { ru: "Разреши доступ к микрофону 🎤", en: "Allow microphone access 🎤", uz: "Mikrofonga ruxsat bering 🎤" },
@@ -1740,6 +1749,7 @@
     if (name === 'social') renderFriendsAndChat();
     if (name === 'words') renderSavedWords();
     if (name === 'topik') { _topikSection = null; _topikReturn = null; renderTopik(); }
+    if (name === 'textbook') renderTextbook();
     if (name === 'selfstudy') { _ssSection = null; renderSelfStudy(); }
     if (name === 'topikdeep') { tdReset(); tdRender(); }
     if (name === 'reading') renderReading();
@@ -20222,6 +20232,474 @@
     setLessonProgress(p);
   }
 
+  // ═════════════════════════════ УЧЕБНИК (교과서) ═════════════════════════════
+  // Интерактивная книга «Korean with Madie». Данные — window.TEXTBOOK
+  // (assets/textbook/textbook-data.js), порядок черт — window.HANGUL_STROKES.
+  // Тот же контент печатается «начисто» через textbook.html (A4 → PDF).
+  let _tbBookIdx = 0, _tbView = 'cover', _tbChap = 0, _tbPage = 0, _tbSvgN = 0;
+  let _tbMatchSel = null, _tbFrom = 'lessons';
+  function _tbData() {
+    return (window.TEXTBOOK && Array.isArray(window.TEXTBOOK.books)) ? window.TEXTBOOK.books[_tbBookIdx] : null;
+  }
+  function _tbBooks() { return (window.TEXTBOOK && Array.isArray(window.TEXTBOOK.books)) ? window.TEXTBOOK.books : []; }
+  // Вход с «Уроки» или «Профиль» → полка книг (выбор книги), дальше обложка → оглавление → страницы.
+  function openTextbook() { _tbFrom = (_curScreen === 'profile') ? 'profile' : 'lessons'; _tbView = _tbBooks().length > 1 ? 'shelf' : 'cover'; _tbChap = 0; _tbPage = 0; switchScreen('textbook'); }
+  function renderTextbook() {
+    const slot = document.getElementById('textbook-hub');
+    if (!slot) return;
+    const books = _tbBooks();
+    if (!books.length) { slot.innerHTML = '<div class="tb-empty">Учебник не загрузился 🌸<br><small>Обнови страницу.</small></div>'; return; }
+    if (_tbView === 'shelf') return tbRenderShelf(slot, books);
+    const book = books[_tbBookIdx] || books[0];
+    if (_tbView === 'cover') return tbRenderCover(slot, book);
+    if (_tbView === 'contents') return tbRenderContents(slot, book);
+    return tbRenderPage(slot, book);
+  }
+  function tbRenderShelf(slot, books) {
+    const cards = books.map((bk, i) => {
+      const pages = bk.chapters.reduce((s, c) => s + c.pages.length, 0);
+      return `<button type="button" class="tb-shelf-book tb-shelf-b${(i % 2) + 1}" onclick="tbOpenBook(${i})">
+        <span class="tb-shelf-spine"><b>한국어</b><span>${bk.no}</span></span>
+        <span class="tb-shelf-tx">
+          <span class="tb-shelf-t">${escHtml(bk.title)}</span>
+          <span class="tb-shelf-s">${escHtml(bk.sub)}</span>
+          <span class="tb-shelf-meta">${bk.chapters.length} глав · ${pages} стр.</span>
+        </span>
+        <i class="fa-solid fa-chevron-right tb-shelf-arrow"></i>
+      </button>`;
+    }).join('');
+    slot.innerHTML = `
+      <div class="tb-shelf-hero">
+        <div class="tb-shelf-flower">🌸</div>
+        <div class="tb-shelf-brand">${escHtml((window.TEXTBOOK && window.TEXTBOOK.brand) || 'Korean with Madie')}</div>
+        <h2 class="tb-shelf-title">Учебник</h2>
+        <p class="tb-shelf-sub">Выбери книгу — занимайся по порядку 🌸</p>
+      </div>
+      <div class="tb-shelf-list">${cards}</div>`;
+  }
+  function tbOpenBook(i) { _tbBookIdx = i; _tbView = 'cover'; _tbChap = 0; _tbPage = 0; renderTextbook(); window.scrollTo(0, 0); }
+  function tbToShelf() { _tbView = 'shelf'; renderTextbook(); window.scrollTo(0, 0); }
+  function tbRenderCover(slot, book) {
+    const multi = _tbBooks().length > 1;
+    slot.innerHTML = `
+      ${multi ? `<button type="button" class="tb-chip-back" style="margin-bottom:12px;" onclick="tbToShelf()"><i class="fa-solid fa-chevron-left"></i> Все книги</button>` : ''}
+      <div class="tb-cover">
+        <div class="tb-cover-flower">🌸</div>
+        <div class="tb-cover-brand">${escHtml(window.TEXTBOOK.brand || 'Korean with Madie')}</div>
+        <div class="tb-cover-ko ko">한국어 ${book.no || ''}</div>
+        <div class="tb-cover-title">${escHtml(book.title)}</div>
+        <div class="tb-cover-sub">${escHtml(book.sub)}</div>
+        <button type="button" class="tb-cover-start" onclick="tbOpenContents()">Открыть оглавление <i class="fa-solid fa-arrow-right"></i></button>
+        <a class="tb-print-link" href="textbook.html?book=${_tbBookIdx}" target="_blank" rel="noopener"><i class="fa-solid fa-print"></i> Печатная версия (PDF)</a>
+      </div>`;
+  }
+  function tbRenderContents(slot, book) {
+    const items = book.chapters.map((c, i) => `
+      <button type="button" class="tb-toc-item tb-acc-${c.accent}" onclick="tbOpenChapter(${i})">
+        <span class="tb-toc-no">${c.no}</span>
+        <span class="tb-toc-tx">
+          <span class="tb-toc-t">${escHtml(c.title)} <span class="ko">${c.ko}</span></span>
+          <span class="tb-toc-s">${escHtml(c.sub)} · ${c.pages.length} стр.</span>
+        </span>
+        <span class="tb-toc-emoji">${c.emoji || '🌸'}</span>
+        <i class="fa-solid fa-chevron-right tb-toc-arrow"></i>
+      </button>`).join('');
+    slot.innerHTML = `
+      <div class="tb-toc-head">
+        <button type="button" class="tb-chip-back" onclick="tbToCover()"><i class="fa-solid fa-chevron-left"></i> Обложка</button>
+        <div class="tb-toc-eyebrow">${escHtml(book.sub)}</div>
+        <h2 class="tb-toc-title">Оглавление</h2>
+      </div>
+      <div class="tb-toc-list">${items}</div>
+      <a class="tb-print-link tb-print-wide" href="textbook.html?book=${_tbBookIdx}" target="_blank" rel="noopener"><i class="fa-solid fa-print"></i> Печать всей книги · сохранить PDF</a>`;
+  }
+  function tbRenderPage(slot, book) {
+    const ch = book.chapters[_tbChap];
+    if (!ch) { tbOpenContents(); return; }
+    const total = ch.pages.length;
+    if (_tbPage < 0) _tbPage = 0;
+    if (_tbPage >= total) _tbPage = total - 1;
+    const page = ch.pages[_tbPage];
+    const blocks = page.blocks.map((b, bi) => tbBlock(b, 't' + _tbChap + '_' + _tbPage + '_' + bi)).join('');
+    const dots = ch.pages.map((p, i) => `<span class="tb-dot ${i === _tbPage ? 'on' : ''}"></span>`).join('');
+    const last = _tbPage === total - 1;
+    slot.innerHTML = `
+      <div class="tb-page tb-acc-${ch.accent}">
+        <div class="tb-page-top">
+          <button type="button" class="tb-chip-back" onclick="tbOpenContents()"><i class="fa-solid fa-list-ul"></i> Главы</button>
+          <span class="tb-page-loc">${ch.no}. ${escHtml(ch.title)} · ${_tbPage + 1}/${total}</span>
+        </div>
+        <div class="tb-blocks">${blocks}</div>
+        <div class="tb-pager">
+          <button type="button" class="tb-pg-btn" ${_tbPage === 0 && _tbChap === 0 ? 'disabled' : ''} onclick="tbPrevPage()"><i class="fa-solid fa-arrow-left"></i></button>
+          <div class="tb-dots">${dots}</div>
+          <button type="button" class="tb-pg-btn tb-pg-next" onclick="tbNextPage()">${last ? '<i class="fa-solid fa-check"></i>' : '<i class="fa-solid fa-arrow-right"></i>'}</button>
+        </div>
+      </div>`;
+    const sc = document.getElementById('screen-textbook'); if (sc) sc.scrollTop = 0;
+    window.scrollTo(0, 0);
+  }
+  function tbToCover() { _tbView = 'cover'; renderTextbook(); }
+  function tbOpenContents() { _tbView = 'contents'; renderTextbook(); window.scrollTo(0, 0); }
+  function tbOpenChapter(ci) { _tbChap = ci; _tbPage = 0; _tbView = 'page'; renderTextbook(); }
+  function tbNextPage() {
+    const book = _tbData(); if (!book) return;
+    const ch = book.chapters[_tbChap];
+    if (_tbPage < ch.pages.length - 1) { _tbPage++; renderTextbook(); }
+    else if (_tbChap < book.chapters.length - 1) { _tbChap++; _tbPage = 0; renderTextbook(); }
+    else { tbOpenContents(); }
+  }
+  function tbPrevPage() {
+    const book = _tbData(); if (!book) return;
+    if (_tbPage > 0) { _tbPage--; renderTextbook(); }
+    else if (_tbChap > 0) { _tbChap--; _tbPage = book.chapters[_tbChap].pages.length - 1; renderTextbook(); }
+    else { tbOpenContents(); }
+  }
+  // Кнопка «назад» в шапке: страница → оглавление → обложка → Уроки
+  function textbookBack() {
+    if (_tbView === 'page') { tbOpenContents(); return; }
+    if (_tbView === 'contents') { tbToCover(); return; }
+    if (_tbView === 'cover' && _tbBooks().length > 1) { tbToShelf(); return; }
+    switchScreen(_tbFrom, true);
+  }
+
+  // ── Рендер блоков ──
+  function tbBlock(b, id) {
+    switch (b.t) {
+      case 'intro':    return tbBlockIntro(b);
+      case 'note':     return tbBlockNote(b);
+      case 'letters':  return tbBlockLetters(b, id);
+      case 'combos':   return tbBlockCombos(b);
+      case 'syllable': return tbBlockSyllable(b);
+      case 'table':    return tbBlockTable(b);
+      case 'vocab':    return tbBlockVocab(b);
+      case 'grammar':  return tbBlockGrammar(b);
+      case 'dialog':   return tbBlockDialog(b);
+      case 'phrases':  return tbBlockPhrases(b);
+      case 'exercise': return tbBlockExercise(b);
+      case 'homework': return tbBlockHomework(b);
+      default:         return '';
+    }
+  }
+  function tbBlockVocab(b) {
+    const cards = (b.items || []).map(it => `
+      <button type="button" class="tb-voc" onclick="playSyllable('${it.ko}', this)">
+        <span class="tb-voc-emoji">${it.emoji || '🔊'}</span>
+        <span class="tb-voc-ko ko">${it.ko}</span>
+        <span class="tb-voc-ru">${escHtml(it.ru || '')}</span>
+        ${it.tr ? `<span class="tb-voc-tr">${escHtml(it.tr)}</span>` : ''}
+      </button>`).join('');
+    return `<div class="tb-sec">
+      <div class="tb-sec-head"><h3 class="tb-sec-title">${escHtml(b.title)}</h3>${b.sub ? `<p class="tb-sec-sub">${escHtml(b.sub)}</p>` : ''}</div>
+      <div class="tb-vocab">${cards}</div></div>`;
+  }
+  function tbBlockGrammar(b) {
+    const ex = (b.examples || []).map(e => `
+      <button type="button" class="tb-gex" onclick="playSyllable('${e.ko}', this)">
+        <span class="tb-gex-ko ko">${e.ko}</span>
+        <span class="tb-gex-ru">${escHtml(e.ru || '')}${e.tr ? ` · <span class="tb-gex-tr">${escHtml(e.tr)}</span>` : ''}</span>
+        <i class="fa-solid fa-volume-high tb-gex-spk" aria-hidden="true"></i>
+      </button>`).join('');
+    return `<div class="tb-gram">
+      <div class="tb-gram-head"><span class="tb-gram-badge">грамматика</span><h3 class="tb-gram-title">${escHtml(b.title)}</h3>${b.ko ? `<span class="tb-gram-ko ko">${b.ko}</span>` : ''}</div>
+      <div class="tb-gram-rule">${b.rule || ''}</div>
+      ${ex ? `<div class="tb-gram-ex">${ex}</div>` : ''}
+    </div>`;
+  }
+  function tbBlockDialog(b) {
+    const order = [];
+    const lines = (b.lines || []).map(l => {
+      let idx = order.indexOf(l.s);
+      if (idx < 0) { order.push(l.s); idx = order.length - 1; }
+      const side = (idx % 2 === 0) ? 'a' : 'b';
+      const name = (l.s && l.s !== 'A' && l.s !== 'B') ? `<span class="tb-dl-name">${escHtml(l.s)}</span>` : '';
+      return `<button type="button" class="tb-dl tb-dl-${side}" onclick="playSyllable('${l.ko}', this)">
+        <span class="tb-dl-av">${side === 'a' ? '🙂' : '🧑'}</span>
+        <span class="tb-dl-bub">${name}<span class="tb-dl-ko ko">${l.ko}</span><span class="tb-dl-ru">${escHtml(l.ru || '')}${l.tr ? ` · ${escHtml(l.tr)}` : ''}</span></span>
+      </button>`;
+    }).join('');
+    return `<div class="tb-sec">
+      <div class="tb-sec-head"><h3 class="tb-sec-title">💬 ${escHtml(b.title)}</h3>${b.sub ? `<p class="tb-sec-sub">${escHtml(b.sub)}</p>` : ''}</div>
+      <div class="tb-dialog">${lines}</div></div>`;
+  }
+  function tbBlockPhrases(b) {
+    const rows = (b.items || []).map(it => `
+      <button type="button" class="tb-phr" onclick="playSyllable('${it.ko}', this)">
+        <span class="tb-phr-ko ko">${it.ko}</span>
+        <span class="tb-phr-ru">${escHtml(it.ru || '')}${it.tr ? ` · <span class="tb-phr-tr">${escHtml(it.tr)}</span>` : ''}</span>
+        <i class="fa-solid fa-volume-high tb-phr-spk" aria-hidden="true"></i>
+      </button>`).join('');
+    return `<div class="tb-sec">
+      <div class="tb-sec-head"><h3 class="tb-sec-title">${escHtml(b.title)}</h3>${b.sub ? `<p class="tb-sec-sub">${escHtml(b.sub)}</p>` : ''}</div>
+      <div class="tb-phrases">${rows}</div></div>`;
+  }
+  function tbBlockIntro(b) {
+    const goals = (b.goals || []).map(g => `<div class="tb-goal"><span class="tb-goal-i">${g[0]}</span><span>${g[1]}</span></div>`).join('');
+    return `<div class="tb-intro">
+      <div class="tb-intro-emoji">${b.emoji || '🌸'}</div>
+      ${b.eyebrow ? `<div class="tb-intro-eyebrow">${b.eyebrow}</div>` : ''}
+      <h1 class="tb-intro-title">${escHtml(b.title)} <span class="ko">${b.ko || ''}</span></h1>
+      <p class="tb-intro-lead">${b.lead || ''}</p>
+      ${goals ? `<div class="tb-goals">${goals}</div>` : ''}
+    </div>`;
+  }
+  function tbBlockNote(b) {
+    const tone = b.tone || 'tip';
+    const ico = tone === 'rule' ? '📌' : (tone === 'warn' ? '⚠️' : '💡');
+    return `<div class="tb-note tb-note-${tone}">
+      ${b.title ? `<div class="tb-note-head"><span class="tb-note-ico">${ico}</span><span class="tb-note-title">${escHtml(b.title)}</span></div>` : ''}
+      <div class="tb-note-body">${b.html || ''}</div>
+    </div>`;
+  }
+  function tbExHtml(ex) {
+    if (!ex) return '';
+    return `<button type="button" class="tb-letter-ex" onclick="playSyllable('${ex.w}', this)">
+      <span class="tb-ex-emoji">${ex.emoji || '🔊'}</span>
+      <span class="tb-ex-w ko">${ex.w}</span>
+      <span class="tb-ex-tr">${ex.tr ? ex.tr + ' · ' : ''}${escHtml(ex.ru || '')}</span>
+    </button>`;
+  }
+  function tbBlockLetters(b, id) {
+    const cards = b.items.map((it, i) => {
+      const lid = id + '_l' + i;
+      const hasStroke = !!(window.HANGUL_STROKES && window.HANGUL_STROKES[it.char]);
+      const baseNote = it.base ? `<span class="tb-letter-base">= <span class="ko">${it.base}${it.base}</span></span>` : '';
+      return `<div class="tb-letter">
+        <div class="tb-stroke" id="${lid}">${hasStroke ? tbStrokeSvg(it.char) : `<span class="tb-glyph-big ko">${it.char}</span>`}</div>
+        <div class="tb-letter-info">
+          <button type="button" class="tb-glyph ko" onclick="playSyllable('${it.char}', this)" aria-label="Произнести букву">${it.char}</button>
+          <div class="tb-letter-meta">
+            <div class="tb-letter-name">${escHtml(it.name || '')} ${baseNote}</div>
+            <div class="tb-letter-rom">${escHtml(it.romaja || '')} · ${escHtml(it.sound || '')}</div>
+          </div>
+        </div>
+        ${hasStroke ? `<button type="button" class="tb-write-btn" onclick="tbAnimate('${lid}')"><i class="fa-solid fa-pen-nib"></i> Порядок черт</button>` : ''}
+        ${tbExHtml(it.ex)}
+      </div>`;
+    }).join('');
+    return `<div class="tb-sec">
+      <div class="tb-sec-head"><h3 class="tb-sec-title">${escHtml(b.title)}</h3>${b.sub ? `<p class="tb-sec-sub">${b.sub}</p>` : ''}</div>
+      <div class="tb-letters">${cards}</div>
+    </div>`;
+  }
+  function tbBlockCombos(b) {
+    const cards = b.items.map(it => `
+      <div class="tb-combo">
+        <button type="button" class="tb-glyph ko" onclick="playSyllable('${it.char}', this)">${it.char}</button>
+        <div class="tb-combo-formula"><span class="ko">${it.parts[0]}</span> + <span class="ko">${it.parts[1]}</span></div>
+        <div class="tb-letter-rom">${escHtml(it.romaja)} · ${escHtml(it.sound)}</div>
+        ${tbExHtml(it.ex)}
+      </div>`).join('');
+    return `<div class="tb-sec">
+      <div class="tb-sec-head"><h3 class="tb-sec-title">${escHtml(b.title)}</h3>${b.sub ? `<p class="tb-sec-sub">${b.sub}</p>` : ''}</div>
+      <div class="tb-combos">${cards}</div>
+    </div>`;
+  }
+  function tbBlockSyllable(b) {
+    const demo = b.demo.map(d => `
+      <button type="button" class="tb-syl" onclick="playSyllable('${d.res}', this)">
+        <span class="tb-syl-parts ko">${d.c}<span class="tb-syl-plus">+</span>${d.v}</span>
+        <span class="tb-syl-eq">→</span>
+        <span class="tb-syl-res ko">${d.res}</span>
+        <span class="tb-syl-tr">${escHtml(d.tr)}</span>
+      </button>`).join('');
+    return `<div class="tb-sec">
+      <div class="tb-sec-head"><h3 class="tb-sec-title">${escHtml(b.title)}</h3></div>
+      ${b.html ? `<p class="tb-sec-sub">${b.html}</p>` : ''}
+      <div class="tb-syls">${demo}</div>
+      ${b.note ? `<div class="tb-note tb-note-tip"><div class="tb-note-body">${b.note}</div></div>` : ''}
+    </div>`;
+  }
+  function tbBlockTable(b) {
+    const head = b.head.map(h => `<th>${escHtml(h)}</th>`).join('');
+    const rows = b.rows.map(r => `<tr>${r.map(c => `<td>${c}</td>`).join('')}</tr>`).join('');
+    return `<div class="tb-sec">
+      <div class="tb-sec-head"><h3 class="tb-sec-title">${escHtml(b.title)}</h3>${b.sub ? `<p class="tb-sec-sub">${b.sub}</p>` : ''}</div>
+      <div class="tb-table-wrap"><table class="tb-table"><thead><tr>${head}</tr></thead><tbody>${rows}</tbody></table></div>
+    </div>`;
+  }
+  function tbBlockExercise(b) {
+    if (b.kind === 'fill') {
+      const items = (b.items || []).map((it, qi) => {
+        const opts = it.options.map((o, oi) =>
+          `<button type="button" class="tb-opt ko" data-c="${oi === it.answer ? '1' : '0'}" onclick="tbChoose(this)">${o}</button>`).join('');
+        return `<div class="tb-q">
+          <div class="tb-q-head"><span class="tb-q-n">${qi + 1}</span><span class="tb-q-text ko">${it.before || ''}<span class="tb-blank">?</span>${it.after || ''}</span></div>
+          ${it.ru ? `<div class="tb-q-ru">${escHtml(it.ru)}</div>` : ''}
+          <div class="tb-opts">${opts}</div>
+        </div>`;
+      }).join('');
+      return `<div class="tb-ex">
+        <div class="tb-ex-head"><span class="tb-ex-badge">задание</span><h3 class="tb-ex-title">${escHtml(b.title)}</h3></div>
+        ${b.instr ? `<p class="tb-ex-instr">${escHtml(b.instr)}</p>` : ''}${items}</div>`;
+    }
+    if (b.kind === 'choose') {
+      const items = b.items.map((it, qi) => {
+        const opts = it.options.map((o, oi) =>
+          `<button type="button" class="tb-opt ko" data-c="${oi === it.answer ? '1' : '0'}" onclick="tbChoose(this)">${o}</button>`).join('');
+        return `<div class="tb-q">
+          <div class="tb-q-head"><span class="tb-q-n">${qi + 1}</span><span class="tb-q-text ko">${it.q}</span></div>
+          <div class="tb-opts">${opts}</div>
+        </div>`;
+      }).join('');
+      return `<div class="tb-ex">
+        <div class="tb-ex-head"><span class="tb-ex-badge">задание</span><h3 class="tb-ex-title">${escHtml(b.title)}</h3></div>
+        ${b.instr ? `<p class="tb-ex-instr">${escHtml(b.instr)}</p>` : ''}${items}</div>`;
+    }
+    if (b.kind === 'match') {
+      const left = b.pairs.map((p, i) => `<button type="button" class="tb-mt tb-mt-l ko" data-k="${i}" onclick="tbMatch(this)">${p[0]}</button>`).join('');
+      const order = b.pairs.map((p, i) => i).reverse();   // детерминированная «перемешка» без random
+      const right = order.map(i => `<button type="button" class="tb-mt tb-mt-r" data-k="${i}" onclick="tbMatch(this)">${b.pairs[i][1]}</button>`).join('');
+      return `<div class="tb-ex">
+        <div class="tb-ex-head"><span class="tb-ex-badge">задание</span><h3 class="tb-ex-title">${escHtml(b.title)}</h3></div>
+        ${b.instr ? `<p class="tb-ex-instr">${escHtml(b.instr)}</p>` : ''}
+        <div class="tb-match"><div class="tb-match-col">${left}</div><div class="tb-match-col">${right}</div></div></div>`;
+    }
+    if (b.kind === 'listen') {
+      const items = b.items.map((it, qi) => {
+        const opts = it.options.map((o, oi) =>
+          `<button type="button" class="tb-opt" data-c="${oi === it.answer ? '1' : '0'}" onclick="tbChoose(this)">${escHtml(o)}</button>`).join('');
+        return `<div class="tb-q">
+          <div class="tb-q-head"><span class="tb-q-n">${qi + 1}</span>
+            <button type="button" class="tb-listen-btn" onclick="playSyllable('${it.ko.replace(/'/g, "\\'")}', this)"><i class="fa-solid fa-volume-up"></i> Слушать</button>
+          </div>
+          <div class="tb-opts">${opts}</div>
+        </div>`;
+      }).join('');
+      return `<div class="tb-ex">
+        <div class="tb-ex-head"><span class="tb-ex-badge">🎧 слушай</span><h3 class="tb-ex-title">${escHtml(b.title)}</h3></div>
+        ${b.instr ? `<p class="tb-ex-instr">${escHtml(b.instr)}</p>` : ''}${items}</div>`;
+    }
+    if (b.kind === 'order') {
+      const items = b.items.map((it, qi) => {
+        const order = it.words.map((w, i) => i).reverse();   // детерминированная «перемешка» без random
+        const chips = order.map(oi => `<button type="button" class="tb-word ko" data-oi="${oi}" onclick="tbOrderPick(this)">${it.words[oi]}</button>`).join('');
+        return `<div class="tb-q tb-order-q">
+          <div class="tb-q-head"><span class="tb-q-n">${qi + 1}</span><span class="tb-q-text-ru">${escHtml(it.ru)}</span></div>
+          <div class="tb-order-slot"></div>
+          <div class="tb-order-bank">${chips}</div>
+        </div>`;
+      }).join('');
+      return `<div class="tb-ex">
+        <div class="tb-ex-head"><span class="tb-ex-badge">собери</span><h3 class="tb-ex-title">${escHtml(b.title)}</h3></div>
+        ${b.instr ? `<p class="tb-ex-instr">${escHtml(b.instr)}</p>` : ''}${items}</div>`;
+    }
+    return '';
+  }
+  function tbBlockHomework(b) {
+    const tasks = b.tasks.map(tk => `<li class="tb-hw-task"><label><input type="checkbox" class="tb-hw-cb"><span>${tk}</span></label></li>`).join('');
+    return `<div class="tb-hw">
+      <div class="tb-hw-head"><span class="tb-hw-ico">📒</span><h3 class="tb-hw-title">${escHtml(b.title)}</h3></div>
+      ${b.intro ? `<p class="tb-hw-intro">${escHtml(b.intro)}</p>` : ''}
+      <ol class="tb-hw-list">${tasks}</ol>
+      ${b.note ? `<div class="tb-hw-note">${b.note}</div>` : ''}
+    </div>`;
+  }
+  // ── Порядок черт: SVG со стрелками и номерами + анимация ──
+  function tbStrokeSvg(char) {
+    const strokes = (window.HANGUL_STROKES && window.HANGUL_STROKES[char]) || [];
+    const mk = 'tbA' + (_tbSvgN++);
+    let paths = '', nums = '';
+    strokes.forEach((d, i) => {
+      paths += `<path d="${d}" class="tb-pth" fill="none" marker-end="url(#${mk})"/>`;
+      const m = /M\s*(-?[\d.]+)[ ,]+(-?[\d.]+)/.exec(d);
+      if (m) {
+        const sx = +m[1], sy = +m[2];
+        nums += `<g class="tb-num"><circle cx="${sx}" cy="${sy}" r="9"/><text x="${sx}" y="${sy}" text-anchor="middle" dominant-baseline="central">${i + 1}</text></g>`;
+      }
+    });
+    return `<svg viewBox="-6 -6 112 112" class="tb-svg" aria-hidden="true">
+      <defs><marker id="${mk}" viewBox="0 0 10 10" refX="6.5" refY="5" markerWidth="11" markerHeight="11" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path d="M0,1 L9,5 L0,9 z" class="tb-arrow"/></marker></defs>
+      <line x1="50" y1="2" x2="50" y2="98" class="tb-grid"/>
+      <line x1="2" y1="50" x2="98" y2="50" class="tb-grid"/>
+      <text x="50" y="50" class="tb-ghost ko" text-anchor="middle" dominant-baseline="central">${char}</text>
+      <g class="tb-strokes">${paths}</g>
+      <g class="tb-nums">${nums}</g>
+    </svg>`;
+  }
+  function tbAnimate(lid) {
+    const box = document.getElementById(lid);
+    if (!box) return;
+    const paths = box.querySelectorAll('.tb-pth');
+    const nums = box.querySelectorAll('.tb-num');
+    if (!paths.length) return;
+    paths.forEach(p => {
+      const len = p.getTotalLength();
+      p.style.transition = 'none';
+      p.style.strokeDasharray = len;
+      p.style.strokeDashoffset = len;
+    });
+    nums.forEach(n => { n.style.transition = 'none'; n.style.opacity = '0'; });
+    // force reflow so the reset applies before transitions
+    void box.offsetWidth;
+    let delay = 60;
+    paths.forEach((p, i) => {
+      setTimeout(() => { p.style.transition = 'stroke-dashoffset .55s ease'; p.style.strokeDashoffset = '0'; }, delay);
+      if (nums[i]) setTimeout(() => { nums[i].style.transition = 'opacity .2s ease'; nums[i].style.opacity = '1'; }, delay);
+      delay += 600;
+    });
+  }
+  // ── Упражнения: выбор ответа ──
+  function tbChoose(btn) {
+    const wrap = btn.closest('.tb-opts');
+    if (!wrap || wrap.dataset.done) return;
+    if (btn.dataset.c === '1') {
+      btn.classList.add('ok');
+      wrap.dataset.done = '1';
+      wrap.querySelectorAll('.tb-opt').forEach(o => { o.disabled = true; if (o.dataset.c === '1') o.classList.add('ok'); });
+      const q = btn.closest('.tb-q');
+      const blank = q && q.querySelector('.tb-blank');
+      if (blank) { blank.textContent = btn.textContent; blank.classList.add('filled'); }
+    } else {
+      btn.classList.add('no');
+      btn.disabled = true;
+    }
+  }
+  // ── Упражнения: соедини пары (тап слева → тап справа) ──
+  function tbMatch(btn) {
+    if (btn.classList.contains('done')) return;
+    if (!_tbMatchSel) { _tbMatchSel = btn; btn.classList.add('sel'); return; }
+    if (_tbMatchSel === btn) { btn.classList.remove('sel'); _tbMatchSel = null; return; }
+    const a = _tbMatchSel;
+    const sameCol = a.classList.contains('tb-mt-l') === btn.classList.contains('tb-mt-l');
+    if (sameCol) { a.classList.remove('sel'); _tbMatchSel = btn; btn.classList.add('sel'); return; }
+    if (a.dataset.k === btn.dataset.k) {
+      a.classList.remove('sel'); a.classList.add('done'); btn.classList.add('done');
+      a.disabled = true; btn.disabled = true;
+    } else {
+      a.classList.add('shake'); btn.classList.add('shake');
+      setTimeout(() => { a.classList.remove('sel', 'shake'); btn.classList.remove('shake'); }, 420);
+    }
+    _tbMatchSel = null;
+  }
+  // ── Упражнения: собери предложение из слов (тап в банке → в строку сборки) ──
+  function tbOrderPick(btn) {
+    const q = btn.closest('.tb-order-q');
+    if (!q || q.dataset.done) return;
+    const slot = q.querySelector('.tb-order-slot');
+    slot.classList.remove('wrong');
+    if (btn.parentElement === slot) {
+      q.querySelector('.tb-order-bank').appendChild(btn);
+      btn.classList.remove('placed');
+      return;
+    }
+    slot.appendChild(btn);
+    btn.classList.add('placed');
+    const total = q.querySelectorAll('.tb-word').length;
+    if (slot.children.length === total) {
+      const order = Array.from(slot.children).map(c => +c.dataset.oi);
+      const ok = order.every((v, i) => v === i);
+      if (ok) {
+        q.dataset.done = '1';
+        slot.classList.add('ok');
+        Array.from(slot.children).forEach(c => { c.disabled = true; });
+      } else {
+        slot.classList.add('wrong');
+        setTimeout(() => slot.classList.remove('wrong'), 420);
+      }
+    }
+  }
+
   // ─────────────────────────── TOPIK PREP (한국어능력시험) ───────────────────────────
   // Foundation v1: built-in exam info + 쓰기 (writing) basics + starter materials,
   // with admin-managed materials merged in. Focus: TOPIK I (초급).
@@ -20838,11 +21316,13 @@
     if (_topikReturn) { const r = _topikReturn; _topikReturn = null; _topikSection = null; switchScreen(r, true); return; }
     _topikSection = null; renderTopik(); requestAnimationFrame(() => _setScroll(_topikMenuScroll));
   }
-  // Контекстная кнопка «назад» экрана ТОПИК: из раздела → в меню, из меню → на Уроки
+  // Контекстная кнопка «назад» экрана ТОПИК:
+  // раздел → меню уровня · меню уровня → экран выбора уровня · выбор уровня → на главную
   function topikBack() {
     if (_topikReturn) { const r = _topikReturn; _topikReturn = null; _topikSection = null; switchScreen(r, true); return; }
     if (_topikSection) { topikHome(); return; }
-    switchScreen('lessons', true);
+    if (_topikLevel) { _topikLevel = null; renderTopik(); window.scrollTo(0, 0); return; }
+    switchScreen('home', true);
   }
 
   function topikAccordionHtml(items, idPrefix) {
@@ -20886,9 +21366,45 @@
       ${inner}`;
   }
 
-  // Уровень раздела ТОПИК: '1' (TOPIK I) или '2' (TOPIK II)
-  let _topikLevel = '1';
+  // Уровень раздела ТОПИК: '1' (TOPIK I), '2' (TOPIK II) или null — пока уровень не выбран
+  // (показываем экран-развилку выбора уровня — вход с главной).
+  let _topikLevel = null;
   function setTopikLevel(lvl) { _topikLevel = lvl; _topikSection = null; renderTopik(); window.scrollTo(0, 0); }
+  // Вход с главной кнопки «Подготовка к ТОПИК»: сбрасываем уровень → сначала экран выбора.
+  function openTopik() { _topikLevel = null; switchScreen('topik'); }
+  // Выбор уровня на экране-развилке → открыть меню подготовки этого уровня.
+  function chooseTopikLevel(lvl) {
+    _topikLevel = lvl; _topikSection = null; renderTopik();
+    const sc = document.getElementById('screen-topik'); if (sc) sc.scrollTop = 0;
+    window.scrollTo(0, 0);
+  }
+  // Экран-развилка: две большие карточки — TOPIK I и TOPIK II.
+  function renderTopikChooser(slot) {
+    slot.innerHTML = `
+      <div class="topik-hero">
+        <div class="topik-hero-badge">TOPIK</div>
+        <div class="topik-hero-title ko">한국어능력시험</div>
+        <div class="topik-hero-sub">${t('topik.chooser.sub')}</div>
+      </div>
+      <div class="topik-level-pick">
+        <button type="button" class="topik-entry be-real" onclick="chooseTopikLevel('1')" aria-label="TOPIK I">
+          <span class="topik-entry-badge">TOPIK <b>I</b></span>
+          <span class="topik-entry-text">
+            <span class="topik-entry-title">${t('topik.lvl1.t')}</span>
+            <span class="topik-entry-sub">${t('topik.lvl1.s')}</span>
+          </span>
+          <i class="fa-solid fa-chevron-right topik-entry-arrow" aria-hidden="true"></i>
+        </button>
+        <button type="button" class="topik-entry be-mock" onclick="chooseTopikLevel('2')" aria-label="TOPIK II">
+          <span class="topik-entry-badge be-badge">TOPIK <b>II</b></span>
+          <span class="topik-entry-text">
+            <span class="topik-entry-title">${t('topik.lvl2.t')}</span>
+            <span class="topik-entry-sub">${t('topik.lvl2.s')}</span>
+          </span>
+          <i class="fa-solid fa-chevron-right topik-entry-arrow" aria-hidden="true"></i>
+        </button>
+      </div>`;
+  }
   function topikLevelTabs() {
     return `
       <div class="auth-tabs" style="margin-bottom:14px;">
@@ -21491,6 +22007,7 @@
     const slot = document.getElementById('topik-hub');
     if (!slot) return;
     const admin = isAdmin();
+    if (!_topikLevel && !_topikSection) { renderTopikChooser(slot); return; }
     if (!_topikSection) { renderTopikMenu(slot); return; }
     renderTopikSection(slot, _topikSection, admin);
   }
