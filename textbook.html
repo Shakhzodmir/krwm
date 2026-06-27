@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Учебник · Korean with Madie 🌸 — печать</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700&family=Noto+Sans+KR:wght@400;500;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{ --berry:#5C2A33; --coral:#BC4B5E; --gold:#C9A55C; --sage:#84C474;
+         --ink:#2B2B2B; --soft:#7A6A6E; --line:#E8DCD6; --cream:#FFFAF6; --acc:var(--coral); }
+  *{ box-sizing:border-box; }
+  html,body{ margin:0; padding:0; }
+  body{ font-family:'Nunito',system-ui,sans-serif; color:var(--ink); background:#EDE7E2; line-height:1.5; }
+  .ko{ font-family:'Noto Sans KR',sans-serif; }
+  h1,h2,h3{ font-family:'Fraunces',Georgia,serif; color:var(--berry); margin:0; }
+  .acc-berry{ --acc:var(--berry); } .acc-coral{ --acc:var(--coral); }
+
+  .book{ width:210mm; margin:14px auto; background:#fff; box-shadow:0 4px 22px rgba(0,0,0,.13); }
+  .pad{ padding:14mm 15mm; }
+
+  /* Toolbar (не печатается) */
+  .bar{ position:sticky; top:0; z-index:9; display:flex; gap:12px; align-items:center; justify-content:center; flex-wrap:wrap;
+        padding:11px; background:rgba(255,255,255,.93); backdrop-filter:blur(6px); border-bottom:1px solid var(--line); }
+  .bar b{ color:var(--berry); font-family:'Fraunces',serif; }
+  .btn{ cursor:pointer; border:none; border-radius:12px; padding:11px 20px; font-family:inherit; font-weight:800; font-size:15px;
+        background:linear-gradient(135deg,var(--berry),var(--coral)); color:#fff; box-shadow:0 8px 20px -8px rgba(92,42,51,.5); }
+  .btn:hover{ filter:brightness(1.05); }
+  .hint{ font-size:12px; color:var(--soft); }
+  .bookpick{ display:inline-flex; gap:6px; }
+  .bookpick a{ font-size:12.5px; font-weight:700; text-decoration:none; color:var(--berry); border:1px solid var(--line); border-radius:9px; padding:7px 12px; background:#fff; }
+  .bookpick a.on{ background:var(--coral); color:#fff; border-color:var(--coral); }
+
+  /* Обложка — единственная «воздушная» полная страница */
+  .cover{ min-height:267mm; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:24mm; }
+  .cover .flower{ font-size:64px; }
+  .cover .brand{ letter-spacing:.16em; text-transform:uppercase; color:var(--soft); font-weight:700; margin-top:10px; }
+  .cover .ko-big{ font-size:92px; font-weight:800; color:var(--berry); margin:18px 0; }
+  .cover .title{ font-size:46px; } .cover .sub{ font-size:18px; color:var(--soft); margin-top:10px; }
+  .cover .rule{ width:80px; height:4px; background:var(--coral); border-radius:2px; margin:24px auto; }
+  .cover-break{ break-after:page; }
+
+  .toc{ break-inside:avoid; }
+  .toc h2{ font-size:26px; border-bottom:3px solid var(--coral); padding-bottom:8px; }
+  .toc ol{ list-style:none; padding:0; margin:14px 0 0; font-size:15px; }
+  .toc li{ display:flex; align-items:baseline; gap:10px; padding:7px 0; border-bottom:1px dotted var(--line); }
+  .toc .n{ color:var(--coral); font-weight:800; font-family:'Fraunces',serif; width:22px; }
+
+  /* Шапка главы (без принудительного разрыва — поток заполняет страницы) */
+  .ch-band{ display:flex; align-items:baseline; gap:12px; color:#fff; border-radius:14px; padding:13px 18px; margin:24px 0 16px;
+            background:linear-gradient(135deg, var(--acc), #00000022); break-after:avoid; break-inside:avoid; }
+  .ch-band .no{ font-size:34px; font-family:'Fraunces',serif; font-weight:700; line-height:1; }
+  .ch-band .t{ font-size:24px; font-family:'Fraunces',serif; } .ch-band .t small{ font-weight:400; opacity:.9; font-size:14px; }
+  .pg-label{ font-size:11px; letter-spacing:.08em; text-transform:uppercase; color:var(--soft); margin:16px 0 8px; font-weight:700; break-after:avoid; }
+
+  .block{ margin:0 0 13px; break-inside:avoid; }
+  h3.sec-t{ font-size:17px; color:var(--berry); margin:0 0 4px; break-after:avoid; }
+  .sec-s{ font-size:12px; color:var(--soft); margin:0 0 9px; }
+
+  .intro{ text-align:center; break-inside:avoid; }
+  .intro .emoji{ font-size:38px; } .intro h1{ font-size:28px; margin:6px 0; }
+  .intro .lead{ font-size:13.5px; text-align:left; } .intro .ko{ font-weight:700; }
+  .goals{ display:flex; flex-wrap:wrap; gap:7px; justify-content:center; margin-top:11px; }
+  .goal{ background:var(--cream); border:1px solid var(--line); border-radius:9px; padding:7px 11px; font-size:11.5px; font-weight:700; color:var(--berry); }
+
+  .note{ border:1px solid var(--line); border-left:5px solid var(--acc); border-radius:10px; padding:11px 13px; background:var(--cream); }
+  .note .nt{ font-weight:800; color:var(--berry); margin-bottom:4px; } .note .nb{ font-size:13px; } .note .ko{ font-weight:700; }
+
+  /* Прописи букв */
+  .writes{ display:flex; flex-direction:column; gap:9px; }
+  .wr{ display:grid; grid-template-columns:60px 1fr; gap:10px; align-items:center; border:1px solid var(--line); border-radius:12px; padding:7px; break-inside:avoid; }
+  .wr-info{ text-align:center; } .wr-info .big{ font-size:28px; font-weight:700; color:var(--berry); }
+  .wr-info .nm{ font-size:9.5px; color:var(--soft); } .wr-info .rm{ font-size:9px; color:var(--soft); }
+  .wr-cells{ display:grid; grid-template-columns:64px repeat(5,1fr); gap:5px; }
+  .cell{ aspect-ratio:1; border:1px dashed var(--line); border-radius:7px; position:relative; background-color:#FCFAF8;
+         background-image:linear-gradient(var(--line),var(--line)),linear-gradient(var(--line),var(--line)); background-size:100% 1px,1px 100%; background-position:center; background-repeat:no-repeat; }
+  .cell.model{ border-style:solid; background-color:#FFF7F1; }
+  .cell svg{ width:100%; height:100%; display:block; }
+  .cell .trace{ position:absolute; inset:0; display:grid; place-items:center; font-size:30px; color:#E7D6CC; font-weight:700; }
+  .ex-word{ font-size:11.5px; color:var(--soft); margin-left:3px; } .ex-word b{ color:var(--berry); }
+
+  /* Словарь / составные / слог */
+  .grid4{ display:grid; grid-template-columns:repeat(4,1fr); gap:7px; }
+  .vcard{ border:1px solid var(--line); border-radius:10px; padding:8px 6px; text-align:center; }
+  .vcard .em{ font-size:20px; } .vcard .k{ font-size:17px; color:var(--berry); font-weight:700; } .vcard .r{ font-size:11px; } .vcard .tr{ font-size:9.5px; color:var(--soft); }
+  .combo .g{ font-size:28px; color:var(--berry); font-weight:700; } .combo .f .ko{ color:var(--coral); font-weight:700; } .combo .f{ font-size:12px; } .combo .rr{ font-size:9.5px; color:var(--soft); }
+  .syls{ display:grid; grid-template-columns:repeat(5,1fr); gap:7px; }
+  .syl{ border:1px solid var(--line); border-radius:10px; padding:7px; text-align:center; } .syl .p{ font-size:12px; color:var(--soft); } .syl .res{ font-size:26px; color:var(--berry); font-weight:700; } .syl .tr{ font-size:9.5px; color:var(--soft); }
+
+  /* Грамматика / диалог / фразы */
+  .gram{ border:1px solid var(--line); border-top:4px solid var(--acc); border-radius:12px; padding:13px; }
+  .gram .gh{ font-size:15px; color:var(--berry); font-weight:800; } .gram .gh .ko{ color:var(--coral); margin-left:6px; }
+  .gram .rule{ font-size:13px; margin:5px 0; } .gram .rule .ko{ font-weight:700; }
+  .gram .ex{ display:flex; flex-direction:column; gap:5px; margin-top:8px; }
+  .gex{ background:var(--cream); border:1px solid var(--line); border-radius:9px; padding:7px 10px; display:flex; gap:10px; align-items:baseline; }
+  .gex .k{ font-size:15px; color:var(--berry); font-weight:600; } .gex .r{ font-size:11.5px; color:var(--soft); }
+  .dia{ display:flex; flex-direction:column; gap:7px; }
+  .dl{ display:flex; gap:8px; align-items:flex-end; } .dl.b{ flex-direction:row-reverse; }
+  .dl .av{ font-size:20px; } .dl .bub{ background:var(--cream); border:1px solid var(--line); border-radius:13px; padding:7px 11px; max-width:80%; }
+  .dl.b .bub{ background:#F4ECEF; } .dl .k{ font-size:15px; color:var(--berry); font-weight:600; } .dl .r{ font-size:11px; color:var(--soft); }
+  .dl .dn{ display:block; font-size:9.5px; font-weight:700; color:var(--coral); opacity:.85; }
+  .phr{ display:flex; gap:10px; align-items:baseline; border:1px solid var(--line); border-radius:9px; padding:7px 10px; margin-bottom:5px; }
+  .phr .k{ font-size:15px; color:var(--berry); font-weight:600; } .phr .r{ font-size:11.5px; color:var(--soft); }
+
+  table.tb{ width:100%; border-collapse:collapse; font-size:12.5px; }
+  table.tb th{ background:var(--acc); color:#fff; padding:6px 9px; text-align:left; }
+  table.tb td{ border:1px solid var(--line); padding:5px 9px; } table.tb td .ko{ color:var(--berry); font-weight:700; font-size:15px; }
+
+  /* Упражнения */
+  .ex{ border:1px solid var(--line); border-radius:10px; padding:11px 13px; break-inside:avoid; }
+  .ex-h{ font-size:14.5px; color:var(--berry); font-weight:800; } .ex-i{ font-size:11.5px; color:var(--soft); margin:2px 0 7px; }
+  .q{ margin:7px 0; } .q .qt{ font-size:16px; font-weight:700; } .q .qt .num{ color:var(--coral); margin-right:6px; } .q .qr{ font-size:11px; color:var(--soft); margin:1px 0 3px 22px; }
+  .blank{ display:inline-block; min-width:42px; border-bottom:2px solid var(--soft); margin:0 3px; }
+  .opts{ display:flex; flex-wrap:wrap; gap:7px; margin-top:4px; }
+  .opt{ border:1px solid var(--line); border-radius:7px; padding:5px 11px; font-size:14px; display:flex; align-items:center; gap:6px; }
+  .opt .box{ width:11px; height:11px; border:1.5px solid var(--soft); border-radius:3px; display:inline-block; }
+  .match{ display:flex; gap:30px; } .match .col{ flex:1; display:flex; flex-direction:column; gap:7px; }
+  .mrow{ border:1px solid var(--line); border-radius:8px; padding:8px 10px; font-size:14px; } .mrow.l{ font-size:18px; font-weight:700; color:var(--berry); text-align:center; }
+  .qr2{ font-size:14px; font-weight:600; }
+  .listen-tag{ font-size:11px; }
+  .order-words{ display:flex; flex-wrap:wrap; gap:7px; margin:5px 0 4px 22px; }
+  .order-words .w{ border:1px solid var(--line); border-radius:7px; padding:5px 11px; font-size:15px; font-weight:700; color:var(--berry); }
+  .order-line{ border-bottom:1.5px solid var(--soft); height:24px; margin:0 0 0 22px; }
+
+  /* Домашка */
+  .hw{ border:1px solid var(--line); border-radius:12px; padding:13px 15px; background:linear-gradient(170deg,rgba(201,165,92,.12),rgba(188,75,94,.05)); break-inside:avoid; }
+  .hw-h{ font-size:16px; color:var(--berry); font-weight:800; } .hw ol{ margin:7px 0 0; padding-left:0; list-style:none; }
+  .hw li{ display:flex; gap:9px; margin:6px 0; font-size:13px; align-items:flex-start; }
+  .hw li .chk{ width:14px; height:14px; border:1.5px solid var(--soft); border-radius:4px; flex-shrink:0; margin-top:2px; }
+  .hw .nt{ margin-top:9px; font-size:12px; color:var(--berry); background:#fff; border-radius:8px; padding:7px 10px; }
+
+  @page{ size:A4; margin:13mm 0; }
+  @media print{
+    body{ background:#fff; } .bar{ display:none; }
+    .book{ width:auto; margin:0; box-shadow:none; }
+    .cover{ min-height:auto; height:248mm; }
+  }
+</style>
+</head>
+<body>
+  <div class="bar">
+    <span><b>Korean with Madie 🌸</b> · Учебник — печать</span>
+    <span id="bookpick" class="bookpick"></span>
+    <button class="btn" onclick="window.print()">🖨️ Печать / Сохранить PDF</button>
+    <span class="hint">В окне печати выбери «Сохранить как PDF», поля — по умолчанию.</span>
+  </div>
+  <div id="doc"></div>
+
+  <script src="assets/textbook/textbook-data.js?v=20260627c"></script>
+  <script>
+  (function(){
+    var T = window.TEXTBOOK, HS = window.HANGUL_STROKES || {};
+    var doc = document.getElementById('doc');
+    if (!T || !T.books) { doc.innerHTML = '<div class="book pad">Не удалось загрузить данные учебника.</div>'; return; }
+    var _bi = parseInt(new URLSearchParams(location.search).get('book') || '0', 10);
+    if (isNaN(_bi) || _bi < 0 || _bi >= T.books.length) _bi = 0;
+    var book = T.books[_bi]; var svgN = 0;
+    // Переключатель книг в панели (если книг несколько)
+    if (T.books.length > 1) {
+      var bp = document.getElementById('bookpick');
+      if (bp) bp.innerHTML = T.books.map(function(bk, i) {
+        return '<a class="bp' + (i === _bi ? ' on' : '') + '" href="?book=' + i + '">Книга ' + bk.no + '</a>';
+      }).join('');
+    }
+    function esc(s){ return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+    function strokeSvg(ch){
+      var st = HS[ch] || []; if(!st.length) return '<div class="trace ko">'+ch+'</div>';
+      var mk='pA'+(svgN++), paths='', nums='';
+      st.forEach(function(d,i){
+        paths+='<path d="'+d+'" fill="none" stroke="var(--acc)" stroke-width="7.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#'+mk+')"/>';
+        var m=/M\s*(-?[\d.]+)[ ,]+(-?[\d.]+)/.exec(d);
+        if(m){ nums+='<g><circle cx="'+m[1]+'" cy="'+m[2]+'" r="9" fill="#fff" stroke="var(--acc)" stroke-width="1.6"/>'+
+               '<text x="'+m[1]+'" y="'+m[2]+'" text-anchor="middle" dominant-baseline="central" font-size="11" font-weight="700" fill="var(--acc)" font-family="sans-serif">'+(i+1)+'</text></g>'; }
+      });
+      return '<svg viewBox="-6 -6 112 112"><defs><marker id="'+mk+'" viewBox="0 0 10 10" refX="6.5" refY="5" markerWidth="11" markerHeight="11" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path d="M0,1 L9,5 L0,9 z" fill="var(--acc)"/></marker></defs>'+
+        '<line x1="50" y1="2" x2="50" y2="98" stroke="#EADAD0" stroke-width="1" stroke-dasharray="3 4"/>'+
+        '<line x1="2" y1="50" x2="98" y2="50" stroke="#EADAD0" stroke-width="1" stroke-dasharray="3 4"/>'+
+        '<g>'+paths+'</g><g>'+nums+'</g></svg>';
+    }
+    function secHead(b){ return '<h3 class="sec-t">'+esc(b.title)+'</h3>'+(b.sub?'<p class="sec-s">'+esc(b.sub)+'</p>':''); }
+    function exWord(ex){ return ex ? '<div class="ex-word">'+(ex.emoji||'')+' <b class="ko">'+esc(ex.w)+'</b> — '+(ex.tr?ex.tr+', ':'')+esc(ex.ru)+'</div>' : ''; }
+
+    var R = {
+      intro:function(b){ var g=(b.goals||[]).map(function(x){return '<span class="goal">'+x[0]+' '+x[1]+'</span>';}).join('');
+        return '<div class="intro"><div class="emoji">'+(b.emoji||'🌸')+'</div><h1>'+esc(b.title)+' <span class="ko">'+(b.ko||'')+'</span></h1><p class="lead">'+(b.lead||'')+'</p>'+(g?'<div class="goals">'+g+'</div>':'')+'</div>'; },
+      note:function(b){ var ico=b.tone==='rule'?'📌':(b.tone==='warn'?'⚠️':'💡');
+        return '<div class="note">'+(b.title?'<div class="nt">'+ico+' '+esc(b.title)+'</div>':'')+'<div class="nb">'+(b.html||'')+'</div></div>'; },
+      letters:function(b){ var rows=(b.items||[]).map(function(it){ var tr=HS[it.char]?'<div class="trace ko">'+it.char+'</div>':'';
+        return '<div class="wr"><div class="wr-info"><div class="big ko">'+it.char+'</div><div class="nm">'+esc(it.name||'')+'</div><div class="rm">'+esc(it.romaja||'')+' · '+esc(it.sound||'')+'</div></div>'+
+          '<div><div class="wr-cells"><div class="cell model">'+strokeSvg(it.char)+'</div><div class="cell">'+tr+'</div><div class="cell">'+tr+'</div><div class="cell"></div><div class="cell"></div><div class="cell"></div></div>'+exWord(it.ex)+'</div></div>'; }).join('');
+        return secHead(b)+'<div class="writes">'+rows+'</div>'; },
+      combos:function(b){ var c=(b.items||[]).map(function(it){ return '<div class="vcard combo"><div class="g ko">'+it.char+'</div><div class="f"><span class="ko">'+it.parts[0]+'</span> + <span class="ko">'+it.parts[1]+'</span></div><div class="rr">'+esc(it.romaja)+' · '+esc(it.sound)+'</div>'+(it.ex?'<div class="tr ko">'+esc(it.ex.w)+'</div>':'')+'</div>'; }).join('');
+        return secHead(b)+'<div class="grid4">'+c+'</div>'; },
+      syllable:function(b){ var s=(b.demo||[]).map(function(d){ return '<div class="syl"><div class="p ko">'+d.c+' + '+d.v+'</div><div class="res ko">'+d.res+'</div><div class="tr">'+esc(d.tr)+'</div></div>'; }).join('');
+        return '<h3 class="sec-t">'+esc(b.title)+'</h3>'+(b.html?'<p class="sec-s">'+b.html+'</p>':'')+'<div class="syls">'+s+'</div>'+(b.note?'<div class="note" style="margin-top:9px"><div class="nb">'+b.note+'</div></div>':''); },
+      table:function(b){ var h=b.head.map(function(x){return '<th>'+esc(x)+'</th>';}).join(''); var r=b.rows.map(function(row){return '<tr>'+row.map(function(c){return '<td>'+c+'</td>';}).join('')+'</tr>';}).join('');
+        return secHead(b)+'<table class="tb"><thead><tr>'+h+'</tr></thead><tbody>'+r+'</tbody></table>'; },
+      vocab:function(b){ var c=(b.items||[]).map(function(it){ return '<div class="vcard"><div class="em">'+(it.emoji||'')+'</div><div class="k ko">'+esc(it.ko)+'</div><div class="r">'+esc(it.ru)+'</div>'+(it.tr?'<div class="tr">'+esc(it.tr)+'</div>':'')+'</div>'; }).join('');
+        return secHead(b)+'<div class="grid4">'+c+'</div>'; },
+      grammar:function(b){ var ex=(b.examples||[]).map(function(e){ return '<div class="gex"><span class="k ko">'+esc(e.ko)+'</span><span class="r">'+esc(e.ru)+(e.tr?' · '+esc(e.tr):'')+'</span></div>'; }).join('');
+        return '<div class="gram"><div class="gh">'+esc(b.title)+(b.ko?'<span class="ko">'+b.ko+'</span>':'')+'</div><div class="rule">'+(b.rule||'')+'</div>'+(ex?'<div class="ex">'+ex+'</div>':'')+'</div>'; },
+      dialog:function(b){ var order=[]; var l=(b.lines||[]).map(function(x){ var i=order.indexOf(x.s); if(i<0){order.push(x.s); i=order.length-1;} var side=(i%2===0)?'a':'b'; var nm=(x.s&&x.s!=="A"&&x.s!=="B")?'<span class="dn">'+esc(x.s)+'</span>':''; return '<div class="dl '+side+'"><span class="av">'+(side==="a"?"🙂":"🧑")+'</span><span class="bub">'+nm+'<span class="k ko">'+esc(x.ko)+'</span><span class="r">'+esc(x.ru)+(x.tr?' · '+esc(x.tr):'')+'</span></span></div>'; }).join('');
+        return secHead({title:'💬 '+b.title,sub:b.sub})+'<div class="dia">'+l+'</div>'; },
+      phrases:function(b){ var r=(b.items||[]).map(function(it){ return '<div class="phr"><span class="k ko">'+esc(it.ko)+'</span><span class="r">'+esc(it.ru)+(it.tr?' · '+esc(it.tr):'')+'</span></div>'; }).join('');
+        return secHead(b)+r; },
+      exercise:function(b){
+        if(b.kind==='match'){ var L=b.pairs.map(function(p){return '<div class="mrow l ko">'+p[0]+'</div>';}).join(''); var Rr=b.pairs.slice().reverse().map(function(p){return '<div class="mrow">'+p[1]+'</div>';}).join('');
+          return '<div class="ex"><div class="ex-h">'+esc(b.title)+'</div>'+(b.instr?'<div class="ex-i">'+esc(b.instr)+' (соедини линиями)</div>':'')+'<div class="match"><div class="col">'+L+'</div><div class="col">'+Rr+'</div></div></div>'; }
+        if(b.kind==='order'){ var os=(b.items||[]).map(function(it,i){ var ws=it.words.slice().reverse().map(function(w){return '<span class="w ko">'+w+'</span>';}).join('');
+            return '<div class="q"><div class="qt"><span class="num">'+(i+1)+'.</span><span class="qr2">'+esc(it.ru)+'</span></div><div class="order-words">'+ws+'</div><div class="order-line"></div></div>'; }).join('');
+          return '<div class="ex"><div class="ex-h">'+esc(b.title)+'</div>'+(b.instr?'<div class="ex-i">'+esc(b.instr)+'</div>':'')+os+'</div>'; }
+        var qs=(b.items||[]).map(function(it,i){ var opts=it.options.map(function(o){return '<span class="opt"><span class="box"></span><span class="ko">'+o+'</span></span>';}).join('');
+          var qt = b.kind==='fill' ? '<span class="ko">'+(it.before||'')+'</span><span class="blank"></span><span class="ko">'+(it.after||'')+'</span>' : b.kind==='listen' ? '<span class="listen-tag">🎧</span> <span class="ko">'+it.ko+'</span>' : '<span class="ko">'+it.q+'</span>';
+          return '<div class="q"><div class="qt"><span class="num">'+(i+1)+'.</span>'+qt+'</div>'+(it.ru?'<div class="qr">'+esc(it.ru)+'</div>':'')+'<div class="opts">'+opts+'</div></div>'; }).join('');
+        return '<div class="ex"><div class="ex-h">'+esc(b.title)+'</div>'+(b.instr?'<div class="ex-i">'+esc(b.instr)+'</div>':'')+qs+'</div>'; },
+      homework:function(b){ var li=b.tasks.map(function(tk){return '<li><span class="chk"></span><span>'+tk+'</span></li>';}).join('');
+        return '<div class="hw"><div class="hw-h">📒 '+esc(b.title)+'</div>'+(b.intro?'<div class="ex-i">'+esc(b.intro)+'</div>':'')+'<ol>'+li+'</ol>'+(b.note?'<div class="nt">'+b.note+'</div>':'')+'</div>'; }
+    };
+    function renderBlock(b){ var fn=R[b.t]; if(!fn) return ''; if(b.t==='intro') return '<div class="block">'+fn(b)+'</div>'; return '<div class="block">'+fn(b)+'</div>'; }
+
+    var html='<div class="book">';
+    // Обложка
+    html+='<div class="cover cover-break"><div class="flower">🌸</div><div class="brand">'+esc(T.brand)+'</div><div class="ko-big ko">한국어</div><div class="rule"></div><h1 class="title">'+esc(book.title)+'</h1><div class="sub">'+esc(book.sub)+'</div></div>';
+    // Поток: оглавление + все главы (без принудительных разрывов — страницы заполняются)
+    html+='<div class="pad">';
+    var toc=book.chapters.map(function(c){return '<li><span class="n">'+c.no+'</span><span>'+esc(c.title)+' <span class="ko">'+c.ko+'</span> <span style="color:var(--soft)">— '+esc(c.sub)+'</span></span></li>';}).join('');
+    html+='<div class="toc"><h2>Оглавление</h2><ol>'+toc+'</ol></div>';
+    book.chapters.forEach(function(c){
+      var acc = c.accent==='berry'?'acc-berry':'acc-coral';
+      html+='<section class="'+acc+'"><div class="ch-band"><div class="no">'+c.no+'</div><div class="t">'+esc(c.title)+' <small>'+c.ko+' · '+esc(c.sub)+'</small></div></div>';
+      c.pages.forEach(function(p,pi){
+        if(pi>0) html+='<div class="pg-label">'+esc(p.title)+'</div>';
+        html+=p.blocks.map(renderBlock).join('');
+      });
+      html+='</section>';
+    });
+    html+='</div></div>';
+    doc.innerHTML=html;
+  })();
+  </script>
+</body>
+</html>

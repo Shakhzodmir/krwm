@@ -29,7 +29,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
 
-<link rel="stylesheet" href="styles.css?v=20260626j">
+<link rel="stylesheet" href="styles.css?v=20260628a">
 </head>
 
 <body>
@@ -172,7 +172,7 @@
 
     <!-- TOPIK prep entry (над текущим уроком) -->
     <div style="padding: 0 20px 20px;">
-      <button type="button" onclick="switchScreen('topik')" class="topik-entry" aria-label="Подготовка к ТОПИК" data-i18n-aria="home.topik">
+      <button type="button" onclick="openTopik()" class="topik-entry" aria-label="Подготовка к ТОПИК" data-i18n-aria="home.topik">
         <span class="topik-entry-badge">TOPIK</span>
         <span class="topik-entry-text">
           <span class="topik-entry-title" data-i18n="home.topik">Подготовка к ТОПИК</span>
@@ -227,6 +227,14 @@
 
     <!-- Bento-вход в разделы курса (#5c): featured ИИ + парные экзамены + высокая «самостоятельная» -->
     <div class="lessons-bento">
+      <button type="button" onclick="openTextbook()" class="topik-entry be-book" aria-label="Учебник — корейский с нуля">
+        <span class="topik-entry-badge be-badge">교과서 📖</span>
+        <span class="topik-entry-text">
+          <span class="topik-entry-title">Учебник · корейский с нуля</span>
+          <span class="topik-entry-sub">буквы · падчим · правописание · упражнения и домашки 🌸</span>
+        </span>
+        <i class="fa-solid fa-chevron-right topik-entry-arrow" aria-hidden="true"></i>
+      </button>
       <button type="button" onclick="openAiTutor()" class="topik-entry be-ai" aria-label="Урок с ИИ" data-i18n-aria="lessons.ai">
         <span class="topik-entry-badge be-badge">AI ✨</span>
         <span class="topik-entry-text">
@@ -759,8 +767,18 @@
         <i class="fa-solid fa-chevron-right" style="color:var(--coral); font-size:14px;"></i>
       </div>
 
+      <!-- Учебник (книги) — видно всем -->
+      <div onclick="openTextbook()" class="card card-press" style="margin-top: 22px; display:flex; align-items:center; gap:14px; cursor:pointer; padding:18px 18px;">
+        <div style="width:52px; height:52px; flex-shrink:0; border-radius:16px; background:linear-gradient(140deg,#C76B98 0%,#7B3F6A 100%); color:#fff; display:flex; align-items:center; justify-content:center; font-size:24px;">📖</div>
+        <div style="flex:1; min-width:0;">
+          <div style="font-weight:800; color:var(--berry); font-size:16px;" data-i18n="profile.textbook">Учебник</div>
+          <div style="font-size:12px; color:var(--soft); margin-top:2px;" data-i18n="profile.textbook.sub">Корейский с нуля · 2 книги с уроками и заданиями</div>
+        </div>
+        <i class="fa-solid fa-chevron-right" style="color:var(--coral); font-size:14px;"></i>
+      </div>
+
       <!-- Советы по учёбе в Корее (видно всем) -->
-      <div onclick="openStudyKr()" class="card card-press" style="margin-top: 22px; display:flex; align-items:center; gap:14px; cursor:pointer; padding:18px 18px;">
+      <div onclick="openStudyKr()" class="card card-press" style="margin-top: 14px; display:flex; align-items:center; gap:14px; cursor:pointer; padding:18px 18px;">
         <div style="width:52px; height:52px; flex-shrink:0; border-radius:16px; background:linear-gradient(140deg,#4E94D6 0%,#2470B4 100%); color:#fff; display:flex; align-items:center; justify-content:center; font-size:24px;">🎓</div>
         <div style="flex:1; min-width:0;">
           <div style="font-weight:800; color:var(--berry); font-size:16px;" data-i18n="profile.studyKr">Учёба в Корее</div>
@@ -853,6 +871,23 @@
     </header>
     <div style="padding: 16px 20px 28px;">
       <div id="topik-hub"></div>
+    </div>
+  </section>
+
+  <!-- УЧЕБНИК (교과서 · интерактивная книга + печать) -->
+  <section id="screen-textbook" class="screen" data-screen-label="Учебник">
+    <header class="topbar">
+      <div style="display:flex; align-items:center; gap:10px; min-width:0;">
+        <button onclick="textbookBack()" class="chat-back-btn" aria-label="Назад" data-i18n-aria="a11y.back"><i class="fa-solid fa-arrow-left"></i></button>
+        <div style="min-width:0;">
+          <div class="page-eyebrow">교과서 · учебник</div>
+          <h1 class="display" style="font-size: 22px; color: var(--berry); margin-top: 2px;">Учебник</h1>
+        </div>
+      </div>
+      <button onclick="openSettingsModal()" class="chat-back-btn" aria-label="Настройки" title="Настройки" data-i18n-aria="set.title" data-i18n-title="set.title" style="flex-shrink:0;"><i class="fa-solid fa-gear"></i></button>
+    </header>
+    <div style="padding: 16px 20px 28px;">
+      <div id="textbook-hub"></div>
     </div>
   </section>
 
@@ -986,7 +1021,8 @@
 </script>
 
 <!-- ─────────────── DATA + LOGIC ─────────────── -->
-<script src="app.js?v=20260626j"></script>
+<script src="assets/textbook/textbook-data.js?v=20260628a"></script>
+<script src="app.js?v=20260628a"></script>
 
 </body>
 </html>
