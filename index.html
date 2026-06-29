@@ -34,11 +34,11 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
 
-<link rel="stylesheet" href="styles.css?v=20260628f">
+<link rel="stylesheet" href="styles.css?v=20260629a">
 
 <!-- Предзагрузка тяжёлого JS: скачивание стартует сразу, параллельно с CSS/шрифтами -->
-<link rel="preload" href="assets/textbook/textbook-data.js?v=20260628f" as="script">
-<link rel="preload" href="app.js?v=20260628f" as="script">
+<link rel="preload" href="assets/textbook/textbook-data.js?v=20260629a" as="script">
+<link rel="preload" href="app.js?v=20260629a" as="script">
 </head>
 
 <body>
@@ -234,16 +234,8 @@
       <div class="progress"><i id="module-progress-bar" style="width:0%"></i></div>
     </div>
 
-    <!-- Bento-вход в разделы курса (#5c): featured ИИ + парные экзамены + высокая «самостоятельная» -->
+    <!-- Bento-вход в разделы курса (#5c): featured ИИ + крупный ТОПИК (выбор уровня внутри) + половинные карточки + учебник внизу -->
     <div class="lessons-bento">
-      <button type="button" onclick="openTextbook()" class="topik-entry be-book" aria-label="Учебник — корейский с нуля">
-        <span class="topik-entry-badge be-badge">교과서 📖</span>
-        <span class="topik-entry-text">
-          <span class="topik-entry-title">Учебник · корейский с нуля</span>
-          <span class="topik-entry-sub">буквы · падчим · правописание · упражнения и домашки 🌸</span>
-        </span>
-        <i class="fa-solid fa-chevron-right topik-entry-arrow" aria-hidden="true"></i>
-      </button>
       <button type="button" onclick="openAiTutor()" class="topik-entry be-ai" aria-label="Урок с ИИ" data-i18n-aria="lessons.ai">
         <span class="topik-entry-badge be-badge">AI ✨</span>
         <span class="topik-entry-text">
@@ -252,19 +244,13 @@
         </span>
         <i class="fa-solid fa-chevron-right topik-entry-arrow" aria-hidden="true"></i>
       </button>
-      <button type="button" onclick="openTopikGroup('real')" class="topik-entry topik-entry-half be-real" aria-label="Реальные экзамены ТОПИК" data-i18n-aria="lessons.realExams">
-        <span class="topik-entry-badge">TOPIK</span>
+      <button type="button" onclick="openTopik()" class="topik-entry be-topik" aria-label="Подготовка к ТОПИК" data-i18n-aria="home.topik">
+        <span class="topik-entry-badge be-badge">TOPIK</span>
         <span class="topik-entry-text">
-          <span class="topik-entry-title" data-i18n="lessons.realExams">Реальные экзамены</span>
-          <span class="topik-entry-sub" data-i18n="lessons.realExams.sub">официальные 회차 · 듣기 · 읽기</span>
+          <span class="topik-entry-title" data-i18n="home.topik">Подготовка к ТОПИК</span>
+          <span class="topik-entry-sub" data-i18n="lessons.topikEntry.sub">한국어능력시험 · выбери TOPIK I или TOPIK II</span>
         </span>
-      </button>
-      <button type="button" onclick="openTopikGroup('mock')" class="topik-entry topik-entry-half be-mock" aria-label="Пробные и другие тесты" data-i18n-aria="lessons.mockExams">
-        <span class="topik-entry-badge" data-i18n="ix.mock">МОК</span>
-        <span class="topik-entry-text">
-          <span class="topik-entry-title" data-i18n="lessons.mockExams">Пробные и другие</span>
-          <span class="topik-entry-sub">모의고사 · EBS · Hot TOPIK</span>
-        </span>
+        <i class="fa-solid fa-chevron-right topik-entry-arrow" aria-hidden="true"></i>
       </button>
       <button type="button" onclick="openSelfStudy()" class="topik-entry topik-entry-half be-self" aria-label="Самостоятельное изучение" data-i18n-aria="lessons.self">
         <span class="topik-entry-badge be-badge">자습 📚</span>
@@ -286,6 +272,14 @@
           <span class="topik-entry-title" data-i18n="lessons.reading">Чтение · 말하기</span>
           <span class="topik-entry-sub" data-i18n="lessons.reading.sub">тексты KO-RU · разбор слов · читать вслух за диктором</span>
         </span>
+      </button>
+      <button type="button" onclick="openTextbook()" class="topik-entry be-book" aria-label="Учебник — корейский с нуля">
+        <span class="topik-entry-badge be-badge">교과서 📖</span>
+        <span class="topik-entry-text">
+          <span class="topik-entry-title">Учебник · корейский с нуля</span>
+          <span class="topik-entry-sub">буквы · падчим · правописание · упражнения 🌸</span>
+        </span>
+        <i class="fa-solid fa-chevron-right topik-entry-arrow" aria-hidden="true"></i>
       </button>
     </div>
 
@@ -1030,8 +1024,8 @@
 </script>
 
 <!-- ─────────────── DATA + LOGIC ─────────────── -->
-<script src="assets/textbook/textbook-data.js?v=20260628f"></script>
-<script src="app.js?v=20260628f"></script>
+<script src="assets/textbook/textbook-data.js?v=20260629a"></script>
+<script src="app.js?v=20260629a"></script>
 
 </body>
 </html>

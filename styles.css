@@ -3330,11 +3330,15 @@
   }
   .lessons-bento .be-ai { grid-column: 1 / -1; padding: 18px; }
   .lessons-bento .be-ai .topik-entry-title { font-size: 17px; }
+  .lessons-bento .be-topik { grid-column: 1 / -1; padding: 18px; }
+  .lessons-bento .be-topik .topik-entry-title { font-size: 17px; }
   .lessons-bento .be-self { grid-row: span 2; justify-content: space-between; }
   /* единый нейтральный бейдж поверх цветной карточки */
   .be-badge { background: rgba(255,255,255,.2) !important; border-color: rgba(255,255,255,.4) !important; color: #fff !important; }
   /* Цветовые акценты по карточкам (светлая тема) */
   .topik-entry.be-ai      { background: linear-gradient(135deg, #E8694F 0%, #C0436A 100%); box-shadow: 0 14px 34px -10px rgba(224,67,90,.5); }
+  .topik-entry.be-topik   { background: linear-gradient(135deg, var(--berry) 0%, var(--coral) 100%); box-shadow: 0 14px 34px -10px rgba(92,42,51,.5); }
+  .topik-entry.be-topik:hover { box-shadow: 0 20px 44px -12px rgba(92,42,51,.6); }
   .topik-entry.be-real    { background: linear-gradient(135deg, var(--berry) 0%, var(--coral) 100%); }
   .topik-entry.be-mock    { background: linear-gradient(135deg, #5b6cb4 0%, #8a73c0 100%); box-shadow: 0 10px 26px -10px rgba(60,50,110,.5); }
   .topik-entry.be-self    { background: linear-gradient(160deg, #4A5A93 0%, #6E5BA6 100%); }
@@ -3343,6 +3347,7 @@
   .topik-entry.be-ai:hover { box-shadow: 0 20px 44px -12px rgba(224,67,90,.6); }
   /* Тёмная тема — те же акценты приглушённо (перебивают общий тёмный фон карточек по специфичности) */
   body.theme-dark .topik-entry.be-ai      { background: linear-gradient(135deg, #7A3C4E 0%, #5E2E48 100%); }
+  body.theme-dark .topik-entry.be-topik   { background: linear-gradient(135deg, #3F3050 0%, #6E3B46 100%); }
   body.theme-dark .topik-entry.be-real    { background: linear-gradient(135deg, #3F3050 0%, #6E3B46 100%); }
   body.theme-dark .topik-entry.be-mock    { background: linear-gradient(135deg, #3D5288 0%, #5a4f86 100%); }
   body.theme-dark .topik-entry.be-self    { background: linear-gradient(160deg, #2E3A66 0%, #463A6B 100%); }
@@ -6125,9 +6130,11 @@
   .exam-passage svg, .td-passage svg { max-width: 100%; height: auto; display: block; margin: 0 auto; }
 
   /* ═══════════════════════ УЧЕБНИК (교과서) ═══════════════════════ */
-  /* Вход на «Уроках» — широкая «учёная» карточка */
-  .lessons-bento .be-book { grid-column: 1 / -1; padding: 18px; }
-  .lessons-bento .be-book .topik-entry-title { font-size: 17px; }
+  /* Вход на «Уроках» — широкая, но КОМПАКТНАЯ карточка внизу bento (меньше больших AI/ТОПИК) */
+  .lessons-bento .be-book { grid-column: 1 / -1; padding: 12px 16px; gap: 12px; }
+  .lessons-bento .be-book .topik-entry-badge { font-size: 13px; padding: 8px 11px; }
+  .lessons-bento .be-book .topik-entry-title { font-size: 14px; }
+  .lessons-bento .be-book .topik-entry-sub { font-size: 11px; }
   .topik-entry.be-book { background: linear-gradient(135deg, #C98A3C 0%, #B5536A 100%); box-shadow: 0 14px 34px -10px rgba(181,83,106,.5); }
   .topik-entry.be-book:hover { box-shadow: 0 20px 44px -12px rgba(181,83,106,.6); }
   body.theme-dark .topik-entry.be-book { background: linear-gradient(135deg, #7A5A2E 0%, #6E3548 100%); }
@@ -6467,6 +6474,57 @@
   .tb-word.placed { background: var(--blush); }
   .tb-word:disabled { cursor: default; }
   .tb-order-slot.ok .tb-word { background: var(--sage); border-color: var(--sage); color: #fff; }
+
+  /* ── Игры: кроссворд / филворд / анаграмма ── */
+  .tb-game-actions { display: flex; flex-wrap: wrap; gap: 9px; align-items: center; margin-top: 13px; }
+  .tb-game-btn { cursor: pointer; font-family: inherit; font-weight: 700; font-size: 13px; border: none; border-radius: 11px; padding: 9px 17px; color: #fff; background: var(--tb-acc); transition: transform var(--t-fast) var(--ease-spring), filter var(--t-base); }
+  .tb-game-btn:hover { filter: brightness(1.05); transform: translateY(-1px); }
+  .tb-game-btn:active { transform: scale(.97); }
+  .tb-game-btn-ghost { background: transparent; color: var(--berry); border: 1.5px solid var(--line); }
+  .tb-game-msg { font-size: 12px; color: var(--soft); }
+  .tb-game-msg.good { color: var(--sage); font-weight: 700; }
+
+  .tb-cw-wrap { display: flex; gap: 16px; flex-wrap: wrap; align-items: flex-start; margin-top: 11px; }
+  .tb-cw-grid { display: grid; gap: 0; }
+  .tb-cw-cell { position: relative; width: 34px; height: 34px; border: 1px solid var(--soft); background: var(--card); }
+  .tb-cw-gap { width: 34px; height: 34px; }
+  .tb-cw-num { position: absolute; top: 1px; left: 2px; font-size: 8px; line-height: 1; color: var(--tb-acc); font-weight: 800; z-index: 1; pointer-events: none; }
+  .tb-cw-in { width: 100%; height: 100%; border: none; background: transparent; text-align: center; font-size: 18px; font-weight: 700; color: var(--berry); padding: 0; }
+  .tb-cw-in:focus { outline: 2px solid var(--tb-acc); outline-offset: -2px; background: var(--cream); }
+  .tb-cw-in.ok { color: var(--sage); background: rgba(141,184,140,.18); }
+  .tb-cw-in.bad { color: var(--bad-ink); background: rgba(224,107,125,.14); }
+  .tb-cw-clues { flex: 1; min-width: 150px; display: flex; flex-direction: column; gap: 11px; }
+  .tb-cw-cl-h { font-weight: 800; color: var(--berry); font-size: 12.5px; margin-bottom: 3px; }
+  .tb-cw-clue { font-size: 12px; margin: 2px 0; color: var(--ink); }
+  .tb-cw-clue b { color: var(--tb-acc); }
+  .tb-cw-bank-h { font-size: 11.5px; color: var(--soft); margin: 12px 0 6px; }
+  .tb-cw-bank { display: flex; flex-wrap: wrap; gap: 6px; }
+  .tb-cw-key { min-width: 36px; height: 38px; padding: 0 9px; border: 1.5px solid var(--line); border-radius: 9px; background: var(--card); font-size: 18px; font-weight: 700; color: var(--berry); cursor: pointer; transition: transform var(--t-fast) var(--ease-spring), background var(--t-base), border-color var(--t-base); }
+  .tb-cw-key:hover { transform: translateY(-1px); border-color: var(--tb-acc); background: var(--cream); }
+  .tb-cw-key:active { transform: scale(.94); }
+
+  .tb-ws-grid { display: grid; gap: 3px; max-width: 330px; margin: 11px 0; }
+  .tb-ws-cell { aspect-ratio: 1; border: 1px solid var(--line); border-radius: 6px; background: var(--card); font-size: 15px; font-weight: 600; color: var(--berry); cursor: pointer; padding: 0; transition: background var(--t-fast), color var(--t-fast), border-color var(--t-fast); }
+  .tb-ws-cell.mark { background: var(--tb-acc); color: #fff; border-color: var(--tb-acc); }
+  .tb-ws-cell.sol { background: rgba(141,184,140,.32); border-color: var(--sage); color: var(--berry); }
+  .tb-ws-words { display: flex; flex-wrap: wrap; gap: 6px; }
+  .tb-ws-word { border: 1.5px solid var(--line); border-radius: 9px; padding: 5px 10px; background: var(--cream); font-size: 12px; cursor: pointer; font-family: inherit; color: var(--soft); }
+  .tb-ws-word .ko { color: var(--berry); font-weight: 700; font-size: 14px; }
+  .tb-ws-word.found { opacity: .5; text-decoration: line-through; }
+
+  .tb-ana-row { border: 1.5px solid var(--line); border-radius: 14px; padding: 11px 13px; margin: 9px 0; background: var(--card); }
+  .tb-ana-top { display: flex; align-items: center; gap: 9px; margin-bottom: 8px; }
+  .tb-ana-n { width: 21px; height: 21px; flex-shrink: 0; border-radius: 50%; background: var(--tb-acc); color: #fff; font-size: 11px; font-weight: 800; display: flex; align-items: center; justify-content: center; }
+  .tb-ana-ru { font-size: 13.5px; color: var(--ink); font-weight: 600; }
+  .tb-ana-slot { min-height: 46px; border: 2px dashed var(--line); border-radius: 12px; display: flex; flex-wrap: wrap; gap: 7px; padding: 7px; margin-bottom: 8px; align-items: center; background: var(--cream); transition: border-color var(--t-base), background var(--t-base); }
+  .tb-ana-slot.ok { border-style: solid; border-color: var(--sage); background: rgba(141,184,140,.14); }
+  .tb-ana-slot.wrong { border-color: #E0A3A3; animation: tbShake .4s; }
+  .tb-ana-bank { display: flex; flex-wrap: wrap; gap: 7px; }
+  .tb-ana-chip { min-width: 40px; height: 42px; padding: 0 11px; border: 1.5px solid var(--line); border-radius: 11px; background: var(--card); font-size: 19px; font-weight: 700; color: var(--berry); cursor: pointer; transition: transform var(--t-fast) var(--ease-spring), background var(--t-base); }
+  .tb-ana-chip:hover:not(:disabled) { transform: translateY(-1px); border-color: var(--tb-acc); }
+  .tb-ana-chip.placed { background: var(--blush); }
+  .tb-ana-chip:disabled { cursor: default; }
+  .tb-ana-slot.ok .tb-ana-chip { background: var(--sage); border-color: var(--sage); color: #fff; }
 
   /* Адаптив */
   @media (max-width: 384px) {
