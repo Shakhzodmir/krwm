@@ -30226,10 +30226,11 @@
       const ym = `${D.y}-${String(D.m + 1).padStart(2, '0')}`;
       const marks = ((_jrnCache && _jrnCache.marks) || {})[ym] || {};
       students.forEach(([sid, st]) => {
-        if (!_jrnStudentDays(st).includes(D.wd) || !_jrnInPeriod(st, D.y, D.m, D.dd)) return;
+        if (!_jrnStudentDays(st).includes(D.wd)) return;   // показываем по расписанию (как на бумаге)
+        const inactive = !_jrnInPeriod(st, D.y, D.m, D.dd); // вне периода обучения (ещё не начала / завершила) — приглушим
         const key = `${st.from}-${st.to}`;
         if (!slotMap.has(key)) slotMap.set(key, { from: st.from, to: st.to });
-        lessons.push({ sid, st, wd: D.wd, y: D.y, m: D.m, dd: D.dd, from: st.from, to: st.to, mk: marks[`${sid}_${D.dd}`] });
+        lessons.push({ sid, st, wd: D.wd, y: D.y, m: D.m, dd: D.dd, from: st.from, to: st.to, mk: marks[`${sid}_${D.dd}`], inactive });
       });
     });
     const slots = [...slotMap.values()].sort((a, b) => (a.from || '').localeCompare(b.from || '') || (a.to || '').localeCompare(b.to || ''));
@@ -30255,10 +30256,10 @@
         const isToday = col.wds.some(wd => byWd[wd] && byWd[wd].isToday);
         const here = lessons.filter(l => l.from === slot.from && l.to === slot.to && col.wds.includes(l.wd));
         const chips = here.map(l => {
-          const dim = l.mk && (l.mk.s === 'miss' || l.mk.s === 'move') ? 'jrn-tt-chip-dim' : '';
-          // подсветка по времени — только сегодня и только для ещё не отмеченных уроков
+          const dim = (l.inactive || (l.mk && (l.mk.s === 'miss' || l.mk.s === 'move'))) ? 'jrn-tt-chip-dim' : '';
+          // подсветка по времени — только сегодня, для активных и ещё не отмеченных уроков
           let state = '', whenLbl = '';
-          if (l.y === nowY && l.m === nowM && l.dd === nowD && !(l.mk && l.mk.s)) {
+          if (!l.inactive && l.y === nowY && l.m === nowM && l.dd === nowD && !(l.mk && l.mk.s)) {
             const fm = _toMin(l.from), tm = _toMin(l.to);
             if (nowMin >= fm && nowMin < tm) { state = 'jrn-tt-now'; whenLbl = t('jrn.now'); }
             else if (nowMin < fm && fm - nowMin <= SOON_WINDOW) { state = 'jrn-tt-soon'; whenLbl = t('jrn.soonIn', { n: fm - nowMin }); }

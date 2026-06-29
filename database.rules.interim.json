@@ -1,0 +1,54 @@
+{
+  // ─────────────────────────────────────────────────────────────────────────
+  //  Korean with Madie — Realtime Database rules · ПРОМЕЖУТОЧНЫЙ (безопасно сейчас)
+  //
+  //  Совместимы с ТЕКУЩЕЙ архитектурой: гости и админ пишут БЕЗ Firebase Auth,
+  //  email-юзеры — с auth. Эти правила НИЧЕГО не ломают, но и НЕ дают per-user
+  //  защиту (для неё нужна миграция — см. database.rules.json + SECURITY.md).
+  //
+  //  Что даёт:
+  //   • корень БД заперт → нельзя выкачать/стереть всю базу одним запросом;
+  //   • нельзя заменить/снести целиком узлы /users и /chats (только их детей);
+  //   • анти-абуз: ограничение длины имени/био и текста сообщений;
+  //   • индекс на shared/userFeedPosts (быстрее лента + без warning в консоли).
+  //
+  //  Деплой:  firebase deploy --only database
+  //  Откат:   в Firebase Console → Realtime Database → Rules вернуть прежние.
+  // ─────────────────────────────────────────────────────────────────────────
+  "rules": {
+    ".read": false,
+    ".write": false,
+
+    // Профили: читать может кто угодно (нужно для поиска друзей, рейтинга и
+    // списка учениц), писать — в КОНКРЕТНЫЙ узел ученицы (не в /users целиком).
+    "users": {
+      ".read": true,
+      "$uid": {
+        ".write": true,
+        "name": { ".validate": "!newData.exists() || (newData.isString() && newData.val().length <= 200)" },
+        "bio":  { ".validate": "!newData.exists() || (newData.isString() && newData.val().length <= 4000)" }
+      }
+    },
+
+    // Чаты: читать/писать в конкретный чат (не в /chats целиком).
+    // Текст сообщения и так режется приложением до 2000 — лимит 4000 с запасом.
+    "chats": {
+      ".read": true,
+      "$chatId": {
+        ".write": true,
+        "messages": {
+          "$msgId": {
+            "text": { ".validate": "!newData.exists() || (newData.isString() && newData.val().length <= 4000)" }
+          }
+        }
+      }
+    },
+
+    // Общий контент/конфиг/лента: как сейчас (read+write), + индекс ленты.
+    "shared": {
+      ".read": true,
+      ".write": true,
+      "userFeedPosts": { ".indexOn": ["ts"] }
+    }
+  }
+}
