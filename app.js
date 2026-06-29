@@ -212,6 +212,7 @@
     'lessons.realExams':     { ru: 'Реальные экзамены', en: 'Real exams', uz: 'Haqiqiy imtihonlar' },
     'lessons.realExams.sub': { ru: 'официальные 회차 · 듣기 · 읽기', en: 'official 회차 · 듣기 · 읽기', uz: 'rasmiy 회차 · 듣기 · 읽기' },
     'lessons.mockExams':     { ru: 'Пробные и другие', en: 'Mock & others', uz: 'Sinov va boshqalar' },
+    'lessons.topikEntry.sub':{ ru: '한국어능력시험 · выбери TOPIK I или TOPIK II', en: '한국어능력시험 · choose TOPIK I or TOPIK II', uz: '한국어능력시험 · TOPIK I yoki TOPIK II ni tanlang' },
     'lessons.ai':            { ru: 'Урок с ИИ · AI 선생님', en: 'Lesson with AI · AI 선생님', uz: 'AI bilan dars · AI 선생님' },
     'lessons.ai.sub':        { ru: 'чат про корейский и Корею · озвучка · мини-карточки', en: 'chat about Korean & Korea · audio · mini-cards', uz: 'koreys tili va Koreya haqida chat · ovoz · mini-kartalar' },
     'lessons.self':          { ru: 'Самостоятельное изучение', en: 'Self-study', uz: 'Mustaqil oʻrganish' },
@@ -3958,11 +3959,47 @@
       try { checkAchievements(true, true); } catch (_) {}
     });
   }
+  // Админ: per-user слушатели (avatar/cover/bio и т.д.) НЕ подключаются —
+  // его персональная стата в облако не синкается. Но публичные поля профиля
+  // (фото, обложка, «о себе») он публикует через pushProfilePublicField, и без
+  // обратной загрузки они оставались «только локальными»: на новом устройстве
+  // или после очистки localStorage фото Мади пропадало. Грузим их из облака
+  // один раз при входе.
+  function loadAdminPublicProfile() {
+    if (typeof _db === 'undefined') return;
+    const u = Store.get('user');
+    if (!u || !u.isAdmin || u.guest) return;
+    const uid = firebaseUserId();
+    if (!uid || uid === 'guest') return;
+    ['avatar', 'cover', 'bio'].forEach(k => {
+      _db.ref(`users/${uid}/${k}`).once('value').then(snap => {
+        const val = snap.val();
+        if (val === null || val === undefined || val === '') {
+          // Облако пусто (первый вход после фикса) — если локально что-то есть,
+          // публикуем, чтобы закрепить на сервере.
+          const local = UStore.get(k, null);
+          if (local) pushProfilePublicField(k, local);
+          return;
+        }
+        _skipCloudPush = true;
+        try { UStore.set(k, val); } finally { _skipCloudPush = false; }
+        if (k === 'avatar') {
+          applyAvatar(val);
+        } else if (k === 'cover') {
+          const prev = document.getElementById('ep-cover-preview');
+          if (prev) { prev.style.background = `url(${val}) center/cover no-repeat`; prev.classList.add('has-photo'); }
+        }
+      }).catch(() => {});
+    });
+  }
   function attachUserListeners() {
     detachUserListeners();
     if (typeof _db === 'undefined') return;
     const u = Store.get('user');
-    if (!u || u.isAdmin || u.guest) return;
+    if (!u || u.isAdmin || u.guest) {
+      loadAdminPublicProfile();   // подтянуть фото/обложку/«о себе» Мади из облака
+      return;
+    }
     const uid = firebaseUserId();
     if (!uid || uid === 'guest') return;
     // Уровень: облако — источник истины (новое устройство / очищенный localStorage).
@@ -20388,6 +20425,9 @@
       case 'phrases':  return tbBlockPhrases(b);
       case 'exercise': return tbBlockExercise(b);
       case 'homework': return tbBlockHomework(b);
+      case 'crossword':  return tbBlockCrossword(b);
+      case 'wordsearch': return tbBlockWordsearch(b);
+      case 'anagram':    return tbBlockAnagram(b);
       default:         return '';
     }
   }
@@ -20707,6 +20747,150 @@
         slot.classList.add('wrong');
         setTimeout(() => slot.classList.remove('wrong'), 420);
       }
+    }
+  }
+
+  // ── Игры: кроссворд / филворд / анаграмма (интерактив) ──
+  // Сетки строит общий детерминированный генератор window.TBGAMES (тот же, что и в печатном PDF).
+  let _tbGameN = 0;
+  function tbBlockCrossword(b) {
+    const G = window.TBGAMES, g = G && G.crossword ? G.crossword(b.words) : null;
+    if (!g || !g.rows) return '';
+    const id = 'tbcw' + (_tbGameN++);
+    let cells = '';
+    for (let r = 0; r < g.rows; r++) {
+      for (let c = 0; c < g.cols; c++) {
+        const s = g.grid[r + ',' + c];
+        if (s != null) {
+          const num = g.numAt[r + ',' + c];
+          cells += `<div class="tb-cw-cell">${num ? `<span class="tb-cw-num">${num}</span>` : ''}<input class="tb-cw-in ko" maxlength="1" inputmode="text" autocomplete="off" data-a="${escAttr(s)}" oninput="tbCwIn(this)" onfocus="tbCwFocus(this)" aria-label="клетка кроссворда"></div>`;
+        } else {
+          cells += '<div class="tb-cw-gap"></div>';
+        }
+      }
+    }
+    const ac = g.across.map(e => `<div class="tb-cw-clue"><b>${e.n}.</b> ${escHtml(e.clue)}</div>`).join('');
+    const dn = g.down.map(e => `<div class="tb-cw-clue"><b>${e.n}.</b> ${escHtml(e.clue)}</div>`).join('');
+    // Банк слогов: тап вставляет слог в активную клетку — кроссворд играбелен и без корейской клавиатуры.
+    const bankSyls = []; Object.keys(g.grid).forEach(k => { const s = g.grid[k]; if (bankSyls.indexOf(s) < 0) bankSyls.push(s); });
+    bankSyls.sort();
+    const bank = bankSyls.map(s => `<button type="button" class="tb-cw-key ko" onclick="tbCwKey(this,'${id}')">${escHtml(s)}</button>`).join('');
+    return `<div class="tb-ex tb-game" id="${id}">
+      <div class="tb-ex-head"><span class="tb-ex-badge">🧩 кроссворд</span><h3 class="tb-ex-title">${escHtml(b.title)}</h3></div>
+      ${b.instr ? `<p class="tb-ex-instr">${escHtml(b.instr)}</p>` : ''}
+      <div class="tb-cw-wrap">
+        <div class="tb-cw-grid" style="grid-template-columns:repeat(${g.cols},34px)">${cells}</div>
+        <div class="tb-cw-clues">
+          <div class="tb-cw-cl"><div class="tb-cw-cl-h">По горизонтали →</div>${ac}</div>
+          <div class="tb-cw-cl"><div class="tb-cw-cl-h">По вертикали ↓</div>${dn}</div>
+        </div>
+      </div>
+      <div class="tb-cw-bank-h">Выбери клетку и нажми слог 👇</div>
+      <div class="tb-cw-bank">${bank}</div>
+      <div class="tb-game-actions">
+        <button type="button" class="tb-game-btn" onclick="tbCwCheck('${id}')">Проверить</button>
+        <button type="button" class="tb-game-btn tb-game-btn-ghost" onclick="tbCwReveal('${id}')">Показать ответы</button>
+        <span class="tb-game-msg"></span>
+      </div>
+    </div>`;
+  }
+  let _tbCwFocusEl = null;
+  function tbCwFocus(inp) { _tbCwFocusEl = inp; }
+  function tbCwIn(inp) {
+    const a = Array.from(inp.value);            // корейский слог = 1 знак; оставляем последний
+    if (a.length > 1) inp.value = a[a.length - 1];
+    inp.classList.remove('ok', 'bad');
+  }
+  function tbCwKey(btn, id) {
+    const root = document.getElementById(id); if (!root) return;
+    let cell = (_tbCwFocusEl && root.contains(_tbCwFocusEl)) ? _tbCwFocusEl : null;
+    if (!cell) cell = root.querySelector('.tb-cw-in:not(.ok)') || root.querySelector('.tb-cw-in');
+    if (!cell) return;
+    cell.value = btn.textContent;
+    cell.classList.remove('ok', 'bad');
+    // перейти к следующей незаполненной клетке этого кроссворда
+    const all = Array.from(root.querySelectorAll('.tb-cw-in'));
+    let next = null;
+    for (let i = all.indexOf(cell) + 1; i < all.length; i++) { if (!all[i].value) { next = all[i]; break; } }
+    if (next) { next.focus(); _tbCwFocusEl = next; } else { _tbCwFocusEl = cell; }
+  }
+  function tbCwCheck(id) {
+    const root = document.getElementById(id); if (!root) return;
+    let all = 0, ok = 0;
+    root.querySelectorAll('.tb-cw-in').forEach(inp => {
+      all++;
+      const got = (inp.value || '').trim();
+      inp.classList.remove('ok', 'bad');
+      if (got === inp.dataset.a) { inp.classList.add('ok'); ok++; }
+      else if (got) inp.classList.add('bad');
+    });
+    const msg = root.querySelector('.tb-game-msg');
+    if (msg) { msg.textContent = (ok === all) ? 'Готово! Все слова верны 🌸' : `Верно: ${ok}/${all}`; msg.className = 'tb-game-msg' + (ok === all ? ' good' : ''); }
+  }
+  function tbCwReveal(id) {
+    const root = document.getElementById(id); if (!root) return;
+    root.querySelectorAll('.tb-cw-in').forEach(inp => { inp.value = inp.dataset.a; inp.classList.remove('bad'); inp.classList.add('ok'); });
+    const msg = root.querySelector('.tb-game-msg'); if (msg) { msg.textContent = 'Ответы показаны 🌸'; msg.className = 'tb-game-msg'; }
+  }
+  function tbBlockWordsearch(b) {
+    const G = window.TBGAMES, g = G && G.wordsearch ? G.wordsearch(b.words, b.size || 9) : null;
+    if (!g) return '';
+    const id = 'tbws' + (_tbGameN++);
+    const sol = {};
+    g.placements.forEach(p => { for (let i = 0; i < p.len; i++) sol[(p.r + p.dr * i) + ',' + (p.c + p.dc * i)] = 1; });
+    let cells = '';
+    for (let r = 0; r < g.n; r++) for (let c = 0; c < g.n; c++) {
+      cells += `<button type="button" class="tb-ws-cell ko" data-k="${r},${c}" onclick="tbWsTap(this)">${escHtml(g.grid[r][c])}</button>`;
+    }
+    const words = g.list.map(w => `<button type="button" class="tb-ws-word" onclick="tbWsWord(this)"><span class="ko">${escHtml(w.a)}</span> <small>${escHtml(w.c)}</small></button>`).join('');
+    return `<div class="tb-ex tb-game" id="${id}" data-sol="${Object.keys(sol).join(' ')}">
+      <div class="tb-ex-head"><span class="tb-ex-badge">🔎 найди слова</span><h3 class="tb-ex-title">${escHtml(b.title)}</h3></div>
+      ${b.instr ? `<p class="tb-ex-instr">${escHtml(b.instr)}</p>` : ''}
+      <div class="tb-ws-grid" style="grid-template-columns:repeat(${g.n},1fr)">${cells}</div>
+      <div class="tb-ws-words">${words}</div>
+      <div class="tb-game-actions">
+        <button type="button" class="tb-game-btn tb-game-btn-ghost" onclick="tbWsReveal('${id}')">Показать ответы</button>
+        <span class="tb-game-msg">Нажимай на буквы и слова, отмечая находки.</span>
+      </div>
+    </div>`;
+  }
+  function tbWsTap(btn) { btn.classList.toggle('mark'); }
+  function tbWsWord(btn) { btn.classList.toggle('found'); }
+  function tbWsReveal(id) {
+    const root = document.getElementById(id); if (!root) return;
+    const set = {}; (root.dataset.sol || '').split(' ').filter(Boolean).forEach(k => set[k] = 1);
+    root.querySelectorAll('.tb-ws-cell').forEach(btn => { if (set[btn.dataset.k]) btn.classList.add('sol'); });
+    root.querySelectorAll('.tb-ws-word').forEach(w => w.classList.add('found'));
+    const msg = root.querySelector('.tb-game-msg'); if (msg) msg.textContent = 'Все слова подсвечены 🌸';
+  }
+  function tbBlockAnagram(b) {
+    const G = window.TBGAMES, arr = G && G.anagram ? G.anagram(b.items) : [];
+    const id = 'tban' + (_tbGameN++);
+    const rows = arr.map((it, qi) => {
+      const chips = it.scrambled.map(s => `<button type="button" class="tb-ana-chip ko" data-s="${escAttr(s)}" onclick="tbAnaPick(this)">${escHtml(s)}</button>`).join('');
+      return `<div class="tb-ana-row" data-a="${escAttr(it.answer)}">
+        <div class="tb-ana-top"><span class="tb-ana-n">${qi + 1}</span><span class="tb-ana-ru">${escHtml(it.ru)}</span></div>
+        <div class="tb-ana-slot"></div>
+        <div class="tb-ana-bank">${chips}</div>
+      </div>`;
+    }).join('');
+    return `<div class="tb-ex tb-game" id="${id}">
+      <div class="tb-ex-head"><span class="tb-ex-badge">🔀 собери слово</span><h3 class="tb-ex-title">${escHtml(b.title)}</h3></div>
+      ${b.instr ? `<p class="tb-ex-instr">${escHtml(b.instr)}</p>` : ''}
+      ${rows}
+    </div>`;
+  }
+  function tbAnaPick(btn) {
+    const row = btn.closest('.tb-ana-row'); if (!row || row.dataset.done) return;
+    const slot = row.querySelector('.tb-ana-slot'), bank = row.querySelector('.tb-ana-bank');
+    slot.classList.remove('wrong');
+    if (btn.parentElement === slot) { bank.appendChild(btn); btn.classList.remove('placed'); return; }
+    slot.appendChild(btn); btn.classList.add('placed');
+    const total = row.querySelectorAll('.tb-ana-chip').length;
+    if (slot.children.length === total) {
+      const got = Array.from(slot.children).map(c => c.dataset.s).join('');
+      if (got === row.dataset.a) { row.dataset.done = '1'; slot.classList.add('ok'); Array.from(slot.children).forEach(c => { c.disabled = true; }); }
+      else { slot.classList.add('wrong'); setTimeout(() => slot.classList.remove('wrong'), 420); }
     }
   }
 
