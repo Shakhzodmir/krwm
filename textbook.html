@@ -57,7 +57,7 @@
   h3.sec-t{ font-size:17px; color:var(--berry); margin:0 0 4px; break-after:avoid; }
   .sec-s{ font-size:12px; color:var(--soft); margin:0 0 9px; }
 
-  .intro{ text-align:center; break-inside:avoid; }
+  .intro{ text-align:center; }
   .intro .emoji{ font-size:38px; } .intro h1{ font-size:28px; margin:6px 0; }
   .intro .lead{ font-size:13.5px; text-align:left; } .intro .ko{ font-weight:700; }
   .goals{ display:flex; flex-wrap:wrap; gap:7px; justify-content:center; margin-top:11px; }
@@ -153,7 +153,7 @@
   /* Пагинация печати: крупные контейнеры (.block/.ex/.hw) свободно перетекают
      между страницами — это убирает пустые и полупустые страницы в PDF. При этом
      мелкие атомарные элементы (карточки, строки, вопросы) не рвём по середине. */
-  .note,.vcard,.syl,.gex,.gram,.dl,.phr,.q,.mrow,.hw li,.intro,.wr,.ch-band,.cw-grid,.ws-grid,.ana-row,.cw-cl{ break-inside:avoid; }
+  .vcard,.syl,.gex,.dl,.phr,.q,.mrow,.hw li,.wr,.ch-band,.cw-grid,.ws-grid,.ana-row,.cw-cl{ break-inside:avoid; }
   @page{ size:A4; margin:13mm 0; }
   @media print{
     body{ background:#fff; } .bar{ display:none; }

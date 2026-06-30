@@ -20337,7 +20337,7 @@
         <div class="tb-cover-title">${escHtml(book.title)}</div>
         <div class="tb-cover-sub">${escHtml(book.sub)}</div>
         <button type="button" class="tb-cover-start" onclick="tbOpenContents()">Открыть оглавление <i class="fa-solid fa-arrow-right"></i></button>
-        <a class="tb-print-link" href="textbook.html?book=${_tbBookIdx}" target="_blank" rel="noopener"><i class="fa-solid fa-print"></i> Печатная версия (PDF)</a>
+        <a class="tb-print-link" href="textbook.html?book=${_tbBookIdx}&v=20260629b" target="_blank" rel="noopener"><i class="fa-solid fa-print"></i> Печатная версия (PDF)</a>
       </div>`;
   }
   function tbRenderContents(slot, book) {
@@ -20358,7 +20358,7 @@
         <h2 class="tb-toc-title">Оглавление</h2>
       </div>
       <div class="tb-toc-list">${items}</div>
-      <a class="tb-print-link tb-print-wide" href="textbook.html?book=${_tbBookIdx}" target="_blank" rel="noopener"><i class="fa-solid fa-print"></i> Печать всей книги · сохранить PDF</a>`;
+      <a class="tb-print-link tb-print-wide" href="textbook.html?book=${_tbBookIdx}&v=20260629b" target="_blank" rel="noopener"><i class="fa-solid fa-print"></i> Печать всей книги · сохранить PDF</a>`;
   }
   function tbRenderPage(slot, book) {
     const ch = book.chapters[_tbChap];
