@@ -584,13 +584,7 @@
     'wf.tipTitle': { ru: 'Учись понемногу каждый день', en: 'Learn a little every day', uz: 'Har kuni ozdan oʻrgan' },
     'wf.tipBody':  { ru: 'Поставь цель дня и заходи каждый день — так стрик 🔥 растёт, а новые слова запоминаются легче.', en: 'Set a daily goal and come back every day — your streak 🔥 grows and new words stick more easily.', uz: 'Kunlik maqsad qoʻy va har kuni kir — shunda striyk 🔥 oʻsadi, yangi soʻzlar oson yodlanadi.' },
 
-    // ── Установка PWA + футер ──
-    'pwa.title':    { ru: 'Установи Madie на телефон', en: 'Install Madie on your phone', uz: 'Madie’ni telefoningizga oʻrnating' },
-    'pwa.iosTap':   { ru: 'Нажми', en: 'Tap', uz: 'Bosing' },
-    'pwa.iosShare': { ru: 'Поделиться → «На экран “Домой”»', en: 'Share → “Add to Home Screen”', uz: 'Ulashish → “Bosh ekranga”' },
-    'pwa.benefit':  { ru: 'Своя иконка, быстрый запуск, работает как приложение', en: 'Own icon, quick launch, works like an app', uz: 'Oʻz belgisi, tez ishga tushish, ilova kabi ishlaydi' },
-    'pwa.install':  { ru: 'Установить', en: 'Install', uz: 'Oʻrnatish' },
-    'common.hide':  { ru: 'Скрыть', en: 'Hide', uz: 'Yashirish' },
+    // ── Футер ──
     'about.madeBy': { ru: 'Сделано с 🌸 командой Korean with Madie', en: 'Made with 🌸 by the Korean with Madie team', uz: 'Korean with Madie jamoasi tomonidan 🌸 bilan yaratilgan' },
 
     // ── Календарь праздников ──
@@ -1277,7 +1271,7 @@
     "ui.431": { ru: "Выбери хотя бы один день", en: "Choose at least one day", uz: "Kamida bitta kun tanlang" },
     "ui.432": { ru: "Укажи время урока", en: "Specify the lesson time", uz: "Dars vaqtini koʻrsating" },
     "ui.433": { ru: "Дата окончания раньше начала 🌸", en: "The end date is before the start 🌸", uz: "Tugash sanasi boshlanishidan oldin 🌸" },
-    "ui.434": { ru: "Убрать «{name}» из журнала? Отметки уроков тоже исчезнут из расписания.", en: "Remove “{name}” from the journal? The lesson marks will also disappear from the schedule.", uz: "“{name}” jurnaldan olib tashlansinmi? Darslar belgilари ham jadvaldan yoʻqoladi." },
+    "ui.434": { ru: "Убрать «{name}» из журнала? Отметки уроков тоже исчезнут из расписания.", en: "Remove “{name}” from the journal? The lesson marks will also disappear from the schedule.", uz: "“{name}” jurnaldan olib tashlansinmi? Darslar belgilari ham jadvaldan yoʻqoladi." },
     "ui.435": { ru: "УРОК", en: "LESSON", uz: "DARS" },
     "ui.436": { ru: "Без отметки", en: "No mark", uz: "Belgisiz" },
     "ui.437": { ru: "Заметка к уроку (тема, ДЗ, оплата…)", en: "Note for the lesson (topic, homework, payment…)", uz: "Darsga eslatma (mavzu, uy vazifasi, toʻlov…)" },
@@ -6472,58 +6466,6 @@
     });
   }
 
-  // ─────────────────────────── PWA INSTALL HINT ───────────────────────────
-  function _pwaIsStandalone() {
-    return (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches)
-      || window.navigator.standalone === true;
-  }
-  function _pwaIsIos() {
-    return /iphone|ipad|ipod/i.test(navigator.userAgent) && !window.MSStream;
-  }
-  function renderPwaInstallHint() {
-    if (_pwaIsStandalone()) return;                       // уже установлено
-    if (Store.get('pwaHintDismissed')) return;            // пользователь закрыл
-    if (document.getElementById('pwa-install-hint')) return;
-    const canPrompt = !!window._pwaInstallEvent;
-    const ios = _pwaIsIos();
-    if (!canPrompt && !ios) return;                       // нечего предложить
-    const slot = document.getElementById('continue-slot');
-    if (!slot) return;
-    const card = document.createElement('div');
-    card.id = 'pwa-install-hint';
-    card.style.cssText = 'margin-bottom:10px;';
-    card.innerHTML = `
-      <div class="card" style="padding:13px 14px; display:flex; align-items:center; gap:12px; background:linear-gradient(135deg, var(--blush), var(--card));">
-        <img src="assets/pwa/icon-192.png" alt="" style="width:42px; height:42px; border-radius:12px; flex-shrink:0; box-shadow:var(--shadow-md);">
-        <div style="flex:1; min-width:0;">
-          <div style="font-weight:600; color:var(--berry); font-size:13px;">${t('pwa.title')}</div>
-          <div style="font-size:11px; color:var(--soft); margin-top:1px;">${ios && !canPrompt
-            ? `${t('pwa.iosTap')} <i class="fa-solid fa-arrow-up-from-bracket"></i> ${t('pwa.iosShare')}`
-            : t('pwa.benefit')}</div>
-        </div>
-        ${canPrompt ? `<button onclick="pwaPromptInstall()" class="btn btn-primary" style="padding:8px 14px; font-size:12px; flex-shrink:0;">${t('pwa.install')}</button>` : ''}
-        <button onclick="pwaDismissHint()" aria-label="${t('common.hide')}" style="background:none; border:none; color:var(--hush); font-size:14px; cursor:pointer; padding:4px; flex-shrink:0;"><i class="fa-solid fa-xmark"></i></button>
-      </div>`;
-    slot.parentNode.insertBefore(card, slot);
-  }
-  async function pwaPromptInstall() {
-    const e = window._pwaInstallEvent;
-    if (!e) return;
-    e.prompt();
-    try {
-      const { outcome } = await e.userChoice;
-      if (outcome === 'accepted') {
-        toast('Madie теперь на твоём экране 🌸', 'var(--sage)');
-        document.getElementById('pwa-install-hint')?.remove();
-      }
-    } catch (_) {}
-    window._pwaInstallEvent = null;
-  }
-  function pwaDismissHint() {
-    Store.set('pwaHintDismissed', 1);
-    document.getElementById('pwa-install-hint')?.remove();
-  }
-
   // ─────────────────────────── РЕФЕРАЛКА ───────────────────────────
   const REFERRAL_XP = 200;
   // захват ?ref=... при загрузке (до регистрации)
@@ -7505,7 +7447,43 @@
     'm5-l9': ['Know how · time since', 'Uddalash · qancha vaqt oʻtdi'],
     'm5-l10': ['Emotions in speech', 'Nutqdagi hissiyot'],
     'm5-l11': ['While · each time · almost', 'Davomida · har safar · sal boʻlmasa'],
-    'm5-l12': ['Free narration', 'Erkin hikoya']
+    'm5-l12': ['Free narration', 'Erkin hikoya'],
+    'm6-l1': ['Personal observation', 'Shaxsiy kuzatish'],
+    'm6-l2': ['Pretending', 'Oʻzini qilib koʻrsatish'],
+    'm6-l3': ['Fear that…', 'Xavotirlanish'],
+    'm6-l4': ['Bound to be', 'Shunday boʻlishi tabiiy'],
+    'm6-l5': ['Counts as', 'Hisoblanadi'],
+    'm6-l6': ['No choice', 'Boshqa chora yoʻq'],
+    'm6-l7': ['Probably, but…', 'Ehtimol, lekin…'],
+    'm6-l8': ['I heard that…?', 'Eshitishimcha…?'],
+    'm6-l9': ['If only then', 'Agar oʻshanda boʻlganida'],
+    'm6-l10': ['Because of · due to', 'Sababli · tufayli'],
+    'm6-l11': ['Ended up', 'Oxir-oqibat'],
+    'm6-l12': ['Far from it · review', 'Aksincha · takror'],
+    'm7-l1': ['New acquaintances', 'Yangi tanishlar'],
+    'm7-l2': ['Professions & dreams', 'Kasblar va orzular'],
+    'm7-l3': ['Appearance', 'Tashqi koʻrinish'],
+    'm7-l4': ['Personality', 'Inson xarakteri'],
+    'm7-l5': ['Food & eating habits', 'Ovqatlanish odatlari'],
+    'm7-l6': ['Healthy lifestyle', 'Sogʻlom turmush tarzi'],
+    'm7-l7': ['Sports & competitions', 'Sport va musobaqalar'],
+    'm7-l8': ['Folk games', 'Xalq oʻyinlari'],
+    'm7-l9': ['Travel', 'Sayohat'],
+    'm7-l10': ['Holidays & festivals', 'Bayramlar va festivallar'],
+    'm7-l11': ['Etiquette: do’s and don’ts', 'Odob-axloq: mumkin va mumkin emas'],
+    'm7-l12': ['Cultural differences', 'Madaniy farqlar'],
+    'm8-l1': ['Renewable energy', 'Qayta tiklanadigan energiya'],
+    'm8-l2': ['World climate', 'Dunyo iqlimi'],
+    'm8-l3': ['Korean home: then & now', 'Koreys uyi: kecha va bugun'],
+    'm8-l4': ['Directions: where we are', 'Dunyoning tomonlari: biz qayerdamiz'],
+    'm8-l5': ['Saving habits', 'Tejamkorlik odatlari'],
+    'm8-l6': ['Taste with five senses', 'Besh sezgi aʼzosi bilan taʼm'],
+    'm8-l7': ['Like Usain Bolt', 'Useyn Bolt kabi'],
+    'm8-l8': ['World of shapes & space', 'Shakllar va makon dunyosi'],
+    'm8-l9': ['Wings for talent', 'Iqtidorga qanot'],
+    'm8-l10': ['Dreaming & working hard', 'Orzu qilib, mehnat qilib'],
+    'm8-l11': ['From spectacle to pleasure', 'Tomoshadan zavqqacha'],
+    'm8-l12': ['Into the story “Sonagi”', 'Sonagi qissasi olamiga']
   };
   function lessonTitle(l) {
     if (!l) return '';
@@ -26388,7 +26366,7 @@
     return `
       <div class="feed-media-wrap" ondblclick="doubleTapLike('${pid}', this, event)" ontouchend="handleMediaTouchTap('${pid}', this, event)">
         <div style="border-radius:14px; overflow:hidden; aspect-ratio:16/9; background:var(--paper); cursor:pointer;">
-          <img src="${image}" alt="" style="width:100%; height:100%; object-fit:cover; user-select:none;" draggable="false" onerror="this.closest('.feed-media-wrap').style.display='none'">
+          <img src="${image}" alt="" style="width:100%; height:100%; object-fit:contain; user-select:none;" draggable="false" onerror="this.closest('.feed-media-wrap').style.display='none'">
         </div>
         <button class="feed-media-expand-btn" onclick="event.stopPropagation(); openMediaLightbox('image', '${safe}')" aria-label="${t('ui.252')}" title="${t('ui.252')}">
           <i class="fa-solid fa-up-right-and-down-left-from-center"></i>
@@ -34188,15 +34166,6 @@
   if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('/firebase-messaging-sw.js').catch(() => {});
   }
-  // Capture Chrome/Edge install prompt so we can offer "Установить" on demand
-  window.addEventListener('beforeinstallprompt', e => {
-    e.preventDefault();
-    window._pwaInstallEvent = e;
-    try { renderPwaInstallHint(); } catch (_) {}
-  });
-  // iOS Safari has no install prompt — show a one-time gentle hint instead
-  try { renderPwaInstallHint(); } catch (_) {}
-
   // ── Presence heartbeat: bump users/{uid}/lastSeen while the tab is visible ──
   function bumpLastSeen() {
     if (typeof _db === 'undefined') return;
