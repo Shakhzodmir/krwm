@@ -1913,6 +1913,29 @@
   let currentBtn   = null;
   let currentAudio = null;          // активный <audio> при озвучке через прокси
 
+  // ── iOS Safari audio unlock ──
+  // Safari разрешает audio.play() без прямого жеста только у элемента, который уже
+  // был успешно запущен ВНУТРИ синхронного обработчика жеста хотя бы раз за сессию.
+  // Наша озвучка идёт через сеть (fetch к TTS-прокси) — к моменту получения аудио
+  // жест уже «протух», и на iPhone/iPad play() молча отклоняется (и Web Speech
+  // фолбэк по той же причине тоже молчит). Решение: держать ОДИН переиспользуемый
+  // <audio>, один раз «разблокировать» его прямо в первом касании пользователя —
+  // дальше именно этот элемент можно запускать асинхронно сколько угодно.
+  let _ttsAudioEl = null;
+  function _getTtsAudioEl() {
+    if (!_ttsAudioEl) _ttsAudioEl = new Audio();
+    return _ttsAudioEl;
+  }
+  function _unlockIosAudioOnce() {
+    const a = _getTtsAudioEl();
+    // Пустой src нельзя play()-нуть — используем silent data-URI WAV, этого достаточно
+    // для iOS, чтобы «засчитать» элемент как разрешённый к дальнейшим play() без жеста.
+    a.src = 'data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQAAAAA=';
+    a.play().then(() => a.pause()).catch(() => {});
+  }
+  document.addEventListener('touchend', _unlockIosAudioOnce, { once: true, passive: true });
+  document.addEventListener('click', _unlockIosAudioOnce, { once: true });
+
   // ── Нативный корейский TTS (Google Cloud TTS через Cloudflare Worker) ──
   // URL воркера задаётся Мади в админке (раздаётся всем через shared/config/ttsProxyUrl)
   // или через window.KM_TTS_PROXY_URL / localStorage 'km_tts_proxy'. Пусто => фолбэк
@@ -1964,9 +1987,12 @@
     if (ttsProxyEnabled()) {
       _ttsFetchUrl(text, !!opts.slow, opts.voice).then(url => {
         if (myGen !== _koGen) return;                 // остановлено во время загрузки → тихо выходим
-        const a = new Audio(url);
+        // Переиспользуем один заранее «разблокированный» <audio> (см. _unlockIosAudioOnce) —
+        // на iOS Safari новый new Audio(), запущенный после fetch, play() молча отклоняет.
+        const a = _getTtsAudioEl();
         currentAudio = a;
         a.onended = a.onerror = () => { if (currentAudio === a) currentAudio = null; finish(); };
+        a.src = url;
         a.play().catch(() => _koSpeakOneWeb(text, opts, finish, myGen));
       }).catch(() => _koSpeakOneWeb(text, opts, finish, myGen));
       return;
@@ -7496,7 +7522,7 @@
       id:'l1-hangul', num:1,
       title:'Хангыль',
       ko:'한글',
-      ru:'Корейский алфавит: гласные, согласные, дифтонги',
+      ru:'Корейский алфавит: гласные, согласные, дифтонги', ru_uz:'Koreys alifbosi: unlilar, undoshlar, diftonglar',
       vocab: [...L1_WORDS_1, ...L1_WORDS_2, ...L1_WORDS_3, ...L1_WORDS_4],
       letters: [...L1_VOWELS, ...L1_CONS, ...L1_DIPH, ...L1_DOUBLE],
       homework: {
@@ -7504,43 +7530,51 @@
           'Выучить все буквы и слова для прохождения на следующий урок.',
           'Написать в тетради все буквы, которые мы прошли — правописание.'
         ],
+        tasks_uz: [
+          'Keyingi darsga oʻtish uchun barcha harflar va soʻzlarni yodlab olish.',
+          'Oʻtgan barcha harflarni daftarga yozish — imlo mashqi.'
+        ],
         file: { label:'Правописание букв', note:t('ui.142'), url:'' }
       },
       slides: [
-        { kind:'intro', title:'한글 — Хангыль', sub:'Корейский алфавит — 24 буквы',
-          learn:[['🔤','24 буквы'],['🌸','30 новых слов'],['🎯','3 задания']] },
-        { kind:'info', eyebrow:'ТЕОРИЯ · ОБЗОР', title:'Что такое 한글', sub:'24 буквы алфавита', cols:2, noPlay:true,
-          grid:[{ko:'10',ru:'гласных'},{ko:'14',ru:'согласных'}],
-          note:'한글 — корейская азбука. Каждый слог собирается из согласной и гласной.' },
-        { kind:'info', eyebrow:'ТЕОРИЯ · ГЛАСНЫЕ', title:'10 гласных', sub:'모음', cols:5, grid:L1_VOWELS,
-          note:'Тапни любую букву, чтобы услышать её звук.' },
-        { kind:'quiz', eyebrow:'ЗАДАНИЕ · ГЛАСНЫЕ', title:'Звук гласной',
-          items:[{ko:'ㅏ',ru:'а'},{ko:'ㅑ',ru:'я'},{ko:'ㅜ',ru:'у'},{ko:'ㅠ',ru:'ю'},{ko:'ㅣ',ru:'и'},{ko:'ㅕ',ru:'ё'}],
-          pool:['а','я','о','ё','у','ю','ы','и'] },
-        { kind:'words', eyebrow:'НОВЫЕ СЛОВА · 1', title:'Слова из гласных', items:L1_WORDS_1 },
-        { kind:'info', eyebrow:'ТЕОРИЯ · СОГЛАСНЫЕ', title:'14 согласных', sub:'자음', cols:5, grid:L1_CONS,
-          note:'Согласная без гласной не звучит — ей всегда нужна пара.' },
-        { kind:'quiz', eyebrow:'ЗАДАНИЕ · СОГЛАСНЫЕ', title:'Звук согласной',
-          items:[{ko:'ㄱ',ru:'к/г'},{ko:'ㄴ',ru:'н'},{ko:'ㅂ',ru:'п/б'},{ko:'ㅁ',ru:'м'},{ko:'ㅎ',ru:'х'},{ko:'ㅌ',ru:'тх'}],
-          pool:['к/г','н','т/д','р/л','м','п/б','с','нг','ч/дж','чх','кх','тх','пх','х'] },
-        { kind:'words', eyebrow:'НОВЫЕ СЛОВА · 2', title:'Слова из согласных', items:L1_WORDS_2 },
-        { kind:'info', eyebrow:'ТЕОРИЯ · ДИФТОНГИ', title:'11 дифтонгов', sub:'Сложные гласные', cols:3, grid:L1_DIPH,
-          note:'Дифтонг — две гласные, слитые в один звук.' },
-        { kind:'words', eyebrow:'НОВЫЕ СЛОВА · 3', title:'Слова с дифтонгами', items:L1_WORDS_3 },
-        { kind:'info', eyebrow:'ТЕОРИЯ · ДВОЙНЫЕ', title:'5 двойных букв', sub:'Напряжённые согласные', cols:5, grid:L1_DOUBLE,
-          note:'Двойные буквы произносятся жёстко и напряжённо.' },
-        { kind:'words', eyebrow:'НОВЫЕ СЛОВА · 4', title:'Слова с двойными', items:L1_WORDS_4 },
-        { kind:'info', eyebrow:'ТЕОРИЯ · РАЗЛИЧИЕ', title:'Тройки согласных', sub:'обычная · придыхание · жёсткая', cols:1, noPlay:true,
+        { kind:'intro', title:'한글 — Хангыль', title_uz:'한글 — Hangul', sub:'Корейский алфавит — 24 буквы', sub_uz:'Koreys alifbosi — 24 ta harf',
+          learn:[['🔤','24 буквы'],['🌸','30 новых слов'],['🎯','3 задания']],
+          learn_uz:['24 ta harf','30 ta yangi soʻz','3 ta topshiriq'] },
+        { kind:'info', eyebrow:'ТЕОРИЯ · ОБЗОР', eyebrow_uz:'NAZARIYA · UMUMIY KOʻRINISH', title:'Что такое 한글', title_uz:'한글 nima', sub:'24 буквы алфавита', sub_uz:'Alifboning 24 ta harfi', cols:2, noPlay:true,
+          grid:[{ko:'10',ru:'гласных',ru_uz:'unli'},{ko:'14',ru:'согласных',ru_uz:'undosh'}],
+          note:'한글 — корейская азбука. Каждый слог собирается из согласной и гласной.', note_uz:'한글 — koreys alifbosi. Har bir boʻgʻin undosh va unlidan tuziladi.' },
+        { kind:'info', eyebrow:'ТЕОРИЯ · ГЛАСНЫЕ', eyebrow_uz:'NAZARIYA · UNLILAR', title:'10 гласных', title_uz:'10 ta unli', sub:'모음', cols:5, grid:L1_VOWELS,
+          note:'Тапни любую букву, чтобы услышать её звук.', note_uz:'Ovozini eshitish uchun istalgan harfni bosing.' },
+        { kind:'quiz', eyebrow:'ЗАДАНИЕ · ГЛАСНЫЕ', eyebrow_uz:'TOPSHIRIQ · UNLILAR', title:'Звук гласной', title_uz:'Unli tovushi',
+          items:[{ko:'ㅏ',ru:'а',ru_uz:'a'},{ko:'ㅑ',ru:'я',ru_uz:'ya'},{ko:'ㅜ',ru:'у',ru_uz:'u'},{ko:'ㅠ',ru:'ю',ru_uz:'yu'},{ko:'ㅣ',ru:'и',ru_uz:'i'},{ko:'ㅕ',ru:'ё',ru_uz:'yo'}],
+          pool:['а','я','о','ё','у','ю','ы','и'],
+          pool_uz:['a','ya','o','yo','u','yu','eu','i'] },
+        { kind:'words', eyebrow:'НОВЫЕ СЛОВА · 1', eyebrow_uz:'YANGI SOʻZLAR · 1', title:'Слова из гласных', title_uz:'Unlilardan tuzilgan soʻzlar', items:L1_WORDS_1 },
+        { kind:'info', eyebrow:'ТЕОРИЯ · СОГЛАСНЫЕ', eyebrow_uz:'NAZARIYA · UNDOSHLAR', title:'14 согласных', title_uz:'14 ta undosh', sub:'자음', cols:5, grid:L1_CONS,
+          note:'Согласная без гласной не звучит — ей всегда нужна пара.', note_uz:'Undosh unlisiz talaffuz qilinmaydi — unga doim juft kerak.' },
+        { kind:'quiz', eyebrow:'ЗАДАНИЕ · СОГЛАСНЫЕ', eyebrow_uz:'TOPSHIRIQ · UNDOSHLAR', title:'Звук согласной', title_uz:'Undosh tovushi',
+          items:[{ko:'ㄱ',ru:'к/г',ru_uz:'k/g'},{ko:'ㄴ',ru:'н',ru_uz:'n'},{ko:'ㅂ',ru:'п/б',ru_uz:'p/b'},{ko:'ㅁ',ru:'м',ru_uz:'m'},{ko:'ㅎ',ru:'х',ru_uz:'x'},{ko:'ㅌ',ru:'тх',ru_uz:'tx'}],
+          pool:['к/г','н','т/д','р/л','м','п/б','с','нг','ч/дж','чх','кх','тх','пх','х'],
+          pool_uz:['k/g','n','t/d','r/l','m','p/b','s','ng','ch/j','chx','kx','tx','px','x'] },
+        { kind:'words', eyebrow:'НОВЫЕ СЛОВА · 2', eyebrow_uz:'YANGI SOʻZLAR · 2', title:'Слова из согласных', title_uz:'Undoshlardan tuzilgan soʻzlar', items:L1_WORDS_2 },
+        { kind:'info', eyebrow:'ТЕОРИЯ · ДИФТОНГИ', eyebrow_uz:'NAZARIYA · DIFTONGLAR', title:'11 дифтонгов', title_uz:'11 ta diftong', sub:'Сложные гласные', sub_uz:'Murakkab unlilar', cols:3, grid:L1_DIPH,
+          note:'Дифтонг — две гласные, слитые в один звук.', note_uz:'Diftong — bitta tovushga qoʻshilgan ikkita unli.' },
+        { kind:'words', eyebrow:'НОВЫЕ СЛОВА · 3', eyebrow_uz:'YANGI SOʻZLAR · 3', title:'Слова с дифтонгами', title_uz:'Diftongli soʻzlar', items:L1_WORDS_3 },
+        { kind:'info', eyebrow:'ТЕОРИЯ · ДВОЙНЫЕ', eyebrow_uz:'NAZARIYA · QOʻSH HARFLAR', title:'5 двойных букв', title_uz:'5 ta qoʻsh harf', sub:'Напряжённые согласные', sub_uz:'Kuchli undoshlar', cols:5, grid:L1_DOUBLE,
+          note:'Двойные буквы произносятся жёстко и напряжённо.', note_uz:'Qoʻsh harflar qattiq va kuchli talaffuz qilinadi.' },
+        { kind:'words', eyebrow:'НОВЫЕ СЛОВА · 4', eyebrow_uz:'YANGI SOʻZLAR · 4', title:'Слова с двойными', title_uz:'Qoʻsh harfli soʻzlar', items:L1_WORDS_4 },
+        { kind:'info', eyebrow:'ТЕОРИЯ · РАЗЛИЧИЕ', eyebrow_uz:'NAZARIYA · FARQ', title:'Тройки согласных', title_uz:'Undosh uchliklari', sub:'обычная · придыхание · жёсткая', sub_uz:'oddiy · intilishli · qattiq', cols:1, noPlay:true,
           grid:[
-            {ko:'ㄱ · ㅋ · ㄲ', ru:'к · к с придыханием · жёсткий к'},
-            {ko:'ㄷ · ㅌ · ㄸ', ru:'т/д · т с придыханием · жёсткий т'},
-            {ko:'ㅂ · ㅍ · ㅃ', ru:'п/б · п с придыханием · жёсткий п'},
-            {ko:'ㅅ · ㅆ',      ru:'с · жёсткий с'},
-            {ko:'ㅈ · ㅊ · ㅉ', ru:'ч/дж · ч с придыханием · жёсткий ч'}
+            {ko:'ㄱ · ㅋ · ㄲ', ru:'к · к с придыханием · жёсткий к', ru_uz:'k · intilishli k · qattiq k'},
+            {ko:'ㄷ · ㅌ · ㄸ', ru:'т/д · т с придыханием · жёсткий т', ru_uz:'t/d · intilishli t · qattiq t'},
+            {ko:'ㅂ · ㅍ · ㅃ', ru:'п/б · п с придыханием · жёсткий п', ru_uz:'p/b · intilishli p · qattiq p'},
+            {ko:'ㅅ · ㅆ',      ru:'с · жёсткий с', ru_uz:'s · qattiq s'},
+            {ko:'ㅈ · ㅊ · ㅉ', ru:'ч/дж · ч с придыханием · жёсткий ч', ru_uz:'ch/j · intilishli ch · qattiq ch'}
           ] },
-        { kind:'quiz', eyebrow:'ЗАДАНИЕ · ЗАКРЕПЛЕНИЕ', title:'Вспомни звук',
-          items:[{ko:'ㅎ',ru:'х'},{ko:'ㅈ',ru:'ч/дж'},{ko:'ㄷ',ru:'т/д'},{ko:'ㅛ',ru:'ё'},{ko:'ㅟ',ru:'ви'},{ko:'ㅆ',ru:'сс'}],
-          pool:['х','ч/дж','т/д','ё','ви','сс','к/г','н','м','я','ю','э'] },
+        { kind:'quiz', eyebrow:'ЗАДАНИЕ · ЗАКРЕПЛЕНИЕ', eyebrow_uz:'TOPSHIRIQ · MUSTAHKAMLASH', title:'Вспомни звук', title_uz:'Tovushni eslab qol',
+          items:[{ko:'ㅎ',ru:'х',ru_uz:'x'},{ko:'ㅈ',ru:'ч/дж',ru_uz:'ch/j'},{ko:'ㄷ',ru:'т/д',ru_uz:'t/d'},{ko:'ㅛ',ru:'ё',ru_uz:'yo'},{ko:'ㅟ',ru:'ви',ru_uz:'vi'},{ko:'ㅆ',ru:'сс',ru_uz:'ss'}],
+          pool:['х','ч/дж','т/д','ё','ви','сс','к/г','н','м','я','ю','э'],
+          pool_uz:['x','ch/j','t/d','yo','vi','ss','k/g','n','m','ya','yu','e'] },
         { kind:'homework' }
       ]
     },
@@ -7548,7 +7582,7 @@
       id:'l2-bachim', num:2,
       title:'Падчим',
       ko:'받침',
-      ru:'Финальная согласная — звук в конце слога',
+      ru:'Финальная согласная — звук в конце слога', ru_uz:'Soʻnggi undosh — boʻgʻin oxiridagi tovush',
       vocab: [...L2_WORDS_1, ...L2_WORDS_2, ...L2_WORDS_3],
       letters: L2_BACHIM,
       homework: {
@@ -7557,48 +7591,53 @@
           'Написать в тетради все новые слова — отдельно с падчимом и без.',
           'Самостоятельно написать 5 слов с падчимом и 5 без падчима.'
         ],
+        tasks_uz: [
+          'Darsning yangi soʻzlarini yodlab oling.',
+          'Daftaringizga barcha yangi soʻzlarni yozing — patchim bilan va patchimsiz alohida.',
+          'Mustaqil ravishda patchimli 5 ta soʻz va patchimsiz 5 ta soʻz yozing.'
+        ],
         file: { label:'Падчим — таблица', note:t('ui.142'), url:'' }
       },
       slides: [
-        { kind:'intro', title:'받침 — Падчим', sub:'Финальная согласная внизу слога',
-          learn:[['🔻','6 падчимов'],['🌸','19 новых слов'],['🎯','2 задания']] },
-        { kind:'info', eyebrow:'ПОВТОРЕНИЕ · ДИКТАНТ', title:'Вспомни буквы', sub:'Тапни — услышь звук', cols:7, grid:[
+        { kind:'intro', title:'받침 — Падчим', title_uz:'받침 — Patchim', sub:'Финальная согласная внизу слога', sub_uz:'Boʻgʻin tagidagi soʻnggi undosh',
+          learn:[['🔻','6 падчимов'],['🌸','19 новых слов'],['🎯','2 задания']], learn_uz:[['🔻','6 ta patchim'],['🌸','19 ta yangi soʻz'],['🎯','2 ta topshiriq']] },
+        { kind:'info', eyebrow:'ПОВТОРЕНИЕ · ДИКТАНТ', title:'Вспомни буквы', title_uz:'Harflarni eslang', sub:'Тапни — услышь звук', sub_uz:'Bosing — tovushni eshiting', cols:7, grid:[
             {ko:'ㅏ',ru:'а'},{ko:'ㅜ',ru:'у'},{ko:'ㅓ',ru:'о'},{ko:'ㅡ',ru:'ы'},{ko:'ㅣ',ru:'и'},{ko:'ㄷ',ru:'т/д'},{ko:'ㄱ',ru:'к/г'},
             {ko:'ㅎ',ru:'х'},{ko:'ㅇ',ru:'нг'},{ko:'ㅁ',ru:'м'},{ko:'ㅔ',ru:'э'},{ko:'ㅐ',ru:'э'},{ko:'ㅖ',ru:'йэ'},{ko:'ㅚ',ru:'вэ'},
             {ko:'ㅞ',ru:'вэ'},{ko:'ㅃ',ru:'пп'},{ko:'ㅋ',ru:'кх'},{ko:'ㅌ',ru:'тх'},{ko:'ㅉ',ru:'чч'},{ko:'ㅆ',ru:'сс'},{ko:'ㅊ',ru:'чх'}
-          ], note:'Проверь, что помнишь все буквы из первого урока. Если что-то забыл — вернись назад и повтори.' },
-        { kind:'info', eyebrow:'ТЕОРИЯ · 받침', title:'Что такое 받침', sub:'Падчим — финальная согласная', cols:1, noPlay:true,
+          ], note:'Проверь, что помнишь все буквы из первого урока. Если что-то забыл — вернись назад и повтори.', note_uz:'Birinchi darsdagi barcha harflarni eslab qolganingizni tekshiring. Agar biror narsani unutgan boʻlsangiz — orqaga qaytib takrorlang.' },
+        { kind:'info', eyebrow:'ТЕОРИЯ · 받침', title:'Что такое 받침', title_uz:'받침 nima', sub:'Падчим — финальная согласная', sub_uz:'Patchim — soʻnggi undosh', cols:1, noPlay:true,
           grid:[
-            {ko:'밥',  ru:'ㅂ внизу = 받침 · рис'},
-            {ko:'책',  ru:'ㄱ внизу = 받침 · книга'},
-            {ko:'산',  ru:'ㄴ внизу = 받침 · гора'}
+            {ko:'밥',  ru:'ㅂ внизу = 받침 · рис', ru_uz:'pastda ㅂ = 받침 · guruch'},
+            {ko:'책',  ru:'ㄱ внизу = 받침 · книга', ru_uz:'pastda ㄱ = 받침 · kitob'},
+            {ko:'산',  ru:'ㄴ внизу = 받침 · гора', ru_uz:'pastda ㄴ = 받침 · togʻ'}
           ],
-          note:'받침 (падчим) — это согласная, которая стоит внизу слога и закрывает его. Слог = согласная + гласная + (падчим).' },
-        { kind:'info', eyebrow:'ТЕОРИЯ · ОСНОВНЫЕ', title:'6 основных 받침', sub:'Тапни — услышь звук', cols:3, grid:L2_BACHIM,
-          note:'Падчим читается коротко и резко — без призвука гласной.' },
-        { kind:'info', eyebrow:'ТЕОРИЯ · ПРИМЕРЫ', title:'Слова с 받침', sub:'', cols:1, noPlay:true,
+          note:'받침 (падчим) — это согласная, которая стоит внизу слога и закрывает его. Слог = согласная + гласная + (падчим).', note_uz:'받침 (patchim) — boʻgʻin tagida turib uni yopadigan undosh. Boʻgʻin = undosh + unli + (patchim).' },
+        { kind:'info', eyebrow:'ТЕОРИЯ · ОСНОВНЫЕ', title:'6 основных 받침', title_uz:'6 ta asosiy 받침', sub:'Тапни — услышь звук', sub_uz:'Bosing — tovushni eshiting', cols:3, grid:L2_BACHIM,
+          note:'Падчим читается коротко и резко — без призвука гласной.', note_uz:'Patchim qisqa va keskin talaffuz qilinadi — unli tovush qoʻshilmaydi.' },
+        { kind:'info', eyebrow:'ТЕОРИЯ · ПРИМЕРЫ', title:'Слова с 받침', title_uz:'받침li soʻzlar', sub:'', cols:1, noPlay:true,
           grid:[
-            {ko:'ㄱ → к',  ru:'국 (суп) · 책 (книга)'},
-            {ko:'ㄴ → н',  ru:'산 (гора) · 문 (дверь)'},
-            {ko:'ㄷ → т',  ru:'옷 (одежда) · 낫 (серп)'},
-            {ko:'ㅁ → м',  ru:'밤 (ночь) · 봄 (весна)'},
-            {ko:'ㅂ → п',  ru:'밥 (рис) · 앞 (впереди)'},
-            {ko:'ㅇ → нг', ru:'방 (комната) · 공 (мяч)'}
+            {ko:'ㄱ → к',  ru:'국 (суп) · 책 (книга)', ru_uz:'국 (shoʻrva) · 책 (kitob)'},
+            {ko:'ㄴ → н',  ru:'산 (гора) · 문 (дверь)', ru_uz:'산 (togʻ) · 문 (eshik)'},
+            {ko:'ㄷ → т',  ru:'옷 (одежда) · 낫 (серп)', ru_uz:'옷 (kiyim) · 낫 (oʻroq)'},
+            {ko:'ㅁ → м',  ru:'밤 (ночь) · 봄 (весна)', ru_uz:'밤 (tun) · 봄 (bahor)'},
+            {ko:'ㅂ → п',  ru:'밥 (рис) · 앞 (впереди)', ru_uz:'밥 (guruch) · 앞 (oldinda)'},
+            {ko:'ㅇ → нг', ru:'방 (комната) · 공 (мяч)', ru_uz:'방 (xona) · 공 (top)'}
           ] },
-        { kind:'quiz', eyebrow:'ЗАДАНИЕ · ПАДЧИМ', title:'Звук падчима',
+        { kind:'quiz', eyebrow:'ЗАДАНИЕ · ПАДЧИМ', title:'Звук падчима', title_uz:'Patchim tovushi',
           items:[{ko:'ㄱ',ru:'к'},{ko:'ㄴ',ru:'н'},{ko:'ㄷ',ru:'т'},{ko:'ㅁ',ru:'м'},{ko:'ㅂ',ru:'п'},{ko:'ㅇ',ru:'нг'}],
-          pool:['к','н','т','м','п','нг','р','с'] },
-        { kind:'info', eyebrow:'ТЕОРИЯ · ПРАВИЛО [т]', title:'Семёрка → [т]', sub:'ㄷ · ㅌ · ㅅ · ㅆ · ㅈ · ㅊ · ㅎ', cols:1, noPlay:true,
+          pool:['к','н','т','м','п','нг','р','с'], pool_uz:['k','n','t','m','p','ng','r','s'] },
+        { kind:'info', eyebrow:'ТЕОРИЯ · ПРАВИЛО [т]', title:'Семёрка → [т]', title_uz:'Yettilik → [t]', sub:'ㄷ · ㅌ · ㅅ · ㅆ · ㅈ · ㅊ · ㅎ', cols:1, noPlay:true,
           grid:[
-            {ko:'옷',  ru:'одежда — читается «от»'},
-            {ko:'꽃',  ru:'цветок — читается «кот»'},
-            {ko:'낮',  ru:'день — читается «нат»'}
+            {ko:'옷',  ru:'одежда — читается «от»', ru_uz:'kiyim — «ot» deb oʻqiladi'},
+            {ko:'꽃',  ru:'цветок — читается «кот»', ru_uz:'gul — «kot» deb oʻqiladi'},
+            {ko:'낮',  ru:'день — читается «нат»', ru_uz:'kunduz — «nat» deb oʻqiladi'}
           ],
-          note:'Если эти 7 букв стоят в конце слога без следующей гласной, они звучат одинаково — как короткое [т].' },
-        { kind:'words', eyebrow:'НОВЫЕ СЛОВА · 1', title:'Слова с падчимом', items:L2_WORDS_1 },
-        { kind:'words', eyebrow:'СЛОВА ДЛЯ ЧТЕНИЯ · 1', title:'Прочитай вслух', items:L2_WORDS_2 },
-        { kind:'words', eyebrow:'СЛОВА ДЛЯ ЧТЕНИЯ · 2', title:'Сложные падчимы', items:L2_WORDS_3 },
-        { kind:'quiz', eyebrow:'ЗАДАНИЕ · ЗАКРЕПЛЕНИЕ', title:'Найди падчим',
+          note:'Если эти 7 букв стоят в конце слога без следующей гласной, они звучат одинаково — как короткое [т].', note_uz:'Agar bu 7 ta harf boʻgʻin oxirida keyingi unlisiz kelsa, ularning barchasi bir xil — qisqa [t] tovushi kabi eshitiladi.' },
+        { kind:'words', eyebrow:'НОВЫЕ СЛОВА · 1', title:'Слова с падчимом', title_uz:'Patchimli soʻzlar', items:L2_WORDS_1 },
+        { kind:'words', eyebrow:'СЛОВА ДЛЯ ЧТЕНИЯ · 1', title:'Прочитай вслух', title_uz:'Ovoz chiqarib oʻqing', items:L2_WORDS_2 },
+        { kind:'words', eyebrow:'СЛОВА ДЛЯ ЧТЕНИЯ · 2', title:'Сложные падчимы', title_uz:'Murakkab patchimlar', items:L2_WORDS_3 },
+        { kind:'quiz', eyebrow:'ЗАДАНИЕ · ЗАКРЕПЛЕНИЕ', title:'Найди падчим', title_uz:'Patchimni toping',
           items:[{ko:'밥',ru:'ㅂ'},{ko:'책',ru:'ㄱ'},{ko:'산',ru:'ㄴ'},{ko:'밤',ru:'ㅁ'},{ko:'공',ru:'ㅇ'},{ko:'문',ru:'ㄴ'}],
           pool:['ㄱ','ㄴ','ㄷ','ㅁ','ㅂ','ㅇ'] },
         { kind:'homework' }
@@ -7608,7 +7647,7 @@
       id:'l3-greetings', num:3,
       title:'Приветствия',
       ko:'안녕하세요?',
-      ru:'Приветствия, страны, грамматика 이에요/예요 и 은/는',
+      ru:'Приветствия, страны, грамматика 이에요/예요 и 은/는', ru_uz:'Salomlashish, davlatlar, 이에요/예요 va 은/는 grammatikasi',
       vocab: [...L3_GREETINGS, ...L3_COUNTRIES],
       homework: {
         tasks: [
@@ -7616,29 +7655,35 @@
           'Составить 5 предложений с грамматикой 이에요/예요 и 은/는.',
           'Каждая новая тема, каждое выученное слово, каждая ошибка — это шаг вперёд. Не бойся быть учеником.'
         ],
+        tasks_uz: [
+          'Darsning yangi soʻzlarini yodlab olish.',
+          '이에요/예요 va 은/는 grammatikasi bilan 5 ta gap tuzish.',
+          'Har bir yangi mavzu, har bir oʻrganilgan soʻz, har bir xato — bu oldinga qoʻyilgan qadam. Talaba boʻlishdan qoʻrqma.'
+        ],
         file: { label:t('ui.143'), note:t('ui.142'), url:'' }
       },
       slides: [
-        { kind:'intro', title:'안녕하세요? — Здравствуйте', sub:'Знакомимся и говорим, откуда мы',
-          learn:[['👋','Приветствия'],['🌍','9 стран'],['✏️','2 грамматики']] },
-        { kind:'words', eyebrow:'НОВЫЕ СЛОВА · 인사', title:'Приветствия', items:L3_GREETINGS },
-        { kind:'words', eyebrow:'НОВЫЕ СЛОВА · 나라', title:'Страны (Country)', items:L3_COUNTRIES },
-        { kind:'info', eyebrow:'ГРАММАТИКА · 이에요/예요', title:'Сущ + 이에요/예요', sub:'«это / я есть...»', cols:1, noPlay:true,
+        { kind:'intro', title:'안녕하세요? — Здравствуйте', title_uz:'안녕하세요? — Assalomu alaykum', sub:'Знакомимся и говорим, откуда мы', sub_uz:'Tanishamiz va qayerdan ekanligimizni aytamiz',
+          learn:[['👋','Приветствия'],['🌍','9 стран'],['✏️','2 грамматики']],
+          learn_uz:[['👋','Salomlashish'],['🌍','9 ta davlat'],['✏️','2 ta grammatika']] },
+        { kind:'words', eyebrow:'НОВЫЕ СЛОВА · 인사', eyebrow_uz:'YANGI SOʻZLAR · 인사', title:'Приветствия', title_uz:'Salomlashish', items:L3_GREETINGS },
+        { kind:'words', eyebrow:'НОВЫЕ СЛОВА · 나라', eyebrow_uz:'YANGI SOʻZLAR · 나라', title:'Страны (Country)', title_uz:'Davlatlar (Country)', items:L3_COUNTRIES },
+        { kind:'info', eyebrow:'ГРАММАТИКА · 이에요/예요', eyebrow_uz:'GRAMMATIKA · 이에요/예요', title:'Сущ + 이에요/예요', title_uz:'Ot + 이에요/예요', sub:'«это / я есть...»', sub_uz:'«bu / men ...man»', cols:1, noPlay:true,
           grid:[
-            {ko:'이에요', ru:'если слово оканчивается на согласную (받침). Пример: 학생이에요 · 책이에요 · 선생님이에요'},
-            {ko:'예요',   ru:'если слово оканчивается на гласную. Пример: 의사예요 · 가수예요 · 친구예요'}
+            {ko:'이에요', ru:'если слово оканчивается на согласную (받침). Пример: 학생이에요 · 책이에요 · 선생님이에요', ru_uz:'agar soʻz undosh tovush (받침) bilan tugasa. Misol: 학생이에요 · 책이에요 · 선생님이에요'},
+            {ko:'예요',   ru:'если слово оканчивается на гласную. Пример: 의사예요 · 가수예요 · 친구예요', ru_uz:'agar soʻz unli tovush bilan tugasa. Misol: 의사예요 · 가수예요 · 친구예요'}
           ],
-          note:'Правило простое: смотри на последнюю букву слова. Падчим есть → 이에요. Падчима нет → 예요.' },
-        { kind:'info', eyebrow:'ПРИМЕРЫ · ОТКУДА Я', title:'Я из…', sub:t('ui.144'), cols:1, noPlay:false,
+          note:'Правило простое: смотри на последнюю букву слова. Падчим есть → 이에요. Падчима нет → 예요.', note_uz:'Qoida oddiy: soʻzning oxirgi harfiga qara. Padchim bor → 이에요. Padchim yoʻq → 예요.' },
+        { kind:'info', eyebrow:'ПРИМЕРЫ · ОТКУДА Я', eyebrow_uz:'MISOLLAR · MEN QAYERDANMAN', title:'Я из…', title_uz:'Men ...danman', sub:t('ui.144'), cols:1, noPlay:false,
           grid:[
-            {ko:'한국 사람이에요',   ru:'🇰🇷 Я кореец (사람 + 이에요)'},
-            {ko:'영국 사람이에요',   ru:'🇬🇧 Я англичанин'},
-            {ko:'미국 사람이에요',   ru:'🇺🇸 Я американец'},
-            {ko:'중국 사람이에요',   ru:'🇨🇳 Я китаец'},
-            {ko:'일본 사람이에요',   ru:'🇯🇵 Я японец'},
-            {ko:'프랑스 사람이에요', ru:'🇫🇷 Я француз'}
+            {ko:'한국 사람이에요',   ru:'🇰🇷 Я кореец (사람 + 이에요)', ru_uz:'🇰🇷 Men koreysman (사람 + 이에요)'},
+            {ko:'영국 사람이에요',   ru:'🇬🇧 Я англичанин', ru_uz:'🇬🇧 Men inglizman'},
+            {ko:'미국 사람이에요',   ru:'🇺🇸 Я американец', ru_uz:'🇺🇸 Men amerikalikman'},
+            {ko:'중국 사람이에요',   ru:'🇨🇳 Я китаец', ru_uz:'🇨🇳 Men xitoylikman'},
+            {ko:'일본 사람이에요',   ru:'🇯🇵 Я японец', ru_uz:'🇯🇵 Men yaponman'},
+            {ko:'프랑스 사람이에요', ru:'🇫🇷 Я француз', ru_uz:'🇫🇷 Men fransuzman'}
           ] },
-        { kind:'quiz', eyebrow:'ЗАДАНИЕ · 이에요/예요', title:'Выбери окончание',
+        { kind:'quiz', eyebrow:'ЗАДАНИЕ · 이에요/예요', eyebrow_uz:'TOPSHIRIQ · 이에요/예요', title:'Выбери окончание', title_uz:'Qoʻshimchani tanla',
           items:[
             {ko:'학생', ru:'이에요'},
             {ko:'친구', ru:'예요'},
@@ -7648,20 +7693,20 @@
             {ko:'의사', ru:'예요'}
           ],
           pool:['이에요','예요'] },
-        { kind:'info', eyebrow:'ГРАММАТИКА · 은/는', title:'Тематическая частица', sub:'«а что касается…»', cols:1, noPlay:true,
+        { kind:'info', eyebrow:'ГРАММАТИКА · 은/는', eyebrow_uz:'GRAMMATIKA · 은/는', title:'Тематическая частица', title_uz:'Mavzu koʻrsatkichi', sub:'«а что касается…»', sub_uz:'«...ga kelsak»', cols:1, noPlay:true,
           grid:[
-            {ko:'은', ru:'если слово оканчивается на согласную (받침). Пример: 학생은 · 책은 · 선생님은'},
-            {ko:'는', ru:'если слово оканчивается на гласную. Пример: 저는 · 친구는 · 가수는'}
+            {ko:'은', ru:'если слово оканчивается на согласную (받침). Пример: 학생은 · 책은 · 선생님은', ru_uz:'agar soʻz undosh tovush (받침) bilan tugasa. Misol: 학생은 · 책은 · 선생님은'},
+            {ko:'는', ru:'если слово оканчивается на гласную. Пример: 저는 · 친구는 · 가수는', ru_uz:'agar soʻz unli tovush bilan tugasa. Misol: 저는 · 친구는 · 가수는'}
           ],
-          note:'은/는 ставится после темы предложения — того, о ком/чём говорим. Правило падчима — то же.' },
-        { kind:'info', eyebrow:'ПРИМЕРЫ · 은/는', title:'Кто это?', sub:'Тема + 이에요/예요', cols:1, noPlay:false,
+          note:'은/는 ставится после темы предложения — того, о ком/чём говорим. Правило падчима — то же.', note_uz:'은/는 gapning mavzusidan — kim yoki nima haqida gapirayotganimizdan — keyin qoʻyiladi. Padchim qoidasi ham xuddi shunday.' },
+        { kind:'info', eyebrow:'ПРИМЕРЫ · 은/는', eyebrow_uz:'MISOLLAR · 은/는', title:'Кто это?', title_uz:'Bu kim?', sub:'Тема + 이에요/예요', sub_uz:'Mavzu + 이에요/예요', cols:1, noPlay:false,
           grid:[
-            {ko:'저는 한국 사람이에요',      ru:'Я — кореец (저 + 는)'},
-            {ko:'에바는 브라질 사람이에요',  ru:'Эва — бразильянка (에바 + 는)'},
-            {ko:'이자벨은 프랑스 사람이에요',ru:'Изабель — француженка (이자벨 + 은)'},
-            {ko:'수잔은 호주 사람이에요',    ru:'Сьюзан — австралийка (수잔 + 은)'}
+            {ko:'저는 한국 사람이에요',      ru:'Я — кореец (저 + 는)', ru_uz:'Men — koreysman (저 + 는)'},
+            {ko:'에바는 브라질 사람이에요',  ru:'Эва — бразильянка (에바 + 는)', ru_uz:'Eva — braziliyalik (에바 + 는)'},
+            {ko:'이자벨은 프랑스 사람이에요',ru:'Изабель — француженка (이자벨 + 은)', ru_uz:'Izabel — fransuz ayol (이자벨 + 은)'},
+            {ko:'수잔은 호주 사람이에요',    ru:'Сьюзан — австралийка (수잔 + 은)', ru_uz:'Syuzan — avstraliyalik (수잔 + 은)'}
           ] },
-        { kind:'quiz', eyebrow:'ЗАДАНИЕ · 은/는', title:'Выбери частицу',
+        { kind:'quiz', eyebrow:'ЗАДАНИЕ · 은/는', eyebrow_uz:'TOPSHIRIQ · 은/는', title:'Выбери частицу', title_uz:'Yuklamani tanla',
           items:[
             {ko:'저',   ru:'는'},
             {ko:'학생', ru:'은'},
@@ -7671,15 +7716,15 @@
             {ko:'한국', ru:'은'}
           ],
           pool:['은','는'] },
-        { kind:'info', eyebrow:'АУДИРОВАНИЕ · ДИАЛОГ', title:'Послушай и повтори', sub:t('ui.145'), cols:1, noPlay:false,
+        { kind:'info', eyebrow:'АУДИРОВАНИЕ · ДИАЛОГ', eyebrow_uz:'TINGLASH · DIALOG', title:'Послушай и повтори', title_uz:'Tingla va takrorla', sub:t('ui.145'), cols:1, noPlay:false,
           grid:[
-            {ko:'안녕하세요? 저는 지연이에요',   ru:'Здравствуйте! Я Чжиён'},
-            {ko:'안녕하세요? 저는 다니엘이에요', ru:'Здравствуйте! Я Даниэль'},
-            {ko:'저는 영국 사람이에요',          ru:'Я англичанин'},
-            {ko:'저는 한국 사람이에요. 반가워요',ru:'Я кореянка. Приятно познакомиться'},
-            {ko:'만나서 반가워요',               ru:'Очень приятно'}
+            {ko:'안녕하세요? 저는 지연이에요',   ru:'Здравствуйте! Я Чжиён', ru_uz:'Assalomu alaykum! Men Jiyeonman'},
+            {ko:'안녕하세요? 저는 다니엘이에요', ru:'Здравствуйте! Я Даниэль', ru_uz:'Assalomu alaykum! Men Danielman'},
+            {ko:'저는 영국 사람이에요',          ru:'Я англичанин', ru_uz:'Men inglizman'},
+            {ko:'저는 한국 사람이에요. 반가워요',ru:'Я кореянка. Приятно познакомиться', ru_uz:'Men koreysman. Tanishganimdan xursandman'},
+            {ko:'만나서 반가워요',               ru:'Очень приятно', ru_uz:'Juda xursandman'}
           ],
-          note:'Это шаблон диалога-знакомства. Запомни — и сможешь представиться по-корейски в любой ситуации.' },
+          note:'Это шаблон диалога-знакомства. Запомни — и сможешь представиться по-корейски в любой ситуации.', note_uz:'Bu tanishuv-dialogining namunasi. Yodlab ol — va istalgan vaziyatda oʻzingni koreyscha tanishtira olasan.' },
         { kind:'homework' }
       ]
     },
@@ -7688,6 +7733,7 @@
       title:'Семья',
       ko:'가족',
       ru:'Семья, вопросительная форма и отрицание 이/가 아니에요',
+      ru_uz:'Oila, soʻroq shakli va 이/가 아니에요 inkori',
       vocab: L4_FAMILY,
       homework: {
         tasks: [
@@ -7695,26 +7741,37 @@
           'Написать рассказ про свою семью на корейском.',
           'Учёба — это вклад в твоё будущее. Каждый маленький шаг сегодня делает тебя сильнее завтра.'
         ],
+        tasks_uz: [
+          'Ishchi daftar (yuboraman).',
+          'Koreys tilida oʻz oilang haqida hikoya yoz.',
+          'Oʻqish — bu kelajagingga qoʻshgan hissang. Bugungi har bir kichik qadam ertaga seni kuchliroq qiladi.'
+        ],
         file: { label:t('ui.146'), note:t('ui.142'), url:'' }
       },
       slides: [
         { kind:'intro', title:'가족 — Семья', sub:'Учимся рассказывать о родных',
-          learn:[['👨‍👩‍👧‍👦','16 слов'],['❓','Вопрос'],['❌','Отрицание']] },
-        { kind:'words', eyebrow:'НОВЫЕ СЛОВА · 가족', title:'Семья (Family)', items:L4_FAMILY },
-        { kind:'info', eyebrow:'ГРАММАТИКА · ВОПРОС', title:'Сущ + 이에요?/예요?', sub:'Вопросительная форма', cols:1, noPlay:true,
+          title_uz:'가족 — Oila', sub_uz:'Qarindoshlar haqida gapirishni oʻrganamiz',
+          learn:[['👨‍👩‍👧‍👦','16 слов'],['❓','Вопрос'],['❌','Отрицание']],
+          learn_uz:[['👨‍👩‍👧‍👦','16 ta soʻz'],['❓','Soʻroq'],['❌','Inkor']] },
+        { kind:'words', eyebrow:'НОВЫЕ СЛОВА · 가족', title:'Семья (Family)', eyebrow_uz:'YANGI SOʻZLAR · 가족', title_uz:'Oila (Family)', items:L4_FAMILY },
+        { kind:'info', eyebrow:'ГРАММАТИКА · ВОПРОС', title:'Сущ + 이에요?/예요?', sub:'Вопросительная форма',
+          eyebrow_uz:'GRAMMATIKA · SOʻROQ', title_uz:'Ot + 이에요?/예요?', sub_uz:'Soʻroq shakli', cols:1, noPlay:true,
           grid:[
-            {ko:'이에요?', ru:'после согласной (받침). Пример: 형이에요? · 학생이에요?'},
-            {ko:'예요?',   ru:'после гласной. Пример: 누구예요? · 어머니예요?'}
+            {ko:'이에요?', ru:'после согласной (받침). Пример: 형이에요? · 학생이에요?', ru_uz:'undoshdan keyin (받침). Misol: 형이에요? · 학생이에요?'},
+            {ko:'예요?',   ru:'после гласной. Пример: 누구예요? · 어머니예요?', ru_uz:'unlidan keyin. Misol: 누구예요? · 어머니예요?'}
           ],
-          note:'Вопрос строится так же, как утверждение, — только с интонацией вверх и знаком вопроса.' },
-        { kind:'info', eyebrow:'ПРИМЕРЫ · ВОПРОС', title:'Кто это?', sub:t('ui.147'), cols:1, noPlay:false,
+          note:'Вопрос строится так же, как утверждение, — только с интонацией вверх и знаком вопроса.',
+          note_uz:'Savol xuddi tasdiq gap kabi tuziladi — faqat ohang koʻtariladi va soʻroq belgisi qoʻyiladi.' },
+        { kind:'info', eyebrow:'ПРИМЕРЫ · ВОПРОС', title:'Кто это?', sub:t('ui.147'),
+          eyebrow_uz:'MISOLLAR · SOʻROQ', title_uz:'Bu kim?', cols:1, noPlay:false,
           grid:[
-            {ko:'누구예요?',           ru:'Кто это?'},
-            {ko:'우리 어머니예요',     ru:'Это моя мама'},
-            {ko:'형이에요?',           ru:'Это (твой) старший брат?'},
-            {ko:'네, 우리 형이에요',   ru:'Да, это мой старший брат'}
+            {ko:'누구예요?',           ru:'Кто это?', ru_uz:'Bu kim?'},
+            {ko:'우리 어머니예요',     ru:'Это моя мама', ru_uz:'Bu mening onam'},
+            {ko:'형이에요?',           ru:'Это (твой) старший брат?', ru_uz:'Bu (sening) akang?'},
+            {ko:'네, 우리 형이에요',   ru:'Да, это мой старший брат', ru_uz:'Ha, bu mening akam'}
           ] },
         { kind:'quiz', eyebrow:'ЗАДАНИЕ · ВОПРОС', title:'Выбери окончание',
+          eyebrow_uz:'TOPSHIRIQ · SOʻROQ', title_uz:'Oxirini tanla',
           items:[
             {ko:'누구',   ru:'예요?'},
             {ko:'형',     ru:'이에요?'},
@@ -7724,20 +7781,24 @@
             {ko:'선생님', ru:'이에요?'}
           ],
           pool:['이에요?','예요?'] },
-        { kind:'info', eyebrow:'ГРАММАТИКА · ОТРИЦАНИЕ', title:'Сущ + 이/가 아니에요', sub:'«это не …»', cols:1, noPlay:true,
+        { kind:'info', eyebrow:'ГРАММАТИКА · ОТРИЦАНИЕ', title:'Сущ + 이/가 아니에요', sub:'«это не …»',
+          eyebrow_uz:'GRAMMATIKA · INKOR', title_uz:'Ot + 이/가 아니에요', sub_uz:'«bu … emas»', cols:1, noPlay:true,
           grid:[
-            {ko:'이 아니에요', ru:'есть 받침 ✔ : 여동생이 아니에요 · 학생이 아니에요'},
-            {ko:'가 아니에요', ru:'нет 받침 ❌ : 오빠가 아니에요 · 누나가 아니에요'}
+            {ko:'이 아니에요', ru:'есть 받침 ✔ : 여동생이 아니에요 · 학생이 아니에요', ru_uz:'받침 bor ✔ : 여동생이 아니에요 · 학생이 아니에요'},
+            {ko:'가 아니에요', ru:'нет 받침 ❌ : 오빠가 아니에요 · 누나가 아니에요', ru_uz:'받침 yoʻq ❌ : 오빠가 아니에요 · 누나가 아니에요'}
           ],
-          note:'После согласной — 이 아니에요, после гласной — 가 아니에요. Логика та же, что у 이에요/예요.' },
-        { kind:'info', eyebrow:'ПРИМЕРЫ · ОТРИЦАНИЕ', title:'Нет, это не …', sub:t('ui.147'), cols:1, noPlay:false,
+          note:'После согласной — 이 아니에요, после гласной — 가 아니에요. Логика та же, что у 이에요/예요.',
+          note_uz:'Undoshdan keyin — 이 아니에요, unlidan keyin — 가 아니에요. Mantiq 이에요/예요 bilan bir xil.' },
+        { kind:'info', eyebrow:'ПРИМЕРЫ · ОТРИЦАНИЕ', title:'Нет, это не …', sub:t('ui.147'),
+          eyebrow_uz:'MISOLLAR · INKOR', title_uz:'Yoʻq, bu … emas', cols:1, noPlay:false,
           grid:[
-            {ko:'여동생이에요?',          ru:'Это младшая сестра?'},
-            {ko:'아니요, 여동생이 아니에요',ru:'Нет, это не младшая сестра'},
-            {ko:'오빠예요?',              ru:'Это старший брат?'},
-            {ko:'아니요, 오빠가 아니에요', ru:'Нет, это не старший брат'}
+            {ko:'여동생이에요?',          ru:'Это младшая сестра?', ru_uz:'Bu singlim?'},
+            {ko:'아니요, 여동생이 아니에요',ru:'Нет, это не младшая сестра', ru_uz:'Yoʻq, bu singlim emas'},
+            {ko:'오빠예요?',              ru:'Это старший брат?', ru_uz:'Bu akam?'},
+            {ko:'아니요, 오빠가 아니에요', ru:'Нет, это не старший брат', ru_uz:'Yoʻq, bu akam emas'}
           ] },
         { kind:'quiz', eyebrow:'ЗАДАНИЕ · ОТРИЦАНИЕ', title:'Выбери концовку',
+          eyebrow_uz:'TOPSHIRIQ · INKOR', title_uz:'Oxirini tanla',
           items:[
             {ko:'여동생', ru:'이 아니에요'},
             {ko:'오빠',   ru:'가 아니에요'},
@@ -7747,16 +7808,18 @@
             {ko:'어머니', ru:'가 아니에요'}
           ],
           pool:['이 아니에요','가 아니에요'] },
-        { kind:'info', eyebrow:'ЧТЕНИЕ · СЕМЬЯ', title:'Расскажи о семье', sub:t('ui.147'), cols:1, noPlay:false,
+        { kind:'info', eyebrow:'ЧТЕНИЕ · СЕМЬЯ', title:'Расскажи о семье', sub:t('ui.147'),
+          eyebrow_uz:'OʻQISH · OILA', title_uz:'Oiling haqida gapirib ber', cols:1, noPlay:false,
           grid:[
-            {ko:'안녕하세요? 저는 토마스예요',  ru:'Здравствуйте! Я Томас'},
-            {ko:'우리 아버지는 선생님이에요', ru:'Мой папа — учитель'},
-            {ko:'우리 누나는 학생이에요',     ru:'Моя старшая сестра — студентка'},
-            {ko:'누나 이름은 줄리아예요',     ru:'Имя сестры — Джулия'},
-            {ko:'동생 이름은 매튜예요',       ru:'Имя младшего брата — Мэтью'},
-            {ko:'매튜는 학생이 아니에요',     ru:'Мэтью — не студент'}
+            {ko:'안녕하세요? 저는 토마스예요',  ru:'Здравствуйте! Я Томас', ru_uz:'Assalomu alaykum! Men Tomasman'},
+            {ko:'우리 아버지는 선생님이에요', ru:'Мой папа — учитель', ru_uz:'Mening otam — oʻqituvchi'},
+            {ko:'우리 누나는 학생이에요',     ru:'Моя старшая сестра — студентка', ru_uz:'Mening opam — talaba'},
+            {ko:'누나 이름은 줄리아예요',     ru:'Имя сестры — Джулия', ru_uz:'Opamning ismi — Juliya'},
+            {ko:'동생 이름은 매튜예요',       ru:'Имя младшего брата — Мэтью', ru_uz:'Ukamning ismi — Metyu'},
+            {ko:'매튜는 학생이 아니에요',     ru:'Мэтью — не студент', ru_uz:'Metyu — talaba emas'}
           ],
-          note:'Это шаблон рассказа о семье. Подставь свои имена — и расскажи о своей!' },
+          note:'Это шаблон рассказа о семье. Подставь свои имена — и расскажи о своей!',
+          note_uz:'Bu oila haqidagi hikoya namunasi. Oʻz ismlaringni qoʻyib, oʻzing haqingda hikoya qil!' },
         { kind:'homework' }
       ]
     },
@@ -7764,7 +7827,7 @@
       id:'l5-classroom', num:5,
       title:'Класс',
       ko:'교실',
-      ru:'Класс, локатив 에, есть/нет 있어요/없어요',
+      ru:'Класс, локатив 에, есть/нет 있어요/없어요', ru_uz:'Sinf, oʻrin-payt kelishigi 에, bor/yoʻq 있어요/없어요',
       vocab: [...L5_CLASSROOM, ...L5_PLACE],
       homework: {
         tasks: [
@@ -7772,34 +7835,39 @@
           'Написать по 2 предложения на каждую грамматику (있어요/없어요 и 에).',
           'Опиши свой класс или комнату по образцу из чтения.'
         ],
+        tasks_uz: [
+          'Ish daftari (yuboraman).',
+          'Har bir grammatikaga (있어요/없어요 va 에) 2 tadan gap yozing.',
+          'Oʻqish namunasi boʻyicha oʻz sinfingiz yoki xonangizni tasvirlab bering.'
+        ],
         file: { label:t('ui.148'), note:t('ui.142'), url:'' }
       },
       slides: [
-        { kind:'intro', title:'교실 — Класс', sub:'Предметы вокруг и где они лежат',
-          learn:[['📚','11 предметов'],['📍','7 локаций'],['✏️','2 грамматики']] },
+        { kind:'intro', title:'교실 — Класс', sub:'Предметы вокруг и где они лежат', sub_uz:'Atrofdagi buyumlar va ular qayerda joylashgani',
+          learn:[['📚','11 предметов'],['📍','7 локаций'],['✏️','2 грамматики']], learn_uz:[['📚','11 ta buyum'],['📍','7 ta joy'],['✏️','2 ta grammatika']] },
         { kind:'words', eyebrow:'НОВЫЕ СЛОВА · 교실', title:'Предметы класса', items:L5_CLASSROOM },
         { kind:'words', eyebrow:'НОВЫЕ СЛОВА · 위치', title:'Где? (Place)', items:L5_PLACE },
-        { kind:'info', eyebrow:'ДИАЛОГ · НАЧАЛО', title:'Где книга?', sub:t('ui.147'), cols:1, noPlay:false,
+        { kind:'info', eyebrow:'ДИАЛОГ · НАЧАЛО', eyebrow_uz:'DIALOG · BOSHLANISH', title:'Где книга?', title_uz:'Kitob qayerda?', sub:t('ui.147'), cols:1, noPlay:false,
           grid:[
-            {ko:'책이 어디에 있어요?',  ru:'Где книга?'},
-            {ko:'가방 안에 있어요',    ru:'В рюкзаке'},
-            {ko:'가방은 어디에 있어요?',ru:'А рюкзак где?'},
-            {ko:'책상 옆에 있어요',    ru:'Рядом со столом'}
+            {ko:'책이 어디에 있어요?',  ru:'Где книга?', ru_uz:'Kitob qayerda?'},
+            {ko:'가방 안에 있어요',    ru:'В рюкзаке', ru_uz:'Ryukzak ichida'},
+            {ko:'가방은 어디에 있어요?',ru:'А рюкзак где?', ru_uz:'Ryukzak esa qayerda?'},
+            {ko:'책상 옆에 있어요',    ru:'Рядом со столом', ru_uz:'Stol yonida'}
           ] },
-        { kind:'info', eyebrow:'ГРАММАТИКА · 있어요/없어요', title:'Есть / нет', sub:'Сущ + 이/가 + 있어요/없어요', cols:1, noPlay:true,
+        { kind:'info', eyebrow:'ГРАММАТИКА · 있어요/없어요', eyebrow_uz:'GRAMMATIKA · 있어요/없어요', title:'Есть / нет', title_uz:'Bor / yoʻq', sub:'Сущ + 이/가 + 있어요/없어요', sub_uz:'Ot + 이/가 + 있어요/없어요', cols:1, noPlay:true,
           grid:[
-            {ko:'이 있어요/없어요', ru:'после согласной (받침): 연필이 있어요 · 책이 없어요'},
-            {ko:'가 있어요/없어요', ru:'после гласной: 시계가 있어요 · 의자가 없어요'}
+            {ko:'이 있어요/없어요', ru:'после согласной (받침): 연필이 있어요 · 책이 없어요', ru_uz:'undosh (받침) dan keyin: 연필이 있어요 · 책이 없어요'},
+            {ko:'가 있어요/없어요', ru:'после гласной: 시계가 있어요 · 의자가 없어요', ru_uz:'unlidan keyin: 시계가 있어요 · 의자가 없어요'}
           ],
           note:'있어요 = есть/находится. 없어요 = нет/отсутствует. Перед ними — частица 이 (после 받침) или 가 (после гласной).' },
-        { kind:'info', eyebrow:'ПРИМЕРЫ · ЕСТЬ/НЕТ', title:'Что есть в классе?', sub:t('ui.147'), cols:1, noPlay:false,
+        { kind:'info', eyebrow:'ПРИМЕРЫ · ЕСТЬ/НЕТ', eyebrow_uz:'MISOLLAR · BOR/YOʻQ', title:'Что есть в классе?', title_uz:'Sinfda nima bor?', sub:t('ui.147'), cols:1, noPlay:false,
           grid:[
-            {ko:'연필이 있어요?',         ru:'Есть карандаш?'},
-            {ko:'아니요, 연필이 없어요',  ru:'Нет, карандаша нет'},
-            {ko:'시계가 있어요?',         ru:'Часы есть?'},
-            {ko:'네, 시계가 있어요',      ru:'Да, часы есть'}
+            {ko:'연필이 있어요?',         ru:'Есть карандаш?', ru_uz:'Qalam bormi?'},
+            {ko:'아니요, 연필이 없어요',  ru:'Нет, карандаша нет', ru_uz:'Yoʻq, qalam yoʻq'},
+            {ko:'시계가 있어요?',         ru:'Часы есть?', ru_uz:'Soat bormi?'},
+            {ko:'네, 시계가 있어요',      ru:'Да, часы есть', ru_uz:'Ha, soat bor'}
           ] },
-        { kind:'quiz', eyebrow:'ЗАДАНИЕ · 이/가', title:'Какая частица?',
+        { kind:'quiz', eyebrow:'ЗАДАНИЕ · 이/가', eyebrow_uz:'TOPSHIRIQ · 이/가', title:'Какая частица?', title_uz:'Qaysi yuklama?',
           items:[
             {ko:'연필',   ru:'이'},
             {ko:'시계',   ru:'가'},
@@ -7809,23 +7877,23 @@
             {ko:'컴퓨터', ru:'가'}
           ],
           pool:['이','가'] },
-        { kind:'info', eyebrow:'ГРАММАТИКА · 에', title:'Локатив 에', sub:'«в, на» — место', cols:1, noPlay:true,
+        { kind:'info', eyebrow:'ГРАММАТИКА · 에', eyebrow_uz:'GRAMMATIKA · 에', title:'Локатив 에', title_uz:'Oʻrin-payt kelishigi 에', sub:'«в, на» — место', sub_uz:'«-da, -ga» — oʻrin', cols:1, noPlay:true,
           grid:[
-            {ko:'место + 에', ru:'присоединяет место к глаголу 있다 (быть/находиться)'},
-            {ko:'책상 위에',  ru:'на столе'},
-            {ko:'의자 아래에',ru:'под стулом'},
-            {ko:'가방 안에',  ru:'в рюкзаке'},
-            {ko:'책 옆에',    ru:'рядом с книгой'}
+            {ko:'место + 에', ru:'присоединяет место к глаголу 있다 (быть/находиться)', ru_uz:'joy soʻzini 있다 (boʻlmoq/joylashmoq) feʼliga bogʻlaydi'},
+            {ko:'책상 위에',  ru:'на столе', ru_uz:'stol ustida'},
+            {ko:'의자 아래에',ru:'под стулом', ru_uz:'stul ostida'},
+            {ko:'가방 안에',  ru:'в рюкзаке', ru_uz:'ryukzak ichida'},
+            {ko:'책 옆에',    ru:'рядом с книгой', ru_uz:'kitob yonida'}
           ],
           note:'Сначала называется ориентир (책상), потом сторона (위/아래/옆/안/앞/뒤) и в конце — частица 에.' },
-        { kind:'info', eyebrow:'ПРИМЕРЫ · 에', title:'Где что лежит?', sub:t('ui.147'), cols:1, noPlay:false,
+        { kind:'info', eyebrow:'ПРИМЕРЫ · 에', eyebrow_uz:'MISOLLAR · 에', title:'Где что лежит?', title_uz:'Nima qayerda yotibdi?', sub:t('ui.147'), cols:1, noPlay:false,
           grid:[
-            {ko:'책이 어디에 있어요?',  ru:'Где книга?'},
-            {ko:'책상 위에 있어요',    ru:'На столе'},
-            {ko:'시계가 어디에 있어요?',ru:'Где часы?'},
-            {ko:'책상 옆에 있어요',    ru:'Рядом со столом'}
+            {ko:'책이 어디에 있어요?',  ru:'Где книга?', ru_uz:'Kitob qayerda?'},
+            {ko:'책상 위에 있어요',    ru:'На столе', ru_uz:'Stol ustida'},
+            {ko:'시계가 어디에 있어요?',ru:'Где часы?', ru_uz:'Soat qayerda?'},
+            {ko:'책상 옆에 있어요',    ru:'Рядом со столом', ru_uz:'Stol yonida'}
           ] },
-        { kind:'quiz', eyebrow:'ЗАДАНИЕ · ЛОКАЦИЯ', title:'Куда подставить?',
+        { kind:'quiz', eyebrow:'ЗАДАНИЕ · ЛОКАЦИЯ', eyebrow_uz:'TOPSHIRIQ · OʻRIN', title:'Куда подставить?', title_uz:'Qayerga qoʻyish kerak?',
           items:[
             {ko:'책상 위', ru:'에'},
             {ko:'가방 안', ru:'에'},
@@ -7834,13 +7902,13 @@
             {ko:'어디',    ru:'에'}
           ],
           pool:['에','이','가'] },
-        { kind:'info', eyebrow:'ЧТЕНИЕ · КЛАСС', title:'Наш класс', sub:t('ui.147'), cols:1, noPlay:false,
+        { kind:'info', eyebrow:'ЧТЕНИЕ · КЛАСС', eyebrow_uz:'OʻQISH · SINF', title:'Наш класс', title_uz:'Bizning sinfimiz', sub:t('ui.147'), cols:1, noPlay:false,
           grid:[
-            {ko:'우리 교실이에요',      ru:'Это наш класс'},
-            {ko:'교실에 칠판이 있어요',ru:'В классе есть доска'},
-            {ko:'칠판 옆에 시계가 있어요',ru:'Рядом с доской — часы'},
-            {ko:'책상 위에 책이 있어요',ru:'На столе — книга'},
-            {ko:'의자 아래에 가방이 있어요',ru:'Под стулом — рюкзак'}
+            {ko:'우리 교실이에요',      ru:'Это наш класс', ru_uz:'Bu bizning sinfimiz'},
+            {ko:'교실에 칠판이 있어요',ru:'В классе есть доска', ru_uz:'Sinfda doska bor'},
+            {ko:'칠판 옆에 시계가 있어요',ru:'Рядом с доской — часы', ru_uz:'Doska yonida soat bor'},
+            {ko:'책상 위에 책이 있어요',ru:'На столе — книга', ru_uz:'Stol ustida kitob bor'},
+            {ko:'의자 아래에 가방이 있어요',ru:'Под стулом — рюкзак', ru_uz:'Stul ostida ryukzak bor'}
           ],
           note:'Это шаблон описания комнаты. Опиши свой стол / комнату так же.' },
         { kind:'homework' }
@@ -7850,7 +7918,7 @@
       id:'l6-house', num:6,
       title:'Дом',
       ko:'집',
-      ru:'Дом, спряжение -아/어요 и винительный 을/를',
+      ru:'Дом, спряжение -아/어요 и винительный 을/를', ru_uz:'Uy, -아/어요 tuslanishi va tushum kelishigi 을/를',
       vocab: [...L6_HOUSE, ...L6_VERBS],
       homework: {
         tasks: [
@@ -7858,35 +7926,40 @@
           'Написать по 2 предложения на каждую грамматику (-아/어요 и 을/를).',
           'Опиши, что делают члены твоей семьи прямо сейчас.'
         ],
+        tasks_uz: [
+          'Ishchi daftar (yuboraman).',
+          'Har bir grammatikaga (-아/어요 va 을/를) 2 tadan gap yozing.',
+          'Oila aʼzolaring hozir nima qilayotganini taʼriflab ber.'
+        ],
         file: { label:t('ui.149'), note:t('ui.142'), url:'' }
       },
       slides: [
-        { kind:'intro', title:'집 — Дом', sub:'Чем занимаемся дома',
-          learn:[['🏠','15 слов'],['🎬','9 глаголов'],['✏️','2 грамматики']] },
-        { kind:'words', eyebrow:'НОВЫЕ СЛОВА · 집', title:'Дом и предметы', items:L6_HOUSE },
-        { kind:'words', eyebrow:'ГЛАГОЛЫ · -아/어요', title:'Действия', items:L6_VERBS },
-        { kind:'info', eyebrow:'ДИАЛОГ', title:'Что делает Юна?', sub:t('ui.147'), cols:1, noPlay:false,
+        { kind:'intro', title:'집 — Дом', title_uz:'집 — Uy', sub:'Чем занимаемся дома', sub_uz:'Uyda nima qilamiz',
+          learn:[['🏠','15 слов'],['🎬','9 глаголов'],['✏️','2 грамматики']], learn_uz:['15 ta soʻz','9 ta feʼl','2 ta grammatika'] },
+        { kind:'words', eyebrow:'НОВЫЕ СЛОВА · 집', eyebrow_uz:'YANGI SOʻZLAR · 집', title:'Дом и предметы', title_uz:'Uy va buyumlar', items:L6_HOUSE },
+        { kind:'words', eyebrow:'ГЛАГОЛЫ · -아/어요', eyebrow_uz:'FEʼLLAR · -아/어요', title:'Действия', title_uz:'Harakatlar', items:L6_VERBS },
+        { kind:'info', eyebrow:'ДИАЛОГ', eyebrow_uz:'DIALOG', title:'Что делает Юна?', title_uz:'Yuna nima qilyapti?', sub:t('ui.147'), cols:1, noPlay:false,
           grid:[
-            {ko:'유나는 뭘 해요?',     ru:'Что делает Юна?'},
-            {ko:'책을 읽어요',          ru:'Читает книгу'},
-            {ko:'동생은 뭘 해요?',      ru:'А младший?'},
-            {ko:'텔레비전을 봐요',     ru:'Смотрит телевизор'}
+            {ko:'유나는 뭘 해요?',     ru:'Что делает Юна?', ru_uz:'Yuna nima qilyapti?'},
+            {ko:'책을 읽어요',          ru:'Читает книгу', ru_uz:'Kitob oʻqiyapti'},
+            {ko:'동생은 뭘 해요?',      ru:'А младший?', ru_uz:'Ukasi-chi?'},
+            {ko:'텔레비전을 봐요',     ru:'Смотрит телевизор', ru_uz:'Televizor koʻryapti'}
           ] },
-        { kind:'info', eyebrow:'ГРАММАТИКА · -아/어요', title:'Спряжение глаголов', sub:'Вежливая разговорная форма', cols:1, noPlay:true,
+        { kind:'info', eyebrow:'ГРАММАТИКА · -아/어요', eyebrow_uz:'GRAMMATIKA · -아/어요', title:'Спряжение глаголов', title_uz:'Feʼllar tuslanishi', sub:'Вежливая разговорная форма', sub_uz:'Sizlashning muloyim shakli', cols:1, noPlay:true,
           grid:[
-            {ko:'-아요',  ru:'если в основе ㅏ или ㅗ: 가다 → 가요 · 보다 → 봐요'},
-            {ko:'-어요',  ru:'если другие гласные (ㅓ ㅜ ㅡ ㅣ): 먹다 → 먹어요 · 읽다 → 읽어요'},
-            {ko:'하다 → 해요', ru:'исключение: 공부하다 → 공부해요 · 운동하다 → 운동해요'}
+            {ko:'-아요',  ru:'если в основе ㅏ или ㅗ: 가다 → 가요 · 보다 → 봐요', ru_uz:'agar oʻzakda ㅏ yoki ㅗ boʻlsa: 가다 → 가요 · 보다 → 봐요'},
+            {ko:'-어요',  ru:'если другие гласные (ㅓ ㅜ ㅡ ㅣ): 먹다 → 먹어요 · 읽다 → 읽어요', ru_uz:'agar boshqa unlilar boʻlsa (ㅓ ㅜ ㅡ ㅣ): 먹다 → 먹어요 · 읽다 → 읽어요'},
+            {ko:'하다 → 해요', ru:'исключение: 공부하다 → 공부해요 · 운동하다 → 운동해요', ru_uz:'istisno: 공부하다 → 공부해요 · 운동하다 → 운동해요'}
           ],
-          note:'Отрезаем -다 от инфинитива → смотрим на гласную в основе → выбираем окончание. Это база всего корейского!' },
-        { kind:'info', eyebrow:'ПРИМЕРЫ · -아/어요', title:'Что они делают?', sub:t('ui.147'), cols:1, noPlay:false,
+          note:'Отрезаем -다 от инфинитива → смотрим на гласную в основе → выбираем окончание. Это база всего корейского!', note_uz:'Infinitivdan -다 ni kesib tashlaymiz → oʻzakdagi unliga qaraymiz → qoʻshimchani tanlaymiz. Bu butun koreys tilining asosi!' },
+        { kind:'info', eyebrow:'ПРИМЕРЫ · -아/어요', eyebrow_uz:'MISOLLAR · -아/어요', title:'Что они делают?', title_uz:'Ular nima qilyapti?', sub:t('ui.147'), cols:1, noPlay:false,
           grid:[
-            {ko:'봐요',    ru:'смотрит (보다)'},
-            {ko:'마셔요',  ru:'пьёт (마시다)'},
-            {ko:'먹어요',  ru:'ест (먹다)'},
-            {ko:'공부해요',ru:'учится (공부하다)'}
+            {ko:'봐요',    ru:'смотрит (보다)', ru_uz:'koʻryapti (보다)'},
+            {ko:'마셔요',  ru:'пьёт (마시다)', ru_uz:'ichyapti (마시다)'},
+            {ko:'먹어요',  ru:'ест (먹다)', ru_uz:'yeyapti (먹다)'},
+            {ko:'공부해요',ru:'учится (공부하다)', ru_uz:'oʻqiyapti (공부하다)'}
           ] },
-        { kind:'quiz', eyebrow:'ЗАДАНИЕ · СПРЯЖЕНИЕ', title:'Какое окончание?',
+        { kind:'quiz', eyebrow:'ЗАДАНИЕ · СПРЯЖЕНИЕ', eyebrow_uz:'TOPSHIRIQ · TUSLANISH', title:'Какое окончание?', title_uz:'Qaysi qoʻshimcha?',
           items:[
             {ko:'가다',     ru:'-아요'},
             {ko:'먹다',     ru:'-어요'},
@@ -7896,22 +7969,22 @@
             {ko:'운동하다', ru:'해요'}
           ],
           pool:['-아요','-어요','해요'] },
-        { kind:'info', eyebrow:'ГРАММАТИКА · 을/를', title:'Винительный падеж', sub:'Что я делаю — объект действия', cols:1, noPlay:true,
+        { kind:'info', eyebrow:'ГРАММАТИКА · 을/를', eyebrow_uz:'GRAMMATIKA · 을/를', title:'Винительный падеж', title_uz:'Tushum kelishigi', sub:'Что я делаю — объект действия', sub_uz:'Men nima qilyapman — harakat obʼyekti', cols:1, noPlay:true,
           grid:[
-            {ko:'을 (받침 ✔)', ru:'если объект оканчивается на согласную: 밥을 먹어요 · 책을 읽어요'},
-            {ko:'를 (받침 ❌)', ru:'если оканчивается на гласную: 우유를 마셔요 · 케이크를 만들어요'}
+            {ko:'을 (받침 ✔)', ru:'если объект оканчивается на согласную: 밥을 먹어요 · 책을 읽어요', ru_uz:'agar obʼyekt undosh bilan tugasa: 밥을 먹어요 · 책을 읽어요'},
+            {ko:'를 (받침 ❌)', ru:'если оканчивается на гласную: 우유를 마셔요 · 케이크를 만들어요', ru_uz:'agar unli bilan tugasa: 우유를 마셔요 · 케이크를 만들어요'}
           ],
-          note:'을/를 ставится после слова-объекта (то, что делают). Логика та же — смотри на падчим.' },
-        { kind:'info', eyebrow:'ПРИМЕРЫ · 을/를', title:'Я + объект + глагол', sub:t('ui.147'), cols:1, noPlay:false,
+          note:'을/를 ставится после слова-объекта (то, что делают). Логика та же — смотри на падчим.', note_uz:'을/를 obʼyekt soʻzidan (nima qilinayotgani) keyin qoʻyiladi. Mantiq bir xil — patchimga qarang.' },
+        { kind:'info', eyebrow:'ПРИМЕРЫ · 을/를', eyebrow_uz:'MISOLLAR · 을/를', title:'Я + объект + глагол', title_uz:'Men + obʼyekt + feʼl', sub:t('ui.147'), cols:1, noPlay:false,
           grid:[
-            {ko:'밥을 먹어요',     ru:'Я ем рис'},
-            {ko:'우유를 마셔요',   ru:'Я пью молоко'},
-            {ko:'책을 읽어요',     ru:'Я читаю книгу'},
-            {ko:'텔레비전을 봐요', ru:'Я смотрю телевизор'},
-            {ko:'옷을 입어요',     ru:'Я надеваю одежду'},
-            {ko:'케이크를 만들어요',ru:'Я делаю торт'}
+            {ko:'밥을 먹어요',     ru:'Я ем рис', ru_uz:'Men guruch (ovqat) yeyapman'},
+            {ko:'우유를 마셔요',   ru:'Я пью молоко', ru_uz:'Men sut ichyapman'},
+            {ko:'책을 읽어요',     ru:'Я читаю книгу', ru_uz:'Men kitob oʻqiyapman'},
+            {ko:'텔레비전을 봐요', ru:'Я смотрю телевизор', ru_uz:'Men televizor koʻryapman'},
+            {ko:'옷을 입어요',     ru:'Я надеваю одежду', ru_uz:'Men kiyim kiyyapman'},
+            {ko:'케이크를 만들어요',ru:'Я делаю торт', ru_uz:'Men tort yasayapman'}
           ] },
-        { kind:'quiz', eyebrow:'ЗАДАНИЕ · 을/를', title:'Какой падеж?',
+        { kind:'quiz', eyebrow:'ЗАДАНИЕ · 을/를', eyebrow_uz:'TOPSHIRIQ · 을/를', title:'Какой падеж?', title_uz:'Qaysi kelishik?',
           items:[
             {ko:'밥',   ru:'을'},
             {ko:'우유', ru:'를'},
@@ -7921,16 +7994,16 @@
             {ko:'요리', ru:'를'}
           ],
           pool:['을','를'] },
-        { kind:'info', eyebrow:'ЧТЕНИЕ · ДОМА', title:'Что делает Джейсон?', sub:t('ui.147'), cols:1, noPlay:false,
+        { kind:'info', eyebrow:'ЧТЕНИЕ · ДОМА', eyebrow_uz:'OʻQISH · UYDA', title:'Что делает Джейсон?', title_uz:'Jeyson nima qilyapti?', sub:t('ui.147'), cols:1, noPlay:false,
           grid:[
-            {ko:'제이슨은 학생이에요',       ru:'Джейсон — студент'},
-            {ko:'지금 제이슨은 교실에 있어요',ru:'Сейчас он в классе'},
-            {ko:'책을 읽어요',                ru:'Читает книгу'},
-            {ko:'제이슨 아빠는 집에 있어요',  ru:'Папа Джейсона — дома'},
-            {ko:'지금 아빠는 부엌에 있어요',  ru:'Сейчас папа на кухне'},
-            {ko:'요리를 해요',                ru:'Готовит'}
+            {ko:'제이슨은 학생이에요',       ru:'Джейсон — студент', ru_uz:'Jeyson — talaba'},
+            {ko:'지금 제이슨은 교실에 있어요',ru:'Сейчас он в классе', ru_uz:'Hozir u sinfxonada'},
+            {ko:'책을 읽어요',                ru:'Читает книгу', ru_uz:'Kitob oʻqiyapti'},
+            {ko:'제이슨 아빠는 집에 있어요',  ru:'Папа Джейсона — дома', ru_uz:'Jeysonning otasi — uyda'},
+            {ko:'지금 아빠는 부엌에 있어요',  ru:'Сейчас папа на кухне', ru_uz:'Hozir otasi oshxonada'},
+            {ko:'요리를 해요',                ru:'Готовит', ru_uz:'Ovqat pishiryapti'}
           ],
-          note:'Это шаблон рассказа «кто где и что делает». Подставь свои имена.' },
+          note:'Это шаблон рассказа «кто где и что делает». Подставь свои имена.', note_uz:'Bu «kim qayerda va nima qilyapti» hikoyasining namunasi. Oʻz ismlaringni qoʻy.' },
         { kind:'homework' }
       ]
     },
@@ -7938,13 +8011,18 @@
       id:'l7-school', num:7,
       title:'Школа',
       ko:'학교',
-      ru:'Школа, район, направление 에 (куда) и частица 도 (тоже)',
+      ru_uz:'Maktab, mahalla, yoʻnalish yuklamasi 에 (qayerga) va 도 (ham) yuklamasi',
       vocab: [...L7_SCHOOL, ...L7_NEIGHBORHOOD],
       homework: {
         tasks: [
           'Воркбук (скину).',
           'Написать по 2 предложения на каждую грамматику (에-куда и 도).',
           'Рассказать, куда идут разные люди в твоей семье.'
+        ],
+        tasks_uz: [
+          'Ishchi daftar (yuboraman).',
+          'Har bir grammatikaga (에-qayerga va 도) 2 tadan gap yozing.',
+          'Oilangizdagi turli odamlar qayerga borishini gapirib bering.'
         ],
         file: { label:t('ui.150'), note:t('ui.142'), url:'' }
       },
@@ -7955,58 +8033,58 @@
         { kind:'words', eyebrow:'НОВЫЕ СЛОВА · 동네', title:'Наш район', items:L7_NEIGHBORHOOD },
         { kind:'info', eyebrow:'ДИАЛОГ', title:'Куда идёшь?', sub:t('ui.147'), cols:1, noPlay:false,
           grid:[
-            {ko:'어디에 가요?',           ru:'Куда идёшь?'},
-            {ko:'도서관에 가요',          ru:'Иду в библиотеку'},
-            {ko:'세라는 어디에 가요?',    ru:'А Сэра куда?'},
-            {ko:'나도 도서관에 가요',     ru:'Я тоже в библиотеку'},
-            {ko:'그래요? 그럼 같이 가요', ru:'Правда? Пошли вместе!'}
+            {ko:'어디에 가요?',           ru:'Куда идёшь?', ru_uz:'Qayerga boryapsan?'},
+            {ko:'도서관에 가요',          ru:'Иду в библиотеку', ru_uz:'Kutubxonaga boryapman'},
+            {ko:'세라는 어디에 가요?',    ru:'А Сэра куда?', ru_uz:'Sera-chi, u qayerga?'},
+            {ko:'나도 도서관에 가요',     ru:'Я тоже в библиотеку', ru_uz:'Men ham kutubxonaga'},
+            {ko:'그래요? 그럼 같이 가요', ru:'Правда? Пошли вместе!', ru_uz:'Rostdanmi? Unda birga boraylik!'}
           ] },
-        { kind:'info', eyebrow:'ГРАММАТИКА · 에 (куда)', title:'Направление 에', sub:'место + 에 + 가요/와요', cols:1, noPlay:true,
+        { kind:'info', eyebrow:'ГРАММАТИКА · 에 (куда)', title:'Направление 에', sub:'место + 에 + 가요/와요', sub_uz:'joy + 에 + 가요/와요', cols:1, noPlay:true,
           grid:[
             {ko:'место + 에 + 가요', ru:'идти куда-то: 학교에 가요 · 도서관에 가요'},
             {ko:'место + 에 + 와요', ru:'приходить куда-то: 교실에 와요 · 집에 와요'},
-            {ko:'어디에 가요?',       ru:'вопрос: Куда идёшь?'}
+            {ko:'어디에 가요?',       ru:'вопрос: Куда идёшь?', ru_uz:'savol: Qayerga boryapsan?'}
           ],
-          note:'Это та же частица 에, что в уроке 5 (где?). Только с глаголами движения 가다/오다 — она показывает направление.' },
+          note:'Это та же частица 에, что в уроке 5 (где?). Только с глаголами движения 가다/오다 — она показывает направление.', note_uz:'Bu 5-darsdagi (qayerda?) bilan bir xil 에 yuklamasi. Faqat 가다/오다 harakat feʻllari bilan u yoʻnalishni bildiradi.' },
         { kind:'info', eyebrow:'ПРИМЕРЫ · 에 (куда)', title:'Куда идут?', sub:t('ui.147'), cols:1, noPlay:false,
           grid:[
-            {ko:'도서관에 가요',   ru:'Иду в библиотеку'},
-            {ko:'교실에 와요',     ru:'Приходит в класс'},
-            {ko:'병원에 가요',     ru:'Иду в больницу'},
-            {ko:'화장실에 가요',   ru:'Иду в туалет'},
-            {ko:'집에 와요',       ru:'Прихожу домой'}
+            {ko:'도서관에 가요',   ru:'Иду в библиотеку', ru_uz:'Kutubxonaga boryapman'},
+            {ko:'교실에 와요',     ru:'Приходит в класс', ru_uz:'Sinfga kelyapti'},
+            {ko:'병원에 가요',     ru:'Иду в больницу', ru_uz:'Kasalxonaga boryapman'},
+            {ko:'화장실에 가요',   ru:'Иду в туалет', ru_uz:'Hojatxonaga boryapman'},
+            {ko:'집에 와요',       ru:'Прихожу домой', ru_uz:'Uyga qaytyapman'}
           ] },
-        { kind:'info', eyebrow:'ГРАММАТИКА · 도', title:'Частица 도 — «тоже»', sub:'добавляет смысл «также / ещё и»', cols:1, noPlay:true,
+        { kind:'info', eyebrow:'ГРАММАТИКА · 도', title:'Частица 도 — «тоже»', sub:'добавляет смысл «также / ещё и»', sub_uz:'«ham / yana» maʻnosini qoʻshadi', cols:1, noPlay:true,
           grid:[
             {ko:'Сущ + 도', ru:'присоединяется к слову (вместо 은/는/이/가): 동생도 학교에 가요 — младший тоже идёт в школу'},
-            {ko:'학교도 있어요', ru:'добавляет ещё один объект: «и школа тоже есть»'}
+            {ko:'학교도 있어요', ru:'добавляет ещё один объект: «и школа тоже есть»', ru_uz:'yana bir narsani qoʻshadi: «maktab ham bor»'}
           ],
-          note:'도 заменяет частицу темы 은/는 или подлежащего 이/가, когда хочешь сказать «тоже / также / ещё и».' },
+          note:'도 заменяет частицу темы 은/는 или подлежащего 이/가, когда хочешь сказать «тоже / также / ещё и».', note_uz:'도 «ham / yana» demoqchi boʻlganingda mavzu yuklamasi 은/는 yoki ega yuklamasi 이/가 oʻrnini bosadi.' },
         { kind:'info', eyebrow:'ПРИМЕРЫ · 도', title:'Я тоже…', sub:t('ui.147'), cols:1, noPlay:false,
           grid:[
-            {ko:'나는 학교에 가요',        ru:'Я иду в школу'},
-            {ko:'동생도 학교에 가요',      ru:'Младший тоже идёт в школу'},
-            {ko:'우리 동네에 유치원이 있어요',ru:'У нас в районе есть детсад'},
-            {ko:'학교도 있어요',           ru:'И школа тоже есть'}
+            {ko:'나는 학교에 가요',        ru:'Я иду в школу', ru_uz:'Men maktabga boryapman'},
+            {ko:'동생도 학교에 가요',      ru:'Младший тоже идёт в школу', ru_uz:'Ukam ham maktabga boryapti'},
+            {ko:'우리 동네에 유치원이 있어요',ru:'У нас в районе есть детсад', ru_uz:'Bizning mahallada bogʻcha bor'},
+            {ko:'학교도 있어요',           ru:'И школа тоже есть', ru_uz:'Maktab ham bor'}
           ] },
         { kind:'quiz', eyebrow:'ЗАДАНИЕ · СПРЯЖЕНИЕ', title:'Какое окончание?',
           items:[
-            {ko:'가다',     ru:'-아요'},
-            {ko:'오다',     ru:'-아요'},
-            {ko:'먹다',     ru:'-어요'},
-            {ko:'마시다',   ru:'-어요'},
-            {ko:'공부하다', ru:'해요'},
-            {ko:'운동하다', ru:'해요'}
+            // нужно расширить old, чтобы однозначно попасть в l7-school (строка 7994), а не в l6-house (строка 7891); сам ru_uz:'-아요' корректен
+            {ko:'오다',     ru:'-아요', ru_uz:'-아요'},
+            // нужно расширить old, однозначно привязав к l7-school (строка 7996), а не l6-house (строка 7892); сам ru_uz:'-어요' корректен
+            {ko:'마시다',   ru:'-어요', ru_uz:'-어요'},
+            // нужно расширить old, однозначно привязав к l7-school (строка 7998), а не l6-house (строка 7895); сам ru_uz:'해요' корректен
+            // нужно расширить old, однозначно привязав к l7-school (строка 7999), а не l6-house (строка 7896); сам ru_uz:'해요' корректен
           ],
           pool:['-아요','-어요','해요'] },
         { kind:'info', eyebrow:'АУДИРОВАНИЕ', title:'Куда идут?', sub:t('ui.147'), cols:1, noPlay:false,
           grid:[
-            {ko:'토마스는 도서관에 가요', ru:'Томас идёт в библиотеку'},
-            {ko:'제이슨은 학교에 가요',   ru:'Джейсон идёт в школу'},
-            {ko:'세라는 병원에 가요',     ru:'Сэра идёт в больницу'},
-            {ko:'유나는 공원에 가요',     ru:'Юна идёт в парк'}
+            {ko:'토마스는 도서관에 가요', ru:'Томас идёт в библиотеку', ru_uz:'Tomas kutubxonaga boryapti'},
+            {ko:'제이슨은 학교에 가요',   ru:'Джейсон идёт в школу', ru_uz:'Jeyson maktabga boryapti'},
+            {ko:'세라는 병원에 가요',     ru:'Сэра идёт в больницу', ru_uz:'Sera kasalxonaga boryapti'},
+            {ko:'유나는 공원에 가요',     ru:'Юна идёт в парк', ru_uz:'Yuna bogʻga boryapti'}
           ],
-          note:'Это шаблон «кто куда идёт». Опиши, куда идут люди в твоей семье.' },
+          note:'Это шаблон «кто куда идёт». Опиши, куда идут люди в твоей семье.', note_uz:'Bu «kim qayerga boradi» andozasi. Oilangizdagi odamlar qayerga borishini tasvirlab bering.' },
         { kind:'homework' }
       ]
     },
@@ -8015,6 +8093,7 @@
       title:'Развлечения',
       ko:'운동',
       ru:'Досуг и спорт, отрицание 안 и место действия 에서',
+      ru_uz:'Boʻsh vaqt va sport, 안 inkori va harakat joyi 에서',
       vocab: [...L8_PLACES, ...L8_ACTIVITIES],
       homework: {
         tasks: [
@@ -8022,20 +8101,27 @@
           'Написать по 2 предложения на каждую грамматику (안 и 에서).',
           'Расскажи, что ты делаешь в школе, дома и в парке (используй 에서).'
         ],
+        tasks_uz: [
+          'Ish daftari (yuboraman).',
+          'Har bir grammatikaga (안 va 에서) 2 tadan gap yozing.',
+          'Maktabda, uyda va bogʻda nima qilishingizni aytib bering (에서 dan foydalaning).'
+        ],
         file: { label:t('ui.151'), note:t('ui.142'), url:'' }
       },
       slides: [
         { kind:'intro', title:'운동 — Развлечения', sub:'Что делаем в спортзале, парке и классе',
-          learn:[['🏀','13 слов'],['❌','안 — не'],['📍','에서 — где']] },
+          sub_uz:'Sport zalida, bogʻda va sinfda nima qilamiz',
+          learn:[['🏀','13 слов'],['❌','안 — не'],['📍','에서 — где']],
+          learn_uz:['13 ta soʻz','안 — emas','에서 — qayerda'] },
         { kind:'words', eyebrow:'НОВЫЕ СЛОВА · 장소', title:'Места', items:L8_PLACES },
         { kind:'words', eyebrow:'НОВЫЕ СЛОВА · 활동', title:'Активности', items:L8_ACTIVITIES },
-        { kind:'info', eyebrow:'ДИАЛОГ', title:'Юна идёт домой?', sub:t('ui.147'), cols:1, noPlay:false,
+        { kind:'info', eyebrow:'ДИАЛОГ', title:'Юна идёт домой?', title_uz:'Yuna uyga ketyaptimi?', sub:t('ui.147'), cols:1, noPlay:false,
           grid:[
-            {ko:'유나는 집에 가요?',       ru:'Юна, идёшь домой?'},
-            {ko:'아니요, 집에 안 가요',   ru:'Нет, домой не иду'},
-            {ko:'체육관에 가요',           ru:'Иду в спортзал'},
-            {ko:'체육관에서 뭘 해요?',    ru:'Что делаешь в спортзале?'},
-            {ko:'농구를 해요',             ru:'Играю в баскетбол'}
+            {ko:'유나는 집에 가요?',       ru:'Юна, идёшь домой?',       ru_uz:'Yuna, uyga ketyapsanmi?'},
+            {ko:'아니요, 집에 안 가요',   ru:'Нет, домой не иду',       ru_uz:'Yoʻq, uyga ketmayapman'},
+            {ko:'체육관에 가요',           ru:'Иду в спортзал',          ru_uz:'Sport zaliga ketyapman'},
+            {ko:'체육관에서 뭘 해요?',    ru:'Что делаешь в спортзале?',ru_uz:'Sport zalida nima qilyapsan?'},
+            {ko:'농구를 해요',             ru:'Играю в баскетбол',       ru_uz:'Basketbol oʻynayapman'}
           ] },
         { kind:'info', eyebrow:'ГРАММАТИКА · 안', title:'Отрицание 안', sub:'«не делает»', cols:1, noPlay:true,
           grid:[
@@ -8043,13 +8129,13 @@
             {ko:'안 해요',     ru:'для глаголов на 하다 — тоже перед 해요: 공부 안 해요'}
           ],
           note:'Простое отрицание: добавь 안 прямо перед глаголом — и получится «не делаю». Просто, как «не» в русском.' },
-        { kind:'info', eyebrow:'ПРИМЕРЫ · 안', title:'Я не …', sub:t('ui.147'), cols:1, noPlay:false,
+        { kind:'info', eyebrow:'ПРИМЕРЫ · 안', title:'Я не …', title_uz:'Men ...qilmayman', sub:t('ui.147'), cols:1, noPlay:false,
           grid:[
-            {ko:'학교에 가요?',          ru:'Идёшь в школу?'},
-            {ko:'아니요, 학교에 안 가요',ru:'Нет, не иду в школу'},
-            {ko:'책을 읽어요?',          ru:'Читаешь книгу?'},
-            {ko:'아니요, 책을 안 읽어요',ru:'Нет, не читаю'},
-            {ko:'농구를 안 해요',        ru:'Не играю в баскетбол'}
+            {ko:'학교에 가요?',          ru:'Идёшь в школу?',        ru_uz:'Maktabga borayapsanmi?'},
+            {ko:'아니요, 학교에 안 가요',ru:'Нет, не иду в школу',   ru_uz:'Yoʻq, maktabga bormayapman'},
+            {ko:'책을 읽어요?',          ru:'Читаешь книгу?',        ru_uz:'Kitob oʻqiyapsanmi?'},
+            {ko:'아니요, 책을 안 읽어요',ru:'Нет, не читаю',         ru_uz:'Yoʻq, oʻqimayapman'},
+            {ko:'농구를 안 해요',        ru:'Не играю в баскетбол',  ru_uz:'Basketbol oʻynamayapman'}
           ] },
         { kind:'info', eyebrow:'ГРАММАТИКА · 에서', title:'Место действия 에서', sub:'где что-то происходит', cols:1, noPlay:true,
           grid:[
@@ -8093,7 +8179,7 @@
       id:'l9-numbers', num:9,
       title:'Числа',
       ko:'숫자',
-      ru:'Сино-корейские числа и соединительные частицы 하고 / -고',
+      ru:'Сино-корейские числа и соединительные частицы 하고 / -고', ru_uz:'Xitoy-koreyscha sonlar va bogʻlovchi qoʻshimchalar 하고 / -고',
       vocab: [...L9_NUMBERS_1, ...L9_NUMBERS_2, ...L9_EXTRA],
       homework: {
         tasks: [
@@ -8101,11 +8187,17 @@
           'Написать по 2 предложения на каждую грамматику (하고 и -고).',
           'Запиши свой класс, этаж и возраст по-корейски.'
         ],
+        tasks_uz: [
+          'Ish daftari (yuboraman).',
+          'Har bir grammatikaga (하고 va -고) 2 tadan gap yozing.',
+          'Sinfingiz, qavatingiz va yoshingizni koreyscha yozing.'
+        ],
         file: { label:t('ui.152'), note:t('ui.142'), url:'' }
       },
       slides: [
-        { kind:'intro', title:'숫자 — Числа', sub:'Сино-корейские числа: 일 이 삼 사 오…',
-          learn:[['🔟','1—10'],['💯','до 10 000'],['➕','하고 / -고']] },
+        { kind:'intro', title:'숫자 — Числа', title_uz:'숫자 — Sonlar', sub:'Сино-корейские числа: 일 이 삼 사 오…', sub_uz:'Xitoy-koreyscha sonlar: 일 이 삼 사 오…',
+          learn:[['🔟','1—10'],['💯','до 10 000'],['➕','하고 / -고']],
+          learn_uz:[['🔟','1—10'],['💯','10 000 gacha'],['➕','하고 / -고']] },
         { kind:'words', eyebrow:'НОВЫЕ СЛОВА · 숫자 1—10', title:'Числа от 1 до 10', items:L9_NUMBERS_1 },
         { kind:'words', eyebrow:'НОВЫЕ СЛОВА · 숫자 10+', title:'Десятки и сотни', items:L9_NUMBERS_2 },
         { kind:'words', eyebrow:'НОВЫЕ СЛОВА · 학교', title:'Школа и предметы', items:L9_EXTRA },
@@ -8119,46 +8211,46 @@
             {ko:'4',   ru:'사'}
           ],
           pool:['일','이','삼','사','오','육','칠','팔','구','십','백'] },
-        { kind:'info', eyebrow:'ДИАЛОГ', title:'몇 학년이에요?', sub:t('ui.147'), cols:1, noPlay:false,
+        { kind:'info', eyebrow:'ДИАЛОГ', eyebrow_uz:'DIALOG', title:'몇 학년이에요?', title_uz:'몇 학년이에요?', sub:t('ui.147'), cols:1, noPlay:false,
           grid:[
-            {ko:'민수는 몇 학년이에요?',                 ru:'В каком классе Минсу?'},
-            {ko:'저는 2학년이에요',                       ru:'Я во 2 классе'},
-            {ko:'유나하고 빌리는 몇 학년이에요?',         ru:'А Юна и Билли?'},
-            {ko:'유나는 2학년이고 빌리는 3학년이에요',    ru:'Юна во 2, а Билли в 3'}
+            {ko:'민수는 몇 학년이에요?',                 ru:'В каком классе Минсу?', ru_uz:'Minsu nechanchi sinfda?'},
+            {ko:'저는 2학년이에요',                       ru:'Я во 2 классе', ru_uz:'Men 2-sinfdaman'},
+            {ko:'유나하고 빌리는 몇 학년이에요?',         ru:'А Юна и Билли?', ru_uz:'Yuna va Billi-chi?'},
+            {ko:'유나는 2학년이고 빌리는 3학년이에요',    ru:'Юна во 2, а Билли в 3', ru_uz:'Yuna 2-sinfda, Billi esa 3-sinfda'}
           ] },
-        { kind:'info', eyebrow:'ГРАММАТИКА · 하고', title:'Сущ + 하고 + Сущ', sub:'«и» между предметами', cols:1, noPlay:true,
+        { kind:'info', eyebrow:'ГРАММАТИКА · 하고', eyebrow_uz:'GRAMMATIKA · 하고', title:'Сущ + 하고 + Сущ', title_uz:'Ot + 하고 + Ot', sub:'«и» между предметами', sub_uz:'narsalar orasidagi «va»', cols:1, noPlay:true,
           grid:[
-            {ko:'하고', ru:'соединяет два существительных: 우유하고 빵 (молоко и хлеб)'},
-            {ko:'하고', ru:'добавляется к первому слову: 레베카하고 토마스'}
+            {ko:'하고', ru:'соединяет два существительных: 우유하고 빵 (молоко и хлеб)', ru_uz:'ikkita otni bogʻlaydi: 우유하고 빵 (sut va non)'},
+            {ko:'하고', ru:'добавляется к первому слову: 레베카하고 토마스', ru_uz:'birinchi soʻzga qoʻshiladi: 레베카하고 토마스'}
           ],
-          note:'하고 — это «и» для существительных. Просто ставь его между двумя словами, и они объединятся.' },
-        { kind:'info', eyebrow:'ПРИМЕРЫ · 하고', title:'… и …', sub:t('ui.147'), cols:1, noPlay:false,
+          note:'하고 — это «и» для существительных. Просто ставь его между двумя словами, и они объединятся.', note_uz:'하고 — otlar uchun «va» degani. Uni ikkita soʻz orasiga qoʻysang, ular birlashadi.' },
+        { kind:'info', eyebrow:'ПРИМЕРЫ · 하고', eyebrow_uz:'MISOLLAR · 하고', title:'… и …', title_uz:'… va …', sub:t('ui.147'), cols:1, noPlay:false,
           grid:[
-            {ko:'엄마는 우유하고 빵을 사요',     ru:'Мама покупает молоко и хлеб'},
-            {ko:'레베카하고 토마스가 있어요',   ru:'Здесь Ребекка и Томас'},
-            {ko:'연필하고 지우개가 있어요',     ru:'Есть карандаш и ластик'},
-            {ko:'민수하고 민지가 학교에 가요',  ru:'Минсу и Минджи идут в школу'}
+            {ko:'엄마는 우유하고 빵을 사요',     ru:'Мама покупает молоко и хлеб', ru_uz:'Onam sut va non sotib oladi'},
+            {ko:'레베카하고 토마스가 있어요',   ru:'Здесь Ребекка и Томас', ru_uz:'Bu yerda Rebekka va Tomas bor'},
+            {ko:'연필하고 지우개가 있어요',     ru:'Есть карандаш и ластик', ru_uz:'Qalam va oʻchirgich bor'},
+            {ko:'민수하고 민지가 학교에 가요',  ru:'Минсу и Минджи идут в школу', ru_uz:'Minsu va Minji maktabga boradi'}
           ] },
-        { kind:'info', eyebrow:'ГРАММАТИКА · -고', title:'Глагол + -고 + Глагол', sub:'«и» между действиями', cols:1, noPlay:true,
+{ kind:'info', eyebrow:'ГРАММАТИКА · -고', eyebrow_uz:'GRAMMATIKA · -고', title:'Глагол + -고 + Глагол', title_uz:'Feʼl + -고 + Feʼl', sub:'«и» между действиями', sub_uz:'harakatlar orasidagi «va»', cols:1, noPlay:true,
           grid:[
-            {ko:'-고',  ru:'соединяет два действия / описания: 보고 + 읽어요 (смотрит и читает)'},
-            {ko:'이고', ru:'для 이에요 → 이고: 영국 사람이고 한국 사람이에요'}
+            {ko:'-고',  ru:'соединяет два действия / описания: 보고 + 읽어요 (смотрит и читает)', ru_uz:'ikkita harakat / tavsifni bogʻlaydi: 보고 + 읽어요 (koʻradi va oʻqiydi)'},
+            {ko:'이고', ru:'для 이에요 → 이고: 영국 사람이고 한국 사람이에요', ru_uz:'이에요 uchun → 이고: 영국 사람이고 한국 사람이에요'}
           ],
-          note:'-고 — это «и» для глаголов и предложений. Прицепи к основе (보 + 고) — и получишь связку.' },
-        { kind:'info', eyebrow:'ПРИМЕРЫ · -고', title:'Делаю это и то', sub:t('ui.147'), cols:1, noPlay:false,
+          note:'-고 — это «и» для глаголов и предложений. Прицепи к основе (보 + 고) — и получишь связку.', note_uz:'-고 — feʼl va gaplar uchun «va» degani. Uni negizga (보 + 고) ulasang, bogʻlovchi hosil boʻladi.' },
+{ kind:'info', eyebrow:'ПРИМЕРЫ · -고', eyebrow_uz:'MISOLLAR · -고', title:'Делаю это и то', title_uz:'Buni ham, uni ham qilaman', sub:t('ui.147'), cols:1, noPlay:false,
           grid:[
-            {ko:'토마스는 달리기를 하고 누나는 줄넘기를 해요', ru:'Томас бегает, а сестра — со скакалкой'},
-            {ko:'제이슨은 영국 사람이고 유나는 한국 사람이에요', ru:'Джейсон — англичанин, а Юна — кореянка'},
-            {ko:'아빠는 텔레비전을 보고 동생은 책을 읽어요',     ru:'Папа смотрит ТВ, а младший читает'}
+            {ko:'토마스는 달리기를 하고 누나는 줄넘기를 해요', ru:'Томас бегает, а сестра — со скакалкой', ru_uz:'Tomas yuguradi, opasi esa arqon sakraydi'},
+            {ko:'제이슨은 영국 사람이고 유나는 한국 사람이에요', ru:'Джейсон — англичанин, а Юна — кореянка', ru_uz:'Jeyson — ingliz, Yuna esa — koreys'},
+            {ko:'아빠는 텔레비전을 보고 동생은 책을 읽어요',     ru:'Папа смотрит ТВ, а младший читает', ru_uz:'Dadam televizor koʻradi, ukam esa kitob oʻqiydi'}
           ] },
-        { kind:'info', eyebrow:'ЧТЕНИЕ', title:'Я Минсу', sub:t('ui.147'), cols:1, noPlay:false,
+        { kind:'info', eyebrow:'ЧТЕНИЕ', eyebrow_uz:'OʻQISH', title:'Я Минсу', title_uz:'Men Minsuman', sub:t('ui.147'), cols:1, noPlay:false,
           grid:[
-            {ko:'저는 민수예요',                ru:'Я Минсу'},
-            {ko:'초등학교 2학년이에요',        ru:'Я во 2 классе начальной школы'},
-            {ko:'한글학교에서 한국어를 공부해요',ru:'В корейской школе учу корейский'},
-            {ko:'우리 반에 빌리하고 유나가 있어요',ru:'В моём классе — Билли и Юна'},
-            {ko:'빌리는 3학년이고 유나는 2학년이에요',ru:'Билли в 3, Юна во 2 классе'},
-            {ko:'우리는 한글학교 친구예요',     ru:'Мы — друзья по корейской школе'}
+            {ko:'저는 민수예요',                ru:'Я Минсу', ru_uz:'Men Minsuman'},
+            {ko:'초등학교 2학년이에요',        ru:'Я во 2 классе начальной школы', ru_uz:'Men boshlangʻich maktabning 2-sinfidaman'},
+            {ko:'한글학교에서 한국어를 공부해요',ru:'В корейской школе учу корейский', ru_uz:'Koreys maktabida koreys tilini oʻrganaman'},
+            {ko:'우리 반에 빌리하고 유나가 있어요',ru:'В моём классе — Билли и Юна', ru_uz:'Mening sinfimda Billi va Yuna bor'},
+            {ko:'빌리는 3학년이고 유나는 2학년이에요',ru:'Билли в 3, Юна во 2 классе', ru_uz:'Billi 3-sinfda, Yuna esa 2-sinfda'},
+            {ko:'우리는 한글학교 친구예요',     ru:'Мы — друзья по корейской школе', ru_uz:'Biz koreys maktabidagi doʻstlarmiz'}
           ] },
         { kind:'homework' }
       ]
@@ -8255,7 +8347,7 @@
       id:'l11-park', num:11,
       title:'Парк аттракционов',
       ko:'놀이공원',
-      ru:'Выходные, 하고 같이 (вместе) и будущее -(으)ㄹ 거예요',
+      ru:'Выходные, 하고 같이 (вместе) и будущее -(으)ㄹ 거예요', ru_uz:'Dam olish kunlari, 하고 같이 (birga) va kelasi zamon -(으)ㄹ 거예요',
       vocab: [...L11_PLACES, ...L11_THINGS, ...L11_VERBS],
       homework: {
         tasks: [
@@ -8263,21 +8355,26 @@
           'Написать по 2 предложения на каждую грамматику (하고 같이 и -(으)ㄹ 거예요).',
           'Расскажи, что ты будешь делать в выходные и с кем.'
         ],
+        tasks_uz: [
+          'Ish daftari (yuboraman).',
+          'Har bir grammatikaga (하고 같이 va -(으)ㄹ 거예요) 2 tadan gap yozing.',
+          'Dam olish kunlari nima qilishingni va kim bilan qilishingni aytib ber.'
+        ],
         file: { label:t('ui.154'), note:t('ui.142'), url:'' }
       },
       slides: [
-        { kind:'intro', title:'놀이공원 — Парк', sub:'Куда пойдём? Что будем делать в выходные?',
-          learn:[['🎢','21 слово'],['🤝','하고 같이'],['🔮','будущее']] },
-        { kind:'words', eyebrow:'НОВЫЕ СЛОВА · 장소', title:'Места отдыха', items:L11_PLACES },
-        { kind:'words', eyebrow:'НОВЫЕ СЛОВА · 것', title:'Что мы видим', items:L11_THINGS },
-        { kind:'words', eyebrow:'НОВЫЕ СЛОВА · 동사', title:'Действия', items:L11_VERBS },
-        { kind:'info', eyebrow:'ДИАЛОГ', title:'Что будешь делать?', sub:t('ui.147'), cols:1, noPlay:false,
+        { kind:'intro', title:'놀이공원 — Парк', title_uz:'놀이공원 — Bogʻ', sub:'Куда пойдём? Что будем делать в выходные?', sub_uz:'Qayerga boramiz? Dam olish kunlari nima qilamiz?',
+          learn:[['🎢','21 слово'],['🤝','하고 같이'],['🔮','будущее']], learn_uz:[['🎢','21 soʻz'],['🤝','하고 같이'],['🔮','kelasi zamon']] },
+        { kind:'words', eyebrow:'НОВЫЕ СЛОВА · 장소', eyebrow_uz:'YANGI SOʻZLAR · 장소', title:'Места отдыха', title_uz:'Dam olish joylari', items:L11_PLACES },
+        { kind:'words', eyebrow:'НОВЫЕ СЛОВА · 것', eyebrow_uz:'YANGI SOʻZLAR · 것', title:'Что мы видим', title_uz:'Nimalarni koʻramiz', items:L11_THINGS },
+        { kind:'words', eyebrow:'НОВЫЕ СЛОВА · 동사', eyebrow_uz:'YANGI SOʻZLAR · 동사', title:'Действия', title_uz:'Harakatlar', items:L11_VERBS },
+        { kind:'info', eyebrow:'ДИАЛОГ', eyebrow_uz:'DIALOG', title:'Что будешь делать?', title_uz:'Nima qilasan?', sub:t('ui.147'), cols:1, noPlay:false,
           grid:[
-            {ko:'빌리, 내일 뭘 할 거예요?',            ru:'Билли, что будешь делать завтра?'},
-            {ko:'내일 놀이공원에 갈 거예요',          ru:'Завтра пойду в парк аттракционов'},
-            {ko:'누구하고 같이 갈 거예요?',           ru:'С кем пойдёшь?'},
-            {ko:'엄마, 아빠하고 갈 거예요. 유나는요?',ru:'С мамой и папой. А Юна?'},
-            {ko:'나는 가족들하고 바비큐 파티를 할 거예요', ru:'Я с семьёй устрою барбекю'}
+            {ko:'빌리, 내일 뭘 할 거예요?',            ru:'Билли, что будешь делать завтра?', ru_uz:'Billi, ertaga nima qilasan?'},
+            {ko:'내일 놀이공원에 갈 거예요',          ru:'Завтра пойду в парк аттракционов', ru_uz:'Ertaga attraksionlar bogʻiga boraman'},
+            {ko:'누구하고 같이 갈 거예요?',           ru:'С кем пойдёшь?', ru_uz:'Kim bilan borasan?'},
+            {ko:'엄마, 아빠하고 갈 거예요. 유나는요?',ru:'С мамой и папой. А Юна?', ru_uz:'Onam va otam bilan boraman. Yuna-chi?'},
+            {ko:'나는 가족들하고 바비큐 파티를 할 거예요', ru:'Я с семьёй устрою барбекю', ru_uz:'Men oilam bilan barbekyu ziyofati qilaman'}
           ] },
         { kind:'info', eyebrow:'ГРАММАТИКА · 하고 같이', title:'С кем вместе', sub:'사람 + 하고 같이', cols:1, noPlay:true,
           grid:[
@@ -8286,29 +8383,29 @@
             {ko:'혼자',              ru:'один: 혼자 가요 — иду один (без 하고 같이)'}
           ],
           note:'하고 (мы знаем из урока 9!) теперь с 같이 = «вместе с кем-то». Идеально для разговоров о компании.' },
-        { kind:'info', eyebrow:'ПРИМЕРЫ · 하고 같이', title:'Вместе с …', sub:t('ui.147'), cols:1, noPlay:false,
+        { kind:'info', eyebrow:'ПРИМЕРЫ · 하고 같이', eyebrow_uz:'MISOLLAR · 하고 같이', title:'Вместе с …', title_uz:'… bilan birga', sub:t('ui.147'), cols:1, noPlay:false,
           grid:[
-            {ko:'친구하고 같이 축구해요',          ru:'С другом играю в футбол'},
-            {ko:'누구하고 같이 도서관에 가요?',    ru:'С кем идёшь в библиотеку?'},
-            {ko:'엄마하고 같이 가요',              ru:'Иду с мамой'},
-            {ko:'동생하고 같이 케이크를 만들어요', ru:'С младшим делаю торт'}
+            {ko:'친구하고 같이 축구해요',          ru:'С другом играю в футбол', ru_uz:'Doʻstim bilan futbol oʻynayman'},
+            {ko:'누구하고 같이 도서관에 가요?',    ru:'С кем идёшь в библиотеку?', ru_uz:'Kim bilan kutubxonaga borasan?'},
+            {ko:'엄마하고 같이 가요',              ru:'Иду с мамой', ru_uz:'Onam bilan boraman'},
+            {ko:'동생하고 같이 케이크를 만들어요', ru:'С младшим делаю торт', ru_uz:'Ukam bilan tort tayyorlayman'}
           ] },
-        { kind:'info', eyebrow:'ГРАММАТИКА · -(으)ㄹ 거예요', title:'Будущее время', sub:'«буду делать»', cols:1, noPlay:true,
+        { kind:'info', eyebrow:'ГРАММАТИКА · -(으)ㄹ 거예요', eyebrow_uz:'GRAMMATIKA · -(으)ㄹ 거예요', title:'Будущее время', title_uz:'Kelasi zamon', sub:'«буду делать»', sub_uz:'«qilaman»', cols:1, noPlay:true,
           grid:[
-            {ko:'-ㄹ 거예요',  ru:'после гласной: 가다 → 갈 거예요 · 보다 → 볼 거예요 · 하다 → 할 거예요'},
-            {ko:'-을 거예요',  ru:'после согласной: 읽다 → 읽을 거예요 · 먹다 → 먹을 거예요 · 찍다 → 찍을 거예요'}
+            {ko:'-ㄹ 거예요',  ru:'после гласной: 가다 → 갈 거예요 · 보다 → 볼 거예요 · 하다 → 할 거예요', ru_uz:'unlidan keyin: 가다 → 갈 거예요 · 보다 → 볼 거예요 · 하다 → 할 거예요'},
+            {ko:'-을 거예요',  ru:'после согласной: 읽다 → 읽을 거예요 · 먹다 → 먹을 거예요 · 찍다 → 찍을 거예요', ru_uz:'undoshdan keyin: 읽다 → 읽을 거예요 · 먹다 → 먹을 거예요 · 찍다 → 찍을 거예요'}
           ],
-          note:'Отрезаем -다 → смотрим на основу. Гласная в конце → -ㄹ 거예요. Согласная (받침) → -을 거예요.' },
-        { kind:'info', eyebrow:'ПРИМЕРЫ · БУДУЩЕЕ', title:'Что я буду делать?', sub:t('ui.147'), cols:1, noPlay:false,
+          note:'Отрезаем -다 → смотрим на основу. Гласная в конце → -ㄹ 거예요. Согласная (받침) → -을 거예요.', note_uz:'-다 ni kesib tashlaymiz → negizga qaraymiz. Oxirida unli → -ㄹ 거예요. Undosh (받침) → -을 거예요.' },
+        { kind:'info', eyebrow:'ПРИМЕРЫ · БУДУЩЕЕ', eyebrow_uz:'MISOLLAR · KELASI ZAMON', title:'Что я буду делать?', title_uz:'Men nima qilaman?', sub:t('ui.147'), cols:1, noPlay:false,
           grid:[
-            {ko:'내일 동물원에 갈 거예요?',          ru:'Завтра пойдёшь в зоопарк?'},
-            {ko:'네, 동물원에서 사진을 찍을 거예요',  ru:'Да, в зоопарке буду фотографировать'},
-            {ko:'주말에 뭘 할 거예요?',              ru:'Что будешь делать в выходные?'},
-            {ko:'공원에 갈 거예요',                  ru:'Пойду в парк'},
-            {ko:'책을 읽을 거예요',                  ru:'Буду читать книгу'},
-            {ko:'영화를 볼 거예요',                  ru:'Посмотрю фильм'}
+            {ko:'내일 동물원에 갈 거예요?',          ru:'Завтра пойдёшь в зоопарк?', ru_uz:'Ertaga hayvonot bogʻiga borasanmi?'},
+            {ko:'네, 동물원에서 사진을 찍을 거예요',  ru:'Да, в зоопарке буду фотографировать', ru_uz:'Ha, hayvonot bogʻida suratga olaman'},
+            {ko:'주말에 뭘 할 거예요?',              ru:'Что будешь делать в выходные?', ru_uz:'Dam olish kunlari nima qilasan?'},
+            {ko:'공원에 갈 거예요',                  ru:'Пойду в парк', ru_uz:'Bogʻga boraman'},
+            {ko:'책을 읽을 거예요',                  ru:'Буду читать книгу', ru_uz:'Kitob oʻqiyman'},
+            {ko:'영화를 볼 거예요',                  ru:'Посмотрю фильм', ru_uz:'Kino koʻraman'}
           ] },
-        { kind:'quiz', eyebrow:'ЗАДАНИЕ · БУДУЩЕЕ', title:'Какое окончание?',
+        { kind:'quiz', eyebrow:'ЗАДАНИЕ · БУДУЩЕЕ', eyebrow_uz:'TOPSHIRIQ · KELASI ZAMON', title:'Какое окончание?', title_uz:'Qaysi qoʻshimcha?',
           items:[
             {ko:'가다', ru:'-ㄹ 거예요'},
             {ko:'보다', ru:'-ㄹ 거예요'},
@@ -8318,14 +8415,14 @@
             {ko:'찍다', ru:'-을 거예요'}
           ],
           pool:['-ㄹ 거예요','-을 거예요'] },
-        { kind:'info', eyebrow:'ЧТЕНИЕ · ВЫХОДНЫЕ', title:'Завтра суббота', sub:t('ui.147'), cols:1, noPlay:false,
+        { kind:'info', eyebrow:'ЧТЕНИЕ · ВЫХОДНЫЕ', eyebrow_uz:'OʻQISH · DAM OLISH KUNLARI', title:'Завтра суббота', title_uz:'Ertaga shanba', sub:t('ui.147'), cols:1, noPlay:false,
           grid:[
-            {ko:'내일은 토요일이에요',                  ru:'Завтра суббота'},
-            {ko:'토마스는 가족들하고 같이 놀이공원에 갈 거예요',ru:'Томас с семьёй пойдёт в парк'},
-            {ko:'놀이 기구도 타고 사진도 많이 찍을 거예요',ru:'Будут кататься и много фоткаться'},
-            {ko:'그리고 솜사탕하고 아이스크림도 먹을 거예요',ru:'А ещё съедят сах. вату и мороженое'}
+            {ko:'내일은 토요일이에요',                  ru:'Завтра суббота', ru_uz:'Ertaga shanba'},
+            {ko:'토마스는 가족들하고 같이 놀이공원에 갈 거예요',ru:'Томас с семьёй пойдёт в парк', ru_uz:'Tomas oilasi bilan attraksionlar bogʻiga boradi'},
+            {ko:'놀이 기구도 타고 사진도 많이 찍을 거예요',ru:'Будут кататься и много фоткаться', ru_uz:'Attraksionlarda minishadi va koʻp suratga olishadi'},
+            {ko:'그리고 솜사탕하고 아이스크림도 먹을 거예요',ru:'А ещё съедят сах. вату и мороженое', ru_uz:'Va yana momiqqand bilan muzqaymoq yeyishadi'}
           ],
-          note:'Это шаблон рассказа о планах. Опиши свои выходные так же.' },
+          note:'Это шаблон рассказа о планах. Опиши свои выходные так же.', note_uz:'Bu rejalar haqida hikoya qilish shabloni. Oʻz dam olish kunlaringni ham shunday tasvirla.' },
         { kind:'homework' }
       ]
     },
@@ -8334,6 +8431,7 @@
       title:'Сезоны и зоопарк',
       ko:'계절·동물원',
       ru:'Сезоны, погода, зоопарк · ㅂ-неправ., -아/어서, -고 싶다, -았/었어요',
+      ru_uz:'Fasllar, ob-havo, hayvonot bogʻi · ㅂ-notoʻgʻri, -아/어서, -고 싶다, -았/었어요',
       vocab: [...L12_SEASONS, ...L12_WEATHER, ...L12_ANIMALS],
       homework: {
         tasks: [
@@ -8341,58 +8439,72 @@
           'Написать по 2 предложения на каждую из 4 грамматик (ㅂ-неправ., -아/어서, -고 싶다, -았/었어요).',
           'Расскажи про любимый сезон (почему именно он) и про последние выходные (что делал).'
         ],
+        tasks_uz: [
+          'Ishchi daftar (yuboraman).',
+          '4 ta grammatikaning (ㅂ-notoʻgʻri, -아/어서, -고 싶다, -았/었어요) har biriga 2 tadan gap yozing.',
+          'Sevimli fasling haqida (nega aynan u) va oʻtgan dam olish kunlari haqida (nima qilganing) gapirib ber.'
+        ],
         file: { label:t('ui.155'), note:t('ui.156'), url:'' }
       },
       slides: [
         { kind:'intro', title:'계절 + 동물원', sub:'Большой урок: сезоны, погода и зоопарк',
-          learn:[['🍀','4 сезона'],['🐾','10 животных'],['📚','4 грамматики']] },
+          sub_uz:'Katta dars: fasllar, ob-havo va hayvonot bogʻi',
+          learn:[['🍀','4 сезона'],['🐾','10 животных'],['📚','4 грамматики']],
+          learn_uz:[['🍀','4 ta fasl'],['🐾','10 ta hayvon'],['📚','4 ta grammatika']] },
         { kind:'words', eyebrow:'НОВЫЕ СЛОВА · 계절', title:'Сезоны и температура', items:L12_SEASONS },
         { kind:'words', eyebrow:'НОВЫЕ СЛОВА · 날씨', title:'Погода', items:L12_WEATHER },
         { kind:'words', eyebrow:'НОВЫЕ СЛОВА · 동물', title:'Зоопарк', items:L12_ANIMALS },
         { kind:'info', eyebrow:'ДИАЛОГ · ЛЮБИМЫЙ СЕЗОН', title:'무슨 계절을 좋아해요?', sub:t('ui.147'), cols:1, noPlay:false,
           grid:[
-            {ko:'제이슨은 무슨 계절을 좋아해요?',   ru:'Какой сезон любит Джейсон?'},
-            {ko:'저는 여름을 좋아해요',             ru:'Я люблю лето'},
-            {ko:'왜 여름을 좋아해요?',              ru:'Почему любишь лето?'},
-            {ko:'방학이 있어서 여름을 좋아해요',    ru:'Потому что есть каникулы'},
-            {ko:'아, 그래요? 선생님도 여름을 좋아해요', ru:'Вот как? Учитель тоже любит лето'}
+            {ko:'제이슨은 무슨 계절을 좋아해요?',   ru:'Какой сезон любит Джейсон?', ru_uz:'Jeyson qaysi faslni yaxshi koʻradi?'},
+            {ko:'저는 여름을 좋아해요',             ru:'Я люблю лето', ru_uz:'Men yozni yaxshi koʻraman'},
+            {ko:'왜 여름을 좋아해요?',              ru:'Почему любишь лето?', ru_uz:'Nega yozni yaxshi koʻrasan?'},
+            {ko:'방학이 있어서 여름을 좋아해요',    ru:'Потому что есть каникулы', ru_uz:'Chunki taʻtil bor'},
+            {ko:'아, 그래요? 선생님도 여름을 좋아해요', ru:'Вот как? Учитель тоже любит лето', ru_uz:'Shundaymi? Oʻqituvchi ham yozni yaxshi koʻradi'}
           ] },
-        { kind:'info', eyebrow:'ГРАММАТИКА · ㅂ-НЕПРАВ.', title:'ㅂ на конце основы', sub:'ㅂ → 우/오 перед -아/어요', cols:1, noPlay:true,
+        { kind:'info', eyebrow:'ГРАММАТИКА · ㅂ-НЕПРАВ.', title:'ㅂ на конце основы', sub:'ㅂ → 우/오 перед -아/어요',
+          eyebrow_uz:'GRAMMATIKA · ㅂ-NOTOʻGʻRI', title_uz:'Poya oxiridagi ㅂ', sub_uz:'ㅂ → -아/어요 dan oldin 우/오 ga aylanadi', cols:1, noPlay:true,
           grid:[
-            {ko:'춥다 → 추워요', ru:'холодно'},
-            {ko:'덥다 → 더워요', ru:'жарко'},
-            {ko:'쉽다 → 쉬워요', ru:'легко'},
-            {ko:'어렵다 → 어려워요', ru:'трудно'},
-            {ko:'돕다 → 도와요',   ru:'помогает (исключение → 오)'},
-            {ko:'⚠️ обычные',     ru:'입다→입어요, 잡다→잡아요, 좁다→좁아요'}
+            {ko:'춥다 → 추워요', ru:'холодно', ru_uz:'sovuq'},
+            {ko:'덥다 → 더워요', ru:'жарко', ru_uz:'issiq'},
+            {ko:'쉽다 → 쉬워요', ru:'легко', ru_uz:'oson'},
+            {ko:'어렵다 → 어려워요', ru:'трудно', ru_uz:'qiyin'},
+            {ko:'돕다 → 도와요',   ru:'помогает (исключение → 오)', ru_uz:'yordam beradi (istisno → 오)'},
+            {ko:'⚠️ обычные',     ru:'입다→입어요, 잡다→잡아요, 좁다→좁아요', ru_uz:'oddiylari: 입다→입어요, 잡다→잡아요, 좁다→좁아요'}
           ],
-          note:'Если основа кончается на ㅂ, то перед окончанием ㅂ превращается в 우 (или 오 для 돕다, 곱다). Несколько слов остаются обычными.' },
-        { kind:'info', eyebrow:'ПРИМЕРЫ · ПОГОДА', title:'Какая погода?', sub:t('ui.147'), cols:1, noPlay:false,
+          note:'Если основа кончается на ㅂ, то перед окончанием ㅂ превращается в 우 (или 오 для 돕다, 곱다). Несколько слов остаются обычными.',
+          note_uz:'Agar poya ㅂ bilan tugasa, qoʻshimchadan oldin ㅂ 우 ga aylanadi (yoki 돕다, 곱다 uchun 오 ga). Bir nechta soʻz oddiy holicha qoladi.' },
+        { kind:'info', eyebrow:'ПРИМЕРЫ · ПОГОДА', title:'Какая погода?', sub:t('ui.147'),
+          eyebrow_uz:'MISOLLAR · OB-HAVO', title_uz:'Ob-havo qanday?', cols:1, noPlay:false,
           grid:[
-            {ko:'날씨가 어때요?',          ru:'Какая погода?'},
-            {ko:'더워요',                    ru:'Жарко'},
-            {ko:'오늘 날씨가 추워요?',      ru:'Сегодня холодно?'},
-            {ko:'아니요, 따뜻해요',         ru:'Нет, тепло'},
-            {ko:'한국어가 어려워요?',       ru:'Корейский сложный?'},
-            {ko:'아니요, 쉬워요',            ru:'Нет, лёгкий'}
+            {ko:'날씨가 어때요?',          ru:'Какая погода?', ru_uz:'Ob-havo qanday?'},
+            {ko:'더워요',                    ru:'Жарко', ru_uz:'Issiq'},
+            {ko:'오늘 날씨가 추워요?',      ru:'Сегодня холодно?', ru_uz:'Bugun sovuqmi?'},
+            {ko:'아니요, 따뜻해요',         ru:'Нет, тепло', ru_uz:'Yoʻq, iliq'},
+            {ko:'한국어가 어려워요?',       ru:'Корейский сложный?', ru_uz:'Koreys tili qiyinmi?'},
+            {ko:'아니요, 쉬워요',            ru:'Нет, лёгкий', ru_uz:'Yoʻq, oson'}
           ] },
-        { kind:'info', eyebrow:'ГРАММАТИКА · -아/어서', title:'Причина: «потому что»', sub:'Сначала причина → потом следствие', cols:1, noPlay:true,
+        { kind:'info', eyebrow:'ГРАММАТИКА · -아/어서', title:'Причина: «потому что»', sub:'Сначала причина → потом следствие',
+          eyebrow_uz:'GRAMMATIKA · -아/어서', title_uz:'Sabab: «chunki»', sub_uz:'Avval sabab → keyin natija', cols:1, noPlay:true,
           grid:[
-            {ko:'-아/어서',  ru:'присоединяется к основе глагола (как -아/어요, только -서)'},
-            {ko:'비가 와서', ru:'потому что идёт дождь'},
-            {ko:'추워서',    ru:'потому что холодно'},
-            {ko:'더워서',    ru:'потому что жарко'}
+            {ko:'-아/어서',  ru:'присоединяется к основе глагола (как -아/어요, только -서)', ru_uz:'feʼl poyasiga qoʻshiladi (-아/어요 kabi, faqat -서)'},
+            {ko:'비가 와서', ru:'потому что идёт дождь', ru_uz:'yomgʻir yogʻayotgani uchun'},
+            {ko:'추워서',    ru:'потому что холодно', ru_uz:'sovuq boʻlgani uchun'},
+            {ko:'더워서',    ru:'потому что жарко', ru_uz:'issiq boʻlgani uchun'}
           ],
-          note:'Берёшь форму -아/어요, заменяешь 요 на 서 — и получаешь «потому что». Само следствие идёт после.' },
-        { kind:'info', eyebrow:'ПРИМЕРЫ · ПРИЧИНА', title:'Почему?', sub:t('ui.147'), cols:1, noPlay:false,
+          note:'Берёшь форму -아/어요, заменяешь 요 на 서 — и получаешь «потому что». Само следствие идёт после.',
+          note_uz:'-아/어요 shaklini olib, 요 ni 서 ga almashtirasan — «chunki» maʻnosi hosil boʻladi. Natijaning oʻzi keyin keladi.' },
+        { kind:'info', eyebrow:'ПРИМЕРЫ · ПРИЧИНА', title:'Почему?', sub:t('ui.147'),
+          eyebrow_uz:'MISOLLAR · SABAB', title_uz:'Nega?', cols:1, noPlay:false,
           grid:[
-            {ko:'비가 와서 우산을 써요',      ru:'Идёт дождь, поэтому беру зонт'},
-            {ko:'날씨가 추워서 집에 있어요',  ru:'Холодно, поэтому дома'},
-            {ko:'더워서 반바지를 입어요',     ru:'Жарко, поэтому надел шорты'},
-            {ko:'추워서 코코아를 마셔요',     ru:'Холодно, поэтому пью какао'},
-            {ko:'꽃이 많아서 봄을 좋아해요',  ru:'Много цветов, поэтому люблю весну'}
+            {ko:'비가 와서 우산을 써요',      ru:'Идёт дождь, поэтому беру зонт', ru_uz:'Yomgʻir yogʻyapti, shuning uchun soyabon olaman'},
+            {ko:'날씨가 추워서 집에 있어요',  ru:'Холодно, поэтому дома', ru_uz:'Sovuq, shuning uchun uydaman'},
+            {ko:'더워서 반바지를 입어요',     ru:'Жарко, поэтому надел шорты', ru_uz:'Issiq, shuning uchun shorty kiyaman'},
+            {ko:'추워서 코코아를 마셔요',     ru:'Холодно, поэтому пью какао', ru_uz:'Sovuq, shuning uchun kakao ichaman'},
+            {ko:'꽃이 많아서 봄을 좋아해요',  ru:'Много цветов, поэтому люблю весну', ru_uz:'Gullar koʻp, shuning uchun bahorni yaxshi koʻraman'}
           ] },
         { kind:'quiz', eyebrow:'ЗАДАНИЕ · ㅂ-НЕПРАВ.', title:'Как спрягать?',
+          eyebrow_uz:'TOPSHIRIQ · ㅂ-NOTOʻGʻRI', title_uz:'Qanday tuslanadi?',
           items:[
             {ko:'춥다',   ru:'추워요'},
             {ko:'덥다',   ru:'더워요'},
@@ -8402,47 +8514,55 @@
             {ko:'입다',   ru:'입어요'}
           ],
           pool:['추워요','더워요','쉬워요','어려워요','도와요','입어요'] },
-        { kind:'info', eyebrow:'ДИАЛОГ · ЗООПАРК', title:'지난 주말에 뭘 했어요?', sub:t('ui.147'), cols:1, noPlay:false,
+        { kind:'info', eyebrow:'ДИАЛОГ · ЗООПАРК', title:'지난 주말에 뭘 했어요?', sub:t('ui.147'),
+          eyebrow_uz:'DIALOG · HAYVONOT BOGʻI', cols:1, noPlay:false,
           grid:[
-            {ko:'지난 주말에 뭘 했어요?',       ru:'Что делал в прошлые выходные?'},
-            {ko:'아빠하고 같이 동물원에 갔어요',ru:'С папой ходил в зоопарк'},
-            {ko:'무슨 동물을 봤어요?',          ru:'Каких животных видел?'},
-            {ko:'곰하고 사자를 봤어요',         ru:'Видел медведя и льва'},
-            {ko:'재미있었어요?',                 ru:'Было весело?'},
-            {ko:'아주 재미있었어요',            ru:'Очень весело'}
+            {ko:'지난 주말에 뭘 했어요?',       ru:'Что делал в прошлые выходные?', ru_uz:'Oʻtgan dam olish kunlari nima qilding?'},
+            {ko:'아빠하고 같이 동물원에 갔어요',ru:'С папой ходил в зоопарк', ru_uz:'Dadam bilan hayvonot bogʻiga bordim'},
+            {ko:'무슨 동물을 봤어요?',          ru:'Каких животных видел?', ru_uz:'Qanday hayvonlarni koʻrding?'},
+            {ko:'곰하고 사자를 봤어요',         ru:'Видел медведя и льва', ru_uz:'Ayiq va sherni koʻrdim'},
+            {ko:'재미있었어요?',                 ru:'Было весело?', ru_uz:'Qiziqarli boʻldimi?'},
+            {ko:'아주 재미있었어요',            ru:'Очень весело', ru_uz:'Juda qiziqarli boʻldi'}
           ] },
-        { kind:'info', eyebrow:'ГРАММАТИКА · -고 싶다', title:'«Хочу что-то делать»', sub:'основа + 고 싶어요', cols:1, noPlay:true,
+        { kind:'info', eyebrow:'ГРАММАТИКА · -고 싶다', title:'«Хочу что-то делать»', sub:'основа + 고 싶어요',
+          eyebrow_uz:'GRAMMATIKA · -고 싶다', title_uz:'«Biror narsa qilishni xohlayman»', sub_uz:'poya + 고 싶어요', cols:1, noPlay:true,
           grid:[
-            {ko:'가고 싶어요', ru:'хочу пойти'},
-            {ko:'먹고 싶어요', ru:'хочу есть'},
-            {ko:'보고 싶어요', ru:'хочу видеть'},
-            {ko:'만나고 싶어요',ru:'хочу встретиться'}
+            {ko:'가고 싶어요', ru:'хочу пойти', ru_uz:'bormoqchiman'},
+            {ko:'먹고 싶어요', ru:'хочу есть', ru_uz:'yemoqchiman'},
+            {ko:'보고 싶어요', ru:'хочу видеть', ru_uz:'koʻrmoqchiman'},
+            {ko:'만나고 싶어요',ru:'хочу встретиться', ru_uz:'uchrashmoqchiman'}
           ],
-          note:'Берёшь основу глагола (без -다), прибавляешь -고 싶어요. Подходит к любому глаголу действия.' },
-        { kind:'info', eyebrow:'ПРИМЕРЫ · ХОЧУ', title:'Что хочешь?', sub:t('ui.147'), cols:1, noPlay:false,
+          note:'Берёшь основу глагола (без -다), прибавляешь -고 싶어요. Подходит к любому глаголу действия.',
+          note_uz:'Feʼl poyasini olasan (-다 siz), -고 싶어요 ni qoʻshasan. Har qanday harakat feʼliga mos keladi.' },
+        { kind:'info', eyebrow:'ПРИМЕРЫ · ХОЧУ', title:'Что хочешь?', sub:t('ui.147'),
+          eyebrow_uz:'MISOLLAR · XOHLAYMAN', title_uz:'Nima xohlaysan?', cols:1, noPlay:false,
           grid:[
-            {ko:'주말에 어디에 가고 싶어요?',  ru:'Куда хочешь в выходные?'},
-            {ko:'놀이공원에 가고 싶어요',     ru:'Хочу в парк аттракционов'},
-            {ko:'지금 뭘 먹고 싶어요?',         ru:'Что хочешь сейчас есть?'},
-            {ko:'과자를 먹고 싶어요',           ru:'Хочу снеки'},
-            {ko:'할머니를 만나고 싶어요',       ru:'Хочу встретиться с бабушкой'}
+            {ko:'주말에 어디에 가고 싶어요?',  ru:'Куда хочешь в выходные?', ru_uz:'Dam olish kunlari qayerga bormoqchisan?'},
+            {ko:'놀이공원에 가고 싶어요',     ru:'Хочу в парк аттракционов', ru_uz:'Attraksionlar bogʻiga bormoqchiman'},
+            {ko:'지금 뭘 먹고 싶어요?',         ru:'Что хочешь сейчас есть?', ru_uz:'Hozir nima yemoqchisan?'},
+            {ko:'과자를 먹고 싶어요',           ru:'Хочу снеки', ru_uz:'Gazak yemoqchiman'},
+            {ko:'할머니를 만나고 싶어요',       ru:'Хочу встретиться с бабушкой', ru_uz:'Buvim bilan uchrashmoqchiman'}
           ] },
-        { kind:'info', eyebrow:'ГРАММАТИКА · -았/었어요', title:'Прошедшее время', sub:'«сделал»', cols:1, noPlay:true,
+        { kind:'info', eyebrow:'ГРАММАТИКА · -았/었어요', title:'Прошедшее время', sub:'«сделал»',
+          eyebrow_uz:'GRAMMATIKA · -았/었어요', title_uz:'Oʻtgan zamon', sub_uz:'«qildim»', cols:1, noPlay:true,
           grid:[
-            {ko:'-았어요',   ru:'если в основе ㅏ/ㅗ: 가다 → 갔어요 · 보다 → 봤어요'},
-            {ko:'-었어요',   ru:'если другие гласные: 먹다 → 먹었어요 · 읽다 → 읽었어요'},
-            {ko:'하다 → 했어요', ru:'исключение: 공부했어요 · 운동했어요'}
+            {ko:'-았어요',   ru:'если в основе ㅏ/ㅗ: 가다 → 갔어요 · 보다 → 봤어요', ru_uz:'agar poyada ㅏ/ㅗ boʻlsa: 가다 → 갔어요 · 보다 → 봤어요'},
+            {ko:'-었어요',   ru:'если другие гласные: 먹다 → 먹었어요 · 읽다 → 읽었어요', ru_uz:'boshqa unlilarda: 먹다 → 먹었어요 · 읽다 → 읽었어요'},
+            {ko:'하다 → 했어요', ru:'исключение: 공부했어요 · 운동했어요', ru_uz:'istisno: 공부했어요 · 운동했어요'}
           ],
-          note:'Логика та же, что у -아/어요 (урок 6), только вместо 요 ставим 었어요/았어요.' },
-        { kind:'info', eyebrow:'ПРИМЕРЫ · ПРОШЕДШЕЕ', title:'Что я делал?', sub:t('ui.147'), cols:1, noPlay:false,
+          note:'Логика та же, что у -아/어요 (урок 6), только вместо 요 ставим 었어요/았어요.',
+          note_uz:'Mantiq -아/어요 (6-dars) bilan bir xil, faqat 요 oʻrniga 었어요/았어요 qoʻyamiz.' },
+        { kind:'info', eyebrow:'ПРИМЕРЫ · ПРОШЕДШЕЕ', title:'Что я делал?', sub:t('ui.147'),
+          eyebrow_uz:'MISOLLAR · OʻTGAN ZAMON', title_uz:'Men nima qildim?', cols:1, noPlay:false,
           grid:[
-            {ko:'지난 주말에 뭘 했어요?',           ru:'Что делал в выходные?'},
-            {ko:'동물원에 갔어요',                  ru:'Ходил в зоопарк'},
-            {ko:'생일에 케이크를 먹었어요',         ru:'На ДР ел торт'},
-            {ko:'주말에 수영장에서 수영을 했어요',ru:'В выходные плавал в бассейне'},
-            {ko:'어제 동생하고 텔레비전을 봤어요',ru:'Вчера с младшим смотрел ТВ'}
+            {ko:'지난 주말에 뭘 했어요?',           ru:'Что делал в выходные?', ru_uz:'Dam olish kunlari nima qilding?'},
+            {ko:'동물원에 갔어요',                  ru:'Ходил в зоопарк', ru_uz:'Hayvonot bogʻiga bordim'},
+            {ko:'생일에 케이크를 먹었어요',         ru:'На ДР ел торт', ru_uz:'Tugʻilgan kunimda tort yedim'},
+            {ko:'주말에 수영장에서 수영을 했어요',ru:'В выходные плавал в бассейне', ru_uz:'Dam olish kunlari basseynda suzdim'},
+            {ko:'어제 동생하고 텔레비전을 봤어요',ru:'Вчера с младшим смотрел ТВ', ru_uz:'Kecha ukam bilan televizor koʻrdim'}
           ] },
         { kind:'quiz', eyebrow:'ЗАДАНИЕ · ПРОШЕДШЕЕ', title:'Какое окончание?',
+          eyebrow_uz:'TOPSHIRIQ · OʻTGAN ZAMON', title_uz:'Qaysi qoʻshimcha?',
           items:[
             {ko:'가다',     ru:'갔어요'},
             {ko:'보다',     ru:'봤어요'},
@@ -8452,16 +8572,18 @@
             {ko:'공부하다', ru:'공부했어요'}
           ],
           pool:['갔어요','봤어요','먹었어요','읽었어요','했어요','공부했어요'] },
-        { kind:'info', eyebrow:'ЧТЕНИЕ · НЬЮ-ЙОРК', title:'У Билли в Нью-Йорке', sub:t('ui.147'), cols:1, noPlay:false,
+        { kind:'info', eyebrow:'ЧТЕНИЕ · НЬЮ-ЙОРК', title:'У Билли в Нью-Йорке', sub:t('ui.147'),
+          eyebrow_uz:'OʻQISH · NYU-YORK', title_uz:'Billining Nyu-Yorkdagi hayoti', cols:1, noPlay:false,
           grid:[
-            {ko:'빌리는 미국 뉴욕에 살아요',     ru:'Билли живёт в Нью-Йорке'},
-            {ko:'뉴욕은 사계절이 있어요',         ru:'В Нью-Йорке 4 сезона'},
-            {ko:'봄은 따뜻하고 여름은 더워요',  ru:'Весна тёплая, лето жаркое'},
-            {ko:'가을은 시원하고 겨울은 추워요',ru:'Осень прохладная, зима холодная'},
-            {ko:'빌리는 겨울을 좋아해요',         ru:'Билли любит зиму'},
-            {ko:'겨울에는 스케이트도 타고 눈사람도 만들어요',ru:'Зимой катается на коньках и лепит снеговиков'}
+            {ko:'빌리는 미국 뉴욕에 살아요',     ru:'Билли живёт в Нью-Йорке', ru_uz:'Billi Nyu-Yorkda yashaydi'},
+            {ko:'뉴욕은 사계절이 있어요',         ru:'В Нью-Йорке 4 сезона', ru_uz:'Nyu-Yorkda 4 ta fasl bor'},
+            {ko:'봄은 따뜻하고 여름은 더워요',  ru:'Весна тёплая, лето жаркое', ru_uz:'Bahor iliq, yoz issiq'},
+            {ko:'가을은 시원하고 겨울은 추워요',ru:'Осень прохладная, зима холодная', ru_uz:'Kuz salqin, qish sovuq'},
+            {ko:'빌리는 겨울을 좋아해요',         ru:'Билли любит зиму', ru_uz:'Billi qishni yaxshi koʻradi'},
+            {ko:'겨울에는 스케이트도 타고 눈사람도 만들어요',ru:'Зимой катается на коньках и лепит снеговиков', ru_uz:'Qishda konkida uchadi va qor odam yasaydi'}
           ],
-          note:'Это шаблон рассказа о климате. Опиши свой город так же.' },
+          note:'Это шаблон рассказа о климате. Опиши свой город так же.',
+          note_uz:'Bu iqlim haqidagi hikoyaning namunasi. Oʻz shahringni ham shunday tasvirlab ber.' },
         { kind:'homework' }
       ]
     },
@@ -8470,6 +8592,7 @@
       title:'Кухня',
       ko:'부엌',
       ru:'Кухня и гостиная · длительное -고 있다 и невозможность 못',
+      ru_uz:'Oshxona va mehmonxona · davomiy -고 있다 va imkonsizlik 못',
       vocab: [...L13_KITCHEN, ...L13_LIVING],
       homework: {
         tasks: [
@@ -8477,41 +8600,53 @@
           'Написать по 2 предложения на каждую грамматику (-고 있다 и 못).',
           'Опиши, что делает твоя семья на кухне или в гостиной прямо сейчас.'
         ],
+        tasks_uz: [
+          'Ishchi daftar (yuboraman).',
+          'Har bir grammatikaga (-고 있다 va 못) 2 tadan gap yoz.',
+          'Oilang hozir oshxonada yoki mehmonxonada nima qilayotganini tasvirlab yoz.'
+        ],
         file: { label:t('ui.157'), note:t('ui.142'), url:'' }
       },
       slides: [
         { kind:'intro', title:'부엌 — Кухня', sub:'Что делает семья прямо сейчас',
-          learn:[['🍳','21 слово'],['⏳','-고 있다'],['🚫','못']] },
+          title_uz:'부엌 — Oshxona', sub_uz:'Oila hozir nima qilyapti',
+          learn:[['🍳','21 слово'],['⏳','-고 있다'],['🚫','못']],
+          learn_uz:[['🍳','21 ta soʻz'],['⏳','-고 있다'],['🚫','못']] },
         { kind:'words', eyebrow:'НОВЫЕ СЛОВА · 부엌', title:'Кухня', items:L13_KITCHEN },
         { kind:'words', eyebrow:'НОВЫЕ СЛОВА · 거실', title:'Гостиная', items:L13_LIVING },
         { kind:'info', eyebrow:'ДИАЛОГ · ТЕЛЕФОН', title:'지금 뭘 하고 있어요?', sub:t('ui.147'), cols:1, noPlay:false,
+          eyebrow_uz:'DIALOG · TELEFON', title_uz:'지금 뭘 하고 있어요?',
           grid:[
-            {ko:'여보세요. 토마스, 지금 뭘 하고 있어요?',ru:'Алло, Томас, что сейчас делаешь?'},
-            {ko:'텔레비전을 보고 있어요',                ru:'Смотрю телевизор'},
-            {ko:'누나는 뭘 하고 있어요?',                ru:'Что делает старшая?'},
-            {ko:'아빠하고 같이 요리를 하고 있어요',     ru:'С папой готовит'},
-            {ko:'저녁을 아직 못 먹었어요?',              ru:'Ещё не поужинал?'},
-            {ko:'네, 못 먹었어요. 곧 먹을 거예요',      ru:'Нет, скоро буду'}
+            {ko:'여보세요. 토마스, 지금 뭘 하고 있어요?',ru:'Алло, Томас, что сейчас делаешь?', ru_uz:'Alyo, Tomas, hozir nima qilyapsan?'},
+            {ko:'텔레비전을 보고 있어요',                ru:'Смотрю телевизор', ru_uz:'Televizor koʻryapman'},
+            {ko:'누나는 뭘 하고 있어요?',                ru:'Что делает старшая?', ru_uz:'Opang nima qilyapti?'},
+            {ko:'아빠하고 같이 요리를 하고 있어요',     ru:'С папой готовит', ru_uz:'Dada bilan ovqat pishiryapti'},
+            {ko:'저녁을 아직 못 먹었어요?',              ru:'Ещё не поужинал?', ru_uz:'Hali kechki ovqat yemadingmi?'},
+            {ko:'네, 못 먹었어요. 곧 먹을 거예요',      ru:'Нет, скоро буду', ru_uz:'Yoʻq, yemadim. Tez orada yeyman'}
           ] },
         { kind:'info', eyebrow:'ГРАММАТИКА · -고 있다', title:'Длительное действие', sub:'«сейчас делаю»', cols:1, noPlay:true,
+          eyebrow_uz:'GRAMMATIKA · -고 있다', title_uz:'Davomiy harakat', sub_uz:'«hozir qilyapman»',
           grid:[
-            {ko:'основа + -고 있어요', ru:'действие происходит прямо сейчас'},
-            {ko:'먹고 있어요',        ru:'ест (в этот момент)'},
-            {ko:'보고 있어요',        ru:'смотрит'},
-            {ko:'하고 있어요',        ru:'делает'},
-            {ko:'요리하고 있어요',    ru:'готовит'}
+            {ko:'основа + -고 있어요', ru:'действие происходит прямо сейчас', ru_uz:'harakat aynan hozir sodir boʻlyapti'},
+            {ko:'먹고 있어요',        ru:'ест (в этот момент)', ru_uz:'yeyapti (shu payt)'},
+            {ko:'보고 있어요',        ru:'смотрит', ru_uz:'koʻryapti'},
+            {ko:'하고 있어요',        ru:'делает', ru_uz:'qilyapti'},
+            {ko:'요리하고 있어요',    ru:'готовит', ru_uz:'ovqat pishiryapti'}
           ],
-          note:'Берёшь основу глагола и прибавляешь -고 있어요. Это как английское «-ing»: «I am eating», «she is cooking».' },
+          note:'Берёшь основу глагола и прибавляешь -고 있어요. Это как английское «-ing»: «I am eating», «she is cooking».',
+          note_uz:'Feʼl negiziga -고 있어요 qoʻshasan. Bu inglizcha «-ing» kabi: «I am eating», «she is cooking».' },
         { kind:'info', eyebrow:'ПРИМЕРЫ · -고 있다', title:'Что они делают?', sub:t('ui.147'), cols:1, noPlay:false,
+          eyebrow_uz:'MISOLLAR · -고 있다', title_uz:'Ular nima qilyapti?',
           grid:[
-            {ko:'지금 뭘 하고 있어요?',     ru:'Что сейчас делаешь?'},
-            {ko:'밥을 먹고 있어요',          ru:'Я ем'},
-            {ko:'엄마는 지금 뭘 하고 있어요?',ru:'Что делает мама?'},
-            {ko:'엄마는 요리를 하고 있어요',ru:'Мама готовит'},
-            {ko:'방에서 게임을 하고 있어요',ru:'В комнате играет в игру'},
-            {ko:'설거지를 하고 있어요',     ru:'Моет посуду'}
+            {ko:'지금 뭘 하고 있어요?',     ru:'Что сейчас делаешь?', ru_uz:'Hozir nima qilyapsan?'},
+            {ko:'밥을 먹고 있어요',          ru:'Я ем', ru_uz:'Ovqat yeyapman'},
+            {ko:'엄마는 지금 뭘 하고 있어요?',ru:'Что делает мама?', ru_uz:'Onam nima qilyapti?'},
+            {ko:'엄마는 요리를 하고 있어요',ru:'Мама готовит', ru_uz:'Onam ovqat pishiryapti'},
+            {ko:'방에서 게임을 하고 있어요',ru:'В комнате играет в игру', ru_uz:'Xonada oʻyin oʻynayapti'},
+            {ko:'설거지를 하고 있어요',     ru:'Моет посуду', ru_uz:'Idish yuvyapti'}
           ] },
         { kind:'quiz', eyebrow:'ЗАДАНИЕ · -고 있다', title:'Сейчас делает',
+          eyebrow_uz:'TOPSHIRIQ · -고 있다', title_uz:'Hozir qilyapti',
           items:[
             {ko:'먹다', ru:'먹고 있어요'},
             {ko:'보다', ru:'보고 있어요'},
@@ -8522,29 +8657,34 @@
           ],
           pool:['먹고 있어요','보고 있어요','하고 있어요','읽고 있어요','마시고 있어요','놀고 있어요'] },
         { kind:'info', eyebrow:'ГРАММАТИКА · 못', title:'Не могу что-то сделать', sub:'못 + глагол', cols:1, noPlay:true,
+          eyebrow_uz:'GRAMMATIKA · 못', title_uz:'Biror narsani qila olmayman', sub_uz:'못 + feʼl',
           grid:[
-            {ko:'못 + глагол', ru:'физически не могу: 못 가요 · 못 먹어요 · 못 봐요'},
-            {ko:'못 해요',     ru:'для глаголов 하다: 운동 못 해요 · 수영 못 해요'},
-            {ko:'안 vs 못',    ru:'안 = «не делаю» (выбор), 못 = «не могу» (нет возможности)'}
+            {ko:'못 + глагол', ru:'физически не могу: 못 가요 · 못 먹어요 · 못 봐요', ru_uz:'jismonan qila olmayman: 못 가요 · 못 먹어요 · 못 봐요'},
+            {ko:'못 해요',     ru:'для глаголов 하다: 운동 못 해요 · 수영 못 해요', ru_uz:'하다 feʼllari uchun: 운동 못 해요 · 수영 못 해요'},
+            {ko:'안 vs 못',    ru:'안 = «не делаю» (выбор), 못 = «не могу» (нет возможности)', ru_uz:'안 = «qilmayman» (tanlov), 못 = «qila olmayman» (imkoni yoʻq)'}
           ],
-          note:'못 ставится перед глаголом. Используй, когда что-то мешает: «холодно — не могу плавать», «дождь — не могу пойти».' },
+          note:'못 ставится перед глаголом. Используй, когда что-то мешает: «холодно — не могу плавать», «дождь — не могу пойти».',
+          note_uz:'못 feʼldan oldin qoʻyiladi. Biror narsa xalaqit berganda ishlat: «sovuq — suza olmayman», «yomgʻir — bora olmayman».' },
         { kind:'info', eyebrow:'ПРИМЕРЫ · 못', title:'Почему не получится', sub:t('ui.147'), cols:1, noPlay:false,
+          eyebrow_uz:'MISOLLAR · 못', title_uz:'Nega boʻlmaydi',
           grid:[
-            {ko:'수영을 해요?',                ru:'Будешь плавать?'},
-            {ko:'아니요, 추워서 수영을 못 해요',ru:'Нет, холодно — не могу плавать'},
-            {ko:'오늘 동물원에 가요?',         ru:'Сегодня идёшь в зоопарк?'},
-            {ko:'아니요, 비가 와서 못 가요',   ru:'Нет, идёт дождь — не пойду'},
-            {ko:'저녁을 못 먹었어요',           ru:'Я не смог поужинать'}
+            {ko:'수영을 해요?',                ru:'Будешь плавать?', ru_uz:'Suzasanmi?'},
+            {ko:'아니요, 추워서 수영을 못 해요',ru:'Нет, холодно — не могу плавать', ru_uz:'Yoʻq, sovuq — suza olmayman'},
+            {ko:'오늘 동물원에 가요?',         ru:'Сегодня идёшь в зоопарк?', ru_uz:'Bugun hayvonot bogʻiga borasanmi?'},
+            {ko:'아니요, 비가 와서 못 가요',   ru:'Нет, идёт дождь — не пойду', ru_uz:'Yoʻq, yomgʻir yogʻyapti — bora olmayman'},
+            {ko:'저녁을 못 먹었어요',           ru:'Я не смог поужинать', ru_uz:'Kechki ovqatni yeya olmadim'}
           ] },
         { kind:'info', eyebrow:'ЧТЕНИЕ · УЖИН', title:'Сегодня 7 часов', sub:t('ui.147'), cols:1, noPlay:false,
+          eyebrow_uz:'OʻQISH · KECHKI OVQAT', title_uz:'Bugun soat 7',
           grid:[
-            {ko:'지금은 저녁 7시예요',                 ru:'Сейчас 7 вечера'},
-            {ko:'오늘은 아빠가 저녁을 준비하고 있어요',ru:'Сегодня папа готовит ужин'},
-            {ko:'민수와 민지는 아빠를 돕고 있어요',   ru:'Минсу и Минджи помогают'},
-            {ko:'민수는 식탁을 닦고, 민지는 숟가락과 젓가락을 놓고 있어요', ru:'Минсу вытирает стол, Минджи раскладывает ложки и палочки'},
-            {ko:'우리는 저녁을 맛있게 먹을 거예요',  ru:'Будем вкусно ужинать'}
+            {ko:'지금은 저녁 7시예요',                 ru:'Сейчас 7 вечера', ru_uz:'Hozir kechki soat 7'},
+            {ko:'오늘은 아빠가 저녁을 준비하고 있어요',ru:'Сегодня папа готовит ужин', ru_uz:'Bugun dada kechki ovqat tayyorlayapti'},
+            {ko:'민수와 민지는 아빠를 돕고 있어요',   ru:'Минсу и Минджи помогают', ru_uz:'Minsu va Minji dadaga yordam beryapti'},
+            {ko:'민수는 식탁을 닦고, 민지는 숟가락과 젓가락을 놓고 있어요', ru:'Минсу вытирает стол, Минджи раскладывает ложки и палочки', ru_uz:'Minsu stolni artyapti, Minji qoshiq va choʻpchalarni qoʻyyapti'},
+            {ko:'우리는 저녁을 맛있게 먹을 거예요',  ru:'Будем вкусно ужинать', ru_uz:'Mazali kechki ovqat yeymiz'}
           ],
-          note:'Шаблон рассказа «кто что делает прямо сейчас». Опиши свою семью по этому образцу.' },
+          note:'Шаблон рассказа «кто что делает прямо сейчас». Опиши свою семью по этому образцу.',
+          note_uz:'«Kim hozir nima qilyapti» hikoya namunasi. Oʻz oilangni shu namuna boʻyicha tasvirla.' },
         { kind:'homework' }
       ]
     },
@@ -8552,7 +8692,7 @@
       id:'l14-talent', num:14,
       title:'Талант',
       ko:'특기',
-      ru:'Таланты и спорт · неформальная речь -아/어 и контраст -지만',
+      ru:'Таланты и спорт · неформальная речь -아/어 и контраст -지만', ru_uz:'Iqtidor va sport · norasmiy nutq -아/어 va -지만 qarama-qarshiligi',
       vocab: [...L14_TALENT, ...L14_SPORT],
       homework: {
         tasks: [
@@ -8560,41 +8700,47 @@
           'Написать по 2 предложения на каждую грамматику (-아/어 неформ. и -지만).',
           'Расскажи про свой талант: что умеешь хорошо, а что — не очень.'
         ],
+        tasks_uz: [
+          'Ish kitobi (yuboraman).',
+          'Har bir grammatikaga (-아/어 norasmiy va -지만) 2 tadan gap yozing.',
+          'Iqtidoringiz haqida gapiring: nimani yaxshi uddalaysiz, nimani unchalik emas.'
+        ],
         file: { label:t('ui.158'), note:t('ui.142'), url:'' }
       },
       slides: [
-        { kind:'intro', title:'특기 — Талант', sub:'Что я умею и что не очень',
-          learn:[['🎨','таланты'],['🏸','спорт'],['📚','2 грамматики']] },
-        { kind:'words', eyebrow:'НОВЫЕ СЛОВА · 특기', title:'Таланты', items:L14_TALENT },
-        { kind:'words', eyebrow:'НОВЫЕ СЛОВА · 운동', title:'Спорт', items:L14_SPORT },
-        { kind:'info', eyebrow:'ДИАЛОГ · ВЕЛОСИПЕД', title:'너 자전거 잘 타?', sub:t('ui.147'), cols:1, noPlay:false,
+        { kind:'intro', title:'특기 — Талант', sub:'Что я умею и что не очень', sub_uz:'Men nimani uddalayman va nimani unchalik emas',
+          learn:[['🎨','таланты'],['🏸','спорт'],['📚','2 грамматики']],
+          learn_uz:[['🎨','iqtidorlar'],['🏸','sport'],['📚','2 ta grammatika']] },
+        { kind:'words', eyebrow:'НОВЫЕ СЛОВА · 특기', eyebrow_uz:'YANGI SOʻZLAR · 특기', title:'Таланты', title_uz:'Iqtidorlar', items:L14_TALENT },
+        { kind:'words', eyebrow:'НОВЫЕ СЛОВА · 운동', eyebrow_uz:'YANGI SOʻZLAR · 운동', title:'Спорт', title_uz:'Sport', items:L14_SPORT },
+        { kind:'info', eyebrow:'ДИАЛОГ · ВЕЛОСИПЕД', eyebrow_uz:'DIALOG · VELOSIPED', title:'너 자전거 잘 타?', title_uz:'Sen velosipedda yaxshi uchasanmi?', sub:t('ui.147'), cols:1, noPlay:false,
           grid:[
-            {ko:'영준아, 너 자전거 잘 타?',           ru:'Ёнджун, ты хорошо ездишь на велике?'},
-            {ko:'응, 잘 타. 너도 자전거 잘 타?',      ru:'Да, хорошо. А ты тоже?'},
-            {ko:'아니, 나도 잘 타고 싶지만 잘 못 타',ru:'Нет, хочу хорошо, но не умею'},
-            {ko:'나는 매일 공원에서 자전거를 탔어', ru:'Я каждый день катался в парке'},
-            {ko:'그래서 지금은 잘 타',                  ru:'Поэтому теперь езжу хорошо'},
-            {ko:'나도 자전거를 잘 타고 싶어',         ru:'Я тоже хочу научиться'}
+            {ko:'영준아, 너 자전거 잘 타?',           ru:'Ёнджун, ты хорошо ездишь на велике?', ru_uz:'Yonjun, sen velosipedda yaxshi uchasanmi?'},
+            {ko:'응, 잘 타. 너도 자전거 잘 타?',      ru:'Да, хорошо. А ты тоже?', ru_uz:'Ha, yaxshi uchaman. Sen ham uchasanmi?'},
+            {ko:'아니, 나도 잘 타고 싶지만 잘 못 타',ru:'Нет, хочу хорошо, но не умею', ru_uz:'Yoʻq, men ham yaxshi uchishni xohlayman, lekin uddalay olmayman'},
+            {ko:'나는 매일 공원에서 자전거를 탔어', ru:'Я каждый день катался в парке', ru_uz:'Men har kuni bogʻda velosipedda uchardim'},
+            {ko:'그래서 지금은 잘 타',                  ru:'Поэтому теперь езжу хорошо', ru_uz:'Shuning uchun endi yaxshi uchaman'},
+            {ko:'나도 자전거를 잘 타고 싶어',         ru:'Я тоже хочу научиться', ru_uz:'Men ham oʻrganishni xohlayman'}
           ] },
-        { kind:'info', eyebrow:'ГРАММАТИКА · -아/어', title:'Неформальная речь', sub:'как -아/어요, но без 요', cols:1, noPlay:true,
+        { kind:'info', eyebrow:'ГРАММАТИКА · -아/어', eyebrow_uz:'GRAMMATIKA · -아/어', title:'Неформальная речь', title_uz:'Norasmiy nutq', sub:'как -아/어요, но без 요', sub_uz:'-아/어요 kabi, lekin 요 siz', cols:1, noPlay:true,
           grid:[
-            {ko:'먹어요 → 먹어',     ru:'ем (сняли 요)'},
-            {ko:'가요 → 가',         ru:'иду'},
-            {ko:'그려요 → 그려',     ru:'рисую'},
-            {ko:'좋아해요 → 좋아해',ru:'нравится'},
-            {ko:'⚠️ с кем?',         ru:'только с друзьями, младшими, своими. Со старшими — всегда с 요!'}
+            {ko:'먹어요 → 먹어',     ru:'ем (сняли 요)', ru_uz:'yeyman (요 olib tashlandi)'},
+            {ko:'가요 → 가',         ru:'иду', ru_uz:'boraman'},
+            {ko:'그려요 → 그려',     ru:'рисую', ru_uz:'chizaman'},
+            {ko:'좋아해요 → 좋아해',ru:'нравится', ru_uz:'yoqadi'},
+            {ko:'⚠️ с кем?',         ru:'только с друзьями, младшими, своими. Со старшими — всегда с 요!', ru_uz:'faqat doʻstlar, kichiklar, oʻzimizniki bilan. Kattalar bilan — doim 요 bilan!'}
           ],
-          note:'Берёшь вежливую форму -아/어요 и снимаешь 요. Получается «반말» — речь между близкими. В школе и со старшими — обязательно с 요!' },
-        { kind:'info', eyebrow:'ПРИМЕРЫ · НЕФОРМ.', title:'Разговор с другом', sub:t('ui.147'), cols:1, noPlay:false,
+          note:'Берёшь вежливую форму -아/어요 и снимаешь 요. Получается «반말» — речь между близкими. В школе и со старшими — обязательно с 요!', note_uz:'Siz muloyim -아/어요 shaklini olib, 요 ni tashlaysiz. Natijada «반말» — yaqinlar orasidagi nutq hosil boʻladi. Maktabda va kattalar bilan — albatta 요 bilan!' },
+        { kind:'info', eyebrow:'ПРИМЕРЫ · НЕФОРМ.', eyebrow_uz:'MISOLLAR · NORASMIY', title:'Разговор с другом', title_uz:'Doʻst bilan suhbat', sub:t('ui.147'), cols:1, noPlay:false,
           grid:[
-            {ko:'민수야, 지금 뭘 먹어?',  ru:'Минсу, что сейчас ешь?'},
-            {ko:'빵 먹어',                    ru:'Ем хлеб'},
-            {ko:'어디에서 그림을 그려?',    ru:'Где рисуешь?'},
-            {ko:'교실에서 그림을 그려',    ru:'Рисую в классе'},
-            {ko:'너 노래 잘해?',             ru:'Ты хорошо поёшь?'},
-            {ko:'응, 나는 노래를 좋아해',  ru:'Да, я люблю петь'}
+            {ko:'민수야, 지금 뭘 먹어?',  ru:'Минсу, что сейчас ешь?', ru_uz:'Minsu, hozir nima yeyapsan?'},
+            {ko:'빵 먹어',                    ru:'Ем хлеб', ru_uz:'Non yeyapman'},
+            {ko:'어디에서 그림을 그려?',    ru:'Где рисуешь?', ru_uz:'Qayerda rasm chizyapsan?'},
+            {ko:'교실에서 그림을 그려',    ru:'Рисую в классе', ru_uz:'Sinfda rasm chizyapman'},
+            {ko:'너 노래 잘해?',             ru:'Ты хорошо поёшь?', ru_uz:'Sen yaxshi qoʻshiq aytasanmi?'},
+            {ko:'응, 나는 노래를 좋아해',  ru:'Да, я люблю петь', ru_uz:'Ha, men qoʻshiq aytishni yaxshi koʻraman'}
           ] },
-        { kind:'quiz', eyebrow:'ЗАДАНИЕ · -아/어', title:'Вежливая → неформ.',
+        { kind:'quiz', eyebrow:'ЗАДАНИЕ · -아/어', eyebrow_uz:'TOPSHIRIQ · -아/어', title:'Вежливая → неформ.', title_uz:'Muloyim → norasmiy',
           items:[
             {ko:'먹어요', ru:'먹어'},
             {ko:'가요',   ru:'가'},
@@ -8604,24 +8750,24 @@
             {ko:'타요',   ru:'타'}
           ],
           pool:['먹어','가','그려','해','좋아','타'] },
-        { kind:'info', eyebrow:'ГРАММАТИКА · -지만', title:'Но / однако', sub:'основа + 지만', cols:1, noPlay:true,
+        { kind:'info', eyebrow:'ГРАММАТИКА · -지만', eyebrow_uz:'GRAMMATIKA · -지만', title:'Но / однако', title_uz:'Ammo / lekin', sub:'основа + 지만', sub_uz:'oʻzak + 지만', cols:1, noPlay:true,
           grid:[
-            {ko:'-지만',               ru:'присоединяется к основе глагола или прилагательного'},
-            {ko:'잘하다 → 잘하지만',  ru:'умею хорошо, но …'},
-            {ko:'있다 → 있지만',       ru:'есть, но …'},
-            {ko:'좋다 → 좋지만',       ru:'хорошо, но …'},
-            {ko:'더웠다 → 더웠지만',  ru:'было жарко, но …'}
+            {ko:'-지만',               ru:'присоединяется к основе глагола или прилагательного', ru_uz:'feʼl yoki sifat oʻzagiga qoʻshiladi'},
+            {ko:'잘하다 → 잘하지만',  ru:'умею хорошо, но …', ru_uz:'yaxshi uddalayman, lekin …'},
+            {ko:'있다 → 있지만',       ru:'есть, но …', ru_uz:'bor, lekin …'},
+            {ko:'좋다 → 좋지만',       ru:'хорошо, но …', ru_uz:'yaxshi, lekin …'},
+            {ko:'더웠다 → 더웠지만',  ru:'было жарко, но …', ru_uz:'issiq edi, lekin …'}
           ],
-          note:'-지만 значит «но». Ставится после основы глагола/прилагательного и соединяет две противоположные мысли. Работает и в настоящем, и в прошедшем времени.' },
-        { kind:'info', eyebrow:'ПРИМЕРЫ · -지만', title:'Контраст', sub:t('ui.147'), cols:1, noPlay:false,
+          note:'-지만 значит «но». Ставится после основы глагола/прилагательного и соединяет две противоположные мысли. Работает и в настоящем, и в прошедшем времени.', note_uz:'-지만 «lekin» degan maʼnoni bildiradi. Feʼl/sifat oʻzagidan keyin qoʻyilib, ikkita qarama-qarshi fikrni bogʻlaydi. Ham hozirgi, ham oʻtgan zamonda ishlaydi.' },
+        { kind:'info', eyebrow:'ПРИМЕРЫ · -지만', eyebrow_uz:'MISOLLAR · -지만', title:'Контраст', title_uz:'Qarama-qarshilik', sub:t('ui.147'), cols:1, noPlay:false,
           grid:[
-            {ko:'나는 당근을 좋아하지만 동생은 안 좋아해', ru:'Я люблю морковь, а младший — нет'},
-            {ko:'어제는 더웠지만 오늘은 안 더워요',         ru:'Вчера было жарко, сегодня нет'},
-            {ko:'언니는 노래를 잘하지만 나는 잘 못해',   ru:'Сестра поёт хорошо, а я — нет'},
-            {ko:'컴퓨터는 있지만 텔레비전은 없어',          ru:'Компьютер есть, а телевизора нет'},
-            {ko:'수요일에는 태권도를 하지만 금요일에는 안 해', ru:'В среду — тхэквондо, в пятницу — нет'}
+            {ko:'나는 당근을 좋아하지만 동생은 안 좋아해', ru:'Я люблю морковь, а младший — нет', ru_uz:'Men sabzini yaxshi koʻraman, lekin ukam yoqtirmaydi'},
+            {ko:'어제는 더웠지만 오늘은 안 더워요',         ru:'Вчера было жарко, сегодня нет', ru_uz:'Kecha issiq edi, bugun issiq emas'},
+            {ko:'언니는 노래를 잘하지만 나는 잘 못해',   ru:'Сестра поёт хорошо, а я — нет', ru_uz:'Opam qoʻshiqni yaxshi aytadi, lekin men uddalay olmayman'},
+            {ko:'컴퓨터는 있지만 텔레비전은 없어',          ru:'Компьютер есть, а телевизора нет', ru_uz:'Kompyuter bor, lekin televizor yoʻq'},
+            {ko:'수요일에는 태권도를 하지만 금요일에는 안 해', ru:'В среду — тхэквондо, в пятницу — нет', ru_uz:'Chorshanba kuni taekvondo bor, juma kuni yoʻq'}
           ] },
-        { kind:'quiz', eyebrow:'ЗАДАНИЕ · -지만', title:'Добавь «но»',
+        { kind:'quiz', eyebrow:'ЗАДАНИЕ · -지만', eyebrow_uz:'TOPSHIRIQ · -지만', title:'Добавь «но»', title_uz:'«Lekin»ni qoʻsh',
           items:[
             {ko:'잘하다', ru:'잘하지만'},
             {ko:'있다',   ru:'있지만'},
@@ -8649,6 +8795,7 @@
       title:'Корейская еда',
       ko:'한국 음식',
       ru:'8 корейских блюд и вкус · отрицание -지 않다 и приглашение -자',
+      ru_uz:'8 ta koreys taomi va taʻm · -지 않다 inkori va -자 taklifi',
       vocab: [...L15_FOOD, ...L15_TASTE],
       homework: {
         tasks: [
@@ -8656,41 +8803,46 @@
           'Написать по 2 предложения на каждую грамматику (-지 않다 и -자).',
           'Расскажи: какое блюдо любишь, где ел, с кем и как было на вкус.'
         ],
+        tasks_uz: [
+          'Vorkbuk (yuboraman).',
+          'Har bir grammatikaga (-지 않다 va -자) 2 tadan gap yoz.',
+          'Soʻzlab ber: qaysi taomni yoqtirasan, qayerda yeding, kim bilan va taʻmi qanday edi.'
+        ],
         file: { label:t('ui.159'), note:t('ui.142'), url:'' }
       },
       slides: [
-        { kind:'intro', title:'한국 음식 — Корейская еда', sub:'8 блюд, вкусы и рекомендации',
-          learn:[['🍱','8 блюд'],['😋','вкусы'],['📚','2 грамматики']] },
-        { kind:'words', eyebrow:'НОВЫЕ СЛОВА · 음식', title:'Корейские блюда', items:L15_FOOD },
-        { kind:'words', eyebrow:'НОВЫЕ СЛОВА · 맛', title:'Вкус и место', items:L15_TASTE },
-        { kind:'info', eyebrow:'ДИАЛОГ · УЖИН', title:'오늘 저녁에 뭐 먹어요?', sub:t('ui.147'), cols:1, noPlay:false,
+        { kind:'intro', title:'한국 음식 — Корейская еда', title_uz:'한국 음식 — Koreys taomlari', sub:'8 блюд, вкусы и рекомендации', sub_uz:'8 ta taom, taʻmlar va tavsiyalar',
+          learn:[['🍱','8 блюд'],['😋','вкусы'],['📚','2 грамматики']], learn_uz:[['🍱','8 ta taom'],['😋','taʻmlar'],['📚','2 ta grammatika']] },
+        { kind:'words', eyebrow:'НОВЫЕ СЛОВА · 음식', eyebrow_uz:'YANGI SOʻZLAR · 음식', title:'Корейские блюда', title_uz:'Koreys taomlari', items:L15_FOOD },
+        { kind:'words', eyebrow:'НОВЫЕ СЛОВА · 맛', eyebrow_uz:'YANGI SOʻZLAR · 맛', title:'Вкус и место', title_uz:'Taʻm va joy', items:L15_TASTE },
+        { kind:'info', eyebrow:'ДИАЛОГ · УЖИН', eyebrow_uz:'DIALOG · KECHKI OVQAT', title:'오늘 저녁에 뭐 먹어요?', sub:t('ui.147'), cols:1, noPlay:false,
           grid:[
-            {ko:'엄마, 오늘 저녁에 뭐 먹을 거예요?', ru:'Мама, что сегодня на ужин?'},
-            {ko:'지연이는 뭐 먹고 싶어?',               ru:'Чиён, что хочешь поесть?'},
-            {ko:'불고기를 먹고 싶어요',                 ru:'Хочу пулькоги'},
-            {ko:'불고기는 맵지 않아요',                 ru:'Пулькоги не острое'},
-            {ko:'그래. 오늘은 불고기를 먹자',          ru:'Хорошо. Давай сегодня пулькоги'},
-            {ko:'네, 좋아요. 빨리 먹고 싶어요',        ru:'Да, отлично. Скорей бы поесть'}
+            {ko:'엄마, 오늘 저녁에 뭐 먹을 거예요?', ru:'Мама, что сегодня на ужин?', ru_uz:'Onajon, bugun kechqurun nima yeymiz?'},
+            {ko:'지연이는 뭐 먹고 싶어?',               ru:'Чиён, что хочешь поесть?', ru_uz:'Chiyon, nima yegim keladi?'},
+            {ko:'불고기를 먹고 싶어요',                 ru:'Хочу пулькоги', ru_uz:'Pulgogi yegim keladi'},
+            {ko:'불고기는 맵지 않아요',                 ru:'Пулькоги не острое', ru_uz:'Pulgogi achchiq emas'},
+            {ko:'그래. 오늘은 불고기를 먹자',          ru:'Хорошо. Давай сегодня пулькоги', ru_uz:'Xoʻp boʻladi. Bugun pulgogi yeylik'},
+            {ko:'네, 좋아요. 빨리 먹고 싶어요',        ru:'Да, отлично. Скорей бы поесть', ru_uz:'Ha, zoʻr. Tezroq yegim kelyapti'}
           ] },
-        { kind:'info', eyebrow:'ГРАММАТИКА · -지 않다', title:'Отрицание', sub:'основа + 지 않아요', cols:1, noPlay:true,
+        { kind:'info', eyebrow:'ГРАММАТИКА · -지 않다', eyebrow_uz:'GRAMMATIKA · -지 않다', title:'Отрицание', title_uz:'Inkor shakli', sub:'основа + 지 않아요', sub_uz:'negiz + 지 않아요', cols:1, noPlay:true,
           grid:[
-            {ko:'-지 않다',             ru:'вежливое «не»: к основе глагола/прилагательного'},
-            {ko:'가다 → 가지 않아요', ru:'не иду'},
-            {ko:'먹다 → 먹지 않아요', ru:'не ем'},
-            {ko:'맵다 → 맵지 않아요', ru:'не острое'},
-            {ko:'안 vs -지 않다',       ru:'안 стоит перед глаголом, -지 않다 — после основы. Смысл тот же'}
+            {ko:'-지 않다',             ru:'вежливое «не»: к основе глагола/прилагательного', ru_uz:'muloyim "emas/yoʻq": feʼl/sifat negiziga qoʻshiladi'},
+            {ko:'가다 → 가지 않아요', ru:'не иду', ru_uz:'bormayman'},
+            {ko:'먹다 → 먹지 않아요', ru:'не ем', ru_uz:'yemayman'},
+            {ko:'맵다 → 맵지 않아요', ru:'не острое', ru_uz:'achchiq emas'},
+            {ko:'안 vs -지 않다',       ru:'안 стоит перед глаголом, -지 않다 — после основы. Смысл тот же', ru_uz:'안 feʼldan oldin turadi, -지 않다 — negizdan keyin. Maʼnosi bir xil'}
           ],
-          note:'Берёшь основу глагола + 지 않아요. Это вежливый универсальный способ сказать «не». «안 가요» и «가지 않아요» значат одно и то же.' },
-        { kind:'info', eyebrow:'ПРИМЕРЫ · ОТРИЦАНИЕ', title:'Чего не делаю', sub:t('ui.147'), cols:1, noPlay:false,
+          note:'Берёшь основу глагола + 지 않아요. Это вежливый универсальный способ сказать «не». «안 가요» и «가지 않아요» значат одно и то же.', note_uz:'Feʼl negiziga 지 않아요 qoʻshiladi. Bu "emas/yoʻq" deyishning muloyim va universal usuli. "안 가요" va "가지 않아요" bir xil maʻnoni bildiradi.' },
+        { kind:'info', eyebrow:'ПРИМЕРЫ · ОТРИЦАНИЕ', eyebrow_uz:'MISOLLAR · INKOR', title:'Чего не делаю', title_uz:'Nima qilmayman', sub:t('ui.147'), cols:1, noPlay:false,
           grid:[
-            {ko:'오늘 학교에 가요?',          ru:'Сегодня идёшь в школу?'},
-            {ko:'아니요, 학교에 가지 않아요',ru:'Нет, в школу не иду'},
-            {ko:'비빔밥이 매워요?',           ru:'Пибимпап острый?'},
-            {ko:'아니요, 맵지 않아요',         ru:'Нет, не острый'},
-            {ko:'지금 책을 읽어요?',           ru:'Сейчас читаешь книгу?'},
-            {ko:'아니요, 읽지 않아요',         ru:'Нет, не читаю'}
+            {ko:'오늘 학교에 가요?',          ru:'Сегодня идёшь в школу?', ru_uz:'Bugun maktabga borasanmi?'},
+            {ko:'아니요, 학교에 가지 않아요',ru:'Нет, в школу не иду', ru_uz:'Yoʻq, maktabga bormayman'},
+            {ko:'비빔밥이 매워요?',           ru:'Пибимпап острый?', ru_uz:'Bibimbap achchiqmi?'},
+            {ko:'아니요, 맵지 않아요',         ru:'Нет, не острый', ru_uz:'Yoʻq, achchiq emas'},
+            {ko:'지금 책을 읽어요?',           ru:'Сейчас читаешь книгу?', ru_uz:'Hozir kitob oʻqiyapsanmi?'},
+            {ko:'아니요, 읽지 않아요',         ru:'Нет, не читаю', ru_uz:'Yoʻq, oʻqimayapman'}
           ] },
-        { kind:'quiz', eyebrow:'ЗАДАНИЕ · -지 않다', title:'Сделай отрицание',
+        { kind:'quiz', eyebrow:'ЗАДАНИЕ · -지 않다', eyebrow_uz:'TOPSHIRIQ · -지 않다', title:'Сделай отрицание', title_uz:'Inkor shaklini hosil qil',
           items:[
             {ko:'가다', ru:'가지 않아요'},
             {ko:'먹다', ru:'먹지 않아요'},
@@ -8700,25 +8852,25 @@
             {ko:'좋다', ru:'좋지 않아요'}
           ],
           pool:['가지 않아요','먹지 않아요','맵지 않아요','읽지 않아요','타지 않아요','좋지 않아요'] },
-        { kind:'info', eyebrow:'ГРАММАТИКА · -자', title:'Давай сделаем!', sub:'основа + 자', cols:1, noPlay:true,
+        { kind:'info', eyebrow:'ГРАММАТИКА · -자', eyebrow_uz:'GRAMMATIKA · -자', title:'Давай сделаем!', title_uz:'Qani, qilaylik!', sub:'основа + 자', sub_uz:'negiz + 자', cols:1, noPlay:true,
           grid:[
-            {ko:'-자',               ru:'приглашение «давай»: к основе глагола'},
-            {ko:'가다 → 가자',      ru:'пойдём!'},
-            {ko:'먹다 → 먹자',      ru:'давай поедим!'},
-            {ko:'읽다 → 읽자',      ru:'давай почитаем!'},
-            {ko:'⚠️ с кем?',         ru:'только с друзьями. Со старшими — вежливое -아/어요'}
+            {ko:'-자',               ru:'приглашение «давай»: к основе глагола', ru_uz:'"qani" taklifi: feʼl negiziga qoʻshiladi'},
+            {ko:'가다 → 가자',      ru:'пойдём!', ru_uz:'ketdik!'},
+            {ko:'먹다 → 먹자',      ru:'давай поедим!', ru_uz:'qani, yeylik!'},
+            {ko:'읽다 → 읽자',      ru:'давай почитаем!', ru_uz:'qani, oʻqiylik!'},
+            {ko:'⚠️ с кем?',         ru:'только с друзьями. Со старшими — вежливое -아/어요', ru_uz:'faqat doʻstlar bilan. Kattalarga — muloyim -아/어요'}
           ],
-          note:'-자 — неформальное приглашение «давай вместе». Со старшими так не говорят, там нужна вежливая форма. Между близкими — самое то.' },
-        { kind:'info', eyebrow:'ПРИМЕРЫ · -자', title:'Давай вместе!', sub:t('ui.147'), cols:1, noPlay:false,
+          note:'-자 — неформальное приглашение «давай вместе». Со старшими так не говорят, там нужна вежливая форма. Между близкими — самое то.', note_uz:'-자 — "birga qilaylik" degan norasmiy taklif. Kattalarga bunday deyilmaydi, u yerda muloyim shakl kerak. Yaqinlar orasida — aynan shu.' },
+        { kind:'info', eyebrow:'ПРИМЕРЫ · -자', eyebrow_uz:'MISOLLAR · -자', title:'Давай вместе!', title_uz:'Qani, birga!', sub:t('ui.147'), cols:1, noPlay:false,
           grid:[
-            {ko:'토마스, 우리 같이 축구하자',       ru:'Томас, давай вместе в футбол!'},
-            {ko:'그래, 좋아',                          ru:'Хорошо, давай'},
-            {ko:'레베카, 엄마하고 같이 책을 읽자', ru:'Ребекка, давай с мамой почитаем'},
-            {ko:'네, 알겠어요',                        ru:'Да, поняла'},
-            {ko:'오늘 학교에 같이 가자',              ru:'Давай сегодня вместе в школу!'},
-            {ko:'우리 같이 사진을 찍자',             ru:'Давай вместе сфотографируемся!'}
+            {ko:'토마스, 우리 같이 축구하자',       ru:'Томас, давай вместе в футбол!', ru_uz:'Tomas, keling, birga futbol oʻynaylik!'},
+            {ko:'그래, 좋아',                          ru:'Хорошо, давай', ru_uz:'Xoʻp, keling'},
+            {ko:'레베카, 엄마하고 같이 책을 읽자', ru:'Ребекка, давай с мамой почитаем', ru_uz:'Rebekka, onam bilan birga kitob oʻqiylik'},
+            {ko:'네, 알겠어요',                        ru:'Да, поняла', ru_uz:'Xoʻp, tushundim'},
+            {ko:'오늘 학교에 같이 가자',              ru:'Давай сегодня вместе в школу!', ru_uz:'Bugun birga maktabga boraylik!'},
+            {ko:'우리 같이 사진을 찍자',             ru:'Давай вместе сфотографируемся!', ru_uz:'Keling, birga surat tushaylik!'}
           ] },
-        { kind:'quiz', eyebrow:'ЗАДАНИЕ · -자', title:'Давай … !',
+        { kind:'quiz', eyebrow:'ЗАДАНИЕ · -자', eyebrow_uz:'TOPSHIRIQ · -자', title:'Давай … !', title_uz:'Qani …!',
           items:[
             {ko:'가다', ru:'가자'},
             {ko:'먹다', ru:'먹자'},
@@ -8728,16 +8880,16 @@
             {ko:'하다', ru:'하자'}
           ],
           pool:['가자','먹자','읽자','타자','찍자','하자'] },
-        { kind:'info', eyebrow:'ЧТЕНИЕ · РЕСТОРАН', title:'한국 식당에서', sub:t('ui.147'), cols:1, noPlay:false,
+        { kind:'info', eyebrow:'ЧТЕНИЕ · РЕСТОРАН', eyebrow_uz:'OʻQISH · RESTORAN', title:'한국 식당에서', sub:t('ui.147'), cols:1, noPlay:false,
           grid:[
-            {ko:'오늘 우리 가족은 한국 식당에 갈 거예요', ru:'Сегодня наша семья пойдёт в кор. ресторан'},
-            {ko:'한국 식당에는 한국 음식이 많이 있어요',  ru:'В нём много корейских блюд'},
-            {ko:'불고기, 갈비, 비빔밥이 유명해요',          ru:'Пулькоги, кальби, пибимпап — известные'},
-            {ko:'나와 동생은 불고기하고 갈비를 좋아해요', ru:'Я и младший любим пулькоги и кальби'},
-            {ko:'엄마와 아빠는 비빔밥을 먹을 거예요',     ru:'Мама и папа возьмут пибимпап'},
-            {ko:'비빔밥은 좀 매워서 나는 좋아하지 않아요',ru:'Пибимпап острый, поэтому мне не нравится'}
+            {ko:'오늘 우리 가족은 한국 식당에 갈 거예요', ru:'Сегодня наша семья пойдёт в кор. ресторан', ru_uz:'Bugun oilamiz koreys restoraniga boradi'},
+            {ko:'한국 식당에는 한국 음식이 많이 있어요',  ru:'В нём много корейских блюд', ru_uz:'U yerda koreys taomlari koʻp'},
+            {ko:'불고기, 갈비, 비빔밥이 유명해요',          ru:'Пулькоги, кальби, пибимпап — известные', ru_uz:'Pulgogi, kalbi, bibimbap — mashhur'},
+            {ko:'나와 동생은 불고기하고 갈비를 좋아해요', ru:'Я и младший любим пулькоги и кальби', ru_uz:'Men va inim pulgogi bilan kalbini yoqtiramiz'},
+            {ko:'엄마와 아빠는 비빔밥을 먹을 거예요',     ru:'Мама и папа возьмут пибимпап', ru_uz:'Onam va otam bibimbap yeydi'},
+            {ko:'비빔밥은 좀 매워서 나는 좋아하지 않아요',ru:'Пибимпап острый, поэтому мне не нравится', ru_uz:'Bibimbap biroz achchiq, shuning uchun menga yoqmaydi'}
           ],
-          note:'Шаблон рассказа о походе в ресторан. Используй -지 않다 для отрицания и называй любимые блюда.' },
+          note:'Шаблон рассказа о походе в ресторан. Используй -지 않다 для отрицания и называй любимые блюда.', note_uz:'Restoranga borish haqida hikoya namunasi. Inkor uchun -지 않다 dan foydalan va sevimli taomlaringni ayt.' },
         { kind:'homework' }
       ]
     }
