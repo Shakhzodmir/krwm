@@ -3917,6 +3917,11 @@
     if (!u || u.isAdmin || u.guest) return;
     const uid = firebaseUserId();
     if (!uid || uid === 'guest') return;
+    // Гейт от гонки: не перезаписывать облако, пока не прочитан его ПЕРВЫЙ снапшот по
+    // этому ключу (см. _cloudLoadedKeys). Иначе дефолтная стата свежего устройства
+    // (xp:0) успевает затереть реальный прогресс до его загрузки. Значение не теряется:
+    // при загрузке облака merge объединит локальное с облачным и запушит результат.
+    if (USTORE_SYNC_KEYS.includes(k) && !_cloudLoadedKeys.has(k)) return;
     _userFieldPending[k] = v; // remember latest so a flush can write it immediately
     if (_userFieldDebounce[k]) clearTimeout(_userFieldDebounce[k]);
     _userFieldDebounce[k] = setTimeout(() => {
@@ -3951,9 +3956,15 @@
     };
   }
   let _userListeners = [];
+  // Ключи, для которых уже прочитан ПЕРВЫЙ облачный снапшот. Пока ключа тут нет,
+  // локальные значения НЕ пишутся в облако (см. pushUserField) — иначе дефолтная
+  // стата свежего устройства (xp:0) успевает затереть реальный прогресс до загрузки.
+  let _cloudLoadedKeys = new Set();
+  let _fbConnected = false;           // реальное состояние связи (.info/connected)
   function detachUserListeners() {
     _userListeners.forEach(off => { try { off(); } catch (_) {} });
     _userListeners = [];
+    _cloudLoadedKeys = new Set();   // новая личность/переподключение → снова ждём снапшот
   }
   // Cloud-sync gating for the profile. While the first snapshot is in flight we
   // show a skeleton instead of a misleading "new user / 0 achievements" state,
@@ -4036,7 +4047,15 @@
     // Expect a cloud snapshot shortly; show skeletons until it lands (≤4s safety net).
     _cloudSyncPending = true;
     if (_cloudSyncTimeout) clearTimeout(_cloudSyncTimeout);
-    _cloudSyncTimeout = setTimeout(() => { _cloudSyncPending = false; syncAchievementsStrip(); }, 4000);
+    _cloudSyncTimeout = setTimeout(() => {
+      _cloudSyncPending = false;
+      // Снимаем push-гейт по таймауту ТОЛЬКО при реальном офлайне — тогда снапшот не
+      // придёт, но локальный прогресс должен сохраняться (уйдёт в очередь SDK, merge
+      // согласует при возврате связи). Если же мы онлайн, но снапшот запаздывает —
+      // НЕ открываем гейт: ждём настоящие данные, чтобы не пушить пустое поверх облака.
+      if (!_fbConnected) USTORE_SYNC_KEYS.forEach(k => _cloudLoadedKeys.add(k));
+      syncAchievementsStrip();
+    }, 4000);
     syncAchievementsStrip();
     USTORE_SYNC_KEYS.forEach(k => {
       const ref = _db.ref(`users/${uid}/${k}`);
@@ -4046,6 +4065,7 @@
         // First fire: if cloud empty, seed from local
         if (firstFire) {
           firstFire = false;
+          _cloudLoadedKeys.add(k);   // облако по этому ключу прочитано → пуши разрешены
           if (val === null || val === undefined) {
             const local = UStore.get(k, null);
             if (local !== null && local !== undefined) pushUserField(k, local);
@@ -4100,6 +4120,51 @@
             if (JSON.stringify(merged) !== JSON.stringify(val)) {
               _skipCloudPush = false;
               pushUserField('stats', merged);
+              _skipCloudPush = true;
+            }
+          } else if (k === 'unlocks') {
+            // Merge = union of ids. Иначе живой listener на втором устройстве/вкладке
+            // мог перетереть свежеразблокированную ачивку старым облачным снапшотом.
+            const before = UStore.get('unlocks', []) || [];
+            const merged = [...new Set([...(Array.isArray(before) ? before : []), ...value])];
+            value = merged;
+            UStore.set(k, value);
+            if (JSON.stringify(merged) !== JSON.stringify(val)) {
+              _skipCloudPush = false;
+              pushUserField('unlocks', merged);
+              _skipCloudPush = true;
+            }
+          } else if (k === 'lessonProgress' || k.startsWith('lessonProgress_m')) {
+            // Merge = union пройденных уроков. Без этого стале-снапшот из облака мог
+            // «забыть» урок, только что пройденный локально (до истечения debounce).
+            const before = UStore.get(k, null) || {};
+            const beforeCompleted = Array.isArray(before.completed) ? before.completed : [];
+            const cloudCompleted = Array.isArray(value.completed) ? value.completed : [];
+            const mergedCompleted = [...new Set([...beforeCompleted, ...cloudCompleted])];
+            let merged = { ...value, completed: mergedCompleted };
+            // Не откатывать «текущий урок» назад на уже пройденный локально.
+            if (before.current && !mergedCompleted.includes(before.current) && merged.current !== before.current) {
+              merged.current = before.current;
+            }
+            value = merged;
+            UStore.set(k, value);
+            if (JSON.stringify(merged) !== JSON.stringify(val)) {
+              _skipCloudPush = false;
+              pushUserField(k, merged);
+              _skipCloudPush = true;
+            }
+          } else if (k === 'bestScores') {
+            // Merge = по каждой игре берём больший результат, а не тот, что «победил» по времени.
+            const before = UStore.get('bestScores', {}) || {};
+            const merged = { ...value };
+            Object.keys(before).forEach(gk => {
+              if ((Number(before[gk]) || 0) > (Number(merged[gk]) || 0)) merged[gk] = before[gk];
+            });
+            value = merged;
+            UStore.set(k, value);
+            if (JSON.stringify(merged) !== JSON.stringify(val)) {
+              _skipCloudPush = false;
+              pushUserField('bestScores', merged);
               _skipCloudPush = true;
             }
           } else { UStore.set(k, value); }
@@ -4391,6 +4456,9 @@
   function initFirebaseSync() {
     if (typeof _db === 'undefined') return;
     applyUStoreCloudSync();
+    // Реальное состояние связи с Firebase — используется, чтобы снимать push-гейт по
+    // таймауту ТОЛЬКО при настоящем офлайне (на медленной онлайн-сети ждём снапшот).
+    try { _db.ref('.info/connected').on('value', s => { _fbConnected = !!s.val(); }); } catch (_) {}
     SHARED_KEYS.forEach(key => {
       let firstFire = true;
       _db.ref('shared/' + key).on('value', snap => {
@@ -6888,9 +6956,16 @@
     const u = Store.get('user');
     if (!u) return 'guest';
     if (u.isAdmin) return `admin_${(u.email || u.name).toLowerCase()}`;
-    if (u.email) return `user_${u.email.toLowerCase()}`;
+    // Email — ключ хранилища. Если локальный объект временно потерял его (синк/вход
+    // без email), восстанавливаем из активной Firebase-сессии, чтобы ключ НЕ съехал
+    // на user_<имя> — иначе весь прогресс ученика «исчезает» под другим ключом.
+    let email = u.email;
+    if (!email && !u.guest && typeof _auth !== 'undefined' && _auth.currentUser && _auth.currentUser.email) {
+      email = _auth.currentUser.email;
+    }
+    if (email) return `user_${email.toLowerCase()}`;
     if (u.guest) return 'guest';
-    return `user_${u.name.toLowerCase()}`;
+    return `user_${(u.name || '').toLowerCase()}`;
   }
   function uKey(name) { return `u_${currentUserId()}_${name}`; }
   const UStore = {
