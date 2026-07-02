@@ -8,7 +8,7 @@ importScripts('https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js
 importScripts('https://www.gstatic.com/firebasejs/10.12.2/firebase-messaging-compat.js');
 
 // ───────────────────────── PWA APP-SHELL CACHE ─────────────────────────
-const CACHE_VERSION = 'madie-v2';
+const CACHE_VERSION = 'madie-v3';
 const SHELL = [
   './',
   './index.html',
@@ -39,32 +39,42 @@ self.addEventListener('fetch', e => {
   if (req.method !== 'GET') return;
   const url = new URL(req.url);
   if (url.origin !== self.location.origin) return;             // CDN/Firebase — мимо
-  if (/\.(mp3|m4a|mp4|pdf)$/i.test(url.pathname)) return;       // тяжёлые медиа не кэшируем
-
-  const isCode = /\/(index\.html)?$|\.(js|css|json)$/i.test(url.pathname);
-  if (isCode) {
-    // network-first: всегда свежий код, кэш — запасной вариант для офлайна
-    e.respondWith(
-      fetch(req).then(res => {
-        if (res && res.ok) {
-          const copy = res.clone();
-          caches.open(CACHE_VERSION).then(c => c.put(req, copy));
-        }
-        return res;
-      }).catch(() => caches.match(req))
-    );
+  if (/\.(mp3|m4a|mp4|pdf)$/i.test(url.pathname)) {
+    // Экзаменационные аудио TOPIK огромные (десятки МБ) и разовые — не кэшируем,
+    // забили бы Cache Storage без пользы. Фоновая музыка для занятий (assets/music/)
+    // маленькая (~3МБ/трек) и крутится в цикле весь сеанс — её кэшируем как картинки.
+    if (!/\/assets\/music\//i.test(url.pathname)) return;
   } else {
-    // cache-first: картинки/шрифты не меняются — мгновенно из кэша
-    e.respondWith(
-      caches.match(req).then(hit => hit || fetch(req).then(res => {
-        if (res && res.ok) {
-          const copy = res.clone();
-          caches.open(CACHE_VERSION).then(c => c.put(req, copy));
-        }
-        return res;
-      }))
-    );
+    var isCode = /\/(index\.html)?$|\.(js|css|json)$/i.test(url.pathname);
+    var versioned = isCode && url.searchParams.has('v');
+    if (isCode && !versioned) {
+      // index.html и немаркированный код: без версии в URL мы не знаем, свежий ли
+      // кэш — поэтому всегда идём в сеть, кэш только для офлайна.
+      e.respondWith(
+        fetch(req).then(res => {
+          if (res && res.ok) {
+            const copy = res.clone();
+            caches.open(CACHE_VERSION).then(c => c.put(req, copy));
+          }
+          return res;
+        }).catch(() => caches.match(req))
+      );
+      return;
+    }
   }
+  // Всё остальное — картинки, шрифты, и код с ?v=… в URL. Версионный код по
+  // определению не может устареть в кэше: смена версии — это новый URL, значит
+  // старая запись просто больше не запрашивается. Отдаём мгновенно из кэша,
+  // сеть — только при первом обращении к этому URL.
+  e.respondWith(
+    caches.match(req).then(hit => hit || fetch(req).then(res => {
+      if (res && res.ok) {
+        const copy = res.clone();
+        caches.open(CACHE_VERSION).then(c => c.put(req, copy));
+      }
+      return res;
+    }))
+  );
 });
 
 firebase.initializeApp({

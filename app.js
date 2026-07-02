@@ -983,7 +983,7 @@
     "ui.137": { ru: "Пока ни одного сообщения 💌", en: "No messages yet 💌", uz: "Hozircha xabar yoʻq 💌" },
     "ui.138": { ru: "Удалить это сообщение?", en: "Delete this message?", uz: "Bu xabar oʻchirilsinmi?" },
     "ui.139": { ru: "Условия использования", en: "Terms of Use", uz: "Foydalanish shartlari" },
-    "ui.140": { ru: "Обновлено: 10 июня 2026", en: "Updated: June 10, 2026", uz: "Yangilangan: 2026-yil 10-iyun" },
+    "ui.140": { ru: "Обновлено: 2 июля 2026", en: "Updated: July 2, 2026", uz: "Yangilangan: 2026-yil 2-iyul" },
     "ui.141": { ru: "Понятно 🌸", en: "Got it 🌸", uz: "Tushunarli 🌸" },
     "ui.142": { ru: "PDF · добавим скоро", en: "PDF · coming soon", uz: "PDF · tez orada" },
     "ui.143": { ru: "Урок 3 · конспект", en: "Lesson 3 · summary", uz: "3-dars · konspekt" },
@@ -1605,6 +1605,47 @@
     "ix.adminEyebrow": { ru: "АДМИН-ПАНЕЛЬ", en: "ADMIN PANEL", uz: "ADMIN-PANEL" },
     "ix.adminTitle":   { ru: "Кабинет Мади 🌸", en: "Madie's office 🌸", uz: "Madi kabineti 🌸" },
     "ix.mock":         { ru: "МОК", en: "MOCK", uz: "MOK" },
+    // ── Условия использования (showTermsModal): 14 разделов, тексты выверены по коду 2026-07-02 ──
+    "terms.s1.h": { ru: "1. О приложении", en: "1. About the app", uz: "1. Ilova haqida" },
+    "terms.s1.p": { ru: "Korean with Madie («Madie», «мы») — образовательное приложение для изучения корейского языка: уроки хангыля, мини-игры, словарь, ИИ-помощники, общение между учениками и подготовка к экзамену TOPIK. Сайт koreanmadie.study — авторский проект преподавателя Мади. Используя приложение, ты соглашаешься с этими условиями. Если ты не согласен(на) — пожалуйста, не используй приложение.", en: "Korean with Madie (“Madie”, “we”) is an educational app for learning Korean: Hangul lessons, mini-games, a dictionary, AI helpers, communication between students and TOPIK exam preparation. The site koreanmadie.study is a personal project of teacher Madie. By using the app you agree to these terms. If you do not agree — please do not use the app.", uz: "Korean with Madie («Madie», «biz») — koreys tilini oʻrganish uchun taʼlim ilovasi: hangul darslari, mini-oʻyinlar, lugʻat, AI yordamchilar, oʻquvchilar oʻrtasida muloqot va TOPIK imtihoniga tayyorgarlik. koreanmadie.study sayti — oʻqituvchi Madining mualliflik loyihasi. Ilovadan foydalanar ekansiz, ushbu shartlarga rozilik bildirasiz. Agar rozi boʻlmasangiz — iltimos, ilovadan foydalanmang." },
+    "terms.s2.h": { ru: "2. Аккаунт и гостевой режим", en: "2. Account and guest mode", uz: "2. Akkaunt va mehmon rejimi" },
+    "terms.s2.p": { ru: "Для сохранения прогресса в облаке нужен аккаунт: имя, email и пароль. Пароль хранится в защищённом виде в Firebase Authentication (Google) — мы не видим его. Ты отвечаешь за сохранность пароля и за действия, совершённые с твоего аккаунта. Аккаунт и платный тариф — личные, передавать их другим людям нельзя.<br><br>Гостевой режим: весь прогресс гостя хранится ТОЛЬКО в памяти браузера на твоём устройстве и никуда не копируется. Если очистить данные браузера, потерять или сменить устройство — гостевой прогресс исчезнет безвозвратно, восстановить его невозможно. Перенос гостевого прогресса в аккаунт происходит при регистрации и только на том же устройстве и в том же браузере. Выход из аккаунта не стирает данные с устройства — после занятий на чужом компьютере очисти данные сайта в браузере.", en: "To save your progress in the cloud you need an account: name, email and password. The password is stored securely in Firebase Authentication (Google) — we cannot see it. You are responsible for keeping your password safe and for everything done from your account. The account and a paid plan are personal — they may not be shared with other people.<br><br>Guest mode: all guest progress is stored ONLY in the browser memory on your device and is not copied anywhere. If you clear browser data, lose or change your device — guest progress disappears permanently and cannot be restored. Guest progress is transferred to an account at registration and only on the same device and in the same browser. Logging out does not erase data from the device — after studying on someone else’s computer, clear the site data in the browser.", uz: "Progressni bulutda saqlash uchun akkaunt kerak: ism, email va parol. Parol Firebase Authentication (Google) tizimida himoyalangan holda saqlanadi — biz uni koʻrmaymiz. Parolning saqlanishi va akkauntingizdan qilingan harakatlar uchun siz javobgarsiz. Akkaunt va pullik tarif shaxsiy — ularni boshqalarga berish mumkin emas.<br><br>Mehmon rejimi: mehmon progressi FAQAT qurilmangizdagi brauzer xotirasida saqlanadi va hech qayerga nusxalanmaydi. Brauzer maʼlumotlari tozalansa, qurilma yoʻqolsa yoki almashtirilsa — mehmon progressi qaytarib boʻlmas tarzda yoʻqoladi, uni tiklab boʻlmaydi. Mehmon progressi akkauntga roʻyxatdan oʻtishda va faqat oʻsha qurilma hamda oʻsha brauzerda koʻchiriladi. Akkauntdan chiqish qurilmadagi maʼlumotlarni oʻchirmaydi — begona kompyuterda shugʻullangandan soʻng brauzerda sayt maʼlumotlarini tozalang." },
+    "terms.s3.h": { ru: "3. Какие данные мы храним и где", en: "3. What data we store and where", uz: "3. Qanday maʼlumotlarni qayerda saqlaymiz" },
+    "terms.s3.p": { ru: "На твоём устройстве (память браузера): настройки, личный словарик, план повторения слов, отметки прочитанного и часть прогресса. Эти данные никуда не отправляются — но и не восстанавливаются, если очистить браузер.<br><br>В облаке Google Firebase (серверы в Сингапуре): имя, email, уровень, дата регистрации и время последнего входа; прогресс обучения — XP, стрик, пройденные уроки и рекорды игр; аватар, обложка и «о себе»; тариф и статус оплаты; друзья и заявки; сообщения чатов; посты, лайки и комментарии ленты; сообщения обратной связи (вместе с технической информацией о браузере); токены push-уведомлений. Загруженные фото и видео хранятся в облачном хранилище Firebase Storage. Преподаватель может вести по ученику учебную анкету (возраст, страна, категория) и заметки к занятиям.<br><br>Сайт размещён на GitHub Pages. Мы НЕ продаём твои данные и не показываем рекламу — данные используются только для работы приложения.", en: "On your device (browser memory): settings, your personal word list, the word review schedule, read marks and part of your progress. This data is not sent anywhere — but it also cannot be restored if you clear the browser.<br><br>In the Google Firebase cloud (servers in Singapore): name, email, level, registration date and last seen time; learning progress — XP, streak, completed lessons and game records; avatar, cover and “about me”; plan and payment status; friends and requests; chat messages; feed posts, likes and comments; feedback messages (together with technical information about the browser); push notification tokens. Uploaded photos and videos are stored in Firebase Storage. The teacher may keep a study profile for a student (age, country, category) and lesson notes.<br><br>The site is hosted on GitHub Pages. We do NOT sell your data and do not show ads — the data is used only to run the app.", uz: "Qurilmangizda (brauzer xotirasi): sozlamalar, shaxsiy lugʻatcha, soʻzlarni takrorlash rejasi, oʻqilganlik belgilari va progressning bir qismi. Bu maʼlumotlar hech qayerga yuborilmaydi — lekin brauzer tozalansa, ularni tiklab ham boʻlmaydi.<br><br>Google Firebase bulutida (serverlar Singapurda): ism, email, daraja, roʻyxatdan oʻtgan sana va oxirgi kirish vaqti; oʻquv progressi — XP, strik, oʻtilgan darslar va oʻyin rekordlari; avatar, muqova va «oʻzim haqimda»; tarif va toʻlov holati; doʻstlar va soʻrovlar; chat xabarlari; lenta postlari, layklar va izohlar; fikr-mulohaza xabarlari (brauzer haqidagi texnik maʼlumot bilan birga); push-bildirishnoma tokenlari. Yuklangan foto va videolar Firebase Storage bulut omborida saqlanadi. Oʻqituvchi oʻquvchi boʻyicha oʻquv anketasi (yosh, mamlakat, toifa) va dars eslatmalarini yuritishi mumkin.<br><br>Sayt GitHub Pages platformasida joylashgan. Biz maʼlumotlaringizni SOTMAYMIZ va reklama koʻrsatmaymiz — maʼlumotlar faqat ilova ishlashi uchun ishlatiladi." },
+    "terms.s4.h": { ru: "4. Что видят другие ученики", en: "4. What other students can see", uz: "4. Boshqa oʻquvchilar nimani koʻradi" },
+    "terms.s4.p": { ru: "Madie — маленькая школа, поэтому часть профиля видна другим ученикам: имя, email, аватар, обложка, «о себе», уровень, XP, стрик и когда ты был(а) в сети. Посты, лайки и комментарии в ленте видят все ученики; общий чат сообщества открыт всем зарегистрированным; личные и групповые чаты видят их участники. Пожалуйста, не публикуй адрес, телефон и другие личные данные.", en: "Madie is a small school, so part of your profile is visible to other students: name, email, avatar, cover, “about me”, level, XP, streak and when you were last online. Feed posts, likes and comments are visible to all students; the community chat is open to everyone registered; private and group chats are visible to their members. Please do not post your address, phone number or other personal data.", uz: "Madie — kichik maktab, shuning uchun profilning bir qismi boshqa oʻquvchilarga koʻrinadi: ism, email, avatar, muqova, «oʻzim haqimda», daraja, XP, strik va oxirgi marta qachon tarmoqda boʻlganingiz. Lentadagi postlar, layklar va izohlarni barcha oʻquvchilar koʻradi; umumiy hamjamiyat chati barcha roʻyxatdan oʻtganlarga ochiq; shaxsiy va guruh chatlarini ularning aʼzolari koʻradi. Iltimos, manzil, telefon va boshqa shaxsiy maʼlumotlarni eʼlon qilmang." },
+    "terms.s5.h": { ru: "5. Сторонние сервисы", en: "5. Third-party services", uz: "5. Uchinchi tomon xizmatlari" },
+    "terms.s5.p": { ru: "Для работы приложения мы используем сервисы-обработчики:<br>• Google Firebase — база данных, вход, хранилище файлов и push-уведомления (в уведомлении через серверы Google проходит имя отправителя и начало сообщения).<br>• Puter.js — ИИ-словарь и ИИ-урок (тариф Pro AI): текст твоих запросов к ИИ обрабатывают серверы Puter и сторонние ИИ-модели; может понадобиться бесплатный вход в Puter. Не пиши в ИИ-чат личные данные.<br>• Озвучка корейского: текст фразы отправляется на сервер озвучки (Google Text-to-Speech через Cloudflare) либо озвучивается встроенным голосом браузера.<br>• CDN-серверы шрифтов и иконок (Google Fonts, cdnjs) получают стандартные данные запроса (IP-адрес).<br>У этих сервисов свои условия и политики. Рекламных трекеров и внешней аналитики в приложении нет.", en: "To run the app we use processing services:<br>• Google Firebase — database, sign-in, file storage and push notifications (the sender’s name and the beginning of the message pass through Google servers in a notification).<br>• Puter.js — AI dictionary and AI lesson (Pro AI plan): the text of your AI requests is processed by Puter servers and third-party AI models; a free Puter sign-in may be required. Do not write personal data in the AI chat.<br>• Korean voice-over: the phrase text is sent to a speech server (Google Text-to-Speech via Cloudflare) or spoken by the browser’s built-in voice.<br>• Font and icon CDNs (Google Fonts, cdnjs) receive standard request data (IP address).<br>These services have their own terms and policies. There are no ad trackers or external analytics in the app.", uz: "Ilova ishlashi uchun biz qayta ishlovchi xizmatlardan foydalanamiz:<br>• Google Firebase — maʼlumotlar bazasi, kirish, fayl ombori va push-bildirishnomalar (bildirishnomada yuboruvchi ismi va xabarning boshi Google serverlari orqali oʻtadi).<br>• Puter.js — AI-lugʻat va AI-dars (Pro AI tarifi): AI soʻrovlaringiz matnini Puter serverlari va uchinchi tomon AI-modellari qayta ishlaydi; Puter tizimiga bepul kirish talab qilinishi mumkin. AI-chatga shaxsiy maʼlumotlarni yozmang.<br>• Koreyscha ovozlashtirish: ibora matni ovoz serveriga yuboriladi (Cloudflare orqali Google Text-to-Speech) yoki brauzerning oʻrnatilgan ovozi bilan oʻqiladi.<br>• Shrift va ikonka CDN-serverlari (Google Fonts, cdnjs) soʻrovning standart maʼlumotlarini (IP-manzil) oladi.<br>Bu xizmatlarning oʻz shartlari va siyosatlari bor. Ilovada reklama trekerlari va tashqi analitika yoʻq." },
+    "terms.s6.h": { ru: "6. Дети и подростки", en: "6. Children and teenagers", uz: "6. Bolalar va oʻsmirlar" },
+    "terms.s6.p": { ru: "Приложение подходит для всех возрастов. Если тебе меньше 14 лет — попроси родителей помочь с регистрацией: регистрируясь, они соглашаются с этими условиями за тебя. Платный тариф может оплачивать только совершеннолетний — сам(а) или родители.", en: "The app is suitable for all ages. If you are under 14, ask your parents to help with registration: by registering, they accept these terms on your behalf. A paid plan may be paid for only by an adult — yourself or your parents.", uz: "Ilova barcha yoshlar uchun mos. Agar 14 yoshdan kichik boʻlsangiz — roʻyxatdan oʻtishda ota-onangizdan yordam soʻrang: roʻyxatdan oʻtar ekan, ular ushbu shartlarga siz uchun rozilik bildiradi. Pullik tarifni faqat voyaga yetgan kishi toʻlashi mumkin — oʻzingiz yoki ota-onangiz." },
+    "terms.s7.h": { ru: "7. Тарифы, оплата и возвраты", en: "7. Plans, payment and refunds", uz: "7. Tariflar, toʻlov va qaytarishlar" },
+    "terms.s7.p": { ru: "Базовые функции бесплатны. Платные тарифы (Master, Pro AI) открывают дополнительные материалы и функции. Оплата проходит напрямую через Мади (вне приложения), доступ подключается вручную после подтверждения оплаты. Автосписаний нет: по окончании оплаченного периода деньги сами не списываются.<br><br>Оплата за тариф возврату НЕ подлежит — в том числе при досрочном отказе от занятий, блокировке за нарушение правил или прекращении работы приложения. Оплачивая тариф, ты соглашаешься, что доступ к цифровым материалам предоставляется сразу и оплата не возвращается. Спорную ситуацию всегда можно обсудить с Мади напрямую.<br><br>Цены и состав тарифов могут меняться — уже оплаченный период это не затрагивает. Комиссии перевода и налоги — на стороне плательщика.", en: "Basic features are free. Paid plans (Master, Pro AI) unlock extra materials and features. Payment is made directly through Madie (outside the app), access is activated manually after the payment is confirmed. There is no auto-renewal: when the paid period ends, no money is charged automatically.<br><br>Plan payments are NOT refundable — including if you stop studying early, are blocked for breaking the rules, or the app stops operating. By paying for a plan you agree that access to digital materials is provided immediately and the payment is not refunded. You can always discuss a disputed situation with Madie directly.<br><br>Prices and plan contents may change — this does not affect a period you have already paid for. Transfer fees and taxes are paid by the payer.", uz: "Asosiy funksiyalar bepul. Pullik tariflar (Master, Pro AI) qoʻshimcha materiallar va funksiyalarni ochadi. Toʻlov toʻgʻridan-toʻgʻri Madi orqali (ilovadan tashqarida) amalga oshiriladi, toʻlov tasdiqlangach, kirish qoʻlda ulanadi. Avtomatik yechib olish yoʻq: toʻlangan davr tugagach, pul oʻz-oʻzidan yechilmaydi.<br><br>Tarif uchun toʻlov QAYTARILMAYDI — jumladan, mashgʻulotlardan muddatidan oldin voz kechilganda, qoidabuzarlik uchun bloklanganda yoki ilova faoliyati toʻxtaganda ham. Tarifni toʻlar ekansiz, raqamli materiallardan foydalanish darhol ochilishiga va toʻlov qaytarilmasligiga rozilik bildirasiz. Bahsli vaziyatni har doim Madi bilan bevosita muhokama qilish mumkin.<br><br>Narxlar va tariflar tarkibi oʻzgarishi mumkin — bu allaqachon toʻlangan davrga taʼsir qilmaydi. Oʻtkazma komissiyalari va soliqlar toʻlovchi zimmasida.", },
+    "terms.s8.h": { ru: "8. Приостановка доступа и блокировка", en: "8. Access suspension and blocking", uz: "8. Kirishni toʻxtatib turish va bloklash" },
+    "terms.s8.p": { ru: "Если оплата не поступила или занятия поставлены на паузу, доступ к приложению временно закрывается целиком (включая бесплатные разделы) — до решения вопроса. Прогресс при этом полностью сохраняется. За нарушение правил мы можем ограничить или заблокировать аккаунт без предупреждения и без возврата оплаты.", en: "If a payment has not been received or lessons are put on pause, access to the app is temporarily closed entirely (including free sections) until the matter is resolved. Your progress is fully preserved. For breaking the rules we may restrict or block an account without warning and without a refund.", uz: "Agar toʻlov kelib tushmagan boʻlsa yoki mashgʻulotlar pauzaga qoʻyilgan boʻlsa, ilovaga kirish vaqtincha butunlay yopiladi (bepul boʻlimlar ham) — masala hal boʻlgunicha. Bunda progress toʻliq saqlanadi. Qoidalarni buzganlik uchun akkauntni ogohlantirishsiz va toʻlovni qaytarmasdan cheklashimiz yoki bloklashimiz mumkin." },
+    "terms.s9.h": { ru: "9. Правила общения и твой контент", en: "9. Communication rules and your content", uz: "9. Muloqot qoidalari va sizning kontentingiz" },
+    "terms.s9.p": { ru: "В чатах и ленте запрещены: оскорбления, травля, спам, реклама, контент 18+, разжигание ненависти и любые незаконные материалы. За всё, что ты загружаешь (фото, тексты, комментарии), отвечаешь ты: загружая контент, ты подтверждаешь, что имеешь на него права, и разрешаешь показывать его внутри приложения. Мы можем удалить любой контент без объяснения причин. На чужой пост можно пожаловаться — мы можем его удалить.", en: "In chats and the feed the following are forbidden: insults, bullying, spam, advertising, 18+ content, hate speech and any illegal materials. You are responsible for everything you upload (photos, texts, comments): by uploading content you confirm that you have the rights to it and allow it to be shown inside the app. We may remove any content without explanation. You can report someone else’s post — we may remove it.", uz: "Chatlar va lentada taqiqlanadi: haqoratlar, taʼqib, spam, reklama, 18+ kontent, nafrat qoʻzgʻatish va har qanday noqonuniy materiallar. Yuklagan hamma narsangiz (foto, matn, izoh) uchun oʻzingiz javobgarsiz: kontent yuklar ekansiz, unga huquqingiz borligini tasdiqlaysiz va uni ilova ichida koʻrsatishga ruxsat berasiz. Biz istalgan kontentni sababini tushuntirmasdan oʻchirishimiz mumkin. Begona postga shikoyat qilish mumkin — biz uni oʻchirishimiz mumkin." },
+    "terms.s10.h": { ru: "10. Учебные материалы и права", en: "10. Learning materials and rights", uz: "10. Oʻquv materiallari va huquqlar" },
+    "terms.s10.p": { ru: "Уроки, игры, дизайн и тексты приложения принадлежат Korean with Madie и предназначены только для личного обучения — копировать и распространять их в коммерческих целях нельзя. Материалы прошедших экзаменов TOPIK публикуются их правообладателем (NIIED, Республика Корея), тексты песен принадлежат их правообладателям — всё используется в образовательных целях и удаляется по запросу правообладателя. XP, стрики и достижения — виртуальные баллы без денежной стоимости; мы можем менять правила их начисления.", en: "The app’s lessons, games, design and texts belong to Korean with Madie and are intended for personal learning only — copying and distributing them for commercial purposes is not allowed. Past TOPIK exam materials are published by their rights holder (NIIED, Republic of Korea), song lyrics belong to their rights holders — everything is used for educational purposes and is removed at the rights holder’s request. XP, streaks and achievements are virtual points with no monetary value; we may change the rules for earning them.", uz: "Ilovaning darslari, oʻyinlari, dizayni va matnlari Korean with Madie loyihasiga tegishli boʻlib, faqat shaxsiy oʻrganish uchun moʻljallangan — ularni tijorat maqsadida nusxalash va tarqatish taqiqlanadi. Oʻtgan TOPIK imtihonlari materiallari ularning huquq egasi (NIIED, Koreya Respublikasi) tomonidan eʼlon qilinadi, qoʻshiq matnlari oʻz huquq egalariga tegishli — barchasi taʼlim maqsadida ishlatiladi va huquq egasining soʻroviga koʻra oʻchiriladi. XP, striklar va yutuqlar — pul qiymatiga ega boʻlmagan virtual ballar; ularni hisoblash qoidalarini oʻzgartirishimiz mumkin." },
+    "terms.s11.h": { ru: "11. Без гарантий: сбои и сохранность данных", en: "11. No warranties: failures and data safety", uz: "11. Kafolatlarsiz: nosozliklar va maʼlumotlar saqlanishi" },
+    "terms.s11.p": { ru: "Приложение развивается и предоставляется «как есть»: возможны ошибки, перерывы в работе и изменения функций. Мы стараемся бережно хранить твои данные, но НЕ гарантируем их сохранность и восстановление: при сбое, ошибке, взломе, потере данных на серверах, прекращении работы сторонних сервисов (Google Firebase, GitHub, Puter и др.) или закрытии приложения данные могут быть утеряны безвозвратно — никто не гарантирует их возврат. Отдельные резервные копии не гарантируются. Ответы ИИ могут содержать ошибки — проверяй важное. Мы можем изменить или прекратить работу отдельных функций или всего приложения; о существенных изменениях постараемся предупредить заранее в приложении. Наша совокупная ответственность в любом случае ограничена суммой твоего последнего платежа. За результаты экзаменов мы не отвечаем — но искренне за тебя болеем 🌸", en: "The app is under active development and is provided “as is”: errors, downtime and feature changes are possible. We do our best to keep your data safe, but we do NOT guarantee its safety or recovery: in case of a failure, error, hack, data loss on servers, shutdown of third-party services (Google Firebase, GitHub, Puter and others) or closure of the app, data may be lost permanently — nobody guarantees its return. Separate backups are not guaranteed. AI answers may contain mistakes — double-check what matters. We may change or discontinue individual features or the whole app; we will try to give advance notice of significant changes in the app. In any case our total liability is limited to the amount of your last payment. We are not responsible for exam results — but we sincerely root for you 🌸", uz: "Ilova rivojlanmoqda va «qanday boʻlsa, shundayligicha» taqdim etiladi: xatolar, ish uzilishlari va funksiyalar oʻzgarishi mumkin. Biz maʼlumotlaringizni ehtiyotkorlik bilan saqlashga harakat qilamiz, lekin ularning saqlanishi va tiklanishiga KAFOLAT BERMAYMIZ: nosozlik, xato, buzib kirish, serverlarda maʼlumotlar yoʻqolishi, uchinchi tomon xizmatlari (Google Firebase, GitHub, Puter va b.) ishini toʻxtatishi yoki ilova yopilishi holatlarida maʼlumotlar qaytarib boʻlmas darajada yoʻqolishi mumkin — ularning qaytishini hech kim kafolatlamaydi. Alohida zaxira nusxalar kafolatlanmaydi. AI javoblarida xatolar boʻlishi mumkin — muhim narsalarni tekshiring. Biz alohida funksiyalar yoki butun ilova ishini oʻzgartirishimiz yoki toʻxtatishimiz mumkin; muhim oʻzgarishlar haqida ilovada oldindan ogohlantirishga harakat qilamiz. Har qanday holatda umumiy javobgarligimiz oxirgi toʻlovingiz summasi bilan cheklangan. Imtihon natijalari uchun javob bermaymiz — lekin chin dildan sizni qoʻllab-quvvatlaymiz 🌸" },
+    "terms.s12.h": { ru: "12. Удаление данных", en: "12. Data deletion", uz: "12. Maʼlumotlarni oʻchirish" },
+    "terms.s12.p": { ru: "Хочешь удалить аккаунт и данные — напиши нам через «Настройки → Написать нам»: в течение 30 дней удалим аккаунт, профиль и прогресс. Сообщения, которые ты отправил(а) другим, комментарии и лайки могут остаться в переписках и ленте. Данные на своём устройстве можно стереть очисткой данных сайта в браузере.", en: "Want to delete your account and data — write to us via “Settings → Contact us”: within 30 days we will delete the account, profile and progress. Messages you sent to others, comments and likes may remain in conversations and the feed. Data on your own device can be erased by clearing the site data in the browser.", uz: "Akkaunt va maʼlumotlarni oʻchirmoqchi boʻlsangiz — «Sozlamalar → Bizga yozing» orqali murojaat qiling: 30 kun ichida akkaunt, profil va progressni oʻchiramiz. Boshqalarga yuborgan xabarlaringiz, izohlar va layklar yozishmalar va lentada qolishi mumkin. Qurilmangizdagi maʼlumotlarni brauzerda sayt maʼlumotlarini tozalash orqali oʻchirish mumkin." },
+    "terms.s13.h": { ru: "13. Изменения условий", en: "13. Changes to these terms", uz: "13. Shartlarning oʻzgarishi" },
+    "terms.s13.p": { ru: "Мы можем обновлять эти условия. О существенных изменениях сообщим в приложении. Продолжая пользоваться Madie после изменений, ты принимаешь новую версию.", en: "We may update these terms. We will announce significant changes in the app. By continuing to use Madie after changes, you accept the new version.", uz: "Biz ushbu shartlarni yangilashimiz mumkin. Muhim oʻzgarishlar haqida ilovada xabar beramiz. Oʻzgarishlardan soʻng Madie ilovasidan foydalanishda davom etar ekansiz, yangi versiyani qabul qilasiz." },
+    "terms.s14.h": { ru: "14. Связь с нами", en: "14. Contact us", uz: "14. Biz bilan aloqa" },
+    "terms.s14.p": { ru: "Вопросы, идеи и жалобы: «Профиль → Настройки → Написать нам». Читаем всё.", en: "Questions, ideas and complaints: “Profile → Settings → Contact us”. We read everything.", uz: "Savollar, gʻoyalar va shikoyatlar: «Profil → Sozlamalar → Bizga yozing». Hammasini oʻqiymiz." },
+    // ── Игры на своих словах (Мои слова → 🎮) ──
+    "mw.play":       { ru: "Играть", en: "Play", uz: "Oʻynash" },
+    "mw.pickTitle":  { ru: "Игра на твоих словах", en: "Play with your words", uz: "Oʻz soʻzlaringiz bilan oʻyin" },
+    "mw.pickSubSel": { ru: "На основе выбранных слов: {n}", en: "Based on selected words: {n}", uz: "Tanlangan soʻzlar asosida: {n}" },
+    "mw.pickSubAll": { ru: "На основе всех сохранённых: {n}", en: "Based on all saved words: {n}", uz: "Barcha saqlanganlar asosida: {n}" },
+    "mw.fit":        { ru: "подходит: {n}", en: "fit: {n}", uz: "mos: {n}" },
+    "mw.needMore":   { ru: "нужно ещё слов: минимум {n}", en: "need more words: at least {n}", uz: "yana soʻz kerak: kamida {n}" },
+    "mw.g.flash":    { ru: "Карточки", en: "Flashcards", uz: "Kartochkalar" },
+    "mw.g.translate":{ ru: "Быстрый перевод", en: "Quick translate", uz: "Tez tarjima" },
+    "mw.g.listen":   { ru: "На слух", en: "By ear", uz: "Eshitib topish" },
+    "mw.g.memory":   { ru: "Память", en: "Memory", uz: "Xotira" },
+    "mw.g.build":    { ru: "Собери слово", en: "Build the word", uz: "Soʻzni yigʻing" },
   };
   function t(key, vars) {
     const e = I18N[key];
@@ -2244,6 +2285,15 @@
   // ── My Words (personal vocab) ──
   // Unified storage for words user wants to remember — from Hangul Lab, flashcards,
   // game word pool, lessons. Migrates old "hangulWords" format on first read.
+  // Автоопределение типа записи, когда место сохранения не передало его явно:
+  // грамматика — конструкции с дефисом/тильдой ('-기 전에', '~(으)면'); фраза — несколько
+  // слов через пробел; иначе — слово. Явно переданный type всегда важнее эвристики.
+  function classifyWordType(ko) {
+    const k = String(ko || '').trim();
+    if (/^[-~–]/.test(k) || /\(으\)|\(이\)|-(기|게|지|다)\b/.test(k)) return 'grammar';
+    if (/\s/.test(k)) return 'phrase';
+    return 'word';
+  }
   function getMyWords() {
     let list = UStore.get('myWords', null);
     if (!Array.isArray(list)) {
@@ -2252,6 +2302,11 @@
       list = legacy.map(w => ({ ko: w.ko, ru: '', translit: '', emoji: '🌸', source: 'hangul', ts: w.ts || Date.now() }));
       UStore.set('myWords', list);
     }
+    // Разовая доклассификация старых записей без type: фразы и грамматика,
+    // сохранённые до появления вкладок, разъезжаются по своим разделам.
+    let touched = false;
+    list.forEach(w => { if (w && w.ko && !w.type) { w.type = classifyWordType(w.ko); touched = true; } });
+    if (touched) UStore.set('myWords', list);
     return list;
   }
   function saveMyWord(ko, ru, translit, emoji, source, type) {
@@ -2263,11 +2318,11 @@
       if (ru && !list[idx].ru) list[idx].ru = ru;
       if (translit && !list[idx].translit) list[idx].translit = translit;
       if (emoji && list[idx].emoji === '🌸') list[idx].emoji = emoji;
-      if (type && !list[idx].type) list[idx].type = type;
+      if (type && list[idx].type !== 'grammar' && list[idx].type !== 'phrase') list[idx].type = type;
       UStore.set('myWords', list);
       return false; // not newly added
     }
-    list.unshift({ ko, ru: ru || '', translit: translit || '', emoji: emoji || '🌸', source: source || 'manual', type: type || 'word', ts: Date.now() });
+    list.unshift({ ko, ru: ru || '', translit: translit || '', emoji: emoji || '🌸', source: source || 'manual', type: type || classifyWordType(ko), ts: Date.now() });
     UStore.set('myWords', list);
     recordWordSeen(ko);
     return true;
@@ -2286,7 +2341,8 @@
       toast(t('ui.r002',{ko: ko}));
     } else {
       saveMyWord(ko, ru, translit, emoji, source, type);
-      const note = type === 'grammar' ? 'грамматика' : type === 'phrase' ? 'фраза' : 'слово';
+      const tp = type || classifyWordType(ko);
+      const note = tp === 'grammar' ? 'грамматика' : tp === 'phrase' ? 'фраза' : 'слово';
       toast(t('ui.007',{note: note, ko: ko}), 'var(--sage)');
     }
     // Re-paint button if provided (поддержка видов: лейбл-кнопка, чип-слово разбора, иконка-сердечко)
@@ -2383,12 +2439,16 @@
       const showStudy = selN > 0 || studyableN >= 2;
       const studyAction = selN > 0 ? 'studySelectedWords()' : 'startMyWordsFlashcards()';
       const studyLabel  = selN > 0 ? t('ui.r006',{n: selN}) : t('ui.r005',{n: studyableN});
+      const gameableN = myWordsGameList().length;
       bar.innerHTML = `
         <div style="font-size:10.5px; color:var(--soft); min-width:0;">
           ${(q || _wordsType !== 'all') ? `${t('ui.r007')} <b style="color:var(--coral);">${filtered.length}</b>` : `${t('ui.015')} <b style="color:var(--coral);">${list.length}</b>`}
           ${selN > 0 ? ` · ${t('ui.r008',{n: selN})} <button type="button" onclick="clearWordSelection()" style="background:none; border:none; color:var(--coral); cursor:pointer; font-size:10.5px; text-decoration:underline; padding:0 0 0 4px;">${t('ui.016')}</button>` : ''}
         </div>
-        ${showStudy ? `<button type="button" onclick="${studyAction}" class="btn btn-primary" style="padding:7px 14px; font-size:11.5px; flex-shrink:0;"><i class="fa-solid fa-graduation-cap" style="font-size:10px;" aria-hidden="true"></i> ${studyLabel}</button>` : ''}`;
+        <div style="display:flex; gap:6px; flex-shrink:0; flex-wrap:wrap; justify-content:flex-end;">
+          ${gameableN >= 2 ? `<button type="button" onclick="openMyWordsGamePicker()" class="btn btn-rose" style="padding:7px 12px; font-size:11.5px;">🎮 ${t('mw.play')}</button>` : ''}
+          ${showStudy ? `<button type="button" onclick="${studyAction}" class="btn btn-primary" style="padding:7px 14px; font-size:11.5px;"><i class="fa-solid fa-graduation-cap" style="font-size:10px;" aria-hidden="true"></i> ${studyLabel}</button>` : ''}
+        </div>`;
     }
 
     if (!filtered.length) {
@@ -2439,6 +2499,64 @@
       meaning: w.ru || w.ko,
       example: ''
     })));
+  }
+
+  // ── Игра на своих словах: выбор мини-игры из «Моих слов» ──
+  // Набор: отмеченные чекбоксами записи, а если ничего не отмечено — весь словарик.
+  // Для игр нужна пара ko↔ru, записи без перевода отсеиваются.
+  function myWordsGameList() {
+    const all = getMyWords();
+    const base = _wordsSelected.size ? all.filter(w => _wordsSelected.has(w.ko)) : all;
+    return base.filter(w => w && w.ko && w.ru);
+  }
+  function openMyWordsGamePicker() {
+    const list = myWordsGameList();
+    const games = [
+      { id:'flash',     emoji:'🃏', name:t('mw.g.flash'),     min:2, fit:list.length },
+      { id:'translate', emoji:'⚡', name:t('mw.g.translate'), min:4, fit:list.filter(_wForChoice).length },
+      { id:'listen',    emoji:'🎧', name:t('mw.g.listen'),    min:4, fit:list.filter(_wForChoice).length },
+      { id:'memory',    emoji:'🧠', name:t('mw.g.memory'),    min:3, fit:list.filter(_wShort).length },
+      { id:'build',     emoji:'🧩', name:t('mw.g.build'),     min:2, fit:list.filter(_wCompact).length }
+    ];
+    const m = document.createElement('div');
+    m.className = 'modal-bg modal-center';
+    m.id = 'mywords-game-picker';
+    m.onclick = e => { if (e.target === m) m.remove(); };
+    const sub = _wordsSelected.size ? t('mw.pickSubSel',{n:list.length}) : t('mw.pickSubAll',{n:list.length});
+    m.innerHTML = `
+      <div class="modal-card" style="max-width:360px;">
+        <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:12px;">
+          <div>
+            <div class="page-eyebrow">🎮 MY WORDS</div>
+            <div class="display" style="font-size:19px; color:var(--berry); margin-top:4px;">${t('mw.pickTitle')}</div>
+            <div style="font-size:10.5px; color:var(--hush); margin-top:3px;">${sub}</div>
+          </div>
+          <div onclick="this.closest('.modal-bg').remove()" style="font-size:24px; color:var(--soft); cursor:pointer;">×</div>
+        </div>
+        <div style="display:grid; gap:8px;">
+          ${games.map(g => {
+            const ok = g.fit >= g.min;
+            return `<button type="button" ${ok ? `onclick="startMyWordsGame('${g.id}')"` : 'disabled'} class="btn btn-ghost" style="display:flex; align-items:center; gap:12px; padding:12px 14px; height:auto; text-align:left; ${ok ? '' : 'opacity:.45; cursor:not-allowed;'}">
+              <span style="font-size:22px;">${g.emoji}</span>
+              <span style="flex:1; min-width:0;">
+                <span style="display:block; font-weight:700; font-size:13.5px;">${g.name}</span>
+                <span style="display:block; font-size:10.5px; color:var(--soft); margin-top:1px;">${ok ? t('mw.fit',{n:g.fit}) : t('mw.needMore',{n:g.min})}</span>
+              </span>
+              ${ok ? '<i class="fa-solid fa-chevron-right" style="font-size:10px; color:var(--soft);" aria-hidden="true"></i>' : ''}
+            </button>`;
+          }).join('')}
+        </div>
+      </div>`;
+    document.body.appendChild(m);
+  }
+  function startMyWordsGame(id) {
+    const list = myWordsGameList();
+    document.getElementById('mywords-game-picker')?.remove();
+    if (id === 'flash') { _wordsSelected.size ? studySelectedWords() : startMyWordsFlashcards(); return; }
+    if (id === 'translate') startTranslate(list);
+    else if (id === 'listen') startListen(list);
+    else if (id === 'memory') startMemory(list);
+    else if (id === 'build') startBuild(list);
   }
 
 
@@ -3676,12 +3794,24 @@
         canvas.width = w; canvas.height = h;
         canvas.getContext('2d').drawImage(img, 0, 0, w, h);
         const url = canvas.toDataURL('image/jpeg', 0.82);
-        UStore.set('avatar', url);
-        applyAvatar(url);
-        toast('Фото обновлено 📷', 'var(--sage)');
-        recordAvatarSet();
-        if (isAdmin()) pushProfilePublicField('avatar', url); // у админа авто-синк отключён — публикуем фото ученицам явно
-        pushUserToCloud();
+        const finish = finalUrl => {
+          UStore.set('avatar', finalUrl);
+          applyAvatar(finalUrl);
+          toast('Фото обновлено 📷', 'var(--sage)');
+          recordAvatarSet();
+          if (isAdmin()) pushProfilePublicField('avatar', finalUrl); // у админа авто-синк отключён — публикуем фото ученицам явно
+          pushUserToCloud();
+        };
+        const acc = Store.get('user');
+        const uid = firebaseUserId();
+        if (acc && !acc.guest && uid && uid !== 'guest' && typeof _storage !== 'undefined') {
+          applyAvatar(url); // мгновенный отклик, пока идёт загрузка в Storage
+          uploadDataUrlToStorage(url, `avatars/${uid}.jpg`, CACHE_MUTABLE)
+            .then(finish)
+            .catch(() => finish(url)); // Storage недоступен — храним base64, как раньше
+        } else {
+          finish(url); // гость живёт только в localStorage — облака у него нет
+        }
       };
       img.onerror = () => toast(t('ui.044'));
       img.src = e.target.result;
@@ -3707,11 +3837,24 @@
         canvas.width = w; canvas.height = h;
         canvas.getContext('2d').drawImage(img, 0, 0, w, h);
         const url = canvas.toDataURL('image/jpeg', 0.78);
-        UStore.set('cover', url);                       // локально + авто-синк (обычные юзеры)
-        if (isAdmin()) pushProfilePublicField('cover', url); // у админа авто-синк отключён
-        const prev = document.getElementById('ep-cover-preview');
-        if (prev) { prev.style.background = `url(${url}) center/cover no-repeat`; prev.classList.add('has-photo'); }
-        toast(t('ep.coverUpdated'), 'var(--sage)');
+        const finish = finalUrl => {
+          UStore.set('cover', finalUrl);                       // локально + авто-синк (обычные юзеры)
+          if (isAdmin()) pushProfilePublicField('cover', finalUrl); // у админа авто-синк отключён
+          const prev = document.getElementById('ep-cover-preview');
+          if (prev) { prev.style.background = `url(${finalUrl}) center/cover no-repeat`; prev.classList.add('has-photo'); }
+          toast(t('ep.coverUpdated'), 'var(--sage)');
+        };
+        const acc = Store.get('user');
+        const uid = firebaseUserId();
+        if (acc && !acc.guest && uid && uid !== 'guest' && typeof _storage !== 'undefined') {
+          const prev = document.getElementById('ep-cover-preview');
+          if (prev) { prev.style.background = `url(${url}) center/cover no-repeat`; prev.classList.add('has-photo'); }
+          uploadDataUrlToStorage(url, `covers/${uid}.jpg`, CACHE_MUTABLE)
+            .then(finish)
+            .catch(() => finish(url)); // Storage недоступен — храним base64, как раньше
+        } else {
+          finish(url);
+        }
       };
       img.onerror = () => toast(t('ep.photoFail'));
       img.src = e.target.result;
@@ -3871,11 +4014,36 @@
       reader.readAsDataURL(file);
     });
   }
+  // Медиа (аватар/обложка/чернила) держим в Storage, а в RTDB — только https-URL:
+  // каждый байт, скачанный из RTDB, стоит ~$1/ГБ и не кэшируется браузером,
+  // а base64-картинки внутри узла users раздували любое чтение справочника.
+  function isDataUrl(v) { return typeof v === 'string' && v.startsWith('data:'); }
+  function dataUrlToBlob(dataUrl) {
+    const comma = dataUrl.indexOf(',');
+    const head = dataUrl.slice(0, comma);
+    const mime = (head.match(/data:([^;]+)/) || [])[1] || 'image/jpeg';
+    const bin = atob(dataUrl.slice(comma + 1));
+    const arr = new Uint8Array(bin.length);
+    for (let i = 0; i < bin.length; i++) arr[i] = bin.charCodeAt(i);
+    return new Blob([arr], { type: mime });
+  }
+  // Без явного Cache-Control Storage не отдаёт кэширующие заголовки — браузер
+  // перезапрашивал бы одну и ту же картинку в каждом списке/чате заново.
+  // Иммутабельные пути (уникальный timestamp/id в имени) — год и navigator кэш;
+  // мутируемые (avatar/cover — один и тот же путь на юзера, перезаписывается)
+  // — сутки, чтобы смена фото не «залипала» надолго у других учеников.
+  const CACHE_LONG = 'public, max-age=31536000, immutable';
+  const CACHE_MUTABLE = 'public, max-age=86400';
+  async function uploadDataUrlToStorage(dataUrl, path, cacheControl) {
+    const ref = _storage.ref(path);
+    const snap = await ref.put(dataUrlToBlob(dataUrl), { cacheControl: cacheControl || CACHE_LONG });
+    return await snap.ref.getDownloadURL();
+  }
   async function uploadFileToStorage(file, folder) {
     const safeName = file.name.replace(/[^\w.\-]+/g, '_');
     const path = `${folder}/${Date.now()}_${safeName}`;
     const ref = _storage.ref(path);
-    const snap = await ref.put(file);
+    const snap = await ref.put(file, { cacheControl: CACHE_LONG });
     return await snap.ref.getDownloadURL();
   }
 
@@ -3907,6 +4075,10 @@
     if (u.level) profile.level = u.level;
     try {
       await _db.ref('users/' + uid).update(profile);
+      // Те же метаданные — в тонкий справочник (его читают списки вместо users)
+      const pub = { ...profile };
+      try { pub.gender = userGender() || null; } catch (_) {}
+      _db.ref('usersPublic/' + uid).update(pub).catch(() => {});
     } catch (e) {
       console.warn('pushUserToCloud failed:', e);
     }
@@ -3933,8 +4105,42 @@
   let _skipCloudPush = false;
   const _userFieldDebounce = {};
   const _userFieldPending = {};
+  // ── Лёгкий публичный справочник usersPublic/<uid> ──
+  // Поиск друзей, списки чатов и глобальный рейтинг раньше скачивали ВЕСЬ узел
+  // users (все профили с base64-фото) — десятки МБ на каждое открытие «Общения».
+  // Теперь у них свой тонкий узел: имя, e-mail, lastSeen, уровень, URL фото и
+  // стата-лайт. base64 сюда не пишем никогда, иначе справочник снова растолстеет.
+  function publicStatsLite(s) {
+    s = s || {};
+    const lite = {
+      xp: +s.xp || 0,
+      streak: +s.streak || 0,
+      words: (Array.isArray(s.wordsLearned) && s.wordsLearned.length) || +s.words || 0, // чип «слов выучено» в мини-профиле
+      xpByDay: {}
+    };
+    const byDay = s.xpByDay || {};
+    const cutoff = Date.now() - 14 * 86400000; // рейтингу нужна только неделя; 14 дней — с запасом
+    Object.keys(byDay).forEach(d => {
+      const ts = Date.parse(d);
+      if (!isNaN(ts) && ts >= cutoff) lite.xpByDay[d] = byDay[d];
+    });
+    return lite;
+  }
+  function _mirrorPublicField(uid, k, v) {
+    if (typeof _db === 'undefined') return;
+    try {
+      if (k === 'avatar' || k === 'cover') {
+        _db.ref(`usersPublic/${uid}/${k}`).set(isDataUrl(v) ? null : (v || null)).catch(() => {});
+      } else if (k === 'bio') {
+        _db.ref(`usersPublic/${uid}/bio`).set(v || null).catch(() => {});
+      } else if (k === 'stats') {
+        _db.ref(`usersPublic/${uid}/stats`).set(publicStatsLite(v)).catch(() => {});
+      }
+    } catch (_) {}
+  }
   function _writeUserField(uid, k, v) {
     const safe = (v === undefined) ? null : v;
+    _mirrorPublicField(uid, k, safe);
     return _db.ref(`users/${uid}/${k}`).set(safe)
       .catch(e => console.warn(`pushUserField(${k}) failed:`, e));
   }
@@ -4251,6 +4457,39 @@
     };
     planRef.on('value', planHandler);
     _userListeners.push(() => planRef.off('value', planHandler));
+    scheduleOwnMediaMigration();
+  }
+
+  // Одноразовый переезд СВОИХ старых base64-фото в Storage: ждём, пока облачный
+  // снапшот приедет (6с с запасом над 4с-гейтом синка), затем конвертируем и
+  // сохраняем URL обычным путём (UStore.set → pushUserField → зеркало справочника).
+  let _ownMediaMigrationScheduled = false;
+  function scheduleOwnMediaMigration() {
+    if (_ownMediaMigrationScheduled) return;
+    _ownMediaMigrationScheduled = true;
+    setTimeout(async () => {
+      try {
+        const u = Store.get('user');
+        if (!u || u.guest || typeof _storage === 'undefined') return;
+        const uid = firebaseUserId();
+        if (!uid || uid === 'guest') return;
+        const av = UStore.get('avatar', null);
+        if (isDataUrl(av)) {
+          try {
+            const url = await uploadDataUrlToStorage(av, `avatars/${uid}.jpg`, CACHE_MUTABLE);
+            UStore.set('avatar', url);
+            applyAvatar(url);
+          } catch (_) {}
+        }
+        const cov = UStore.get('cover', null);
+        if (isDataUrl(cov)) {
+          try {
+            const url = await uploadDataUrlToStorage(cov, `covers/${uid}.jpg`, CACHE_MUTABLE);
+            UStore.set('cover', url);
+          } catch (_) {}
+        }
+      } catch (_) {}
+    }, 6000);
   }
 
   // ── Экран «доступ приостановлен»: не оплачено (⛔) или заморозка (❄️) ──
@@ -4582,13 +4821,137 @@
       .replace(/[\r\n]+/g, ' ');
   }
 
+  let _dirReadyFlag = null; // null — ещё не спрашивали у облака
   async function loadUsersDirectory() {
     if (typeof _db === 'undefined') return {};
     try {
+      if (isAdmin()) {
+        // Мади нужны полные профили (XP, тариф, доступ) — одна загрузка на сессию,
+        // кэш общий с админ-панелями (см. loadAdminUsers/loadAdminStats).
+        const snap = await _db.ref('users').once('value');
+        _usersDirCache = snap.val() || {};
+        _adminUsersCache = _usersDirCache;
+        _adminUsersCacheAt = Date.now();
+        return _usersDirCache;
+      }
+      if (_dirReadyFlag === null) {
+        const f = await _db.ref('shared/config/dirReady').once('value');
+        _dirReadyFlag = !!f.val();
+      }
+      // Ученикам хватает тонкого справочника — полный users (со всей статой и
+      // прогрессом каждого) им скачивать незачем: это и было главной утечкой трафика.
+      if (_dirReadyFlag) {
+        try {
+          const snap = await _db.ref('usersPublic').once('value');
+          const val = snap.val();
+          if (val && Object.keys(val).length) { _usersDirCache = val; return _usersDirCache; }
+        } catch (_) { /* справочник не прочитался — ниже старый путь */ }
+      }
       const snap = await _db.ref('users').once('value');
       _usersDirCache = snap.val() || {};
       return _usersDirCache;
     } catch (e) { console.warn('users dir load', e); return {}; }
+  }
+
+  // ── Одноразовая миграция у Мади: base64-медиа → Storage, наполнение usersPublic ──
+  // Ученические клиенты не могут собрать справочник за других, поэтому первый
+  // полный проход делает админ (он и так грузит весь users). Идемпотентно:
+  // data:-поля конвертируются по одному разу, записи справочника просто обновляются.
+  // По завершении ставится флаг shared/config/dirReady — и все клиенты
+  // переключаются на тонкий usersPublic.
+  let _dirMigrationRan = false;
+  async function adminMigrateDirectory() {
+    if (_dirMigrationRan) return;
+    if (typeof _db === 'undefined' || typeof _storage === 'undefined') return;
+    if (!isAdmin()) return;
+    _dirMigrationRan = true;
+    try {
+      const snap = await _db.ref('users').once('value');
+      const users = snap.val() || {};
+      if (!_usersDirCache) { _usersDirCache = users; _adminUsersCache = users; _adminUsersCacheAt = Date.now(); }
+      for (const [uid, u] of Object.entries(users)) {
+        if (!u || typeof u !== 'object') continue;
+        let avatar = u.avatar || null;
+        let cover = u.cover || null;
+        if (isDataUrl(avatar)) {
+          try {
+            avatar = await uploadDataUrlToStorage(avatar, `avatars/${uid}.jpg`, CACHE_MUTABLE);
+            await _db.ref(`users/${uid}/avatar`).set(avatar);
+          } catch (e) { console.warn('avatar migrate', uid, e); avatar = null; }
+        }
+        if (isDataUrl(cover)) {
+          try {
+            cover = await uploadDataUrlToStorage(cover, `covers/${uid}.jpg`, CACHE_MUTABLE);
+            await _db.ref(`users/${uid}/cover`).set(cover);
+          } catch (e) { console.warn('cover migrate', uid, e); cover = null; }
+        }
+        const entry = {
+          name: u.name || null,
+          email: u.email || null,
+          lastSeen: u.lastSeen || null,
+          joinedAt: u.joinedAt || null,
+          isAdmin: !!u.isAdmin,
+          level: u.level || null,
+          gender: u.gender || null,
+          bio: u.bio || null,
+          avatar: isDataUrl(avatar) ? null : avatar,
+          cover: isDataUrl(cover) ? null : cover,
+          stats: publicStatsLite(u.stats)
+        };
+        await _db.ref('usersPublic/' + uid).update(entry);
+      }
+      await _db.ref('shared/config/dirReady').set(true);
+      console.info('usersPublic: справочник собран, dirReady=true');
+    } catch (e) {
+      console.warn('dir migration', e);
+      _dirMigrationRan = false; // не получилось — попробуем в следующей сессии
+    }
+  }
+
+  // Одноразовая миграция ленты: base64-фото постов (и Мади, и учеников) → Storage.
+  // Последние 40 постов сообщества и вся админская лента скачиваются каждым
+  // клиентом при каждом запуске — base64 внутри них и был вторым источником
+  // взрыва трафика. Идемпотентно: обрабатываются только data:-поля.
+  let _feedMediaMigrationRan = false;
+  async function adminMigrateFeedMedia() {
+    if (_feedMediaMigrationRan) return;
+    if (typeof _db === 'undefined' || typeof _storage === 'undefined') return;
+    if (!isAdmin()) return;
+    _feedMediaMigrationRan = true;
+    try {
+      // Посты учеников (shared/userFeedPosts): фото поста + аватар автора
+      const snap = await _db.ref('shared/userFeedPosts').once('value');
+      const posts = snap.val() || {};
+      for (const [key, p] of Object.entries(posts)) {
+        if (!p) continue;
+        if (isDataUrl(p.image)) {
+          try {
+            const url = await uploadDataUrlToStorage(p.image, `feed/user/${key}.jpg`);
+            await _db.ref(`shared/userFeedPosts/${key}/image`).set(url);
+          } catch (e) { console.warn('feed image migrate', key, e); }
+        }
+        if (isDataUrl(p.avatar)) {
+          // Свежий URL-аватар автора уже лежит в справочнике после миграции профилей
+          const fresh = (p.uid && _usersDirCache && _usersDirCache[p.uid] && _usersDirCache[p.uid].avatar) || null;
+          await _db.ref(`shared/userFeedPosts/${key}/avatar`).set(isDataUrl(fresh) ? null : fresh).catch(() => {});
+        }
+      }
+      // Лента Мади (customFeedPosts): узел пишется целиком через Store.set
+      const all = Store.get('customFeedPosts', []);
+      let changed = false;
+      for (const p of all) {
+        if (p && isDataUrl(p.image)) {
+          try {
+            p.image = await uploadDataUrlToStorage(p.image, `feed/admin/${p.id || Date.now()}.jpg`);
+            changed = true;
+          } catch (e) { console.warn('custom feed migrate', e); }
+        }
+      }
+      if (changed) Store.set('customFeedPosts', all);
+    } catch (e) {
+      console.warn('feed media migration', e);
+      _feedMediaMigrationRan = false; // доделаем в следующей сессии
+    }
   }
 
   async function searchUsersByName(q) {
@@ -4874,9 +5237,15 @@
     const gid = 'g_' + _db.ref('chats').push().key;
     const members = { [me]: true };
     picked.forEach(uid => { members[uid] = true; });
+    // Фото группы — в Storage: meta чата читается всеми участниками при каждой
+    // отрисовке списка, base64 внутри неё умножается на каждое открытие.
+    let groupPhoto = _groupPhoto || null;
+    if (isDataUrl(groupPhoto) && typeof _storage !== 'undefined') {
+      try { groupPhoto = await uploadDataUrlToStorage(groupPhoto, `groups/${gid}.jpg`); } catch (_) {}
+    }
     const updates = {};
     updates[`chats/${gid}/meta`] = {
-      group: true, title, desc: desc || null, photo: _groupPhoto || null,
+      group: true, title, desc: desc || null, photo: groupPhoto,
       members, owner: me, createdAt: now,
       lastMessage: '', lastAt: now, lastFrom: '', lastFromName: '',
       read: { [me]: now }
@@ -5705,6 +6074,8 @@
 
   async function refreshAdminChatList() {
     _usersDirCache = null;
+    _adminUsersCache = {};
+    _adminUsersCacheAt = 0;
     await loadUsersDirectory();
     renderAdminChatList();
     toast('Список обновлён 🌸', 'var(--sage)');
@@ -7188,8 +7559,9 @@
     const m = document.createElement('div');
     m.className = 'modal-bg modal-center';
     m.onclick = e => { if (e.target === m) m.remove(); };
-    const h = t => `<div style="font-weight:700; color:var(--berry); font-size:13.5px; margin:16px 0 6px;">${t}</div>`;
-    const p = t => `<div style="font-size:12.5px; color:var(--ink); line-height:1.65;">${t}</div>`;
+    // Параметр НЕ называем t — иначе затеняет i18n-функцию t() (класс багов затенения)
+    const h = txt => `<div style="font-weight:700; color:var(--berry); font-size:13.5px; margin:16px 0 6px;">${txt}</div>`;
+    const p = txt => `<div style="font-size:12.5px; color:var(--ink); line-height:1.65;">${txt}</div>`;
     m.innerHTML = `
       <div class="modal-card" style="max-width:440px; max-height:84vh; display:flex; flex-direction:column;">
         <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:8px; flex-shrink:0;">
@@ -7201,26 +7573,7 @@
           <div onclick="this.closest('.modal-bg').remove()" style="font-size:24px; color:var(--soft); cursor:pointer;">×</div>
         </div>
         <div style="overflow-y:auto; padding-right:6px; min-height:0;">
-          ${h('1. О приложении')}
-          ${p('Korean with Madie («Madie», «мы») — образовательное приложение для изучения корейского языка: уроки хангыля, мини-игры, словарь, общение между учениками и подготовка к экзамену TOPIK I. Используя приложение, ты соглашаешься с этими условиями. Если ты не согласен(на) — пожалуйста, не используй приложение.')}
-          ${h('2. Аккаунт')}
-          ${p('Для сохранения прогресса нужен аккаунт: имя, email и пароль. Пароль хранится в защищённом виде в Firebase Authentication (Google) — мы не видим его. Ты отвечаешь за сохранность своего пароля и за действия, совершённые с твоего аккаунта. Можно пользоваться приложением как гость — тогда прогресс хранится только на твоём устройстве.')}
-          ${h('3. Какие данные мы храним')}
-          ${p('• Имя и email — для входа и отображения в профиле.<br>• Прогресс обучения: XP, стрик, пройденные уроки, результаты игр и тестов, сохранённые слова.<br>• Аватар, если ты его загрузишь.<br>• Сообщения в чате — видны только тебе и собеседнику.<br>• Сообщения обратной связи — их читает команда Madie.<br>Данные хранятся в Google Firebase. Мы НЕ продаём и не передаём твои данные третьим лицам. Данные используются только для работы приложения.')}
-          ${h('4. Дети и подростки')}
-          ${p('Приложение подходит для всех возрастов. Если тебе меньше 14 лет — попроси родителей помочь с регистрацией: регистрируясь, они соглашаются с этими условиями за тебя.')}
-          ${h('5. Правила общения')}
-          ${p('В чате и комментариях запрещены: оскорбления, травля, спам, реклама, контент 18+, разжигание ненависти и любые незаконные материалы. Нарушителей можем ограничить или заблокировать без предупреждения.')}
-          ${h('6. Контент и материалы')}
-          ${p('Уроки, игры, дизайн и тексты приложения принадлежат Korean with Madie и предназначены только для личного обучения. Материалы прошедших экзаменов TOPIK публикуются их правообладателем (NIIED, Республика Корея) и используются в образовательных целях. Копировать и распространять материалы приложения в коммерческих целях нельзя.')}
-          ${h('7. Без гарантий')}
-          ${p('Приложение развивается и предоставляется «как есть»: возможны ошибки, перерывы в работе и изменения функций. Мы стараемся, чтобы всё работало идеально, но не можем это гарантировать. Мы не несём ответственности за результаты экзаменов — но искренне за тебя болеем 🌸')}
-          ${h('8. Удаление данных')}
-          ${p('Хочешь удалить аккаунт и все данные — напиши нам через «Настройки → Написать нам», удалим в течение 30 дней.')}
-          ${h('9. Изменения условий')}
-          ${p('Мы можем обновлять эти условия. О существенных изменениях сообщим в приложении. Продолжая пользоваться Madie после изменений, ты принимаешь новую версию.')}
-          ${h('10. Связь с нами')}
-          ${p('Вопросы, идеи и жалобы: «Профиль → Настройки → Написать нам». Читаем всё.')}
+          ${Array.from({length: 14}, (_, i) => h(t('terms.s' + (i + 1) + '.h')) + p(t('terms.s' + (i + 1) + '.p'))).join('')}
           <div style="text-align:center; padding:18px 0 6px; font-size:11px; color:var(--hush);">${t('about.madeBy')}</div>
         </div>
         <button onclick="this.closest('.modal-bg').remove()" class="btn btn-primary btn-block" style="margin-top:12px; flex-shrink:0;">${t('ui.141')}</button>
@@ -27157,16 +27510,23 @@
     const capEl = document.getElementById('composer-caption');
     const caption = capEl ? (capEl.value || '').trim().slice(0, 600) : '';
     if (containsProfanity(caption)) { toast(t('ui.246')); return; }
+    const btn = document.querySelector('#feed-composer-modal .btn-primary');
+    if (btn) { btn.disabled = true; btn.textContent = t('ui.247'); }
+    // Фото поста — в Storage: последние 40 постов скачивает КАЖДЫЙ клиент при
+    // каждом запуске, base64 внутри узла умножал этот трафик в сотни раз.
+    let image = _composerPhoto;
+    if (isDataUrl(image) && typeof _storage !== 'undefined') {
+      try { image = await uploadDataUrlToStorage(image, `feed/user/${socialUserId()}_${Date.now()}.jpg`); } catch (_) {}
+    }
+    const myAv = ((typeof UStore !== 'undefined') ? UStore.get('avatar') : null) || null;
     const post = {
       uid: socialUserId(),
       name: socialUserName(),
-      avatar: ((typeof UStore !== 'undefined') ? UStore.get('avatar') : null) || null,
-      image: _composerPhoto,
+      avatar: isDataUrl(myAv) ? null : myAv, // base64-аватар в общий узел не пускаем — покажется инициал
+      image,
       caption,
       ts: Date.now()
     };
-    const btn = document.querySelector('#feed-composer-modal .btn-primary');
-    if (btn) { btn.disabled = true; btn.textContent = t('ui.247'); }
     try {
       await _db.ref('shared/userFeedPosts').push(post);
       _composerPhoto = null;
@@ -27190,6 +27550,9 @@
     if (!confirm(t('ui.250'))) return;
     try {
       await _db.ref('shared/userFeedPosts/' + pid).remove();
+      if (post.image && /^https?:/.test(post.image) && typeof _storage !== 'undefined') {
+        try { _storage.refFromURL(post.image).delete().catch(() => {}); } catch (_) {}
+      }
       _db.ref('shared/feedLikes/' + pid).remove().catch(() => {});
       _db.ref('shared/feedComments/' + pid).remove().catch(() => {});
       _db.ref('shared/feedReports/' + pid).remove().catch(() => {});
@@ -29286,6 +29649,7 @@
         const snap = await _db.ref('users').once('value');
         usersObj = snap.val() || {};
         _adminUsersCache = usersObj;
+        _adminUsersCacheAt = Date.now();
       } catch (e) {
         console.warn(e);
         const el = document.getElementById(bodyId);
@@ -29931,7 +30295,7 @@
       const safeName = file.name.replace(/[^\w.\-]+/g, '_');
       const path = `videos/${Date.now()}_${safeName}`;
       const ref = _storage.ref(path);
-      const task = ref.put(file);
+      const task = ref.put(file, { cacheControl: CACHE_LONG }); // путь с timestamp — иммутабельный, кэш на год
       task.on('state_changed', snap => {
         if (progress) {
           const pct = Math.round((snap.bytesTransferred / snap.totalBytes) * 100);
@@ -30147,12 +30511,18 @@
     if (label) label.textContent = t('ui.365');
     try {
       const dataUrl = await compressImageFile(file);
+      // Картинку поста — в Storage: узел customFeedPosts целиком скачивает каждый
+      // клиент при каждом запуске, base64 внутри него взрывал трафик.
+      let url = dataUrl;
+      if (typeof _storage !== 'undefined') {
+        try { url = await uploadDataUrlToStorage(dataUrl, `feed/admin/${Date.now()}.jpg`); } catch (_) {}
+      }
       const input = document.getElementById('afp-image');
       const preview = document.getElementById('afp-image-preview');
-      if (input) input.value = dataUrl;
+      if (input) input.value = url;
       if (preview) {
         preview.style.display = 'block';
-        preview.innerHTML = `<img src="${dataUrl}" style="max-width:100%; max-height:180px; border-radius:12px; border:1px solid var(--line);">`;
+        preview.innerHTML = `<img src="${url}" style="max-width:100%; max-height:180px; border-radius:12px; border:1px solid var(--line);">`;
       }
       if (label) label.textContent = t('ui.366');
       toast('Фото готово 🌸', 'var(--sage)');
@@ -30178,7 +30548,7 @@
       const safeName = file.name.replace(/[^\w.\-]+/g, '_');
       const path = `feed-videos/${Date.now()}_${safeName}`;
       const ref = _storage.ref(path);
-      const task = ref.put(file);
+      const task = ref.put(file, { cacheControl: CACHE_LONG }); // путь с timestamp — иммутабельный, кэш на год
       task.on('state_changed', snap => {
         if (progress) {
           const pct = Math.round((snap.bytesTransferred / snap.totalBytes) * 100);
@@ -30261,6 +30631,8 @@
 
   // ── Admin: Students list ──
   let _adminUsersCache = {};
+  let _adminUsersCacheAt = 0;             // когда кэш загружен; свежий (<5 мин) не перекачиваем
+  const ADMIN_USERS_CACHE_MS = 5 * 60 * 1000;
   // Категории учениц и статусы доступа
   const STUDENT_CATS = ['초급','중급','고급','TOPIK1','TOPIK2'];
   const ACCESS_INFO = {
@@ -30309,8 +30681,13 @@
       return;
     }
     try {
-      const snap = await _db.ref('users').once('value');
-      _adminUsersCache = snap.val() || {};
+      // Свежий кэш (например, только что загруженный списком чатов) не перекачиваем:
+      // полный users — самое тяжёлое чтение в приложении.
+      if (!Object.keys(_adminUsersCache).length || Date.now() - _adminUsersCacheAt > ADMIN_USERS_CACHE_MS) {
+        const snap = await _db.ref('users').once('value');
+        _adminUsersCache = snap.val() || {};
+        _adminUsersCacheAt = Date.now();
+      }
       filterAdminUsers();
     } catch (e) {
       console.warn(e);
@@ -30724,6 +31101,7 @@
           const changed = JSON.stringify(val) !== JSON.stringify(_jrnCache);
           _jrnCache = val;
           Store.set('adminJournalLocal', val);
+          scheduleJrnInkMigration();
           if (!changed) return;
         }
         if (adminCurrentTab === 'journal') renderProfileAdminPanel('journal');
@@ -30735,6 +31113,30 @@
       Store.set('adminJournalLocal', _jrnCache);
       if (adminCurrentTab === 'journal') renderProfileAdminPanel('journal');
     }
+  }
+  // Одноразовый переезд старых рукописных заметок: PNG-чернила, сохранённые как
+  // base64 прямо в узле журнала, раздували его так, что каждое сохранение любой
+  // заметки пере-скачивало все накопленные картинки. Теперь чернила живут в
+  // Storage, в журнале — только URL.
+  let _jrnInkMigrationRan = false;
+  function scheduleJrnInkMigration() {
+    if (_jrnInkMigrationRan || typeof _storage === 'undefined') return;
+    _jrnInkMigrationRan = true;
+    setTimeout(async () => {
+      try {
+        const notes = (_jrnCache && _jrnCache.notes) || {};
+        for (const ym of Object.keys(notes)) {
+          for (const nid of Object.keys(notes[ym] || {})) {
+            const n = notes[ym][nid];
+            if (!n || !isDataUrl(n.ink)) continue;
+            try {
+              const url = await uploadDataUrlToStorage(n.ink, `journal/${ym}/${nid}.png`);
+              _jrnWrite(`notes/${ym}/${nid}/ink`, url);
+            } catch (_) { return; } // Storage недоступен — доделаем в следующей сессии
+          }
+        }
+      } catch (_) {}
+    }, 3000);
   }
   // ── Период обучения ученицы: ISO-даты 'YYYY-MM-DD'. Пустая граница = без ограничения ──
   function _jrnTodayIso() { return `${TODAY.y}-${String(TODAY.m + 1).padStart(2, '0')}-${String(TODAY.d).padStart(2, '0')}`; }
@@ -31477,6 +31879,9 @@
     });
     if (_jrnInk.src) {
       const im = new Image();
+      // Чернила из Storage: без crossOrigin холст станет «tainted» и toDataURL
+      // при пересохранении заметки упадёт (Storage отдаёт CORS: *)
+      if (/^https?:/.test(_jrnInk.src)) im.crossOrigin = 'anonymous';
       im.onload = () => { x.drawImage(im, 0, 0, w, h); };
       im.src = _jrnInk.src;
     }
@@ -31580,10 +31985,22 @@
     if (!text && !ink) { toast(t('ui.451')); return; }
     const prev = id ? (_jrnNotesOf(ym)[id] || {}) : {};
     const nid = id || ('n' + Date.now());
-    _jrnWrite(`notes/${ym}/${nid}`, { text: text || null, ink: ink || null, bg, cat: _jrnNoteCat || null, pin: !!prev.pin, ts: Date.now() });
-    document.getElementById('jrn-note-modal')?.remove();
-    toast('Заметка сохранена 📒', 'var(--sage)');
-    jrnNotesRefresh();
+    const write = finalInk => {
+      _jrnWrite(`notes/${ym}/${nid}`, { text: text || null, ink: finalInk || null, bg, cat: _jrnNoteCat || null, pin: !!prev.pin, ts: Date.now() });
+      document.getElementById('jrn-note-modal')?.remove();
+      toast('Заметка сохранена 📒', 'var(--sage)');
+      jrnNotesRefresh();
+    };
+    if (isDataUrl(ink) && typeof _storage !== 'undefined') {
+      // Чернила — в Storage, в журнал только URL; при сбое/офлайне сохраняем base64,
+      // фоновая миграция (scheduleJrnInkMigration) доувезёт позже.
+      Promise.race([
+        uploadDataUrlToStorage(ink, `journal/${ym}/${nid}.png`),
+        new Promise((_, rej) => setTimeout(() => rej(new Error('timeout')), 8000))
+      ]).then(url => write(url), () => write(ink)); // два аргумента: ошибка САМОГО write не должна вызвать повторную запись
+    } else {
+      write(ink);
+    }
   }
   function jrnNotePin(id) {
     const ym = _jrnYm();
@@ -31594,6 +32011,10 @@
   }
   function jrnNoteDel(id) {
     if (!confirm(t('ui.452'))) return;
+    const n = _jrnNotesOf(_jrnYm())[id] || {};
+    if (n.ink && /^https?:/.test(n.ink) && typeof _storage !== 'undefined') {
+      try { _storage.refFromURL(n.ink).delete().catch(() => {}); } catch (_) {}
+    }
     _jrnWrite(`notes/${_jrnYm()}/${id}`, null);
     jrnNotesRefresh();
   }
@@ -32287,17 +32708,23 @@
   }
 
   // ── Game 2: Build Word (Собери слово) ──
+  // customList (опционально) — массив {ko, ru} из «Моих слов»: игра идёт только на нём,
+  // а кнопка «Ещё раз» повторяет тот же набор через replayBuildCustom.
   let buildData = [];
+  let buildCustom = null;
   let buildScore = 0, buildRound = 0, buildTotal = 5, buildPool = [], buildPicked = [], buildTiles = [];
-  function startBuild() {
-    buildData = gameWordPool().filter(_wCompact).map(w => ({ word:w.ko, meaning:w.ru }));
+  function startBuild(customList) {
+    buildCustom = Array.isArray(customList) && customList.length ? customList : null;
+    buildData = (buildCustom || gameWordPool()).filter(_wCompact).map(w => ({ word:w.ko, meaning:w.ru }));
+    if (buildData.length < 2) { toast(t('ui.019')); return; }
     buildTotal = Math.min(scaledRounds(5), buildData.length);
     buildScore = 0; buildRound = 0;
     buildPool = shuffleArr(buildData).slice(0, buildTotal);
     renderBuild();
   }
+  function replayBuildCustom() { startBuild(buildCustom); }
   function renderBuild() {
-    if (buildRound >= buildTotal) { gameModal(gameFinish(buildScore, buildTotal, 'Собери слово', 'build', 'startBuild')); return; }
+    if (buildRound >= buildTotal) { gameModal(gameFinish(buildScore, buildTotal, 'Собери слово', 'build', buildCustom ? 'replayBuildCustom' : 'startBuild')); return; }
     const item = buildPool[buildRound];
     const tiles = item.word.split('');
     // Add 1-2 distractor syllables
@@ -32362,17 +32789,22 @@
   }
 
   // ── Game 3: Listen (На слух) ──
+  // customList (опционально) — игра на «Моих словах», см. комментарий у startBuild.
   let listenData = [];
+  let listenCustom = null;
   let listenScore = 0, listenRound = 0, listenTotal = 5, listenPool = [];
-  function startListen() {
-    listenData = gameWordPool().filter(_wForChoice).map(w => ({ word:w.ko, meaning:w.ru }));
+  function startListen(customList) {
+    listenCustom = Array.isArray(customList) && customList.length ? customList : null;
+    listenData = (listenCustom || gameWordPool()).filter(_wForChoice).map(w => ({ word:w.ko, meaning:w.ru }));
+    if (listenData.length < 4) { toast(t('ui.019')); return; }
     listenTotal = Math.min(scaledRounds(5), listenData.length);
     listenScore = 0; listenRound = 0;
     listenPool = shuffleArr(listenData).slice(0, listenTotal);
     renderListen();
   }
+  function replayListenCustom() { startListen(listenCustom); }
   function renderListen() {
-    if (listenRound >= listenTotal) { gameModal(gameFinish(listenScore, listenTotal, 'На слух', 'listen', 'startListen')); return; }
+    if (listenRound >= listenTotal) { gameModal(gameFinish(listenScore, listenTotal, 'На слух', 'listen', listenCustom ? 'replayListenCustom' : 'startListen')); return; }
     const correct = listenPool[listenRound];
     const wrong = shuffleArr(listenData.filter(p => p.word !== correct.word)).slice(0, 3);
     const choices = shuffleArr([correct, ...wrong]);
@@ -32437,7 +32869,21 @@
     { artist:'Girls’ Generation', song:'Genie (소원을 말해봐)', line:'___ 말해봐', blank:'소원을', options:['소원을','이름을','노래를','진실을'], translation:'Скажи своё ___', blankRu:'желание' },
     { artist:'BTS', song:'DNA', line:'우리 만남은 수학의 ___', blank:'공식', options:['공식','문제','정답','숫자'], translation:'Наша встреча — математическая ___', blankRu:'формула' },
     { artist:'BTS', song:'Boy With Luv (작은 것들을 위한 시)', line:'모든 게 ___', blank:'궁금해', options:['궁금해','좋아해','신기해','생각해'], translation:'Мне всё ___', blankRu:'любопытно' },
-    { artist:'Red Velvet', song:'Red Flavor (빨간 맛)', line:'빨간 ___ 궁금해 honey', blank:'맛', options:['맛','색','꽃','말'], translation:'Красный ___, мне интересно, honey', blankRu:'вкус' }
+    { artist:'Red Velvet', song:'Red Flavor (빨간 맛)', line:'빨간 ___ 궁금해 honey', blank:'맛', options:['맛','색','꽃','말'], translation:'Красный ___, мне интересно, honey', blankRu:'вкус' },
+    { artist:'NewJeans', song:'Hype Boy', line:'난 너만 ___', blank:'원해', options:['원해','몰라','봤어','줄래'], translation:'Я только тебя ___', blankRu:'хочу' },
+    { artist:'IVE', song:'LOVE DIVE', line:'숨 참고 love ___', blank:'다이브', options:['다이브','드라이브','라이브','하이파이브'], translation:'Задержи дыхание — love ___', blankRu:'дайв (нырок)' },
+    { artist:'TWICE', song:'Feel Special', line:'나는 다시 ___', blank:'특별해져', options:['특별해져','행복해져','슬퍼져','예뻐져'], translation:'Я снова становлюсь ___', blankRu:'особенной' },
+    { artist:'TWICE', song:'Cheer Up', line:'좀 더 힘을 ___', blank:'내', options:['내','써','줘','놔'], translation:'Ещё немного — ___ силы (соберись!)', blankRu:'соберись' },
+    { artist:'2NE1', song:'I Am the Best (내가 제일 잘 나가)', line:'내가 제일 ___', blank:'잘나가', options:['잘나가','잘몰라','잘자요','잘해요'], translation:'Я самая ___', blankRu:'крутая' },
+    { artist:'EXO', song:'Growl (으르렁)', line:'나 ___ 으르렁 대', blank:'으르렁', options:['으르렁','두근두근','반짝반짝','살랑살랑'], translation:'Я ___ (рычу) на тебя', blankRu:'р-р-р' },
+    { artist:'BIGBANG', song:'Fantastic Baby', line:'다 같이 ___ 춘다', blank:'춤을', options:['춤을','꿈을','밥을','맘을'], translation:'Все вместе танцуем ___', blankRu:'танец' },
+    { artist:'Girls’ Generation', song:'Gee', line:'너무 반짝반짝 눈이 ___', blank:'부셔', options:['부셔','감아','예뻐','커져'], translation:'Так сверкает, что глаза ___', blankRu:'слепит' },
+    { artist:'IU', song:'Celebrity', line:'넌 내 ___', blank:'셀러브리티', options:['셀러브리티','멜로디','에너지','판타지'], translation:'Ты моя ___', blankRu:'знаменитость' },
+    { artist:'Wonder Girls', song:'Tell Me', line:'어서 ___', blank:'말해줘', options:['말해줘','웃어줘','안아줘','보여줘'], translation:'Скорее ___', blankRu:'скажи мне' },
+    { artist:'SEVENTEEN', song:'Very Nice (아주 NICE)', line:'아주 ___', blank:'나이스', options:['나이스','프리티','해피','스마일'], translation:'Очень ___', blankRu:'найс (классно)' },
+    { artist:'(G)I-DLE', song:'Queencard (퀸카)', line:'I’m a ___', blank:'퀸카', options:['퀸카','스타','천사','공주'], translation:'Я — ___', blankRu:'королева (квинка)' },
+    { artist:'BLACKPINK', song:'As If It’s Your Last (마지막처럼)', line:'___처럼', blank:'마지막', options:['마지막','처음','어제','내일'], translation:'Как в ___ раз', blankRu:'последний' },
+    { artist:'Zico', song:'Any Song (아무노래)', line:'아무 ___나 일단 틀어', blank:'노래', options:['노래','영화','음식','사진'], translation:'Включи пока любую ___', blankRu:'песню' }
   ];
   let kpopScore = 0, kpopRound = 0, kpopTotal = 4, kpopPool = [];
   function startKpop() {
@@ -32494,10 +32940,14 @@
   }
 
   // ── Game 5: Memory Match (Парные карточки) ──
+  // customList (опционально) — игра на «Моих словах», см. комментарий у startBuild.
   let memoryData = [];
+  let memCustom = null;
   let memCards = [], memFlipped = [], memMatched = 0, memMoves = 0, memPairs = 6;
-  function startMemory() {
-    memoryData = gameWordPool().filter(_wShort).map(w => ({ ko:w.ko, ru:w.ru }));
+  function startMemory(customList) {
+    memCustom = Array.isArray(customList) && customList.length ? customList : null;
+    memoryData = (memCustom || gameWordPool()).filter(_wShort).map(w => ({ ko:w.ko, ru:w.ru }));
+    if (memoryData.length < 3) { toast(t('ui.019')); return; }
     // Всегда 8 пар = 16 карточек = ровная сетка 4×4
     memPairs = Math.min(8, memoryData.length);
     const picked = shuffleArr(memoryData).slice(0, memPairs);
@@ -32508,11 +32958,12 @@
     memFlipped = []; memMatched = 0; memMoves = 0;
     renderMemory();
   }
+  function replayMemoryCustom() { startMemory(memCustom); }
   function renderMemory() {
     if (memMatched >= memPairs) {
       const efficient = memMoves <= memPairs + 2;
       const score = efficient ? memPairs : Math.max(0, memPairs - Math.floor((memMoves - memPairs) / 2));
-      gameModal(gameFinish(score, memPairs, `${t('ui.r069', {moves: memMoves})}`, 'memory', 'startMemory'));
+      gameModal(gameFinish(score, memPairs, `${t('ui.r069', {moves: memMoves})}`, 'memory', memCustom ? 'replayMemoryCustom' : 'startMemory'));
       return;
     }
     const cardsHtml = memCards.map(c => {
@@ -32973,17 +33424,22 @@
   }
 
   // ── Game 6: Quick Translate (Быстрый перевод) ──
+  // customList (опционально) — игра на «Моих словах», см. комментарий у startBuild.
   let translateData = [];
+  let trCustom = null;
   let trScore = 0, trRound = 0, trTotal = 6, trPool = [];
-  function startTranslate() {
-    translateData = gameWordPool().filter(_wForChoice).map(w => ({ ru:w.ru, ko:w.ko }));
+  function startTranslate(customList) {
+    trCustom = Array.isArray(customList) && customList.length ? customList : null;
+    translateData = (trCustom || gameWordPool()).filter(_wForChoice).map(w => ({ ru:w.ru, ko:w.ko }));
+    if (translateData.length < 4) { toast(t('ui.019')); return; }
     trTotal = Math.min(scaledRounds(6), translateData.length);
     trScore = 0; trRound = 0;
     trPool = shuffleArr(translateData).slice(0, trTotal);
     renderTranslate();
   }
+  function replayTranslateCustom() { startTranslate(trCustom); }
   function renderTranslate() {
-    if (trRound >= trTotal) { gameModal(gameFinish(trScore, trTotal, 'Быстрый перевод', 'translate', 'startTranslate')); return; }
+    if (trRound >= trTotal) { gameModal(gameFinish(trScore, trTotal, 'Быстрый перевод', 'translate', trCustom ? 'replayTranslateCustom' : 'startTranslate')); return; }
     const correct = trPool[trRound];
     // Exclude distractors that share the answer's RU meaning — otherwise the
     // prompt «как будет мама?» could show two valid Korean answers (어머니/엄마),
@@ -34741,6 +35197,12 @@
   attachFriendsListeners();
   // Supabase OAuth (Kakao): подхватить сессию после возврата с провайдера
   try { initSupabaseSession(); } catch (_) {}
+  // У Мади: собрать/освежить тонкий справочник usersPublic и увезти base64-медиа
+  // (профили, лента) в Storage — после запуска приложения, чтобы не тормозить старт.
+  setTimeout(async () => {
+    try { await adminMigrateDirectory(); } catch (_) {}
+    try { await adminMigrateFeedMedia(); } catch (_) {}
+  }, 8000);
   // Achievement system
   recordDayEntered();
   startSessionTimer();
@@ -34769,6 +35231,8 @@
     const uid = firebaseUserId();
     if (!uid || uid === 'guest') return;
     try { _db.ref(`users/${uid}/lastSeen`).set(Date.now()); } catch (_) {}
+    // Дублируем в тонкий справочник: оттуда статус «в сети» читают списки чатов
+    try { _db.ref(`usersPublic/${uid}/lastSeen`).set(Date.now()); } catch (_) {}
   }
   bumpLastSeen();
   setInterval(() => { if (!document.hidden) bumpLastSeen(); }, 45000);

@@ -7,3 +7,26 @@ IMG_*.JPG
 .remember/tmp/
 *pdf
 assets/new material/
+
+# Сайт хостится на GitHub Pages из ПУБЛИЧНОГО репо: всё, что закоммичено,
+# видно и на сайте, и на github.com. Внутренние планы, конфиги Firebase/Cloudflare
+# и код бэкенда в публикацию не попадают — живут только локально.
+RELEASE_PLAN.md
+HOTTOPIK_PLAN.md
+NEW_MATERIALS_PLAN.md
+SECURITY.md
+SUPABASE-KAKAO-SETUP.md
+Todos.md
+database.rules.json
+database.rules.interim.json
+firebase.json
+.firebaserc
+serverless/
+functions/
+skills-lock.json
+test
+
+# Нативные обёртки (Android/Windows) — ЦЕЛИКОМ только локально:
+# репо публичный и раздаётся GitHub Pages, а внутри native/ лежит ключ
+# подписи APK, пароли и бинарники. В git/на сайт не попадает ничего.
+native/
