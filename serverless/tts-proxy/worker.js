@@ -27,8 +27,21 @@ function cors(origin) {
     'Access-Control-Allow-Origin': origin || '*',
     'Access-Control-Allow-Methods': 'GET, OPTIONS',
     'Access-Control-Allow-Headers': 'Content-Type',
-    'Access-Control-Max-Age': '86400'
+    'Access-Control-Max-Age': '86400',
+    'Vary': 'Origin'
   };
+}
+
+// ALLOWED_ORIGIN: '*' либо список доменов через запятую
+// (например "https://koreanmadie.study, https://koreanmadie.web.app").
+// Возвращаем origin запроса, если он в списке — так один воркер обслуживает
+// и новый домен, и старые адреса Firebase Hosting.
+function pickOrigin(request, allowed) {
+  const conf = (allowed || '*').trim();
+  if (conf === '*' || !conf) return '*';
+  const list = conf.split(',').map(s => s.trim().replace(/\/+$/, '')).filter(Boolean);
+  const origin = (request.headers.get('Origin') || '').replace(/\/+$/, '');
+  return list.includes(origin) ? origin : list[0];
 }
 
 function json(obj, status, origin) {
@@ -48,7 +61,7 @@ function base64ToBytes(b64) {
 
 export default {
   async fetch(request, env, ctx) {
-    const allowOrigin = env.ALLOWED_ORIGIN || '*';
+    const allowOrigin = pickOrigin(request, env.ALLOWED_ORIGIN);
 
     if (request.method === 'OPTIONS') {
       return new Response(null, { status: 204, headers: cors(allowOrigin) });

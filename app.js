@@ -678,6 +678,12 @@
     'auth.apple':        { ru: 'Войти через Apple', en: 'Sign in with Apple', uz: 'Apple orqali kirish' },
     'auth.soon':         { ru: 'СКОРО', en: 'SOON', uz: 'TEZ ORADA' },
     'auth.appleTitle':   { ru: 'Подключим позже', en: 'Coming later', uz: 'Keyinroq qoʻshamiz' },
+    'auth.sessionLost':  { ru: 'Сессия входа обновилась — зайди в Профиль и войди заново, чтобы всё синхронизировалось 🌸', en: 'Your sign-in session expired — open Profile and sign in again to keep everything synced 🌸', uz: 'Kirish sessiyasi eskirdi — Profilga kirib, qaytadan tizimga kiring, hammasi sinxron boʻlsin 🌸' },
+    'comm.title':        { ru: 'Чат сообщества', en: 'Community chat', uz: 'Jamiyat chati' },
+    'comm.badge':        { ru: 'ВСЕ', en: 'ALL', uz: 'HAMMA' },
+    'comm.preview':      { ru: 'Общий чат всех учениц и Мади — заходи! 🌸', en: 'One shared chat for all students and Madie — come join! 🌸', uz: 'Barcha oʻquvchilar va Madie uchun umumiy chat — kiring! 🌸' },
+    'comm.permanent':    { ru: 'Это общий чат сообщества — он всегда с тобой 🌸', en: 'This is the community chat — it’s always with you 🌸', uz: 'Bu jamiyatning umumiy chati — u doim siz bilan 🌸' },
+    'tts.iphoneMute':    { ru: 'Нет звука? Выключи бесшумный режим — переключатель сбоку iPhone 🔕→🔔', en: 'No sound? Turn off Silent Mode — the switch on the side of your iPhone 🔕→🔔', uz: 'Ovoz yoʻqmi? Ovozsiz rejimni oʻchiring — iPhone yon tomonidagi tugmacha 🔕→🔔' },
     'auth.tabLogin':     { ru: 'Вход', en: 'Sign in', uz: 'Kirish' },
     'auth.tabRegister':  { ru: 'Регистрация', en: 'Sign up', uz: 'Roʻyxatdan oʻtish' },
     'auth.ph.nameOrEmail': { ru: 'Имя или email', en: 'Name or email', uz: 'Ism yoki email' },
@@ -1932,6 +1938,17 @@
     // для iOS, чтобы «засчитать» элемент как разрешённый к дальнейшим play() без жеста.
     a.src = 'data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQAAAAA=';
     a.play().then(() => a.pause()).catch(() => {});
+    // Web Speech на iOS разрешает speak() вне жеста только после первого speak(),
+    // выполненного ВНУТРИ жеста — «будим» синтез беззвучной фразой. Заодно триггерим
+    // асинхронную загрузку списка голосов (на iOS первый getVoices() бывает пустым).
+    try {
+      if ('speechSynthesis' in window && !window.speechSynthesis.speaking) {
+        window.speechSynthesis.getVoices();
+        const u = new SpeechSynthesisUtterance(' ');
+        u.volume = 0;
+        window.speechSynthesis.speak(u);
+      }
+    } catch (_) {}
   }
   document.addEventListener('touchend', _unlockIosAudioOnce, { once: true, passive: true });
   document.addEventListener('click', _unlockIosAudioOnce, { once: true });
@@ -2007,8 +2024,29 @@
     u.rate  = opts.slow ? 0.6 : (opts.rate != null ? opts.rate : 0.85);
     u.pitch = opts.pitch != null ? opts.pitch : 1.05;
     u.onend = u.onerror = () => finish();
-    currentUtter = u;
-    try { window.speechSynthesis.speak(u); } catch (_) { finish(); }
+    _maybeIphoneMuteHint();
+    // iOS/Safari: speak() сразу после cancel() движок иногда молча «съедает» либо
+    // остаётся залипшим в paused — resume() + микрозадержка обходят обе болячки.
+    // Жестовое требование уже закрыто прогревом в _unlockIosAudioOnce.
+    setTimeout(() => {
+      if (myGen !== _koGen) return;
+      currentUtter = u;
+      try { window.speechSynthesis.resume(); } catch (_) {}
+      try { window.speechSynthesis.speak(u); } catch (_) { finish(); }
+    }, 60);
+  }
+  // На iPhone физический переключатель «бесшумно» глушит Web Speech (медиа-плеер через
+  // TTS-прокси он НЕ глушит — у iPad переключателя нет вовсе, поэтому «на iPad работает,
+  // на iPhone нет»). Определить положение переключателя из JS нельзя — один раз за
+  // сессию подсказываем, куда смотреть.
+  let _iphoneMuteHintShown = false;
+  function _maybeIphoneMuteHint() {
+    if (_iphoneMuteHintShown) return;
+    if (!/iPhone|iPod/.test(navigator.userAgent)) return;
+    _iphoneMuteHintShown = true;
+    setTimeout(() => {
+      try { toast(t('tts.iphoneMute'), 'var(--berry)'); } catch (_) {}
+    }, 1500);
   }
   // Голоса Google ko-KR-Neural2 для разведения собеседников в диалогах/скриптах.
   const TTS_VOICE_F = 'ko-KR-Neural2-A';   // женский (Мади, реплики «여자»/B)
@@ -4053,7 +4091,15 @@
       // придёт, но локальный прогресс должен сохраняться (уйдёт в очередь SDK, merge
       // согласует при возврате связи). Если же мы онлайн, но снапшот запаздывает —
       // НЕ открываем гейт: ждём настоящие данные, чтобы не пушить пустое поверх облака.
-      if (!_fbConnected) USTORE_SYNC_KEYS.forEach(k => _cloudLoadedKeys.add(k));
+      // Пустые/дефолтные локальные значения гейт НЕ открывают: если браузер почистил
+      // localStorage, офлайн-сессия с нулевой статой не должна затереть облачный
+      // прогресс — их пуш подождёт первого настоящего снапшота (merge объединит).
+      if (!_fbConnected) USTORE_SYNC_KEYS.forEach(k => {
+        const local = UStore.get(k, null);
+        if (local === null || local === undefined) return;
+        if (k === 'stats' && (+local.xp || 0) === 0 && !(Array.isArray(local.dates) && local.dates.length)) return;
+        _cloudLoadedKeys.add(k);
+      });
       syncAchievementsStrip();
     }, 4000);
     syncAchievementsStrip();
@@ -4085,8 +4131,12 @@
             const before = UStore.get('stats', null) || {};
             const today = (typeof todayIsoDate === 'function') ? todayIsoDate() : new Date().toISOString().slice(0, 10);
             let merged = { ...value };
+            // Мади выставила XP вручную (метка xpAdminTs новее локальной) — принимаем
+            // облачную базу безусловно, иначе правило «больше XP правее» вечно
+            // откатывало бы понижение XP на живом клиенте ученицы.
+            const adminBump = (+value.xpAdminTs || 0) > (+before.xpAdminTs || 0);
             // If local has strictly more XP, local is fresher — keep it as the base
-            if ((before.xp || 0) > (merged.xp || 0)) merged = { ...before };
+            if (!adminBump && (before.xp || 0) > (merged.xp || 0)) merged = { ...before };
             // Preserve today's daily progress
             if (before.dailyDate === today) {
               merged.dailyDate = today;
@@ -4509,6 +4559,7 @@
   // Telegram-Premium chat FX state
   let _chatSeenKeys = null;        // Set of message keys already painted (null = first paint, no entrance anim)
   let _chatPrevReactions = {};     // mid -> { uid: emoji } from the previous render (for burst diff)
+  let _chatLastRenderedSig = null; // разметка прошлого рендера (без enter-классов) — гасит лишние innerHTML
   let _chatTyping = {};            // chats/{id}/meta/typing → { uid: ts } (other side typing)
   let _typingWriteAt = 0;          // throttle for my own typing writes
   let _typingClearTimer = null;    // clears my typing flag after a pause
@@ -4638,6 +4689,10 @@
     const updates = {};
     updates[`users/${me}/friends/${friendUid}`] = null;
     updates[`users/${friendUid}/friends/${me}`] = null;
+    // Счётчики непрочитанного — с обеих сторон: без чата в списке их нечем
+    // обнулить, и цифра на вкладке «Общение» зависала бы навсегда.
+    updates[`users/${me}/unreadFrom/${friendUid}`] = null;
+    updates[`users/${friendUid}/unreadFrom/${me}`] = null;
     try {
       await _db.ref().update(updates);
       toast(t('ui.077'));
@@ -4715,8 +4770,10 @@
     updates[`chats/${gid}/meta/lastFromName`] = myName();
     updates[`chats/${gid}/meta/read/${me}`] = now;
     // Unread counter for every member except me (key = gid, just like DM keys by uid).
-    let members = Object.keys(_chatMembers || {});
-    if (!members.length) {
+    // Чат сообщества — исключение: он может быть очень большим, веерные записи
+    // unread по всем участникам не делаем; «новое» считается локально (communityReadAt).
+    let members = (gid === COMMUNITY_GID) ? [] : Object.keys(_chatMembers || {});
+    if (!members.length && gid !== COMMUNITY_GID) {
       // члены ещё не подгрузились (медленная сеть) — дочитываем напрямую
       try {
         const snap = await _db.ref(`chats/${gid}/meta/members`).once('value');
@@ -4991,6 +5048,7 @@
     _unreadFromCache = val;
     renderFriendsAndChat();
     updateChatBadges();
+    scheduleUnreadCleanup();
   }
   function notifyNewMessage(key) {
     // key = friend uid (DM) or gid (group chat)
@@ -5040,9 +5098,15 @@
     if (t && text) t.textContent = text.length > 64 ? text.slice(0, 64) + '…' : text;
   }
   let _friendsListenerOffs = [];
+  // Пришли ли первые снапшоты friends/groups — до этого нельзя судить,
+  // осиротел ли ключ в unreadFrom (пустой кэш ≠ «друзей нет»).
+  let _friendsLoaded = false, _groupsLoaded = false;
+  let _unreadCleanupTimer = null;
   function detachFriendsListeners() {
     _friendsListenerOffs.forEach(off => { try { off(); } catch(_){} });
     _friendsListenerOffs = [];
+    _friendsLoaded = false; _groupsLoaded = false;
+    if (_unreadCleanupTimer) { clearTimeout(_unreadCleanupTimer); _unreadCleanupTimer = null; }
   }
 
   function attachFriendsListeners() {
@@ -5056,19 +5120,54 @@
       ref.on('value', handler);
       _friendsListenerOffs.push(() => ref.off('value', handler));
     };
-    wire(`users/${me}/friends`,  val => { _friendsCache  = val; renderFriendsAndChat(); if (document.getElementById('add-friend-modal')) filterAddFriend(); });
-    wire(`users/${me}/groups`,   val => { _groupsCache   = val; renderFriendsAndChat(); });
+    wire(`users/${me}/friends`,  val => { _friendsCache  = val; _friendsLoaded = true; renderFriendsAndChat(); updateChatBadges(); scheduleUnreadCleanup(); if (document.getElementById('add-friend-modal')) filterAddFriend(); });
+    wire(`users/${me}/groups`,   val => { _groupsCache   = val; _groupsLoaded = true; renderFriendsAndChat(); updateChatBadges(); scheduleUnreadCleanup(); });
     wire(`users/${me}/inbox`,    val => { _inboxCache    = val; renderFriendsAndChat(); updateChatBadges(); processReferralRewards(); });
     wire(`users/${me}/outgoing`, val => { _outgoingCache = val; if (document.getElementById('add-friend-modal')) filterAddFriend(); });
     wire(`users/${me}/unreadFrom`, val => { handleUnreadFromUpdate(val); });
+  }
+
+  // Ключ из unreadFrom «виден» в списке чатов: сообщество, моя группа, друг,
+  // а у админа — любая ученица из каталога (его список чатов = все ученицы;
+  // пока каталог не загружен, админу считаем все ключи, как раньше).
+  function _isVisibleChatKey(key) {
+    if (key === COMMUNITY_GID) return true;
+    if (_groupsCache && _groupsCache[key]) return true;
+    if (_friendsCache && _friendsCache[key]) return true;
+    if (isAdmin() && (!_usersDirCache || _usersDirCache[key])) return true;
+    return false;
+  }
+  // Осиротевшие счётчики (дружбу удалили — чата в списке нет, открыть и
+  // «прочитать» его нельзя) подчищаем из БД, иначе они копятся навсегда.
+  // Дебаунс: дружба и счётчик пишутся одним атомарным update, но события
+  // разных слушателей приходят порознь — даём кэшам устаканиться.
+  function scheduleUnreadCleanup() {
+    if (_unreadCleanupTimer) clearTimeout(_unreadCleanupTimer);
+    _unreadCleanupTimer = setTimeout(() => {
+      _unreadCleanupTimer = null;
+      if (!_friendsLoaded || !_groupsLoaded) return;
+      if (isAdmin() && !_usersDirCache) return; // без каталога ученицу от сироты не отличить
+      const me = myUid();
+      if (!me || me === 'guest' || typeof _db === 'undefined') return;
+      const orphans = Object.keys(_unreadFromCache || {}).filter(k => !_isVisibleChatKey(k));
+      if (!orphans.length) return;
+      const updates = {};
+      orphans.forEach(k => { updates[`users/${me}/unreadFrom/${k}`] = null; });
+      _db.ref().update(updates).catch(() => {});
+    }, 4000);
   }
 
   function updateChatBadges() {
     // Friend requests + unread messages → badge on the "Общение" tab.
     // Update BOTH nav copies (mobile bottom nav + desktop sidebar), since only
     // one is visible at a time depending on viewport.
-    const requestsCount = Object.keys(_inboxCache || {}).length;
-    const unreadCount = Object.keys(_unreadFromCache || {}).reduce((a, uid) => a + unreadCountFor(uid), 0);
+    // Считаем только то, что реально видно на экране «Общение»: заявки в друзья
+    // (в inbox бывают и другие типы писем — например referral) и непрочитанное
+    // из чатов, которые есть в списке. Иначе бейдж показывает фантомную цифру.
+    const requestsCount = Object.values(_inboxCache || {}).filter(v => v && v.type === 'friend_request').length;
+    const unreadCount = Object.keys(_unreadFromCache || {})
+      .filter(_isVisibleChatKey)
+      .reduce((a, uid) => a + unreadCountFor(uid), 0);
     const total = requestsCount + unreadCount;
     document.querySelectorAll('.nav-item[data-screen="social"]').forEach(navItem => {
       let badge = navItem.querySelector('.profile-nav-badge');
@@ -5176,24 +5275,90 @@
       </div>`;
   }
 
+  // ── Глобальный чат сообщества: один общий канал для всех учениц и Мади ──
+  // Живёт в chats/g_community (обычная группа), но: не входит в users/*/groups,
+  // строка рендерится отдельно поверх списка у ВСЕХ, веерных unread-записей нет
+  // (сообщество большое) — «новое» считается локально от communityReadAt.
+  const COMMUNITY_GID = 'g_community';
+  function communityRowHtml() {
+    const meta = _chatMetaCache[COMMUNITY_GID] || {};
+    const lastRead = UStore.get('communityReadAt', 0) || 0;
+    const hasNew = !!(meta.lastAt && meta.lastAt > lastRead);
+    const preview = meta.lastMessage
+      ? `${meta.lastFromName ? escHtml(meta.lastFromName) + ': ' : ''}${escHtml(meta.lastMessage)}`
+      : t('comm.preview');
+    const timeLabel = chatListTimeLabel(meta.lastAt);
+    return `
+      <div class="card card-press chat-list-row" onclick="openCommunityChat()" style="background:linear-gradient(135deg, rgba(var(--accent-rgb),.10), var(--card)); border-color:rgba(var(--accent-rgb),.28);">
+        <div class="friend-avatar-wrap"><div class="chat-row-av chat-row-av-initial" style="background:var(--grad-coral); color:#FFF7F9;">🌍</div></div>
+        <div class="chat-row-main">
+          <div class="chat-row-top">
+            <span class="chat-row-name">${t('comm.title')} <span style="font-size:9.5px;color:var(--coral);font-weight:800;letter-spacing:.08em;">${t('comm.badge')}</span></span>
+            <span class="chat-row-time ${hasNew ? 'unread' : ''}">${timeLabel}</span>
+          </div>
+          <div class="chat-row-bottom">
+            <span class="chat-row-preview">${preview}</span>
+            ${hasNew ? '<span class="chat-unread-badge">new</span>' : ''}
+          </div>
+        </div>
+      </div>`;
+  }
+  async function openCommunityChat() {
+    if (!isLoggedInForChat()) { toast(t('ui.102')); return; }
+    if (typeof _db === 'undefined') { toast(t('ui.243')); return; }
+    const me = myUid();
+    try {
+      const metaRef = _db.ref(`chats/${COMMUNITY_GID}/meta`);
+      const snap = await metaRef.once('value');
+      if (!snap.val()) {
+        await metaRef.set({ group: true, community: true, title: 'Чат сообщества', owner: 'system', createdAt: Date.now(), members: { [me]: true } });
+      } else {
+        // членство нужно для отметок прочтения/печатает — дописываем себя тихо
+        metaRef.child('members/' + me).set(true).catch(() => {});
+      }
+    } catch (_) {}
+    try { UStore.set('communityReadAt', Date.now()); } catch (_) {}
+    openGroupChat(COMMUNITY_GID, t('comm.title'));
+  }
+
   let _renderFriendsSeq = 0; // drop stale async renders (meta fetches race otherwise)
-  async function renderFriendsAndChat() {
+  // Подпись мет чатов: фоновое обновление перерисовывает список ТОЛЬКО когда
+  // что-то реально изменилось (иначе экран зря «мигает» и сбрасывает скролл).
+  function _chatMetaSig(keys) {
+    return keys.map(k => { const m = _chatMetaCache[k] || {}; return k + ':' + (m.lastAt || 0); }).join('|');
+  }
+  async function renderFriendsAndChat(fromBgRefresh) {
     const slot = document.getElementById('friends-chat-section');
     if (!slot) return;
     const seq = ++_renderFriendsSeq;
     if (!_usersDirCache) await loadUsersDirectory();
-    if (isAdmin()) { renderAdminChatList(); return; }
+    if (isAdmin()) { renderAdminChatList(fromBgRefresh); return; }
     const friends = _friendsCache || {};
     const groups = _groupsCache || {};
     const inbox = _inboxCache || {};
     if (!_chatLastAtLoaded) loadChatLastAt();
     const me = myUid();
-    // Pull fresh chat meta (last message + server timestamp) for every conversation.
-    if (me && me !== 'guest') {
-      await loadChatMetas([
+    // Меты чатов (последнее сообщение + время). Cache-first: при повторном заходе
+    // рисуем МГНОВЕННО из кэша, а свежие меты тянем фоном и тихо перерисовываем
+    // только при реальных изменениях. Первый заход за сессию — ждём сеть (иначе пусто).
+    if (me && me !== 'guest' && !fromBgRefresh) {
+      const items = [
+        { key: COMMUNITY_GID, chatId: COMMUNITY_GID },
         ...Object.keys(friends).map(uid => ({ key: uid, chatId: chatIdFor(me, uid) })),
         ...Object.keys(groups).map(gid => ({ key: gid, chatId: gid }))
-      ]);
+      ];
+      if (!Object.keys(_chatMetaCache).length) {
+        await loadChatMetas(items);
+      } else {
+        const sigBefore = _chatMetaSig(items.map(i => i.key));
+        loadChatMetas(items).then(() => {
+          if (seq !== _renderFriendsSeq) return;               // уже начался новый рендер
+          if (_curScreen !== 'social') return;                 // ушли с экрана
+          if (document.getElementById('chat-page')) return;    // открыта переписка
+          if (_chatMetaSig(items.map(i => i.key)) === sigBefore) return;
+          renderFriendsAndChat(true);
+        });
+      }
     }
     if (seq !== _renderFriendsSeq) return; // a newer render started while we awaited
     // Telegram order: the conversation with the newest message on top.
@@ -5218,9 +5383,14 @@
          <div style="display:grid;gap:8px;margin-bottom:14px;">${requests.map(([k,r]) => requestRowHtml(k, r)).join('')}</div>`
       : '';
 
+    // stagger-in — только при ПЕРВОМ наполнении списка: повторная перерисовка
+    // (пришло сообщение, обновились меты) переигрывала входную анимацию всех
+    // строк — выглядело как «список перезагрузился и мигает».
+    const staggerCls = slot.childElementCount ? '' : 'stagger-in';
     const listHtml = convos.length
-      ? `<div class="stagger-in" style="display:grid;gap:8px;">${convos.map(c => c.kind === 'group' ? groupRowHtml(c.key, groups[c.key]) : friendRowHtml(c.key, friends[c.key])).join('')}</div>`
-      : `<div class="card" style="text-align:center; padding:26px 18px 22px; background:linear-gradient(160deg, var(--card), var(--paper));">
+      ? `<div class="${staggerCls}" style="display:grid;gap:8px;">${communityRowHtml()}${convos.map(c => c.kind === 'group' ? groupRowHtml(c.key, groups[c.key]) : friendRowHtml(c.key, friends[c.key])).join('')}</div>`
+      : `<div style="display:grid;gap:8px;margin-bottom:10px;">${communityRowHtml()}</div>
+         <div class="card" style="text-align:center; padding:26px 18px 22px; background:linear-gradient(160deg, var(--card), var(--paper));">
            <img src="assets/bear3.png" alt="" style="width:92px; margin:0 auto 4px; display:block; filter:drop-shadow(0 8px 14px rgba(92,42,51,.18));" onerror="this.style.display='none'">
            <div class="display" style="font-size:18px; color:var(--berry);">${t('ui.084')}</div>
            <div style="font-size:12px; color:var(--soft); margin-top:6px; line-height:1.55; max-width:260px; margin-left:auto; margin-right:auto;">
@@ -5234,7 +5404,7 @@
            <button onclick="openAddFriendModal()" class="btn btn-primary" style="margin-top:16px;"><i class="fa-solid fa-user-plus" style="font-size:11px;"></i> ${t('ui.088')}</button>
          </div>`;
 
-    slot.innerHTML = `
+    const finalHtml = `
       <div id="week-leaderboard"></div>
       <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;padding:0 4px;margin-bottom:10px;">
         <div style="font-size:10px;letter-spacing:.2em;color:var(--soft);">${t('ui.t008')} ${convos.length ? `<span style="color:var(--coral);font-weight:700;letter-spacing:.04em;">${convos.length}</span>` : ''}</div>
@@ -5247,6 +5417,12 @@
       ${requestsHtml}
       ${listHtml}
     `;
+    // Ничего не изменилось — не трогаем DOM (unreadFrom дёргает этот рендер
+    // на каждое сообщение, включая эхо собственного «прочитано»).
+    if (slot._lastListHtml !== finalHtml) {
+      slot._lastListHtml = finalHtml;
+      slot.innerHTML = finalHtml;
+    }
     renderWeekLeaderboard();
   }
 
@@ -5275,6 +5451,8 @@
     if (!slot) return;
     const me = Store.get('user');
     if (!me || me.guest || typeof _db === 'undefined') { slot.innerHTML = ''; _lbFriendRows = _lbGlobalRows = null; return; }
+    // Мгновенный показ из кэша прошлого визита — свежие данные ниже тихо перерисуют
+    if (_lbFriendRows || _lbGlobalRows) paintLeaderboard();
     const myUid = firebaseUserId();
     const myRow = { uid: myUid, name: me.name || 'Я', me: true, week: _weekXpFrom(stats.xpByDay), all: stats.xp || 0 };
 
@@ -5393,21 +5571,37 @@
     </div>`;
   }
 
-  async function renderAdminChatList() {
+  async function renderAdminChatList(fromBgRefresh) {
     const slot = document.getElementById('friends-chat-section');
     if (!slot) return;
+    const seq = ++_renderFriendsSeq;
     const dir = _usersDirCache || {};
     const me = myUid();
     const groups = _groupsCache || {};
-    // Fresh previews: last message + server timestamp for students and admin's groups.
+    // Fresh previews — cache-first: повторный заход рисуется мгновенно из кэша,
+    // свежие меты (по одному запросу на ученицу — дорого) тянутся фоном.
     const studentUids = Object.keys(dir).filter(uid => !(dir[uid] && dir[uid].isAdmin) && uid !== me);
-    if (me && me !== 'guest') {
-      await loadChatMetas([
+    if (me && me !== 'guest' && !fromBgRefresh) {
+      const items = [
+        { key: COMMUNITY_GID, chatId: COMMUNITY_GID },
         ...studentUids.map(uid => ({ key: uid, chatId: chatIdFor(me, uid) })),
         ...Object.keys(groups).map(gid => ({ key: gid, chatId: gid }))
-      ]);
+      ];
+      if (!Object.keys(_chatMetaCache).length) {
+        await loadChatMetas(items);
+      } else {
+        const sigBefore = _chatMetaSig(items.map(i => i.key));
+        loadChatMetas(items).then(() => {
+          if (seq !== _renderFriendsSeq) return;
+          if (_curScreen !== 'social') return;
+          if (document.getElementById('chat-page')) return;
+          if (_chatMetaSig(items.map(i => i.key)) === sigBefore) return;
+          renderAdminChatList(true);
+        });
+      }
     }
     if (!document.getElementById('friends-chat-section')) return;
+    if (seq !== _renderFriendsSeq) return;
     const students = studentUids
       .map(uid => ({ uid, ...dir[uid] }))
       .sort((a, b) => {
@@ -5426,20 +5620,29 @@
       .sort((a, b) => ((_chatMetaCache[b] && _chatMetaCache[b].lastAt) || 0) - ((_chatMetaCache[a] && _chatMetaCache[a].lastAt) || 0))
       .map(gid => groupRowHtml(gid, groups[gid])).join('');
 
+    // stagger-in — только при первом наполнении; сигнатура гасит холостые
+    // перерисовки (unreadFrom дёргает список на каждое сообщение). См. renderFriendsAndChat.
+    const staggerCls = slot.childElementCount ? '' : 'stagger-in';
     const listHtml = students.length
-      ? `<div class="stagger-in" style="display:grid;gap:8px;">${groupRows}${students.map(s => adminChatRowHtml(s)).join('')}</div>`
-      : `<div style="text-align:center;padding:18px 12px;color:var(--soft);font-size:12px;background:var(--blush);border:1px dashed var(--line);border-radius:14px;">${t('ui.098')}</div>`;
+      ? `<div class="${staggerCls}" style="display:grid;gap:8px;">${communityRowHtml()}${groupRows}${students.map(s => adminChatRowHtml(s)).join('')}</div>`
+      : `<div style="display:grid;gap:8px;margin-bottom:10px;">${communityRowHtml()}</div>
+         <div style="text-align:center;padding:18px 12px;color:var(--soft);font-size:12px;background:var(--blush);border:1px dashed var(--line);border-radius:14px;">${t('ui.098')}</div>`;
 
-    slot.innerHTML = `
+    const finalHtml = `
       <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;padding:0 4px;margin-bottom:10px;">
         <div style="font-size:10px;letter-spacing:.2em;color:var(--soft);">${t('ui.099')} <span style="color:var(--coral);font-weight:700;letter-spacing:.04em;">${students.length}</span></div>
         <div style="display:flex;gap:6px;">
+          <button onclick="adminOpenFullRating()" class="chip" style="font-size:11px;padding:5px 12px;cursor:pointer;border:none;background:var(--blush);color:var(--berry);">🏆 Рейтинг</button>
           <button onclick="openCreateGroupModal()" class="chip" style="font-size:11px;padding:5px 12px;cursor:pointer;border:none;background:var(--blush);color:var(--berry);"><i class="fa-solid fa-user-group" style="font-size:10px;"></i> ${t('ui.089')}</button>
           <button onclick="refreshAdminChatList()" class="chip" style="font-size:11px;padding:5px 12px;cursor:pointer;border:none;background:var(--blush);color:var(--berry);"><i class="fa-solid fa-rotate" style="font-size:10px;"></i> ${t('ui.100')}</button>
         </div>
       </div>
       ${listHtml}
     `;
+    if (slot._lastListHtml !== finalHtml) {
+      slot._lastListHtml = finalHtml;
+      slot.innerHTML = finalHtml;
+    }
   }
 
   function adminChatRowHtml(u) {
@@ -5505,6 +5708,59 @@
     await loadUsersDirectory();
     renderAdminChatList();
     toast('Список обновлён 🌸', 'var(--sage)');
+  }
+
+  // ── Админ: полный рейтинг всех учениц (весь список, не топ-5) ──
+  let _admRatingMode = 'all';
+  function adminOpenFullRating(mode) {
+    if (!ensureAdminAccess()) return;
+    if (mode) _admRatingMode = (mode === 'week') ? 'week' : 'all';
+    const dir = _usersDirCache || {};
+    const rows = Object.entries(dir)
+      .filter(([, u]) => u && !u.isAdmin)
+      .map(([uid, u]) => {
+        const s = u.stats || {};
+        return { uid, name: u.name || 'Ученица', avatar: u.avatar || '', week: _weekXpFrom(s.xpByDay), all: (+s.xp || 0), streak: (+s.streak || 0) };
+      })
+      .sort((a, b) => (_admRatingMode === 'week' ? (b.week - a.week || b.all - a.all) : (b.all - a.all || b.week - a.week)));
+    const medal = i => i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : `<span style="font-size:11px;color:var(--hush);font-weight:700;">${i + 1}</span>`;
+    const rowHtml = (r, i) => {
+      const lvl = getLevel(r.all);
+      const av = r.avatar
+        ? `<div style="width:34px;height:34px;border-radius:50%;background:url(${r.avatar}) center/cover no-repeat;flex-shrink:0;border:2px solid var(--rose);"></div>`
+        : `<div style="width:34px;height:34px;border-radius:50%;background:var(--paper);flex-shrink:0;border:2px solid var(--rose);display:flex;align-items:center;justify-content:center;font-size:13px;color:var(--coral);font-weight:700;">${escHtml((r.name || '?').charAt(0).toUpperCase())}</div>`;
+      return `
+        <div style="display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:12px;background:${i < 3 ? 'rgba(201,165,92,.08)' : 'transparent'};">
+          <span style="width:24px;text-align:center;font-size:15px;flex-shrink:0;">${medal(i)}</span>
+          ${av}
+          <div style="flex:1;min-width:0;">
+            <div style="font-weight:600;font-size:13px;color:var(--berry);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${escHtml(r.name)}</div>
+            <div style="font-size:10.5px;color:var(--soft);">Lv ${lvl} · 🔥 ${r.streak}</div>
+          </div>
+          <span style="font-weight:800;font-size:13px;color:${i === 0 ? 'var(--gold)' : 'var(--soft)'};flex-shrink:0;">${_admRatingMode === 'week' ? r.week : r.all} XP</span>
+        </div>`;
+    };
+    const chip = (m2, label) => `<button type="button" class="lb-chip ${_admRatingMode === m2 ? 'lb-chip-on' : ''}" onclick="adminOpenFullRating('${m2}')">${label}</button>`;
+    document.getElementById('admin-rating-modal')?.remove();
+    const m = document.createElement('div');
+    m.className = 'modal-bg modal-center';
+    m.id = 'admin-rating-modal';
+    m.onclick = e => { if (e.target === m) m.remove(); };
+    m.innerHTML = `
+      <div class="modal-card" style="max-height:86vh;overflow-y:auto;">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px;">
+          <div>
+            <div class="page-eyebrow">🏆 Рейтинг учениц</div>
+            <div class="display" style="font-size:20px;color:var(--berry);margin-top:2px;">Весь список · ${rows.length}</div>
+          </div>
+          <div onclick="this.closest('.modal-bg').remove()" style="font-size:24px;line-height:1;color:var(--soft);cursor:pointer;padding:4px;">×</div>
+        </div>
+        <div style="display:flex;gap:6px;margin-bottom:10px;">
+          ${chip('week', 'Эта неделя')}${chip('all', 'За всё время')}
+        </div>
+        <div style="display:grid;gap:4px;">${rows.map(rowHtml).join('') || `<div style="text-align:center;color:var(--soft);font-size:12px;padding:20px;">Пока нет учениц</div>`}</div>
+      </div>`;
+    document.body.appendChild(m);
   }
 
   function openAddFriendModal() {
@@ -5698,11 +5954,19 @@
     _chatReplyTo = null;
     _chatReadMeta = {};
     _lastChatMsgs = {};
-    _chatSeenKeys = null; _chatPrevReactions = {}; _chatTyping = {}; // reset FX so history doesn't animate
+    _chatSeenKeys = null; _chatPrevReactions = {}; _chatTyping = {}; _chatLastRenderedSig = null; // reset FX so history doesn't animate
     bumpChatActivity(key); // opening a chat surfaces it to the top of the list
     document.getElementById(_popupId(key))?.remove(); // clear any pending banner for this chat
     // Remove existing if any
     document.getElementById('chat-page')?.remove();
+    document.getElementById('chat-backdrop')?.remove();
+    // Подложка: на ПК/планшете чат — карточка с воздухом по краям,
+    // клик мимо окна закрывает переписку (на телефоне чат во весь экран).
+    const backdrop = document.createElement('div');
+    backdrop.id = 'chat-backdrop';
+    backdrop.className = 'chat-backdrop';
+    backdrop.addEventListener('click', closeChat);
+    document.body.appendChild(backdrop);
     const m = document.createElement('div');
     m.className = 'chat-page';
     m.id = 'chat-page';
@@ -5842,6 +6106,8 @@
   }
 
   function openGroupMenu(gid, title) {
+    // Чат сообщества общий и постоянный — из него нельзя выйти или удалить его
+    if (gid === COMMUNITY_GID) { toast(t('comm.permanent'), 'var(--sage)'); return; }
     const me = myUid();
     const names = Object.entries(_chatMembers || {});
     const meta = _chatGroupMeta || {};
@@ -5947,6 +6213,8 @@
 
   function closeChat() {
     stopTyping(); // clear my typing flag before tearing down
+    // Выход из чата сообщества = «прочитано до этого момента» (значок new гаснет)
+    if (_chatCurrentId === COMMUNITY_GID) { try { UStore.set('communityReadAt', Date.now()); } catch (_) {} }
     detachChatListener();
     detachChatBuddyListener();
     _chatCurrentId = null;
@@ -5956,6 +6224,7 @@
     _chatGroupMeta = null;
     _chatReplyTo = null;
     document.getElementById('chat-page')?.remove();
+    document.getElementById('chat-backdrop')?.remove();
     document.getElementById('chat-modal')?.remove();
     document.body.classList.remove('chat-open');
     // Снимаем фокус, чтобы строка чата не оставалась с залипшей рамкой-обводкой
@@ -6324,6 +6593,7 @@
     if (!entries.length) {
       body.innerHTML = `<div style="text-align:center;padding:36px 24px;color:var(--soft);font-size:12px;">${t('ui.127')}<br>${t('ui.127')}</div>`;
       _chatSeenKeys = new Set();
+      _chatLastRenderedSig = null;
       return;
     }
     const firstPaint = _chatSeenKeys === null; // don't animate history when a chat opens
@@ -6388,6 +6658,13 @@
           </div>
         </div>`;
     }
+    // Перерисовываем ТОЛЬКО при реальных изменениях. На каждое сообщение рендер
+    // прилетал дважды-трижды подряд (эхо моего markChatRead через снапшот meta/read,
+    // тикер typing) — полный innerHTML обрывал entrance-анимацию пузыря и «мигал»
+    // чатом. Сигнатура без enter-классов: повтор с тем же содержимым — тихий выход.
+    const sig = html.replace(/ chat-enter(-mine)?/g, '');
+    if (sig === _chatLastRenderedSig) return;
+    _chatLastRenderedSig = sig;
     body.innerHTML = html;
     if (nearBottom) body.scrollTop = body.scrollHeight;
     // Reaction burst: animate reactions that appeared since the previous render (either side).
@@ -29994,7 +30271,12 @@
   function accessOf(u) { return (u && u.access && ACCESS_INFO[u.access.status]) ? u.access.status : 'paid'; }
   let _adminUserFilter = { status: 'all', cat: 'all' };
   function renderAdminUsers() {
-    setTimeout(loadAdminUsers, 0);
+    setTimeout(() => {
+      // Cache-first: список из прошлого визита показываем мгновенно,
+      // свежий срез из облака доедет фоном и тихо перерисует.
+      if (_adminUsersCache && Object.keys(_adminUsersCache).length) filterAdminUsers();
+      loadAdminUsers();
+    }, 0);
     const stChip = (key, label) => `<button onclick="adminUsersSetFilter('status','${key}')" class="chip" style="cursor:pointer; border:none; font-size:10.5px; padding:5px 10px; ${_adminUserFilter.status === key ? 'background:var(--grad-coral); color:#F2F5FA;' : 'background:var(--blush); color:var(--berry);'}">${label}</button>`;
     const catChip = (key, label) => `<button onclick="adminUsersSetFilter('cat','${key}')" class="chip" style="cursor:pointer; border:none; font-size:10.5px; padding:5px 10px; ${_adminUserFilter.cat === key ? 'background:var(--grad-coral); color:#F2F5FA;' : 'background:var(--blush); color:var(--berry);'}">${label}</button>`;
     return `
@@ -30217,6 +30499,23 @@
           <div>👁 ${t('ui.r058',{time: relativeTime(u.lastSeen)})}</div>
         </div>
 
+        <!-- Восстановление прогресса (XP · модули · домашки) -->
+        <div style="margin-top:16px;">
+          <div style="font-size:10px; letter-spacing:.16em; color:var(--coral); font-weight:700;">🛟 ВОССТАНОВЛЕНИЕ ПРОГРЕССА</div>
+          <div style="display:flex; gap:8px; margin-top:8px;">
+            <input id="sd-xp" class="input" type="number" min="0" step="10" value="${xp}" style="font-size:12.5px; flex:1; min-width:0;">
+            <button onclick="adminSetStudentXp('${escAttrSafe(uid)}')" class="btn btn-primary" style="font-size:12px; padding:9px 14px; flex-shrink:0;">Сохранить XP</button>
+          </div>
+          <div style="font-size:10px; color:var(--hush); margin-top:4px; line-height:1.5;">Уровень и ранг пересчитаются сами. Применяется сразу — даже если приложение ученицы открыто.</div>
+          <div style="display:flex; gap:8px; margin-top:10px;">
+            <select id="sd-module" class="input" style="font-size:12.5px; flex:1; min-width:0;">
+              ${Object.keys(LESSON_MODULES).map(mid => `<option value="${mid}">${escHtml(LESSON_MODULES[mid].navTitle || mid)}</option>`).join('')}
+            </select>
+            <button onclick="adminOpenModulesUpTo('${escAttrSafe(uid)}')" class="btn btn-ghost" style="font-size:12px; padding:9px 14px; flex-shrink:0;">Открыть доступ</button>
+          </div>
+          <div style="font-size:10px; color:var(--hush); margin-top:4px; line-height:1.5;">Уроки предыдущих модулей отметятся пройденными — вместе с ними вернутся и их домашки. Уже пройденное не стирается.</div>
+        </div>
+
         <button onclick="adminDeleteStudent('${escAttrSafe(uid)}')" class="btn btn-ghost btn-block" style="margin-top:14px; color:var(--bad-ink); border-color:rgba(179,58,74,.25); font-size:12px;">
           <i class="fa-solid fa-trash"></i> ${t('ui.r059')}
         </button>
@@ -30262,6 +30561,64 @@
       showStudentDetail(uid); // перерисовать модалку с новым статусом
       filterAdminUsers();
     } catch (e) { console.warn(e); toast(t('ui.q009')); }
+  }
+  // ── Восстановление прогресса ученицы: XP и открытие модулей ──
+  // Пишем напрямую в users/<uid>/… — устройство ученицы подхватит через свои
+  // слушатели, а merge-защита (union/max) гарантирует, что ничего не сотрётся.
+  async function adminSetStudentXp(uid) {
+    if (!ensureAdminAccess()) return;
+    if (typeof _db === 'undefined') { toast(t('ui.q003')); return; }
+    const inp = document.getElementById('sd-xp');
+    const raw = ((inp && inp.value) || '').trim();
+    // Пустое поле НЕ означает «0 XP» — иначе случайный тап обнулил бы ученицу
+    if (!raw) { toast('Введи число XP'); return; }
+    const n = Math.max(0, Math.round(+raw));
+    if (!isFinite(n)) { toast('Введи число XP'); return; }
+    try {
+      // update, не set: трогаем ТОЛЬКО xp, остальная стата (стрик/дни/слова) не задевается.
+      // xpAdminTs — маркер «выставлено Мади»: клиент ученицы примет это значение даже
+      // если оно МЕНЬШЕ локального (иначе merge «больше XP правее» откатил бы понижение).
+      await _db.ref(`users/${uid}/stats`).update({ xp: n, xpAdminTs: Date.now() });
+      if (_adminUsersCache[uid]) _adminUsersCache[uid].stats = { ...(_adminUsersCache[uid].stats || {}), xp: n };
+      if (_usersDirCache && _usersDirCache[uid]) _usersDirCache[uid].stats = { ...(_usersDirCache[uid].stats || {}), xp: n };
+      toast(`XP обновлён: ${n} · Lv ${getLevel(n)} 🌸`, 'var(--sage)');
+      showStudentDetail(uid);
+      filterAdminUsers();
+    } catch (e) { console.warn('adminSetStudentXp failed:', e); toast('Не получилось сохранить XP'); }
+  }
+  async function adminOpenModulesUpTo(uid) {
+    if (!ensureAdminAccess()) return;
+    if (typeof _db === 'undefined') { toast(t('ui.q003')); return; }
+    const sel = document.getElementById('sd-module');
+    const target = (sel && sel.value) || '';
+    const order = Object.keys(LESSON_MODULES);
+    const ti = order.indexOf(target);
+    if (ti < 0) return;
+    const stu = _adminUsersCache[uid] || {};
+    if (!confirm(`Открыть ${stu.name || 'ученице'} доступ до «${LESSON_MODULES[target].navTitle}»?\nВсе уроки предыдущих модулей отметятся пройденными (уже пройденное сохранится).`)) return;
+    try {
+      for (let i = 0; i < ti; i++) {
+        const mid = order[i];
+        const key = mid === 'm1' ? 'lessonProgress' : 'lessonProgress_' + mid;
+        const ids = (LESSON_MODULES[mid].lessons || []).map(l => l.id);
+        // читаем текущее и делаем union — НИКОГДА не перезаписываем чужой прогресс вслепую
+        const snap = await _db.ref(`users/${uid}/${key}`).once('value');
+        const pr = snap.val() || {};
+        const done = Array.isArray(pr.completed) ? pr.completed : (pr.completed ? Object.values(pr.completed) : []);
+        const merged = [...new Set([...done, ...ids])];
+        await _db.ref(`users/${uid}/${key}`).update({ completed: merged });
+        if (_adminUsersCache[uid]) _adminUsersCache[uid][key] = { ...pr, completed: merged };
+      }
+      // Целевой модуль: если ученица его ещё не начинала — ставим первый урок текущим
+      const tKey = target === 'm1' ? 'lessonProgress' : 'lessonProgress_' + target;
+      const tSnap = await _db.ref(`users/${uid}/${tKey}`).once('value');
+      const tPr = tSnap.val();
+      if (!tPr || !tPr.current) {
+        const first = (LESSON_MODULES[target].lessons || [])[0];
+        if (first) await _db.ref(`users/${uid}/${tKey}`).update({ current: first.id });
+      }
+      toast(`Доступ до «${LESSON_MODULES[target].navTitle}» открыт 🎓`, 'var(--sage)');
+    } catch (e) { console.warn('adminOpenModulesUpTo failed:', e); toast('Не получилось открыть модули'); }
   }
   async function adminSaveStudentMeta(uid) {
     if (!ensureAdminAccess()) return;
@@ -31468,12 +31825,16 @@
       if (document.getElementById('screen-admin')?.classList.contains('active')) switchScreen('home');
     }
   }
+  // Защита от двойного тапа по «Войти»/«Зарегистрироваться»: на медленной сети
+  // повторный клик до ответа Firebase давал второй запрос и путающий тост об ошибке.
+  let _authBusy = false;
   async function loginUser(forceName) {
     if (forceName) {
       setActiveUser({ name: forceName, guest: true });
       toast(t('ui.460',{name: forceName}), 'var(--sage)');
       return;
     }
+    if (_authBusy) return;
     const name = (document.getElementById('li-name').value || '').trim();
     const pass = (document.getElementById('li-pass').value || '');
     if (!name) { toast(t('ui.461')); return; }
@@ -31494,6 +31855,7 @@
     }
     // 2. Firebase Auth login (email + password)
     if (!name.includes('@')) { toast(t('ui.465')); return; }
+    _authBusy = true;
     try {
       const cred = await _auth.signInWithEmailAndPassword(name, pass);
       const display = cred.user.displayName || (cred.user.email || '').split('@')[0];
@@ -31513,9 +31875,12 @@
       } else {
         toast(t('ui.471') + (e.message || code));
       }
+    } finally {
+      _authBusy = false;
     }
   }
   async function registerUser() {
+    if (_authBusy) return;
     const name = (document.getElementById('rg-name').value || '').trim();
     const email = (document.getElementById('rg-email').value || '').trim();
     const pass = (document.getElementById('rg-pass').value || '');
@@ -31526,6 +31891,7 @@
     const termsCb = document.getElementById('rg-terms');
     if (termsCb && !termsCb.checked) { toast(t('ui.476')); return; }
     const level = (document.getElementById('rg-level')?.value || '');
+    _authBusy = true;
     try {
       const cred = await _auth.createUserWithEmailAndPassword(email, pass);
       try { await cred.user.updateProfile({ displayName: name }); } catch (_) {}
@@ -31549,6 +31915,8 @@
       } else {
         toast(t('ui.481') + (e.message || code));
       }
+    } finally {
+      _authBusy = false;
     }
   }
 
@@ -34429,24 +34797,20 @@
         Store.set('user', local);
       }
     } else {
-      // No Firebase session — clear stale local user (without toast)
-      // Kakao-сессией управляет Supabase (fbUser всегда null) — её здесь не трогаем,
-      // иначе вошедший через Kakao разлогинивается при каждой перезагрузке.
+      // Нет Firebase-сессии. Kakao-сессией управляет Supabase (fbUser всегда null) —
+      // её здесь не трогаем, иначе Kakao-вход разлогинивается при каждой перезагрузке.
+      // ВАЖНО: iOS Safari и вебвью (Instagram/Telegram) чистят indexedDB с сессией
+      // Firebase агрессивнее, чем localStorage. Раньше мы тут мгновенно сбрасывали
+      // профиль в гостя — у учениц «пропадал» весь XP до повторного входа (данные
+      // целы, но экран показывал гостя). Синхронизация работает по ключу user_<email>
+      // и auth-сессии не требует, поэтому профиль НЕ сбрасываем — оставляем ученицу
+      // в аккаунте и один раз мягко просим войти заново (для сброса пароля и будущих
+      // строгих правил БД сессия всё же нужна).
       if (local && !local.isAdmin && !local.guest && local.provider !== 'kakao') {
-        detachUserListeners();
-        detachFriendsListeners();
-        detachChatListener();
-        Store.del('user');
-        loadUserData();
-        const un = document.getElementById('user-name');
-        const pn = document.getElementById('profile-name');
-        if (un) un.textContent = t('ui.568');
-        if (pn) pn.textContent = t('ui.569');
-        const authSec = document.getElementById('auth-section');
-        const content = document.getElementById('profile-content');
-        if (authSec) authSec.style.display = 'block';
-        if (content) content.style.display = 'none';
-        setProfileAdminMode(false);
+        if (!window._authReloginHinted) {
+          window._authReloginHinted = true;
+          setTimeout(() => { try { toast(t('auth.sessionLost'), 'var(--berry)'); } catch (_) {} }, 2500);
+        }
       }
     }
   });

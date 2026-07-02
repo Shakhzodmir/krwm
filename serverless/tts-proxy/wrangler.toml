@@ -2,11 +2,10 @@ name = "km-tts"
 main = "worker.js"
 compatibility_date = "2024-11-01"
 
-# CORS: для безопасности замени "*" на адрес сайта,
-# например "https://madie.example.com". Тогда воркером смогут
-# пользоваться только страницы твоего сайта.
+# CORS: воркером могут пользоваться только страницы этих сайтов
+# (список через запятую; "*" — разрешить всем).
 [vars]
-ALLOWED_ORIGIN = "*"
+ALLOWED_ORIGIN = "https://koreanmadie.study, https://koreanmadie.web.app, https://koreanmadie.firebaseapp.com"
 
 # Секрет GOOGLE_TTS_KEY здесь НЕ указывается — он задаётся отдельно:
 #   wrangler secret put GOOGLE_TTS_KEY
