@@ -7,6 +7,10 @@
     "ignore": [
       "firebase.json",
       "database.rules.json",
+      "database.rules.interim.json",
+      "serverless/**",
+      "skills-lock.json",
+      "test",
       "**/.*",
       "**/node_modules/**",
       "functions/**",
