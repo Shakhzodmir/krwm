@@ -131,7 +131,7 @@
     'set.calm':         { ru: 'Спокойный режим', en: 'Calm mode', uz: 'Tinch rejim' },
     'set.calm.sub':     { ru: 'Меньше анимаций и движения', en: 'Fewer animations and motion', uz: 'Kamroq animatsiya va harakat' },
     'set.dark':         { ru: 'Тёмная тема', en: 'Dark theme', uz: 'Tungi mavzu' },
-    'set.dark.sub':     { ru: 'Графит и синий — строго и спокойно', en: 'Graphite and blue — calm and clean', uz: 'Grafit va koʻk — sokin va toza' },
+    'set.dark.sub':     { ru: 'Мягкая тёмная — акцент в цвет темы', en: 'Soft dark — accent follows your theme', uz: 'Yumshoq tungi — aksent mavzu rangida' },
     'set.darkAuto':     { ru: 'Авто-тёмная ночью', en: 'Auto dark at night', uz: 'Kechasi avto-tungi' },
     'set.darkAuto.sub': { ru: 'С 20:00 до 08:00 тёмная тема включается сама', en: 'Dark theme turns on by itself 20:00–08:00', uz: '20:00–08:00 da tungi mavzu oʻzi yoqiladi' },
 
@@ -554,7 +554,7 @@
     'ob.verdictLow.title': { ru: '{sc}/{n} — начнём с основ', en: '{sc}/{n} — let’s start with the basics', uz: '{sc}/{n} — asosdan boshlaymiz' },
     'ob.verdictLow.sub':   { ru: 'Идеальная точка старта: алфавит и первые слова. Через месяц не узнаешь себя!', en: 'The perfect starting point: the alphabet and first words. In a month you won’t recognize yourself!', uz: 'Ideal boshlanish: alifbo va birinchi soʻzlar. Bir oyda oʻzingizni tanimaysiz!' },
     'ob.darkTitle':   { ru: 'Есть тёмная тема', en: 'There’s a dark theme', uz: 'Tungi mavzu bor' },
-    'ob.darkSub':     { ru: 'Графит и синий — строго и без розового', en: 'Graphite and blue — sleek, no pink', uz: 'Grafit va koʻk — qatʼiy, pushtisiz' },
+    'ob.darkSub':     { ru: 'Мягкие тёмные тона — глазам спокойнее вечером', en: 'Soft dark tones — easy on the eyes at night', uz: 'Yumshoq tungi ranglar — kechqurun koʻzga qulay' },
     'ob.darkOn':      { ru: 'Включить', en: 'Turn on', uz: 'Yoqish' },
     'ob.darkBack':    { ru: '☀️ Вернуть светлую', en: '☀️ Back to light', uz: '☀️ Yorugʻga qaytarish' },
     'ob.allReady':    { ru: 'Всё готово!', en: 'All set!', uz: 'Hammasi tayyor!' },
@@ -1898,7 +1898,7 @@
     document.querySelectorAll(`.nav-item[data-screen="${name}"]`).forEach(n => n.classList.add('active'));
     if (name === 'hangul' && !document.getElementById('consonants-grid').children.length) initHangulLab();
     if (name === 'games') { syncBestScoreCards(); initGameFavorites(); }
-    if (name === 'home') { _safeRenderGroup([renderBearGuide, renderCustomVideos, renderCustomFeedPosts, renderHeroLesson, renderDailyGoal, renderSrsWidget, renderContinue]); }
+    if (name === 'home') { _guideTipSeed++; _safeRenderGroup([renderBearGuide, renderCustomVideos, renderCustomFeedPosts, renderHeroLesson, renderDailyGoal, renderSrsWidget, renderContinue]); }
     if (name === 'lessons') { _safeRenderGroup([renderModuleSwitcher, renderCustomLessons, renderLessonPath]); }
     if (name === 'profile') { _safeRenderGroup([syncAchievementsStrip, renderWeeklyXpChart, renderHomeworkList, renderSavedWords, renderPlanCard, renderMyLevelChip, refreshProfileEmail]); }
     if (name === 'social') renderFriendsAndChat();
@@ -5164,6 +5164,30 @@
         }
       }
       if (changed) Store.set('customFeedPosts', all);
+      // Комментарии ленты: сотни вшитых base64-аватаров раздули узел до 40+ МБ,
+      // и каждый клиент скачивал его ЦЕЛИКОМ при каждом заходе (профайлер 03.07).
+      // Меняем base64 на URL-аватар автора из справочника или убираем совсем —
+      // рендер и так показывает живой аватар из _userAvatars, поле было fallback'ом.
+      const cSnap = await _db.ref('shared/feedComments').once('value');
+      const byPost = cSnap.val() || {};
+      const fixes = {};
+      const urlAvatarOf = uid => {
+        const u = (uid && _usersDirCache && _usersDirCache[uid]) || null;
+        return (u && u.avatar && !isDataUrl(u.avatar)) ? u.avatar : null;
+      };
+      Object.entries(byPost).forEach(([pid, comments]) => {
+        Object.entries(comments || {}).forEach(([cid, c]) => {
+          if (!c || typeof c !== 'object') return;
+          if (isDataUrl(c.avatar)) fixes[`${pid}/${cid}/avatar`] = urlAvatarOf(c.uid);
+          Object.entries(c.replies || {}).forEach(([rid, r]) => {
+            if (r && isDataUrl(r.avatar)) fixes[`${pid}/${cid}/replies/${rid}/avatar`] = urlAvatarOf(r.uid);
+          });
+        });
+      });
+      if (Object.keys(fixes).length) {
+        await _db.ref('shared/feedComments').update(fixes);
+        console.info('feedComments: вычищено base64-аватаров:', Object.keys(fixes).length);
+      }
     } catch (e) {
       console.warn('feed media migration', e);
       _feedMediaMigrationRan = false; // доделаем в следующей сессии
@@ -25005,10 +25029,138 @@
       ]
     }
   ];
+  // ── Разбор по типам · 쓰기 (письменная часть TOPIK II, задания 51–54) ──
+  // Уровни распределены по вкладкам: 3급→51, 4급→52, 5급→53, 6급→54.
+  // Все примеры авторские (src:'Madie · оригинал'), формат движка общий с чтением.
+  const TOPIK_DEEP_WRITING = [
+    { id:'w51', range:'51', lvl:3, ico:'✉️', title:'Пропуски в практическом тексте', ko:'실용문 ㉠㉡ 채우기', skill:'Дописать 2 фразы в письме или объявлении', ready:true,
+      strategy:[
+        'Определи жанр: приглашение, объявление, письмо, сообщение — у каждого свои шаблонные фразы.',
+        'Прочитай предложения ДО и ПОСЛЕ пропуска: ответ почти всегда прямо связан с ними.',
+        'Держи стиль текста: если вокруг -(스)ㅂ니다 — пропуск пишется так же, без разговорных 요-форм.',
+        'Смотри на знак в конце пропуска: «?» — значит вопрос или вежливая просьба (-(으)ㄹ까요? · -아/어 주시겠어요?).'
+      ],
+      keywords:[
+        ['-(으)ㄹ까요?','как насчёт…? (предложение сделать вместе)','같이 저녁을 먹을까요?'],
+        ['-아/어 주시겠어요?','не могли бы вы…? (вежливая просьба)','문을 좀 닫아 주시겠어요?'],
+        ['-(으)려고 하다','собираться (план на будущее)','주말에 파티를 하려고 합니다'],
+        ['-기 바랍니다','просим… (стиль объявлений)','많이 참석하시기 바랍니다'],
+        ['-(으)면 좋겠습니다','хотелось бы, было бы хорошо','빨리 답장을 주시면 좋겠습니다'],
+        ['-아/어도 됩니까?','можно ли…? (разрешение)','창문을 열어도 됩니까?'],
+        ['혹시','случайно, возможно (смягчает вопрос)','혹시 시간이 있으면 연락해 주세요'],
+        ['-겠습니다','сделаю, обещаю (вежливое намерение)','꼭 연락드리겠습니다']
+      ],
+      examples:[
+        { passage:'민수 씨, 안녕하세요? 다음 주 토요일이 제 생일입니다. 그래서 친구들과 함께 작은 파티를 ( ㉠ ). 시간은 오후 6시이고 장소는 우리 집입니다. 그날 시간이 ( ㉡ ) 꼭 와 주세요. 답장 기다리겠습니다.',
+          passageRu:'Минсу, здравствуйте! В следующую субботу у меня день рождения. Поэтому я с друзьями ( ㉠ ) небольшую вечеринку. Время — 18:00, место — у меня дома. Если в тот день у вас ( ㉡ ) время, обязательно приходите. Жду ответа.',
+          questions:[
+            { label:'㉠', q:'( ㉠ )에 들어갈 알맞은 말을 고르십시오.', options:['하려고 합니다','한 적이 있습니다','하기 싫어합니다','이미 했습니다'], answer:1, explain:'Дальше называются время и место БУДУЩЕЙ вечеринки → это план: -(으)려고 하다 «собираюсь устроить». → ①.' },
+            { label:'㉡', q:'( ㉡ )에 들어갈 알맞은 말을 고르십시오.', options:['없으면','있으면','많아서','없어서'], answer:2, explain:'«…обязательно приходите» — приглашение работает, если время ЕСТЬ: 있으면 «если будет время». → ②.' }
+          ], src:'Madie · оригинал' },
+        { passage:'<지갑을 찾습니다>\n어제 오후 도서관 3층에서 까만색 지갑을 ( ㉠ ). 지갑 안에는 학생증과 가족사진이 들어 있습니다. 지갑을 ( ㉡ ) 아래 번호로 연락해 주시기 바랍니다. 사례하겠습니다. ☎ 010-1234-5678',
+          passageRu:'«Ищу кошелёк». Вчера днём на 3-м этаже библиотеки я ( ㉠ ) чёрный кошелёк. Внутри — студенческий билет и семейное фото. Если вы ( ㉡ ) кошелёк, просим связаться по номеру ниже. Отблагодарю.',
+          questions:[
+            { label:'㉠', q:'( ㉠ )에 들어갈 알맞은 말을 고르십시오.', options:['잃어버렸습니다','샀습니다','찾았습니다','만들었습니다'], answer:1, explain:'Заголовок «ищу кошелёк» + просьба связаться → кошелёк ПОТЕРЯН: 잃어버리다. → ①.' },
+            { label:'㉡', q:'( ㉡ )에 들어갈 알맞은 말을 고르십시오.', options:['잃어버리시면','찾으시면','사시면','버리시면'], answer:2, explain:'Связаться должен тот, кто кошелёк НАШЁЛ: 찾다 + -(으)시- (вежливость) + -면 (условие) = 찾으시면. → ②.' }
+          ], src:'Madie · оригинал' }
+      ] },
+    { id:'w52', range:'52', lvl:4, ico:'📄', title:'Пропуски в объясняющем тексте', ko:'설명문 ㉠㉡ 채우기', skill:'Достроить логику рассуждения', ready:true,
+      strategy:[
+        'Текст 52 — маленькое научно-популярное объяснение: ищи цепочку «утверждение → пояснение → вывод».',
+        'Связки-маркеры (그래서, 그러나, 이처럼, 반면에) прямо подсказывают, ЧТО должно стоять в пропуске.',
+        'Пиши нейтральным письменным стилем: -는다/-ㄴ다 или -(으)ㅂ니다 — как в остальном тексте.',
+        'Заполнив пропуск, перечитай абзац целиком: фраза должна звучать как естественная часть рассуждения.'
+      ],
+      keywords:[
+        ['이처럼','таким образом (обобщение сказанного)','이처럼 잠은 기억에 중요하다'],
+        ['반면(에)','напротив, с другой стороны','반면에 운동을 안 하면 건강이 나빠진다'],
+        ['왜냐하면 … 때문이다','потому что… (развёрнутая причина)','왜냐하면 뇌가 쉬어야 하기 때문이다'],
+        ['-(으)ㄹ수록','чем…, тем…','자주 웃을수록 기분이 좋아진다'],
+        ['-기 위해서(는)','для того чтобы','기억력을 높이기 위해서는 잠이 필요하다'],
+        ['그러므로','следовательно (письменный стиль)','그러므로 충분히 자는 것이 좋다'],
+        ['-다는 연구 결과가 있다','есть исследование, что…','웃음이 건강에 좋다는 연구 결과가 있다'],
+        ['오히려','наоборот, напротив (неожиданный итог)','밤을 새우면 오히려 기억이 안 난다']
+      ],
+      examples:[
+        { passage:'사람은 잠을 자는 동안 낮에 배운 것을 정리한다. 잠이 부족하면 새로운 내용을 기억하기 어렵다. 그래서 시험 전날 밤을 새워서 공부하는 것은 오히려 ( ㉠ ). 공부한 내용을 오래 기억하고 싶으면 충분히 ( ㉡ ) 것이 좋다.',
+          passageRu:'Во сне человек «раскладывает по полочкам» выученное за день. При недосыпе запоминать новое трудно. Поэтому не спать всю ночь перед экзаменом — это, наоборот, ( ㉠ ). Если хочешь надолго запомнить выученное, лучше достаточно ( ㉡ ).',
+          questions:[
+            { label:'㉠', q:'( ㉠ )에 들어갈 알맞은 말을 고르십시오.', options:['좋은 방법이다','도움이 되지 않는다','기억에 오래 남는다','꼭 필요한 일이다'], answer:2, explain:'Логика: мало сна → трудно запоминать. Значит ночь без сна перед экзаменом НЕ помогает (오히려 усиливает неожиданность). → ②.' },
+            { label:'㉡', q:'( ㉡ )에 들어갈 알맞은 말을 고르십시오.', options:['자는','공부하는','먹는','노는'], answer:1, explain:'Вывод всего текста: чтобы помнить — надо достаточно СПАТЬ: 충분히 자는 것이 좋다. → ①.' }
+          ], src:'Madie · оригинал' },
+        { passage:'우리는 보통 기분이 좋을 때 웃는다. 그런데 반대로 웃으면 기분이 ( ㉠ ) 연구 결과가 있다. 웃는 표정을 지으면 뇌가 즐겁다고 느끼기 때문이다. 그러므로 기분이 안 좋을 때일수록 한번 ( ㉡ ) 것이 어떨까?',
+          passageRu:'Обычно мы смеёмся, когда нам хорошо. Но есть исследование: если улыбнуться, настроение ( ㉠ ). Когда мы делаем улыбающееся лицо, мозг «чувствует», что нам весело. Поэтому чем хуже настроение, тем больше повод разок ( ㉡ ) — как вам идея?',
+          questions:[
+            { label:'㉠', q:'( ㉠ )에 들어갈 알맞은 말을 고르십시오.', options:['나빠진다는','좋아진다는','변하지 않는다는','이상해진다는'], answer:2, explain:'반대로 «наоборот»: не «хорошо → улыбка», а «улыбка → хорошо»: настроение УЛУЧШАЕТСЯ (-다는 передаёт содержание исследования). → ②.' },
+            { label:'㉡', q:'( ㉡ )에 들어갈 알맞은 말을 고르십시오.', options:['울어 보는','웃어 보는','화내 보는','참아 보는'], answer:2, explain:'Весь текст о пользе улыбки → «попробовать улыбнуться»: 웃어 보다. → ②.' }
+          ], src:'Madie · оригинал' }
+      ] },
+    { id:'w53', range:'53', lvl:5, ico:'📊', title:'Описание данных · 200–300자', ko:'자료 설명 글쓰기', skill:'Пересказать график цифрами, без мнения', ready:true,
+      strategy:[
+        'Структура из 4 шагов: что исследовали → главные цифры → сравнение или изменение → вывод из данных.',
+        'Первое предложение — пересказ заголовка графика: «…을/를 대상으로 …에 대해 조사하였다».',
+        'Только письменный стиль -았/었다 и только факты из графика: своё мнение в 53 не пишут.',
+        'Объём 200–300자 — это 5–7 предложений; каждую цифру вводи оборотом, а не голым числом.'
+      ],
+      keywords:[
+        ['-을/를 대상으로 조사하다','провести опрос среди…','대학생 500명을 대상으로 조사하였다'],
+        ['-(으)ㄴ 것으로 나타났다','выяснилось, что…','시간이 없어서 못 먹는 것으로 나타났다'],
+        ['-에 비해 / -보다','по сравнению с…','작년에 비해 두 배로 증가하였다'],
+        ['증가하다 ↔ 감소하다','увеличиваться ↔ уменьшаться','꾸준히 증가하고 있다'],
+        ['가장 높게 나타나다','оказаться самым высоким','«시간 부족»이 가장 높게 나타났다'],
+        ['그 다음으로','на втором месте, далее','그 다음으로 «습관이 없어서»가 뒤를 이었다'],
+        ['절반 이상 / 3분의 1','больше половины / треть','응답자의 절반 이상이 아침을 거른다'],
+        ['이러한 결과는 … 보여 준다','эти результаты показывают…','이러한 결과는 아침 식사 습관의 변화를 보여 준다']
+      ],
+      examples:[
+        { passage:'※ 다음 자료를 보고 200~300자로 글을 쓰십시오.\n\n조사 기관: 한국대학교 학생회\n대상: 대학생 500명\n질문: 아침을 먹습니까?\n결과: 매일 먹는다 20% · 가끔 먹는다 45% · 안 먹는다 35%\n안 먹는 이유: ① 시간이 없어서 60% ② 습관이 없어서 25% ③ 입맛이 없어서 15%',
+          passageRu:'Задание: опишите данные опроса (студсовет университета, 500 студентов): «Завтракаете ли вы?» — каждый день 20%, иногда 45%, не завтракаю 35%. Причины: нет времени 60%, нет привычки 25%, нет аппетита 15%.',
+          questions:[
+            { label:'문장 1', q:'Какое ПЕРВОЕ предложение правильно открывает ответ 53?', options:['나는 아침을 안 먹는다. 왜냐하면 시간이 없기 때문이다.','한국대학교 학생회에서 대학생 500명을 대상으로 아침 식사에 대해 조사하였다.','아침을 꼭 먹읍시다! 아침은 건강에 좋습니다.','요즘 대학생들은 너무 바쁜 것 같아요.'], answer:2, explain:'53 начинается с пересказа шапки графика: кто · кого · о чём опросил (-을 대상으로 조사하였다). ① — личное мнение, ③ — призыв, ④ — разговорный стиль с 요. → ②.' },
+            { label:'문장 2', q:'Как правильно записать главный результат письменным стилем?', options:['아침을 안 먹는 학생이 35%나 돼요.','조사 결과 «가끔 먹는다»가 45%로 가장 높게 나타났다.','제 생각에는 다들 아침을 먹어야 한다.','45%가 가끔 먹는다고 말했어요.'], answer:2, explain:'Нужен письменный стиль без 요-форм + оборот подачи данных: -(으)로 가장 높게 나타났다. ①·④ — разговорные (돼요, 말했어요), ③ — мнение, которого в 53 быть не должно. → ②.' }
+          ], src:'Madie · оригинал' },
+        { passage:'<모범 답안 예시>\n한국대학교 학생회에서 대학생 500명을 대상으로 아침 식사에 대해 조사하였다. 조사 결과 아침을 가끔 먹는다는 응답이 45%로 가장 높게 나타났고, 안 먹는다는 응답도 35%나 되었다. 매일 먹는다는 학생은 20%에 불과했다. 아침을 안 먹는 이유로는 «시간이 없어서»가 60%로 가장 많았으며, 그 다음으로 «습관이 없어서»(25%), «입맛이 없어서»(15%)가 뒤를 이었다. 이러한 결과는 많은 대학생들이 바쁜 생활 때문에 아침 식사를 거르고 있음을 보여 준다.',
+          passageRu:'Образец ответа: «Студсовет университета Ханкук опросил 500 студентов о завтраке. Чаще всего отвечали “иногда завтракаю” — 45%; “не завтракаю” — целых 35%. Каждый день завтракают лишь 20%. Главная причина пропуска завтрака — “нет времени” (60%), далее “нет привычки” (25%) и “нет аппетита” (15%). Эти результаты показывают, что многие студенты пропускают завтрак из-за занятости».',
+          questions:[
+            { label:'구조', q:'Какой элемент НЕЛЬЗЯ добавлять в этот ответ?', options:['자료의 출처와 대상','가장 높은 수치와 비교','조사 결과에 대한 나의 감상과 조언','결과가 보여 주는 의미'], answer:3, explain:'В 53 описывают только данные: источник, цифры, сравнения и вывод ИЗ ДАННЫХ. Личные впечатления и советы (감상과 조언) снижают балл. → ③.' }
+          ], src:'Madie · оригинал' }
+      ] },
+    { id:'w54', range:'54', lvl:6, ico:'📝', title:'Эссе-мнение · 600–700자', ko:'주제 글쓰기 (논술)', skill:'Аргументированное сочинение по вопросам задания', ready:true,
+      strategy:[
+        'В задании всегда 2–3 вопроса-подсказки — ответь на КАЖДЫЙ по абзацу: это и есть готовый план эссе.',
+        'Структура: введение (почему тема важна) → аргументы с примерами → вывод с обобщением.',
+        'Стиль строго письменный: -는다/-ㄴ다, -것이다; вместо 저는/나는 — обобщения (사람들은, 우리는).',
+        'Объём 600–700자 обязателен: меньше 600 — минус баллы, поэтому тренируйся укладываться заранее.'
+      ],
+      keywords:[
+        ['-는 데 (긍정적/부정적) 영향을 미치다','положительно/отрицательно влиять на…','실패의 경험은 성장하는 데 긍정적 영향을 미친다'],
+        ['-(으)ㄹ 뿐만 아니라','не только…, но и…','지식을 줄 뿐만 아니라 태도도 바꾼다'],
+        ['물론 -지만','конечно…, однако… (учёт контраргумента)','물론 실패는 고통스럽지만'],
+        ['-(으)ㄹ 필요가 있다','необходимо…','실패를 두려워하지 않을 필요가 있다'],
+        ['첫째, 둘째, 마지막으로','во-первых, во-вторых, наконец','첫째, 실패는 원인을 알려 준다'],
+        ['결론적으로','в заключение','결론적으로 실패는 성공의 밑거름이 된다'],
+        ['-기 마련이다','неизбежно, свойственно','도전하는 사람은 실수하기 마련이다'],
+        ['-(ㄴ/는)다고 생각한다','считаю, что… (письменно)','실패가 꼭 나쁜 것은 아니라고 생각한다']
+      ],
+      examples:[
+        { passage:'※ 다음을 주제로 하여 600~700자로 글을 쓰십시오.\n\n«실패는 누구나 겪는 일이지만, 실패를 대하는 태도는 사람마다 다르다.»\n· 실패는 왜 필요한가?\n· 실패를 통해 무엇을 배울 수 있는가?\n· 실패를 극복하기 위해 어떤 태도가 필요한가?',
+          passageRu:'Задание: эссе 600–700 знаков на тему «Неудачи случаются у всех, но отношение к ним у каждого своё»: зачем нужны неудачи? чему они учат? какое отношение помогает их преодолеть?',
+          questions:[
+            { label:'개요', q:'Какой план эссе правильный?', options:['서론: 내 실패 이야기 → 본론: 그때의 기분 → 결론: 슬펐다','서론: 실패의 의미 → 본론 1: 실패의 필요성 → 본론 2: 실패에서 배우는 것 → 본론 3: 극복하는 태도 → 결론','서론: 성공한 사람들 소개 → 본론: 그들의 명언 → 결론: 나도 성공하고 싶다','실패에 대한 시를 쓴다'], answer:2, explain:'План 54 = вопросы задания, каждый — свой абзац + введение и вывод. Личная история и «хочу успеха» не отвечают на поставленные вопросы. → ②.' },
+            { label:'문체', q:'Какое предложение написано правильным стилем для 54?', options:['실패하면 진짜 속상해요.','저는 실패가 싫어요. 여러분은 어때요?','실패는 성공으로 가는 과정에서 겪는 자연스러운 일이다.','실패??? 무섭다!!!'], answer:3, explain:'54 пишется книжным стилем -(ㄴ/는)다 без 요-форм, обращений и эмоциональных знаков. → ③.' }
+          ], src:'Madie · оригинал' },
+        { passage:'<서론 예시>\n사람은 누구나 살면서 크고 작은 실패를 경험하기 마련이다. 시험에 떨어지기도 하고, 준비한 일이 뜻대로 되지 않기도 한다. 그러나 실패를 어떻게 받아들이느냐에 따라 그 결과는 완전히 달라진다. 실패는 단순한 좌절이 아니라 성장의 기회가 될 수 있기 때문이다. 첫째, 실패는 자신의 부족한 점을 알려 준다. 성공했을 때는 보이지 않던 문제점이 실패를 통해 분명하게 드러난다. 이를 고치는 과정에서 사람은 한 단계 성장하게 된다.',
+          passageRu:'Образец введения и 1-го аргумента: «Каждому в жизни свойственно переживать неудачи… Но результат полностью зависит от того, как их принять: неудача — не просто разочарование, а возможность роста. Во-первых, неудача показывает слабые места: проблемы, невидимые при успехе, проявляются через неё, и, исправляя их, человек растёт».',
+          questions:[
+            { label:'표현', q:'Какая конструкция здесь передаёт «людям свойственно ошибаться»?', options:['-기 마련이다','-(으)ㄹ 뻔하다','-는 척하다','-기 싫어하다'], answer:1, explain:'경험하기 마련이다 = «неизбежно/свойственно переживать» — классика письменного стиля 54. ② «чуть не…», ③ «делать вид», ④ «не хотеть». → ①.' }
+          ], src:'Madie · оригинал' }
+      ] }
+  ];
+
   const TOPIK_DEEP_SECTIONS = [
     { k:'reading',   ico:'📖', t:'읽기 · Чтение', t_uz:'읽기 · Oʻqish',  s:'18 типов · вопросы 1–50', s_uz:'18 tur · 1–50 savollar', types:TOPIK_DEEP_READING, ready:true },
-    { k:'listening', ico:'🎧', t:'듣기 · Аудир.', t_uz:'듣기 · Tinglash',  s:'скоро', s_uz:'tez orada', ready:false },
-    { k:'writing',   ico:'✍️', t:'쓰기 · Письмо', t_uz:'쓰기 · Yozish',  s:'скоро', s_uz:'tez orada', ready:false }
+    { k:'writing',   ico:'✍️', t:'쓰기 · Письмо', t_uz:'쓰기 · Yozish',  s:'51–54 · стратегия · разборы', s_uz:'51–54 · strategiya · tahlillar', types:TOPIK_DEEP_WRITING, ready:true },
+    { k:'listening', ico:'🎧', t:'듣기 · Аудир.', t_uz:'듣기 · Tinglash',  s:'скоро', s_uz:'tez orada', ready:false }
   ];
   const TD_LEVELS = [3, 4, 5, 6];
   const _tdState = { section:null, level:3, typeId:null };
@@ -25683,8 +25835,13 @@
     _tdState.section = k; _tdState.typeId = null; tdRender(); window.scrollTo(0, 0);
   }
   function tdSetLevel(n) { _tdState.level = n; tdRender(); }
+  // Типы активной секции (읽기 / 쓰기 / …) — движок разборов общий для всех секций
+  function tdTypesOf() {
+    const sec = TOPIK_DEEP_SECTIONS.find(s => s.k === _tdState.section);
+    return (sec && sec.types) || [];
+  }
   function tdOpenType(id) {
-    const ty = TOPIK_DEEP_READING.find(x => x.id === id);
+    const ty = tdTypesOf().find(x => x.id === id);
     if (!ty || !ty.ready) { toast(t('ui.183')); return; }
     _tdState.typeId = id; tdRender(); window.scrollTo(0, 0);
   }
@@ -25727,7 +25884,7 @@
       <div class="td-levels" role="group" aria-label="${t('ui.187')}">
         ${TD_LEVELS.map(n => `<button type="button" class="td-level-btn${n === lvl ? ' active' : ''}" onclick="tdSetLevel(${n})" aria-pressed="${n === lvl}">${n}급</button>`).join('')}
       </div>
-      <p class="td-levels-hint"><b>${lvl}급</b> · вопросы ${tdLevelHint(lvl)}</p>
+      <p class="td-levels-hint"><b>${lvl}급</b> · ${sec.k === 'writing' ? '문제 51–54 · письменная часть' : 'вопросы ' + tdLevelHint(lvl)}</p>
       <div class="td-types">
         ${types.map(ty => `
           <button type="button" class="td-type${ty.ready ? '' : ' td-soon'}${ty.ready && tdIsDone(ty.id) ? ' td-type-done' : ''}" onclick="tdOpenType('${ty.id}')" aria-label="${t('ui.188',{range: ty.range, title: ty.title})}">
@@ -25781,8 +25938,9 @@
       </div>`;
   }
   function tdRenderType(slot) {
-    const ty = TOPIK_DEEP_READING.find(x => x.id === _tdState.typeId);
+    const ty = tdTypesOf().find(x => x.id === _tdState.typeId);
     if (!ty) { _tdState.typeId = null; tdRender(); return; }
+    const secKo = _tdState.section === 'writing' ? '쓰기' : _tdState.section === 'listening' ? '듣기' : '읽기';
     const banks = [];
     if (ty.grammar)  banks.push({ ico:'📖', title:'Грамматика',      sub:t('ui.190'), rows:ty.grammar });
     if (ty.vocab)    banks.push({ ico:'📚', title:'Ключевые слова',   sub:t('ui.191'), rows:ty.vocab });
@@ -25815,7 +25973,7 @@
       <button type="button" class="topik-back" onclick="topikDeepBack()"><i class="fa-solid fa-chevron-left"></i> ${t('ui.194')}</button>
       <div class="topik-sec-head">
         <h2 class="topik-sec-title">${ty.ico} ${ty.title}</h2>
-        <p class="topik-sec-sub">읽기 · ${_tdState.level}급 · вопросы ${ty.range} · <span class="ko">${ty.ko}</span></p>
+        <p class="topik-sec-sub">${secKo} · ${_tdState.level}급 · вопросы ${ty.range} · <span class="ko">${ty.ko}</span></p>
       </div>
       <div class="td-block">
         <div class="td-block-h">📌 ${t('ui.195')}</div>
@@ -28504,9 +28662,12 @@
     if (containsProfanity(text)) { toast(t('ui.259')); return; }
     const uid = socialUserId();
     const name = socialUserName();
+    // В общий узел — только URL-аватар (крошечная строка). base64 (старые/гостевые
+    // фото) НЕ вкладываем: сотни комментариев с вшитыми картинками раздули узел до
+    // 40+ МБ, и каждый клиент скачивал его целиком при каждом заходе (инцидент 03.07).
     const avatar = (typeof UStore !== 'undefined') ? UStore.get('avatar') : null;
     const comment = { uid, name, text, ts: Date.now() };
-    if (avatar) comment.avatar = avatar;
+    if (avatar && !isDataUrl(avatar)) comment.avatar = avatar;
     if (input) input.value = '';
     try {
       await _db.ref(`shared/feedComments/${pid}`).push(comment);
@@ -28603,9 +28764,10 @@
     if (containsProfanity(text)) { toast(t('ui.259')); return; }
     const uid = socialUserId();
     const name = socialUserName();
+    // Только URL-аватар — base64 в общий узел не пускаем (см. submitFeedComment)
     const avatar = (typeof UStore !== 'undefined') ? UStore.get('avatar') : null;
     const reply = { uid, name, text, ts: Date.now() };
-    if (avatar) reply.avatar = avatar;
+    if (avatar && !isDataUrl(avatar)) reply.avatar = avatar;
     if (input) input.value = '';
     if (form) form.classList.remove('open');
     // Auto-expand replies block on this comment so the new reply is visible after re-render
@@ -35332,13 +35494,13 @@
         ${levelLine}
         ${planCard}
         ${_obGender === 'm' && !getSettings().darkTheme ? `
-        <div class="card card-padded" style="margin:0 0 14px; display:flex; align-items:center; gap:12px; background:linear-gradient(140deg, #202126, #2B2F39); border:none;">
+        <div class="card card-padded" style="margin:0 0 14px; display:flex; align-items:center; gap:12px; background:linear-gradient(140deg, #211A1D, #35222A); border:none;">
           <span style="font-size:26px; flex-shrink:0;">🌙</span>
           <div style="flex:1; min-width:0; text-align:left;">
             <div style="font-weight:700; color:#E7EBF4; font-size:13.5px;">${t('ob.darkTitle')}</div>
             <div style="font-size:11px; color:rgba(231,235,244,.6); margin-top:2px;">${t('ob.darkSub')}</div>
           </div>
-          <button id="ob-dark-btn" onclick="obEnableDark()" class="btn" style="background:#6B8BD6; color:white; border:none; padding:9px 14px; font-size:12px; flex-shrink:0;">${t('ob.darkOn')}</button>
+          <button id="ob-dark-btn" onclick="obEnableDark()" class="btn" style="background:#CD6379; color:white; border:none; padding:9px 14px; font-size:12px; flex-shrink:0;">${t('ob.darkOn')}</button>
         </div>` : ''}
       </div>
       <div class="ob-foot">
@@ -35409,6 +35571,7 @@
   // Одна конкретная подсказка «что сделать сейчас»: знакомство → повторение SRS →
   // текущий урок → добить цель дня → совет-открытие дня (ротация по дате).
   // Все данные локальные (localStorage/stats) — ни одного обращения к сети.
+  let _guideTipSeed = 0; // растёт с каждым заходом на Главную — совет каждый раз новый
   const GUIDE_TIPS = [
     { tk: 'guide.tip.games.t',  sk: 'guide.tip.games.s',  img: 'assets/bear2.png', action: "switchScreen('games')" },
     { tk: 'guide.tip.hangul.t', sk: 'guide.tip.hangul.s', img: 'assets/bear1.png', action: "switchScreen('hangul')" },
@@ -35456,21 +35619,25 @@
     // 5.5) Зарегистрирован, но тур не пройден — предложим экскурсию
     if (!guest && !Store.get('tourDone'))
       return { img: 'assets/bear1.png', title: t('guide.tour.t'), sub: t('guide.tour.s'), cta: t('guide.tour.c'), action: 'startAppTour()' };
-    // 6) Цель выполнена (или уроки кончились) — советы с ротацией раз в час
+    // 6) Цель выполнена (или уроки кончились) — советы: новый на каждый заход на Главную
     const doneToday = dxp >= goal;
-    const hourIdx = Math.floor(Date.now() / 36e5);
+    const tipIdx = Math.floor(Date.now() / 36e5) + _guideTipSeed;
     if (guest) {
       // Гостю: сохранить прогресс регистрацией ↔ культурный совет с Главной
       const gTips = [
         { img: 'assets/bear3.png', title: t('guide.reg.t'), sub: t('guide.reg.s'), cta: t('guide.reg.c'), action: 'goRegister()' },
         { img: 'assets/bear3.png', title: (doneToday ? '🎉 ' : '') + t('guide.tip.cal.t'), sub: t('guide.tip.cal.s'), cta: t('guide.open'), action: 'showCalendar()' }
       ];
-      return gTips[hourIdx % gTips.length];
+      return gTips[tipIdx % gTips.length];
     }
     const prof = Store.get('onboardProfile') || {};
-    const tips = GUIDE_TIPS.slice();
-    if (Array.isArray(prof.goals) && prof.goals.includes('topik')) tips.unshift(...tips.splice(2, 1)); // цель TOPIK — его совет первым в ротации
-    const tip = tips[hourIdx % tips.length];
+    // Советуем только то, что реально откроется: ИИ-урок — лишь на тарифе Pro AI
+    let tips = GUIDE_TIPS.filter(x => x.action !== 'openAiTutor()' || planAtLeast('proai'));
+    if (Array.isArray(prof.goals) && prof.goals.includes('topik')) {
+      const ti = tips.findIndex(x => x.action === 'openTopik()');
+      if (ti > 0) tips.unshift(...tips.splice(ti, 1)); // цель TOPIK — его совет первым в ротации
+    }
+    const tip = tips[tipIdx % tips.length];
     return { img: tip.img, title: (doneToday ? '🎉 ' : '') + t(tip.tk), sub: t(tip.sk), cta: t('guide.open'), action: tip.action };
   }
   function renderBearGuide() {

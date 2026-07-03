@@ -2010,6 +2010,7 @@
   }
   .ai-tutor-log {
     flex: 1;
+    min-height: 0; /* без этого flex-ребёнок не сжимается и лог не скроллится */
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
     padding: 18px 16px;
@@ -5888,11 +5889,13 @@
     --cream:   #161618;
     --linen:   #121212;
     --paper:   #1B1C1F;
-    --blush:   #222631;
-    --petal:   #333A4A;
-    --rose:    #46587A;
-    --coral:   #6B8BD6;
-    --plum:    #8FA7DE;
+    --blush:   #2E2226;
+    --petal:   #4A2C34;
+    --rose:    #6E4450;
+    /* Тёмная Madie — фирменный розовый акцент (как у остальных тем в тёмной):
+       #CD6379 текстом на карточке 4.43:1, белый на нём 3.71:1 (иконки ≥3:1). */
+    --coral:   #CD6379;
+    --plum:    #D77F90;
     --berry:   #E7EBF4;
     --ink:     #E7EBF4;
     --gold:    #B8C4DC;
@@ -5906,17 +5909,17 @@
     --shadow-sm: 0 1px 2px rgba(0,0,0,.25), 0 2px 6px rgba(0,0,0,.3);
     --shadow-md: 0 2px 6px rgba(0,0,0,.3), 0 8px 22px -10px rgba(0,0,0,.55);
     --shadow-lg: 0 4px 12px -4px rgba(0,0,0,.4), 0 18px 40px -16px rgba(0,0,0,.6);
-    --shadow-glow: 0 0 0 4px rgba(107,139,214,.16), 0 10px 28px -10px rgba(107,139,214,.4);
-    /* Без градиентов: сплошной тёмно-синий + белый текст */
-    --grad-coral: #3D5288;
-    --grad-warm:  #344878;
-    --grad-berry: #1B1C1F;
+    --shadow-glow: 0 0 0 4px rgba(205,99,121,.16), 0 10px 28px -10px rgba(205,99,121,.4);
+    /* Без градиентов: сплошной тёмный берри + белый текст (6.31:1) */
+    --grad-coral: #A53A52;
+    --grad-warm:  #91384C;
+    --grad-berry: #2A171C;
     --grad-cream: #1C1D21;
 
     /* Семантические поверхности и статусы */
-    --accent-rgb: 107,139,214;
-    --rose-rgb:   143,167,222;
-    --petal-rgb:  70,88,122;
+    --accent-rgb: 205,99,121;
+    --rose-rgb:   230,143,160;
+    --petal-rgb:  110,68,80;
     --text2:   rgba(231,235,244,.78);
     --veil:    rgba(231,235,244,.07);
     --card:    #1E1F23;
@@ -5929,13 +5932,13 @@
 
     /* Duo-слой (объёмные карточки): его !important-правила берут цвета
        из этих токенов, поэтому тему переключаем на уровне токенов */
-    /* #5874B8→#4E69AE: текст #F2F5FA на текущей плитке 4.9:1 (было 4.2:1) */
-    --duo-coral:      #4E69AE;
-    --duo-coral-deep: #3D5288;
-    --duo-rose:       #4A63A6;
-    --duo-rose-deep:  #344878;
-    --duo-berry:      #4E69AE;
-    --duo-berry-deep: #36497F;
+    /* Плитки duo: белый текст на --duo-coral 6.31:1, на --duo-rose 4.87:1 */
+    --duo-coral:      #A53A52;
+    --duo-coral-deep: #7C2C3E;
+    --duo-rose:       #B84E64;
+    --duo-rose-deep:  #8A3A4C;
+    --duo-berry:      #A53A52;
+    --duo-berry-deep: #6E2838;
     --duo-gold:       #80671F;
     --duo-gold-deep:  #5F4E1D;
     --duo-sage:       #80671F;
@@ -5943,7 +5946,7 @@
     --sage:           #C9A94E;
     --duo-cream:      #161618;
     --duo-paper:      #1B1C1F;
-    --duo-blush:      #2B2F39;
+    --duo-blush:      #2E2226;
     /* Текст на тёмном золоте/sage (.btn-gold/.chip-gold): светлый, иначе берри #5C2A33
        давал 2.1:1. Теперь #FBF4E4 → 4.9:1 (AA). Перебивает свотчевый duo-ink-line. */
     --duo-ink-line:   #FBF4E4;
@@ -5953,11 +5956,11 @@
        --dk-fill: яркая заливка без текста; --dk-fill-deep: глубокая заливка с мелким
        белым текстом/иконкой (бейдж, ▶); --dk-ink: светлый акцент-текст; --dk-surf/2:
        приподнятые тёмные поверхности (hero, topik-entry, flashcard-back…). */
-    --dk-fill:        #5874B8;
-    --dk-fill-deep:   #3D5288;
-    --dk-ink:         #AFC4EF;
-    --dk-surf:        #222A3C;
-    --dk-surf-2:      #2E3A52;
+    --dk-fill:        #CD6379;
+    --dk-fill-deep:   #A53A52;
+    --dk-ink:         #D77F90;
+    --dk-surf:        #2C1A1E;
+    --dk-surf-2:      #3A2228;
   }
   /* ───── ТЁМНАЯ ВЕРСИЯ КАЖДОГО СВОТЧА ─────
      body.ct-X.theme-dark (специфичность 0,2,1) перебивает базовую тёмную (0,1,1):
@@ -6666,7 +6669,7 @@
      в body.theme-dark, поэтому правила на них адаптируются сами. Здесь — только
      точечные оверрайды для жёстко заданных СВЕТЛЫХ цветов и для градиентов. */
   body.theme-dark .tb-acc-berry { --tb-acc: var(--coral); }   /* в тёмной --berry≈белый, ломает акцент */
-  body.theme-dark .tb-cover { background: linear-gradient(150deg, #2C3358 0%, #3D5288 100%); }
+  body.theme-dark .tb-cover { background: linear-gradient(150deg, var(--dk-surf-2) 0%, var(--dk-fill-deep) 100%); }
   body.theme-dark .tb-cover-start { background: #E7EBF4; color: #1B1C1F; }
   body.theme-dark .tb-stroke { background: linear-gradient(160deg, #24262E, #1B1C1F); }
   body.theme-dark .tb-grid { stroke: rgba(231,235,244,.14); }
