@@ -2506,6 +2506,9 @@
   }
   .flashcard-front { background: var(--grad-cream); border: 1px solid var(--line); }
   .flashcard-back  { background: linear-gradient(160deg, var(--berry), var(--ink)); color: white; transform: rotateY(180deg); }
+  /* Ответ на обороте всегда белый: глобальное «.display { color: var(--duo-berry) }»
+     (duo-редизайн, ~стр. 4825) иначе даёт бордовое-на-бордовом; фон оборота тёмный во всех темах. */
+  .flashcard-back .display, .flashcard-back .ko { color: #fff; }
 
   /* ───── FEED CARDS ───── */
   .feed-card        { background: var(--card); border: 1px solid var(--line); border-radius: 20px; padding: 18px; }
@@ -5392,6 +5395,36 @@
   .ob-opt .ob-ico { width: 38px; height: 38px; flex-shrink: 0; border-radius: 12px; background: var(--blush); display: flex; align-items: center; justify-content: center; font-size: 18px; }
   .ob-opt .ob-check { margin-left: auto; color: var(--coral); opacity: 0; transition: opacity .15s; font-size: 15px; }
   .ob-opt.sel .ob-check { opacity: 1; }
+
+  /* ───── МИШКА-ГИД «КОМДОРИ» (главная) ─────
+     Цвета только через токены темы — тёмная тема и остальные темы
+     подхватываются автоматически. */
+  .bear-guide { display: flex; align-items: flex-end; gap: 8px; }
+  .bear-guide-img {
+    width: 62px; height: 62px; flex-shrink: 0; object-fit: contain;
+    filter: drop-shadow(0 6px 10px rgba(92,42,51,.18));
+    animation: bearBob 3.4s ease-in-out infinite;
+  }
+  @keyframes bearBob {
+    0%, 100% { transform: translateY(0); }
+    50%      { transform: translateY(-3px); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .bear-guide-img { animation: none; }
+  }
+  .bear-bubble {
+    position: relative; flex: 1; min-width: 0; display: block; text-align: left;
+    background: var(--card); border: 1px solid var(--line);
+    border-radius: 18px 18px 18px 6px; padding: 11px 14px 12px;
+    cursor: pointer; font-family: inherit;
+    box-shadow: 0 8px 20px -12px rgba(92,42,51,.25);
+    transition: transform .2s var(--ease-out), box-shadow .2s var(--ease-out);
+  }
+  .bear-bubble:active { transform: scale(.985); }
+  .bear-guide-eyebrow { display: block; font-size: 9px; letter-spacing: .16em; font-weight: 700; color: var(--coral); text-transform: uppercase; }
+  .bear-guide-title { display: block; font-size: 13.5px; font-weight: 700; color: var(--berry); margin-top: 3px; line-height: 1.25; overflow-wrap: anywhere; }
+  .bear-guide-sub { display: block; font-size: 11.5px; color: var(--soft); margin-top: 3px; line-height: 1.5; overflow-wrap: anywhere; }
+  .bear-guide-cta { display: inline-flex; margin-top: 8px; }
 
   /* ───── ФОКУС-ТАЙМЕР (учебная комната) ───── */
   .focus-pill {

@@ -34,11 +34,11 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
 
-<link rel="stylesheet" href="styles.css?v=20260702b">
+<link rel="stylesheet" href="styles.css?v=20260703b">
 
 <!-- Предзагрузка тяжёлого JS: скачивание стартует сразу, параллельно с CSS/шрифтами -->
 <link rel="preload" href="assets/textbook/textbook-data.js?v=20260629a" as="script">
-<link rel="preload" href="app.js?v=20260703a" as="script">
+<link rel="preload" href="app.js?v=20260703d" as="script">
 </head>
 
 <body>
@@ -143,6 +143,9 @@
         <div id="home-greet-avatar" class="home-greet-avatar" aria-label="Аватар" data-i18n-aria="a11y.avatar"></div>
       </div>
     </div>
+
+    <!-- Мишка-гид Комдори (dynamic) -->
+    <div id="bear-guide-slot" style="padding: 0 20px 14px;"></div>
 
     <!-- Continue last game (dynamic; hidden when nothing to resume) -->
     <div id="continue-slot" style="padding: 0 20px 4px;"></div>
@@ -424,6 +427,15 @@
     </header>
 
     <div style="padding: 20px;">
+      <!-- Источник слов для игр: уроки или сохранённый словарик -->
+      <div style="margin-bottom:16px;">
+        <div style="display:flex; gap:6px; flex-wrap:wrap;" role="tablist">
+          <button type="button" role="tab" id="game-src-auto" class="wt-chip active" onclick="setGameSource('auto')">📚 <span data-i18n="games.src.auto">Слова из уроков</span></button>
+          <button type="button" role="tab" id="game-src-mine" class="wt-chip" onclick="setGameSource('mine')">💗 <span data-i18n="games.src.mine">Мои слова</span> <span id="game-src-mine-n"></span></button>
+        </div>
+        <div style="font-size:10px; color:var(--hush); margin-top:6px; line-height:1.45;" data-i18n="games.src.hint">Выбор действует на игры со словами: перевод, слух, память, сборка, карточки, кроссворд, поиск слов</div>
+      </div>
+
       <!-- ⭐ Избранные игры — всплывают наверх -->
       <div id="games-fav-wrap" style="display:none;">
         <div class="section-head"><div class="left"><div class="rule"></div><span class="title"><span data-i18n="games.fav">Избранное</span> <span style="color:var(--gold); margin-left:6px;">★</span></span></div><span class="meta" data-i18n="games.fav.m">любимые игры</span></div>
@@ -1027,7 +1039,7 @@
 
 <!-- ─────────────── DATA + LOGIC ─────────────── -->
 <script src="assets/textbook/textbook-data.js?v=20260629a"></script>
-<script src="app.js?v=20260703a"></script>
+<script src="app.js?v=20260703d"></script>
 
 </body>
 </html>

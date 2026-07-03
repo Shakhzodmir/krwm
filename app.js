@@ -564,6 +564,66 @@
     'ob.regToast':    { ru: 'Создай аккаунт — сохраним твой путь 🌸', en: 'Create an account — we’ll save your journey 🌸', uz: 'Akkaunt yarating — yoʻlingizni saqlaymiz 🌸' },
     'ob.darkOnToast': { ru: 'Тёмная тема включена 🌙', en: 'Dark theme on 🌙', uz: 'Tungi mavzu yoqildi 🌙' },
     'ob.lightToast':  { ru: 'Светлая тема вернулась 🌸', en: 'Light theme is back 🌸', uz: 'Yorugʻ mavzu qaytdi 🌸' },
+    'ob.namePh':      { ru: 'Твоё имя (необязательно)', en: 'Your name (optional)', uz: 'Ismingiz (ixtiyoriy)' },
+    'ob.nameNote':    { ru: 'Мади и мишка-гид будут звать тебя по имени 🧸', en: 'Madie and the guide bear will call you by name 🧸', uz: 'Madie va yoʻlboshchi ayiqcha sizni ismingiz bilan chaqiradi 🧸' },
+    'ob.allReadyName':{ ru: '{name}, всё готово!', en: '{name}, all set!', uz: '{name}, hammasi tayyor!' },
+    'ob.planEyebrow': { ru: 'Твой план на первую неделю', en: 'Your first-week plan', uz: 'Birinchi hafta rejangiz' },
+    'ob.plan.zero.1': { ru: 'Урок 1 — первые буквы хангыля', en: 'Lesson 1 — your first Hangul letters', uz: '1-dars — birinchi hangul harflari' },
+    'ob.plan.zero.2': { ru: 'Hangul Lab — собери свой первый слог', en: 'Hangul Lab — build your first syllable', uz: 'Hangul Lab — birinchi boʻgʻiningizni yigʻing' },
+    'ob.plan.zero.3': { ru: 'Мини-игра, чтобы закрепить буквы', en: 'A mini-game to lock the letters in', uz: 'Harflarni mustahkamlash uchun mini-oʻyin' },
+    'ob.plan.hangul.1': { ru: 'Уроки — первые слова и фразы', en: 'Lessons — first words and phrases', uz: 'Darslar — birinchi soʻzlar va iboralar' },
+    'ob.plan.hangul.2': { ru: 'Игры на запоминание слов', en: 'Games to memorize vocabulary', uz: 'Soʻzlarni yodlash oʻyinlari' },
+    'ob.plan.hangul.3': { ru: 'Словарик — сохраняй и повторяй слова', en: 'Vocabulary — save words and review them', uz: 'Lugʻat — soʻzlarni saqlang va takrorlang' },
+    'ob.plan.basic.1': { ru: 'Уроки — грамматика и простые предложения', en: 'Lessons — grammar and simple sentences', uz: 'Darslar — grammatika va sodda gaplar' },
+    'ob.plan.basic.2': { ru: 'Пробный TOPIK I с разбором ответов', en: 'A TOPIK I mock exam with explanations', uz: 'Javoblar tahlili bilan sinov TOPIK I' },
+    'ob.plan.basic.3': { ru: 'Игры и ИИ-учитель для практики', en: 'Games and the AI tutor for practice', uz: 'Mashq uchun oʻyinlar va AI oʻqituvchi' },
+    'ob.plan.topik':  { ru: 'Пробный TOPIK — узнай свой балл уже сейчас', en: 'A TOPIK mock — find out your score now', uz: 'Sinov TOPIK — balingizni hoziroq biling' },
+    'ob.goLesson':    { ru: 'Начать первый урок ✨', en: 'Start the first lesson ✨', uz: 'Birinchi darsni boshlash ✨' },
+    'ob.goLessons':   { ru: 'Перейти к урокам ✨', en: 'Go to lessons ✨', uz: 'Darslarga oʻtish ✨' },
+    'ob.look':        { ru: 'Сначала осмотрюсь', en: 'I’ll look around first', uz: 'Avval koʻrib chiqaman' },
+
+    // ── Мишка-гид «Комдори» на главной ──
+    'guide.name':    { ru: 'Комдори · 곰돌이', en: 'Komdori · 곰돌이', uz: 'Komdori · 곰돌이' },
+    'guide.meet.t':  { ru: 'Привет! Я Комдори 🧸', en: 'Hi! I’m Komdori 🧸', uz: 'Salom! Men Komdori 🧸' },
+    'guide.meet.s':  { ru: 'Твой мишка-гид. Пройдём короткое знакомство — подскажу, с чего начать.', en: 'Your guide bear. A quick intro — and I’ll show you where to start.', uz: 'Yoʻlboshchi ayiqchangizman. Qisqa tanishuvdan soʻng nimadan boshlashni aytaman.' },
+    'guide.meet.c':  { ru: 'Погнали', en: 'Let’s go', uz: 'Ketdik' },
+    'guide.srs.t':   { ru: 'Пора повторить слова', en: 'Time to review words', uz: 'Soʻzlarni takrorlash vaqti' },
+    'guide.srs.s':   { ru: 'Карточек «созрело»: {n}. Пара минут — и слова останутся с тобой.', en: '{n} cards are due. A couple of minutes — and the words stick.', uz: 'Takrorlashga tayyor kartalar: {n}. Bir-ikki daqiqa — va soʻzlar yodda qoladi.' },
+    'guide.srs.c':   { ru: 'Повторить', en: 'Review', uz: 'Takrorlash' },
+    'guide.today.t': { ru: 'Сегодня ещё не занимались 🌱', en: 'No practice yet today 🌱', uz: 'Bugun hali shugʻullanmadik 🌱' },
+    'guide.today.s': { ru: 'Начни с урока «{name}» — минут десяти хватит.', en: 'Start with the lesson “{name}” — ten minutes is enough.', uz: '«{name}» darsidan boshlang — oʻn daqiqa yetadi.' },
+    'guide.today.c': { ru: 'К уроку', en: 'To the lesson', uz: 'Darsga' },
+    'guide.goal.t':  { ru: 'До цели дня — {n} XP', en: '{n} XP to today’s goal', uz: 'Kunlik maqsadgacha — {n} XP' },
+    'guide.goal.s':  { ru: 'Одна мини-игра — и цель твоя 🔥', en: 'One mini-game — and the goal is yours 🔥', uz: 'Bitta mini-oʻyin — va maqsad sizniki 🔥' },
+    'guide.goal.c':  { ru: 'Играть', en: 'Play', uz: 'Oʻynash' },
+    'guide.open':    { ru: 'Открыть', en: 'Open', uz: 'Ochish' },
+    'guide.tip.games.t':  { ru: 'Загляни в игры 🎮', en: 'Check out the games 🎮', uz: 'Oʻyinlarga qarang 🎮' },
+    'guide.tip.games.s':  { ru: 'Девять мини-игр и K-Pop карточки — учёба, к которой хочется вернуться.', en: 'Nine mini-games and K-Pop cards — learning you come back to.', uz: 'Toʻqqizta mini-oʻyin va K-Pop kartalar — qaytib kelgingiz keladigan taʼlim.' },
+    'guide.tip.hangul.t': { ru: 'Hangul Lab ждёт', en: 'Hangul Lab awaits', uz: 'Hangul Lab kutmoqda' },
+    'guide.tip.hangul.s': { ru: 'Собери слог из букв и послушай, как он звучит.', en: 'Build a syllable from letters and hear how it sounds.', uz: 'Harflardan boʻgʻin yigʻing va qanday jaranglashini eshiting.' },
+    'guide.tip.topik.t':  { ru: 'Пробный TOPIK', en: 'TOPIK mock exam', uz: 'Sinov TOPIK' },
+    'guide.tip.topik.s':  { ru: 'Реальный экзамен с таймером и разбором каждого ответа.', en: 'A real past exam with a timer and per-answer explanations.', uz: 'Taymer va har bir javob tahlili bilan haqiqiy imtihon.' },
+    'guide.tip.cal.t':    { ru: 'Праздники Кореи', en: 'Korean holidays', uz: 'Koreya bayramlari' },
+    'guide.tip.cal.s':    { ru: 'Посмотри, что скоро отмечают в Корее.', en: 'See what Korea celebrates soon.', uz: 'Koreyada yaqinda nima nishonlanishini koʻring.' },
+    'guide.tip.ai.t':     { ru: 'ИИ-учитель 선생님', en: 'AI tutor 선생님', uz: 'AI oʻqituvchi 선생님' },
+    'guide.tip.ai.s':     { ru: 'Задай любой вопрос про корейский — ответит и озвучит.', en: 'Ask anything about Korean — it answers and speaks.', uz: 'Koreys tili haqida istalgan savol bering — javob berib, ovoz chiqaradi.' },
+    'guide.tip.book.t':   { ru: 'Учебник Мади', en: 'Madie’s textbook', uz: 'Madie darsligi' },
+    'guide.tip.book.s':   { ru: 'Вся теория по полочкам — как книга, только живая.', en: 'All the theory, neatly organized — like a book, but alive.', uz: 'Butun nazariya tartib bilan — kitobdek, lekin jonli.' },
+    'guide.tip.social.t': { ru: 'Найди друзей', en: 'Find friends', uz: 'Doʻstlar toping' },
+    'guide.tip.social.s': { ru: 'Общайся с другими учениками прямо в приложении.', en: 'Chat with other learners right in the app.', uz: 'Boshqa oʻquvchilar bilan ilovada muloqot qiling.' },
+    'guide.today.tName': { ru: '{name}, начнём? 🌱', en: '{name}, shall we start? 🌱', uz: '{name}, boshlaymizmi? 🌱' },
+    'guide.streak.t':  { ru: '🔥 Стрик под угрозой!', en: '🔥 Your streak is at risk!', uz: '🔥 Striyk xavf ostida!' },
+    'guide.streak.s':  { ru: 'Один урок сегодня — и огонёк не погаснет.', en: 'One lesson today — and the flame stays lit.', uz: 'Bugun bitta dars — va olov oʻchmaydi.' },
+    'guide.goalLesson.s': { ru: 'Ещё один урок — и цель дня твоя 🌸', en: 'One more lesson — and the daily goal is yours 🌸', uz: 'Yana bitta dars — va kunlik maqsad sizniki 🌸' },
+    'guide.reg.t':     { ru: 'Сохраню твой прогресс', en: 'I’ll keep your progress safe', uz: 'Progressingizni saqlayman' },
+    'guide.reg.s':     { ru: 'Зарегистрируйся бесплатно — XP, стрик и словарик не потеряются.', en: 'Register for free — XP, streak and vocabulary won’t be lost.', uz: 'Bepul roʻyxatdan oʻting — XP, striyk va lugʻat yoʻqolmaydi.' },
+    'guide.reg.c':     { ru: 'Создать аккаунт', en: 'Create account', uz: 'Akkaunt yaratish' },
+
+    // ── Гейт «нужен аккаунт» (гостевой режим) ──
+    'gate.title': { ru: 'Это откроется после регистрации', en: 'This unlocks after registration', uz: 'Bu roʻyxatdan oʻtgach ochiladi' },
+    'gate.sub':   { ru: 'Гостям открыты Главная и уроки модуля. Зарегистрируйся бесплатно — откроется всё остальное, а прогресс сохранится 🌸', en: 'Guests get the Home screen and module lessons. Register for free to unlock everything else — your progress carries over 🌸', uz: 'Mehmonlarga Asosiy sahifa va modul darslari ochiq. Bepul roʻyxatdan oʻting — qolgan hammasi ochiladi, progress saqlanadi 🌸' },
+    'gate.cta':   { ru: 'Зарегистрироваться бесплатно', en: 'Register for free', uz: 'Bepul roʻyxatdan oʻtish' },
+    'gate.later': { ru: 'Позже', en: 'Later', uz: 'Keyinroq' },
 
     // ── Культур-деталь (정) ──
     'cult.eyebrow': { ru: 'Непереводимое корейское слово', en: 'An untranslatable Korean word', uz: 'Tarjima qilib boʻlmaydigan koreyscha soʻz' },
@@ -1641,6 +1701,15 @@
     "mw.pickSubAll": { ru: "На основе всех сохранённых: {n}", en: "Based on all saved words: {n}", uz: "Barcha saqlanganlar asosida: {n}" },
     "mw.fit":        { ru: "подходит: {n}", en: "fit: {n}", uz: "mos: {n}" },
     "mw.needMore":   { ru: "нужно ещё слов: минимум {n}", en: "need more words: at least {n}", uz: "yana soʻz kerak: kamida {n}" },
+    "mw.t.proverb":  { ru: "Пословицы", en: "Proverbs", uz: "Maqollar" },
+    "mw.t.idiom":    { ru: "Фразеологизмы", en: "Idioms", uz: "Iboraviy birikmalar" },
+    // ── Источник слов для игр (экран «Игры») ──
+    "games.src.auto":  { ru: "Слова из уроков", en: "Lesson words", uz: "Dars soʻzlari" },
+    "games.src.mine":  { ru: "Мои слова", en: "My words", uz: "Mening soʻzlarim" },
+    "games.src.hint":  { ru: "Выбор действует на игры со словами: перевод, слух, память, сборка, карточки, кроссворд, поиск слов", en: "Applies to word games: translate, listening, memory, build, flashcards, crossword, word search", uz: "Soʻz oʻyinlariga taalluqli: tarjima, tinglash, xotira, yigʻish, kartochkalar, krossvord, soʻz qidirish" },
+    "games.src.onMine":        { ru: "Игры пойдут на твоих словах: {n} шт. 🌸", en: "Games will use your words: {n} 🌸", uz: "Oʻyinlar sizning soʻzlaringizda boʻladi: {n} ta 🌸" },
+    "games.src.few":           { ru: "Сохранённых слов пока мало — добавили слова из уроков 🌱", en: "Not enough saved words yet — lesson words added 🌱", uz: "Saqlangan soʻzlar hali kam — dars soʻzlari qoʻshildi 🌱" },
+    "games.src.matchFallback": { ru: "Для «Подбери картинку» нужны слова с картинками — взяли слова уроков", en: "Match Picture needs words with pictures — using lesson words", uz: "«Rasmni tanla» uchun rasmli soʻzlar kerak — dars soʻzlari olindi" },
     "mw.g.flash":    { ru: "Карточки", en: "Flashcards", uz: "Kartochkalar" },
     "mw.g.translate":{ ru: "Быстрый перевод", en: "Quick translate", uz: "Tez tarjima" },
     "mw.g.listen":   { ru: "На слух", en: "By ear", uz: "Eshitib topish" },
@@ -1782,6 +1851,8 @@
   }
   function switchScreen(name, restoreScroll) {
     if (name === 'admin' && !isAdmin()) name = 'home'; // кабинет только для админа
+    // Гостям закрытые разделы не открываем — показываем приглашение зарегистрироваться
+    if ((name in GUEST_LOCKED_SCREENS) && !requireAccount(GUEST_LOCKED_SCREENS[name] ? t(GUEST_LOCKED_SCREENS[name]) : '')) return;
     _screenScroll[_curScreen] = _getScroll();
     // Тап по навигации закрывает оверлеи переписки/профиля участника и поп-ап
     // входящего сообщения — иначе они «висят» поверх нового экрана.
@@ -1795,7 +1866,7 @@
     document.querySelectorAll(`.nav-item[data-screen="${name}"]`).forEach(n => n.classList.add('active'));
     if (name === 'hangul' && !document.getElementById('consonants-grid').children.length) initHangulLab();
     if (name === 'games') { syncBestScoreCards(); initGameFavorites(); }
-    if (name === 'home') { _safeRenderGroup([renderCustomVideos, renderCustomFeedPosts, renderHeroLesson, renderDailyGoal, renderSrsWidget, renderContinue]); }
+    if (name === 'home') { _safeRenderGroup([renderBearGuide, renderCustomVideos, renderCustomFeedPosts, renderHeroLesson, renderDailyGoal, renderSrsWidget, renderContinue]); }
     if (name === 'lessons') { _safeRenderGroup([renderModuleSwitcher, renderCustomLessons, renderLessonPath]); }
     if (name === 'profile') { _safeRenderGroup([syncAchievementsStrip, renderWeeklyXpChart, renderHomeworkList, renderSavedWords, renderPlanCard, renderMyLevelChip, refreshProfileEmail]); }
     if (name === 'social') renderFriendsAndChat();
@@ -2285,11 +2356,39 @@
   // ── My Words (personal vocab) ──
   // Unified storage for words user wants to remember — from Hangul Lab, flashcards,
   // game word pool, lessons. Migrates old "hangulWords" format on first read.
+  // ── Реестр идиом и пословиц раздела «Самообучение → Идиомы и пословицы» ──
+  // Пословицы (속담) размечены вручную; остальные записи раздела — фразеологизмы (관용구).
+  // Нужен, чтобы сохранённые из игр/карточек выражения попадали в свои вкладки словарика.
+  const KNOWN_PROVERBS = new Set([
+    '수박 겉 핥기', '울며 겨자 먹기', '달리는 말에 채찍질', '도랑 치고 가재 잡는다',
+    '돌다리도 두들겨 보고 건너라', '떡 본 김에 제사 지낸다', '한마디 말로 천 냥 빚도 갚는다',
+    '비 온 뒤에 땅이 굳어진다', '천 리 길도 한 걸음부터', '소 잃고 외양간 고친다',
+    '가는 말이 고와야 오는 말이 곱다', '발 없는 말이 천 리 간다', '호랑이도 제 말 하면 온다',
+    '티끌 모아 태산', '윗물이 맑아야 아랫물이 맑다', '백지장도 맞들면 낫다',
+    '우물 안 개구리', '그림의 떡', '하늘의 별 따기'
+  ]);
+  let _ssIdiomIndex = null; // ko → 'proverb' | 'idiom', лениво из SELFSTUDY (объявлен ниже по файлу)
+  function ssIdiomTypeOf(ko) {
+    if (_ssIdiomIndex === null) {
+      _ssIdiomIndex = {};
+      try {
+        const sec = SELFSTUDY.find(s => s.k === 'ss-idioms');
+        ssGroups(sec).forEach(g => (g.words || []).forEach(row => {
+          const k = String(row[0] || '').trim();
+          if (k) _ssIdiomIndex[k] = KNOWN_PROVERBS.has(k) ? 'proverb' : 'idiom';
+        }));
+      } catch (_) { _ssIdiomIndex = {}; }
+    }
+    return _ssIdiomIndex[String(ko || '').trim()] || (KNOWN_PROVERBS.has(String(ko || '').trim()) ? 'proverb' : null);
+  }
   // Автоопределение типа записи, когда место сохранения не передало его явно:
-  // грамматика — конструкции с дефисом/тильдой ('-기 전에', '~(으)면'); фраза — несколько
-  // слов через пробел; иначе — слово. Явно переданный type всегда важнее эвристики.
+  // пословица/фразеологизм — по реестру выше; грамматика — конструкции с дефисом/тильдой
+  // ('-기 전에', '~(으)면'); фраза — несколько слов через пробел; иначе — слово.
+  // Явно переданный type всегда важнее эвристики.
   function classifyWordType(ko) {
     const k = String(ko || '').trim();
+    const reg = ssIdiomTypeOf(k);
+    if (reg) return reg;
     if (/^[-~–]/.test(k) || /\(으\)|\(이\)|-(기|게|지|다)\b/.test(k)) return 'grammar';
     if (/\s/.test(k)) return 'phrase';
     return 'word';
@@ -2306,6 +2405,16 @@
     // сохранённые до появления вкладок, разъезжаются по своим разделам.
     let touched = false;
     list.forEach(w => { if (w && w.ko && !w.type) { w.type = classifyWordType(w.ko); touched = true; } });
+    // v2: пословицы (속담) и фразеологизмы (관용구) выделены из «фраз» — разовая
+    // переразметка по реестру; явную грамматику не трогаем.
+    if (!UStore.get('myWordsTypedV2')) {
+      list.forEach(w => {
+        if (!w || !w.ko || w.type === 'grammar') return;
+        const c = classifyWordType(w.ko);
+        if (c !== w.type) { w.type = c; touched = true; }
+      });
+      UStore.set('myWordsTypedV2', 1);
+    }
     if (touched) UStore.set('myWords', list);
     return list;
   }
@@ -2342,7 +2451,8 @@
     } else {
       saveMyWord(ko, ru, translit, emoji, source, type);
       const tp = type || classifyWordType(ko);
-      const note = tp === 'grammar' ? 'грамматика' : tp === 'phrase' ? 'фраза' : 'слово';
+      const note = tp === 'grammar' ? 'грамматика' : tp === 'phrase' ? 'фраза'
+        : tp === 'proverb' ? 'пословица' : tp === 'idiom' ? 'фразеологизм' : 'слово';
       toast(t('ui.007',{note: note, ko: ko}), 'var(--sage)');
     }
     // Re-paint button if provided (поддержка видов: лейбл-кнопка, чип-слово разбора, иконка-сердечко)
@@ -2366,12 +2476,14 @@
   // My Words view state (search / sort / multi-select)
   let _wordsQuery = '';
   let _wordsSort = 'recent';        // 'recent' | 'alpha'
-  let _wordsType = 'all';           // 'all' | 'word' | 'grammar' | 'phrase'
+  let _wordsType = 'all';           // 'all' | 'word' | 'grammar' | 'phrase' | 'proverb' | 'idiom'
   let _wordsSelected = new Set();   // ko of words ticked for "study selected"
   const WORD_TYPE_META = {
     word:    { emoji: '📝', label: t('ui.008') },
     grammar: { emoji: '📚', label: t('ui.009') },
-    phrase:  { emoji: '💬', label: t('ui.010') }
+    phrase:  { emoji: '💬', label: t('ui.010') },
+    proverb: { emoji: '📜', label: t('mw.t.proverb') },
+    idiom:   { emoji: '🎭', label: t('mw.t.idiom') }
   };
   function wordTypeOf(w) { return (w && w.type) || 'word'; } // старые записи без type → слово
 
@@ -2394,8 +2506,10 @@
     }
     // Controls (search + sort) are rendered once here; the list re-renders separately
     // so typing in search doesn't recreate (and unfocus) the input.
-    const tcount = { word: 0, grammar: 0, phrase: 0 };
+    const tcount = { word: 0, grammar: 0, phrase: 0, proverb: 0, idiom: 0 };
     list.forEach(w => { tcount[wordTypeOf(w)] = (tcount[wordTypeOf(w)] || 0) + 1; });
+    // Базовые три вкладки — всегда; пословицы и фразеологизмы появляются, когда есть записи.
+    const typeTabs = ['word', 'grammar', 'phrase'].concat(['proverb', 'idiom'].filter(tp => tcount[tp] > 0 || _wordsType === tp));
     slot.innerHTML = `
       <div class="words-controls">
         <div class="words-search">
@@ -2409,7 +2523,7 @@
       </div>
       <div class="words-types">
         <button type="button" class="wt-chip ${_wordsType==='all'?'active':''}" onclick="setWordsType('all')">${t('ui.r004')} · ${list.length}</button>
-        ${['word','grammar','phrase'].map(tp => `<button type="button" class="wt-chip ${_wordsType===tp?'active':''}" onclick="setWordsType('${tp}')">${WORD_TYPE_META[tp].emoji} ${WORD_TYPE_META[tp].label} · ${tcount[tp]}</button>`).join('')}
+        ${typeTabs.map(tp => `<button type="button" class="wt-chip ${_wordsType===tp?'active':''}" onclick="setWordsType('${tp}')">${WORD_TYPE_META[tp].emoji} ${WORD_TYPE_META[tp].label} · ${tcount[tp]}</button>`).join('')}
       </div>
       <div id="saved-words-actionbar" style="display:flex; justify-content:space-between; align-items:center; gap:10px; margin:10px 2px;"></div>
       <div id="saved-words-items" style="display:grid; gap:6px;"></div>`;
@@ -3561,7 +3675,8 @@
   function buildFlashcards() {
     return [
       ...gameWordPool().map(w => ({ front:w.ko, translit:w.translit||'', emoji:w.emoji||'🌸', meaning:w.ru, example:w.example||'' })),
-      ...Store.get('customFlashcards', [])
+      // В режиме «Мои слова» карточки — только из сохранённого словарика, без админ-наборов
+      ...(gameSource() === 'mine' && myWordsPoolRaw().length >= 4 ? [] : Store.get('customFlashcards', []))
     ];
   }
   // Earliest-due first (due 0 = новое/просроченное идёт вперёд).
@@ -3602,6 +3717,15 @@
     const heartIcon = saved
       ? '<i class="fa-solid fa-heart" style="color:var(--coral);"></i>'
       : '<i class="fa-regular fa-heart"></i>';
+    // Размер текста подстраивается под длину: слово — крупно, фраза/пословица — мельче,
+    // иначе длинные записи вылезают за рамки карточки.
+    const frontLen = [...String(card.front || '')].length;
+    const koSize = frontLen <= 4 ? 50 : frontLen <= 8 ? 40 : frontLen <= 14 ? 31 : frontLen <= 22 ? 25 : 21;
+    const emojiSize = frontLen > 14 ? 28 : 42;
+    const trSpacing = frontLen <= 8 ? '0.32em' : '0.06em';
+    const meanLen = [...String(card.meaning || '')].length;
+    const meanSize = meanLen <= 12 ? 32 : meanLen <= 24 ? 26 : meanLen <= 40 ? 21 : 17;
+    const cardH = (frontLen > 14 || meanLen > 40) ? 280 : 240;
     flashSetContent(`
       <div style="background:var(--card); border-radius:24px; padding:22px; box-shadow:var(--shadow-md); border:1px solid var(--line);">
         <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:14px;">
@@ -3614,12 +3738,12 @@
             <div onclick="closeGameModal('flash-modal')" style="font-size:24px; line-height:1; color:var(--soft); cursor:pointer; padding:4px 8px;">×</div>
           </div>
         </div>
-        <div class="flashcard ${flipped ? 'flipped' : ''}" id="fc" style="width:100%; height:240px;" onclick="flipFlashcard()">
+        <div class="flashcard ${flipped ? 'flipped' : ''}" id="fc" style="width:100%; height:${cardH}px;" onclick="flipFlashcard()">
           <div class="flashcard-inner">
             <div class="flashcard-face flashcard-front">
-              <div style="font-size:42px;">${escHtml(card.emoji)}</div>
-              <div class="ko" style="font-size:50px; font-weight:700; color:var(--berry); line-height:1; margin-top:6px;">${escHtml(card.front)}</div>
-              ${card.translit ? `<div style="color:var(--coral); letter-spacing: 0.32em; margin-top: 6px;">[ ${escHtml(card.translit)} ]</div>` : ''}
+              <div style="font-size:${emojiSize}px;">${escHtml(card.emoji)}</div>
+              <div class="ko" style="font-size:${koSize}px; font-weight:700; color:var(--berry); line-height:1.2; margin-top:6px; text-align:center; max-width:100%; word-break:keep-all; overflow-wrap:anywhere;">${escHtml(card.front)}</div>
+              ${card.translit ? `<div style="color:var(--coral); letter-spacing:${trSpacing}; margin-top:6px; text-align:center; max-width:100%; overflow-wrap:anywhere;">[ ${escHtml(card.translit)} ]</div>` : ''}
               <div style="display:flex; gap:8px; margin-top:14px;" onclick="event.stopPropagation();">
                 <button onclick="event.stopPropagation(); playSyllable('${jsStr(card.front)}', this)" class="btn-mic" style="background:var(--card); border-color:var(--line-strong);"><i class="fa-solid fa-volume-up"></i> ${t('ui.028')}</button>
                 <button onclick="event.stopPropagation(); pronounceCheck('${jsStr(card.front)}', this)" class="btn-mic"><i class="fa-solid fa-microphone"></i> ${t('ui.029')}</button>
@@ -3628,7 +3752,7 @@
             </div>
             <div class="flashcard-face flashcard-back">
               <div style="font-size:10px; opacity:.7; letter-spacing: 0.16em;">${t('ui.031')}</div>
-              <div class="display" style="font-size:32px; margin-top:4px;">${escHtml(card.meaning)}</div>
+              <div class="display" style="font-size:${meanSize}px; margin-top:4px; text-align:center; max-width:100%; line-height:1.3; word-break:break-word; overflow-wrap:anywhere;">${escHtml(card.meaning)}</div>
               ${card.example ? `<div style="border-top:1px solid rgba(255,255,255,.18); border-bottom:1px solid rgba(255,255,255,.18); padding: 14px 0; margin-top:18px; font-size:12.5px; text-align:center; line-height:1.5;">
                 <span class="ko">«${escHtml(card.example.split(' — ')[0])}»</span><br>
                 <span style="opacity:.8;">— ${escHtml(card.example.split(' — ')[1] || '')}</span>
@@ -4585,6 +4709,42 @@
     return `<span class="plan-price">${p.priceM} $<i>${t('ui.047')}</i></span><span class="plan-price-sub">${t('ui.r016',{price: p.firstM})} · −50%</span>`;
   }
 
+  // ── Гостевой гейт: без аккаунта открыты Главная (с виджетами), Уроки модуля и Профиль ──
+  // Остальные разделы видны в навигации, но по тапу зовут на бесплатную регистрацию.
+  // Значение — i18n-ключ подписи раздела для модалки ('' = без подписи).
+  const GUEST_LOCKED_SCREENS = {
+    games: 'nav.games', social: 'nav.social', words: '', topik: 'home.topik',
+    textbook: '', selfstudy: '', topikdeep: 'home.topik', reading: '', studykr: '', hangul: ''
+  };
+  function isGuestish() { const u = Store.get('user'); return !u || !!u.guest; }
+  function requireAccount(label) {
+    if (!isGuestish()) return true;
+    showRegisterGate(label || '');
+    return false;
+  }
+  function goRegister() {
+    document.getElementById('register-gate')?.remove();
+    switchScreen('profile');
+    try { showAuthTab('register'); } catch (_) {}
+  }
+  function showRegisterGate(label) {
+    document.getElementById('register-gate')?.remove();
+    const m = document.createElement('div');
+    m.className = 'modal-bg modal-center';
+    m.id = 'register-gate';
+    m.onclick = e => { if (e.target === m) m.remove(); };
+    m.innerHTML = `
+      <div class="modal-card" style="max-width:360px; text-align:center;">
+        <img src="assets/bear1.png" alt="" style="height:92px; margin:2px auto 6px; display:block;" onerror="this.style.display='none'">
+        ${label ? `<div class="page-eyebrow" style="color:var(--coral);">${escHtml(label)}</div>` : ''}
+        <div class="display" style="font-size:21px; color:var(--berry); margin-top:2px;">${t('gate.title')}</div>
+        <div style="font-size:12.5px; color:var(--soft); margin-top:8px; line-height:1.6;">${t('gate.sub')}</div>
+        <button onclick="goRegister()" class="btn btn-primary btn-block" style="margin-top:16px;">${t('gate.cta')}</button>
+        <button onclick="this.closest('.modal-bg').remove()" class="btn btn-ghost btn-block" style="margin-top:8px;">${t('gate.later')}</button>
+      </div>`;
+    document.body.appendChild(m);
+  }
+
   // Карточка «Мой тариф» в профиле
   function renderPlanCard() {
     const slot = document.getElementById('profile-plan-slot');
@@ -4822,6 +4982,11 @@
   }
 
   let _dirReadyFlag = null; // null — ещё не спрашивали у облака
+  // Справочник учеников не меняется поминутно (имя/фото/уровень), а живой
+  // онлайн-статус в чате идёт отдельным heartbeat-путём — поэтому в пределах TTL
+  // отдаём его прямо из localStorage БЕЗ единого обращения к сети: ученик может
+  // открывать «Общение» весь день, а справочник скачается с сервера один раз.
+  const DIR_CACHE_TTL_MS = 10 * 60 * 1000;
   async function loadUsersDirectory() {
     if (typeof _db === 'undefined') return {};
     try {
@@ -4834,6 +4999,12 @@
         _adminUsersCacheAt = Date.now();
         return _usersDirCache;
       }
+      const cached = Store.get('usersDirCacheV1', null);
+      if (cached && cached.data && (Date.now() - (cached.at || 0)) < DIR_CACHE_TTL_MS) {
+        _dirReadyFlag = !!cached.dirReady;
+        _usersDirCache = cached.data;
+        return _usersDirCache;
+      }
       if (_dirReadyFlag === null) {
         const f = await _db.ref('shared/config/dirReady').once('value');
         _dirReadyFlag = !!f.val();
@@ -4844,7 +5015,11 @@
         try {
           const snap = await _db.ref('usersPublic').once('value');
           const val = snap.val();
-          if (val && Object.keys(val).length) { _usersDirCache = val; return _usersDirCache; }
+          if (val && Object.keys(val).length) {
+            _usersDirCache = val;
+            Store.set('usersDirCacheV1', { at: Date.now(), dirReady: true, data: val });
+            return _usersDirCache;
+          }
         } catch (_) { /* справочник не прочитался — ниже старый путь */ }
       }
       const snap = await _db.ref('users').once('value');
@@ -7649,7 +7824,9 @@
     renderDailyGoal();
     renderSrsWidget();
     renderContinue();
+    renderBearGuide();
     applyAvatar(UStore.get('avatar'));
+    updateGameSourceUI();
   }
 
   // ── СЛОВА УРОКА 1 · 한글 ──
@@ -9659,7 +9836,22 @@
     });
     return out;
   }
+  // ── Источник слов для игр (тумблер на экране «Игры») ──
+  // 'auto' — уроки + самообучение + словарик (как всегда); 'mine' — ТОЛЬКО сохранённые
+  // «Мои слова». При нехватке сохранённых (<4 с переводом) тихо падаем на уроки,
+  // чтобы ни одна игра не осталась без материала.
+  function gameSource() { return UStore.get('gameSrc', 'auto') === 'mine' ? 'mine' : 'auto'; }
+  function myWordsPoolRaw() {
+    try { return getMyWords().filter(w => w && w.ko && w.ru); } catch (_) { return []; }
+  }
   function gameWordPool() {
+    if (gameSource() === 'mine') {
+      const mine = myWordsPoolRaw().map(w => ({ ko: w.ko, ru: w.ru, translit: w.translit || '', emoji: w.emoji || '🌸', example: '' }));
+      if (mine.length >= 4) return mine;
+    }
+    return _lessonsWordPool();
+  }
+  function _lessonsWordPool() {
     const admin = isAdmin();
     const rank = userLevelRank();              // -1 = уровень не выбран
     const seen = new Set(); const out = [];
@@ -9682,6 +9874,24 @@
     // 4) Запасной набор — пока слов мало (новичок без прогресса и без выбранного уровня).
     if (out.length < 8) LEGACY_WORDS.forEach(add);
     return out;
+  }
+  function setGameSource(src) {
+    const v = src === 'mine' ? 'mine' : 'auto';
+    UStore.set('gameSrc', v);
+    updateGameSourceUI();
+    if (v === 'mine') {
+      const n = myWordsPoolRaw().length;
+      toast(n >= 4 ? t('games.src.onMine', { n: n }) : t('games.src.few'), 'var(--sage)');
+    }
+  }
+  function updateGameSourceUI() {
+    const src = gameSource();
+    const a = document.getElementById('game-src-auto');
+    const m = document.getElementById('game-src-mine');
+    if (a) a.classList.toggle('active', src === 'auto');
+    if (m) m.classList.toggle('active', src === 'mine');
+    const nEl = document.getElementById('game-src-mine-n');
+    if (nEl) nEl.textContent = '· ' + myWordsPoolRaw().length;
   }
   // Кол-во раундов растёт с числом пройденных уроков (+1 за урок, максимум +6)
   function scaledRounds(base) {
@@ -28906,6 +29116,7 @@
   function renderContinue() {
     const slot = document.getElementById('continue-slot');
     if (!slot) return;
+    if (isGuestish()) { slot.innerHTML = ''; return; } // игры гостям закрыты — чип не показываем
     const lg = UStore.get('lastGame', null);
     if (!lg || !lg.action) { slot.innerHTML = ''; return; }
     // lg.action is an internal function call string (e.g. "startDictation()") — not user input.
@@ -28977,6 +29188,7 @@
     const nowReached = stats.dailyXp >= goal;
     syncStats();
     renderDailyGoal();
+    renderBearGuide();
     if (label !== false) {
       const pop = document.createElement('div');
       pop.textContent = '+' + n + ' XP';
@@ -32135,7 +32347,7 @@
       // Первое нажатие «Регистрация» → знакомство с Madie, после него — сюда же, на форму.
       // Свой флаг obRegSeen: старые версии ставили onboardDone всем гостям автоматически.
       if (!Store.get('user') && !Store.get('obRegSeen') && !document.getElementById('onboard')) {
-        startOnboardingTour();
+        startOnboardingTour('register');
       }
     }
   }
@@ -32253,6 +32465,7 @@
     if (forceName) {
       setActiveUser({ name: forceName, guest: true });
       toast(t('ui.460',{name: forceName}), 'var(--sage)');
+      switchScreen('home'); // гостя ведём на Главную — его основной экран
       return;
     }
     if (_authBusy) return;
@@ -32320,6 +32533,8 @@
       setActiveUser({ name, email: cred.user.email, uid: cred.user.uid, level });
       toast(t('ui.477',{name: name}), 'var(--sage)');
       try { applyPendingReferral(cred.user.uid, name); } catch (_) {}
+      // Завершение регистрации → экран тарифов (Базовый уже активен, можно сразу закрыть)
+      setTimeout(() => { try { openPlanPage(); } catch (_) {} }, 700);
     } catch (e) {
       console.warn('register error:', e);
       const code = e.code || '';
@@ -32642,7 +32857,13 @@
   let matchScore = 0, matchRound = 0, matchTotal = 5, matchPool = [];
   function startMatch() {
     // «Подбери картинку» работает по эмодзи: берём слова с настоящим эмодзи, а если их мало — весь пул.
-    const pool = gameWordPool(); const emo = pool.filter(_wHasEmoji);
+    let pool = gameWordPool(); let emo = pool.filter(_wHasEmoji);
+    if (emo.length < 4 && gameSource() === 'mine') {
+      // Игра различает ответы по эмодзи: без 4 разных картинок в сохранённых она
+      // выродится (все плитки 🌸 «правильные») — честно берём слова уроков.
+      toast(t('games.src.matchFallback'));
+      pool = _lessonsWordPool(); emo = pool.filter(_wHasEmoji);
+    }
     matchData = (emo.length >= 4 ? emo : pool).map(w => ({ word:w.ko, emoji:w.emoji||'🌸', meaning:w.ru }));
     matchTotal = Math.min(scaledRounds(5), matchData.length);
     matchScore = 0; matchRound = 0;
@@ -34051,6 +34272,7 @@
   ].join('\n');
   let _aiMsgs = [], _aiLogHtml = [], _aiBusy = false;
   function openAiTutor() {
+    if (!requireAccount(t('lessons.ai'))) return; // гостям — сперва аккаунт, потом тариф
     if (!requirePlan('proai', 'Урок с ИИ')) return;
     if (document.getElementById('ai-tutor-modal')) return;
     ensurePuter().catch(() => {}); // прогреваем SDK заранее, пока ученица печатает
@@ -34857,30 +35079,52 @@
     ['basic', '🌳', 'Читаю и немного говорю', 'База есть, хочу дальше'],
     ['unknown', '🤔', 'Не знаю свой уровень', 'Пройти мини-тест из 10 вопросов']
   ];
-  let _obStep = 0, _obGoals = [], _obLevel = '', _obQuiz = null, _obGender = '';
+  let _obStep = 0, _obGoals = [], _obLevel = '', _obQuiz = null, _obGender = '', _obName = '', _obIntent = '';
   function maybeStartOnboarding() {
     if (Store.get('onboardDone')) return;
     if (Store.get('user')) { Store.set('onboardDone', 1); return; } // уже в аккаунте — не мешаем
     startOnboardingTour();
   }
-  function startOnboardingTour() {
+  // intent: 'register' — знакомство открыто с кнопки «Регистрация», финал ведёт в форму аккаунта
+  function startOnboardingTour(intent) {
     document.getElementById('settings-modal')?.remove();
     document.getElementById('onboard')?.remove();
-    _obStep = 0; _obGoals = []; _obLevel = ''; _obQuiz = null; _obGender = '';
+    _obStep = 0; _obGoals = []; _obLevel = ''; _obQuiz = null; _obGender = ''; _obName = '';
+    _obIntent = intent === 'register' ? 'register' : '';
     const el = document.createElement('div');
     el.id = 'onboard';
     document.body.appendChild(el);
     paintOnboard();
   }
   function obSkip() { finishOnboarding(false); }
-  function finishOnboarding(toRegister) {
+  // next: true → регистрация · 'lesson' → сразу в текущий урок · 'lessons' → экран уроков · false → просто закрыть
+  function finishOnboarding(next) {
     Store.set('onboardDone', 1);
     Store.set('obRegSeen', 1);
-    Store.set('onboardProfile', { goals: _obGoals, level: _obLevel, gender: _obGender, miniScore: _obQuiz ? _obQuiz.score : null, at: Date.now() });
+    Store.set('onboardProfile', {
+      name: _obName, goals: _obGoals, level: obEffectiveLevel(), picked: _obLevel, gender: _obGender,
+      miniScore: _obQuiz ? _obQuiz.score : null, miniTotal: _obQuiz ? _obQuiz.qs.length : null, at: Date.now()
+    });
     document.getElementById('onboard')?.remove();
-    if (toRegister && !Store.get('user')) {
+    // Гостя сразу зовём по имени (при регистрации имя переедет в форму)
+    if (_obName && !Store.get('user')) {
+      const un = document.getElementById('user-name');
+      if (un) un.textContent = _obName;
+    }
+    try { renderBearGuide(); } catch (_) {}
+    if (next === 'lesson') {
+      const cur = getCurrentLesson();
+      if (cur) { try { startLessonFlow(cur.id); } catch (_) { switchScreen('lessons'); } }
+      else switchScreen('lessons');
+    } else if (next === 'lessons') {
+      switchScreen('lessons');
+    } else if (next === true && !Store.get('user')) {
       switchScreen('profile');
-      try { showAuthTab('register'); } catch (_) {}
+      try {
+        showAuthTab('register');
+        const rn = document.getElementById('rg-name');
+        if (rn && !rn.value && _obName) rn.value = _obName;
+      } catch (_) {}
       toast(t('ob.regToast'), 'var(--berry)');
     }
   }
@@ -34925,6 +35169,8 @@
         <div class="ob-body" style="justify-content:flex-start; padding-top:26px; text-align:left; align-items:stretch;">
           <div class="ob-title" style="text-align:center;">${t('ob.aboutYou')}</div>
           <div class="ob-sub" style="text-align:center; margin:8px auto 20px;">${t('ob.aboutYouSub')}</div>
+          <input id="ob-name" class="input" maxlength="24" autocomplete="off" placeholder="${escHtml(t('ob.namePh'))}" value="${escHtml(_obName)}" style="margin-bottom:6px;">
+          <div style="font-size:10.5px; color:var(--soft); margin:0 4px 16px;">${t('ob.nameNote')}</div>
           <button class="ob-opt ${_obGender === 'f' ? 'sel' : ''}" onclick="obPickGender('f')">
             <span class="ob-ico">👩</span>${t('ob.girl')}
             <i class="fa-solid fa-check ob-check"></i>
@@ -34939,7 +35185,7 @@
           </button>
         </div>
         <div class="ob-foot">
-          <button class="btn btn-primary btn-block" onclick="if(_obGender){_obStep++; paintOnboard()}else{toast('${jsStr(t('ob.pickOne'))}')}">${t('ob.next')}</button>
+          <button class="btn btn-primary btn-block" onclick="obGrabName(); if(_obGender){_obStep++; paintOnboard()}else{toast('${jsStr(t('ob.pickOne'))}')}">${t('ob.next')}</button>
         </div>`;
       return;
     }
@@ -34999,31 +35245,50 @@
         </div>`;
       return;
     }
-    // Шаг 6: финал (с результатом теста или без)
+    // Шаг 7: финал — вердикт мини-теста, персональный план недели, прямой вход в занятия
+    const effLvl = obEffectiveLevel();
     let levelLine = '';
     if (_obQuiz) {
       const sc = _obQuiz.score, n = _obQuiz.qs.length;
-      const verdict = sc >= 8 ? ['🌳', t('ob.verdictHi.title', { sc: sc, n: n }), t('ob.verdictHi.sub')]
-        : sc >= 5 ? ['🌸', t('ob.verdictMid.title', { sc: sc, n: n }), t('ob.verdictMid.sub')]
+      const verdict = sc >= Math.ceil(n * 0.75) ? ['🌳', t('ob.verdictHi.title', { sc: sc, n: n }), t('ob.verdictHi.sub')]
+        : sc >= Math.ceil(n * 0.45) ? ['🌸', t('ob.verdictMid.title', { sc: sc, n: n }), t('ob.verdictMid.sub')]
         : ['🌱', t('ob.verdictLow.title', { sc: sc, n: n }), t('ob.verdictLow.sub')];
       levelLine = `
-        <div class="card card-padded" style="margin:0 0 16px; text-align:center; background:linear-gradient(160deg, var(--card), var(--paper));">
+        <div class="card card-padded" style="margin:0 0 14px; text-align:center; background:linear-gradient(160deg, var(--card), var(--paper));">
           <div style="font-size:38px;">${verdict[0]}</div>
           <div class="display" style="font-size:19px; color:var(--berry); margin-top:4px;">${verdict[1]}</div>
           <div style="font-size:12px; color:var(--soft); margin-top:6px; line-height:1.55;">${verdict[2]}</div>
         </div>`;
     }
+    const planKeys = {
+      zero:   ['ob.plan.zero.1', 'ob.plan.zero.2', 'ob.plan.zero.3'],
+      hangul: ['ob.plan.hangul.1', 'ob.plan.hangul.2', 'ob.plan.hangul.3'],
+      basic:  ['ob.plan.basic.1', 'ob.plan.basic.2', 'ob.plan.basic.3']
+    };
+    const planRows = (planKeys[effLvl] || planKeys.zero).slice();
+    if (_obGoals.includes('topik') && effLvl !== 'basic') planRows.push('ob.plan.topik'); // у basic TOPIK уже в плане
+    const planCard = `
+      <div class="card card-padded" style="margin:0 0 14px; text-align:left;">
+        <div class="page-eyebrow" style="color:var(--coral);">${t('ob.planEyebrow')}</div>
+        ${planRows.map((k, i) => `
+          <div style="display:flex; gap:10px; align-items:flex-start; margin-top:${i ? 9 : 12}px;">
+            <span style="width:22px; height:22px; flex-shrink:0; border-radius:50%; background:rgba(var(--accent-rgb),.14); color:var(--coral); font-size:11px; font-weight:800; display:flex; align-items:center; justify-content:center;">${i + 1}</span>
+            <span style="font-size:12.5px; color:var(--berry); line-height:1.5; min-width:0; padding-top:3px;">${t(k)}</span>
+          </div>`).join('')}
+      </div>`;
     el.innerHTML = `
       <div class="ob-top"><div></div><div></div></div>
-      <div class="ob-body" style="align-items:stretch;">
-        <div class="ob-art" style="margin:0 auto 14px;">
+      <div class="ob-body" style="justify-content:flex-start; align-items:stretch;">
+        <div class="ob-art" style="margin:0 auto 10px; width:132px; height:132px;">
           <div class="ob-circle"></div>
-          <img src="assets/bear3.png" alt="" onerror="this.style.display='none'">
-          <span class="ob-emoji" style="top:4px; right:0;">🎉</span>
+          <img src="assets/bear3.png" alt="" style="height:114px;" onerror="this.style.display='none'">
+          <span class="ob-emoji" style="top:0; right:-6px;">🎉</span>
         </div>
+        <div class="ob-title" style="text-align:center; font-size:22px; margin-bottom:14px;">${_obName ? t('ob.allReadyName', { name: escHtml(_obName) }) : t('ob.allReady')}</div>
         ${levelLine}
+        ${planCard}
         ${_obGender === 'm' && !getSettings().darkTheme ? `
-        <div class="card card-padded" style="margin:0 0 16px; display:flex; align-items:center; gap:12px; background:linear-gradient(140deg, #202126, #2B2F39); border:none;">
+        <div class="card card-padded" style="margin:0 0 14px; display:flex; align-items:center; gap:12px; background:linear-gradient(140deg, #202126, #2B2F39); border:none;">
           <span style="font-size:26px; flex-shrink:0;">🌙</span>
           <div style="flex:1; min-width:0; text-align:left;">
             <div style="font-weight:700; color:#E7EBF4; font-size:13.5px;">${t('ob.darkTitle')}</div>
@@ -35031,12 +35296,15 @@
           </div>
           <button id="ob-dark-btn" onclick="obEnableDark()" class="btn" style="background:#6B8BD6; color:white; border:none; padding:9px 14px; font-size:12px; flex-shrink:0;">${t('ob.darkOn')}</button>
         </div>` : ''}
-        <div class="ob-title" style="text-align:center; font-size:22px;">${t('ob.allReady')}</div>
-        <div class="ob-sub" style="text-align:center; margin:8px auto 0;">${t('ob.allReadySub')}</div>
       </div>
       <div class="ob-foot">
+        <div style="font-size:10.5px; color:var(--soft); text-align:center; margin-bottom:10px;">${t('ob.allReadySub')}</div>
+        ${_obIntent === 'register' ? `
         <button class="btn btn-primary btn-block" onclick="finishOnboarding(true)">${t('ob.createAcc')}</button>
-        <button class="btn btn-ghost btn-block" style="margin-top:10px;" onclick="finishOnboarding(false)">${t('ob.later')}</button>
+        <button class="ob-skip" style="display:block; margin:8px auto 0;" onclick="finishOnboarding(false)">${t('ob.look')}</button>` : `
+        <button class="btn btn-primary btn-block" onclick="finishOnboarding('${effLvl === 'basic' ? 'lessons' : 'lesson'}')">${effLvl === 'basic' ? t('ob.goLessons') : t('ob.goLesson')}</button>
+        <button class="btn btn-ghost btn-block" style="margin-top:10px;" onclick="finishOnboarding(true)">${t('ob.createAcc')}</button>
+        <button class="ob-skip" style="display:block; margin:8px auto 0;" onclick="finishOnboarding(false)">${t('ob.look')}</button>`}
       </div>`;
   }
   function obToggleGoal(k) {
@@ -35044,8 +35312,19 @@
     if (i >= 0) _obGoals.splice(i, 1); else _obGoals.push(k);
     paintOnboard();
   }
-  function obPickGender(g) { _obGender = g; paintOnboard(); }
+  function obGrabName() {
+    const inp = document.getElementById('ob-name');
+    if (inp) _obName = inp.value.trim().slice(0, 24);
+  }
+  function obPickGender(g) { obGrabName(); _obGender = g; paintOnboard(); }
   function obPickLevel(k) { _obLevel = k; paintOnboard(); }
+  // Итоговый уровень: явный выбор либо оценка по мини-тесту (доля верных ответов)
+  function obEffectiveLevel() {
+    if (_obLevel && _obLevel !== 'unknown') return _obLevel;
+    if (!_obQuiz || !_obQuiz.qs.length) return 'zero';
+    const r = _obQuiz.score / _obQuiz.qs.length;
+    return r >= 0.75 ? 'basic' : r >= 0.45 ? 'hangul' : 'zero';
+  }
   function obAfterLevel() {
     if (!_obLevel) { toast(t('ob.pickOne')); return; }
     if (_obLevel === 'unknown' || (_obGoals.includes('topik') && _obLevel !== 'zero')) {
@@ -35082,14 +35361,98 @@
     paintOnboard();
   }
 
+  // ── Мишка-гид «Комдори» на главной ──
+  // Одна конкретная подсказка «что сделать сейчас»: знакомство → повторение SRS →
+  // текущий урок → добить цель дня → совет-открытие дня (ротация по дате).
+  // Все данные локальные (localStorage/stats) — ни одного обращения к сети.
+  const GUIDE_TIPS = [
+    { tk: 'guide.tip.games.t',  sk: 'guide.tip.games.s',  img: 'assets/bear2.png', action: "switchScreen('games')" },
+    { tk: 'guide.tip.hangul.t', sk: 'guide.tip.hangul.s', img: 'assets/bear1.png', action: "switchScreen('hangul')" },
+    { tk: 'guide.tip.topik.t',  sk: 'guide.tip.topik.s',  img: 'assets/bear5.png', action: 'openTopik()' },
+    { tk: 'guide.tip.cal.t',    sk: 'guide.tip.cal.s',    img: 'assets/bear3.png', action: 'showCalendar()' },
+    { tk: 'guide.tip.ai.t',     sk: 'guide.tip.ai.s',     img: 'assets/bear5.png', action: 'openAiTutor()' },
+    { tk: 'guide.tip.book.t',   sk: 'guide.tip.book.s',   img: 'assets/bear1.png', action: "switchScreen('textbook')" },
+    { tk: 'guide.tip.social.t', sk: 'guide.tip.social.s', img: 'assets/bear2.png', action: "switchScreen('social')" }
+  ];
+  // Короткое имя для обращений: аккаунт → имя из знакомства (гостевое «Гостья 🌸» не считаем)
+  function guideUserName() {
+    const u = Store.get('user');
+    if (u && u.name && !u.guest) return String(u.name).trim().split(/\s+/)[0];
+    const prof = Store.get('onboardProfile') || {};
+    return prof.name ? String(prof.name).trim().split(/\s+/)[0] : '';
+  }
+  function guideNextStep() {
+    const guest = isGuestish();
+    // 1) Новичок без знакомства — зовём в онбординг
+    if (!Store.get('onboardDone') && !Store.get('user'))
+      return { img: 'assets/bear1.png', title: t('guide.meet.t'), sub: t('guide.meet.s'), cta: t('guide.meet.c'), action: 'startOnboardingTour()' };
+    ensureDailyCounter();
+    // 2) «Созревшие» карточки — самое ценное действие дня (виджет SRS живёт на Главной, гостям тоже можно)
+    let due = 0;
+    try { due = srsDueList().length; } catch (_) {}
+    if (due > 0)
+      return { img: 'assets/bear5.png', title: t('guide.srs.t'), sub: t('guide.srs.s', { n: due }), cta: t('guide.srs.c'), action: 'startDueFlashcards()' };
+    const goal = stats.dailyGoal || 30, dxp = stats.dailyXp || 0;
+    const cur = getCurrentLesson();
+    const name = guideUserName();
+    const hour = new Date().getHours();
+    // 3) Вечер, сегодня пусто, а стрик живой — спасаем огонёк
+    if (!dxp && cur && hour >= 18 && (stats.streak || 0) >= 1)
+      return { img: 'assets/bear2.png', title: t('guide.streak.t'), sub: t('guide.streak.s'), cta: t('guide.today.c'), action: `startLessonFlow('${cur.id}')` };
+    // 4) Сегодня ещё ничего не делали — мягко в текущий урок, по имени
+    if (!dxp && cur)
+      return { img: 'assets/bear2.png', title: name ? t('guide.today.tName', { name: escHtml(name) }) : t('guide.today.t'), sub: t('guide.today.s', { name: lessonTitle(cur) }), cta: t('guide.today.c'), action: `startLessonFlow('${cur.id}')` };
+    // 5) Цель дня близко — гостю уроком (игры закрыты), остальным мини-игрой
+    if (dxp && dxp < goal) {
+      if (guest && cur)
+        return { img: 'assets/bear1.png', title: t('guide.goal.t', { n: goal - dxp }), sub: t('guide.goalLesson.s'), cta: t('guide.today.c'), action: `startLessonFlow('${cur.id}')` };
+      if (!guest)
+        return { img: 'assets/bear1.png', title: t('guide.goal.t', { n: goal - dxp }), sub: t('guide.goal.s'), cta: t('guide.goal.c'), action: "switchScreen('games')" };
+    }
+    // 6) Цель выполнена (или уроки кончились) — советы с ротацией раз в час
+    const doneToday = dxp >= goal;
+    const hourIdx = Math.floor(Date.now() / 36e5);
+    if (guest) {
+      // Гостю: сохранить прогресс регистрацией ↔ культурный совет с Главной
+      const gTips = [
+        { img: 'assets/bear3.png', title: t('guide.reg.t'), sub: t('guide.reg.s'), cta: t('guide.reg.c'), action: 'goRegister()' },
+        { img: 'assets/bear3.png', title: (doneToday ? '🎉 ' : '') + t('guide.tip.cal.t'), sub: t('guide.tip.cal.s'), cta: t('guide.open'), action: 'showCalendar()' }
+      ];
+      return gTips[hourIdx % gTips.length];
+    }
+    const prof = Store.get('onboardProfile') || {};
+    const tips = GUIDE_TIPS.slice();
+    if (Array.isArray(prof.goals) && prof.goals.includes('topik')) tips.unshift(...tips.splice(2, 1)); // цель TOPIK — его совет первым в ротации
+    const tip = tips[hourIdx % tips.length];
+    return { img: tip.img, title: (doneToday ? '🎉 ' : '') + t(tip.tk), sub: t(tip.sk), cta: t('guide.open'), action: tip.action };
+  }
+  function renderBearGuide() {
+    const slot = document.getElementById('bear-guide-slot');
+    if (!slot) return;
+    let s = null;
+    try { s = guideNextStep(); } catch (e) { console.warn('[guide]', e); }
+    if (!s) { slot.innerHTML = ''; return; }
+    slot.innerHTML = `
+      <div class="bear-guide">
+        <img class="bear-guide-img" src="${s.img}" alt="" onerror="this.style.visibility='hidden'">
+        <button type="button" class="bear-bubble" onclick="${s.action}" aria-label="${escHtml(s.title)}">
+          <span class="bear-guide-eyebrow">${t('guide.name')}</span>
+          <span class="bear-guide-title">${s.title}</span>
+          <span class="bear-guide-sub">${s.sub}</span>
+          <span class="chip chip-coral bear-guide-cta">${s.cta}</span>
+        </button>
+      </div>`;
+  }
+
   // ── Intro splash ──
   function dismissIntro() {
     const i = document.getElementById('intro');
     if (!i || i.classList.contains('dismissing')) return;
     i.classList.add('dismissing');
     setTimeout(() => i.remove(), 700);
-    // Знакомство больше не запускается само: оно открывается при первом
-    // нажатии «Регистрация» (showAuthTab) или из Настроек.
+    // Знакомство здесь не запускаем: новичок после заставки видит экран входа
+    // (boot-роутинг), знакомство открывает первое нажатие «Регистрация» (showAuthTab),
+    // мишка-гид или Настройки.
   }
   (function petals() {
     const layer = document.getElementById('intro-petals');
@@ -35183,6 +35546,16 @@
     const adminBadge = document.getElementById('profile-admin-badge');
     if (adminBadge) adminBadge.style.display = savedUser.isAdmin ? 'inline-flex' : 'none';
     setProfileAdminMode(!!savedUser.isAdmin);
+  } else {
+    // Гость, назвавший имя в знакомстве, — здороваемся по имени
+    const obProf = Store.get('onboardProfile');
+    if (obProf && obProf.name) {
+      const un = document.getElementById('user-name');
+      if (un) un.textContent = obProf.name;
+    }
+    // Самый первый вход (ни аккаунта, ни гостя): показываем экран входа —
+    // оттуда «Регистрация» (→ знакомство с Мади) или «Продолжить как гость».
+    try { switchScreen('profile'); } catch (_) {}
   }
   // Init Firebase sync first so UStore writes propagate to cloud
   initFirebaseSync();
