@@ -625,6 +625,32 @@
     'gate.cta':   { ru: 'Зарегистрироваться бесплатно', en: 'Register for free', uz: 'Bepul roʻyxatdan oʻtish' },
     'gate.later': { ru: 'Позже', en: 'Later', uz: 'Keyinroq' },
 
+    // ── Тур по приложению (экскурсия с Комдори) ──
+    'set.tour':     { ru: 'Тур по приложению', en: 'App tour', uz: 'Ilova boʻylab tur' },
+    'set.tour.sub': { ru: 'Экскурсия с Комдори: что где находится', en: 'A tour with Komdori: what’s where', uz: 'Komdori bilan sayohat: nima qayerda' },
+    'guide.tour.t': { ru: 'Провести экскурсию? 🧭', en: 'Want a quick tour? 🧭', uz: 'Qisqa sayohat qilamizmi? 🧭' },
+    'guide.tour.s': { ru: 'За две минуты покажу, что где находится.', en: 'In two minutes I’ll show you what’s where.', uz: 'Ikki daqiqada nima qayerdaligini koʻrsataman.' },
+    'guide.tour.c': { ru: 'Погнали', en: 'Let’s go', uz: 'Ketdik' },
+    'tour.next':    { ru: 'Дальше', en: 'Next', uz: 'Keyingi' },
+    'tour.skip':    { ru: 'Пропустить', en: 'Skip', uz: 'Oʻtkazib yuborish' },
+    'tour.startLesson': { ru: 'Начать первый урок ✨', en: 'Start the first lesson ✨', uz: 'Birinchi darsni boshlash ✨' },
+    'tour.s1.t': { ru: 'Это я, Комдори 🧸', en: 'That’s me, Komdori 🧸', uz: 'Bu men, Komdori 🧸' },
+    'tour.s1.s': { ru: 'Живу на Главной и каждый день подсказываю один следующий шаг. Просто тапни по пузырю.', en: 'I live on Home and suggest one next step every day. Just tap the bubble.', uz: 'Asosiy sahifada yashayman va har kuni bitta keyingi qadamni aytaman. Pufakchaga tegining.' },
+    'tour.s2.t': { ru: 'Цель дня и стрик 🔥', en: 'Daily goal and streak 🔥', uz: 'Kunlik maqsad va striyk 🔥' },
+    'tour.s2.s': { ru: 'Занимайся каждый день — огонёк растёт, XP копится. Цель можно поменять тапом.', en: 'Practise daily — the flame grows, XP adds up. Tap to change the goal.', uz: 'Har kuni shugʻullaning — olov oʻsadi, XP yigʻiladi. Maqsadni tegib oʻzgartirish mumkin.' },
+    'tour.s3.t': { ru: 'Твой путь уроков 🌸', en: 'Your lesson path 🌸', uz: 'Darslar yoʻlingiz 🌸' },
+    'tour.s3.s': { ru: 'Уроки идут по порядку: пройденный открывает следующий. Начни с первого — я рядом.', en: 'Lessons go in order: each one unlocks the next. Start with the first — I’m nearby.', uz: 'Darslar tartib bilan: har biri keyingisini ochadi. Birinchisidan boshlang — men yoningizdaman.' },
+    'tour.s4.t': { ru: 'Дополнительные разделы', en: 'Extra sections', uz: 'Qoʻshimcha boʻlimlar' },
+    'tour.s4.s': { ru: 'Урок с ИИ, подготовка к TOPIK, самостоятельное изучение и учебник — когда захочешь больше.', en: 'AI lessons, TOPIK prep, self-study and the textbook — when you want more.', uz: 'AI dars, TOPIK tayyorgarligi, mustaqil oʻrganish va darslik — koʻproq xohlasangiz.' },
+    'tour.s5.t': { ru: 'Игры 🎮', en: 'Games 🎮', uz: 'Oʻyinlar 🎮' },
+    'tour.s5.s': { ru: 'Закрепляй слова играя: карточки, слух, память, кроссворды. XP идёт в общую копилку.', en: 'Lock words in by playing: cards, listening, memory, crosswords. XP counts too.', uz: 'Oʻynab soʻzlarni mustahkamlang: kartalar, tinglash, xotira, krossvordlar. XP ham yigʻiladi.' },
+    'tour.s6.t': { ru: 'Общение 💬', en: 'Chat 💬', uz: 'Muloqot 💬' },
+    'tour.s6.s': { ru: 'Друзья по языку, чат с Мади и моменты учеников — вместе веселее.', en: 'Language friends, chat with Madie and student moments — it’s more fun together.', uz: 'Til boʻyicha doʻstlar, Madie bilan chat va oʻquvchilar lahzalari — birga qiziqroq.' },
+    'tour.s7.t': { ru: 'Профиль и тариф', en: 'Profile and plan', uz: 'Profil va tarif' },
+    'tour.s7.s': { ru: 'Прогресс, словарик, домашки, достижения и твой тариф — всё здесь.', en: 'Progress, vocabulary, homework, achievements and your plan — all here.', uz: 'Progress, lugʻat, uy vazifalari, yutuqlar va tarifingiz — hammasi shu yerda.' },
+    'tour.fin.t': { ru: 'Вот и всё! 화이팅 🌸', en: 'That’s it! 화이팅 🌸', uz: 'Tamom! 화이팅 🌸' },
+    'tour.fin.s': { ru: 'Если потеряешься — я на Главной, подскажу. Начнём с первого урока?', en: 'If you get lost — I’m on Home to help. Shall we start the first lesson?', uz: 'Adashsangiz — men Asosiy sahifadaman, yordam beraman. Birinchi darsni boshlaymizmi?' },
+
     // ── Культур-деталь (정) ──
     'cult.eyebrow': { ru: 'Непереводимое корейское слово', en: 'An untranslatable Korean word', uz: 'Tarjima qilib boʻlmaydigan koreyscha soʻz' },
     'cult.p1':      { ru: '<span class="ko" style="font-weight:600;">정</span> — это глубокая привязанность и тёплая связь между людьми, которая <em>растёт со временем</em>.', en: '<span class="ko" style="font-weight:600;">정</span> is a deep attachment and warm bond between people that <em>grows over time</em>.', uz: '<span class="ko" style="font-weight:600;">정</span> — bu odamlar oʻrtasidagi chuqur mehr va iliq rishta, u <em>vaqt oʻtgani sari kuchayadi</em>.' },
@@ -2478,12 +2504,16 @@
   let _wordsSort = 'recent';        // 'recent' | 'alpha'
   let _wordsType = 'all';           // 'all' | 'word' | 'grammar' | 'phrase' | 'proverb' | 'idiom'
   let _wordsSelected = new Set();   // ko of words ticked for "study selected"
+  // ВАЖНО: label — функция, а не готовая строка. Раньше t(...) вызывался один раз
+  // при определении этого объекта (на старте скрипта, ещё до того, как APP_LANG
+  // подхватывал язык ученика) — надпись застывала на дефолтном языке навсегда,
+  // даже после смены языка. Баг проявлялся как узбекские подписи на русской версии.
   const WORD_TYPE_META = {
-    word:    { emoji: '📝', label: t('ui.008') },
-    grammar: { emoji: '📚', label: t('ui.009') },
-    phrase:  { emoji: '💬', label: t('ui.010') },
-    proverb: { emoji: '📜', label: t('mw.t.proverb') },
-    idiom:   { emoji: '🎭', label: t('mw.t.idiom') }
+    word:    { emoji: '📝', get label() { return t('ui.008'); } },
+    grammar: { emoji: '📚', get label() { return t('ui.009'); } },
+    phrase:  { emoji: '💬', get label() { return t('ui.010'); } },
+    proverb: { emoji: '📜', get label() { return t('mw.t.proverb'); } },
+    idiom:   { emoji: '🎭', get label() { return t('mw.t.idiom'); } }
   };
   function wordTypeOf(w) { return (w && w.type) || 'word'; } // старые записи без type → слово
 
@@ -4786,6 +4816,11 @@
   function closePlanPage() {
     document.getElementById('plan-page')?.remove();
     if (!document.getElementById('chat-page')) document.body.classList.remove('chat-open');
+    // Первое закрытие тарифов после регистрации → экскурсия с Комдори
+    if (Store.get('tourPending')) {
+      Store.del('tourPending');
+      if (!Store.get('tourDone')) setTimeout(() => { try { startAppTour(); } catch (_) {} }, 350);
+    }
   }
   function setPlanPeriod(p) { _planPeriod = p; _renderPlanPage(); }
   function _renderPlanPage(highlight) {
@@ -7605,6 +7640,7 @@
         row('💎', t('set.plan'), t('set.plan.sub', { plan: `${PLANS[myPlanId()].emoji} ${PLANS[myPlanId()].name}` }), chev, "document.getElementById('settings-modal')?.remove(); openPlanPage()")
       ] : []),
       row('🌸', t('set.intro'), t('set.intro.sub'), chev, 'startOnboardingTour()'),
+      row('🧭', t('set.tour'), t('set.tour.sub'), chev, 'startAppTour()'),
       row('🎯', t('set.goal'), t('set.goal.sub'), chev, 'openDailyGoalSettings()'),
       row('🔔', t('set.notif'), pushState, pushRight, 'askPushPermission()'),
       row('💌', t('set.feedback'), t('set.feedback.sub'), chev, 'openFeedbackModal()'),
@@ -21994,10 +22030,10 @@
       body:`Сначала читай <b>вопрос</b>, потом текст — ищи ключевые слова. Не застревай на незнакомом слове: смысл часто понятен из контекста.` }
   ];
   const TOPIK_MAT_META = {
-    vocab:   { icon:'📖', label:t('ui.168'),    cls:'vocab' },
-    grammar: { icon:'🧩', label:t('ui.009'), cls:'grammar' },
-    tip:     { icon:'💡', label:t('ui.169'),      cls:'tip' },
-    file:    { icon:'📎', label:t('ui.170'),   cls:'file' }
+    vocab:   { icon:'📖', get label() { return t('ui.168'); },    cls:'vocab' },
+    grammar: { icon:'🧩', get label() { return t('ui.009'); }, cls:'grammar' },
+    tip:     { icon:'💡', get label() { return t('ui.169'); },      cls:'tip' },
+    file:    { icon:'📎', get label() { return t('ui.170'); },   cls:'file' }
   };
   // Materials are grouped into these sections (in this order) on the hub.
   const TOPIK_MAT_ORDER = ['vocab','grammar','tip','file'];
@@ -30848,9 +30884,9 @@
   // Категории учениц и статусы доступа
   const STUDENT_CATS = ['초급','중급','고급','TOPIK1','TOPIK2'];
   const ACCESS_INFO = {
-    paid:   { emoji:'✅', label:t('ui.371'),    chip:'background:rgba(132,196,116,.16); color:var(--ok-ink); border:1px solid rgba(132,196,116,.35);' },
-    unpaid: { emoji:'⛔', label:t('ui.372'), chip:'background:var(--bad-bg); color:var(--bad-ink); border:1px solid rgba(179,58,74,.3);' },
-    frozen: { emoji:'❄️', label:t('ui.373'),   chip:'background:rgba(107,139,214,.14); color:var(--coral); border:1px solid rgba(107,139,214,.3);' }
+    paid:   { emoji:'✅', get label() { return t('ui.371'); },    chip:'background:rgba(132,196,116,.16); color:var(--ok-ink); border:1px solid rgba(132,196,116,.35);' },
+    unpaid: { emoji:'⛔', get label() { return t('ui.372'); }, chip:'background:var(--bad-bg); color:var(--bad-ink); border:1px solid rgba(179,58,74,.3);' },
+    frozen: { emoji:'❄️', get label() { return t('ui.373'); },   chip:'background:rgba(107,139,214,.14); color:var(--coral); border:1px solid rgba(107,139,214,.3);' }
   };
   function accessOf(u) { return (u && u.access && ACCESS_INFO[u.access.status]) ? u.access.status : 'paid'; }
   let _adminUserFilter = { status: 'all', cat: 'all' };
@@ -31263,9 +31299,9 @@
   let _jrnView = 'week', _jrnWeekMon = null;   // вид журнала: 'week' (по умолчанию) | 'month'; _jrnWeekMon — понедельник текущей недели {y,m,d}
   const JRN_DAYS = ['Пн','Вт','Ср','Чт','Пт','Сб','Вс'];
   const JRN_MARKS = {
-    done: { label:t('ui.q013'),  chip:'background:rgba(132,196,116,.22); color:var(--ok-ink); border:1px solid rgba(132,196,116,.45);' },
-    miss: { label:t('ui.q014'),   chip:'background:var(--bad-bg); color:var(--bad-ink); border:1px solid rgba(179,58,74,.35);' },
-    move: { label:t('ui.398'),   chip:'background:rgba(229,180,60,.18); color:var(--gold-ink); border:1px solid rgba(201,165,92,.45);' }
+    done: { get label() { return t('ui.q013'); },  chip:'background:rgba(132,196,116,.22); color:var(--ok-ink); border:1px solid rgba(132,196,116,.45);' },
+    miss: { get label() { return t('ui.q014'); },   chip:'background:var(--bad-bg); color:var(--bad-ink); border:1px solid rgba(179,58,74,.35);' },
+    move: { get label() { return t('ui.398'); },   chip:'background:rgba(229,180,60,.18); color:var(--gold-ink); border:1px solid rgba(201,165,92,.45);' }
   };
   function _jrnSeed() {
     return {
@@ -32533,7 +32569,9 @@
       setActiveUser({ name, email: cred.user.email, uid: cred.user.uid, level });
       toast(t('ui.477',{name: name}), 'var(--sage)');
       try { applyPendingReferral(cred.user.uid, name); } catch (_) {}
-      // Завершение регистрации → экран тарифов (Базовый уже активен, можно сразу закрыть)
+      // Завершение регистрации → экран тарифов (Базовый уже активен, можно сразу закрыть),
+      // а после его закрытия — экскурсия с Комдори (см. closePlanPage)
+      Store.set('tourPending', 1);
       setTimeout(() => { try { openPlanPage(); } catch (_) {} }, 700);
     } catch (e) {
       console.warn('register error:', e);
@@ -33245,9 +33283,9 @@
   // в общих слогах; генератор гарантирует корректность стыков и отсутствие случайных
   // слов (проверка перпендикулярных соседей). 3 уровня сложности по числу слов.
   const CW_LEVELS = {
-    easy:   { label: t('ui.507'),  want: 4, xp: 12 },
-    medium: { label: t('ui.508'), want: 6, xp: 18 },
-    hard:   { label: t('ui.509'), want: 8, xp: 25 }
+    easy:   { get label() { return t('ui.507'); },  want: 4, xp: 12 },
+    medium: { get label() { return t('ui.508'); }, want: 6, xp: 18 },
+    hard:   { get label() { return t('ui.509'); }, want: 8, xp: 25 }
   };
   const CW_DISTRACTORS = ['나','라','오','머','니','고','주','비','마','노','두','수','기','사','아','이'];
   let _cw = null; // { level, sol{key:syl}, cells{key:{across,down,num}}, words[], user{}, active, dir, bank[], maxR, maxC, won }
@@ -33488,9 +33526,9 @@
   // Сетка корейских слогов. Слова прячутся по 8 направлениям; тянешь по линии —
   // при совпадении слово вычёркивается из списка. Слова — из gameWordPool (рандом).
   const WS_LEVELS = {
-    easy:   { size: 7,  count: 4,  label: t('ui.507'),  xp: 12 },
-    medium: { size: 9,  count: 6,  label: t('ui.508'), xp: 18 },
-    hard:   { size: 11, count: 8,  label: t('ui.509'), xp: 25 }
+    easy:   { size: 7,  count: 4,  get label() { return t('ui.507'); },  xp: 12 },
+    medium: { size: 9,  count: 6,  get label() { return t('ui.508'); }, xp: 18 },
+    hard:   { size: 11, count: 8,  get label() { return t('ui.509'); }, xp: 25 }
   };
   const WS_FILL = ['가','나','다','라','마','바','사','아','자','차','카','타','파','하','고','노','도','로','모','보','소','오','조','구','누','두','루','무','부','수','우','주','기','니','디','리','미','비','시','이','지'];
   let _ws = null; // { level, size, grid{key}, targets[], found, sel, selecting, dragDir }
@@ -34832,10 +34870,10 @@
   // — звуки природы (синтез WebAudio: без файлов, работает офлайн) —
   const MUSIC_DIR = 'assets/music/';
   const SCAPES = {
-    rain:  { icon: '🌧️', label: t('ui.562'), file: MUSIC_DIR + 'study-rain.mp3' }, // настоящий дождь (mp3)
-    waves: { icon: '🌊', label: t('ui.563') },
-    fire:  { icon: '🔥', label: t('ui.564') },
-    wind:  { icon: '🌬️', label: t('ui.565') }
+    rain:  { icon: '🌧️', get label() { return t('ui.562'); }, file: MUSIC_DIR + 'study-rain.mp3' }, // настоящий дождь (mp3)
+    waves: { icon: '🌊', get label() { return t('ui.563'); } },
+    fire:  { icon: '🔥', get label() { return t('ui.564'); } },
+    wind:  { icon: '🌬️', get label() { return t('ui.565'); } }
   };
   // Музыка для учёбы (mp3) — подписи на русском и корейском. Один активный источник за раз.
   const MUSIC = {
@@ -35409,6 +35447,9 @@
       if (!guest)
         return { img: 'assets/bear1.png', title: t('guide.goal.t', { n: goal - dxp }), sub: t('guide.goal.s'), cta: t('guide.goal.c'), action: "switchScreen('games')" };
     }
+    // 5.5) Зарегистрирован, но тур не пройден — предложим экскурсию
+    if (!guest && !Store.get('tourDone'))
+      return { img: 'assets/bear1.png', title: t('guide.tour.t'), sub: t('guide.tour.s'), cta: t('guide.tour.c'), action: 'startAppTour()' };
     // 6) Цель выполнена (или уроки кончились) — советы с ротацией раз в час
     const doneToday = dxp >= goal;
     const hourIdx = Math.floor(Date.now() / 36e5);
@@ -35442,6 +35483,119 @@
           <span class="chip chip-coral bear-guide-cta">${s.cta}</span>
         </button>
       </div>`;
+  }
+
+  // ── Тур по приложению: экскурсия с Комдори (прожектор + карточка-шаг) ──
+  // Запуск: первое закрытие тарифов после регистрации (tourPending), Настройки,
+  // совет мишки. Прожектор — box-shadow вокруг цели; всё локально, ноль сети.
+  const TOUR_STEPS = [
+    { screen: 'home',    sel: '#bear-guide-slot .bear-guide, #bear-guide-slot', tk: 'tour.s1.t', sk: 'tour.s1.s' },
+    { screen: 'home',    sel: '#daily-goal-widget',                tk: 'tour.s2.t', sk: 'tour.s2.s' },
+    { screen: 'lessons', sel: '#lesson-path',                      tk: 'tour.s3.t', sk: 'tour.s3.s' },
+    { screen: 'lessons', sel: '.lessons-bento',                    tk: 'tour.s4.t', sk: 'tour.s4.s' },
+    { screen: 'games',   sel: '#screen-games .games-grid',         tk: 'tour.s5.t', sk: 'tour.s5.s' },
+    { screen: 'social',  sel: '#friends-chat-section',             tk: 'tour.s6.t', sk: 'tour.s6.s' },
+    { screen: 'profile', sel: '#profile-plan-slot, #auth-section', tk: 'tour.s7.t', sk: 'tour.s7.s' },
+    { final: true, tk: 'tour.fin.t', sk: 'tour.fin.s' }
+  ];
+  let _tourIdx = 0, _tourSteps = [], _tourTarget = null, _tourRepos = null;
+  function startAppTour() {
+    document.getElementById('settings-modal')?.remove();
+    document.getElementById('onboard')?.remove();
+    document.getElementById('register-gate')?.remove();
+    try { closePlanPage(); } catch (_) {}
+    Store.set('tourDone', 1); // не предлагаем повторно, даже если бросят на полпути
+    // Гостю показываем только открытые ему экраны
+    _tourSteps = TOUR_STEPS.filter(s => s.final || !(s.screen in GUEST_LOCKED_SCREENS) || !isGuestish());
+    _tourIdx = 0;
+    if (!document.getElementById('app-tour')) {
+      const el = document.createElement('div');
+      el.id = 'app-tour';
+      el.innerHTML = `<div class="tour-veil"></div><div class="tour-hole" id="tour-hole" onclick="tourNext()"></div><div class="tour-card" id="tour-card"></div>`;
+      document.body.appendChild(el);
+      _tourRepos = () => positionTourHole();
+      window.addEventListener('resize', _tourRepos);
+      window.addEventListener('scroll', _tourRepos, true);
+    }
+    paintTourStep();
+  }
+  function endAppTour() {
+    document.getElementById('app-tour')?.remove();
+    if (_tourRepos) {
+      window.removeEventListener('resize', _tourRepos);
+      window.removeEventListener('scroll', _tourRepos, true);
+      _tourRepos = null;
+    }
+    _tourTarget = null;
+    try { renderBearGuide(); } catch (_) {} // совет мишки зависит от tourDone
+  }
+  function tourNext() {
+    _tourIdx++;
+    if (_tourIdx >= _tourSteps.length) { endAppTour(); return; }
+    paintTourStep();
+  }
+  function tourSkip() { endAppTour(); }
+  function tourFinishLesson() {
+    endAppTour();
+    const cur = getCurrentLesson();
+    if (cur) { try { startLessonFlow(cur.id); return; } catch (_) {} }
+    switchScreen('lessons');
+  }
+  function _tourFindTarget(sel) {
+    const els = document.querySelectorAll(sel);
+    for (const el of els) {
+      const r = el.getBoundingClientRect();
+      if (r.width > 4 && r.height > 4) return el; // скрытые экраны дают 0×0
+    }
+    return null;
+  }
+  function positionTourHole() {
+    const root = document.getElementById('app-tour');
+    const hole = document.getElementById('tour-hole');
+    const card = document.getElementById('tour-card');
+    if (!root || !hole || !card) return;
+    const isFinal = !_tourTarget;
+    root.classList.toggle('final', isFinal);
+    card.classList.toggle('final', isFinal);
+    if (isFinal) { hole.style.display = 'none'; card.classList.remove('at-top'); return; }
+    const r = _tourTarget.getBoundingClientRect();
+    const pad = 8;
+    hole.style.display = 'block';
+    hole.style.top = (r.top - pad) + 'px';
+    hole.style.left = Math.max(4, r.left - pad) + 'px';
+    hole.style.width = Math.min(window.innerWidth - 8, r.width + pad * 2) + 'px';
+    hole.style.height = (r.height + pad * 2) + 'px';
+    // цель в нижней половине экрана — карточку наверх
+    card.classList.toggle('at-top', (r.top + r.height / 2) > window.innerHeight * 0.55);
+  }
+  function paintTourStep() {
+    const st = _tourSteps[_tourIdx];
+    const card = document.getElementById('tour-card');
+    if (!st || !card) return;
+    if (!st.final) { try { switchScreen(st.screen); } catch (_) {} }
+    const dots = _tourSteps.map((_, i) => `<span class="${i <= _tourIdx ? 'on' : ''}"></span>`).join('');
+    card.innerHTML = `
+      <img class="tour-bear" src="assets/bear1.png" alt="" onerror="this.style.display='none'">
+      <div class="tour-card-body">
+        <div class="tour-dots">${dots}</div>
+        <div class="tour-title">${t(st.tk)}</div>
+        <div class="tour-sub">${t(st.sk)}</div>
+        <div class="tour-btns">
+          <button class="btn btn-ghost" onclick="tourSkip()">${st.final ? t('gate.later') : t('tour.skip')}</button>
+          ${st.final
+            ? `<button class="btn btn-primary" onclick="tourFinishLesson()">${t('tour.startLesson')}</button>`
+            : `<button class="btn btn-primary" onclick="tourNext()">${t('tour.next')}</button>`}
+        </div>
+      </div>`;
+    if (st.final) { _tourTarget = null; positionTourHole(); return; }
+    // дать экрану отрисоваться, затем навести прожектор
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      if (!document.getElementById('app-tour')) return;
+      _tourTarget = _tourFindTarget(st.sel);
+      if (!_tourTarget) { tourNext(); return; } // цели нет — тихо пропускаем шаг
+      try { _tourTarget.scrollIntoView({ block: 'center' }); } catch (_) {}
+      positionTourHole();
+    }));
   }
 
   // ── Intro splash ──

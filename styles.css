@@ -5426,6 +5426,53 @@
   .bear-guide-sub { display: block; font-size: 11.5px; color: var(--soft); margin-top: 3px; line-height: 1.5; overflow-wrap: anywhere; }
   .bear-guide-cta { display: inline-flex; margin-top: 8px; }
 
+  /* ───── ТУР ПО ПРИЛОЖЕНИЮ (экскурсия с Комдори) ─────
+     Прожектор: тень .tour-hole затемняет всё вокруг цели; .tour-veil
+     прозрачен и лишь блокирует клики по фону. Цвета — токены темы. */
+  #app-tour { position: fixed; inset: 0; z-index: 860; }
+  #app-tour .tour-veil { position: absolute; inset: 0; }
+  #app-tour.final .tour-veil { background: rgba(24, 14, 18, .6); }
+  .tour-hole {
+    position: fixed; border-radius: 18px; cursor: pointer;
+    box-shadow: 0 0 0 9999px rgba(24, 14, 18, .6);
+    transition: top .35s var(--ease-out), left .35s var(--ease-out),
+                width .35s var(--ease-out), height .35s var(--ease-out);
+  }
+  .tour-hole::after {
+    content: ''; position: absolute; inset: -3px; border-radius: 21px;
+    border: 2.5px solid var(--coral);
+    animation: tourPulse 1.6s ease-in-out infinite;
+  }
+  @keyframes tourPulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50%      { opacity: .55; transform: scale(1.015); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .tour-hole { transition: none; }
+    .tour-hole::after { animation: none; }
+  }
+  .tour-card {
+    position: fixed; left: 16px; right: 16px;
+    bottom: calc(18px + env(safe-area-inset-bottom, 0px));
+    max-width: 430px; margin: 0 auto;
+    display: flex; align-items: flex-end; gap: 8px;
+  }
+  .tour-card.at-top { bottom: auto; top: calc(18px + env(safe-area-inset-top, 0px)); align-items: flex-start; }
+  .tour-card.final { bottom: auto; top: 50%; transform: translateY(-50%); }
+  .tour-bear { width: 58px; height: 58px; object-fit: contain; flex-shrink: 0; filter: drop-shadow(0 6px 12px rgba(0,0,0,.35)); }
+  .tour-card-body {
+    flex: 1; min-width: 0; background: var(--card); border: 1px solid var(--line);
+    border-radius: 18px 18px 18px 6px; padding: 13px 15px 14px;
+    box-shadow: var(--shadow-lg);
+  }
+  .tour-dots { display: flex; gap: 5px; margin-bottom: 8px; }
+  .tour-dots span { width: 16px; height: 4px; border-radius: 999px; background: rgba(var(--accent-rgb), .2); transition: background .3s var(--ease-out); }
+  .tour-dots span.on { background: var(--coral); }
+  .tour-title { font-weight: 700; font-size: 14.5px; color: var(--berry); overflow-wrap: anywhere; }
+  .tour-sub { font-size: 12px; color: var(--soft); line-height: 1.55; margin-top: 4px; overflow-wrap: anywhere; }
+  .tour-btns { display: flex; gap: 8px; margin-top: 12px; }
+  .tour-btns .btn { flex: 1; padding: 10px 12px; font-size: 12.5px; }
+
   /* ───── ФОКУС-ТАЙМЕР (учебная комната) ───── */
   .focus-pill {
     position: fixed; top: calc(10px + env(safe-area-inset-top, 0px)); left: 50%; transform: translateX(-50%);
