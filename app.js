@@ -1887,7 +1887,13 @@
     document.querySelectorAll('.chat-popup').forEach(el => el.remove());
     document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
     document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-    document.getElementById('screen-' + name).classList.add('active');
+    const scr = document.getElementById('screen-' + name);
+    // Входные каскады (карточки игр, плитки уроков, проявление контента) — только
+    // при ПЕРВОМ открытии экрана за сессию. Повторные переключения мгновенные:
+    // перезапуск анимаций на каждый тап выглядел как «всё заново загружается».
+    if (scr.dataset.entered) scr.classList.add('screen-revisit');
+    else scr.dataset.entered = '1';
+    scr.classList.add('active');
     // Activate matching nav items in BOTH bottom nav and sidebar nav
     document.querySelectorAll(`.nav-item[data-screen="${name}"]`).forEach(n => n.classList.add('active'));
     if (name === 'hangul' && !document.getElementById('consonants-grid').children.length) initHangulLab();
@@ -35482,6 +35488,7 @@
           <span class="bear-guide-sub">${s.sub}</span>
           <span class="chip chip-coral bear-guide-cta">${s.cta}</span>
         </button>
+        <button type="button" class="bear-tour-btn" onclick="startAppTour()" aria-label="${escHtml(t('set.tour'))}" title="${escHtml(t('set.tour'))}">🧭</button>
       </div>`;
   }
 

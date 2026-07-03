@@ -1498,6 +1498,16 @@
   body.calm-motion .stagger-in > *,
   body.calm-motion .nav-item.active i { animation: none !important; }
 
+  /* Повторное открытие экрана (класс ставит switchScreen): входные каскады уже
+     отыграли при первом заходе — при переключении вкладок контент появляется
+     мгновенно. Иначе перезапуск анимаций на каждый тап выглядел как
+     «всё заново загружается» (мигание уроков/игр). */
+  .screen.active.screen-revisit > *:not(.topbar),
+  .screen.active.screen-revisit .games-grid > .game-card-v2,
+  .screen.active.screen-revisit .game-card-v2,
+  .screen.active.screen-revisit #lesson-path .lesson-tile,
+  .screen.active.screen-revisit .section-head { animation: none !important; }
+
   /* ════════════════ ТАРИФЫ ════════════════ */
   .plan-profile-card { border: 1.5px solid var(--line); }
   .plan-profile-card.plan-profile-paid {
@@ -5399,7 +5409,17 @@
   /* ───── МИШКА-ГИД «КОМДОРИ» (главная) ─────
      Цвета только через токены темы — тёмная тема и остальные темы
      подхватываются автоматически. */
-  .bear-guide { display: flex; align-items: flex-end; gap: 8px; }
+  .bear-guide { display: flex; align-items: flex-end; gap: 8px; position: relative; }
+  /* Кнопка «повторить тур» — всегда на уголке пузыря */
+  .bear-tour-btn {
+    position: absolute; top: -8px; right: -4px; width: 27px; height: 27px;
+    border-radius: 50%; border: 1px solid var(--line); background: var(--card);
+    font-size: 13px; line-height: 1; cursor: pointer; padding: 0;
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 3px 8px -3px rgba(92,42,51,.35);
+    transition: transform .15s var(--ease-out);
+  }
+  .bear-tour-btn:active { transform: scale(.9); }
   .bear-guide-img {
     width: 62px; height: 62px; flex-shrink: 0; object-fit: contain;
     filter: drop-shadow(0 6px 10px rgba(92,42,51,.18));
