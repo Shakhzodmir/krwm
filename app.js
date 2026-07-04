@@ -4614,6 +4614,9 @@
       const v = snap.val();
       if (v && PLANS[v.id]) { _skipCloudPush = true; try { UStore.set('plan', v); } finally { _skipCloudPush = false; } }
       renderPlanCard();
+      // Апгрейд/даунгрейд меняет доступ к соц-ленте — перерисуем её (платному
+      // тут же лениво подключатся соц-слушатели, бесплатному — уберутся посты).
+      try { renderCustomFeedPosts(); } catch (_) {}
     };
     planRef.on('value', planHandler);
     _userListeners.push(() => planRef.off('value', planHandler));
@@ -4724,6 +4727,10 @@
     return myPlanObj().id;
   }
   function planAtLeast(want) { return PLAN_ORDER[myPlanId()] >= PLAN_ORDER[want]; }
+  // Соц-слой ленты (посты учеников, лайки, комментарии) — только платным тарифам
+  // и Мади. Гость и «Базовый» видят объявления Мади, но НЕ подписываются на тяжёлый
+  // shared/feedComments — иначе бесплатные жгут трафик впустую (инцидент 03-04.07).
+  function feedSocialEnabled() { return planAtLeast('master'); }
   // Гейт функции: true — можно; false — показана апселл-модалка.
   function requirePlan(want, featureLabel) {
     if (planAtLeast(want)) return true;
@@ -5731,7 +5738,7 @@
     };
     wire(`users/${me}/friends`,  val => { _friendsCache  = val; _friendsLoaded = true; renderFriendsAndChat(); updateChatBadges(); scheduleUnreadCleanup(); if (document.getElementById('add-friend-modal')) filterAddFriend(); });
     wire(`users/${me}/groups`,   val => { _groupsCache   = val; _groupsLoaded = true; renderFriendsAndChat(); updateChatBadges(); scheduleUnreadCleanup(); });
-    wire(`users/${me}/inbox`,    val => { _inboxCache    = val; renderFriendsAndChat(); updateChatBadges(); processReferralRewards(); });
+    wire(`users/${me}/inbox`,    val => { _inboxCache    = val; if (isAdmin()) adminAutoAcceptRequests(val); renderFriendsAndChat(); updateChatBadges(); processReferralRewards(); });
     wire(`users/${me}/outgoing`, val => { _outgoingCache = val; if (document.getElementById('add-friend-modal')) filterAddFriend(); });
     wire(`users/${me}/unreadFrom`, val => { handleUnreadFromUpdate(val); });
   }
@@ -5739,12 +5746,44 @@
   // Ключ из unreadFrom «виден» в списке чатов: сообщество, моя группа, друг,
   // а у админа — любая ученица из каталога (его список чатов = все ученицы;
   // пока каталог не загружен, админу считаем все ключи, как раньше).
+  // ВАЖНО: у админа список чатов исключает ДРУГИХ админов (renderAdminChatList),
+  // поэтому личка админ↔админ невидима и некликабельна — её непрочитанное НЕ
+  // считаем «видимым», иначе бейдж «Общение» рос бы фантомом, а обнулить негде.
   function _isVisibleChatKey(key) {
     if (key === COMMUNITY_GID) return true;
     if (_groupsCache && _groupsCache[key]) return true;
+    if (isAdmin()) {
+      if (!_usersDirCache) return true;                 // каталог ещё не загружен — как раньше
+      return !!(_usersDirCache[key] && !_usersDirCache[key].isAdmin);
+    }
     if (_friendsCache && _friendsCache[key]) return true;
-    if (isAdmin() && (!_usersDirCache || _usersDirCache[key])) return true;
     return false;
+  }
+  // Админ не имеет UI для заявок в друзья (его список чатов = весь каталог учениц,
+  // а первый DM и так авто-дружит), поэтому входящие friend_request к админу
+  // принимаются молча и автоматически. Это (1) чистит счётчик, который иначе рос бы
+  // вечно — принять/отклонить заявку админу негде; (2) снимает у ученицы зависший
+  // статус «Заявка отправлена» и сразу делает её другом Мади (чтобы могла писать).
+  let _adminAcceptingReqs = false;
+  function adminAutoAcceptRequests(inbox) {
+    if (!isAdmin() || typeof _db === 'undefined' || _adminAcceptingReqs) return;
+    const me = myUid();
+    if (!me || me === 'guest') return;
+    const reqs = Object.entries(inbox || {}).filter(([, v]) => v && v.type === 'friend_request');
+    if (!reqs.length) return;
+    _adminAcceptingReqs = true;
+    const now = Date.now();
+    const updates = {};
+    reqs.forEach(([reqKey, r]) => {
+      const fromUid = r.from;
+      if (fromUid) {
+        updates[`users/${me}/friends/${fromUid}`] = { name: r.fromName || '', since: now };
+        updates[`users/${fromUid}/friends/${me}`] = { name: myName(), since: now };
+        updates[`users/${fromUid}/outgoing/${me}`] = null; // снять «Заявка отправлена» у ученицы
+      }
+      updates[`users/${me}/inbox/${reqKey}`] = null;        // убрать заявку из инбокса админа
+    });
+    _db.ref().update(updates).then(() => {}, () => {}).then(() => { _adminAcceptingReqs = false; });
   }
   // Осиротевшие счётчики (дружбу удалили — чата в списке нет, открыть и
   // «прочитать» его нельзя) подчищаем из БД, иначе они копятся навсегда.
@@ -5773,7 +5812,11 @@
     // Считаем только то, что реально видно на экране «Общение»: заявки в друзья
     // (в inbox бывают и другие типы писем — например referral) и непрочитанное
     // из чатов, которые есть в списке. Иначе бейдж показывает фантомную цифру.
-    const requestsCount = Object.values(_inboxCache || {}).filter(v => v && v.type === 'friend_request').length;
+    // У АДМИНА заявок в друзья на экране нет (renderAdminChatList их не рисует, а
+    // входящие авто-принимаются) — не считаем их, иначе бейдж рос бы вечно.
+    const requestsCount = isAdmin()
+      ? 0
+      : Object.values(_inboxCache || {}).filter(v => v && v.type === 'friend_request').length;
     const unreadCount = Object.keys(_unreadFromCache || {})
       .filter(_isVisibleChatKey)
       .reduce((a, uid) => a + unreadCountFor(uid), 0);
@@ -27716,8 +27759,7 @@
           <span style="font-size:11px; color: var(--soft);">${dateStr}</span>
         </div>
         ${feedPostBody(p, pid)}
-        ${renderFeedSocialBar(pid)}
-        ${renderFeedCommentsBlock(pid)}
+        ${feedSocialEnabled() ? renderFeedSocialBar(pid) + renderFeedCommentsBlock(pid) : ''}
       </div>
     `;
   }
@@ -27767,11 +27809,20 @@
       if (u && u.isAdmin) Store.set('customFeedPosts', posts);
       else _origStoreSet && _origStoreSet('customFeedPosts', posts);
     }
-    // Композер «поделиться фото» (наполняет отдельный слот; зависит от входа)
-    renderFeedComposer();
+    // Соц-лента (посты учеников, композер, лайки/комменты) — только платным тарифам.
+    // Бесплатным показываем лишь объявления Мади: соц-слушатели у них не подключены,
+    // трафик нулевой. Платному — лениво поднимаем подписку тут (на случай апгрейда).
+    const social = feedSocialEnabled();
+    const composerSlot = document.getElementById('feed-composer-slot');
+    if (social) {
+      renderFeedComposer();
+      attachFeedListeners();
+    } else if (composerSlot) {
+      composerSlot.innerHTML = '';
+    }
     // Посты учеников из RTDB (shared/userFeedPosts) — публичная лента в стиле Instagram.
     // Сливаем с постами Мади и сортируем по времени (новые сверху).
-    const studentPosts = (_userFeedPosts || []).map(p => ({ ...p, date: p.ts || 0, _student: true }));
+    const studentPosts = social ? (_userFeedPosts || []).map(p => ({ ...p, date: p.ts || 0, _student: true })) : [];
     const merged = posts.slice().concat(studentPosts).sort((a, b) => (b.date || 0) - (a.date || 0));
     if (merged.length === 0) {
       // Admin sees how to add posts; students get friendly built-in welcome cards
@@ -28284,6 +28335,9 @@
 
   function attachFeedListeners() {
     if (typeof _db === 'undefined' || _feedListenersAttached) return;
+    // Гость/«Базовый» соц-слой не грузят вообще — 0 трафика. Флаг НЕ ставим, чтобы
+    // при апгрейде до платного (renderCustomFeedPosts вызовет снова) подписка встала.
+    if (!feedSocialEnabled()) return;
     _feedListenersAttached = true;
     _db.ref('shared/feedLikes').on('value', snap => {
       _feedLikes = snap.val() || {};
