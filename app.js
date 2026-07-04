@@ -4518,6 +4518,14 @@
               const s = new Set([...(Array.isArray(merged.dates) ? merged.dates : []), ...before.dates]);
               merged.dates = [...s].sort();
             }
+            // Стрик и число дней — ВСЕГДА производные от набора дат. Иначе устаревший
+            // облачный снапшот (streak со вчера) приходил с задержкой сети и затирал
+            // свежепосчитанный огонёк обратно на 1: дни входа копились правильно, а
+            // огонёк «застревал». Баг отзыва ученицы 04.07 — «3 дня захожу, огонёк 1».
+            if (Array.isArray(merged.dates)) {
+              merged.streak = computeConsecutiveStreak(merged.dates);
+              merged.daysEntered = merged.dates.length;
+            }
             value = merged;
             UStore.set(k, value);
             Object.keys(stats).forEach(s => delete stats[s]);
