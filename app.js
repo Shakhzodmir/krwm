@@ -720,7 +720,7 @@
     'games.sec.cross':     { ru: 'Кроссворд', en: 'Crossword', uz: 'Krossvord' },
     'games.sec.cross.m':   { ru: 'головоломки', en: 'puzzles', uz: 'boshqotirmalar' },
     'games.sec.tr':        { ru: 'Перевод и грамматика', en: 'Translation & grammar', uz: 'Tarjima va grammatika' },
-    'games.sec.tr.m':      { ru: '4 игры', en: '4 games', uz: '4 ta oʻyin' },
+    'games.sec.tr.m':      { ru: '5 игр', en: '5 games', uz: '5 ta oʻyin' },
     'games.sec.music':     { ru: 'Музыка', en: 'Music', uz: 'Musiqa' },
     'games.sec.music.m':   { ru: 'бонусная', en: 'bonus', uz: 'bonus' },
     'games.flag.rec':  { ru: 'Рекомендуем', en: 'Recommended', uz: 'Tavsiya etamiz' },
@@ -753,6 +753,8 @@
     'games.c.num.sub':   { ru: 'Sino + Native · 6 раундов', en: 'Sino + Native · 6 rounds', uz: 'Sino + Native · 6 raund' },
     'games.c.sent':      { ru: 'Собери фразу', en: 'Build a phrase', uz: 'Ibora tuz' },
     'games.c.sent.sub':  { ru: '4 фразы · перетащи в порядке', en: '4 phrases · drag in order', uz: '4 ibora · tartibda surang' },
+    'games.c.part':      { ru: 'Частицы', en: 'Particles', uz: 'Qoʻshimchalar' },
+    'games.c.part.sub':  { ru: 'Выбери 은/는 · 이/가 · 을/를 · 에/에서', en: 'Pick 은/는 · 이/가 · 을/를 · 에/에서', uz: '은/는 · 이/가 · 을/를 · 에/에서 tanlang' },
 
     // ── Профиль · вход/регистрация ──
     'profile.eyebrow':   { ru: 'ПРОФИЛЬ', en: 'PROFILE', uz: 'PROFIL' },
@@ -3730,7 +3732,79 @@
     flashcardSession = fcQueue;                  // keep legacy global in sync
     renderFlashcardModal();
   }
-  function startFlashcards() { fcReplayFn = startFlashcards; startFlashcardSession(shuffleArr(buildFlashcards())); }
+  // ── Флешкарты: лобби с фильтром по типу (по отзывам — отдельная колода грамматики) ──
+  // Базовая колода грамматики TOPIK I: частицы и конструкции с примерами.
+  // Подмешивается ТОЛЬКО в фильтре «Грамматика» (дедуп по front), чтобы не менять
+  // привычную колоду «Всё подряд». Транскрипции кириллицей, как в уроках.
+  const FC_GRAMMAR_SEED = [
+    { front: '은/는',          translit: 'ын/нын',        emoji: '📌', meaning: 'частица темы («что касается…»)',            example: '저는 학생이에요 — Я студент' },
+    { front: '이/가',          translit: 'и/га',          emoji: '📌', meaning: 'частица подлежащего (кто? что?)',           example: '날씨가 좋아요 — Погода хорошая' },
+    { front: '을/를',          translit: 'ыль/рыль',      emoji: '📌', meaning: 'частица дополнения (кого? что?)',           example: '밥을 먹어요 — Ем (еду)' },
+    { front: '에',             translit: 'е',             emoji: '📍', meaning: 'в/на: куда? когда? где находится',          example: '학교에 가요 — Иду в школу' },
+    { front: '에서',           translit: 'есо',           emoji: '📍', meaning: 'в/на: где происходит действие; откуда',     example: '도서관에서 공부해요 — Занимаюсь в библиотеке' },
+    { front: '도',             translit: 'до',            emoji: '➕', meaning: 'тоже, также',                               example: '저도 좋아요 — Мне тоже нравится' },
+    { front: '만',             translit: 'ман',           emoji: '☝️', meaning: 'только, лишь',                              example: '물만 마셔요 — Пью только воду' },
+    { front: '의',             translit: 'ый (е)',        emoji: '🔗', meaning: 'частица принадлежности (чей?)',             example: '친구의 책 — Книга друга' },
+    { front: '하고',           translit: 'хаго',          emoji: '🤝', meaning: 'и, вместе с (разговорное)',                 example: '친구하고 영화를 봐요 — Смотрю кино с другом' },
+    { front: '-아/어요',       translit: '-а/оё',         emoji: '💬', meaning: 'вежливое окончание настоящего времени',     example: '가요 · 먹어요 — иду · ем' },
+    { front: '-았/었어요',     translit: '-ат/оссоё',     emoji: '⏪', meaning: 'прошедшее время (вежливо)',                 example: '어제 봤어요 — Вчера видел(а)' },
+    { front: '-(으)ㄹ 거예요', translit: '-(ы)ль ккоеё',  emoji: '⏩', meaning: 'будущее время, намерение',                  example: '내일 갈 거예요 — Завтра пойду' },
+    { front: '-고 싶다',       translit: '-ко сипта',     emoji: '🌠', meaning: 'хотеть (что-то сделать)',                   example: '한국에 가고 싶어요 — Хочу поехать в Корею' },
+    { front: '-고 있다',       translit: '-ко итта',      emoji: '▶️', meaning: 'действие прямо сейчас (в процессе)',        example: '공부하고 있어요 — Сейчас учусь' },
+    { front: '-지 않다',       translit: '-чи анта',      emoji: '🚫', meaning: 'отрицание («не …»)',                        example: '맵지 않아요 — Не остро' },
+    { front: '-(으)세요',      translit: '-(ы)сеё',       emoji: '🙏', meaning: 'вежливая просьба, уважительная форма',      example: '앉으세요 — Присаживайтесь' },
+    { front: '-아/어 주세요',  translit: '-а/о чусеё',    emoji: '🎁', meaning: 'сделайте, пожалуйста (для меня)',           example: '도와주세요 — Помогите, пожалуйста' },
+    { front: '-(으)러 가다',   translit: '-(ы)ро када',   emoji: '🚶', meaning: 'идти, чтобы… (цель движения)',              example: '밥 먹으러 가요 — Идём поесть' },
+    { front: '-지만',          translit: '-чиман',        emoji: '⚖️', meaning: 'но, однако',                                example: '비싸지만 좋아요 — Дорого, но хорошо' },
+    { front: '-(으)면',        translit: '-(ы)мён',       emoji: '❓', meaning: 'если / когда',                              example: '시간이 있으면 오세요 — Приходите, если будет время' }
+  ];
+  // Пословицы и фразеологизмы для флешкарт складываем к «фразам» — отдельные
+  // вкладки тут избыточны, их и так видно в словарике.
+  function _fcBucket(c) {
+    const x = classifyWordType(c.front);
+    return (x === 'proverb' || x === 'idiom') ? 'phrase' : x;
+  }
+  function fcCardsByType(tp) {
+    const all = buildFlashcards();
+    if (tp === 'all') return all;
+    const out = all.filter(c => _fcBucket(c) === tp);
+    if (tp === 'grammar') {
+      const seen = new Set(out.map(c => c.front));
+      FC_GRAMMAR_SEED.forEach(c => { if (!seen.has(c.front)) out.push(Object.assign({}, c)); });
+    }
+    return out;
+  }
+  function startFlashcardsType(tp) {
+    closeGameModal();
+    const cards = fcCardsByType(tp);
+    if (cards.length < 3) { toast(t('ui.019')); return; }
+    fcReplayFn = function () { startFlashcardsType(tp); };
+    startFlashcardSession(shuffleArr(cards));
+  }
+  function startFlashcards() {
+    // Лобби «что будем повторять?» — как выбор уровня в кроссворде/поиске слов.
+    const all = buildFlashcards();
+    const counts = { all: all.length, word: 0, grammar: 0, phrase: 0 };
+    all.forEach(c => { const b = _fcBucket(c); if (counts[b] != null) counts[b]++; });
+    const gSeen = new Set(all.filter(c => _fcBucket(c) === 'grammar').map(c => c.front));
+    FC_GRAMMAR_SEED.forEach(c => { if (!gSeen.has(c.front)) counts.grammar++; });
+    const nCards = n => `${n} ${pluralRu(n, 'карточка', 'карточки', 'карточек')}`;
+    const opt = (tp, emoji, label, sub) => `
+      <button type="button" class="cw-lobby-card" onclick="startFlashcardsType('${tp}')">
+        <span class="cw-lobby-ico">${emoji}</span>
+        <span class="cw-lobby-tx"><span class="cw-lobby-title">${escHtml(label)}</span><span class="cw-lobby-sub">${escHtml(sub)}</span></span>
+        <i class="fa-solid fa-chevron-right" style="color:var(--coral);"></i>
+      </button>`;
+    gameModal(`
+      ${gameHeader('🎴 ФЛЕШКАРТЫ', 'что будем повторять?', 0, 0)}
+      <div class="cw-lobby">
+        ${opt('all', '🌸', 'Всё подряд', nCards(counts.all))}
+        ${opt('word', WORD_TYPE_META.word.emoji, WORD_TYPE_META.word.label, nCards(counts.word))}
+        ${opt('grammar', WORD_TYPE_META.grammar.emoji, WORD_TYPE_META.grammar.label, `${nCards(counts.grammar)} · частицы и конструкции`)}
+        ${opt('phrase', WORD_TYPE_META.phrase.emoji, WORD_TYPE_META.phrase.label, nCards(counts.phrase))}
+      </div>
+    `);
+  }
   function replayFlashcards() { (fcReplayFn || startFlashcards)(); }
   // Full-screen flashcard page; created once, then content swapped in place (no re-animation flicker).
   function flashSetContent(inner) {
@@ -30083,6 +30157,7 @@
     memory:     '🧠 Память',
     translate:  '⚡ Быстрый перевод',
     numbers:    '🔢 Числа',
+    particles:  '🔗 Частицы',
     sentence:   '📝 Собери фразу',
     dictation:  '✍️ Слушай и пиши',
     writing:    '✏️ Пиши буквы'
@@ -34042,6 +34117,141 @@
         }
       }
       setTimeout(() => { numRound++; renderNumbers(); }, 1200);
+    }
+  }
+
+  // ── Game 7.5: Particles (Частицы · 조사) ──
+  // Грамматическая игра (по отзывам учениц: «грамматика не укладывается в голове»).
+  // Два вида раундов: 은/는·이/가·을/를 — выбор по патчиму, генерируется из слов
+  // уроков; 에/에서 — по смыслу (курированные предложения: направление/место/время).
+  const _PT_JONG = ['','ㄱ','ㄲ','ㄳ','ㄴ','ㄵ','ㄶ','ㄷ','ㄹ','ㄺ','ㄻ','ㄼ','ㄽ','ㄾ','ㄿ','ㅀ','ㅁ','ㅂ','ㅄ','ㅅ','ㅆ','ㅇ','ㅈ','ㅊ','ㅋ','ㅌ','ㅍ','ㅎ'];
+  // Финальная согласная последнего слога («받침») или '' — на ней вся механика.
+  function koPatchim(word) {
+    const ch = [...String(word || '')].pop() || '';
+    const code = ch.charCodeAt(0);
+    if (!(code >= 0xAC00 && code <= 0xD7A3)) return null; // не хангыль-слог
+    return _PT_JONG[(code - 0xAC00) % 28];
+  }
+  // Пары «с 받침 / без 받침» + рамка, чтобы частица училась в контексте живого
+  // предложения. Рамки семантически безопасны для любого существительного.
+  const PT_SETS = [
+    { pair: ['은', '는'], role: 'тема · 주제',         tail: ' 어때요?',  ruTail: 'как насчёт «{w}»?' },
+    { pair: ['이', '가'], role: 'подлежащее · 주어',   tail: ' 있어요',   ruTail: 'есть «{w}»' },
+    { pair: ['을', '를'], role: 'дополнение · 목적어', tail: ' 좋아해요', ruTail: 'мне нравится «{w}»' }
+  ];
+  // 에/에서 патчимом не решаются — только смыслом; набор курированный, с «почему».
+  const PT_LOC = [
+    { s: '학교__ 가요',          ru: 'Иду в школу',                a: '에',   why: 'куда? направление движения → 에' },
+    { s: '도서관__ 공부해요',    ru: 'Занимаюсь в библиотеке',     a: '에서', why: 'где происходит действие → 에서' },
+    { s: '집__ 가요',            ru: 'Иду домой',                  a: '에',   why: 'куда? направление движения → 에' },
+    { s: '카페__ 친구를 만나요', ru: 'Встречаюсь с другом в кафе', a: '에서', why: 'где происходит действие → 에서' },
+    { s: '회사__ 일해요',        ru: 'Работаю в компании',         a: '에서', why: 'где происходит действие → 에서' },
+    { s: '식당__ 밥을 먹어요',   ru: 'Ем в ресторане',             a: '에서', why: 'где происходит действие → 에서' },
+    { s: '병원__ 가요',          ru: 'Иду в больницу',             a: '에',   why: 'куда? направление движения → 에' },
+    { s: '공원__ 운동해요',      ru: 'Тренируюсь в парке',         a: '에서', why: 'где происходит действие → 에서' },
+    { s: '마트__ 우유를 사요',   ru: 'Покупаю молоко в магазине',  a: '에서', why: 'где происходит действие → 에서' },
+    { s: '한국__ 가고 싶어요',   ru: 'Хочу поехать в Корею',       a: '에',   why: 'куда? направление движения → 에' },
+    { s: '아침 9시__ 만나요',    ru: 'Встречаемся в 9 утра',       a: '에',   why: 'время → всегда 에' },
+    { s: '교실__ 있어요',        ru: 'Я в классе',                 a: '에',   why: 'где находится (있어요/없어요) → 에' }
+  ];
+  // Слово годится для патчим-раунда: одно чистое хангыль-слово 1–5 слогов;
+  // словарные формы глаголов на -다 отсекаем (к ним частица не цепляется).
+  // Жертвуем редкими существительными на 다 (바다) — надёжность важнее.
+  function _wForParticles(w) {
+    const k = String((w && w.ko) || '');
+    return /^[가-힣]{1,5}$/.test(k) && !/다$/.test(k);
+  }
+  let ptScore = 0, ptRound = 0, ptTotal = 8, ptPool = [], _ptCur = null;
+  function startParticles() {
+    let nouns = gameWordPool().filter(_wForParticles);
+    if (nouns.length < 4) nouns = _lessonsWordPool().filter(_wForParticles);
+    ptTotal = scaledRounds(8);
+    // ~треть раундов — 에/에서 (без повторов), остальное — пары по патчиму
+    const locN = Math.min(Math.max(2, Math.round(ptTotal / 3)), PT_LOC.length);
+    const rounds = shuffleArr(PT_LOC).slice(0, locN).map(item => ({ kind: 'loc', item }));
+    const ws = shuffleArr(nouns);
+    for (let i = 0; rounds.length < ptTotal && ws.length; i++) {
+      const w = ws.pop();
+      rounds.push({ kind: 'patchim', ko: w.ko, ru: w.ru, set: PT_SETS[i % PT_SETS.length] });
+    }
+    ptTotal = rounds.length; // слов совсем мало — играем что есть
+    if (ptTotal < 4) { toast(t('ui.019')); return; }
+    ptScore = 0; ptRound = 0;
+    ptPool = shuffleArr(rounds);
+    renderParticles();
+  }
+  function renderParticles() {
+    if (ptRound >= ptTotal) { gameModal(gameFinish(ptScore, ptTotal, 'Частицы · 조사', 'particles', 'startParticles')); return; }
+    const r = ptPool[ptRound];
+    let choices, roleLabel;
+    if (r.kind === 'loc') {
+      _ptCur = {
+        correct: r.item.a,
+        full: r.item.s.replace('__', r.item.a),
+        why: r.item.why,
+        blank: r.item.s,
+        ru: r.item.ru
+      };
+      choices = ['에', '에서'];
+      roleLabel = 'место · направление · 에/에서';
+    } else {
+      const p = koPatchim(r.ko);
+      const correct = p ? r.set.pair[0] : r.set.pair[1];
+      _ptCur = {
+        correct,
+        full: r.ko + correct + r.set.tail,
+        why: p ? `${r.ko} кончается на согласную ${p} (есть 받침) → ${correct}`
+               : `${r.ko} кончается на гласную (받침 нет) → ${correct}`,
+        blank: r.ko + '__' + r.set.tail,
+        ru: r.set.ruTail.replace('{w}', r.ru || '')
+      };
+      choices = r.set.pair.slice();
+      roleLabel = r.set.role;
+    }
+    gameModal(`
+      ${gameHeader('🔗 ЧАСТИЦЫ', 'выбери правильную частицу', ptRound, ptTotal)}
+      <div style="text-align:center; margin-bottom:16px;">
+        <span class="chip" style="font-size:10px;">${escHtml(roleLabel)}</span>
+        <div class="ko" style="font-size:27px; font-weight:800; color:var(--berry); margin-top:12px; line-height:1.35; word-break:keep-all;">${escHtml(_ptCur.blank).replace('__', '<span style="display:inline-block; min-width:34px; border-bottom:2.5px solid var(--coral); color:var(--coral);">?</span>')}</div>
+        <div style="font-size:12.5px; color:var(--soft); margin-top:6px;">${escHtml(_ptCur.ru)}</div>
+      </div>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+        ${choices.map(c => `
+          <div onclick="pickParticle(this, '${jsStr(c)}')" class="card card-press" style="padding:20px 12px; text-align:center; cursor:pointer;">
+            <div class="ko" style="font-size:26px; font-weight:800; color:var(--berry); line-height:1.1;">${escHtml(c)}</div>
+          </div>
+        `).join('')}
+      </div>
+      <div id="pt-why" style="text-align:center; font-size:12px; color:var(--soft); margin-top:14px; min-height:36px; line-height:1.5;"></div>
+    `);
+  }
+  function pickParticle(el, picked) {
+    if (!_ptCur) return;
+    const cur = _ptCur;
+    const sibs = el.parentElement.children;
+    for (const s of sibs) s.style.pointerEvents = 'none';
+    const ok = picked === cur.correct;
+    // объяснение «почему» — главный обучающий момент, поэтому пауза длиннее обычной
+    const whyEl = document.getElementById('pt-why');
+    if (whyEl) whyEl.innerHTML = `<span class="ko" style="color:var(--berry); font-weight:700;">${escHtml(cur.full)}</span><br><span style="color:${ok ? 'var(--ok-ink)' : 'var(--berry)'};">${escHtml(cur.why)}</span>`;
+    try { if (typeof getSettings !== 'function' || getSettings().sound) playSyllable(cur.full); } catch (_) {}
+    if (ok) {
+      el.style.background = 'rgba(132,196,116,.22)';
+      el.style.borderColor = 'var(--ok-ink)';
+      el.classList.add('quiz-correct-pop');
+      ptScore++; addXp(6);
+      setTimeout(() => { ptRound++; renderParticles(); }, 1600);
+    } else {
+      el.style.background = 'var(--bad-bg)';
+      el.style.borderColor = 'var(--bad-line)';
+      el.classList.add('quiz-wrong-shake');
+      for (const s of sibs) {
+        if (s.querySelector('.ko')?.textContent === cur.correct) {
+          s.style.background = 'rgba(132,196,116,.22)';
+          s.style.borderColor = 'var(--ok-ink)';
+        }
+      }
+      setTimeout(() => { ptRound++; renderParticles(); }, 2600);
     }
   }
 

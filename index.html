@@ -38,7 +38,7 @@
 
 <!-- Предзагрузка тяжёлого JS: скачивание стартует сразу, параллельно с CSS/шрифтами -->
 <link rel="preload" href="assets/textbook/textbook-data.js?v=20260629a" as="script">
-<link rel="preload" href="app.js?v=20260704c" as="script">
+<link rel="preload" href="app.js?v=20260706a" as="script">
 </head>
 
 <body>
@@ -549,7 +549,7 @@
       </div>
 
       <!-- Перевод & грамматика · 번역 + 문법 -->
-      <div class="section-head" style="margin-top:8px;"><div class="left"><div class="rule"></div><span class="title"><span data-i18n="games.sec.tr">Перевод и грамматика</span> <span class="ko" style="color:var(--coral); font-weight:500; margin-left:6px;">번역 · 문법</span></span></div><span class="meta" data-i18n="games.sec.tr.m">4 игры</span></div>
+      <div class="section-head" style="margin-top:8px;"><div class="left"><div class="rule"></div><span class="title"><span data-i18n="games.sec.tr">Перевод и грамматика</span> <span class="ko" style="color:var(--coral); font-weight:500; margin-left:6px;">번역 · 문법</span></span></div><span class="meta" data-i18n="games.sec.tr.m">5 игр</span></div>
       <div class="games-grid">
         <div onclick="startTranslate()" class="game-card-v2 gcv-wide" data-game-key="translate">
           <div class="gcv-icon"><div class="gcv-emoji-icon gcv-svg"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h7"/><path d="M7.5 4c0 4.5-2 7.5-4.5 9.5"/><path d="M5 9c.6 1.7 2.2 3.7 4.5 4.8"/><path d="m12.5 20 4-9 4 9"/><path d="M14 17h5"/></svg></div></div>
@@ -589,6 +589,16 @@
           <div class="gcv-foot">
             <span class="best-score gcv-best">Ещё не играли</span>
             <span class="gcv-xp">+20 XP</span>
+          </div>
+        </div>
+        <div onclick="openParticles()" class="game-card-v2 gcv-wide" data-game-key="particles">
+          <div class="gcv-icon"><div class="gcv-emoji-icon gcv-svg"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg></div></div>
+          <div class="gcv-title" data-i18n="games.c.part">Частицы</div>
+          <div class="gcv-ko ko">조사</div>
+          <div class="gcv-sub" data-i18n="games.c.part.sub">Выбери 은/는 · 이/가 · 을/를 · 에/에서</div>
+          <div class="gcv-foot">
+            <span class="best-score gcv-best">Ещё не играли</span>
+            <span class="gcv-xp">+6 XP</span>
           </div>
         </div>
       </div>
@@ -1039,7 +1049,7 @@
 
 <!-- ─────────────── DATA + LOGIC ─────────────── -->
 <script src="assets/textbook/textbook-data.js?v=20260629a"></script>
-<script src="app.js?v=20260704c"></script>
+<script src="app.js?v=20260706a"></script>
 
 </body>
 </html>

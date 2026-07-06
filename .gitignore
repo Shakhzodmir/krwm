@@ -12,6 +12,7 @@ assets/new material/
 # видно и на сайте, и на github.com. Внутренние планы, конфиги Firebase/Cloudflare
 # и код бэкенда в публикацию не попадают — живут только локально.
 RELEASE_PLAN.md
+GROWTH_PLAN.md
 HOTTOPIK_PLAN.md
 NEW_MATERIALS_PLAN.md
 SECURITY.md
