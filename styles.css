@@ -420,6 +420,7 @@
   }
   .stat-pill:hover { transform: translateY(-1px); box-shadow: var(--shadow-md), inset 0 1px 0 rgba(255,255,255,.6); }
   .stat-pill .ico { font-size: 12px; }
+  .stat-pill-btn { cursor: pointer; -webkit-tap-highlight-color: transparent; } /* :active press-feedback уже даёт .stat-pill ниже по каскаду */
 
   /* ───── PAGE TITLE BLOCK ───── */
   .page-head { padding: 20px 20px 8px; }
@@ -2169,6 +2170,18 @@
     margin-top: 28px;
     flex-shrink: 0;
   }
+  /* ФАЗА E2: предложение «закрепи слова урока в игре» на экране завершения урока */
+  .lesson-game-suggest {
+    display: flex; align-items: center; gap: 12px;
+    width: 100%; max-width: 360px;
+    margin-top: 18px; padding: 12px 14px;
+    text-align: left;
+  }
+  .lgs-ico { font-size: 22px; flex-shrink: 0; }
+  .lgs-main { flex: 1; min-width: 0; }
+  .lgs-title { font-size: 13px; font-weight: 700; color: var(--berry); overflow-wrap: anywhere; }
+  .lgs-sub { font-size: 10.5px; color: var(--soft); margin-top: 1px; overflow-wrap: anywhere; }
+  .lgs-arrow { color: var(--soft); font-size: 17px; flex-shrink: 0; }
 
   /* Legacy class kept for the small daily-goal popup that still uses modal-card */
   .lesson-complete-card {
@@ -2520,6 +2533,11 @@
   /* Ответ на обороте всегда белый: глобальное «.display { color: var(--duo-berry) }»
      (duo-редизайн, ~стр. 4825) иначе даёт бордовое-на-бордовом; фон оборота тёмный во всех темах. */
   .flashcard-back .display, .flashcard-back .ko { color: #fff; }
+  /* Ревью 07.07: цвет KO-слова (.ko) раньше был инлайном на var(--berry) — в обратном
+     режиме та же вёрстка рендерится на .flashcard-back (тёмный градиент, начинается
+     с того же --berry) → бордовое на бордовом. Инлайн убран из _fcKoFaceHtml,
+     теперь фронт красит явно, а тыл забирает правило выше — без конфликта specificity. */
+  .flashcard-front .ko { color: var(--berry); }
 
   /* ───── FEED CARDS ───── */
   .feed-card        { background: var(--card); border: 1px solid var(--line); border-radius: 20px; padding: 18px; }
@@ -2658,6 +2676,33 @@
     padding: 3px 8px; border-radius: 999px;
     box-shadow: 0 3px 8px -2px rgba(var(--accent-rgb),.5);
   }
+  /* ФАЗА E1: карточка «игры дня» на экране игр — золотая рамка + бейдж в противоположном
+     от .gcv-flag углу (обе могут совпасть на одной карточке в редкий день). */
+  .game-card-v2.gcv-of-day {
+    border-color: var(--gold);
+    box-shadow: 0 10px 26px -14px rgba(201,165,92,.55);
+  }
+  .gcv-of-day-badge {
+    position: absolute; top: 10px; left: 10px; z-index: 2;
+    font-size: 8.5px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase;
+    background: linear-gradient(140deg, var(--gold), var(--coral)); color: #fff;
+    padding: 3px 8px; border-radius: 999px;
+    box-shadow: 0 3px 8px -2px rgba(201,165,92,.5);
+  }
+  /* Плашка «игра дня» на главной — тот же язык, что у .card/.card-press */
+  .god-widget { display: flex; align-items: center; gap: 12px; padding: 12px 14px; }
+  .god-badge {
+    position: absolute; top: -8px; left: 14px;
+    font-size: 8.5px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase;
+    background: linear-gradient(140deg, var(--gold), var(--coral)); color: #fff;
+    padding: 3px 9px; border-radius: 999px;
+  }
+  .god-ico { width: 48px; height: 48px; flex-shrink: 0; }
+  .god-ico :where(img, .gcv-emoji-icon, svg) { width: 100%; height: 100%; }
+  .god-main { flex: 1; min-width: 0; }
+  .god-title { font-size: 13.5px; font-weight: 700; color: var(--berry); overflow-wrap: anywhere; }
+  .god-sub { font-size: 11px; color: var(--soft); margin-top: 1px; overflow-wrap: anywhere; }
+  .god-arrow { color: var(--soft); font-size: 16px; flex-shrink: 0; }
   /* Чипы выбора уровня корейского (регистрация · профиль · админка) */
   .lvl-chip {
     font-family: inherit; cursor: pointer;
@@ -3370,6 +3415,7 @@
   .topik-entry.be-self    { background: linear-gradient(160deg, #4A5A93 0%, #6E5BA6 100%); }
   .topik-entry.be-deep    { background: linear-gradient(135deg, #C2598B 0%, #E0815F 100%); }
   .topik-entry.be-reading { background: linear-gradient(140deg, #5BA86F 0%, #3E7E52 100%); }
+  .topik-entry.be-write   { background: linear-gradient(140deg, #3E7EA6 0%, #5B5BA6 100%); }
   .topik-entry.be-ai:hover { box-shadow: 0 20px 44px -12px rgba(224,67,90,.6); }
   /* Тёмная тема — те же акценты приглушённо (перебивают общий тёмный фон карточек по специфичности) */
   body.theme-dark .topik-entry.be-ai      { background: linear-gradient(135deg, #7A3C4E 0%, #5E2E48 100%); }
@@ -3379,6 +3425,7 @@
   body.theme-dark .topik-entry.be-self    { background: linear-gradient(160deg, #2E3A66 0%, #463A6B 100%); }
   body.theme-dark .topik-entry.be-deep    { background: linear-gradient(135deg, #6E3556 0%, #7A4538 100%); }
   body.theme-dark .topik-entry.be-reading { background: linear-gradient(140deg, #356046 0%, #284E37 100%); }
+  body.theme-dark .topik-entry.be-write   { background: linear-gradient(140deg, #2E4E66 0%, #3B3B66 100%); }
   /* Очень узкие экраны — один столбец, ничего не сплющивается */
   @media (max-width: 360px) {
     .lessons-bento { grid-template-columns: 1fr; }
@@ -3700,6 +3747,64 @@
   .topik-exam-t { font-weight: 700; font-size: 16px; }
   .topik-exam-s { font-size: 11.5px; opacity: .92; }
   .topik-exam-arrow { opacity: .85; flex-shrink: 0; }
+
+  /* ФАЗА T1/T2: дрилл/Блиц/오답노트/вопрос дня — общая кнопка-вариант */
+  .topik-drill-opt {
+    display: block; width: 100%; text-align: left; cursor: pointer; font-family: inherit;
+    font-size: 13.5px; font-weight: 600; color: var(--berry);
+    background: var(--card); border: 1.5px solid var(--line); border-radius: 12px; padding: 11px 12px;
+    transition: transform var(--t-fast) var(--ease-spring), border-color var(--t-base);
+    overflow-wrap: anywhere;
+  }
+  .topik-drill-opt:hover:not(:disabled) { border-color: var(--coral); }
+  .topik-drill-opt:active:not(:disabled) { transform: scale(.98); }
+  .topik-drill-opt.correct { background: var(--sage); border-color: var(--sage); color: #fff; }
+  .topik-drill-opt.wrong   { background: #F6DDDD; border-color: #E0A3A3; color: #9B3B3B; opacity: .85; }
+  .topik-drill-opt:disabled { cursor: default; }
+  .topik-drill-explain { margin-top: 14px; font-size: 12.5px; color: var(--berry); line-height: 1.65; background: var(--paper); border-radius: 12px; padding: 12px 14px; overflow-wrap: anywhere; }
+
+  .topik-type-grid { display: grid; gap: 8px; }
+  .topik-type-tile {
+    background: var(--card); border: 1px solid var(--line); border-radius: 14px;
+    padding: 12px 14px; cursor: pointer; transition: transform .15s var(--ease-out);
+  }
+  .topik-type-tile:active { transform: scale(.98); }
+  .topik-type-title { font-size: 13px; font-weight: 700; color: var(--berry); overflow-wrap: anywhere; }
+  .topik-type-meta { display: flex; justify-content: space-between; font-size: 11px; color: var(--soft); margin-top: 4px; }
+
+  /* Игра «Связки» (ФАЗА T3) — бланк в предложении */
+  .lk-blank { display: inline-block; min-width: 46px; border-bottom: 2.5px solid var(--coral); color: var(--coral); }
+
+  /* Игра «Порядок» 문장 배열 (ФАЗА T3) */
+  .wo-built {
+    text-align: center; font-size: 13px; font-weight: 700; color: var(--berry);
+    background: var(--paper); border-radius: 12px; padding: 12px; min-height: 20px; overflow-wrap: anywhere;
+  }
+  .wo-chip {
+    display: block; width: 100%; text-align: left; cursor: pointer; font-family: inherit;
+    font-size: 13px; color: var(--berry); background: var(--card); border: 1.5px solid var(--line);
+    border-radius: 12px; padding: 11px 12px 11px 32px; text-indent: -20px;
+    transition: border-color var(--t-base), transform var(--t-fast) var(--ease-spring);
+    overflow-wrap: anywhere;
+  }
+  .wo-chip:hover:not(:disabled) { border-color: var(--coral); }
+  .wo-chip:active:not(:disabled) { transform: scale(.98); }
+  .wo-chip.used { opacity: .4; }
+  .wo-chip-label { font-weight: 800; color: var(--coral); margin-right: 4px; }
+
+  /* «Вопрос дня» на Главной (ФАЗА T2) */
+  .tq-card { margin-top: 14px; }
+  .tq-opt {
+    display: block; width: 100%; text-align: left; cursor: pointer; font-family: inherit;
+    font-size: 12.5px; font-weight: 600; color: var(--berry);
+    background: var(--paper); border: 1.5px solid var(--line); border-radius: 10px; padding: 9px 10px;
+    transition: border-color var(--t-base); overflow-wrap: anywhere;
+  }
+  .tq-opt:hover:not(:disabled) { border-color: var(--coral); }
+  .tq-opt.correct { background: var(--sage); border-color: var(--sage); color: #fff; }
+  .tq-opt.wrong   { background: #F6DDDD; border-color: #E0A3A3; color: #9B3B3B; opacity: .85; }
+  .tq-opt:disabled { cursor: default; }
+  .tq-more { text-align: right; font-size: 11.5px; font-weight: 700; color: var(--coral); margin-top: 10px; cursor: pointer; }
 
   .topik-menu-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 11px; margin-top: 14px; }
   .topik-menu-card {
@@ -4163,6 +4268,9 @@
   .exam-listen-btn:hover { box-shadow: 0 10px 22px -10px rgba(var(--accent-rgb),.85); }
   .exam-listen-btn:active { transform: scale(.97); }
   .exam-listen-btn.playing { background: var(--bad-line); box-shadow: 0 8px 18px -10px rgba(216,82,95,.7); }
+  /* Ревью 07.07: play/stop-тоггл добавлен и аудио-дриллу T4 (playListenScript) —
+     та же визуальная индикация «играет», что и у .exam-listen-btn.playing выше. */
+  .btn.btn-rose.playing { background: var(--bad-line); }
   .exam-passage {
     background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 17px 19px;
     font-size: 17.5px; line-height: 1.95; color: var(--berry); margin-bottom: 18px;
@@ -5447,6 +5555,59 @@
   .bear-guide-sub { display: block; font-size: 11.5px; color: var(--soft); margin-top: 3px; line-height: 1.5; overflow-wrap: anywhere; }
   .bear-guide-cta { display: inline-flex; margin-top: 8px; }
 
+  /* ───── Недельные квесты (ФАЗА A3) ───── */
+  .week-quest-row {
+    display: flex; align-items: center; gap: 8px;
+    background: var(--card); border: 1px solid var(--line); border-radius: 14px;
+    padding: 9px 12px; margin-top: 8px; cursor: pointer;
+    transition: transform .15s var(--ease-out), box-shadow .15s var(--ease-out);
+  }
+  .week-quest-row:active { transform: scale(.985); }
+  .week-quest-ico { font-size: 15px; flex-shrink: 0; }
+  .week-quest-txt { flex: 1; min-width: 0; font-size: 12px; font-weight: 600; color: var(--berry); }
+  .week-quest-chest { font-size: 16px; flex-shrink: 0; animation: bearBob 1.8s ease-in-out infinite; }
+  .week-quest-chev { color: var(--soft); font-size: 15px; flex-shrink: 0; }
+  .quest-item {
+    display: flex; align-items: center; gap: 10px;
+    background: var(--card); border: 2px solid var(--duo-blush); border-radius: 16px; padding: 10px 12px;
+    cursor: pointer; box-shadow: 0 3px 0 var(--duo-blush);
+    transition: opacity .2s var(--ease-out), transform .12s var(--ease-out), box-shadow .12s var(--ease-out), border-color .15s ease;
+  }
+  .quest-item:hover { border-color: var(--duo-rose); box-shadow: 0 3px 0 var(--duo-rose); }
+  .quest-item:active { transform: translateY(2px); box-shadow: 0 1px 0 var(--duo-rose); }
+  .quest-item.done { opacity: .68; }
+  .quest-item-ico { font-size: 20px; flex-shrink: 0; }
+  .quest-item-main { flex: 1; min-width: 0; }
+  .quest-item-title { font-size: 12.5px; font-weight: 700; color: var(--berry); overflow-wrap: anywhere; }
+  .quest-item-sub { font-size: 10.5px; color: var(--soft); margin-top: 1px; line-height: 1.4; overflow-wrap: anywhere; }
+  .quest-item-track { height: 6px; background: var(--line); border-radius: 999px; overflow: hidden; margin-top: 6px; }
+  .quest-item-fill { height: 100%; background: var(--grad-coral); border-radius: 999px; transition: width .4s var(--ease-out); }
+  .quest-item-val { font-size: 12px; font-weight: 700; color: var(--coral); flex-shrink: 0; font-variant-numeric: tabular-nums; }
+  .quest-item.done .quest-item-val { color: var(--ok-ink); }
+  .quest-item-chev { color: var(--soft); font-size: 15px; flex-shrink: 0; }
+
+  /* ФАЗА D1: хардкор-режим — полоска обратного отсчёта раунда */
+  .hc-timer-track { height: 4px; background: rgba(var(--rose-rgb),.18); border-radius: 999px; overflow: hidden; margin-bottom: 10px; }
+  .hc-timer-fill { height: 100%; width: 100%; background: linear-gradient(90deg, var(--gold), var(--coral)); border-radius: 999px; }
+  /* Ревью 07.07: --gold в тёмной теме — бледно-голубой (для др. нужд свотча), а не
+     золотой → полоска «горящего фитиля» становилась холодной сине-розовой. Берём
+     --dk-fill/--dk-fill-deep — они уже подстраиваются под выбранный цветовой свотч. */
+  body.theme-dark .hc-timer-fill { background: linear-gradient(90deg, var(--dk-fill), var(--dk-fill-deep)); }
+
+  /* ───── Стикеры Комдори — полочка в профиле (ФАЗА A3) ───── */
+  .sticker-tile {
+    width: 60px; height: 60px; border-radius: 16px;
+    background: linear-gradient(140deg, var(--blush), var(--petal));
+    border: 1px solid var(--line-strong);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px; box-shadow: 0 4px 12px -4px rgba(var(--accent-rgb),.35);
+  }
+
+  /* ───── Месячный отчёт (ФАЗА A4) ───── */
+  .report-delta { font-size: 10px; font-weight: 700; vertical-align: middle; }
+  .report-delta.up   { color: var(--ok-ink); }
+  .report-delta.down { color: var(--bad-ink); }
+
   /* ───── ТУР ПО ПРИЛОЖЕНИЮ (экскурсия с Комдори) ─────
      Прожектор: тень .tour-hole затемняет всё вокруг цели; .tour-veil
      прозрачен и лишь блокирует клики по фону. Цвета — токены темы. */
@@ -6068,6 +6229,10 @@
   body.theme-dark .td-opt:not(:disabled):hover { border-color: var(--rose) !important; background: #23262E !important; }
   body.theme-dark .td-opt.correct { background: rgba(46,158,91,.20) !important; color: #8FE3AC !important; border-color: #2E9E5B !important; }
   body.theme-dark .td-opt.wrong { background: rgba(217,83,79,.20) !important; color: #F1A8A5 !important; border-color: #D9534F !important; }
+  /* Ревью 07.07: .topik-drill-opt.wrong/.tq-opt.wrong (используется и в новой игре
+     «Связки») не имели тёмного варианта вовсе — светло-розовая карточка светилась
+     на тёмном экране. Тот же тёмный трактат, что уже есть у .td-opt.wrong выше. */
+  body.theme-dark .topik-drill-opt.wrong, body.theme-dark .tq-opt.wrong { background: rgba(217,83,79,.20) !important; color: #F1A8A5 !important; border-color: #D9534F !important; }
   body.theme-dark .td-explain { background: #23262E !important; color: #E8DDE2 !important; }
   body.theme-dark .td-real-tag, body.theme-dark .td-ex-count { background: #2E2530 !important; color: #F0B6B0 !important; }
   body.theme-dark .td-passage { background: #23262E !important; color: #F0E6EA !important; }
@@ -6264,6 +6429,15 @@
   .topik-entry.be-book { background: linear-gradient(135deg, #C98A3C 0%, #B5536A 100%); box-shadow: 0 14px 34px -10px rgba(181,83,106,.5); }
   .topik-entry.be-book:hover { box-shadow: 0 20px 44px -12px rgba(181,83,106,.6); }
   body.theme-dark .topik-entry.be-book { background: linear-gradient(135deg, #7A5A2E 0%, #6E3548 100%); }
+
+  /* ФАЗА D2/ревью 07.07: «Письмо RU→KO» была 4-й half-карточкой в 2-колоночной
+     .lessons-bento — оставляла пустую нестилизованную ячейку рядом (некому было
+     встать в пару). Переводим на full-width, как be-book — та же компактная
+     раскладка, ячейка больше не пустует. */
+  .lessons-bento .be-write { grid-column: 1 / -1; padding: 12px 16px; gap: 12px; }
+  .lessons-bento .be-write .topik-entry-badge { font-size: 13px; padding: 8px 11px; }
+  .lessons-bento .be-write .topik-entry-title { font-size: 14px; }
+  .lessons-bento .be-write .topik-entry-sub { font-size: 11px; }
 
   #textbook-hub { --tb-acc: var(--coral); }
   .tb-acc-berry { --tb-acc: var(--berry); }
@@ -6680,3 +6854,9 @@
   body.theme-dark .tb-opt.no { background: rgba(224,107,125,.18); border-color: var(--bad-line); color: var(--bad-ink); }
   body.theme-dark .tb-opt.ok, body.theme-dark .tb-mt.done { background: var(--sage); border-color: var(--sage); color: #1B1C1F; }
   body.theme-dark .tb-hw-note { background: var(--paper); }
+
+  /* Ревью 07.07: --sage в тёмной теме переопределён на золотой (для Duo-плиток,
+     см. выше) — «правильные» карточки с белым текстом (color:#fff), написанные
+     до этого переопределения, дают ~2.3:1 (провал WCAG AA). Тот же фикс, что уже
+     стоит для .tb-opt.ok/.tb-mt.done выше — тёмные чернила вместо белого текста. */
+  body.theme-dark .topik-drill-opt.correct, body.theme-dark .tq-opt.correct { color: #1B1C1F; }

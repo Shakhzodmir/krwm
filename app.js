@@ -168,6 +168,9 @@
     // ── Общее / бренд ──
     'brand.tagline':    { ru: 'с первого шага', en: 'from the very first step', uz: 'birinchi qadamdan' },
     'a11y.avatar':      { ru: 'Аватар', en: 'Avatar', uz: 'Avatar' },
+    'a11y.streakPill':  { ru: 'Стрик — открыть календарь', en: 'Streak — open calendar', uz: 'Striyk — kalendarni ochish' },
+    'a11y.freezePill':  { ru: 'Заморозки стрика — подробнее', en: 'Streak freezes — details', uz: 'Striyk muzlatgichlari — batafsil' },
+    'a11y.xpPill':      { ru: 'Опыт и уровень — все ранги', en: 'XP and level — all ranks', uz: 'Tajriba va daraja — barcha darajalar' },
 
     // ── Главная ──
     'greet.morning':    { ru: 'Доброе утро', en: 'Good morning', uz: 'Xayrli tong' },
@@ -416,6 +419,12 @@
     'common.done':  { ru: 'Готово ✓', en: 'Done ✓', uz: 'Tayyor ✓' },
     'common.check': { ru: 'Проверить', en: 'Check', uz: 'Tekshirish' },
 
+    // ── Попап «доступно обновление» ──
+    'update.title': { ru: 'Вышло обновление!', en: 'An update is available!', uz: 'Yangilanish chiqdi!' },
+    'update.body':  { ru: 'Мы кое-что улучшили. Обнови страницу, чтобы получить новую версию 🌸', en: "We've made some improvements. Refresh the page to get the new version 🌸", uz: 'Biz nimadir yaxshiladik. Yangi versiyani olish uchun sahifani yangilang 🌸' },
+    'update.cta':   { ru: 'Обновить страницу', en: 'Refresh page', uz: 'Sahifani yangilash' },
+    'update.later': { ru: 'Позже', en: 'Later', uz: 'Keyinroq' },
+
     // ── Домашнее задание ──
     'hw.title':       { ru: 'Домашнее задание', en: 'Homework', uz: 'Uy vazifasi' },
     'hw.materials':   { ru: 'МАТЕРИАЛЫ', en: 'MATERIALS', uz: 'MATERIALLAR' },
@@ -651,6 +660,110 @@
     'tour.fin.t': { ru: 'Вот и всё! 화이팅 🌸', en: 'That’s it! 화이팅 🌸', uz: 'Tamom! 화이팅 🌸' },
     'tour.fin.s': { ru: 'Если потеряешься — я на Главной, подскажу. Начнём с первого урока?', en: 'If you get lost — I’m on Home to help. Shall we start the first lesson?', uz: 'Adashsangiz — men Asosiy sahifadaman, yordam beraman. Birinchi darsni boshlaymizmi?' },
 
+    // ── Заморозка стрика (ФАЗА A1) ──
+    'freeze.badge':        { ru: 'Заморозки стрика: {cur}/2', en: 'Streak freezes: {cur}/2', uz: 'Striyk muzlatgichlari: {cur}/2' },
+    'freeze.earned':       { ru: '🧊 +1 заморозка стрика ({cur}/2)', en: '🧊 +1 streak freeze ({cur}/2)', uz: '🧊 +1 striyk muzlatgichi ({cur}/2)' },
+    'freeze.row.title':    { ru: '🧊 Заморозки стрика: {cur}/2', en: '🧊 Streak freezes: {cur}/2', uz: '🧊 Striyk muzlatgichlari: {cur}/2' },
+    'freeze.row.sub':      { ru: 'Одна в неделю за выполненную цель дня. Спасает 1 пропущенный день.', en: 'One per week for hitting your daily goal. Covers 1 missed day.', uz: 'Kunlik maqsadga erishgan uchun haftada bittadan. 1 ta oʻtkazib yuborilgan kunni qoplaydi.' },
+    'freeze.repair.eyebrow': { ru: 'Твой огонёк защищён 🧊', en: 'Your streak is protected 🧊', uz: 'Striykingiz himoyalangan 🧊' },
+    'freeze.repair.title': { ru: 'Комдори укрыл огонёк одеялком 🧸', en: 'Komdori tucked your flame in 🧸', uz: 'Komdori olovingizni koʻrpacha bilan yopdi 🧸' },
+    'freeze.repair.msg1':  { ru: 'Ты пропустила 1 день, но заморозка закрыла дыру — стрик цел!', en: 'You missed 1 day, but a freeze covered the gap — your streak is safe!', uz: '1 kun oʻtkazib yubordingiz, lekin muzlatgich buni qopladi — striyk saqlanib qoldi!' },
+    'freeze.repair.msg2':  { ru: 'Ты пропустила 2 дня, но заморозки закрыли обе дыры — стрик цел!', en: 'You missed 2 days, but freezes covered both gaps — your streak is safe!', uz: '2 kun oʻtkazib yubordingiz, lekin muzlatgichlar ikkalasini ham qopladi — striyk saqlanib qoldi!' },
+    'freeze.repair.cta':   { ru: 'Ура, продолжаем!', en: 'Yay, let’s continue!', uz: 'Ajoyib, davom etamiz!' },
+
+    // ── Сценарий возвращения (ФАЗА A2) ──
+    'comeback.eyebrow': { ru: 'С возвращением 🌱', en: 'Welcome back 🌱', uz: 'Xush kelibsiz 🌱' },
+    'comeback.title':   { ru: 'Я скучал! Давай по чуть-чуть?', en: 'I missed you! Shall we ease back in?', uz: 'Sogʻindim! Asta-sekin qaytamizmi?' },
+    'comeback.msg':     { ru: 'Перерыв — это нормально, никакого стыда 🌸 Предлагаю 3-минутную разминку — несколько карточек, чтобы снова почувствовать корейский.', en: 'Taking a break is completely normal, no shame here 🌸 Let’s do a 3-minute warm-up — a few cards to get back into Korean.', uz: 'Tanaffus olish — bu normal holat, uyalmang 🌸 3 daqiqalik isinish taklif qilaman — koreys tiliga qayta kirish uchun bir nechta kartalar.' },
+    'comeback.cta':     { ru: 'Начать разминку 🌸', en: 'Start the warm-up 🌸', uz: 'Isinishni boshlash 🌸' },
+    'comeback.done.eyebrow':      { ru: 'Стрик спасён 🧊', en: 'Streak saved 🧊', uz: 'Striyk saqlab qolindi 🧊' },
+    'comeback.done.title':        { ru: 'Комдори починил огонёк!', en: 'Komdori mended your flame!', uz: 'Komdori olovingizni tuzatdi!' },
+    'comeback.done.msg':          { ru: 'Ты вернулась, размялась — и я закрыл пропущенные дни одним ремонтом. Продолжаем вместе! 🌸', en: 'You came back and warmed up — so I patched the missed days with one repair. Let’s keep going together! 🌸', uz: 'Qaytdingiz, isindingiz — men oʻtkazib yuborilgan kunlarni bitta taʼmirlash bilan yopdim. Birga davom etamiz! 🌸' },
+    'comeback.done.eyebrowPlain': { ru: 'Так держать 🌸', en: 'Great job 🌸', uz: 'Shunday davom eting 🌸' },
+    'comeback.done.titlePlain':   { ru: 'Отличная разминка!', en: 'Great warm-up!', uz: 'Ajoyib isinish!' },
+    'comeback.done.msgPlain':     { ru: 'Новый стрик стартует сегодня — прошлый перерыв не считается неудачей, ты здесь, и это главное 🌸', en: 'A new streak starts today — the past break isn’t a failure, you’re here and that’s what matters 🌸', uz: 'Yangi striyk bugun boshlanadi — oʻtgan tanaffus muvaffaqiyatsizlik emas, siz shu yerdasiz va bu muhim 🌸' },
+    'comeback.done.cta':          { ru: 'Спасибо!', en: 'Thank you!', uz: 'Rahmat!' },
+    'comeback.guestNudge':        { ru: 'Кстати: с аккаунтом твой прогресс никогда не потеряется.', en: 'By the way: with an account your progress is never lost.', uz: 'Aytgancha: hisob bilan progressingiz hech qachon yoʻqolmaydi.' },
+
+    // ── Недельные квесты от Комдори (ФАЗА A3) ──
+    'quest.words.t':      { ru: 'Повтори {n} слов', en: 'Review {n} words', uz: '{n} ta soʻzni takrorlang' },
+    'quest.words.s':      { ru: 'Флешкартами или в уроках — как удобно', en: 'With flashcards or in lessons — whatever works', uz: 'Kartalar yoki darslar orqali — qulay boʻlgani' },
+    'quest.lessons.t':    { ru: 'Пройди {n} урока', en: 'Complete {n} lessons', uz: '{n} ta darsni oʻting' },
+    'quest.lessons.s':    { ru: 'Любой раздел уроков считается', en: 'Any lesson section counts', uz: 'Har qanday dars boʻlimi hisoblanadi' },
+    'quest.newgame.t':    { ru: 'Попробуй новую игру', en: 'Try a new game', uz: 'Yangi oʻyinni sinab koʻring' },
+    'quest.newgame.s':    { ru: 'Одну, в которую ещё не играла', en: 'One you haven’t played yet', uz: 'Hali oʻynamagan birortasini' },
+    'quest.topik.t':      { ru: 'Закрой один разбор TOPIK', en: 'Finish one TOPIK breakdown', uz: 'Bitta TOPIK tahlilini yakunlang' },
+    'quest.topik.s':      { ru: 'Любой тип в разделе «Разбор по типам»', en: 'Any type in the “Breakdown by type” section', uz: '«Turlar boʻyicha tahlil» boʻlimidan istalgan turi' },
+    'quest.goalstreak.t': { ru: '{n} дня подряд выполни цель дня', en: '{n} days in a row hit your daily goal', uz: 'Ketma-ket {n} kun kunlik maqsadga erishing' },
+    'quest.goalstreak.s': { ru: 'Три дня без перерыва — уже привычка!', en: 'Three days straight and it’s a habit!', uz: 'Uzluksiz uch kun — bu allaqachon odat!' },
+    'quest.gameofday.t':  { ru: 'Сыграй в игру дня 🌟', en: 'Play the game of the day 🌟', uz: 'Kunning oʻyinini oʻynang 🌟' },
+    'quest.gameofday.s':  { ru: 'Она даёт двойной XP — ищи золотую рамку на экране игр', en: 'It gives double XP — look for the gold border on the games screen', uz: 'U ikki barobar XP beradi — oʻyinlar ekranida oltin ramkani qidiring' },
+
+    // ── ФАЗА C1: сезонные ивенты ──
+    'season.gwangbok.title': { ru: '🎆 Кванбокчоль — День освобождения', en: '🎆 Gwangbokjeol — Liberation Day', uz: '🎆 Gwangbokjeol — Ozodlik kuni' },
+    'season.gwangbok.sub':   { ru: '15 тематических слов + значок недели', en: '15 themed words + a weekly badge', uz: '15 mavzuli soʻz + haftalik nishon' },
+    'season.gwangbok.ach':   { ru: 'Кванбокчоль 2026 🇰🇷', en: 'Gwangbokjeol 2026 🇰🇷', uz: 'Gwangbokjeol 2026 🇰🇷' },
+    'season.wordsTitle':     { ru: 'Слова праздника', en: 'Holiday words', uz: 'Bayram soʻzlari' },
+    'season.ach.eyebrow':    { ru: 'ЛИМИТИРОВАННАЯ АЧИВКА', en: 'LIMITED ACHIEVEMENT', uz: 'CHEKLANGAN YUTUQ' },
+    'season.ach.sub':        { ru: 'Такую можно получить только во время праздника — она навсегда останется в коллекции 🌸', en: 'This one’s only available during the holiday — it stays in your collection forever 🌸', uz: 'Bunga faqat bayram vaqtida erishish mumkin — u toʻplamingizda abadiy qoladi 🌸' },
+    'quest.seasonal.t':      { ru: 'Загляни в слова праздника 🎏', en: 'Check out the holiday words 🎏', uz: 'Bayram soʻzlariga qarab chiqing 🎏' },
+    'quest.seasonal.s':      { ru: 'Лимитированный квест — доступен только в дни ивента', en: 'A limited quest — available only during the event', uz: 'Cheklangan topshiriq — faqat tadbir kunlarida' },
+    'guide.tip.seasonal.t':  { ru: 'Идёт праздник в Корее! 🎏', en: 'A holiday is happening in Korea! 🎏', uz: 'Koreyada bayram davom etmoqda! 🎏' },
+    'guide.tip.seasonal.s':  { ru: 'Загляни в тематические слова, пока не закончилось', en: 'Check out the themed words before it ends', uz: 'Tugamasdan mavzuli soʻzlarga qarab chiqing' },
+
+    // ── ФАЗА C2: ежемесячный TOPIK-марафон ──
+    'marathon.card.title':    { ru: 'TOPIK-марафон', en: 'TOPIK marathon', uz: 'TOPIK marafoni' },
+    'marathon.card.today':    { ru: 'Сегодня! Пройди пробник 읽기 🎯', en: 'Today! Take the 읽기 mock exam 🎯', uz: 'Bugun! 읽기 sinov imtihonini bering 🎯' },
+    'marathon.card.countdown': { ru: 'Через {n} дн. — первая суббота месяца', en: 'In {n} days — first Saturday of the month', uz: '{n} kundan keyin — oyning birinchi shanbasi' },
+    'marathon.card.done':     { ru: 'Готово! Твой результат: {score} 🏅', en: 'Done! Your score: {score} 🏅', uz: 'Tayyor! Natijangiz: {score} 🏅' },
+    'marathon.notYet':        { ru: 'Марафон начнётся в свой день — загляни ближе к дате 🌸', en: 'The marathon starts on its day — check back closer to the date 🌸', uz: 'Marafon oʻz kunida boshlanadi — sanaga yaqinroq qarab chiqing 🌸' },
+    'guide.marathon3.t':      { ru: 'До марафона TOPIK — 3 дня 📅', en: '3 days until the TOPIK marathon 📅', uz: 'TOPIK marafonigacha 3 kun qoldi 📅' },
+    'guide.marathon3.s':      { ru: 'Успей закрыть слабые типы и 오답노트 в «Практике»', en: 'Time to clear your weak types and 오답노트 in Practice', uz: '«Amaliyot»da zaif turlar va 오답노트ni yopib olishga ulguring' },
+    'guide.marathonToday.t':  { ru: 'Сегодня марафон TOPIK! 🎯', en: 'The TOPIK marathon is today! 🎯', uz: 'Bugun TOPIK marafoni! 🎯' },
+    'guide.marathonToday.s':  { ru: 'Пройди пробник — результат пойдёт в общий зачёт', en: 'Take the mock exam — your result counts toward the leaderboard', uz: 'Sinov imtihonini bering — natija umumiy hisobga kiradi' },
+    'guide.marathonToday.c':  { ru: 'К марафону', en: 'To the marathon', uz: 'Marafonga' },
+    'quest.row':          { ru: 'Квесты недели {done}/{total}', en: 'Weekly quests {done}/{total}', uz: 'Haftalik topshiriqlar {done}/{total}' },
+    'quest.sheet.eyebrow': { ru: 'КОМДОРИ ПРЕДЛАГАЕТ', en: 'KOMDORI SUGGESTS', uz: 'KOMDORI TAKLIF ETADI' },
+    'quest.sheet.title':  { ru: 'Квесты недели 📜', en: 'Weekly quests 📜', uz: 'Haftalik topshiriqlar 📜' },
+    'quest.claim':        { ru: 'Открыть сундучок 🎁', en: 'Open the chest 🎁', uz: 'Sandiqni ochish 🎁' },
+    'quest.claimed':      { ru: 'Сундучок уже открыт на этой неделе ✨', en: 'The chest is already opened this week ✨', uz: 'Sandiq bu hafta allaqachon ochilgan ✨' },
+    'quest.chest.autoClaimed': { ru: '🎁 Забрала прошлый сундучок: +{xp} XP', en: '🎁 Collected last week’s chest: +{xp} XP', uz: '🎁 Oʻtgan haftagi sandiq olindi: +{xp} XP' },
+    'quest.reward.eyebrow': { ru: 'Сундучок открыт 🎁', en: 'Chest opened 🎁', uz: 'Sandiq ochildi 🎁' },
+    'quest.reward.title': { ru: 'Новый стикер Комдори!', en: 'A new Komdori sticker!', uz: 'Yangi Komdori stikeri!' },
+    'quest.reward.week':  { ru: 'неделя {week}', en: 'week {week}', uz: '{week}-hafta' },
+    'quest.reward.xp':    { ru: '+ {xp} XP в копилку', en: '+ {xp} XP added', uz: '+ {xp} XP qoʻshildi' },
+    'quest.reward.cta':   { ru: 'Ура! 🌸', en: 'Yay! 🌸', uz: 'Ajoyib! 🌸' },
+    'sticker.shelf.title':  { ru: 'СТИКЕРЫ КОМДОРИ', en: 'KOMDORI STICKERS', uz: 'KOMDORI STIKERLARI' },
+    'sticker.bookworm':     { ru: 'Книжный червячок', en: 'Bookworm', uz: 'Kitobxon' },
+    'sticker.gamer':        { ru: 'Игровой марафонец', en: 'Game marathoner', uz: 'Oʻyin marafonchisi' },
+    'sticker.topik':        { ru: 'Покоритель TOPIK', en: 'TOPIK conqueror', uz: 'TOPIK zabtchisi' },
+    'sticker.onfire':       { ru: 'В ударе 🔥', en: 'On fire 🔥', uz: 'Zoʻr kayfiyatda 🔥' },
+    'sticker.allrounder':   { ru: 'Универсал недели', en: 'All-rounder of the week', uz: 'Haftaning har tomonlama rivojlangani' },
+
+    // ── Месячный отчёт от Мади (ФАЗА A4) ──
+    'report.eyebrow': { ru: 'ПИСЬМО ОТ МАДИ', en: 'A NOTE FROM MADIE', uz: 'MADIEDAN XAT' },
+    'report.title':   { ru: 'Итоги {month}', en: 'Your {month} recap', uz: '{month} yakunlari' },
+    'report.xp':      { ru: 'XP заработано', en: 'XP earned', uz: 'Toʻplangan XP' },
+    'report.words':   { ru: 'новых слов', en: 'new words', uz: 'yangi soʻz' },
+    'report.lessons': { ru: 'уроков пройдено', en: 'lessons completed', uz: 'oʻtilgan darslar' },
+    'report.streak':  { ru: 'лучший стрик', en: 'best streak', uz: 'eng yaxshi striyk' },
+    'report.madie':   { ru: '🌸 Горжусь тобой! Каждое слово и каждый урок — маленький шаг к настоящему корейскому. Продолжаем вместе?', en: '🌸 I’m proud of you! Every word and every lesson is a small step toward real Korean. Shall we keep going together?', uz: '🌸 Siz bilan faxrlanaman! Har bir soʻz va har bir dars — haqiqiy koreys tiliga kichik qadam. Birga davom etamizmi?' },
+    'report.share':   { ru: 'Поделиться результатом 📤', en: 'Share your results 📤', uz: 'Natijani ulashish 📤' },
+    'report.sharing': { ru: 'Готовим картинку…', en: 'Preparing image…', uz: 'Rasm tayyorlanmoqda…' },
+    'report.close':   { ru: 'Спасибо, Мади 🌸', en: 'Thank you, Madie 🌸', uz: 'Rahmat, Madie 🌸' },
+
+    // ── Игра дня (ФАЗА E1) ──
+    'e1.badge':       { ru: '🌟 Игра дня ×2', en: '🌟 Game of the day ×2', uz: '🌟 Kunning oʻyini ×2' },
+    'e1.home.eyebrow': { ru: 'ИГРА ДНЯ · ×2 XP', en: 'GAME OF THE DAY · ×2 XP', uz: 'KUNNING OʻYINI · ×2 XP' },
+    'e1.doublexp':    { ru: '🌟 ×2 XP за игру дня!', en: '🌟 ×2 XP for the game of the day!', uz: '🌟 Kunning oʻyini uchun ×2 XP!' },
+
+    // ── Связка урок → игра (ФАЗА E2) ──
+    'e2.suggest.t': { ru: 'Закрепи {n} слов в игре «{game}»', en: 'Lock in {n} words with «{game}»', uz: '«{game}» oʻyinida {n} ta soʻzni mustahkamlang' },
+    'e2.suggest.s': { ru: 'Свежие слова урока — почини, пока помнишь', en: 'Fresh lesson words — practice while they’re new', uz: 'Yangi dars soʻzlari — esingizdaligida mashq qiling' },
+    'e4.tab.words': { ru: 'Слова', en: 'Words', uz: 'Soʻzlar' },
+    'e4.suggest.t': { ru: 'Пропиши буквы урока от руки — {n} шт.', en: 'Trace {n} lesson letters by hand', uz: 'Dars harflarini qoʻlda yozib chiq — {n} ta' },
+    'e4.suggest.s': { ru: 'Порядок черт — как в прописях Madie', en: 'Stroke order — like in Madie’s workbook', uz: 'Chiziqlar tartibi — Madie daftaridagidek' },
+
     // ── Культур-деталь (정) ──
     'cult.eyebrow': { ru: 'Непереводимое корейское слово', en: 'An untranslatable Korean word', uz: 'Tarjima qilib boʻlmaydigan koreyscha soʻz' },
     'cult.p1':      { ru: '<span class="ko" style="font-weight:600;">정</span> — это глубокая привязанность и тёплая связь между людьми, которая <em>растёт со временем</em>.', en: '<span class="ko" style="font-weight:600;">정</span> is a deep attachment and warm bond between people that <em>grows over time</em>.', uz: '<span class="ko" style="font-weight:600;">정</span> — bu odamlar oʻrtasidagi chuqur mehr va iliq rishta, u <em>vaqt oʻtgani sari kuchayadi</em>.' },
@@ -690,8 +803,18 @@
 
     // ── Приглашение друга (реферал) ──
     'inv.needLogin': { ru: 'Сначала войди в аккаунт 🌸', en: 'Sign in first 🌸', uz: 'Avval akkauntga kiring 🌸' },
-    'inv.text':      { ru: 'Учу корейский с Madie 🌸 — присоединяйся! Зарегистрируешься по моей ссылке — нам обоим +{xp} XP: {link}', en: 'I’m learning Korean with Madie 🌸 — join me! Sign up with my link and we both get +{xp} XP: {link}', uz: 'Madie bilan koreys tilini oʻrganyapman 🌸 — qoʻshiling! Havolam orqali roʻyxatdan oʻtsangiz, ikkalamizga +{xp} XP: {link}' },
+    'inv.text':      { ru: 'Учу корейский с Madie 🌸 — присоединяйся! Зарегистрируешься по моей ссылке — нам обоим +{xp} XP и неделя Master 🎁: {link}', en: 'I’m learning Korean with Madie 🌸 — join me! Sign up with my link and we both get +{xp} XP and a week of Master 🎁: {link}', uz: 'Madie bilan koreys tilini oʻrganyapman 🌸 — qoʻshiling! Havolam orqali roʻyxatdan oʻtsangiz, ikkalamizga +{xp} XP va bir hafta Master 🎁: {link}' },
     'inv.copied':    { ru: 'Ссылка-приглашение скопирована 💌', en: 'Invite link copied 💌', uz: 'Taklif havolasi nusxalandi 💌' },
+    'inv.card.title':  { ru: 'Пригласи подругу 🎁', en: 'Invite a friend 🎁', uz: 'Doʻstingizni taklif qiling 🎁' },
+    'inv.card.sub':    { ru: 'Обеим — неделя Master и +200 XP', en: 'A week of Master and +200 XP for both of you', uz: 'Ikkalangizga ham bir hafta Master va +200 XP' },
+    'inv.card.sub.n':  { ru: 'Уже пригласила: {n}', en: 'Already invited: {n}', uz: 'Allaqachon taklif qilingan: {n}' },
+    'inv.card.cta':    { ru: 'Позвать →', en: 'Invite →', uz: 'Taklif qilish →' },
+    'plan.giftDays':   { ru: 'Master ещё {n} дн.', en: 'Master for {n} more days', uz: 'Master yana {n} kun' },
+    'guide.tip.invite.t': { ru: 'Пригласи подругу 🎁', en: 'Invite a friend 🎁', uz: 'Doʻstingizni taklif qiling 🎁' },
+    'guide.tip.invite.s': { ru: 'Обеим — неделя Master и +200 XP', en: 'A week of Master and +200 XP for both of you', uz: 'Ikkalangizga ham bir hafta Master va +200 XP' },
+    'guide.giftEnding.t': { ru: 'Master тает завтра 🌸', en: 'Master fades tomorrow 🌸', uz: 'Master ertaga tugaydi 🌸' },
+    'guide.giftEnding.s': { ru: 'Подарочная неделя почти закончилась — продлить?', en: 'Your gift week is almost over — extend it?', uz: 'Sovgʻa haftasi deyarli tugadi — uzaytiramizmi?' },
+    'guide.giftEnding.c': { ru: 'Продлить', en: 'Extend', uz: 'Uzaytirish' },
 
     // ── Доступность (aria) для карты уроков ──
     'a11y.lessonDone':    { ru: 'пройден', en: 'completed', uz: 'tugatilgan' },
@@ -720,14 +843,17 @@
     'games.sec.cross':     { ru: 'Кроссворд', en: 'Crossword', uz: 'Krossvord' },
     'games.sec.cross.m':   { ru: 'головоломки', en: 'puzzles', uz: 'boshqotirmalar' },
     'games.sec.tr':        { ru: 'Перевод и грамматика', en: 'Translation & grammar', uz: 'Tarjima va grammatika' },
-    'games.sec.tr.m':      { ru: '5 игр', en: '5 games', uz: '5 ta oʻyin' },
+    'games.sec.tr.m':      { ru: '4 игры', en: '4 games', uz: '4 ta oʻyin' },
     'games.sec.music':     { ru: 'Музыка', en: 'Music', uz: 'Musiqa' },
     'games.sec.music.m':   { ru: 'бонусная', en: 'bonus', uz: 'bonus' },
+    'games.sec.new':       { ru: 'Новинки', en: 'New', uz: 'Yangiliklar' },
+    'games.sec.new.m':     { ru: 'только что добавили', en: 'just added', uz: 'yaqinda qoʻshildik' },
     'games.flag.rec':  { ru: 'Рекомендуем', en: 'Recommended', uz: 'Tavsiya etamiz' },
+    'games.flag.new':  { ru: 'Новинка', en: 'New', uz: 'Yangi' },
     'games.c.lab.sub':   { ru: 'Конструктор слогов', en: 'Syllable builder', uz: 'Boʻgʻin konstruktori' },
     'games.c.lab.best':  { ru: 'Собери · послушай', en: 'Build · listen', uz: 'Yigʻ · tingla' },
     'games.c.write':     { ru: 'Пиши буквы', en: 'Write letters', uz: 'Harf yoz' },
-    'games.c.write.sub': { ru: '6 букв · обведи пальцем', en: '6 letters · trace with your finger', uz: '6 harf · barmoq bilan chiz' },
+    'games.c.write.sub': { ru: 'Буквы, слоги и слова · обведи пальцем', en: 'Letters, syllables & words · trace with your finger', uz: 'Harflar, boʻgʻinlar va soʻzlar · barmoq bilan chiz' },
     'games.c.dict':      { ru: 'Слушай и пиши', en: 'Listen and write', uz: 'Tingla va yoz' },
     'games.c.dict.sub':  { ru: '6 слогов · Аудио', en: '6 syllables · Audio', uz: '6 boʻgʻin · Audio' },
     'games.c.cards':     { ru: 'Карточки слов', en: 'Word cards', uz: 'Soʻz kartalari' },
@@ -814,6 +940,8 @@
     // ── Общение / Словарик (заголовки) ──
     'social.eyebrow':    { ru: 'ОБЩЕНИЕ', en: 'CHAT', uz: 'MULOQOT' },
     'social.title':      { ru: 'Друзья и чат 💬', en: 'Friends & chat 💬', uz: 'Doʻstlar va chat 💬' },
+    'social.search.ph':    { ru: 'Поиск по друзьям и чатам…', en: 'Search friends and chats…', uz: 'Doʻstlar va chatlarni qidirish…' },
+    'social.search.empty': { ru: 'Никого не нашлось 🔍', en: 'No matches found 🔍', uz: 'Hech kim topilmadi 🔍' },
     'words.eyebrow':     { ru: 'ЛИЧНЫЙ СЛОВАРИК', en: 'PERSONAL DICTIONARY', uz: 'SHAXSIY LUGʻAT' },
     'words.title':       { ru: 'Мои слова 🌸', en: 'My words 🌸', uz: 'Mening soʻzlarim 🌸' },
     'words.dict':        { ru: 'Словарь-переводчик · 사전', en: 'Dictionary & translator · 사전', uz: 'Lugʻat-tarjimon · 사전' },
@@ -854,6 +982,7 @@
     'topik.t.mustknow': { ru: 'Что нужно знать', en: 'Need to know', uz: 'Bilish kerak' },
     'topik.t.hints':    { ru: 'Подсказки', en: 'Hints', uz: 'Ishoralar' },
     'topik.t.writing':  { ru: 'Как писать 쓰기', en: 'How to write 쓰기', uz: '쓰기 qanday yoziladi' },
+    'topik.t.practice': { ru: 'Практика', en: 'Practice', uz: 'Amaliyot' },
 
     // Подписи разделов в меню
     'topik.s.words':     { ru: 'Лексика по темам', en: 'Vocabulary by topic', uz: 'Mavzular boʻyicha lugʻat' },
@@ -867,6 +996,8 @@
     'topik.s.about2':    { ru: 'Формат · баллы · уровни', en: 'Format · scores · levels', uz: 'Format · ballar · darajalar' },
     'topik.s.writing2':  { ru: '51–54 · критерии', en: '51–54 · criteria', uz: '51–54 · mezonlar' },
     'topik.s.hints':     { ru: 'Тайминг · ловушки', en: 'Timing · traps', uz: 'Vaqt · tuzoqlar' },
+    'topik.s.practice1': { ru: 'Дриллы по типам · Блиц-10', en: 'Type drills · Blitz-10', uz: 'Turlar boʻyicha mashqlar · Blitz-10' },
+    'topik.s.practice2': { ru: 'Дриллы по типам · Блиц-10', en: 'Type drills · Blitz-10', uz: 'Turlar boʻyicha mashqlar · Blitz-10' },
 
     // Заголовки экранов разделов (подзаголовок)
     'topik.h.words1':    { ru: 'Базовая лексика TOPIK I по темам', en: 'Basic TOPIK I vocabulary by topic', uz: 'TOPIK I asosiy lugʻati mavzular boʻyicha' },
@@ -880,6 +1011,140 @@
     'topik.h.hints1':    { ru: 'Мелочи, которые решают', en: 'Small things that make the difference', uz: 'Hal qiluvchi mayda narsalar' },
     'topik.h.hints2':    { ru: 'Мелочи, которые решают на TOPIK II', en: 'Small things that matter on TOPIK II', uz: 'TOPIK II da hal qiluvchi mayda narsalar' },
     'topik.h.mustknow':  { ru: 'Формат экзамена, баллы и основы письма', en: 'Exam format, scores and writing basics', uz: 'Imtihon formati, ballar va yozuv asoslari' },
+    'topik.h.practice1': { ru: 'Дриллы по типам заданий + Блиц-10 + тетрадь ошибок', en: 'Type drills + Blitz-10 + mistake notebook', uz: 'Turlar boʻyicha mashqlar + Blitz-10 + xatolar daftari' },
+    'topik.h.practice2': { ru: 'Дриллы по типам заданий + Блиц-10 + тетрадь ошибок', en: 'Type drills + Blitz-10 + mistake notebook', uz: 'Turlar boʻyicha mashqlar + Blitz-10 + xatolar daftari' },
+
+    // ФАЗА T1/T2: Практика — дриллы, Блиц-10, тетрадь ошибок, вопрос дня
+    'topik.lvl':             { ru: 'Уровень', en: 'Level', uz: 'Daraja' },
+    'topik.drill.title':     { ru: 'Дрилл по типу', en: 'Type drill', uz: 'Tur boʻyicha mashq' },
+    'topik.drill.empty':     { ru: 'Пока маловато вопросов этого типа 🌸', en: 'Not enough questions of this type yet 🌸', uz: 'Bu turdagi savollar hali kam 🌸' },
+    'topik.blitz.title':     { ru: 'Блиц-10', en: 'Blitz-10', uz: 'Blitz-10' },
+    'topik.blitz.card':      { ru: 'Блиц-10 🎯', en: 'Blitz-10 🎯', uz: 'Blitz-10 🎯' },
+    'topik.blitz.card.sub':  { ru: '10 случайных вопросов · бесплатно каждый день', en: '10 random questions · free every day', uz: '10 ta tasodifiy savol · har kuni bepul' },
+    'topik.review.title':    { ru: '오답노트 · тетрадь ошибок', en: '오답노트 · mistake notebook', uz: '오답노트 · xatolar daftari' },
+    'topik.review.card':     { ru: '오답노트 📓', en: '오답노트 📓', uz: '오답노트 📓' },
+    'topik.review.card.sub': { ru: '{n} вопросов ждут повторения', en: '{n} questions waiting for review', uz: '{n} ta savol takrorlashni kutmoqda' },
+    'topik.review.empty':    { ru: 'На сегодня всё повторено ✨', en: 'Everything reviewed for today ✨', uz: 'Bugun uchun hammasi takrorlandi ✨' },
+    'topik.review.done':     { ru: 'Молодец!', en: 'Well done!', uz: 'Ajoyib!' },
+    'topik.review.doneSub':  { ru: 'Разобрала все ошибки, которые были готовы к повтору', en: 'You reviewed every mistake that was due', uz: 'Takrorlashga tayyor boʻlgan barcha xatolarni koʻrib chiqdingiz' },
+    'topik.practice.new':    { ru: 'ещё не пробовала', en: 'not tried yet', uz: 'hali urinib koʻrilmagan' },
+    'topik.practice.qCount': { ru: 'вопросов', en: 'questions', uz: 'savol' },
+    'topik.practice.byType': { ru: 'ПО ТИПАМ ЗАДАНИЙ', en: 'BY QUESTION TYPE', uz: 'SAVOL TURLARI BOʻYICHA' },
+    'topik.practice.empty':  { ru: 'Типы вопросов ещё готовятся 🌸', en: 'Question types are still being prepared 🌸', uz: 'Savol turlari hali tayyorlanmoqda 🌸' },
+
+    // ── ФАЗА T3: игры «Связки»/«Порядок» + TOPIK-колоды слов ──
+    'topik.practice.games':  { ru: 'ИГРЫ ПО ГРАММАТИКЕ', en: 'GRAMMAR GAMES', uz: 'GRAMMATIKA OʻYINLARI' },
+    'topik.practice.decks':  { ru: 'КОЛОДЫ СЛОВ TOPIK', en: 'TOPIK WORD DECKS', uz: 'TOPIK SOʻZ TOʻPLAMLARI' },
+    'games.links':      { ru: 'Связки', en: 'Links', uz: 'Bogʻlovchilar' },
+    'games.links.sub':  { ru: 'Грамматика в контексте предложения', en: 'Grammar in a real sentence', uz: 'Gap kontekstidagi grammatika' },
+    'games.wordorder':      { ru: 'Порядок', en: 'Order', uz: 'Tartib' },
+    'games.wordorder.sub':  { ru: '문장 배열 · расставь по порядку', en: '문장 배열 · put in order', uz: '문장 배열 · tartib bilan joylashtiring' },
+    'games.topikLink.t': { ru: 'TOPIK-тренажёры', en: 'TOPIK trainers', uz: 'TOPIK trenajyorlari' },
+    'games.topikLink.s': { ru: 'Связки · Порядок · колоды слов · дриллы', en: 'Links · Order · word decks · drills', uz: 'Bogʻlovchilar · Tartib · soʻz toʻplamlari · mashqlar' },
+    'topik.deck.flash':  { ru: 'Карточки', en: 'Flashcards', uz: 'Kartochkalar' },
+    'topik.deck.pick':   { ru: 'В какую игру?', en: 'Which game?', uz: 'Qaysi oʻyin?' },
+    'topik.deck.notEnough': { ru: 'мало подходящих слов', en: 'not enough matching words', uz: 'mos soʻzlar yetarli emas' },
+    'wordorder.tapHint': { ru: 'Тапай части предложения по порядку 👇', en: 'Tap the sentence parts in order 👇', uz: 'Gap qismlarini tartib bilan bosing 👇' },
+    'wordorder.sub':     { ru: 'Расставь (가)(나)(다)(라) по порядку', en: 'Put (가)(나)(다)(라) in the right order', uz: '(가)(나)(다)(라) ni toʻgʻri tartibda joylashtiring' },
+    'wordorder.correct': { ru: '와! Верный порядок ✨', en: '와! Correct order ✨', uz: '와! Toʻgʻri tartib ✨' },
+    'wordorder.wrong':   { ru: 'Правильный порядок: {order}', en: 'Correct order: {order}', uz: 'Toʻgʻri tartib: {order}' },
+    'topik.qod.eyebrow':     { ru: 'ВОПРОС ДНЯ · TOPIK', en: 'QUESTION OF THE DAY · TOPIK', uz: 'KUNNING SAVOLI · TOPIK' },
+    'topik.qod.more':        { ru: 'Больше практики', en: 'More practice', uz: 'Koʻproq amaliyot' },
+    'quest.blitz.t':         { ru: 'Пройди Блиц-10 🎯', en: 'Do the Blitz-10 🎯', uz: 'Blitz-10ni bajaring 🎯' },
+    'quest.blitz.s':         { ru: '10 вопросов TOPIK в разделе «Практика»', en: '10 TOPIK questions in the Practice section', uz: '«Amaliyot» boʻlimida 10 ta TOPIK savoli' },
+
+    // ── ФАЗА D2: письменная практика RU→KO ──
+    'lessons.write':      { ru: 'Письмо RU→KO', en: 'Writing RU→KO', uz: 'Yozish RU→KO' },
+    'lessons.write.sub':  { ru: 'переведи · опиши · ответь — с ИИ-проверкой или Мади', en: 'translate · describe · answer — checked by AI or Madie', uz: 'tarjima · tasvirlash · javob — AI yoki Madie tekshiradi' },
+    'wp.eyebrow':      { ru: 'ПИСЬМЕННАЯ ПРАКТИКА', en: 'WRITING PRACTICE', uz: 'YOZMA AMALIYOT' },
+    'wp.title':        { ru: 'RU → KO ✍️', en: 'RU → KO ✍️', uz: 'RU → KO ✍️' },
+    'wp.writeTitle':   { ru: 'Напиши ответ по-корейски', en: 'Write your answer in Korean', uz: 'Javobni koreyscha yozing' },
+    'wp.placeholder':  { ru: 'Пиши здесь на корейском…', en: 'Write in Korean here…', uz: 'Bu yerga koreyscha yozing…' },
+    'wp.checkAi':      { ru: 'Проверить с ИИ', en: 'Check with AI', uz: 'AI bilan tekshirish' },
+    'wp.sendMadie':    { ru: 'Отправить Мади', en: 'Send to Madie', uz: 'Madiega yuborish' },
+    'wp.empty':        { ru: 'Сначала напиши ответ 🌸', en: 'Write your answer first 🌸', uz: 'Avval javobni yozing 🌸' },
+    'wp.aiEmpty':      { ru: 'Не получилось разобрать ответ — попробуй переформулировать и отправь ещё раз', en: 'Could not parse the answer — try rephrasing and send again', uz: 'Javobni tahlil qilib boʻlmadi — qayta yozib koʻring' },
+    'wp.score':        { ru: 'ОЦЕНКА', en: 'SCORE', uz: 'BAHO' },
+    'wp.mistakes':     { ru: 'НА ЧТО ОБРАТИТЬ ВНИМАНИЕ', en: 'THINGS TO WATCH', uz: 'NIMAGA EʼTIBOR BERISH KERAK' },
+    'wp.chatPrefix':   { ru: 'Задание по письму — проверь, пожалуйста:', en: 'Writing task — please check:', uz: 'Yozma topshiriq — iltimos tekshiring:' },
+    'wp.sentToMadie':  { ru: 'Отправлено Мади 💌', en: 'Sent to Madie 💌', uz: 'Madiega yuborildi 💌' },
+    'wp.type.translate': { ru: 'Переведи {n} фразы', en: 'Translate {n} phrases', uz: '{n} ta iborani tarjima qiling' },
+    'wp.type.describe':  { ru: 'Опиши картинку', en: 'Describe the picture', uz: 'Rasmni tasvirlab bering' },
+    'wp.type.answer':    { ru: 'Ответь на вопрос', en: 'Answer the question', uz: 'Savolga javob bering' },
+    'wp.hintPrefix':     { ru: 'подсказка', en: 'hint', uz: 'maslahat' },
+    'wp.describeInstruction': { ru: 'Опиши сцену на корейском 3-5 предложениями', en: 'Describe the scene in Korean, 3-5 sentences', uz: 'Voqeani koreys tilida 3-5 ta gap bilan taʼriflang' },
+    'quest.writing.t':   { ru: 'Напиши 1 задание по письму', en: 'Do 1 writing task', uz: '1 ta yozma topshiriq bajaring' },
+    'quest.writing.s':   { ru: 'Перевод, описание или ответ в разделе «Письмо RU→KO»', en: 'Translation, description or answer in the Writing RU→KO section', uz: '«Yozish RU→KO» boʻlimida tarjima, tasvir yoki javob' },
+
+    // ── ФАЗА T5: карта слабых мест + прогноз 급 ──
+    't5.eyebrow':  { ru: 'ТВОИ СЛАБЫЕ ТИПЫ', en: 'YOUR WEAK SPOTS', uz: 'SIZNING ZAIF TOMONLARINGIZ' },
+    't5.forecast': { ru: 'Примерный прогноз: {label} · точность {pct}%', en: 'Rough forecast: {label} · {pct}% accuracy', uz: 'Taxminiy prognoz: {label} · aniqlik {pct}%' },
+    't5.forecast.coverageHint': { ru: 'точность выше прогноза — разобрано только {coverage}% типов, пройди ещё для более высокого прогноза', en: 'accuracy is higher than the forecast — only {coverage}% of question types tried, do more for a higher forecast', uz: 'aniqlik prognozdan yuqori — faqat {coverage}% turdagi savollar sinab koʻrildi, yuqoriroq prognoz uchun yana mashq qiling' },
+    't5.openDeep': { ru: '📖 разбор', en: '📖 breakdown', uz: '📖 tahlil' },
+
+    // ── ФАЗА E3: флешкарты — прогресс, обратный режим, сид-колоды ──
+    'fc.stats.learned':  { ru: 'выучено', en: 'learned', uz: 'oʻrganilgan' },
+    'fc.stats.due':      { ru: 'ждут повторения', en: 'due for review', uz: 'takrorlashni kutmoqda' },
+    'fc.reverseMode':    { ru: 'Обратный режим: перевод → корейский', en: 'Reverse mode: translation → Korean', uz: 'Teskari rejim: tarjima → koreyscha' },
+    'fc.reverse.prompt': { ru: 'КАК ПО-КОРЕЙСКИ?', en: 'HOW DO YOU SAY THIS IN KOREAN?', uz: 'KOREYSCHA QANDAY BOʻLADI?' },
+    'fc.seedDecks':      { ru: 'ПО ТЕМАМ И УРОКАМ', en: 'BY TOPIC AND LESSON', uz: 'MAVZU VA DARSLAR BOʻYICHA' },
+    'fc.seed.lesson':    { ru: 'Слова урока «{title}»', en: 'Words from “{title}”', uz: '«{title}» darsi soʻzlari' },
+    'fc.seed.topik1':    { ru: 'TOPIK I минимум', en: 'TOPIK I essentials', uz: 'TOPIK I minimumi' },
+    'fc.seed.topik1.sub':{ ru: 'слова по темам из подготовки к TOPIK', en: 'themed words from TOPIK prep', uz: 'TOPIK tayyorlovidan mavzuli soʻzlar' },
+
+    // ── ФАЗА D3: статус «Сонбэ 선배» ──
+    'sonbae.badge.title': { ru: 'Сонбэ — прошла 6+ модулей', en: 'Sonbae — completed 6+ modules', uz: 'Sonbae — 6+ modulni yakunladi' },
+    'sonbae.title':  { ru: 'Поздравляем!', en: 'Congratulations!', uz: 'Tabriklaymiz!' },
+    'sonbae.body':   { ru: 'Комдори и Мади гордятся тобой — ты {verb} 6 модулей программы и теперь официально 선배! Бейдж останется с тобой навсегда 🎓', en: 'Komdori and Madie are proud of you — you completed 6 modules and are now officially 선배! The badge stays with you forever 🎓', uz: 'Komdori va Madie siz bilan faxrlanadi — 6 ta modulni tugatdingiz va endi rasman 선배 siz! Nishon abadiy siz bilan qoladi 🎓' },
+    'sonbae.xp':     { ru: '+{xp} XP за достижение', en: '+{xp} XP for the milestone', uz: 'Yutuq uchun +{xp} XP' },
+    'sonbae.cta':    { ru: 'Спасибо, Мади! 🌸', en: 'Thank you, Madie! 🌸', uz: 'Rahmat, Madie! 🌸' },
+
+    // ── ФАЗА T4: аудио-дриллы 듣기 · тренажёр -ㄴ다/-는다 · конструктор №53 ──
+    'td.listening.sub':    { ru: 'Три тренажёра для устной и письменной части', en: 'Three trainers for the spoken and written parts', uz: 'Ogʻzaki va yozma qism uchun uchta trenajyor' },
+    'listendrill.title':   { ru: 'Аудио-дрилл 듣기', en: 'Audio drill 듣기', uz: 'Audio-mashq 듣기' },
+    'listendrill.cardSub': { ru: 'Слушай и выбирай верный ответ', en: 'Listen and pick the right answer', uz: 'Tinglang va toʻgʻri javobni tanlang' },
+    'listendrill.play':    { ru: 'Прослушать', en: 'Play audio', uz: 'Tinglash' },
+    'listendrill.stop':    { ru: 'Остановить', en: 'Stop', uz: 'Toʻxtatish' },
+    'nda.title':      { ru: 'Тренажёр -ㄴ다/-는다', en: '-ㄴ다/-는다 trainer', uz: '-ㄴ다/-는다 trenajyori' },
+    'nda.cardSub':    { ru: 'Переведи вежливую речь в письменный стиль', en: 'Turn polite speech into written style', uz: 'Xushmuomala nutqni yozma uslubga aylantiring' },
+    'nda.sub':        { ru: 'Напиши в письменном стиле (문어체)', en: 'Write it in the written style (문어체)', uz: 'Yozma uslubda yozing (문어체)' },
+    'nda.politeLabel':{ ru: 'Вежливая речь', en: 'Polite speech', uz: 'Xushmuomala nutq' },
+    'nda.placeholder':{ ru: 'Введи ответ на корейском…', en: 'Type your answer in Korean…', uz: 'Javobni koreyscha kiriting…' },
+    'nda.correct':    { ru: '와! Верно ✨', en: '와! Correct ✨', uz: '와! Toʻgʻri ✨' },
+    'nda.wrong':      { ru: 'Правильно: {answer}', en: 'Correct: {answer}', uz: 'Toʻgʻrisi: {answer}' },
+    'w53.title':      { ru: 'Конструктор №53', en: 'Question 53 builder', uz: '53-topshiriq konstruktori' },
+    'w53.cardSub':    { ru: 'Собери официальный ответ из готовых фраз', en: 'Build a formal answer from ready-made phrases', uz: 'Tayyor iboralardan rasmiy javob tuzing' },
+    'w53.sub':        { ru: 'Выбери фразу, которая продолжает ответ', en: 'Pick the phrase that continues the answer', uz: 'Javobni davom ettiruvchi iborani tanlang' },
+    'w53.hint.intro':      { ru: 'Начни со вступления: кто и о чём проводил опрос', en: 'Start with the intro: who ran the survey and about what', uz: 'Kirish bilan boshlang: kim va nima haqida soʻrov oʻtkazgan' },
+    'w53.hint.data':       { ru: 'Теперь главные цифры опроса', en: 'Now the main survey numbers', uz: 'Endi soʻrovning asosiy raqamlari' },
+    'w53.hint.reason':     { ru: 'Теперь причины', en: 'Now the reasons', uz: 'Endi sabablar' },
+    'w53.hint.conclusion': { ru: 'И вывод', en: 'And the conclusion', uz: 'Va xulosa' },
+    'w53.tryAgain':   { ru: 'Это разговорная фраза — попробуй другую', en: 'That’s a casual phrase — try another', uz: 'Bu soʻzlashuv iborasi — boshqasini tanlang' },
+    'w53.done':       { ru: 'Ответ готов!', en: 'Answer ready!', uz: 'Javob tayyor!' },
+    'w53.yourText':   { ru: 'Твой ответ', en: 'Your answer', uz: 'Sizning javobingiz' },
+    'w53.modelText':  { ru: 'Образцовый ответ', en: 'Model answer', uz: 'Namunaviy javob' },
+
+    // ── ФАЗА B2: тест уровня (лид-магнит) ──
+    'leveltest.title':    { ru: 'Тест уровня', en: 'Level test', uz: 'Daraja testi' },
+    'leveltest.sub':      { ru: '~20 вопросов · 5 минут', en: '~20 questions · 5 minutes', uz: '~20 ta savol · 5 daqiqa' },
+    'leveltest.q.vocab':  { ru: 'Что означает это слово?', en: 'What does this word mean?', uz: 'Bu soʻz nimani anglatadi?' },
+    'leveltest.listenBtn': { ru: 'Прослушать 🔊', en: 'Listen 🔊', uz: 'Tinglash 🔊' },
+    'leveltest.notEnoughContent': { ru: 'Материалов пока маловато для теста 🌸', en: 'Not enough material for the test yet 🌸', uz: 'Test uchun material hali yetarli emas 🌸' },
+    'leveltest.entry':    { ru: 'Пройти тест', en: 'Take the test', uz: 'Testdan oʻtish' },
+    'leveltest.entryTopik': { ru: 'Не знаю свой уровень — пройти тест', en: 'Not sure of my level — take the test', uz: 'Darajamni bilmayman — testdan oʻtish' },
+    'leveltest.result.eyebrow': { ru: 'ТВОЙ УРОВЕНЬ', en: 'YOUR LEVEL', uz: 'DARAJANGIZ' },
+    'leveltest.result.score':   { ru: 'Правильных ответов: {pct}%', en: 'Correct answers: {pct}%', uz: 'Toʻgʻri javoblar: {pct}%' },
+    'leveltest.share':    { ru: 'Поделиться результатом 📤', en: 'Share your result 📤', uz: 'Natijani ulashish 📤' },
+    'leveltest.startModule': { ru: 'Начать с этого модуля →', en: 'Start with this module →', uz: 'Shu moduldan boshlash →' },
+    'leveltest.goTopik':  { ru: 'К практике TOPIK →', en: 'To TOPIK practice →', uz: 'TOPIK amaliyotiga →' },
+    'leveltest.skill.vocab':     { ru: 'Лексика', en: 'Vocabulary', uz: 'Lugʻat' },
+    'leveltest.skill.grammar':   { ru: 'Грамматика', en: 'Grammar', uz: 'Grammatika' },
+    'leveltest.skill.reading':   { ru: 'Чтение', en: 'Reading', uz: 'Oʻqish' },
+    'leveltest.skill.listening': { ru: 'Аудирование', en: 'Listening', uz: 'Tinglab tushunish' },
+    'leveltest.share.title':      { ru: 'Мой корейский — {level}! 🌸', en: 'My Korean level — {level}! 🌸', uz: 'Mening koreys tilim — {level}! 🌸' },
+    'leveltest.share.scoreLabel': { ru: 'точность', en: 'accuracy', uz: 'aniqlik' },
+    'guide.tip.leveltest.t': { ru: 'Узнай свой уровень корейского 🧪', en: 'Find out your Korean level 🧪', uz: 'Koreys tili darajangizni biling 🧪' },
+    'guide.tip.leveltest.s': { ru: '~20 вопросов и результат сразу', en: '~20 questions and an instant result', uz: '~20 ta savol va darhol natija' },
 
     // Экзамены
     'topik.exam.card':      { ru: 'Экзамены (Mock)', en: 'Exams (Mock)', uz: 'Imtihonlar (Mock)' },
@@ -1738,6 +2003,11 @@
     "games.src.onMine":        { ru: "Игры пойдут на твоих словах: {n} шт. 🌸", en: "Games will use your words: {n} 🌸", uz: "Oʻyinlar sizning soʻzlaringizda boʻladi: {n} ta 🌸" },
     "games.src.few":           { ru: "Сохранённых слов пока мало — добавили слова из уроков 🌱", en: "Not enough saved words yet — lesson words added 🌱", uz: "Saqlangan soʻzlar hali kam — dars soʻzlari qoʻshildi 🌱" },
     "games.src.matchFallback": { ru: "Для «Подбери картинку» нужны слова с картинками — взяли слова уроков", en: "Match Picture needs words with pictures — using lesson words", uz: "«Rasmni tanla» uchun rasmli soʻzlar kerak — dars soʻzlari olindi" },
+    // ФАЗА D1: хардкор-режим 🔥
+    "hc.chip": { ru: "Хардкор", en: "Hardcore", uz: "Hardkor" },
+    "hc.hint": { ru: "Слова из всех модулей (даже не открытых) + таймер на раунд в Переводе, Сборке слова и Слухе", en: "Words from every module (even locked ones) + a round timer in Translate, Build a Word and Listening", uz: "Barcha modullardan soʻzlar (ochilmaganlari ham) + Tarjima, Soʻz yigʻish va Tinglashda raund taymeri" },
+    "hc.on":   { ru: "Хардкор включён 🔥 — держись!", en: "Hardcore is on 🔥 — hang in there!", uz: "Hardkor yoqildi 🔥 — chidang!" },
+    "hc.off":  { ru: "Хардкор выключен", en: "Hardcore is off", uz: "Hardkor oʻchirildi" },
     "mw.g.flash":    { ru: "Карточки", en: "Flashcards", uz: "Kartochkalar" },
     "mw.g.translate":{ ru: "Быстрый перевод", en: "Quick translate", uz: "Tez tarjima" },
     "mw.g.listen":   { ru: "На слух", en: "By ear", uz: "Eshitib topish" },
@@ -1823,6 +2093,11 @@
         <span style="font-size:11px; color:var(--soft); font-weight:500;">${t('lvl.my')}:</span>
         <span class="ko">${txt}</span>
         <i class="fa-solid fa-pen" style="font-size:9px; color:var(--coral);"></i>
+      </button>
+      <button type="button" onclick="startLevelTest()"
+        style="display:inline-flex; align-items:center; gap:5px; padding:6px 10px; margin-left:6px; border-radius:999px; cursor:pointer; font-family:inherit;
+        border:1.5px solid transparent; background:none; color:var(--coral); font-size:11.5px; font-weight:700;">
+        🧪 ${t('leveltest.entry')}
       </button>`;
   }
   // Универсальный модальный пикер уровня. cb(id) — что делать с выбором (свой профиль / ученик в админке).
@@ -1853,7 +2128,8 @@
   const vowels     = ['ㅏ','ㅑ','ㅓ','ㅕ','ㅗ','ㅛ','ㅜ','ㅠ','ㅡ','ㅣ'];
   const translitMap = {
     'ㄱ':'g','ㄴ':'n','ㄷ':'d','ㄹ':'r','ㅁ':'m','ㅂ':'b','ㅅ':'s','ㅇ':'','ㅈ':'j','ㅎ':'h',
-    'ㅏ':'a','ㅑ':'ya','ㅓ':'eo','ㅕ':'yeo','ㅗ':'o','ㅛ':'yo','ㅜ':'u','ㅠ':'yu','ㅡ':'eu','ㅣ':'i'
+    'ㅏ':'a','ㅑ':'ya','ㅓ':'eo','ㅕ':'yeo','ㅗ':'o','ㅛ':'yo','ㅜ':'u','ㅠ':'yu','ㅡ':'eu','ㅣ':'i',
+    'ㅋ':'k','ㅌ':'t','ㅍ':'p','ㅊ':'ch','ㄲ':'kk','ㄸ':'tt','ㅃ':'pp','ㅆ':'ss','ㅉ':'jj','ㅐ':'ae','ㅔ':'e'
   };
   let flashcardSession = [];
 
@@ -1899,9 +2175,9 @@
     // Activate matching nav items in BOTH bottom nav and sidebar nav
     document.querySelectorAll(`.nav-item[data-screen="${name}"]`).forEach(n => n.classList.add('active'));
     if (name === 'hangul' && !document.getElementById('consonants-grid').children.length) initHangulLab();
-    if (name === 'games') { syncBestScoreCards(); initGameFavorites(); }
-    if (name === 'home') { _guideTipSeed++; _safeRenderGroup([renderBearGuide, renderCustomVideos, renderCustomFeedPosts, renderHeroLesson, renderDailyGoal, renderSrsWidget, renderContinue]); }
-    if (name === 'lessons') { _safeRenderGroup([renderModuleSwitcher, renderCustomLessons, renderLessonPath]); }
+    if (name === 'games') { syncBestScoreCards(); initGameFavorites(); decorateGameOfDayCard(); renderHardcoreToggle(); }
+    if (name === 'home') { _guideTipSeed++; _safeRenderGroup([renderBearGuide, renderCustomVideos, renderCustomFeedPosts, renderHeroLesson, renderDailyGoal, renderSrsWidget, renderSeasonBanner, renderGameOfDayPlaque, renderTopikQuestionCard, renderContinue]); }
+    if (name === 'lessons') { _safeRenderGroup([renderModuleSwitcher, renderCustomLessons, renderLessonPath, renderWritingEntry]); }
     if (name === 'profile') { _safeRenderGroup([syncAchievementsStrip, renderWeeklyXpChart, renderHomeworkList, renderSavedWords, renderPlanCard, renderMyLevelChip, refreshProfileEmail]); }
     if (name === 'social') renderFriendsAndChat();
     if (name === 'words') renderSavedWords();
@@ -3648,6 +3924,7 @@
     renderLessonPath();
     renderHeroLesson();
     renderHomeworkList();
+    renderWritingEntry();     // Модуль 3 мог только что открыться — покажем раздел письма (ФАЗА D2)
     // Поздравление + анонс открытого следующего модуля
     if (!wasComplete && isModuleComplete(_activeModule)) {
       const order = Object.keys(LESSON_MODULES);
@@ -3657,6 +3934,51 @@
     }
     showLessonCompletePopup(lesson, xp);
     checkAchievements();
+    checkSonbaeMilestone(); // ФАЗА D3: возможно, только что завершён 6-й модуль
+  }
+  // ФАЗА E2: связка «урок → игра» — сразу после урока предлагаем закрепить его же
+  // слова в игре. Ротация listen/translate по номеру урока — обе используют мягкий
+  // фильтр _wForChoice (только длина ≤16), поэтому весь словарь урока проходит без потерь
+  // (в отличие от memory/build с фильтром «одно короткое слово», рискующим срезать фразы).
+  function lessonGameSuggestion(lesson) {
+    if (!lesson) return null;
+    // ФАЗА E4: уроки хангыля (есть letters) → предлагаем прописать буквы от руки:
+    // для алфавита письмо в разы полезнее словарных игр.
+    const wl = writeLettersForLesson(lesson);
+    if (wl.length >= 4) {
+      const n = Math.min(wl.length, 8);
+      return { n, write: true, ico: '🖌️', action: `playLessonWriting('${lesson.id}')` };
+    }
+    if (!Array.isArray(lesson.vocab) || lesson.vocab.length < 4) return null;
+    const opts = [
+      { key: 'listen',    ico: '👂', labelKey: 'games.c.listen' },
+      { key: 'translate', ico: '⚡', labelKey: 'games.c.tr' }
+    ];
+    const pick = opts[(lesson.num || 0) % opts.length];
+    return { n: lesson.vocab.length, label: t(pick.labelKey), ico: pick.ico, action: `playLessonGame('${lesson.id}','${pick.key}')` };
+  }
+  function playLessonGame(lessonId, gameType) {
+    document.getElementById('lesson-complete-page')?.remove();
+    const lesson = getAllLessons().find(l => l.id === lessonId);
+    if (!lesson || !Array.isArray(lesson.vocab) || !lesson.vocab.length) return;
+    if (gameType === 'listen') startListen(lesson.vocab);
+    else if (gameType === 'translate') startTranslate(lesson.vocab);
+  }
+  // ФАЗА E4: буквы урока, для которых есть анимация порядка черт
+  function writeLettersForLesson(lesson) {
+    if (!lesson || !Array.isArray(lesson.letters)) return [];
+    return lesson.letters.map(x => x && x.ko).filter(ch => ch && ch.length === 1 && JAMO_STROKES[ch]);
+  }
+  function playLessonWriting(lessonId) {
+    document.getElementById('lesson-complete-page')?.remove();
+    const lesson = getAllLessons().find(l => l.id === lessonId);
+    const pool = writeLettersForLesson(lesson);
+    if (!pool.length) return;
+    writeMode = 'letters';
+    writePool = shuffleArr(pool).slice(0, 8).map(ch => ({ jamo: [ch], label: ch }));
+    writeTotal = writePool.length;
+    writeRound = 0; writeScore = 0;
+    renderWriting();
   }
   function showLessonCompletePopup(lesson, xp) {
     if (!lesson) return;
@@ -3667,6 +3989,16 @@
     const xpChip = xp > 0
       ? `<div style="margin-top:18px;"><span class="chip" style="background:linear-gradient(140deg,var(--coral),var(--gold)); color:white; font-weight:600; font-size:13px; padding:6px 16px;">+${xp} XP · 🔥</span></div>`
       : '';
+    const suggest = lessonGameSuggestion(lesson);
+    const suggestHtml = suggest ? `
+      <div onclick="${suggest.action}" class="card card-press lesson-game-suggest">
+        <span class="lgs-ico">${suggest.ico}</span>
+        <div class="lgs-main">
+          <div class="lgs-title">${suggest.write ? t('e4.suggest.t', { n: suggest.n }) : t('e2.suggest.t', { n: suggest.n, game: suggest.label })}</div>
+          <div class="lgs-sub">${suggest.write ? t('e4.suggest.s') : t('e2.suggest.s')}</div>
+        </div>
+        <span class="lgs-arrow">›</span>
+      </div>` : '';
     m.innerHTML = `
       <div class="lesson-complete-inner">
         <img src="assets/bear5.png" alt="" class="lesson-complete-bear-big" onerror="this.style.display='none'">
@@ -3677,6 +4009,7 @@
         <div style="margin-top:18px; font-size:14px; color:var(--soft); line-height:1.55; max-width:320px;">
           ${t('ui.r011')}
         </div>
+        ${suggestHtml}
       </div>
       <button onclick="document.getElementById('lesson-complete-page')?.remove()" class="btn btn-primary lesson-complete-cta">
         ${t('ui.t000')} <i class="fa-solid fa-arrow-right" style="font-size:11px;"></i>
@@ -3694,6 +4027,7 @@
   let cardIdx = 0, flipped = false;            // cardIdx kept for back-compat
   let fcQueue = [], fcPos = 0, fcReviewed = 0, fcLearned = 0;
   let fcReplayFn = startFlashcards;
+  let fcReverse = false; // ФАЗА E3: обратный режим — RU показывается первой, KO при перевороте
   const SRS_INTERVALS_DAYS = [0, 1, 3, 7, 16, 35]; // box → days until due
   function srsAll() { const v = UStore.get('srs', {}); return (v && typeof v === 'object') ? v : {}; }
   function srsDue(ko) { const e = srsAll()[ko]; return e ? (e.due || 0) : 0; }
@@ -3725,10 +4059,12 @@
       .sort((a, b) => a.due - b.due)
       .map(x => x.c);
   }
-  function startFlashcardSession(cards) {
+  let _fcPlayCounted = false; // партия флешкарт засчитана в этой сессии (первый rateCard)
+  function startFlashcardSession(cards, reverse) {
+    fcReverse = !!reverse; // ФАЗА E3: сбрасываем/выставляем на КАЖДЫЙ старт сессии — не «протекает» между вызовами
     fcQueue = orderByDue(cards);
     fcQueue.forEach(c => { c._tries = 0; });
-    fcPos = 0; fcReviewed = 0; fcLearned = 0; flipped = false;
+    fcPos = 0; fcReviewed = 0; fcLearned = 0; flipped = false; _fcPlayCounted = false;
     flashcardSession = fcQueue;                  // keep legacy global in sync
     renderFlashcardModal();
   }
@@ -3775,11 +4111,31 @@
     return out;
   }
   function startFlashcardsType(tp) {
+    const reverse = fcReverse; // читаем ДО closeGameModal — тумблер живёт в лобби-модалке
     closeGameModal();
     const cards = fcCardsByType(tp);
     if (cards.length < 3) { toast(t('ui.019')); return; }
     fcReplayFn = function () { startFlashcardsType(tp); };
-    startFlashcardSession(shuffleArr(cards));
+    startFlashcardSession(shuffleArr(cards), reverse);
+  }
+  // ФАЗА E3: сид-колоды — мостик к урокам и к TOPIK-темам (T3), без нового контента.
+  function startFlashcardsSeed(kind) {
+    const reverse = fcReverse;
+    closeGameModal();
+    if (kind === 'lesson') {
+      const cur = getCurrentLesson();
+      if (!cur || !Array.isArray(cur.vocab) || cur.vocab.length < 3) { toast(t('ui.019')); return; }
+      const cards = cur.vocab.map(w => ({ front: w.ko, meaning: w.ru, translit: w.translit || '', emoji: w.emoji || '🌸', example: w.example || '' }));
+      fcReplayFn = function () { startFlashcardsSeed('lesson'); };
+      startFlashcardSession(shuffleArr(cards), reverse);
+    } else if (kind === 'topik1') {
+      const words = [];
+      (typeof TOPIK_VOCAB_THEMES !== 'undefined' ? TOPIK_VOCAB_THEMES : []).forEach(th => topikThemeToWordList(th).forEach(w => words.push(w)));
+      if (words.length < 3) { toast(t('ui.019')); return; }
+      const cards = words.map(w => ({ front: w.ko, meaning: w.ru, translit: w.translit || '', emoji: w.emoji || '🌸', example: w.example || '' }));
+      fcReplayFn = function () { startFlashcardsSeed('topik1'); };
+      startFlashcardSession(shuffleArr(cards), reverse);
+    }
   }
   function startFlashcards() {
     // Лобби «что будем повторять?» — как выбор уровня в кроссворде/поиске слов.
@@ -3789,20 +4145,46 @@
     const gSeen = new Set(all.filter(c => _fcBucket(c) === 'grammar').map(c => c.front));
     FC_GRAMMAR_SEED.forEach(c => { if (!gSeen.has(c.front)) counts.grammar++; });
     const nCards = n => `${n} ${pluralRu(n, 'карточка', 'карточки', 'карточек')}`;
+    // ФАЗА E3: «мой прогресс» — выучено (box>=4, устойчивая память по SRS) и сколько
+    // ждут повторения ПРЯМО СЕЙЧАС (srsDueList уже дедупит по front).
+    const seenFr = new Set(); let learnedCount = 0;
+    const srsMap = srsAll();
+    all.forEach(c => { if (c.front && !seenFr.has(c.front)) { seenFr.add(c.front); const e = srsMap[c.front]; if (e && e.box >= 4) learnedCount++; } });
+    const dueCount = srsDueList().length;
     const opt = (tp, emoji, label, sub) => `
       <button type="button" class="cw-lobby-card" onclick="startFlashcardsType('${tp}')">
         <span class="cw-lobby-ico">${emoji}</span>
         <span class="cw-lobby-tx"><span class="cw-lobby-title">${escHtml(label)}</span><span class="cw-lobby-sub">${escHtml(sub)}</span></span>
         <i class="fa-solid fa-chevron-right" style="color:var(--coral);"></i>
       </button>`;
+    const seedOpt = (label, sub, action) => `
+      <button type="button" class="cw-lobby-card" onclick="${action}">
+        <span class="cw-lobby-ico">📎</span>
+        <span class="cw-lobby-tx"><span class="cw-lobby-title">${escHtml(label)}</span><span class="cw-lobby-sub">${escHtml(sub)}</span></span>
+        <i class="fa-solid fa-chevron-right" style="color:var(--coral);"></i>
+      </button>`;
+    const cur = getCurrentLesson();
+    const hasTopikSeed = typeof TOPIK_VOCAB_THEMES !== 'undefined' && TOPIK_VOCAB_THEMES.length > 0;
     gameModal(`
       ${gameHeader('🎴 ФЛЕШКАРТЫ', 'что будем повторять?', 0, 0)}
+      ${(learnedCount || dueCount) ? `
+      <div class="card card-padded" style="display:flex; justify-content:space-around; text-align:center; margin-bottom:14px;">
+        <div><div class="display" style="font-size:18px; color:var(--berry);">${learnedCount}</div><div style="font-size:10px; color:var(--soft);">${t('fc.stats.learned')}</div></div>
+        <div><div class="display" style="font-size:18px; color:var(--coral);">${dueCount}</div><div style="font-size:10px; color:var(--soft);">${t('fc.stats.due')}</div></div>
+      </div>` : ''}
+      <button type="button" role="switch" aria-checked="${fcReverse}" class="wt-chip${fcReverse ? ' active' : ''}" onclick="fcReverse=!fcReverse; startFlashcards();" style="margin-bottom:12px; display:flex; align-items:center; justify-content:center; min-height:44px;">🔄 ${t('fc.reverseMode')}</button>
       <div class="cw-lobby">
         ${opt('all', '🌸', 'Всё подряд', nCards(counts.all))}
         ${opt('word', WORD_TYPE_META.word.emoji, WORD_TYPE_META.word.label, nCards(counts.word))}
         ${opt('grammar', WORD_TYPE_META.grammar.emoji, WORD_TYPE_META.grammar.label, `${nCards(counts.grammar)} · частицы и конструкции`)}
         ${opt('phrase', WORD_TYPE_META.phrase.emoji, WORD_TYPE_META.phrase.label, nCards(counts.phrase))}
       </div>
+      ${(cur || hasTopikSeed) ? `
+      <div class="topik-sec-sub" style="margin-top:18px; margin-bottom:8px;">${t('fc.seedDecks')}</div>
+      <div class="cw-lobby">
+        ${cur ? seedOpt(t('fc.seed.lesson', { title: lessonTitle(cur) }), `${(cur.vocab || []).length} ${pluralRu((cur.vocab || []).length, 'слово', 'слова', 'слов')}`, "startFlashcardsSeed('lesson')") : ''}
+        ${hasTopikSeed ? seedOpt(t('fc.seed.topik1'), t('fc.seed.topik1.sub'), "startFlashcardsSeed('topik1')") : ''}
+      </div>` : ''}
     `);
   }
   function replayFlashcards() { (fcReplayFn || startFlashcards)(); }
@@ -3818,6 +4200,37 @@
       document.body.classList.add('game-open');
     }
     page.querySelector('.game-page-card').innerHTML = inner;
+  }
+  // ФАЗА E3: вынесены из renderFlashcardModal, чтобы одно и то же содержимое можно
+  // было показать и как «лицо», и как «изнанку» карточки — обратный режим просто
+  // меняет их местами, вся вёрстка/логика карточки (флип, оценка) не дублируется.
+  function _fcKoFaceHtml(card, emojiSize, koSize, trSpacing) {
+    return `
+      <div style="font-size:${emojiSize}px;">${escHtml(card.emoji)}</div>
+      <div class="ko" style="font-size:${koSize}px; font-weight:700; line-height:1.2; margin-top:6px; text-align:center; max-width:100%; word-break:keep-all; overflow-wrap:anywhere;">${escHtml(card.front)}</div>
+      ${card.translit ? `<div style="color:var(--coral); letter-spacing:${trSpacing}; margin-top:6px; text-align:center; max-width:100%; overflow-wrap:anywhere;">[ ${escHtml(card.translit)} ]</div>` : ''}
+      <div style="display:flex; gap:8px; margin-top:14px;" onclick="event.stopPropagation();">
+        <button onclick="event.stopPropagation(); playSyllable('${jsStr(card.front)}', this)" class="btn-mic" style="background:var(--card); border-color:var(--line-strong);"><i class="fa-solid fa-volume-up"></i> ${t('ui.028')}</button>
+        <button onclick="event.stopPropagation(); pronounceCheck('${jsStr(card.front)}', this)" class="btn-mic"><i class="fa-solid fa-microphone"></i> ${t('ui.029')}</button>
+      </div>
+      <div style="position:absolute; bottom:10px; font-size:10px; color: var(--soft);">${t('ui.030')}</div>`;
+  }
+  // Ревью 07.07: рамка вокруг примера — среднесерая, не белая. Эта грань рендерится
+  // и на фикс.-тёмном .flashcard-back, и на светлом .flashcard-front (обратный режим) —
+  // белая полупрозрачная рамка была невидима на светлом фоне.
+  // Ревью 07.07: раньше грань была почти пустой у коротких слов (только эйброу+
+  // перевод) — заметно скромнее KO-грани с эмодзи+словом+кнопками. Добавлено
+  // эмодзи для визуального паритета (кнопки озвучки/микрофона сюда не подходят —
+  // это грань с русским переводом, произносить нечего).
+  function _fcRuFaceHtml(card, meanSize, eyebrow) {
+    return `
+      ${card.emoji ? `<div style="font-size:30px; margin-bottom:2px;">${escHtml(card.emoji)}</div>` : ''}
+      <div style="font-size:10px; opacity:.7; letter-spacing: 0.16em;">${eyebrow}</div>
+      <div class="display" style="font-size:${meanSize}px; margin-top:4px; text-align:center; max-width:100%; line-height:1.3; word-break:break-word; overflow-wrap:anywhere;">${escHtml(card.meaning)}</div>
+      ${card.example ? `<div style="border-top:1px solid rgba(128,128,128,.35); border-bottom:1px solid rgba(128,128,128,.35); padding: 14px 0; margin-top:18px; font-size:12.5px; text-align:center; line-height:1.5;">
+        <span class="ko">«${escHtml(card.example.split(' — ')[0])}»</span><br>
+        <span style="opacity:.8;">— ${escHtml(card.example.split(' — ')[1] || '')}</span>
+      </div>` : ''}`;
   }
   function renderFlashcardModal() {
     if (fcPos >= fcQueue.length) { renderFlashcardDone(); return; }
@@ -3850,24 +4263,8 @@
         </div>
         <div class="flashcard ${flipped ? 'flipped' : ''}" id="fc" style="width:100%; height:${cardH}px;" onclick="flipFlashcard()">
           <div class="flashcard-inner">
-            <div class="flashcard-face flashcard-front">
-              <div style="font-size:${emojiSize}px;">${escHtml(card.emoji)}</div>
-              <div class="ko" style="font-size:${koSize}px; font-weight:700; color:var(--berry); line-height:1.2; margin-top:6px; text-align:center; max-width:100%; word-break:keep-all; overflow-wrap:anywhere;">${escHtml(card.front)}</div>
-              ${card.translit ? `<div style="color:var(--coral); letter-spacing:${trSpacing}; margin-top:6px; text-align:center; max-width:100%; overflow-wrap:anywhere;">[ ${escHtml(card.translit)} ]</div>` : ''}
-              <div style="display:flex; gap:8px; margin-top:14px;" onclick="event.stopPropagation();">
-                <button onclick="event.stopPropagation(); playSyllable('${jsStr(card.front)}', this)" class="btn-mic" style="background:var(--card); border-color:var(--line-strong);"><i class="fa-solid fa-volume-up"></i> ${t('ui.028')}</button>
-                <button onclick="event.stopPropagation(); pronounceCheck('${jsStr(card.front)}', this)" class="btn-mic"><i class="fa-solid fa-microphone"></i> ${t('ui.029')}</button>
-              </div>
-              <div style="position:absolute; bottom:10px; font-size:10px; color: var(--soft);">${t('ui.030')}</div>
-            </div>
-            <div class="flashcard-face flashcard-back">
-              <div style="font-size:10px; opacity:.7; letter-spacing: 0.16em;">${t('ui.031')}</div>
-              <div class="display" style="font-size:${meanSize}px; margin-top:4px; text-align:center; max-width:100%; line-height:1.3; word-break:break-word; overflow-wrap:anywhere;">${escHtml(card.meaning)}</div>
-              ${card.example ? `<div style="border-top:1px solid rgba(255,255,255,.18); border-bottom:1px solid rgba(255,255,255,.18); padding: 14px 0; margin-top:18px; font-size:12.5px; text-align:center; line-height:1.5;">
-                <span class="ko">«${escHtml(card.example.split(' — ')[0])}»</span><br>
-                <span style="opacity:.8;">— ${escHtml(card.example.split(' — ')[1] || '')}</span>
-              </div>` : ''}
-            </div>
+            <div class="flashcard-face flashcard-front">${fcReverse ? _fcRuFaceHtml(card, meanSize, t('fc.reverse.prompt')) : _fcKoFaceHtml(card, emojiSize, koSize, trSpacing)}</div>
+            <div class="flashcard-face flashcard-back">${fcReverse ? _fcKoFaceHtml(card, emojiSize, koSize, trSpacing) : _fcRuFaceHtml(card, meanSize, t('ui.031'))}</div>
           </div>
         </div>
         <div style="display:grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-top: 18px;">
@@ -3879,7 +4276,17 @@
       </div>
     `);
   }
+  // Коллбэк «сессия флешкарт закончена штатно» — используется разминкой A2 (сценарий
+  // возвращения), чтобы после 3-минутной активности вернуться к результату ремонта
+  // стрика вместо обычного экрана «молодец». null для всех остальных сессий.
+  let _warmupDoneCallback = null;
   function renderFlashcardDone() {
+    if (_warmupDoneCallback) {
+      const cb = _warmupDoneCallback;
+      _warmupDoneCallback = null;
+      cb();
+      return;
+    }
     flashSetContent(`
       <div style="background:var(--card); border-radius:24px; padding:24px; box-shadow:var(--shadow-md); border:1px solid var(--line); text-align:center;">
         <div style="font-size:56px;">🌸</div>
@@ -3908,11 +4315,12 @@
       if (card.front) recordWordSeen(card.front);
       fcLearned++;
     }
-    // Count flashcards as a "play" for the games-1 / games-10 / games-50 / games-all achievements
-    if (!stats.gamePlays.flashcards) stats.gamePlays.flashcards = 0;
-    stats.gamePlays.flashcards++;
+    // Партия = сессия (см. startFlashcardSession), а не каждая карточка — иначе
+    // «Сыграно партий» на дашборде считало перевёрнутые карточки. Карточки — свой счётчик.
+    stats.fcCardsRated = (stats.fcCardsRated || 0) + 1;
     UStore.set('stats', stats);
-    if (stats.gamePlays.flashcards % 5 === 0) checkAchievements();
+    if (!_fcPlayCounted) { _fcPlayCounted = true; recordGamePlay('flashcards'); }
+    else if (stats.fcCardsRated % 5 === 0) checkAchievements();
     // «Не помню/с трудом» — вернуть карточку позже в этой сессии (с лимитом повторов)
     card._tries = (card._tries || 0) + 1;
     if (rating <= 1 && card._tries < 3) {
@@ -4335,7 +4743,7 @@
   }
 
   // ── Per-user data sync (full mirror to Firebase) ──
-  const USTORE_SYNC_KEYS = ['stats', 'avatar', 'unlocks', 'lessonProgress', 'lessonProgress_m2', 'lessonProgress_m3', 'lessonProgress_m4', 'lessonProgress_m5', 'lessonProgress_m6', 'lessonProgress_m7', 'lessonProgress_m8', 'bestScores', 'cover', 'bio'];
+  const USTORE_SYNC_KEYS = ['stats', 'avatar', 'unlocks', 'lessonProgress', 'lessonProgress_m2', 'lessonProgress_m3', 'lessonProgress_m4', 'lessonProgress_m5', 'lessonProgress_m6', 'lessonProgress_m7', 'lessonProgress_m8', 'bestScores', 'cover', 'bio', 'wrongsTopik', 'topikTypeAcc'];
   let _skipCloudPush = false;
   const _userFieldDebounce = {};
   const _userFieldPending = {};
@@ -4592,20 +5000,61 @@
               const s = new Set([...(Array.isArray(merged.dates) ? merged.dates : []), ...before.dates]);
               merged.dates = [...s].sort();
             }
+            // ФАЗА A1: frozenDates — та же union-защита, что у dates (иначе заморозка,
+            // применённая локально, терялась бы после облачного снапшота без неё).
+            if (Array.isArray(before.frozenDates) && before.frozenDates.length) {
+              const fs = new Set([...(Array.isArray(merged.frozenDates) ? merged.frozenDates : []), ...before.frozenDates]);
+              merged.frozenDates = [...fs].sort();
+            }
+            // ФАЗА A3: stickers — заработанные награды, как unlocks/bestScores, теряться
+            // после стале-снапшота не должны. Дедуп по ts (у каждой награды свой момент выдачи).
+            if (Array.isArray(before.stickers) && before.stickers.length) {
+              const seenTs = new Set((Array.isArray(merged.stickers) ? merged.stickers : []).map(s => s && s.ts));
+              const extra = before.stickers.filter(s => s && !seenTs.has(s.ts));
+              merged.stickers = [...(Array.isArray(merged.stickers) ? merged.stickers : []), ...extra];
+            }
+            // ФАЗА C1: seasonal — лимитированные ачивки, та же union-защита (постоянный
+            // флаг, второй раз не получить — терять уже полученный из-за стале-снапшота нельзя).
+            if (Array.isArray(before.seasonal) && before.seasonal.length) {
+              const s = new Set([...(Array.isArray(merged.seasonal) ? merged.seasonal : []), ...before.seasonal]);
+              merged.seasonal = [...s];
+            }
+            // ФАЗА D2: writingSubmits — та же union-защита по ts, что у stickers (иначе
+            // прогресс квеста «напиши задание» мог бы «откатиться» назад от стале-снапшота).
+            if (Array.isArray(before.writingSubmits) && before.writingSubmits.length) {
+              const seenTs2 = new Set((Array.isArray(merged.writingSubmits) ? merged.writingSubmits : []).map(x => x && x.ts));
+              const extra2 = before.writingSubmits.filter(x => x && !seenTs2.has(x.ts));
+              merged.writingSubmits = [...(Array.isArray(merged.writingSubmits) ? merged.writingSubmits : []), ...extra2];
+            }
+            // ФАЗА D3: sonbaeAwarded — постоянный статус, стале-снапшот не должен его снимать.
+            if (before.sonbaeAwarded) merged.sonbaeAwarded = true;
             // Стрик и число дней — ВСЕГДА производные от набора дат. Иначе устаревший
             // облачный снапшот (streak со вчера) приходил с задержкой сети и затирал
             // свежепосчитанный огонёк обратно на 1: дни входа копились правильно, а
             // огонёк «застревал». Баг отзыва ученицы 04.07 — «3 дня захожу, огонёк 1».
             if (Array.isArray(merged.dates)) {
-              merged.streak = computeConsecutiveStreak(merged.dates);
+              merged.streak = computeConsecutiveStreak(merged.dates, merged.frozenDates);
               merged.daysEntered = merged.dates.length;
             }
+            // Снапшот со старым подсчётом флешкарт (без флага) мигрируем на лету —
+            // push ниже отнесёт исправленное в облако.
+            migrateFcPlays(merged);
             value = merged;
             UStore.set(k, value);
             Object.keys(stats).forEach(s => delete stats[s]);
             Object.assign(stats, defaultStats(), value);
             if (!Array.isArray(stats.dates))         stats.dates         = stats.dates         ? Object.values(stats.dates)         : [];
             if (!Array.isArray(stats.wordsLearned))  stats.wordsLearned  = stats.wordsLearned  ? Object.values(stats.wordsLearned)  : [];
+            if (!Array.isArray(stats.frozenDates))   stats.frozenDates   = stats.frozenDates   ? Object.values(stats.frozenDates)   : [];
+            if (typeof stats.freezeCount !== 'number' || stats.freezeCount < 0) stats.freezeCount = 0;
+            if (!Array.isArray(stats.stickers))      stats.stickers      = stats.stickers      ? Object.values(stats.stickers)      : [];
+            if (!stats.monthly || typeof stats.monthly !== 'object') stats.monthly = {};
+            if (!Array.isArray(stats.gameOfDayPlayedDates)) stats.gameOfDayPlayedDates = stats.gameOfDayPlayedDates ? Object.values(stats.gameOfDayPlayedDates) : [];
+            if (!Array.isArray(stats.blitzPlayedDates)) stats.blitzPlayedDates = stats.blitzPlayedDates ? Object.values(stats.blitzPlayedDates) : [];
+            if (!Array.isArray(stats.seasonal)) stats.seasonal = stats.seasonal ? Object.values(stats.seasonal) : [];
+            if (!stats.seasonalVisited || typeof stats.seasonalVisited !== 'object') stats.seasonalVisited = {};
+            if (!Array.isArray(stats.writingSubmits)) stats.writingSubmits = stats.writingSubmits ? Object.values(stats.writingSubmits) : [];
+            if (typeof stats.sonbaeAwarded !== 'boolean') stats.sonbaeAwarded = !!stats.sonbaeAwarded;
             if (!stats.gamePlays    || typeof stats.gamePlays    !== 'object') stats.gamePlays    = {};
             if (!stats.perfectGames || typeof stats.perfectGames !== 'object') stats.perfectGames = {};
             syncStats();
@@ -4806,7 +5255,24 @@
   function myPlanId() {
     const u = Store.get('user');
     if (u && u.isAdmin) return 'proai'; // у Мади открыто всё
-    return myPlanObj().id;
+    const p = myPlanObj();
+    // ФАЗА B1: подарочные дни Master (until) истекли — тихо откатываемся на free,
+    // ничего не удаляя (until останется в объекте, просто больше не действует).
+    if (p.until && p.until < Date.now()) return 'free';
+    return p.id;
+  }
+  // ФАЗА B1: подарок дней Master за рефералку. Продлевает until (не понижает уже
+  // купленный платный тариф без срока — там дарить нечего, он и так лучше/равен).
+  function grantMasterDays(days, by) {
+    const cur = myPlanObj();
+    const now = Date.now();
+    if (cur.id !== 'free' && !cur.until) return false; // настоящая оплаченная подписка
+    const base = (cur.until && cur.until > now) ? cur.until : now;
+    const plan = { id: 'master', period: cur.period || 'monthly', since: cur.id === 'master' ? cur.since : now, until: base + days * 86400000, updatedAt: now, by: by || 'gift' };
+    UStore.set('plan', plan);
+    pushUserField('plan', plan);
+    renderPlanCard();
+    return true;
   }
   function planAtLeast(want) { return PLAN_ORDER[myPlanId()] >= PLAN_ORDER[want]; }
   // Соц-слой ленты (посты учеников, лайки, комментарии) — только платным тарифам
@@ -4872,12 +5338,17 @@
 
   // Карточка «Мой тариф» в профиле
   function renderPlanCard() {
+    try { renderInviteCard(); } catch (_) {}
     const slot = document.getElementById('profile-plan-slot');
     if (!slot) return;
     const u = Store.get('user');
     if (!u || u.isAdmin) { slot.innerHTML = ''; return; }
     const cur = PLANS[myPlanId()];
     const isFree = cur.id === 'free';
+    // ФАЗА B1: подарочные дни Master от рефералки — показать, сколько осталось
+    const po = myPlanObj();
+    const giftDaysLeft = (!isFree && po.until) ? Math.max(0, Math.ceil((po.until - Date.now()) / 86400000)) : 0;
+    const giftChip = giftDaysLeft > 0 ? `<span class="chip chip-gold" style="font-size:9.5px; flex-shrink:0; white-space:nowrap;">🎁 ${t('plan.giftDays', { n: giftDaysLeft })}</span>` : '';
     slot.innerHTML = `
       <div onclick="openPlanPage()" class="card card-press card-padded plan-profile-card ${isFree ? '' : 'plan-profile-paid'}" style="cursor:pointer; display:flex; align-items:center; gap:13px;">
         <div class="plan-profile-ico">${cur.emoji}</div>
@@ -4885,6 +5356,7 @@
           <div style="font-weight:700; font-size:14.5px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${t('ui.t001')} ${cur.name}${isFree ? '' : ' <span style="color:var(--ok-ink); font-size:11px;">· ' + t('ui.t002') + ' ✓</span>'}</div>
           <div style="font-size:11px; opacity:.8; margin-top:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${isFree ? t('ui.t003') : cur.tagline}</div>
         </div>
+        ${giftChip}
         <span class="chip ${isFree ? 'chip-coral' : 'chip-blush'}" style="font-size:10px; flex-shrink:0; white-space:nowrap;">${isFree ? t('ui.t005') : t('ui.t004')}</span>
       </div>`;
     // Компактный индикатор активного тарифа вверху профиля
@@ -4894,6 +5366,42 @@
         <span>${cur.emoji}</span> ${t('ui.r018')} ${cur.name}${isFree ? '' : ' · ' + t('ui.r017')} <i class="fa-solid fa-chevron-right" style="font-size:9px; opacity:.7;"></i>
       </button>`;
     }
+  }
+
+  // ФАЗА B1: карточка «Пригласи друга» в профиле — счётчик из stats.referralsCount
+  // (локальный, растёт при processReferralRewards — без чтения общего shared/referrals).
+  // ВРЕМЕННО ВЫКЛЮЧЕНО по решению пользователя (07.07): реферальная механика пока
+  // не нужна — вместо рабочей карточки показываем заглушку «готовим». Вся логика
+  // (shareInviteLink/applyPendingReferral/processReferralRewards/grantMasterDays)
+  // остаётся нетронутой — включить обратно = вернуть true в этом флаге.
+  const INVITE_FEATURE_ENABLED = false;
+  function renderInviteCard() {
+    const slot = document.getElementById('profile-invite-slot');
+    if (!slot) return;
+    const u = Store.get('user');
+    if (!u || u.isAdmin || u.guest) { slot.innerHTML = ''; return; }
+    if (!INVITE_FEATURE_ENABLED) {
+      slot.innerHTML = `
+        <div class="card card-padded" style="display:flex; align-items:center; gap:13px; margin-top:10px; opacity:.72;">
+          <div class="plan-profile-ico">🎁</div>
+          <div style="flex:1; min-width:0;">
+            <div style="font-weight:700; font-size:14.5px;">${t('inv.card.title')}</div>
+            <div style="font-size:11px; color:var(--soft); margin-top:2px;">${t('ui.182')}</div>
+          </div>
+          <span class="td-soon-tag">${t('ui.186')}</span>
+        </div>`;
+      return;
+    }
+    const n = stats.referralsCount || 0;
+    slot.innerHTML = `
+      <div onclick="shareInviteLink()" class="card card-press card-padded" style="cursor:pointer; display:flex; align-items:center; gap:13px; margin-top:10px;">
+        <div class="plan-profile-ico">🎁</div>
+        <div style="flex:1; min-width:0;">
+          <div style="font-weight:700; font-size:14.5px;">${t('inv.card.title')}</div>
+          <div style="font-size:11px; color:var(--soft); margin-top:2px;">${n > 0 ? t('inv.card.sub.n', { n }) : t('inv.card.sub')}</div>
+        </div>
+        <span class="chip chip-blush" style="font-size:10px; flex-shrink:0;">${t('inv.card.cta')}</span>
+      </div>`;
   }
 
   // Полноэкранная страница тарифов
@@ -5032,6 +5540,27 @@
     document.body.appendChild(m);
   }
 
+  // Версия сборки: держать В РУЧНУЮ синхронной с ?v= в index.html при каждом деплое
+  // (те же 3 места — stylesheet/preload/script). Используется только для попапа
+  // «доступно обновление» ниже — сама загрузка кода по-прежнему идёт через ?v=.
+  const APP_VERSION = '20260707p';
+  function showUpdateAvailableModal() {
+    if (document.getElementById('update-avail-modal')) return;
+    const m = document.createElement('div');
+    m.className = 'modal-bg modal-center';
+    m.id = 'update-avail-modal';
+    m.onclick = e => { if (e.target === m) m.remove(); };
+    m.innerHTML = `
+      <div class="modal-card" style="max-width:360px; text-align:center;">
+        <div style="font-size:44px;">🌸✨</div>
+        <div class="display" style="font-size:20px; color:var(--berry); margin-top:10px;">${t('update.title')}</div>
+        <div style="font-size:12.5px; color:var(--soft); margin-top:8px; line-height:1.6;">${t('update.body')}</div>
+        <button onclick="location.reload()" class="btn btn-primary btn-block" style="margin-top:16px;">${t('update.cta')}</button>
+        <button onclick="this.closest('.modal-bg').remove()" class="btn btn-ghost btn-block" style="margin-top:8px;">${t('update.later')}</button>
+      </div>`;
+    document.body.appendChild(m);
+  }
+
   function initFirebaseSync() {
     if (typeof _db === 'undefined') return;
     applyUStoreCloudSync();
@@ -5069,6 +5598,25 @@
       const url = (snap.val() || '').toString().trim();
       try { if (url) localStorage.setItem('km_tts_proxy', url); else localStorage.removeItem('km_tts_proxy'); } catch (_) {}
       window.KM_TTS_PROXY_URL = url;
+    });
+    // Оповещение об обновлении: первый клиент, открывший сайт ПОСЛЕ деплоя, сам
+    // «поднимает» отметку версии в облаке (лексикографически новее — формат YYYYMMDD+буква
+    // сравнивается строками корректно) — отдельного шага в админке не требуется. Вкладки,
+    // уже открытые со старой версией app.js в памяти, услышат это через listener и один раз
+    // предложат обновить страницу — только зарегистрированным (не гостям), один раз на версию.
+    const appVerRef = _db.ref('shared/config/appVersion');
+    appVerRef.once('value').then(snap => {
+      const remote = (snap.val() || '').toString();
+      if (APP_VERSION > remote) appVerRef.set(APP_VERSION).catch(() => {});
+    }).catch(() => {});
+    appVerRef.on('value', snap => {
+      const remote = (snap.val() || '').toString();
+      if (!remote || !(remote > APP_VERSION) || isGuestish()) return;
+      let seen = '';
+      try { seen = localStorage.getItem('km_update_seen_v') || ''; } catch (_) {}
+      if (seen === remote) return;
+      try { localStorage.setItem('km_update_seen_v', remote); } catch (_) {}
+      showUpdateAvailableModal();
     });
   }
   // ── Friends & Chat ──
@@ -5919,7 +6467,8 @@
   }
 
   function friendRowHtml(uid, info) {
-    const name = escHtml(info && info.name ? info.name : 'Друг');
+    const rawName = (info && info.name) ? info.name : 'Друг';
+    const name = escHtml(rawName);
     const unread = unreadCountFor(uid);
     const dir = (_usersDirCache && _usersDirCache[uid]) || {};
     const isAdmin = dir.isAdmin;
@@ -5940,11 +6489,11 @@
     const timeLabel = chatListTimeLabel(meta.lastAt);
     const pinned = isChatPinned(uid);
     return `
-      <div class="card card-press chat-list-row${pinned ? ' chat-pinned' : ''}" onclick="openChat('${escHtml(uid)}','${name.replace(/'/g,"&#39;")}')">
+      <div class="card card-press chat-list-row${pinned ? ' chat-pinned' : ''}" data-chat-name="${escAttr(rawName.toLowerCase())}" onclick="openChat('${escHtml(uid)}','${name.replace(/'/g,"&#39;")}')">
         ${avatar}
         <div class="chat-row-main">
           <div class="chat-row-top">
-            <span class="chat-row-name">${pinned ? '<i class="fa-solid fa-thumbtack chat-pin-i"></i> ' : ''}${name}${isAdmin ? ' <span class="chip chip-coral" style="font-size:9px;padding:1px 6px;">' + t('ui.080') + '</span>' : ''}</span>
+            <span class="chat-row-name">${pinned ? '<i class="fa-solid fa-thumbtack chat-pin-i"></i> ' : ''}${name}${isAdmin ? ' <span class="chip chip-coral" style="font-size:9px;padding:1px 6px;">' + t('ui.080') + '</span>' : ''}${dir.sonbae ? ' <span class="chip chip-gold" style="font-size:9px;padding:1px 6px;" title="선배">🎓</span>' : ''}</span>
             <span class="chat-row-time ${unread > 0 ? 'unread' : ''}">${timeLabel}</span>
           </div>
           <div class="chat-row-bottom">
@@ -5957,7 +6506,8 @@
   }
 
   function groupRowHtml(gid, info) {
-    const title = escHtml((info && info.title) || (_chatMetaCache[gid] && _chatMetaCache[gid].title) || 'Группа');
+    const rawTitle = (info && info.title) || (_chatMetaCache[gid] && _chatMetaCache[gid].title) || 'Группа';
+    const title = escHtml(rawTitle);
     const unread = unreadCountFor(gid);
     const meta = _chatMetaCache[gid] || {};
     const memberCount = meta.members ? Object.keys(meta.members).length : 0;
@@ -5976,7 +6526,7 @@
       : `<div class="chat-row-av chat-group-av"><i class="fa-solid fa-user-group"></i></div>`;
     const pinned = isChatPinned(gid);
     return `
-      <div class="card card-press chat-list-row${pinned ? ' chat-pinned' : ''}" onclick="openGroupChat('${escHtml(gid)}','${title.replace(/'/g,"&#39;")}')">
+      <div class="card card-press chat-list-row${pinned ? ' chat-pinned' : ''}" data-chat-name="${escAttr(rawTitle.toLowerCase())}" onclick="openGroupChat('${escHtml(gid)}','${title.replace(/'/g,"&#39;")}')">
         <div class="chat-av-wrap">${avInner}<span class="chat-group-tag" title="${t('ui.082')}"><i class="fa-solid fa-user-group"></i></span></div>
         <div class="chat-row-main">
           <div class="chat-row-top">
@@ -6138,6 +6688,15 @@
            <button onclick="openAddFriendModal()" class="btn btn-primary" style="margin-top:16px;"><i class="fa-solid fa-user-plus" style="font-size:11px;"></i> ${t('ui.088')}</button>
          </div>`;
 
+    // Поисковик по своим друзьям/группам (фильтрация на клиенте — список и так
+    // уже загружен целиком; поиск НОВЫХ людей — отдельная модалка openAddFriendModal).
+    const searchHtml = convos.length >= 4 ? `
+      <div style="position:relative; margin-bottom:12px;">
+        <i class="fa-solid fa-magnifying-glass" style="position:absolute; left:14px; top:50%; transform:translateY(-50%); color:var(--soft); font-size:13px; pointer-events:none;"></i>
+        <input id="social-search-input" class="input" placeholder="${escAttr(t('social.search.ph'))}" oninput="filterSocialList(this.value)" style="padding-left:38px; font-size:13px;">
+      </div>
+      <div id="social-search-empty" style="display:none; text-align:center; padding:20px 10px; color:var(--soft); font-size:12.5px;">${t('social.search.empty')}</div>
+    ` : '';
     const finalHtml = `
       <div id="week-leaderboard"></div>
       <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;padding:0 4px;margin-bottom:10px;">
@@ -6148,16 +6707,39 @@
         </div>
       </div>
       ${pushPermissionCtaHtml()}
+      ${searchHtml}
       ${requestsHtml}
       ${listHtml}
     `;
     // Ничего не изменилось — не трогаем DOM (unreadFrom дёргает этот рендер
     // на каждое сообщение, включая эхо собственного «прочитано»).
     if (slot._lastListHtml !== finalHtml) {
+      // Реальное изменение (новое сообщение и т.п.) полностью перерисует список —
+      // не даём это стереть то, что ученица уже набрала в поиске.
+      const prevQuery = document.getElementById('social-search-input')?.value || '';
       slot._lastListHtml = finalHtml;
       slot.innerHTML = finalHtml;
+      if (prevQuery) {
+        const inp = document.getElementById('social-search-input');
+        if (inp) { inp.value = prevQuery; filterSocialList(prevQuery); }
+      }
     }
     renderWeekLeaderboard();
+  }
+  // Фильтр списка друзей/групп по имени — сообщество и заявки в друзья всегда
+  // остаются видимыми (у них нет data-chat-name), фильтруются только строки чатов.
+  function filterSocialList(q) {
+    const query = (q || '').trim().toLowerCase();
+    const slot = document.getElementById('friends-chat-section');
+    if (!slot) return;
+    let anyMatch = !query;
+    slot.querySelectorAll('[data-chat-name]').forEach(row => {
+      const match = !query || row.getAttribute('data-chat-name').includes(query);
+      row.style.display = match ? '' : 'none';
+      if (match) anyMatch = true;
+    });
+    const emptyEl = document.getElementById('social-search-empty');
+    if (emptyEl) emptyEl.style.display = (query && !anyMatch) ? '' : 'none';
   }
 
   // ── Лидерборд недели: я + друзья по XP с понедельника ──
@@ -6409,7 +6991,7 @@
         ${avatar}
         <div class="chat-row-main">
           <div class="chat-row-top">
-            <span class="chat-row-name">${pinned ? '<i class="fa-solid fa-thumbtack chat-pin-i"></i> ' : ''}${name} <span style="font-size:10.5px;color:var(--coral);font-weight:600;">${rank.emoji} Lv ${lvl}</span></span>
+            <span class="chat-row-name">${pinned ? '<i class="fa-solid fa-thumbtack chat-pin-i"></i> ' : ''}${name} <span style="font-size:10.5px;color:var(--coral);font-weight:600;">${rank.emoji} Lv ${lvl}</span>${u.sonbae ? ' <span class="chip chip-gold" style="font-size:9px;padding:1px 6px;" title="선배">🎓</span>' : ''}</span>
             <span class="chat-row-time ${unread > 0 ? 'unread' : ''}">${timeLabel}</span>
           </div>
           <div class="chat-row-bottom">
@@ -7610,6 +8192,7 @@
       // награда новичку — сразу
       setTimeout(() => {
         addXp(REFERRAL_XP, false);
+        grantMasterDays(7, 'referral-new');
         toast(t('ui.134',{xp: REFERRAL_XP}), 'var(--sage)');
       }, 1500);
     } catch (_) {}
@@ -7623,6 +8206,10 @@
       if (!v || v.type !== 'referral' || v.claimed) return;
       _db.ref(`users/${me}/inbox/${key}`).remove();
       addXp(REFERRAL_XP, false);
+      grantMasterDays(7, 'referral-inviter');
+      stats.referralsCount = (stats.referralsCount || 0) + 1;
+      UStore.set('stats', stats);
+      renderInviteCard();
       toast(t('ui.r039',{name: escHtml(v.fromName || 'Друг'), xp: REFERRAL_XP}), 'var(--sage)');
     });
   }
@@ -7983,11 +8570,52 @@
       // Daily goal — резетится каждый день в полночь по локальному времени
       dailyGoal: 30, dailyXp: 0, dailyDate: '', dailyGoalReachedDates: [],
       // XP earned per calendar day (for the weekly profile chart); pruned to ~30 days
-      xpByDay: {}
+      xpByDay: {},
+      // Заморозка стрика (ФАЗА A1): frozenDates — «укрытые» пропущенные дни, считаются
+      // в computeConsecutiveStreak наравне с dates, но НЕ в daysEntered (это не реальный вход).
+      freezeCount: 0, frozenDates: [], freezeEarnedWeek: '',
+      // ФАЗА A2: последний «ремонт» стрика (epoch ms) — лимит 1 раз в 30 дней
+      lastRepairAt: 0,
+      // ФАЗА A3: недельные квесты от Комдори + альбом стикеров-наград
+      weekQuests: null, stickers: [],
+      // ФАЗА A4: месячные агрегаты + флаг «отчёт за этот месяц уже показан»
+      monthly: {}, lastReportShown: '',
+      // ФАЗА E1: дни, когда была сыграна «игра дня» — для квеста A3 «сыграй в игру дня»
+      gameOfDayPlayedDates: [],
+      // ФАЗА T1: дни, когда пройден Блиц-10 — для квеста A3 «пройди Блиц-10»
+      blitzPlayedDates: [],
+      // ФАЗА B1: число друзей, чью рефералку засчитали (локальный счётчик, без чтения shared/referrals)
+      referralsCount: 0,
+      // ФАЗА C1: постоянные флаги лимитированных сезонных ачивок + «видел слова ивента N»
+      seasonal: [], seasonalVisited: {},
+      // ФАЗА D2: письменная практика RU→KO — {taskId, ts} за каждую отправленную на проверку/Мади работу
+      writingSubmits: [],
+      // ФАЗА D3: постоянный флаг статуса «Сонбэ» — церемония показывается только один раз
+      sonbaeAwarded: false
     };
   }
   // In-memory stats (mutated, kept identical reference across user switches)
   const stats = defaultStats();
+
+  // ФАЗА 0 (честные измерения игр): раньше rateCard засчитывал «партию» за каждую
+  // перевёрнутую карточку, т.е. gamePlays.flashcards хранил карточки, а не сессии.
+  // Одноразовая миграция: сырое значение → бэкап в gamePlaysLegacyFc, партии ≈ /15
+  // (средняя длина сессии), карточки переезжают в новый счётчик fcCardsRated.
+  // Идемпотентна (флаг = наличие gamePlaysLegacyFc) — облачный снапшот без флага
+  // мигрируется заново, уже мигрированный не делится второй раз. Заработанные
+  // ачивки games-* не страдают: unlocks хранятся отдельно и не отзываются.
+  function migrateFcPlays(st) {
+    if (!st || typeof st !== 'object') return false;
+    if (st.gamePlaysLegacyFc !== undefined) return false; // уже мигрировано
+    if (!st.gamePlays || typeof st.gamePlays !== 'object') st.gamePlays = {};
+    const raw = Number(st.gamePlays.flashcards) || 0;
+    st.gamePlaysLegacyFc = raw;
+    if (raw > 0) {
+      st.gamePlays.flashcards = Math.max(1, Math.round(raw / 15));
+      if (st.fcCardsRated === undefined) st.fcCardsRated = raw;
+    }
+    return true;
+  }
 
   // Load all per-user state from storage (call on init + after login/logout)
   function loadUserData() {
@@ -8001,6 +8629,17 @@
     if (!stats.gamePlays || typeof stats.gamePlays !== 'object') stats.gamePlays = {};
     if (!stats.perfectGames || typeof stats.perfectGames !== 'object') stats.perfectGames = {};
     if (!Array.isArray(stats.dates)) stats.dates = [];
+    if (!Array.isArray(stats.frozenDates)) stats.frozenDates = [];
+    if (typeof stats.freezeCount !== 'number' || stats.freezeCount < 0) stats.freezeCount = 0;
+    if (!Array.isArray(stats.stickers)) stats.stickers = [];
+    if (!stats.monthly || typeof stats.monthly !== 'object') stats.monthly = {};
+    if (!Array.isArray(stats.gameOfDayPlayedDates)) stats.gameOfDayPlayedDates = [];
+    if (!Array.isArray(stats.blitzPlayedDates)) stats.blitzPlayedDates = [];
+    if (typeof stats.referralsCount !== 'number' || stats.referralsCount < 0) stats.referralsCount = 0;
+    if (!Array.isArray(stats.seasonal)) stats.seasonal = [];
+    if (!stats.seasonalVisited || typeof stats.seasonalVisited !== 'object') stats.seasonalVisited = {};
+    if (!Array.isArray(stats.writingSubmits)) stats.writingSubmits = [];
+    if (migrateFcPlays(stats)) UStore.set('stats', stats);
     _activeModule = UStore.get('activeModule') || 'm1';
     if (!LESSON_MODULES[_activeModule]) _activeModule = 'm1';
     // Если сохранённый модуль ещё не открыт (прогресс сброшен/не пройден) — откатываемся на m1
@@ -8014,6 +8653,9 @@
     renderSavedWords();
     renderDailyGoal();
     renderSrsWidget();
+    renderSeasonBanner();
+    renderGameOfDayPlaque();
+    renderTopikQuestionCard();
     renderContinue();
     renderBearGuide();
     applyAvatar(UStore.get('avatar'));
@@ -10044,6 +10686,9 @@
   }
   function _lessonsWordPool() {
     const admin = isAdmin();
+    // ФАЗА D1: хардкор приравнен к admin ТОЛЬКО для широты пула — вся остальная
+    // admin-логика (права, доступ к разделам и т.п.) хардкор не трогает.
+    const forceAll = admin || hardcoreOn();
     const rank = userLevelRank();              // -1 = уровень не выбран
     const seen = new Set(); const out = [];
     const add = w => {
@@ -10054,12 +10699,12 @@
     // 1) Слова уроков: целиком из модулей ≤ выбранного уровня + реально пройденные уроки прочих модулей.
     Object.keys(LESSON_MODULES).forEach(mid => {
       const lessons = LESSON_MODULES[mid].lessons || [];
-      const byLevel = admin || (rank >= 0 && (MODULE_RANK[mid] || 0) <= rank);
+      const byLevel = forceAll || (rank >= 0 && (MODULE_RANK[mid] || 0) <= rank);
       const src = byLevel ? lessons : lessons.filter(l => _moduleUnlockedIds(mid).has(l.id));
       src.forEach(l => { if (Array.isArray(l.vocab)) l.vocab.forEach(add); });
     });
     // 2) Лексика из «Самостоятельного изучения» по уровню (приветствия, фразы, темы…).
-    ssGameWords(admin ? 99 : rank).forEach(add);
+    ssGameWords(forceAll ? 99 : rank).forEach(add);
     // 3) Сохранённые слова ученицы — слова, грамматика И фразы (длинные фразы идут в флешкарты/слух/перевод).
     getMyWords().forEach(w => { if (w && w.ru) add(w); });
     // 4) Запасной набор — пока слов мало (новичок без прогресса и без выбранного уровня).
@@ -10083,6 +10728,30 @@
     if (m) m.classList.toggle('active', src === 'mine');
     const nEl = document.getElementById('game-src-mine-n');
     if (nEl) nEl.textContent = '· ' + myWordsPoolRaw().length;
+  }
+  // ── ФАЗА D1: хардкор-режим 🔥 (открывается после 3 пройденных модулей) ──
+  // Тумблер один на все игры сразу (не по каждой отдельно) — влияет на пул слов
+  // (см. _lessonsWordPool: hardcore приравнивается к admin-ветке — берём словарь
+  // ВСЕХ модулей, а не только открытых по прогрессу) и на визуальный таймер раунда
+  // в Переводе/Сборке слова/Слухе (см. gameHeader).
+  function hardcoreEligible() { return Object.keys(LESSON_MODULES).filter(isModuleComplete).length >= 3; }
+  function hardcoreOn() { return hardcoreEligible() && UStore.get('hardcore', false) === true; }
+  function setHardcore(v) {
+    UStore.set('hardcore', !!v);
+    renderHardcoreToggle();
+    if (v) toast(t('hc.on'), 'var(--coral)'); else toast(t('hc.off'));
+  }
+  function renderHardcoreToggle() {
+    const slot = document.getElementById('hardcore-toggle-slot');
+    if (!slot) return;
+    if (!hardcoreEligible()) { slot.innerHTML = ''; return; }
+    const on = hardcoreOn();
+    slot.innerHTML = `
+      <button type="button" role="switch" aria-checked="${on}" class="wt-chip${on ? ' active' : ''}" onclick="setHardcore(${!on})" style="margin-top:8px; display:flex; align-items:center; justify-content:center; min-height:44px;">
+        🔥 <span>${t('hc.chip')}</span><span class="ko" style="color:var(--coral); font-weight:500; margin-left:6px;">고급</span>
+      </button>
+      ${on ? `<div style="font-size:10px; color:var(--hush); margin-top:6px; line-height:1.45;">${t('hc.hint')}</div>` : ''}
+    `;
   }
   // Кол-во раундов растёт с числом пройденных уроков (+1 за урок, максимум +6)
   function scaledRounds(base) {
@@ -22421,6 +23090,7 @@
   ];
 
   const TOPIK_SECTIONS = [
+    { k:'practice', ico:'🎯', tk:'topik.t.practice', sk:'topik.s.practice1', t:'Практика',       s:'Дриллы по типам · Блиц-10' },
     { k:'words',    ico:'📖', tk:'topik.t.words',    sk:'topik.s.words',     t:'Слова',          s:'Лексика по темам' },
     { k:'grammar',  ico:'🧩', tk:'topik.t.grammar',  sk:'topik.s.grammar1',  t:'Грамматика',     s:'84 конструкции' },
     { k:'tips',     ico:'💡', tk:'topik.t.tips',     sk:'topik.s.tips1',     t:'Советы',         s:'Стратегия 듣기·읽기' },
@@ -22715,6 +23385,7 @@
   ];
 
   const TOPIK2_SECTIONS = [
+    { k:'practice2', ico:'🎯', tk:'topik.t.practice', sk:'topik.s.practice2', t:'Практика',      s:'Дриллы по типам · Блиц-10' },
     { k:'words2',   ico:'📖', tk:'topik.t.words',    sk:'topik.s.words2',   t:'Слова',           s:'Лексика 중급 по темам' },
     { k:'grammar2', ico:'🧩', tk:'topik.t.grammar',  sk:'topik.s.grammar2', t:'Грамматика',      s:'60 конструкций 3–4급' },
     { k:'tips2',    ico:'💡', tk:'topik.t.tips',     sk:'topik.s.tips2',    t:'Советы',          s:'Стратегия 듣기·쓰기·읽기' },
@@ -22741,6 +23412,14 @@
     setTimeout(() => {
       document.getElementById('topik-grp-' + k)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }, 90);
+  }
+  // ФАЗА T3: карточка-ссылка «TOPIK-тренажёры» на экране игр — прямой вход в
+  // «Практику» TOPIK I (там же живут «Связки»/«Порядок»); назад ведёт на Игры.
+  function openTopikPracticeFromGames() {
+    _topikLevel = '1';
+    switchScreen('topik');
+    _topikReturn = 'games';
+    openTopikSection('practice');
   }
   function topikHome() {
     if (_topikReturn) { const r = _topikReturn; _topikReturn = null; _topikSection = null; switchScreen(r, true); return; }
@@ -22796,6 +23475,63 @@
       ${inner}`;
   }
 
+  // ── ФАЗА T1/T2: экран «Практика» — Блиц-10 (бесплатно) + 오답노트 (Master) + плитки типов (Master) ──
+  function renderTopikPractice(slot, lvl) {
+    const types = topikTypesList(lvl);
+    const wrongCount = topikWrongTotalCount();
+    const tiles = types.map(ty => {
+      const accTxt = ty.acc && ty.acc.total ? `${Math.round(ty.acc.right / ty.acc.total * 100)}% · ${ty.acc.total}` : t('topik.practice.new');
+      return `
+        <div class="topik-type-tile" onclick="startTopikDrill('${ty.id}')">
+          <div class="topik-type-title">${escHtml(ty.title)}</div>
+          <div class="topik-type-meta"><span>${ty.count} ${t('topik.practice.qCount')}</span><span>${accTxt}</span></div>
+        </div>`;
+    }).join('');
+    slot.innerHTML = topikSectionWrap('🎯 ' + t('topik.t.practice'), t(lvl === 2 ? 'topik.h.practice2' : 'topik.h.practice1'), `
+      ${renderWeakSpotWidget(lvl)}
+      <button type="button" class="topik-exam-card" onclick="startTopikBlitz()">
+        <span class="topik-exam-ico">🎯</span>
+        <div class="topik-exam-tx">
+          <div class="topik-exam-t">${t('topik.blitz.card')}</div>
+          <div class="topik-exam-s">${t('topik.blitz.card.sub')}</div>
+        </div>
+        <i class="fa-solid fa-chevron-right topik-exam-arrow"></i>
+      </button>
+      <button type="button" class="topik-exam-card" style="margin-top:10px; background:linear-gradient(135deg, var(--plum), var(--berry));" onclick="startTopikReview()">
+        <span class="topik-exam-ico">📓</span>
+        <div class="topik-exam-tx">
+          <div class="topik-exam-t">${t('topik.review.card')}</div>
+          <div class="topik-exam-s">${t('topik.review.card.sub', { n: wrongCount })}</div>
+        </div>
+        <i class="fa-solid fa-chevron-right topik-exam-arrow"></i>
+      </button>
+      <div class="topik-sec-sub" style="margin-top:18px; margin-bottom:8px;">${t('topik.practice.games')}</div>
+      <div class="topik-type-grid">
+        <div class="topik-type-tile" onclick="startLinks()">
+          <div class="topik-type-title">🔗 ${t('games.links')}</div>
+          <div class="topik-type-meta"><span>${t('games.links.sub')}</span><span>›</span></div>
+        </div>
+        ${lvl === 1 ? `
+        <div class="topik-type-tile" onclick="startWordOrder()">
+          <div class="topik-type-title">🔀 ${t('games.wordorder')}</div>
+          <div class="topik-type-meta"><span>${t('games.wordorder.sub')}</span><span>›</span></div>
+        </div>` : ''}
+      </div>
+      <div class="topik-sec-sub" style="margin-top:18px; margin-bottom:8px;">${t('topik.practice.decks')}</div>
+      <div class="topik-type-grid">${renderTopikDecksSection(lvl)}</div>
+      <div class="topik-sec-sub" style="margin-top:18px; margin-bottom:8px;">${t('topik.practice.byType')}</div>
+      <div class="topik-type-grid">${tiles || `<div class="dx-empty">${t('topik.practice.empty')}</div>`}</div>
+    `, false, null);
+  }
+  function renderTopikDecksSection(lvl) {
+    const themes = lvl === 2 ? TOPIK2_VOCAB_THEMES : TOPIK_VOCAB_THEMES;
+    return themes.map((th, i) => `
+      <div onclick="openTopikDeckPicker(${lvl}, ${i})" class="topik-type-tile">
+        <div class="topik-type-title">${th.ico} ${escHtml(th.title)}</div>
+        <div class="topik-type-meta"><span>${th.words.length} ${t('topik.practice.qCount')}</span><span>›</span></div>
+      </div>`).join('');
+  }
+
   // Уровень раздела ТОПИК: '1' (TOPIK I), '2' (TOPIK II) или null — пока уровень не выбран
   // (показываем экран-развилку выбора уровня — вход с главной).
   let _topikLevel = null;
@@ -22833,7 +23569,12 @@
           </span>
           <i class="fa-solid fa-chevron-right topik-entry-arrow" aria-hidden="true"></i>
         </button>
+      </div>
+      <div id="marathon-card-slot"></div>
+      <div onclick="startLevelTest()" style="text-align:center; margin-top:16px; font-size:12.5px; color:var(--coral); font-weight:700; cursor:pointer;">
+        🧪 ${t('leveltest.entryTopik')}
       </div>`;
+    try { renderMarathonCard(); } catch (_) {}
   }
   function topikLevelTabs() {
     return `
@@ -23333,6 +24074,7 @@
   }
 
   function renderTopikSection(slot, k, admin) {
+    if (k === 'practice' || k === 'practice2') return renderTopikPractice(slot, k === 'practice2' ? 2 : 1);
     if (k === 'exams') return _topikLevel === '2' ? renderTopik2Exams(slot) : renderTopikExams(slot, admin);
     if (k === 'about2') return renderTopik2About(slot);
     if (k === 'writing2') return renderTopik2WritingGuide(slot);
@@ -25285,7 +26027,7 @@
   const TOPIK_DEEP_SECTIONS = [
     { k:'reading',   ico:'📖', t:'읽기 · Чтение', t_uz:'읽기 · Oʻqish',  s:'18 типов · вопросы 1–50', s_uz:'18 tur · 1–50 savollar', types:TOPIK_DEEP_READING, ready:true },
     { k:'writing',   ico:'✍️', t:'쓰기 · Письмо', t_uz:'쓰기 · Yozish',  s:'51–54 · стратегия · разборы', s_uz:'51–54 · strategiya · tahlillar', types:TOPIK_DEEP_WRITING, ready:true },
-    { k:'listening', ico:'🎧', t:'듣기 · Аудир.', t_uz:'듣기 · Tinglash',  s:'скоро', s_uz:'tez orada', ready:false }
+    { k:'listening', ico:'🎧', t:'듣기 · Аудир.', t_uz:'듣기 · Tinglash',  s:'аудио-дриллы · -ㄴ다 · №53', s_uz:'audio-mashqlar · -ㄴ다 · №53', ready:true, special:true }
   ];
   const TD_LEVELS = [3, 4, 5, 6];
   const _tdState = { section:null, level:3, typeId:null };
@@ -25974,8 +26716,43 @@
     const slot = document.getElementById('topikdeep-hub');
     if (!slot) return;
     if (!_tdState.section) { tdRenderHub(slot); return; }
+    if (_tdState.section === 'listening') { tdRenderListeningHub(slot); return; }
     if (!_tdState.typeId) { tdRenderTypes(slot); return; }
     tdRenderType(slot);
+  }
+  // 듣기-секция особая: без банка настоящих аудиозаписей по вопросам (см. buildListenBank)
+  // это не сетка типов 1-4급, а три отдельных тренажёра T4.
+  function tdRenderListeningHub(slot) {
+    const sec = TOPIK_DEEP_SECTIONS.find(s => s.k === 'listening');
+    slot.innerHTML = `
+      <button type="button" class="topik-back" onclick="topikDeepBack()"><i class="fa-solid fa-chevron-left"></i> ${t('ui.180')}</button>
+      <div class="topik-sec-head"><h2 class="topik-sec-title">${sec.ico} ${skLoc(sec,'t')}</h2><p class="topik-sec-sub">${t('td.listening.sub')}</p></div>
+      <div class="td-types">
+        <button type="button" class="td-type" onclick="startListenDrill()">
+          <span class="td-type-badge">🎧</span>
+          <span class="td-type-main">
+            <span class="td-type-title">${t('listendrill.title')}</span>
+            <span class="td-type-skill">${t('listendrill.cardSub')}</span>
+          </span>
+          <i class="fa-solid fa-chevron-right td-type-arrow" aria-hidden="true"></i>
+        </button>
+        <button type="button" class="td-type" onclick="startNdaDrill()">
+          <span class="td-type-badge">✏️</span>
+          <span class="td-type-main">
+            <span class="td-type-title">${t('nda.title')}</span>
+            <span class="td-type-skill">${t('nda.cardSub')}</span>
+          </span>
+          <i class="fa-solid fa-chevron-right td-type-arrow" aria-hidden="true"></i>
+        </button>
+        <button type="button" class="td-type" onclick="startW53Scaffold()">
+          <span class="td-type-badge">✍️</span>
+          <span class="td-type-main">
+            <span class="td-type-title">${t('w53.title')}</span>
+            <span class="td-type-skill">${t('w53.cardSub')}</span>
+          </span>
+          <i class="fa-solid fa-chevron-right td-type-arrow" aria-hidden="true"></i>
+        </button>
+      </div>`;
   }
   function tdRenderHub(slot) {
     slot.innerHTML = `
@@ -27028,6 +27805,570 @@
   };
 
   const TOPIK_CIRCLED = ['①','②','③','④'];
+
+  // ═══════════════ ФАЗА T1: банк вопросов TOPIK · дриллы по типам · Блиц-10 ═══════════════
+  // Только READING: у вопросов на слух нет покарточечных таймкодов (один mp3 на весь
+  // экзамен целиком), поэтому изолированный дрилл по ОДНОМУ вопросу технически неосуществим.
+  // Разбор экзамена со звуком остаётся в существующем полном раннере (startTopikExam);
+  // НОВЫЕ упражнения на слух строятся в Фазе T4 с нуля на TTS, а не разбором этого банка.
+
+  // TOPIK I 읽기 (31–70): диапазоны эмпирически сверены по всем 9 официальным 회차 —
+  // текст инструкции (instr) стабилен внутри диапазона (кроме мелких синонимов
+  // «слово/частица/связка/выражение» — это один и тот же тип «вставь в пропуск»).
+  const TOPIK1_READING_TYPES = [
+    { range:[31,33], id:'t1-31-33', title:'О чём текст (короткий)' },
+    { range:[34,39], id:'t1-34-39', title:'Слово/частица в пропуск' },
+    { range:[40,42], id:'t1-40-42', title:'Не совпадает' },
+    { range:[43,45], id:'t1-43-45', title:'Совпадает (короткий текст)' },
+    { range:[46,48], id:'t1-46-48', title:'Главная мысль' },
+    { range:[49,50], id:'t1-49-50', title:'Слово в пропуск + совпадает' },
+    { range:[51,52], id:'t1-51-52', title:'Связка + о чём текст' },
+    { range:[53,54], id:'t1-53-54', title:'Слово в пропуск + совпадает' },
+    { range:[55,56], id:'t1-55-56', title:'Выражение в пропуск + совпадает' },
+    { range:[57,58], id:'t1-57-58', title:'Порядок предложений 가나다라' },
+    { range:[59,60], id:'t1-59-60', title:'Куда вставить + совпадает' },
+    { range:[61,62], id:'t1-61-62', title:'Выражение в пропуск + совпадает' },
+    { range:[63,64], id:'t1-63-64', title:'Зачем написан + совпадает' },
+    { range:[65,66], id:'t1-65-66', title:'Выражение в пропуск + совпадает' },
+    { range:[67,68], id:'t1-67-68', title:'Выражение в пропуск + совпадает' },
+    { range:[69,70], id:'t1-69-70', title:'Выражение в пропуск + вывод' }
+  ];
+  function topik1TypeForN(n) { return TOPIK1_READING_TYPES.find(t => n >= t.range[0] && n <= t.range[1]) || null; }
+  // TOPIK II 읽기 (1–50): переиспользуем уже готовую таксономию TOPIK_DEEP_READING (18
+  // типов, id 'r1-2'…'r48-50') — не плодим второй справочник рядом с существующим.
+  function topik2TypeForN(n) {
+    return TOPIK_DEEP_READING.find(t => {
+      const parts = t.id.slice(1).split('-').map(Number);
+      return n >= parts[0] && n <= (parts[1] || parts[0]);
+    }) || null;
+  }
+  let _topikBankCache = null;
+  function buildTopikBank() {
+    if (_topikBankCache) return _topikBankCache;
+    const bank = [];
+    Object.keys(TOPIK_EXAMS).forEach(examNo => {
+      const rd = TOPIK_EXAMS[examNo] && TOPIK_EXAMS[examNo].reading;
+      if (!rd || !Array.isArray(rd.questions)) return;
+      rd.questions.forEach(q => {
+        const ty = topik1TypeForN(q.n);
+        if (!ty) return;
+        bank.push({ id: `1-${examNo}-${q.n}`, lvl: 1, examNo, typeId: ty.id, typeTitle: ty.title, n: q.n, instr: q.instr, passage: q.passage, image: q.image, options: q.options, answer: q.answer, explain: q.explain });
+      });
+    });
+    if (typeof TOPIK2_EXAMS !== 'undefined') {
+      Object.keys(TOPIK2_EXAMS).forEach(examNo => {
+        const rd = TOPIK2_EXAMS[examNo] && TOPIK2_EXAMS[examNo].reading;
+        if (!rd || !Array.isArray(rd.questions)) return;
+        rd.questions.forEach(q => {
+          const ty = topik2TypeForN(q.n);
+          if (!ty) return;
+          bank.push({ id: `2-${examNo}-${q.n}`, lvl: 2, examNo, typeId: ty.id, typeTitle: ty.title, n: q.n, instr: q.instr, passage: q.passage, image: q.image, options: q.options, answer: q.answer, explain: q.explain });
+        });
+      });
+    }
+    _topikBankCache = bank;
+    return bank;
+  }
+  // Список типов с числом вопросов и личной точностью (для плиток экрана «Практика»).
+  function topikTypesList(lvl) {
+    const bank = buildTopikBank().filter(q => q.lvl === lvl);
+    const counts = {};
+    bank.forEach(q => { counts[q.typeId] = (counts[q.typeId] || 0) + 1; });
+    const acc = topikTypeAccuracy();
+    // Порядок — из исходной таблицы типов (уже отсортирована по номеру вопроса), не из bank.
+    const order = lvl === 2 ? TOPIK_DEEP_READING.map(t => t.id) : TOPIK1_READING_TYPES.map(t => t.id);
+    const titleOf = lvl === 2
+      ? id => (TOPIK_DEEP_READING.find(t => t.id === id) || {}).title
+      : id => (TOPIK1_READING_TYPES.find(t => t.id === id) || {}).title;
+    return order.filter(id => counts[id] > 0).map(id => ({ id, lvl, title: titleOf(id), count: counts[id], acc: acc[id] || null }));
+  }
+  // Личная точность по типам — из истории попыток (UStore, отдельно от wrongsTopik).
+  function topikTypeAccuracy() {
+    try { return UStore.get('topikTypeAcc', {}) || {}; } catch (_) { return {}; }
+  }
+  function recordTopikAttempt(typeId, correct) {
+    const acc = topikTypeAccuracy();
+    const a = acc[typeId] || { right: 0, total: 0 };
+    a.total++; if (correct) a.right++;
+    acc[typeId] = a;
+    try { UStore.set('topikTypeAcc', acc); } catch (_) {}
+  }
+
+  // ═══════════════ ФАЗА T5: карта слабых мест + прогноз 급 (клей) ═══════════════
+  // Целиком поверх уже собранной topikTypeAcc (T1/T2) — ни одного нового счётчика,
+  // только два производных представления той же истории попыток.
+  function _topikAllTypeIds(lvl) { return (lvl === 2 ? TOPIK_DEEP_READING : TOPIK1_READING_TYPES).map(t => t.id); }
+  // Минимум 3 попытки в типе — иначе один случайный промах красит тип «слабым».
+  function weakTopikTypes(lvl, limit) {
+    return topikTypesList(lvl)
+      .filter(ty => ty.acc && ty.acc.total >= 3)
+      .map(ty => ({ ...ty, pct: Math.round(ty.acc.right / ty.acc.total * 100) }))
+      .sort((a, b) => a.pct - b.pct)
+      .slice(0, limit || 3);
+  }
+  // Простая шкала «точность + покрытие» — не претендует на официальный прогноз,
+  // честно молчит (null), пока данных меньше чем по 3 типам.
+  function topikLevelForecast(lvl) {
+    const acc = topikTypeAccuracy();
+    const allIds = _topikAllTypeIds(lvl);
+    const attempted = allIds.filter(id => acc[id] && acc[id].total > 0);
+    if (attempted.length < 3) return null;
+    let right = 0, total = 0;
+    attempted.forEach(id => { right += acc[id].right; total += acc[id].total; });
+    const pct = total > 0 ? right / total : 0;
+    const coverage = attempted.length / allIds.length;
+    const tiers = lvl === 2
+      ? [{ min: .8, cov: .6, label: '5~6급' }, { min: .6, cov: .4, label: '4~5급' }, { min: .4, cov: 0, label: '3~4급' }, { min: 0, cov: 0, label: '3급 이하' }]
+      : [{ min: .8, cov: .6, label: '3~4급' }, { min: .6, cov: .4, label: '2~3급' }, { min: .4, cov: 0, label: '1~2급' }, { min: 0, cov: 0, label: '1급' }];
+    const tier = tiers.find(t => pct >= t.min && coverage >= t.cov) || tiers[tiers.length - 1];
+    // Ревью 07.07: точность одна могла бы дать более высокий ярус — если прогноз
+    // скромный именно из-за охвата (мало разобранных типов), а не самой точности,
+    // явно подсказываем это в UI (иначе виджет выглядит произвольно строгим).
+    const accOnlyTier = tiers.find(t => pct >= t.min) || tiers[tiers.length - 1];
+    return { pct: Math.round(pct * 100), coverage: Math.round(coverage * 100), label: tier.label, coverageLimited: accOnlyTier.label !== tier.label };
+  }
+  function openWeakSpotInDeep(typeId) {
+    const ty = TOPIK_DEEP_READING.find(t => t.id === typeId);
+    if (!ty) return;
+    // switchScreen('topikdeep') сбрасывает _tdState через tdReset() — выставлять
+    // раздел/уровень/тип нужно ПОСЛЕ перехода на экран, иначе сброс их затирает.
+    switchScreen('topikdeep');
+    _tdState.section = 'reading';
+    _tdState.level = ty.lvl;
+    tdOpenType(typeId);
+  }
+  function renderWeakSpotWidget(lvl) {
+    const weak = weakTopikTypes(lvl, 3);
+    const forecast = topikLevelForecast(lvl);
+    if (!weak.length && !forecast) return '';
+    const rows = weak.map(ty => `
+      <div class="quest-item" onclick="startTopikDrill('${ty.id}')">
+        <span class="quest-item-ico">🎯</span>
+        <div class="quest-item-main">
+          <div class="quest-item-title">${escHtml(ty.title)}</div>
+          <div class="quest-item-sub">${ty.pct}% · ${ty.acc.total} ${t('topik.practice.qCount')}</div>
+        </div>
+        ${lvl === 2 ? `<button type="button" onclick="event.stopPropagation(); openWeakSpotInDeep('${ty.id}')" class="chip chip-blush" style="font-size:9px; flex-shrink:0; align-self:stretch; height:auto;">${t('t5.openDeep')}</button>` : ''}
+        <span class="quest-item-chev">›</span>
+      </div>`).join('');
+    return `
+      <div class="card card-padded" style="margin-bottom:14px;">
+        <div style="font-size:11px; letter-spacing:.14em; color:var(--coral); font-weight:700;">${t('t5.eyebrow')}</div>
+        ${forecast ? `<div style="font-size:13px; color:var(--berry); margin-top:4px;">${t('t5.forecast', { label: forecast.label, pct: forecast.pct })}</div>` : ''}
+        ${forecast && forecast.coverageLimited ? `<div style="font-size:10.5px; color:var(--soft); margin-top:2px;">${t('t5.forecast.coverageHint', { coverage: forecast.coverage })}</div>` : ''}
+        ${rows ? `<div style="display:grid; gap:8px; margin-top:10px;">${rows}</div>` : ''}
+      </div>`;
+  }
+
+  // ── Дрилл по типу и Блиц-10: один общий раннер, отличается только набором вопросов ──
+  let _drillState = null;
+  function startTopikDrill(typeId) {
+    if (!requirePlan('master', 'Дрилл по типам TOPIK')) return;
+    const qs = shuffleArr(buildTopikBank().filter(q => q.typeId === typeId));
+    if (qs.length < 3) { toast(t('topik.drill.empty')); return; }
+    _drillState = { mode: 'drill', typeId, qs, idx: 0, score: 0, answered: null };
+    renderTopikDrill();
+  }
+  function startTopikBlitz() {
+    const qs = shuffleArr(buildTopikBank()).slice(0, 10);
+    if (qs.length < 5) { toast(t('topik.drill.empty')); return; }
+    _drillState = { mode: 'blitz', qs, idx: 0, score: 0, answered: null };
+    renderTopikDrill();
+  }
+  function renderTopikDrill() {
+    const st = _drillState;
+    if (!st) return;
+    if (st.idx >= st.qs.length) { gameModal(topikDrillFinishHtml(st), { id: 'topik-drill-modal' }); return; }
+    const q = st.qs[st.idx];
+    const isBlitz = st.mode === 'blitz';
+    const answered = st.answered;
+    const title = isBlitz ? t('topik.blitz.title') : t('topik.drill.title');
+    const sub = isBlitz ? `${t('topik.lvl')} ${q.lvl} · ${q.typeTitle}` : q.typeTitle;
+    const passage = q.passage ? `<div class="exam-passage ko">${examPassageHtml(q.passage)}</div>` : '';
+    const image = q.image ? `<img class="exam-qimg" src="${q.image}" alt="">` : '';
+    const opts = q.options.map((opt, i) => {
+      const n = i + 1;
+      let cls = 'topik-drill-opt';
+      if (answered) {
+        if (n === q.answer) cls += ' correct';
+        else if (n === answered) cls += ' wrong';
+      }
+      return `<button type="button" class="${cls}" ${answered ? 'disabled' : `onclick="answerTopikDrill(${n})"`}>${TOPIK_CIRCLED[i]} ${escHtml(opt)}</button>`;
+    }).join('');
+    gameModal(`
+      ${gameHeader(title, sub, st.idx, st.qs.length, "closeGameModal('topik-drill-modal')")}
+      ${passage}${image}
+      <div style="font-size:13px; color:var(--berry); font-weight:600; margin:10px 0;">${escHtml(q.instr)}</div>
+      <div style="display:grid; gap:8px;">${opts}</div>
+      ${answered ? `
+        <div class="topik-drill-explain">${q.explain}</div>
+        <button onclick="nextTopikDrill()" class="btn btn-primary btn-block" style="margin-top:14px;">${t('common.next')}</button>
+      ` : ''}
+    `, { id: 'topik-drill-modal' });
+  }
+  function answerTopikDrill(n) {
+    const st = _drillState;
+    if (!st || st.answered) return;
+    const q = st.qs[st.idx];
+    st.answered = n;
+    const correct = n === q.answer;
+    if (correct) st.score++;
+    recordTopikAttempt(q.typeId, correct);
+    if (!correct) recordTopikWrong(q); else clearTopikWrong(q.id);
+    renderTopikDrill();
+  }
+  function nextTopikDrill() {
+    if (!_drillState) return;
+    _drillState.idx++;
+    _drillState.answered = null;
+    renderTopikDrill();
+  }
+  function topikDrillFinishHtml(st) {
+    const xp = st.score * (st.mode === 'blitz' ? 6 : 5);
+    addXp(xp, false);
+    // Квест A3 «пройди Блиц-10» — резервировался в реестре ещё до постройки T1.
+    if (st.mode === 'blitz') {
+      if (!Array.isArray(stats.blitzPlayedDates)) stats.blitzPlayedDates = [];
+      const today = todayIsoDate();
+      if (!stats.blitzPlayedDates.includes(today)) {
+        stats.blitzPlayedDates.push(today);
+        const bkeys = stats.blitzPlayedDates.sort();
+        if (bkeys.length > 60) bkeys.slice(0, bkeys.length - 60).forEach(d => stats.blitzPlayedDates.splice(stats.blitzPlayedDates.indexOf(d), 1));
+        UStore.set('stats', stats);
+      }
+    }
+    const pct = Math.round((st.score / st.qs.length) * 100);
+    _drillState = null;
+    return `
+      <div style="text-align:center; padding: 8px 0;">
+        <div style="font-size: 56px;">${pct >= 80 ? '🌟' : pct >= 50 ? '🌸' : '🌷'}</div>
+        <div class="display" style="font-size: 24px; color: var(--berry); margin-top: 6px;">${t('common.done')}</div>
+        <div style="font-size:13px; color: var(--coral); margin-top:2px;">${st.score}/${st.qs.length}</div>
+        <div style="display:grid; grid-template-columns: repeat(2,1fr); gap:8px; margin-top:18px;">
+          <div class="card card-padded" style="text-align:center; padding:12px 6px;"><div class="display" style="font-size:18px; color:var(--berry);">${st.score}/${st.qs.length}</div><div style="font-size:10px; color:var(--soft);">${t('ui.493')}</div></div>
+          <div class="card card-padded" style="text-align:center; padding:12px 6px;"><div class="display" style="font-size:18px; color:var(--gold-ink);">+${xp}</div><div style="font-size:10px; color:var(--soft);">XP</div></div>
+        </div>
+        <button onclick="closeGameModal('topik-drill-modal')" class="btn btn-primary btn-block" style="margin-top:18px;">${t('common.done')}</button>
+      </div>`;
+  }
+
+  // ═══════════════ ФАЗА T2: тетрадь ошибок 오답노트 · «Вопрос дня» ═══════════════
+  // Отдельный ключ UStore (как bestScores), не внутри stats — низкая критичность данных
+  // (тетрадь-помощник, не награда), поэтому мерж по умолчанию («последний снапшот
+  // побеждает»), без специальной union-защиты как у stickers/frozenDates.
+  const TOPIK_WRONG_INTERVALS_DAYS = [1, 3, 7];
+  function getWrongsTopik() { try { return UStore.get('wrongsTopik', {}) || {}; } catch (_) { return {}; } }
+  function setWrongsTopik(w) { try { UStore.set('wrongsTopik', w); } catch (_) {} }
+  function recordTopikWrong(q) {
+    const w = getWrongsTopik();
+    const prev = w[q.id];
+    w[q.id] = { examNo: q.examNo, n: q.n, lvl: q.lvl, typeId: q.typeId, box: prev ? prev.box : 0, correctStreak: 0, due: Date.now(), addedAt: (prev && prev.addedAt) || Date.now() };
+    setWrongsTopik(w);
+  }
+  function clearTopikWrong(qid) {
+    const w = getWrongsTopik();
+    if (w[qid]) { delete w[qid]; setWrongsTopik(w); }
+  }
+  function topikWrongDueList() {
+    const w = getWrongsTopik();
+    const now = Date.now();
+    const bank = buildTopikBank();
+    const out = [];
+    Object.keys(w).forEach(qid => {
+      if ((w[qid].due || 0) > now) return;
+      const q = bank.find(x => x.id === qid);
+      if (q) out.push(q);
+    });
+    return out;
+  }
+  function topikWrongTotalCount() { return Object.keys(getWrongsTopik()).length; }
+
+  let _reviewState = null;
+  function startTopikReview() {
+    if (!requirePlan('master', 'Тетрадь ошибок TOPIK')) return;
+    const qs = shuffleArr(topikWrongDueList());
+    if (!qs.length) { toast(t('topik.review.empty'), 'var(--sage)'); return; }
+    _reviewState = { qs, idx: 0, answered: null };
+    renderTopikReview();
+  }
+  function renderTopikReview() {
+    const st = _reviewState;
+    if (!st) return;
+    if (st.idx >= st.qs.length) { gameModal(topikReviewFinishHtml(), { id: 'topik-drill-modal' }); return; }
+    const q = st.qs[st.idx];
+    const answered = st.answered;
+    const passage = q.passage ? `<div class="exam-passage ko">${examPassageHtml(q.passage)}</div>` : '';
+    const image = q.image ? `<img class="exam-qimg" src="${q.image}" alt="">` : '';
+    const opts = q.options.map((opt, i) => {
+      const n = i + 1;
+      let cls = 'topik-drill-opt';
+      if (answered) { if (n === q.answer) cls += ' correct'; else if (n === answered) cls += ' wrong'; }
+      return `<button type="button" class="${cls}" ${answered ? 'disabled' : `onclick="answerTopikReview(${n})"`}>${TOPIK_CIRCLED[i]} ${escHtml(opt)}</button>`;
+    }).join('');
+    gameModal(`
+      ${gameHeader(t('topik.review.title'), q.typeTitle, st.idx, st.qs.length, "closeGameModal('topik-drill-modal')")}
+      ${passage}${image}
+      <div style="font-size:13px; color:var(--berry); font-weight:600; margin:10px 0;">${escHtml(q.instr)}</div>
+      <div style="display:grid; gap:8px;">${opts}</div>
+      ${answered ? `
+        <div class="topik-drill-explain">${q.explain}</div>
+        <button onclick="nextTopikReview()" class="btn btn-primary btn-block" style="margin-top:14px;">${t('common.next')}</button>
+      ` : ''}
+    `, { id: 'topik-drill-modal' });
+  }
+  function answerTopikReview(n) {
+    const st = _reviewState;
+    if (!st || st.answered) return;
+    const q = st.qs[st.idx];
+    st.answered = n;
+    const correct = n === q.answer;
+    const w = getWrongsTopik();
+    const e = w[q.id];
+    if (e) {
+      if (correct) {
+        e.correctStreak = (e.correctStreak || 0) + 1;
+        if (e.correctStreak >= 2) delete w[q.id];
+        else { e.box = Math.min(e.box + 1, TOPIK_WRONG_INTERVALS_DAYS.length - 1); e.due = Date.now() + TOPIK_WRONG_INTERVALS_DAYS[e.box] * 86400000; }
+      } else {
+        e.correctStreak = 0;
+        e.due = Date.now() + TOPIK_WRONG_INTERVALS_DAYS[Math.min(e.box, TOPIK_WRONG_INTERVALS_DAYS.length - 1)] * 86400000;
+      }
+      setWrongsTopik(w);
+    }
+    renderTopikReview();
+  }
+  function nextTopikReview() {
+    if (!_reviewState) return;
+    _reviewState.idx++;
+    _reviewState.answered = null;
+    renderTopikReview();
+  }
+  function topikReviewFinishHtml() {
+    _reviewState = null;
+    return `
+      <div style="text-align:center; padding: 8px 0;">
+        <div style="font-size: 56px;">🌸</div>
+        <div class="display" style="font-size: 24px; color: var(--berry); margin-top: 6px;">${t('topik.review.done')}</div>
+        <div style="font-size:13px; color: var(--soft); margin-top:8px; line-height:1.5;">${t('topik.review.doneSub')}</div>
+        <button onclick="closeGameModal('topik-drill-modal')" class="btn btn-primary btn-block" style="margin-top:18px;">${t('common.done')}</button>
+      </div>`;
+  }
+
+  // ── «Вопрос дня» на Главной: общий для всех (как todayGameKey), но реже показывается
+  // без цели TOPIK в onboardProfile (не заслоняет бытовые советы Комдори каждый день).
+  function todayTopikQuestion() {
+    const bank = buildTopikBank();
+    if (!bank.length) return null;
+    const days = Math.floor(new Date(todayIsoDate() + 'T00:00:00Z').getTime() / 86400000);
+    return bank[((days % bank.length) + bank.length) % bank.length];
+  }
+  function shouldShowTopikQuestion() {
+    const prof = Store.get('onboardProfile') || {};
+    if (Array.isArray(prof.goals) && prof.goals.includes('topik')) return true;
+    const days = Math.floor(new Date(todayIsoDate() + 'T00:00:00Z').getTime() / 86400000);
+    return days % 3 === 0; // без цели TOPIK — раз в три дня
+  }
+  function renderTopikQuestionCard() {
+    const slot = document.getElementById('topik-question-widget');
+    if (!slot) return;
+    if (!shouldShowTopikQuestion()) { slot.innerHTML = ''; return; }
+    const q = todayTopikQuestion();
+    if (!q) { slot.innerHTML = ''; return; }
+    const today = todayIsoDate();
+    const state = Store.get('tqState', {});
+    const answered = state.day === today ? state.answered : null;
+    const opts = q.options.map((opt, i) => {
+      const n = i + 1;
+      let cls = 'tq-opt';
+      if (answered) { if (n === q.answer) cls += ' correct'; else if (n === answered) cls += ' wrong'; }
+      return `<button type="button" class="${cls}" ${answered ? 'disabled' : `onclick="answerTopikQuestionOfDay(${n})"`}>${TOPIK_CIRCLED[i]} ${escHtml(opt)}</button>`;
+    }).join('');
+    slot.innerHTML = `
+      <div class="card card-padded tq-card">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <span class="page-eyebrow" style="color:var(--coral);">${t('topik.qod.eyebrow')}</span>
+          <span class="chip chip-blush" style="font-size:9.5px;">TOPIK ${q.lvl === 2 ? 'II' : 'I'}</span>
+        </div>
+        ${q.passage ? `<div class="ko" style="font-size:12.5px; color:var(--soft); margin-top:8px; line-height:1.6;">${examPassageHtml(q.passage)}</div>` : ''}
+        <div style="font-size:13px; font-weight:600; color:var(--berry); margin-top:8px;">${escHtml(q.instr)}</div>
+        <div style="display:grid; gap:6px; margin-top:10px;">${opts}</div>
+        ${answered ? `<div class="topik-drill-explain" style="margin-top:10px;">${q.explain}</div><div onclick="switchScreen('topik')" class="tq-more">${t('topik.qod.more')} ›</div>` : ''}
+      </div>`;
+  }
+  function answerTopikQuestionOfDay(n) {
+    const q = todayTopikQuestion();
+    if (!q) return;
+    Store.set('tqState', { day: todayIsoDate(), answered: n });
+    renderTopikQuestionCard();
+  }
+
+  // ═══════════════ ФАЗА B2: тест уровня — лид-магнит 🧪 ═══════════════
+  // Упрощение объёма (осознанное): прогрессия по сложности вместо настоящей адаптивности
+  // (ветвление усложнило бы вдвое, а фиксированный прогрессивный набор даёт тот же эффект
+  // «не спугнуть новичка» и «не занизить продвинутую»). Вопросы: 8 лексика (из
+  // gameWordPool — как в играх), 8 TOPIK I читение текстом, 4 TOPIK I «на слух» —
+  // те же вопросы банка T1, но passage/instr озвучиваются TTS вместо показа текстом
+  // (обходит ограничение банка «нет покарточечных таймкодов у настоящих аудио 회차»).
+  function buildLevelTestQuestions() {
+    const qs = [];
+    const words = shuffleArr(gameWordPool().filter(w => w.ko && w.ru));
+    const vocabWords = words.slice(0, 8);
+    vocabWords.forEach(w => {
+      const wrongPool = words.filter(x => x.ru !== w.ru);
+      const wrongs = shuffleArr(wrongPool).slice(0, 3).map(x => x.ru);
+      if (wrongs.length < 3) return; // словаря маловато — пропускаем вопрос, не подставляем дубли
+      const options = shuffleArr([w.ru, ...wrongs]);
+      qs.push({ skill: 'vocab', ko: w.ko, instr: t('leveltest.q.vocab'), options, answer: options.indexOf(w.ru) + 1, mode: 'text' });
+    });
+    const bank1 = shuffleArr(buildTopikBank().filter(q => q.lvl === 1 && q.options && q.options.length === 4));
+    bank1.slice(0, 8).forEach((q, i) => {
+      qs.push({ skill: i < 4 ? 'grammar' : 'reading', passage: q.passage, image: q.image, instr: q.instr, options: q.options, answer: q.answer, mode: 'text' });
+    });
+    bank1.filter(q => q.passage && q.passage.length < 90).slice(8, 12).forEach(q => {
+      qs.push({ skill: 'listening', passage: q.passage, instr: q.instr, options: q.options, answer: q.answer, mode: 'listen' });
+    });
+    return qs;
+  }
+  let _ltState = null;
+  function startLevelTest() {
+    const qs = buildLevelTestQuestions();
+    if (qs.length < 10) { toast(t('leveltest.notEnoughContent')); return; }
+    _ltState = { qs, idx: 0, answered: null, skillScores: { vocab: {r:0,t:0}, grammar: {r:0,t:0}, reading: {r:0,t:0}, listening: {r:0,t:0} } };
+    renderLevelTest();
+  }
+  function renderLevelTest() {
+    const st = _ltState;
+    if (!st) return;
+    if (st.idx >= st.qs.length) { gameModal(levelTestResultHtml(), { id: 'leveltest-modal' }); return; }
+    const q = st.qs[st.idx];
+    const answered = st.answered;
+    let bodyHtml;
+    if (q.mode === 'listen') {
+      bodyHtml = `
+        <div class="topik-drill-explain" style="text-align:center;">
+          <button type="button" class="btn btn-rose" onclick="playSyllable(${JSON.stringify(q.passage)})"><i class="fa-solid fa-volume-up"></i> ${t('leveltest.listenBtn')}</button>
+        </div>`;
+    } else {
+      bodyHtml = (q.ko ? `<div class="ko" style="font-size:28px; font-weight:700; color:var(--berry); text-align:center; margin:10px 0;">${escHtml(q.ko)}</div>` : '')
+        + (q.passage ? `<div class="exam-passage ko">${examPassageHtml(q.passage)}</div>` : '')
+        + (q.image ? `<img class="exam-qimg" src="${q.image}" alt="">` : '');
+    }
+    const opts = q.options.map((opt, i) => {
+      const n = i + 1;
+      let cls = 'topik-drill-opt';
+      if (answered) { if (n === q.answer) cls += ' correct'; else if (n === answered) cls += ' wrong'; }
+      return `<button type="button" class="${cls}" ${answered ? 'disabled' : `onclick="answerLevelTest(${n})"`}>${TOPIK_CIRCLED[i]} ${escHtml(opt)}</button>`;
+    }).join('');
+    gameModal(`
+      ${gameHeader(t('leveltest.title'), t('leveltest.sub'), st.idx, st.qs.length, "closeLevelTest()")}
+      ${bodyHtml}
+      <div style="font-size:13px; color:var(--berry); font-weight:600; margin:10px 0;">${escHtml(q.instr)}</div>
+      <div style="display:grid; gap:8px;">${opts}</div>
+      ${answered ? `<button onclick="nextLevelTest()" class="btn btn-primary btn-block" style="margin-top:14px;">${t('common.next')}</button>` : ''}
+    `, { id: 'leveltest-modal' });
+  }
+  function answerLevelTest(n) {
+    const st = _ltState;
+    if (!st || st.answered) return;
+    const q = st.qs[st.idx];
+    st.answered = n;
+    const sc = st.skillScores[q.skill];
+    sc.t++; if (n === q.answer) sc.r++;
+    renderLevelTest();
+  }
+  function nextLevelTest() {
+    if (!_ltState) return;
+    _ltState.idx++;
+    _ltState.answered = null;
+    renderLevelTest();
+  }
+  function closeLevelTest() {
+    stopSpeech();
+    _ltState = null;
+    closeGameModal('leveltest-modal');
+  }
+  function levelTestVerdict(pct) {
+    if (pct >= 0.85) return 'topik1';
+    if (pct >= 0.6)  return 'basic';
+    if (pct >= 0.35) return 'hangul';
+    return 'zero';
+  }
+  const LEVELTEST_VERDICT_META = {
+    zero:   { label: '시작 · Начало',      moduleId: 'm1', emoji: '🌱' },
+    hangul: { label: '한글 · Хангыль',      moduleId: 'm1', emoji: '🌿' },
+    basic:  { label: '초급 · Базовый',      moduleId: 'm3', emoji: '🌸' },
+    topik1: { label: 'TOPIK I · Уверенно', moduleId: null, emoji: '🌟' }
+  };
+  function levelTestResultHtml() {
+    const st = _ltState;
+    const totalR = Object.values(st.skillScores).reduce((s, x) => s + x.r, 0);
+    const totalT = Object.values(st.skillScores).reduce((s, x) => s + x.t, 0);
+    const pct = totalT ? totalR / totalT : 0;
+    const verdict = levelTestVerdict(pct);
+    const meta = LEVELTEST_VERDICT_META[verdict];
+    // Автопростановка уровня. Два РАЗНЫХ масштаба в приложении: onboardProfile.level
+    // (zero/hangul/basic — язык подбора модуля урока) и user.level (STUDY_LEVELS:
+    // beginner/inter/advanced/topik1/topik2 — чип в профиле). verdict уже в первом
+    // масштабе (переиспользует термины обнбординга) — для аккаунта переводим во второй.
+    const u = Store.get('user');
+    if (u && !u.guest) {
+      const studyLevelMap = { zero: 'beginner', hangul: 'beginner', basic: 'inter', topik1: 'topik1' };
+      try { setMyLevel(studyLevelMap[verdict] || 'beginner'); } catch (_) {}
+    } else {
+      const prof = Store.get('onboardProfile') || {};
+      prof.level = verdict;
+      Store.set('onboardProfile', prof);
+    }
+    Store.set('levelTestLastAt', Date.now());
+    Store.set('levelTestResult', { verdict, pct: Math.round(pct * 100), at: Date.now() });
+    const skillRows = ['vocab','grammar','reading','listening'].map(k => {
+      const s = st.skillScores[k];
+      if (!s.t) return '';
+      const p = Math.round(s.r / s.t * 100);
+      return `<div class="topik-type-tile"><div class="topik-type-title">${t('leveltest.skill.' + k)}</div><div class="topik-type-meta"><span>${s.r}/${s.t}</span><span>${p}%</span></div></div>`;
+    }).join('');
+    _ltState = null;
+    return `
+      <div style="text-align:center; padding: 8px 0;">
+        <div style="font-size: 56px;">${meta.emoji}</div>
+        <div class="page-eyebrow" style="color:var(--coral); margin-top:8px;">${t('leveltest.result.eyebrow')}</div>
+        <div class="display" style="font-size:24px; color:var(--berry); margin-top:4px;">${meta.label}</div>
+        <div style="font-size:13px; color:var(--soft); margin-top:6px;">${t('leveltest.result.score', { pct: Math.round(pct * 100) })}</div>
+        <div class="topik-type-grid" style="margin-top:16px; text-align:left;">${skillRows}</div>
+        <button onclick="shareLevelTestCard()" class="btn btn-rose btn-block" style="margin-top:18px;">${t('leveltest.share')}</button>
+        ${meta.moduleId ? `<button onclick="closeLevelTest(); setActiveModule('${meta.moduleId}'); switchScreen('lessons');" class="btn btn-primary btn-block" style="margin-top:8px;">${t('leveltest.startModule')}</button>` : `<button onclick="closeLevelTest(); switchScreen('topik');" class="btn btn-primary btn-block" style="margin-top:8px;">${t('leveltest.goTopik')}</button>`}
+        <button onclick="closeLevelTest()" class="btn btn-ghost btn-block" style="margin-top:8px;">${t('common.done')}</button>
+      </div>`;
+  }
+  async function shareLevelTestCard() {
+    const res = Store.get('levelTestResult');
+    if (!res) return;
+    const meta = LEVELTEST_VERDICT_META[res.verdict];
+    try {
+      const png = await generateShareCardPNG({
+        eyebrow: 'KOREAN WITH MADIE',
+        title: t('leveltest.share.title', { level: meta.label }),
+        lines: [{ label: t('leveltest.share.scoreLabel'), value: res.pct + '%' }],
+        footer: 'koreanmadie.study 🌸'
+      });
+      await shareCanvasImage(png, t('leveltest.share.title', { level: meta.label }));
+    } catch (e) { console.warn('[leveltest-share]', e); }
+  }
+  // Раз в 2 недели — проактивно предлагаем тест ТОЛЬКО тем, у кого его ещё не было
+  // или прошло достаточно времени; ручной вход (профиль/TOPIK) доступен всегда.
+  function shouldSuggestLevelTest() {
+    const last = Store.get('levelTestLastAt', 0);
+    return !last || (Date.now() - last) > 14 * 86400000;
+  }
+  // Вход по ссылке ?test=1 (соцсети Мади) — доступно и гостю, без ожидания загрузки профиля
+  (function autoLevelTestFromUrl() {
+    try {
+      if (new URLSearchParams(location.search).get('test') === '1') {
+        setTimeout(() => { try { startLevelTest(); } catch (_) {} }, 1200);
+      }
+    } catch (_) {}
+  })();
+
   let _examState = null;
   let _examTimer = null;
 
@@ -27039,7 +28380,7 @@
       toast('Этот тест готовится 🌸', 'var(--berry)'); return;
     }
     _examState = {
-      exam: n, mode, label: data.label, questions: data.questions,
+      exam: n, mode, lvl: lvl === 2 ? 2 : 1, label: data.label, questions: data.questions,
       durationMin: data.durationMin, total: data.total, audio: data.audio || '',
       answers: {}, idx: 0, endAt: Date.now() + data.durationMin * 60000, finished: false
     };
@@ -27245,6 +28586,15 @@
     _examState.finished = true;
     stopExamTimer();
     stopExamScript();
+    // ФАЗА C2: марафон — секция 읽기 сегодняшнего расписания, ровно в окне (первая суббота месяца)
+    try {
+      const m = activeMarathon();
+      if (m && _examState.mode === 'reading' && _examState.exam === m.examNo && _examState.lvl === m.lvl) {
+        let score = 0;
+        _examState.questions.forEach(q => { if (_examState.answers[q.n] === q.answer) score += q.points; });
+        submitMarathonResult(m, score);
+      }
+    } catch (_) {}
     renderExamResults(byTime);
   }
   function renderExamResults(byTime) {
@@ -27491,6 +28841,7 @@
     p.current = next ? next.id : null;
     setLessonProgress(p);
     stats.lessons = totalLessonsCompleted();
+    _bumpMonthly('lessons', 1);
     UStore.set('stats', stats);
   }
 
@@ -27909,6 +29260,7 @@
     if (merged.length === 0) {
       // Admin sees how to add posts; students get friendly built-in welcome cards
       // (local only — no DB writes, no like/comment bars) so the feed is never empty.
+      if (social) syncFeedPidListeners([]);
       slot.innerHTML = isAdmin()
         ? `<div class="card card-padded" style="text-align:center; color:var(--soft); font-size:12.5px; line-height:1.6;">${t('ui.228')}<br>${t('ui.229')} <b style="color:var(--coral);">${t('ui.229')}</b>.</div>`
         : welcomeFeedHtml();
@@ -27927,6 +29279,9 @@
       shown = merged.slice(start, start + FEED_PER_PAGE);
       footer = `<div style="display:grid; gap:8px;">${pageNavHtml(feedPage, pages, 'gotoFeedPage')}<button onclick="collapseFeed()" class="btn btn-ghost btn-block">${t('ui.230')}</button></div>`;
     }
+    // Живые лайки/комменты — только для постов, реально показанных на экране сейчас
+    // (не для всей истории ленты). Меняется страница/лента — слушатели переезжают.
+    syncFeedPidListeners(social ? shown.map(p => p.id) : []);
     slot.innerHTML = shown.map(p => p._student ? studentPostCardHtml(p) : feedPostCardHtml(p)).join('') + footer;
   }
 
@@ -28340,6 +29695,46 @@
   let _feedLikes = {};      // { postId: { uid: true } }
   let _feedComments = {};   // { postId: [{id, uid, name, text, ts, avatar?}] sorted asc by ts }
   let _feedListenersAttached = false;
+  // pid → отписка от shared/feedLikes|feedComments для этого поста. Слушаем ТОЧЕЧНО
+  // только показанные сейчас посты (макс. FEED_PER_PAGE), а не весь узел целиком —
+  // иначе трафик растёт вместе с ОБЩИМ числом лайков/комментов по всем постам за всю
+  // историю ленты, а не с тем, что реально на экране (см. rtdb-download-blowup, 07.2026).
+  const _feedPidOffs = {};
+  function watchFeedPost(pid) {
+    if (!pid || _feedPidOffs[pid] || typeof _db === 'undefined') return;
+    const likesRef = _db.ref('shared/feedLikes/' + pid);
+    const likesHandler = snap => { _feedLikes[pid] = snap.val() || {}; refreshFeedSocial(); };
+    likesRef.on('value', likesHandler);
+    const commentsRef = _db.ref('shared/feedComments/' + pid);
+    const commentsHandler = snap => {
+      const obj = snap.val() || {};
+      _feedComments[pid] = Object.entries(obj)
+        .map(([id, c]) => ({ id, ...c }))
+        .sort((a, b) => (a.ts || 0) - (b.ts || 0));
+      watchAvatarsForComments();
+      refreshFeedSocial();
+    };
+    commentsRef.on('value', commentsHandler);
+    _feedPidOffs[pid] = () => {
+      try { likesRef.off('value', likesHandler); } catch (_) {}
+      try { commentsRef.off('value', commentsHandler); } catch (_) {}
+    };
+  }
+  function unwatchFeedPost(pid) {
+    const off = _feedPidOffs[pid];
+    if (!off) return;
+    off();
+    delete _feedPidOffs[pid];
+    delete _feedLikes[pid];
+    delete _feedComments[pid];
+  }
+  // Вызывается при каждом рендере ленты с массивом id постов, видимых прямо сейчас —
+  // подписывает новые, отписывает те, что пропали с экрана (сменилась страница/лента).
+  function syncFeedPidListeners(pids) {
+    const wanted = new Set(pids || []);
+    Object.keys(_feedPidOffs).forEach(pid => { if (!wanted.has(pid)) unwatchFeedPost(pid); });
+    wanted.forEach(pid => watchFeedPost(pid));
+  }
 
   function fbKey(s) { return String(s).replace(/[.#$\[\]\/]/g, '_'); }
 
@@ -28421,23 +29816,7 @@
     // при апгрейде до платного (renderCustomFeedPosts вызовет снова) подписка встала.
     if (!feedSocialEnabled()) return;
     _feedListenersAttached = true;
-    _db.ref('shared/feedLikes').on('value', snap => {
-      _feedLikes = snap.val() || {};
-      refreshFeedSocial();
-    });
-    _db.ref('shared/feedComments').on('value', snap => {
-      const data = snap.val() || {};
-      _feedComments = {};
-      Object.keys(data).forEach(pid => {
-        const obj = data[pid] || {};
-        _feedComments[pid] = Object.entries(obj)
-          .map(([id, c]) => ({ id, ...c }))
-          .sort((a, b) => (a.ts || 0) - (b.ts || 0));
-      });
-      // Subscribe to live avatar updates for every author seen in the feed
-      watchAvatarsForComments();
-      refreshFeedSocial();
-    });
+    // Лайки/комменты — точечно per-pid, см. syncFeedPidListeners (вызывается из renderCustomFeedPosts).
     // Публичные посты учеников (последние 40, новые внизу узла — сортируем в рендере)
     _db.ref('shared/userFeedPosts').orderByChild('ts').limitToLast(40).on('value', snap => {
       const data = snap.val() || {};
@@ -29009,6 +30388,8 @@
     { id:'perfect-numbers',   icon:'🔢', title:'Числа в кармане',      desc:'6/6 в «Числа»',                    xp:30, cat:'perfect', check: s => (s.perfectGames||{}).numbers },
     { id:'perfect-sentence',  icon:'📝', title:'Грамматик',             desc:'4/4 в «Собери фразу»',             xp:60, cat:'perfect', check: s => (s.perfectGames||{}).sentence },
     { id:'perfect-kpop',      icon:'🎵', title:'K-Pop фанатка',         desc:'4/4 в K-Pop Fill',                 xp:50, cat:'perfect', check: s => (s.perfectGames||{}).kpop },
+    // ФАЗА D1: хардкор-режим — идеальный проход сразу трёх хардкор-игр
+    { id:'hardcore-3', icon:'🔥', title:'Перфекционистка 고급', desc:'Идеально пройди три хардкор-игры', xp:150, cat:'perfect', check: s => { const p = s.perfectGames||{}; return !!(p.hc_translate && p.hc_build && p.hc_listen); } },
     // Vocabulary
     { id:'vocab-10',  icon:'🌷', title:'10 слов',                desc:'Узнай 10 разных слов',                  xp:25,  cat:'vocab', check: s => s.words >= 10 },
     { id:'vocab-50',  icon:'💐', title:'50 слов',                desc:'50 слов в копилке',                     xp:80,  cat:'vocab', check: s => s.words >= 50 },
@@ -29030,7 +30411,9 @@
     // Special
     { id:'profile',  icon:'📷', title:'Это я',                  desc:'Загрузи фото профиля',                  xp:10, cat:'special', check: s => s.hasAvatar },
     { id:'calendar', icon:'📅', title:'Знаток календаря',        desc:'Открой календарь корейских праздников', xp:5,  cat:'special', check: s => s.openedCalendar },
-    { id:'culture',  icon:'🎎', title:'Любопытство',             desc:'Открой блок «Культура»',                xp:10, cat:'special', check: s => s.openedCulture }
+    { id:'culture',  icon:'🎎', title:'Любопытство',             desc:'Открой блок «Культура»',                xp:10, cat:'special', check: s => s.openedCulture },
+    // ФАЗА D3: xp:0 — XP за статус уже начислен напрямую в checkSonbaeMilestone(), здесь только витрина
+    { id:'sonbae',   icon:'🎓', title:'선배 — Сонбэ',              desc:'Заверши 6 и больше модулей программы',  xp:0,  cat:'special', check: s => !!s.sonbaeAwarded }
   ];
   const ACH_CAT_LABEL = {
     streak:'Дни', time:'Время', lessons:'Уроки', games:'Игры',
@@ -29065,6 +30448,7 @@
     'perfect-numbers':   { en:['Numbers in pocket','6/6 in “Numbers”'], uz:['Raqamlar choʻntakda','«Raqamlar»da 6/6'] },
     'perfect-sentence':  { en:['Grammarian','4/4 in “Build a Phrase”'], uz:['Grammatik','«Ibora tuz»da 4/4'] },
     'perfect-kpop':      { en:['K-Pop fan','4/4 in K-Pop Fill'], uz:['K-Pop muxlisi','K-Pop Fillda 4/4'] },
+    'hardcore-3': { en:['Hardcore perfectionist','Ace all three hardcore games'], uz:['Hardkor mukammalchi','Uchala hardkor oʻyinni benuqson oʻtang'] },
     'vocab-10':   { en:['10 words','Learn 10 different words'], uz:['10 soʻz','10 xil soʻz oʻrganing'] },
     'vocab-50':   { en:['50 words','50 words collected'], uz:['50 soʻz','50 soʻz yigʻildi'] },
     'vocab-100':  { en:['A hundred words','100 words learned'], uz:['Yuz soʻz','100 soʻz oʻrganildi'] },
@@ -29081,7 +30465,8 @@
     'level-20':   { en:['Level 20','Reach level 20'], uz:['20-daraja','20-darajaga yeting'] },
     'profile':    { en:['It’s me','Upload a profile photo'], uz:['Bu men','Profil rasmini yuklang'] },
     'calendar':   { en:['Calendar buff','Open the Korean holiday calendar'], uz:['Taqvim bilimdoni','Koreys bayramlari taqvimini oching'] },
-    'culture':    { en:['Curiosity','Open the “Culture” block'], uz:['Qiziquvchanlik','«Madaniyat» blokini oching'] }
+    'culture':    { en:['Curiosity','Open the “Culture” block'], uz:['Qiziquvchanlik','«Madaniyat» blokini oching'] },
+    'sonbae':     { en:['선배 — Sonbae','Complete 6 or more program modules'], uz:['선배 — Sonbae','Dasturning 6 va undan koʻp modulini yakunlang'] }
   };
   const ACH_CAT_TR = {
     en: { streak:'Days', time:'Time', lessons:'Lessons', games:'Games', perfect:'Perfect', vocab:'Words', hangul:'Hangul', speak:'Speaking', level:'Levels', special:'Special' },
@@ -29192,21 +30577,173 @@
   }
 
   // ── Tracking helpers ──
+  // ФАЗА A1: пропущено 1–2 дня и фризов хватает → дыры укрываются в frozenDates,
+  // счётчик тратится. 0 дней (без разрыва) — ничего не делаем. 3+ дней ИЛИ фризов
+  // не хватает — фриз НЕ трогаем, стрик честно падает (дальше подключается A2).
+  // Возвращает {repaired:N} при укрытии, {gapDays:N} при непокрытом разрыве, иначе null.
+  // Укрывает дни (lastDate, lastDate+gap] в frozenDates — общий хелпер для автофриза
+  // A1 и ручного «ремонта» A2, чтобы даты считались одинаково в обоих местах.
+  function fillFrozenGap(lastDate, gap) {
+    if (!Array.isArray(stats.frozenDates)) stats.frozenDates = [];
+    for (let i = 1; i <= gap; i++) {
+      const d = new Date(lastDate);
+      d.setUTCDate(d.getUTCDate() + i);
+      const iso = d.toISOString().slice(0, 10);
+      if (!stats.frozenDates.includes(iso)) stats.frozenDates.push(iso);
+    }
+  }
+  function applyStreakFreeze(today) {
+    const all = new Set([...(stats.dates || []), ...(stats.frozenDates || [])]);
+    if (!all.size) return null; // новый пользователь — защищать нечего
+    const lastDate = [...all].sort().pop();
+    if (!lastDate) return null;
+    const gap = Math.round((new Date(today) - new Date(lastDate)) / 86400000) - 1;
+    if (gap <= 0) return null; // сегодня уже отмечен или разрыва нет
+    // 3+ дня ИЛИ фризов не хватает — не тратим, стрик честно падает (передаём lastDate
+    // для A2: к моменту показа модалки stats.dates уже содержит сегодня, пересчитать поздно).
+    if (gap > 2 || (stats.freezeCount || 0) < gap) return { gapDays: gap, lastDate };
+    fillFrozenGap(lastDate, gap);
+    stats.freezeCount -= gap;
+    return { repaired: gap };
+  }
+  function showFreezeRepairModal(gap) {
+    const m = document.createElement('div');
+    m.className = 'modal-bg modal-center';
+    m.id = 'freeze-repair-popup';
+    m.onclick = e => { if (e.target === m) m.remove(); };
+    m.innerHTML = `
+      <div class="modal-card lesson-complete-card">
+        <img src="assets/bear5.png" alt="" class="lesson-complete-bear" onerror="this.style.display='none'">
+        <div class="page-eyebrow" style="color:var(--coral);">${t('freeze.repair.eyebrow')}</div>
+        <div class="display" style="font-size:22px; color:var(--berry); margin-top:6px; line-height:1.2;">${t('freeze.repair.title')}</div>
+        <div style="margin-top:14px; font-size:13px; color:var(--soft); line-height:1.55; padding:0 8px;">
+          ${t(gap >= 2 ? 'freeze.repair.msg2' : 'freeze.repair.msg1')}
+        </div>
+        <button onclick="this.closest('.modal-bg').remove()" class="btn btn-primary" style="margin-top:22px; width:100%; justify-content:center;">
+          ${t('freeze.repair.cta')} <i class="fa-solid fa-heart" style="font-size:11px;"></i>
+        </button>
+      </div>`;
+    document.body.appendChild(m);
+    setTimeout(() => { document.getElementById('freeze-repair-popup')?.remove(); }, 8000);
+  }
+
+  // ФАЗА A2: возвращение после разрыва ≥3 дней — тёплый экран без стыда + разминка
+  // (5 SRS-карточек), после которой при выполнении условий даём один «ремонт» стрика:
+  // прежний стрик ≥3, разрыв <7 дней, не чаще раза в 30 дней (stats.lastRepairAt).
+  let _comebackGap = 0, _comebackLastDate = '', _comebackPrevStreak = 0;
+  function canRepairStreak(prevStreak, gap) {
+    if (prevStreak < 3 || gap >= 7) return false;
+    return (Date.now() - (stats.lastRepairAt || 0)) >= 30 * 86400000;
+  }
+  function showComebackModal(gapInfo, prevStreak) {
+    _comebackGap = gapInfo.gapDays; _comebackLastDate = gapInfo.lastDate; _comebackPrevStreak = prevStreak;
+    const m = document.createElement('div');
+    m.className = 'modal-bg modal-center';
+    m.id = 'comeback-popup';
+    m.onclick = e => { if (e.target === m) m.remove(); };
+    m.innerHTML = `
+      <div class="modal-card lesson-complete-card">
+        <img src="assets/bear5.png" alt="" class="lesson-complete-bear" onerror="this.style.display='none'">
+        <div class="page-eyebrow" style="color:var(--coral);">${t('comeback.eyebrow')}</div>
+        <div class="display" style="font-size:22px; color:var(--berry); margin-top:6px; line-height:1.2;">${t('comeback.title')}</div>
+        <div style="margin-top:14px; font-size:13px; color:var(--soft); line-height:1.6; padding:0 8px;">
+          ${t('comeback.msg')}
+        </div>
+        <button onclick="startComebackWarmup()" class="btn btn-primary" style="margin-top:20px; width:100%; justify-content:center;">
+          ${t('comeback.cta')} <i class="fa-solid fa-heart" style="font-size:11px;"></i>
+        </button>
+        <button onclick="this.closest('.modal-bg').remove()" class="btn btn-ghost btn-block" style="margin-top:8px;">${t('gate.later')}</button>
+      </div>`;
+    document.body.appendChild(m);
+  }
+  function startComebackWarmup() {
+    document.getElementById('comeback-popup')?.remove();
+    const due = srsDueList();
+    const cards = (due.length >= 3 ? due : shuffleArr(buildFlashcards())).slice(0, 5);
+    if (cards.length < 3) { finishComebackWarmup(); return; } // словаря почти нет — не мучаем разминкой
+    _warmupDoneCallback = finishComebackWarmup;
+    startFlashcardSession(cards);
+  }
+  function finishComebackWarmup() {
+    closeGameModal('flash-modal');
+    const repairable = canRepairStreak(_comebackPrevStreak, _comebackGap);
+    if (repairable && _comebackLastDate) {
+      fillFrozenGap(_comebackLastDate, _comebackGap);
+      stats.lastRepairAt = Date.now();
+      stats.streak = computeConsecutiveStreak(stats.dates, stats.frozenDates);
+      _bumpMonthly('bestStreak', stats.streak);
+      UStore.set('stats', stats);
+      syncStats();
+    }
+    setTimeout(() => showComebackResultModal(repairable), 400);
+  }
+  function showComebackResultModal(repaired) {
+    const m = document.createElement('div');
+    m.className = 'modal-bg modal-center';
+    m.id = 'comeback-result-popup';
+    m.onclick = e => { if (e.target === m) m.remove(); };
+    const guestNudge = repaired && typeof isGuestish === 'function' && isGuestish();
+    m.innerHTML = `
+      <div class="modal-card lesson-complete-card">
+        <img src="assets/bear5.png" alt="" class="lesson-complete-bear" onerror="this.style.display='none'">
+        <div class="page-eyebrow" style="color:var(--coral);">${t(repaired ? 'comeback.done.eyebrow' : 'comeback.done.eyebrowPlain')}</div>
+        <div class="display" style="font-size:22px; color:var(--berry); margin-top:6px; line-height:1.2;">${t(repaired ? 'comeback.done.title' : 'comeback.done.titlePlain')}</div>
+        <div style="margin-top:14px; font-size:13px; color:var(--soft); line-height:1.6; padding:0 8px;">
+          ${t(repaired ? 'comeback.done.msg' : 'comeback.done.msgPlain')}
+        </div>
+        ${guestNudge ? `<div style="margin-top:12px; font-size:11.5px; color:var(--soft); line-height:1.5;">${t('comeback.guestNudge')} <a href="#" onclick="event.preventDefault(); this.closest('.modal-bg').remove(); goRegister();" style="color:var(--coral); font-weight:700;">${t('gate.cta')}</a></div>` : ''}
+        <button onclick="this.closest('.modal-bg').remove()" class="btn btn-primary" style="margin-top:20px; width:100%; justify-content:center;">
+          ${t('comeback.done.cta')} <i class="fa-solid fa-heart" style="font-size:11px;"></i>
+        </button>
+      </div>`;
+    document.body.appendChild(m);
+  }
+
+  // Тап по 🔥-пилюле в топбаре — открыть Профиль и подсветить календарь стрика
+  // (тот же паттерн, что и у questItemAction: переход + скролл после рендера).
+  function openStreakInfo() {
+    switchScreen('profile');
+    setTimeout(() => document.getElementById('streak-cal')?.scrollIntoView({ behavior: 'smooth', block: 'center' }), 150);
+  }
+  // Значок 🧊×N в топбаре рядом с 🔥 — скрыт, пока фризов нет.
+  function renderFreezeBadge() {
+    const el = document.getElementById('freeze-pill');
+    if (!el) return;
+    const n = stats.freezeCount || 0;
+    if (n <= 0) { el.style.display = 'none'; return; }
+    el.style.display = '';
+    el.title = t('freeze.badge', { cur: n });
+    const val = document.getElementById('freeze-value');
+    if (val) val.textContent = n;
+  }
   function recordDayEntered() {
     const today = new Date().toISOString().slice(0, 10);
     if (!stats.dates.includes(today)) {
+      const prevStreak = stats.streak || 0; // до пересчёта — для право на «ремонт» A2
+      const freeze = applyStreakFreeze(today);
       stats.dates.push(today);
       stats.daysEntered = stats.dates.length;
-      // Keep streak in sync — count consecutive trailing days
-      stats.streak = computeConsecutiveStreak(stats.dates);
+      // Keep streak in sync — count consecutive trailing days (dates ∪ frozenDates)
+      stats.streak = computeConsecutiveStreak(stats.dates, stats.frozenDates);
+      _bumpMonthly('bestStreak', stats.streak);
       UStore.set('stats', stats);
       syncStats();
       checkAchievements();
+      if (freeze && freeze.repaired) {
+        setTimeout(() => showFreezeRepairModal(freeze.repaired), 600);
+      } else if (freeze && freeze.gapDays >= 3 && Store.get('onboardDone') && !Store.get('tourPending') && !document.getElementById('app-tour')) {
+        // A2: тёплый экран возвращения — только вне онбординга/тура
+        setTimeout(() => showComebackModal(freeze, prevStreak), 600);
+      } else {
+        // A4: месячный отчёт — только когда не занят фризом/возвращением в этом же боте
+        setTimeout(() => { try { maybeShowMonthlyReport(); } catch (e) { console.warn('[monthly]', e); } }, 900);
+      }
     }
   }
-  function computeConsecutiveStreak(dates) {
-    if (!dates || dates.length === 0) return 0;
-    const sorted = [...dates].sort();
+  function computeConsecutiveStreak(dates, frozenDates) {
+    const merged = (frozenDates && frozenDates.length) ? [...(dates || []), ...frozenDates] : dates;
+    if (!merged || merged.length === 0) return 0;
+    const sorted = [...new Set(merged)].sort();
     let streak = 1;
     for (let i = sorted.length - 1; i > 0; i--) {
       const d1 = new Date(sorted[i]);
@@ -29219,6 +30756,13 @@
   function recordGamePlay(key, score, total) {
     if (!key) return;
     stats.gamePlays[key] = (stats.gamePlays[key] || 0) + 1;
+    // Динамика по неделям для дашборда; храним последние 12 ISO-недель (обрезка как у xpByDay)
+    if (!stats.gamePlaysByWeek || typeof stats.gamePlaysByWeek !== 'object') stats.gamePlaysByWeek = {};
+    const wk = isoWeekKey();
+    const row = stats.gamePlaysByWeek[wk] || (stats.gamePlaysByWeek[wk] = {});
+    row[key] = (row[key] || 0) + 1;
+    const wkeys = Object.keys(stats.gamePlaysByWeek).sort();
+    if (wkeys.length > 12) wkeys.slice(0, wkeys.length - 12).forEach(k => delete stats.gamePlaysByWeek[k]);
     if (total > 0 && score === total) stats.perfectGames[key] = true;
     UStore.set('stats', stats);
     checkAchievements();
@@ -29229,6 +30773,7 @@
       stats.wordsLearned.push(word);
       // words count = max(baseline, set size)
       stats.words = Math.max(stats.words || 0, stats.wordsLearned.length);
+      _bumpMonthly('words', 1);
       UStore.set('stats', stats);
       syncStats();
       checkAchievements();
@@ -29270,6 +30815,7 @@
 
   // ── Profile achievements rendering ──
   function syncAchievementsStrip() {
+    try { renderStickerShelf(); } catch (_) {}
     const strip = document.getElementById('ach-strip');
     const counter = document.getElementById('ach-count');
     const unlocked = unlockedAchievements();
@@ -29473,6 +31019,7 @@
   function syncStats() {
     updateHomeDateLine();
     renderGreeting();
+    renderFreezeBadge();
     buildStreakCal();
     const xp = document.getElementById('xp-value');
     const st = document.getElementById('streak-value');
@@ -29520,6 +31067,7 @@
     stats.xpByDay[tday] = (stats.xpByDay[tday] || 0) + n;
     const xbdKeys = Object.keys(stats.xpByDay).sort();
     if (xbdKeys.length > 30) xbdKeys.slice(0, xbdKeys.length - 30).forEach(k => delete stats.xpByDay[k]);
+    _bumpMonthly('xp', n);
     // Daily goal tracking — increment dailyXp, detect goal-reached transition
     ensureDailyCounter();
     const goal = stats.dailyGoal || 30;
@@ -29543,6 +31091,36 @@
 
   // ── Daily Goal ──
   function todayIsoDate() { return new Date().toISOString().slice(0, 10); }
+  // Ключ ISO-недели ('2026-W28') в UTC — тот же календарь, что todayIsoDate().
+  // Жёсткая лексикографическая сортировка (padStart) — можно сортировать строки.
+  function isoWeekKey(isoDate) {
+    const d = new Date((isoDate || todayIsoDate()) + 'T00:00:00Z');
+    d.setUTCDate(d.getUTCDate() + 3 - ((d.getUTCDay() + 6) % 7)); // четверг ISO-недели
+    const jan4 = new Date(Date.UTC(d.getUTCFullYear(), 0, 4));    // 4 января всегда в W01
+    const wk = 1 + Math.round(((d - jan4) / 86400000 - 3 + ((jan4.getUTCDay() + 6) % 7)) / 7);
+    return d.getUTCFullYear() + '-W' + String(wk).padStart(2, '0');
+  }
+
+  // ФАЗА E1: «Игра дня» ×2 XP. Пул — только игры с единой сессионной механикой через
+  // gameFinish() (карточки исключены: XP там начисляется за карточку, не за сессию).
+  // Ротация по календарной дате в UTC — все ученицы видят одну и ту же игру в один день.
+  const DAILY_GAME_POOL = ['match','build','listen','kpop','memory','translate','numbers','particles','sentence','dictation','writing','wordsearch','crosswordpick'];
+  function todayGameKey() {
+    const days = Math.floor(new Date(todayIsoDate() + 'T00:00:00Z').getTime() / 86400000);
+    return DAILY_GAME_POOL[((days % DAILY_GAME_POOL.length) + DAILY_GAME_POOL.length) % DAILY_GAME_POOL.length];
+  }
+
+  // ФАЗА A4: месячный агрегат для отчёта от Мади. В отличие от xpByDay (30 дней),
+  // здесь не обрезаем — 12 маленьких чисел в год не проблема размера.
+  function _monthKey(d) { return (d || todayIsoDate()).slice(0, 7); }
+  function _bumpMonthly(field, amount) {
+    const mk = _monthKey();
+    if (!stats.monthly || typeof stats.monthly !== 'object') stats.monthly = {};
+    if (!stats.monthly[mk]) stats.monthly[mk] = { xp: 0, words: 0, lessons: 0, bestStreak: 0 };
+    const m = stats.monthly[mk];
+    if (field === 'bestStreak') { if (amount > (m.bestStreak || 0)) m.bestStreak = amount; }
+    else m[field] = (m[field] || 0) + amount;
+  }
 
   function ensureDailyCounter() {
     const today = todayIsoDate();
@@ -29618,6 +31196,13 @@
         <div style="font-size:10.5px; color:var(--soft); margin-top:12px; text-align:center;">
           Цель резетится каждый день в полночь 🌙
         </div>
+        <div style="display:flex; align-items:center; gap:8px; margin-top:12px; padding:10px 12px; background:var(--paper); border-radius:12px;">
+          <span style="font-size:18px;">🧊</span>
+          <div style="min-width:0;">
+            <div style="font-size:12px; font-weight:700; color:var(--berry);">${t('freeze.row.title', { cur: stats.freezeCount || 0 })}</div>
+            <div style="font-size:10.5px; color:var(--soft); margin-top:1px;">${t('freeze.row.sub')}</div>
+          </div>
+        </div>
       </div>`;
     document.body.appendChild(m);
   }
@@ -29638,6 +31223,16 @@
       stats.dailyGoalReachedDates.push(today);
       UStore.set('stats', stats);
     }
+    // ФАЗА A1: +1 заморозка стрика за выполненную цель дня — не чаще раза в ISO-неделю, максимум 2
+    const wk = isoWeekKey();
+    let freezeEarned = false;
+    if (stats.freezeEarnedWeek !== wk && (stats.freezeCount || 0) < 2) {
+      stats.freezeCount = (stats.freezeCount || 0) + 1;
+      stats.freezeEarnedWeek = wk;
+      UStore.set('stats', stats);
+      renderFreezeBadge();
+      freezeEarned = true;
+    }
     // Confetti
     spawnConfetti();
     // Celebration popup with bear
@@ -29653,6 +31248,7 @@
         <div style="margin-top:14px; font-size:13px; color:var(--soft); line-height:1.55; padding:0 8px;">
           🌸 Молодец! Завтра новая цель.
         </div>
+        ${freezeEarned ? `<div style="margin-top:10px; font-size:12.5px; color:var(--coral); font-weight:700;">${t('freeze.earned', { cur: stats.freezeCount })}</div>` : ''}
         <button onclick="this.closest('.modal-bg').remove()" class="btn btn-primary" style="margin-top:22px; width:100%; justify-content:center;">
           Спасибо! <i class="fa-solid fa-heart" style="font-size:11px;"></i>
         </button>
@@ -30160,8 +31756,18 @@
     particles:  '🔗 Частицы',
     sentence:   '📝 Собери фразу',
     dictation:  '✍️ Слушай и пиши',
-    writing:    '✏️ Пиши буквы'
+    writing:    '✏️ Пиши буквы',
+    // Агрегаты уровневых ключей (cw_a1…, ws_topik…) — см. dashGameKey
+    crossword:  '🔠 Кроссворд',
+    wordsearch: '🔍 Поиск слов'
   };
+  // Уровневые ключи партий сворачиваем в одну игру для отчёта (сырые ключи в stats не трогаем)
+  function dashGameKey(k) {
+    if (k.startsWith('cw_')) return 'crossword';
+    if (k.startsWith('ws_')) return 'wordsearch';
+    if (k.startsWith('hc_')) return k.slice(3); // хардкор-варианты (ФАЗА D1) считаем в дашборде как обычную игру
+    return k;
+  }
   // Кол-во пройденных уроков из записи пользователя (массивы Firebase могут приходить объектами).
   function _dashLessonsDone(u) {
     let n = 0;
@@ -30249,6 +31855,7 @@
 
     // ── Действия учениц: игры, охват функций, минуты, слова, активность по дням ──
     const gameAgg = {}; let totalGamePlays = 0;
+    const weekAgg = {}; let fcCardsSum = 0;
     const reach = { games: 0, lessons: 0, hangul: 0, pron: 0, ai: 0, focus: 0, words: 0, calendar: 0, culture: 0, avatar: 0 };
     let minutesSum = 0, wordsSum = 0, lessonsSumAll = 0, focusSum = 0, pronAttempts = 0, pronCorrect = 0;
     const dayAgg = {};
@@ -30256,7 +31863,14 @@
       const st = u.stats || {};
       const gp = (st.gamePlays && typeof st.gamePlays === 'object') ? st.gamePlays : {};
       let uPlays = 0;
-      Object.keys(gp).forEach(k => { const v = gp[k] || 0; gameAgg[k] = (gameAgg[k] || 0) + v; totalGamePlays += v; uPlays += v; });
+      Object.keys(gp).forEach(k => { const v = gp[k] || 0; const ak = dashGameKey(k); gameAgg[ak] = (gameAgg[ak] || 0) + v; totalGamePlays += v; uPlays += v; });
+      const gpw = (st.gamePlaysByWeek && typeof st.gamePlaysByWeek === 'object') ? st.gamePlaysByWeek : {};
+      Object.keys(gpw).forEach(w => {
+        const row = gpw[w];
+        if (!row || typeof row !== 'object') return;
+        Object.values(row).forEach(v => { weekAgg[w] = (weekAgg[w] || 0) + (v || 0); });
+      });
+      fcCardsSum += st.fcCardsRated || 0;
       if (uPlays > 0) reach.games++;
       const lessonsDone = _dashLessonsDone(u); lessonsSumAll += lessonsDone;
       if (lessonsDone > 0) reach.lessons++;
@@ -30401,7 +32015,7 @@
       days.push({ iso, label: String(dt.getDate()), value: dayAgg[iso] || 0 });
     }
     const activeDays = days.filter(d => d.value > 0).length;
-    const activityChart = vbars(days, { h: 92, title: d => `${d.iso}: ${d.value} XP` });
+    const activityChart = vbars(days, { h: 92, showVal: true, title: d => `${d.iso}: ${d.value} XP` });
 
     // ── Новые ученицы по месяцам ──
     const new6 = months.reduce((s, m) => s + m.n, 0);
@@ -30410,6 +32024,18 @@
     // ── Популярные игры (суммарные партии по типам) ──
     const gameKeys = Object.keys(gameAgg).filter(k => gameAgg[k] > 0).sort((a, b) => gameAgg[b] - gameAgg[a]);
     const gameItems = gameKeys.map(k => { const s = splitIco(GAME_LABELS[k] || k); return { icon: s.icon || '🎮', name: escAttrSafe(s.name), value: gameAgg[k] }; });
+
+    // ── Партии по неделям (последние 12 ISO-недель; копится с релиза фикса) ──
+    const weekCols = [];
+    for (let i = 11; i >= 0; i--) {
+      const wk = isoWeekKey(new Date(now - i * 7 * DAY).toISOString().slice(0, 10));
+      weekCols.push({ label: wk.slice(5), value: weekAgg[wk] || 0 });
+    }
+    const weeklyGamesChart =
+      `<div style="margin-top:14px; padding-top:12px; border-top:1px dashed var(--line);">
+        <div style="font-size:11px; font-weight:700; color:var(--soft); margin-bottom:8px;">📅 Партии по неделям</div>
+        ${vbars(weekCols, { h: 88, showVal: true, title: d => `Неделя ${d.label}: ${d.value}` })}
+      </div>`;
 
     // ── Чем пользуются (охват функций) ──
     const usageRows = [
@@ -30492,6 +32118,7 @@
       ${statCard('🔥', streakMax, 'Лучший стрик')}
       ${statCard('📅', lessonsTotal, 'Проведено уроков')}
       ${statCard('🎯', focusSum, 'Фокус-сессий')}
+      ${statCard('🎴', fmt(fcCardsSum), 'Карточек перевёрнуто')}
       ${statCard('💌', `${fbUnread}/${fbAll}`, 'Писем (непрочит./всего)')}
     </div>`;
 
@@ -30540,7 +32167,7 @@
         ${sec('📊', 'Новые ученицы по месяцам', new6 ? `+${new6}` : '', monthlyChart)}
       </div>
       <div class="dx-grid2">
-        ${sec('🎮', t('ui.s008'), t('ui.s007',{count: totalGamePlays}), barList(gameItems, { rank: true, empty: t('ui.s006') }))}
+        ${sec('🎮', t('ui.s008'), t('ui.s007',{count: totalGamePlays}), barList(gameItems, { rank: true, empty: t('ui.s006') }) + weeklyGamesChart)}
         ${sec('🍀', t('ui.s010'), t('ui.s009',{total: total}), barList(usageItems, {}))}
       </div>
       <div class="dx-grid4">
@@ -32743,6 +34370,8 @@
     refreshProfileEmail();
     const adminBadge = document.getElementById('profile-admin-badge');
     if (adminBadge) adminBadge.style.display = user.isAdmin ? 'inline-flex' : 'none';
+    const sonbaeBadge = document.getElementById('profile-sonbae-badge');
+    if (sonbaeBadge) sonbaeBadge.style.display = stats.sonbaeAwarded ? 'inline-flex' : 'none';
     try { renderMyLevelChip(); } catch (_) {}
     setProfileAdminMode(!!user.isAdmin);
     recordDayEntered();
@@ -33140,14 +34769,23 @@
   }
   function closeGameModal(id='game-modal') {
     document.getElementById(id)?.remove();
+    // Закрыли флешкарты раньше конца сессии — «разминка» A2 не завершена штатно,
+    // не даём коллбэку просочиться в следующую, не связанную с ним сессию.
+    if (id === 'flash-modal') _warmupDoneCallback = null;
     // Drop the body flag only once no game/flashcard page remains open.
     if (!document.querySelector('.game-page')) document.body.classList.remove('game-open');
   }
-  function gameHeader(title, subtitle, progress, total, onClose) {
+  // ФАЗА D1: hcTimer=true — рисуем визуальную полоску обратного отсчёта раунда
+  // (хардкор-режим, «таймер −30%» из плана). Полоска ЧИСТО визуальная: по нулю не
+  // форсирует провал раунда (это потребовало бы отдельного хука в 3 разных движка
+  // ответов ради косметики) — просто создаёт ощутимое давление скоростью анимации.
+  const HC_ROUND_SEC = 5.6; // 8с «спокойного» темпа − 30%
+  function gameHeader(title, subtitle, progress, total, onClose, hcTimer) {
     // onClose — необязательный JS для крестика. По умолчанию закрывает страницу
     // игры. Игры с лобби уровней (кроссворд, поиск слов) передают возврат к выбору
     // уровня, чтобы крестик не выкидывал сразу на экран игр.
     const close = onClose || 'closeGameModal()';
+    if (hcTimer) setTimeout(_hcStartRoundTimer, 20);
     return `
       <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:14px;">
         <div>
@@ -33156,15 +34794,37 @@
         </div>
         <div onclick="${close}" aria-label="${t('ui.023')}" style="font-size:24px; line-height:1; color:var(--soft); cursor:pointer; padding:4px;">×</div>
       </div>
+      ${hcTimer ? `<div class="hc-timer-track"><div id="hc-timer-fill" class="hc-timer-fill"></div></div>` : ''}
       <div style="display:flex; gap:4px; margin-bottom:18px;">
         ${Array.from({length: total}, (_,i) => `<span style="flex:1; height:4px; border-radius:999px; background:${i < progress ? 'var(--coral)' : 'rgba(var(--rose-rgb),.25)'};"></span>`).join('')}
       </div>
     `;
   }
+  function _hcStartRoundTimer() {
+    const el = document.getElementById('hc-timer-fill');
+    if (!el) return;
+    el.style.transition = 'none';
+    el.style.width = '100%';
+    void el.offsetWidth; // форсируем reflow, чтобы браузер зафиксировал 100% ДО включения transition
+    el.style.transition = `width ${HC_ROUND_SEC}s linear`;
+    el.style.width = '0%';
+  }
   function gameFinish(score, total, label, gameKey, replayFn) {
     const pct = Math.round((score / total) * 100);
-    const xp = score * 8;
+    // ФАЗА E1: «игра дня» — ×2 XP, отмечаем дату для квеста «сыграй в игру дня» (A3)
+    const isGameOfDay = !!gameKey && dashGameKey(gameKey) === todayGameKey();
+    const xp = score * 8 * (isGameOfDay ? 2 : 1);
     addXp(xp, false);
+    if (isGameOfDay) {
+      const today = todayIsoDate();
+      if (!Array.isArray(stats.gameOfDayPlayedDates)) stats.gameOfDayPlayedDates = [];
+      if (!stats.gameOfDayPlayedDates.includes(today)) {
+        stats.gameOfDayPlayedDates.push(today);
+        const gkeys = stats.gameOfDayPlayedDates.sort();
+        if (gkeys.length > 60) gkeys.slice(0, gkeys.length - 60).forEach(d => stats.gameOfDayPlayedDates.splice(stats.gameOfDayPlayedDates.indexOf(d), 1));
+        UStore.set('stats', stats);
+      }
+    }
     if (gameKey) recordGamePlay(gameKey, score, total);
     if (replayFn) setLastGame(label || 'Игра', replayFn + '()'); // remember for the Home "Продолжить" chip
     const isNew = gameKey ? Best.save(gameKey, score, total) : false;
@@ -33182,6 +34842,7 @@
         <div class="display" style="font-size: 24px; color: var(--berry); margin-top: 6px;">${label || t('ui.r065')}</div>
         <div style="font-size:13px; color: var(--coral); margin-top:2px;">${t('ui.r066',{score: score, total: total, pct: pct})}</div>
         ${isNew ? `<div class="chip chip-gold record-pulse" style="margin-top:8px;">${t('ui.492')}</div>` : prevBest ? `<div style="font-size:11px; color:var(--soft); margin-top:6px;">${t('ui.r067',{score: prevBest.score, total: prevBest.total})} 🏆</div>` : ''}
+        ${isGameOfDay ? `<div class="chip chip-coral" style="margin-top:8px;">${t('e1.doublexp')}</div>` : ''}
         <div class="ko-quote" style="margin-top: 18px; text-align:left;">${msg}</div>
         <div style="display:grid; grid-template-columns: repeat(3,1fr); gap:8px; margin-top:18px;">
           <div class="card card-padded" style="text-align:center; padding:12px 6px;"><div class="display" style="font-size:18px; color:var(--berry);">${score}</div><div style="font-size:10px; color:var(--soft);">${t('ui.493')}</div></div>
@@ -33288,7 +34949,7 @@
   }
   function replayBuildCustom() { startBuild(buildCustom); }
   function renderBuild() {
-    if (buildRound >= buildTotal) { gameModal(gameFinish(buildScore, buildTotal, 'Собери слово', 'build', buildCustom ? 'replayBuildCustom' : 'startBuild')); return; }
+    if (buildRound >= buildTotal) { gameModal(gameFinish(buildScore, buildTotal, 'Собери слово', hardcoreOn() ? 'hc_build' : 'build', buildCustom ? 'replayBuildCustom' : 'startBuild')); return; }
     const item = buildPool[buildRound];
     const tiles = item.word.split('');
     // Add 1-2 distractor syllables
@@ -33312,7 +34973,7 @@
       return `<button ${isThisUsed ? 'disabled' : `onclick="pickBuildTile(${i})"`} class="hangul-key ko" style="height:62px; aspect-ratio:auto; padding:0 18px; opacity:${isThisUsed?'.3':'1'}; ${isThisUsed?'pointer-events:none;':''}">${t}</button>`;
     }).join('');
     gameModal(`
-      ${gameHeader('🧩 СОБЕРИ СЛОВО', `${t('ui.r068')}`, buildRound, buildTotal)}
+      ${gameHeader('🧩 СОБЕРИ СЛОВО', `${t('ui.r068')}`, buildRound, buildTotal, null, hardcoreOn())}
       <div style="text-align:center; margin-bottom:14px; position:relative; padding-top:6px;">
         ${wordHeartBtn(item.word, item.meaning, '', '🌸', 'build')}
         <div style="font-size:11px; color:var(--soft); letter-spacing:.16em;">${t('ui.497')}</div>
@@ -33368,12 +35029,12 @@
   }
   function replayListenCustom() { startListen(listenCustom); }
   function renderListen() {
-    if (listenRound >= listenTotal) { gameModal(gameFinish(listenScore, listenTotal, 'На слух', 'listen', listenCustom ? 'replayListenCustom' : 'startListen')); return; }
+    if (listenRound >= listenTotal) { gameModal(gameFinish(listenScore, listenTotal, 'На слух', hardcoreOn() ? 'hc_listen' : 'listen', listenCustom ? 'replayListenCustom' : 'startListen')); return; }
     const correct = listenPool[listenRound];
     const wrong = shuffleArr(listenData.filter(p => p.word !== correct.word)).slice(0, 3);
     const choices = shuffleArr([correct, ...wrong]);
     gameModal(`
-      ${gameHeader('🎧 НА СЛУХ', 'послушай и выбери правильное слово', listenRound, listenTotal)}
+      ${gameHeader('🎧 НА СЛУХ', 'послушай и выбери правильное слово', listenRound, listenTotal, null, hardcoreOn())}
       <div style="text-align:center; margin-bottom:18px;">
         <button onclick="playSyllable('${jsStr(correct.word)}', this)" style="width:100px; height:100px; border-radius:50%; background: linear-gradient(140deg, var(--coral), var(--gold)); color:white; border:none; cursor:pointer; font-size:38px; box-shadow: var(--shadow-lg), inset 0 1px 0 rgba(255,255,255,.3); margin:0 auto; display:flex; align-items:center; justify-content:center;">
           <i class="fa-solid fa-volume-up"></i>
@@ -34003,7 +35664,7 @@
   }
   function replayTranslateCustom() { startTranslate(trCustom); }
   function renderTranslate() {
-    if (trRound >= trTotal) { gameModal(gameFinish(trScore, trTotal, 'Быстрый перевод', 'translate', trCustom ? 'replayTranslateCustom' : 'startTranslate')); return; }
+    if (trRound >= trTotal) { gameModal(gameFinish(trScore, trTotal, 'Быстрый перевод', hardcoreOn() ? 'hc_translate' : 'translate', trCustom ? 'replayTranslateCustom' : 'startTranslate')); return; }
     const correct = trPool[trRound];
     // Exclude distractors that share the answer's RU meaning — otherwise the
     // prompt «как будет мама?» could show two valid Korean answers (어머니/엄마),
@@ -34018,7 +35679,7 @@
     }
     const choices = shuffleArr([correct, ...wrong]);
     gameModal(`
-      ${gameHeader('⚡ ПЕРЕВОД', 'найди корейский эквивалент', trRound, trTotal)}
+      ${gameHeader('⚡ ПЕРЕВОД', 'найди корейский эквивалент', trRound, trTotal, null, hardcoreOn())}
       <div style="text-align:center; margin-bottom:18px; position:relative; padding-top:6px;">
         ${wordHeartBtn(correct.ko, correct.ru, '', '🌸', 'translate')}
         <div style="font-size:11px; color:var(--soft); letter-spacing:.16em;">${t('ui.517')}</div>
@@ -34255,6 +35916,519 @@
     }
   }
 
+  // ═══════════════ ФАЗА T3: игра «Связки» (грамматический gap-fill) ═══════════════
+  // Каркас — «Частицы» (startParticles), автогенерация из TOPIK_GRAMMAR (сотни готовых
+  // троек конструкция/значение/пример) — ноль нового контента. Живёт внутри TOPIK →
+  // «Практика» (принятое размещение), а не на общем экране игр.
+  // Извлекает реальную поверхностную форму конструкции («-(으)면» → пробует '으면'/'면';
+  // «이/가» → '이'/'가') и находит ту, что реально встречается в примере — без этого
+  // бланк нечего вырезать (нотация грамматики не всегда совпадает с текстом дословно).
+  function _linksSurfaceForms(constr) {
+    const noDash = constr.replace(/^-/, '');
+    // Реальный текст никогда не содержит буквальных скобок — включаем «сырой» вид
+    // с необязательной группой (X) в кандидаты, только если скобок нет вовсе.
+    const hasParen = /\([^)]+\)/.test(noDash);
+    const candidates = hasParen
+      ? [noDash.replace(/\(([^)]+)\)/g, '$1'), noDash.replace(/\([^)]+\)/g, '')]
+      : [noDash];
+    const variants = new Set();
+    candidates.forEach(v => {
+      v.split('/').forEach(part => { const p = part.trim(); if (p) variants.add(p); });
+    });
+    return [...variants];
+  }
+  let _linksFullPool = null;
+  function linksBuildPool() {
+    if (_linksFullPool) return _linksFullPool;
+    const all = [];
+    TOPIK_GRAMMAR.forEach(g => g.items.forEach(it => {
+      const constr = it[0], meaning = it[1], example = it[2];
+      const form = _linksSurfaceForms(constr).find(f => example.includes(f));
+      if (form) all.push({ constr, meaning, example, form });
+    }));
+    _linksFullPool = all;
+    return all;
+  }
+  let lkScore = 0, lkRound = 0, lkTotal = 8, lkPool = [], _lkCur = null;
+  function startLinks() {
+    const pool = linksBuildPool();
+    if (pool.length < 8) { toast(t('ui.019')); return; }
+    lkTotal = Math.min(scaledRounds(8), pool.length);
+    lkScore = 0; lkRound = 0;
+    lkPool = shuffleArr(pool).slice(0, lkTotal);
+    renderLinks();
+  }
+  function renderLinks() {
+    if (lkRound >= lkTotal) { gameModal(gameFinish(lkScore, lkTotal, 'Связки · 문법', 'links', 'startLinks')); return; }
+    const item = lkPool[lkRound];
+    const fullPool = linksBuildPool();
+    const distractors = [...new Set(shuffleArr(fullPool).map(x => x.form).filter(f => f !== item.form))].slice(0, 3);
+    const options = shuffleArr([item.form, ...distractors]);
+    _lkCur = { form: item.form, options };
+    const blanked = escHtml(item.example).split(escHtml(item.form)).join('<span class="lk-blank">____</span>');
+    gameModal(`
+      ${gameHeader('🔗 СВЯЗКИ', item.meaning, lkRound, lkTotal)}
+      <div class="ko" style="font-size:19px; font-weight:700; color:var(--berry); text-align:center; margin:16px 0; line-height:1.6;">${blanked}</div>
+      <div style="display:grid; gap:8px;" id="lk-opts">
+        ${options.map((o, i) => `<button type="button" class="topik-drill-opt" onclick="answerLinks(${i})">${TOPIK_CIRCLED[i]} ${escHtml(o)}</button>`).join('')}
+      </div>
+    `);
+  }
+  function answerLinks(i) {
+    const cur = _lkCur;
+    if (!cur) return;
+    const wrap = document.getElementById('lk-opts');
+    if (!wrap) return;
+    const picked = cur.options[i];
+    const ok = picked === cur.form;
+    [...wrap.children].forEach((btn, bi) => {
+      btn.disabled = true;
+      if (cur.options[bi] === cur.form) btn.classList.add('correct');
+      else if (bi === i) btn.classList.add('wrong');
+    });
+    if (ok) { lkScore++; addXp(6); }
+    _lkCur = null;
+    setTimeout(() => { lkRound++; renderLinks(); }, ok ? 1200 : 2200);
+  }
+
+  // ═══════════════ ФАЗА T3: игра «Порядок» (문장 배열, тапами) ═══════════════
+  // Вопросы 57–58 из банка T1 (тип t1-57-58) уже содержат (가)(나)(다)(라)-фрагменты
+  // и верный порядок в options[answer-1] — конвертируем в тап-интерфейс вместо
+  // готовых 4 вариантов-строк (последнее — обычный дрилл, это отдельная игра).
+  function _woParseSegments(passage) {
+    const parts = String(passage || '').split(/(?=\([가나다라]\))/).map(s => s.trim()).filter(Boolean);
+    return parts.map(p => {
+      const m = p.match(/^\(([가나다라])\)\s*([\s\S]*)$/);
+      return m ? { label: m[1], text: m[2] } : null;
+    }).filter(Boolean);
+  }
+  function _woCorrectOrder(q) {
+    const s = q.options[q.answer - 1] || '';
+    return [...s.matchAll(/[가나다라]/g)].map(m => m[0]);
+  }
+  function woBuildPool() {
+    return buildTopikBank().filter(q => q.typeId === 't1-57-58' && q.passage)
+      .map(q => ({ q, segs: _woParseSegments(q.passage), correctOrder: _woCorrectOrder(q) }))
+      .filter(x => x.segs.length === 4 && x.correctOrder.length === 4);
+  }
+  let woScore = 0, woRound = 0, woTotal = 6, woPool = [], _woCur = null;
+  function startWordOrder() {
+    const pool = woBuildPool();
+    if (pool.length < 4) { toast(t('ui.019')); return; }
+    woTotal = Math.min(scaledRounds(6), pool.length);
+    woScore = 0; woRound = 0;
+    woPool = shuffleArr(pool).slice(0, woTotal);
+    renderWordOrder();
+  }
+  function renderWordOrder() {
+    if (woRound >= woTotal) { gameModal(gameFinish(woScore, woTotal, 'Порядок · 문장 배열', 'wordorder', 'startWordOrder')); return; }
+    const item = woPool[woRound];
+    _woCur = { segs: shuffleArr(item.segs), correctOrder: item.correctOrder, picked: [], done: false };
+    renderWordOrderState();
+  }
+  function renderWordOrderState() {
+    const cur = _woCur;
+    if (!cur) return;
+    const chips = cur.segs.map(s => {
+      const used = cur.picked.includes(s.label);
+      return `<button type="button" class="wo-chip${used ? ' used' : ''}" ${used || cur.done ? 'disabled' : `onclick="woPick('${s.label}')"`}>
+        <span class="wo-chip-label">${s.label}</span> ${escHtml(s.text)}
+      </button>`;
+    }).join('');
+    const built = cur.picked.length
+      ? cur.picked.map((l, i) => `${i + 1}.${l}`).join(' → ')
+      : t('wordorder.tapHint');
+    gameModal(`
+      ${gameHeader('🔀 ПОРЯДОК', t('wordorder.sub'), woRound, woTotal)}
+      <div class="wo-built">${built}</div>
+      <div style="display:grid; gap:8px; margin-top:12px;">${chips}</div>
+      <div id="wo-result" style="text-align:center; margin-top:12px; font-size:12.5px; font-weight:700; min-height:18px;"></div>
+    `);
+  }
+  function woPick(label) {
+    const cur = _woCur;
+    if (!cur || cur.done || cur.picked.includes(label)) return;
+    cur.picked.push(label);
+    if (cur.picked.length < 4) { renderWordOrderState(); return; }
+    cur.done = true;
+    const ok = cur.picked.every((l, i) => l === cur.correctOrder[i]);
+    if (ok) { woScore++; addXp(8); }
+    renderWordOrderState();
+    const resEl = document.getElementById('wo-result');
+    if (resEl) {
+      resEl.style.color = ok ? 'var(--ok-ink)' : 'var(--bad-ink)';
+      resEl.textContent = ok ? t('wordorder.correct') : t('wordorder.wrong', { order: cur.correctOrder.join('-') });
+    }
+    setTimeout(() => { woRound++; renderWordOrder(); }, ok ? 1400 : 2400);
+  }
+
+  // ═══════════════ ФАЗА T3: TOPIK-колоды слов в существующих играх ═══════════════
+  // Флешкарты/На слух/Перевод/Память/Собери слово принимают customList (тот же
+  // механизм, что уже работал для «Мои слова» и урок→игра, E2). «Подбери картинку»
+  // (Match) исключена — завязана на эмодзи, которых у тем нет; «Слушай и пиши»
+  // (Диктант) исключена — это слоговый тренажёр хангыля, не про слова вообще.
+  function topikThemeToWordList(theme) {
+    return theme.words.map(([ko, ru, example]) => ({ ko, ru, translit: '', emoji: '🌸', example: example || '' }));
+  }
+  // Ревью 07.07: Память/Собери слово рассчитаны на ОДНО слово без пробела; темы
+  // с синонимичными парами («나 / 저» = «я») теряли их целиком из-за пробела вокруг
+  // «/». Для этих двух игр (только для них — Флешкарты/Слух/Перевод по-прежнему
+  // показывают запись целиком) берём первую форму.
+  function _topikDeckSingleForm(list) {
+    return list.map(w => {
+      const i = w.ko.indexOf(' / ');
+      return i < 0 ? w : { ...w, ko: w.ko.slice(0, i) };
+    });
+  }
+  function openTopikDeckPicker(lvl, themeIdx) {
+    const themes = lvl === 2 ? TOPIK2_VOCAB_THEMES : TOPIK_VOCAB_THEMES;
+    const theme = themes[themeIdx];
+    if (!theme) return;
+    const list = topikThemeToWordList(theme);
+    const singleForm = _topikDeckSingleForm(list);
+    // Идиомы/пословицы — многословные фразы: Память/Собери слово физически не
+    // могут с ними работать (та же логика минимума, что внутри startMemory/startBuild).
+    // Плитку не прячем совсем (сетка/порядок стабильны), а гасим и объясняем —
+    // молчаливый «0 карточек» с общим тостом был реальным багом (ревью 07.07).
+    const memOk = singleForm.filter(_wShort).length >= 3;
+    const buildOk = singleForm.filter(_wCompact).length >= 2;
+    const games = [
+      { id: 'flash', ico: '🎴', label: t('topik.deck.flash'), ok: true },
+      { id: 'listen', ico: '👂', label: t('games.c.listen'), ok: true },
+      { id: 'translate', ico: '⚡', label: t('games.c.tr'), ok: true },
+      { id: 'memory', ico: '🧠', label: t('games.c.memory'), ok: memOk },
+      { id: 'build', ico: '🧩', label: t('games.c.build'), ok: buildOk }
+    ];
+    const m = document.createElement('div');
+    m.className = 'modal-bg modal-center';
+    m.id = 'topik-deck-picker';
+    m.onclick = e => { if (e.target === m) m.remove(); };
+    m.innerHTML = `
+      <div class="modal-card" style="max-width:380px;">
+        <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:12px;">
+          <div style="min-width:0;">
+            <div class="page-eyebrow" style="word-break:keep-all;">${theme.ico} ${escHtml(theme.title)}</div>
+            <div class="display" style="font-size:18px; color:var(--berry); margin-top:2px;">${t('topik.deck.pick')}</div>
+          </div>
+          <div onclick="this.closest('.modal-bg').remove()" style="font-size:24px; color:var(--soft); cursor:pointer; flex-shrink:0;">×</div>
+        </div>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
+          ${games.map(g => g.ok ? `
+            <div onclick="startTopikDeckGame('${g.id}', ${lvl}, ${themeIdx})" class="card card-press" style="padding:14px; text-align:center; cursor:pointer;">
+              <div style="font-size:24px;">${g.ico}</div>
+              <div style="font-size:11.5px; font-weight:700; color:var(--berry); margin-top:4px;">${g.label}</div>
+            </div>` : `
+            <div class="card" style="padding:14px; text-align:center; opacity:.4; cursor:not-allowed;" title="${escAttr(t('topik.deck.notEnough'))}">
+              <div style="font-size:24px;">${g.ico}</div>
+              <div style="font-size:11.5px; font-weight:700; color:var(--berry); margin-top:4px;">${g.label}</div>
+              <div style="font-size:9.5px; color:var(--soft); margin-top:2px;">${t('topik.deck.notEnough')}</div>
+            </div>`).join('')}
+        </div>
+      </div>`;
+    document.body.appendChild(m);
+  }
+  function startTopikDeckGame(gameId, lvl, themeIdx) {
+    document.getElementById('topik-deck-picker')?.remove();
+    const themes = lvl === 2 ? TOPIK2_VOCAB_THEMES : TOPIK_VOCAB_THEMES;
+    const theme = themes[themeIdx];
+    if (!theme) return;
+    const list = topikThemeToWordList(theme);
+    // Флешкарты ждут {front, meaning}, а не {ko, ru} — без этой раскладки колода
+    // молча показывала бы 0 карточек (orderByDue фильтрует по c.front).
+    if (gameId === 'flash') startFlashcardSession(list.map(w => ({ front: w.ko, meaning: w.ru, translit: w.translit, emoji: w.emoji, example: w.example })));
+    else if (gameId === 'listen') startListen(list);
+    else if (gameId === 'translate') startTranslate(list);
+    else if (gameId === 'memory') startMemory(_topikDeckSingleForm(list));
+    else if (gameId === 'build') startBuild(_topikDeckSingleForm(list));
+  }
+
+  // ═══════════════ ФАЗА T4: аудио-дриллы 듣기 через TTS ═══════════════
+  // Закрывает заглушку «듣기 — скоро» в «Разборе по типам» (см. tdPickSection ниже).
+  // Только вопросы TOPIK II с полем script — это моки без настоящей аудиозаписи
+  // (EBS и т.п.), для них Мади уже готовила транскрипт как раз для синтеза озвучки.
+  // У TOPIK I вопросов listening поле script отсутствует вовсе (проверено: 0 из 270) —
+  // там всегда есть настоящий mp3, транскрипт для TTS никто не готовил.
+  function buildListenBank() {
+    const bank = [];
+    if (typeof TOPIK2_EXAMS === 'undefined') return bank;
+    Object.keys(TOPIK2_EXAMS).forEach(examNo => {
+      const l = TOPIK2_EXAMS[examNo].listening;
+      if (!l || !Array.isArray(l.questions)) return;
+      l.questions.forEach(q => {
+        if (!q.script) return;
+        // Ревью 07.07: часть вопросов «выбери картинку/график» отдаёт варианты
+        // просто как '①','②','③','④' (реальная картинка — в q.image) — у этого
+        // чисто аудио-дрилла нет рендера изображений, такой вопрос показал бы
+        // 4 неразличимые кнопки-циферки. Раз изображение показать нечем — не берём.
+        if (Array.isArray(q.options) && q.options.every((o, i) => o === TOPIK_CIRCLED[i])) return;
+        bank.push({ id: `l2-${examNo}-${q.n}`, examNo, n: q.n, instr: q.instr, script: q.script, options: q.options, answer: q.answer, explain: q.explain });
+      });
+    });
+    return bank;
+  }
+  let _listenBankCache = null;
+  function listenBank() { return _listenBankCache || (_listenBankCache = buildListenBank()); }
+  let _ldState = null;
+  function startListenDrill() {
+    if (!requirePlan('master', 'Аудио-дриллы TOPIK')) return;
+    const bank = shuffleArr(listenBank());
+    if (bank.length < 5) { toast(t('topik.drill.empty')); return; }
+    _ldState = { qs: bank.slice(0, Math.min(scaledRounds(6), bank.length)), idx: 0, score: 0, answered: null };
+    renderListenDrill();
+  }
+  function renderListenDrill() {
+    const st = _ldState;
+    if (!st) return;
+    if (st.idx >= st.qs.length) { gameModal(listenDrillFinishHtml(st), { id: 'topik-drill-modal' }); return; }
+    const q = st.qs[st.idx];
+    const answered = st.answered;
+    const opts = q.options.map((opt, i) => {
+      const n = i + 1;
+      let cls = 'topik-drill-opt';
+      if (answered) { if (n === q.answer) cls += ' correct'; else if (n === answered) cls += ' wrong'; }
+      return `<button type="button" class="${cls}" ${answered ? 'disabled' : `onclick="answerListenDrill(${n})"`}>${TOPIK_CIRCLED[i]} ${escHtml(opt)}</button>`;
+    }).join('');
+    gameModal(`
+      ${gameHeader(t('listendrill.title'), q.instr, st.idx, st.qs.length, "closeListenDrill()")}
+      <div style="text-align:center; margin:14px 0;">
+        <button type="button" class="btn btn-rose" onclick="playListenScript(this)"><i class="fa-solid fa-headphones"></i> ${t('listendrill.play')}</button>
+      </div>
+      <div style="display:grid; gap:8px;">${opts}</div>
+      ${answered ? `
+        <div class="topik-drill-explain">${q.explain}</div>
+        <button onclick="nextListenDrill()" class="btn btn-primary btn-block" style="margin-top:14px;">${t('common.next')}</button>
+      ` : ''}
+    `, { id: 'topik-drill-modal' });
+  }
+  // Та же логика голосов, что и у speakExamScript (два голоса 남자/여자, поддержка
+  // медленного режима), но НАД собственным состоянием _ldState — speakExamScript
+  // намертво завязан на _examState полного экзамена-раннера, сюда не подходит.
+  let _ldSpeakLines = null, _ldSpeakIdx = 0, _ldSpeakBtn = null;
+  function stopListenScript() {
+    _koGen++;
+    try { speechSynthesis.cancel(); } catch (_) {}
+    stopAudioPlayback();
+    _ldSpeakLines = null; _ldSpeakIdx = 0;
+    // Ревью 07.07: без этого play/stop-переключения и индикации «сейчас играет» —
+    // тот же паттерн, что уже есть у speakExamScript (28441), просто над своим
+    // состоянием (_ldState вместо _examState).
+    if (_ldSpeakBtn && _ldSpeakBtn.dataset.idle) { _ldSpeakBtn.classList.remove('playing'); _ldSpeakBtn.innerHTML = _ldSpeakBtn.dataset.idle; }
+    _ldSpeakBtn = null;
+  }
+  function playListenScript(btn) {
+    if (!ttsProxyEnabled() && !('speechSynthesis' in window)) { toast(t('ui.000')); return; }
+    const st = _ldState;
+    if (!st) return;
+    const q = st.qs[st.idx];
+    if (!q.script) return;
+    if (btn && btn === _ldSpeakBtn && _ldSpeakLines) { stopListenScript(); return; } // toggle
+    stopListenScript();
+    _ldSpeakBtn = btn || null;
+    if (btn) { if (!btn.dataset.idle) btn.dataset.idle = btn.innerHTML; btn.classList.add('playing'); btn.innerHTML = '<i class="fa-solid fa-stop"></i> ' + t('listendrill.stop'); }
+    const slow = (typeof getSettings === 'function' && getSettings().slowVoice);
+    _ldSpeakLines = q.script.split('\n').map(s => s.trim()).filter(Boolean);
+    _ldSpeakIdx = 0;
+    const next = () => {
+      if (!_ldSpeakLines || _ldSpeakIdx >= _ldSpeakLines.length) { stopListenScript(); return; }
+      let line = _ldSpeakLines[_ldSpeakIdx++];
+      let pitch = 1.05, text = line, voice = TTS_VOICE_F;
+      const m = line.match(/^(남자|여자|남|여)\s*[:：]\s*(.*)$/);
+      if (m) { text = m[2]; const male = /남/.test(m[1]); pitch = male ? 0.8 : 1.25; voice = male ? TTS_VOICE_M : TTS_VOICE_F; }
+      _koSpeakOne(text, { slow: slow, rate: slow ? 0.6 : 0.92, pitch: pitch, voice: voice }, next);
+    };
+    next();
+  }
+  function answerListenDrill(n) {
+    const st = _ldState;
+    if (!st || st.answered) return;
+    stopListenScript();
+    const q = st.qs[st.idx];
+    st.answered = n;
+    if (n === q.answer) st.score++;
+    renderListenDrill();
+  }
+  function nextListenDrill() {
+    if (!_ldState) return;
+    _ldState.idx++;
+    _ldState.answered = null;
+    renderListenDrill();
+  }
+  function closeListenDrill() {
+    stopListenScript();
+    _ldState = null;
+    closeGameModal('topik-drill-modal');
+  }
+  function listenDrillFinishHtml(st) {
+    const xp = st.score * 6;
+    addXp(xp, false);
+    const pct = Math.round((st.score / st.qs.length) * 100);
+    return `
+      <div style="text-align:center; padding: 8px 0;">
+        <div style="font-size: 56px;">${pct >= 80 ? '🌟' : pct >= 50 ? '🌸' : '🌷'}</div>
+        <div class="display" style="font-size: 24px; color: var(--berry); margin-top: 6px;">${t('common.done')}</div>
+        <div style="font-size:13px; color: var(--coral); margin-top:2px;">${st.score}/${st.qs.length}</div>
+        <button onclick="closeGameModal('topik-drill-modal')" class="btn btn-primary btn-block" style="margin-top:18px;">${t('common.done')}</button>
+      </div>`;
+  }
+
+  // ═══════════════ ФАЗА T4: тренажёр стиля -ㄴ다/-는다 (ошибка №1 в 쓰기 53–54) ═══════════════
+  // Курируемый список — каждая пара сверена вручную (обычные глаголы на согласную/
+  // гласную, ㄹ-неправильные основы 알다/살다/만들다/놀다, 하다-глаголы, прилагательные
+  // «как есть», связка 이다, прошедшее и будущее время).
+  const NDA_DRILLS = [
+    { polite: '학교에 가요',       plain: '학교에 간다',       ru: 'Иду в школу' },
+    { polite: '집에 와요',         plain: '집에 온다',         ru: 'Прихожу домой' },
+    { polite: '밥을 먹어요',       plain: '밥을 먹는다',       ru: 'Ем еду' },
+    { polite: '영화를 봐요',       plain: '영화를 본다',       ru: 'Смотрю фильм' },
+    { polite: '책을 읽어요',       plain: '책을 읽는다',       ru: 'Читаю книгу' },
+    { polite: '편지를 써요',       plain: '편지를 쓴다',       ru: 'Пишу письмо' },
+    { polite: '물을 마셔요',       plain: '물을 마신다',       ru: 'Пью воду' },
+    { polite: '일찍 자요',         plain: '일찍 잔다',         ru: 'Рано ложусь спать' },
+    { polite: '친구를 만나요',     plain: '친구를 만난다',     ru: 'Встречаю друга' },
+    { polite: '한국어를 공부해요', plain: '한국어를 공부한다', ru: 'Изучаю корейский' },
+    { polite: '회사에서 일해요',   plain: '회사에서 일한다',   ru: 'Работаю в компании' },
+    { polite: '고양이를 좋아해요', plain: '고양이를 좋아한다', ru: 'Люблю кошек' },
+    { polite: '정답을 알아요',     plain: '정답을 안다',       ru: 'Знаю ответ (ㄹ-основа)' },
+    { polite: '서울에 살아요',     plain: '서울에 산다',       ru: 'Живу в Сеуле (ㄹ-основа)' },
+    { polite: '빵을 만들어요',     plain: '빵을 만든다',       ru: 'Делаю хлеб (ㄹ-основа)' },
+    { polite: '공원에서 놀아요',   plain: '공원에서 논다',     ru: 'Играю в парке (ㄹ-основа)' },
+    { polite: '날씨가 좋아요',     plain: '날씨가 좋다',       ru: 'Погода хорошая (прил.)' },
+    { polite: '시간이 있어요',     plain: '시간이 있다',       ru: 'Есть время (прил.)' },
+    { polite: '돈이 없어요',       plain: '돈이 없다',         ru: 'Нет денег (прил.)' },
+    { polite: '그 배우는 예뻐요',  plain: '그 배우는 예쁘다',  ru: 'Та актриса красивая (прил.)' },
+    { polite: '이 가방은 비싸요',  plain: '이 가방은 비싸다',  ru: 'Эта сумка дорогая (прил.)' },
+    { polite: '이 음식은 맛있어요',plain: '이 음식은 맛있다',  ru: 'Эта еда вкусная (прил.)' },
+    { polite: '학생이에요',        plain: '학생이다',          ru: 'Является студентом (связка)' },
+    { polite: '어제 숙제를 했어요',plain: '어제 숙제를 했다',  ru: 'Вчера сделал(а) домашку (прош.)' },
+    { polite: '작년에 부산에 갔어요', plain: '작년에 부산에 갔다', ru: 'В прошлом году ездил(а) в Пусан (прош.)' },
+    { polite: '내일 영화를 볼 거예요', plain: '내일 영화를 볼 것이다', ru: 'Завтра посмотрю фильм (буд.)' }
+  ];
+  function _ndaNormalize(s) {
+    return String(s || '').trim().replace(/[.!?~\s]+$/g, '').replace(/\s+/g, ' ');
+  }
+  let ndaScore = 0, ndaRound = 0, ndaTotal = 8, ndaPool = [];
+  function startNdaDrill() {
+    if (!requirePlan('master', 'Тренажёр -ㄴ다/-는다')) return;
+    ndaTotal = Math.min(scaledRounds(8), NDA_DRILLS.length);
+    ndaScore = 0; ndaRound = 0;
+    ndaPool = shuffleArr(NDA_DRILLS).slice(0, ndaTotal);
+    renderNdaDrill();
+  }
+  function renderNdaDrill() {
+    if (ndaRound >= ndaTotal) { gameModal(ndaDrillFinishHtml(), { id: 'topik-drill-modal' }); return; }
+    const item = ndaPool[ndaRound];
+    gameModal(`
+      ${gameHeader(t('nda.title'), t('nda.sub'), ndaRound, ndaTotal, "closeGameModal('topik-drill-modal')")}
+      <div class="card card-padded" style="text-align:center; margin:14px 0;">
+        <div style="font-size:10.5px; color:var(--soft);">${t('nda.politeLabel')}</div>
+        <div class="ko" style="font-size:19px; font-weight:700; color:var(--berry); margin-top:4px;">${escHtml(item.polite)}</div>
+        <div style="font-size:11.5px; color:var(--soft); margin-top:4px;">${escHtml(item.ru)}</div>
+      </div>
+      <input type="text" id="nda-input" class="input ko" placeholder="${t('nda.placeholder')}" style="text-align:center; font-size:17px;" autocomplete="off">
+      <button onclick="checkNdaDrill()" class="btn btn-primary btn-block" style="margin-top:12px;">${t('common.check')}</button>
+      <div id="nda-result" style="text-align:center; margin-top:12px; font-size:13px;"></div>
+    `, { id: 'topik-drill-modal' });
+    setTimeout(() => document.getElementById('nda-input')?.focus(), 100);
+  }
+  function checkNdaDrill() {
+    const inp = document.getElementById('nda-input');
+    if (!inp || inp.disabled) return;
+    const item = ndaPool[ndaRound];
+    const ok = _ndaNormalize(inp.value) === _ndaNormalize(item.plain);
+    inp.disabled = true;
+    const resEl = document.getElementById('nda-result');
+    if (ok) { ndaScore++; addXp(6); if (resEl) { resEl.style.color = 'var(--ok-ink)'; resEl.textContent = t('nda.correct'); } }
+    else if (resEl) { resEl.style.color = 'var(--bad-ink)'; resEl.innerHTML = t('nda.wrong', { answer: escHtml(item.plain) }); }
+    setTimeout(() => { ndaRound++; renderNdaDrill(); }, ok ? 1200 : 2600);
+  }
+  function ndaDrillFinishHtml() {
+    const xp = ndaScore * 6;
+    addXp(xp, false);
+    const pct = Math.round((ndaScore / ndaTotal) * 100);
+    return `
+      <div style="text-align:center; padding: 8px 0;">
+        <div style="font-size: 56px;">${pct >= 80 ? '🌟' : pct >= 50 ? '🌸' : '🌷'}</div>
+        <div class="display" style="font-size: 24px; color: var(--berry); margin-top: 6px;">${t('common.done')}</div>
+        <div style="font-size:13px; color: var(--coral); margin-top:2px;">${ndaScore}/${ndaTotal}</div>
+        <button onclick="closeGameModal('topik-drill-modal')" class="btn btn-primary btn-block" style="margin-top:18px;">${t('common.done')}</button>
+      </div>`;
+  }
+
+  // ═══════════════ ФАЗА T4: конструктор ответа №53 (чипы) ═══════════════
+  // Дополняет готовый раздел разборов w53 (TOPIK_DEEP_WRITING) — та же сцена
+  // опроса про завтрак, тот же образцовый ответ, что уже разобран там.
+  const W53_SCAFFOLD = {
+    passage: '📊 한국대학교 학생회 · 대학생 500명 · «아침을 먹습니까?» · 매일 20% · 가끔 45% · 안 먹는다 35% (이유: 시간 없음 60% · 습관 없음 25% · 입맛 없음 15%)',
+    stages: [
+      { hintKey: 'w53.hint.intro', chips: [
+        { text: '한국대학교 학생회에서 대학생 500명을 대상으로 아침 식사에 대해 조사하였다.', correct: true },
+        { text: '저는 아침을 잘 안 먹어요. 시간이 없어서 그런 것 같아요.', correct: false },
+        { text: '아침을 꼭 먹어야 한다고 생각합니다.', correct: false }
+      ]},
+      { hintKey: 'w53.hint.data', chips: [
+        { text: '조사 결과 아침을 가끔 먹는다는 응답이 45%로 가장 높게 나타났고, 안 먹는다는 응답도 35%나 되었다.', correct: true },
+        { text: '다들 아침을 잘 안 먹는 것 같아서 걱정이에요.', correct: false }
+      ]},
+      { hintKey: 'w53.hint.reason', chips: [
+        { text: '아침을 안 먹는 이유로는 «시간이 없어서»가 60%로 가장 많았으며, 그 다음으로 «습관이 없어서»(25%), «입맛이 없어서»(15%)가 뒤를 이었다.', correct: true },
+        { text: '아마 다들 너무 바빠서 그런 걸 거예요.', correct: false }
+      ]},
+      { hintKey: 'w53.hint.conclusion', chips: [
+        { text: '이러한 결과는 많은 대학생들이 바쁜 생활 때문에 아침 식사를 거르고 있음을 보여 준다.', correct: true },
+        { text: '아침을 꼭 챙겨 먹는 것이 좋겠습니다.', correct: false }
+      ]}
+    ],
+    model: '한국대학교 학생회에서 대학생 500명을 대상으로 아침 식사에 대해 조사하였다. 조사 결과 아침을 가끔 먹는다는 응답이 45%로 가장 높게 나타났고, 안 먹는다는 응답도 35%나 되었다. 매일 먹는다는 학생은 20%에 불과했다. 아침을 안 먹는 이유로는 «시간이 없어서»가 60%로 가장 많았으며, 그 다음으로 «습관이 없어서»(25%), «입맛이 없어서»(15%)가 뒤를 이었다. 이러한 결과는 많은 대학생들이 바쁜 생활 때문에 아침 식사를 거르고 있음을 보여 준다.'
+  };
+  let _w53State = null;
+  function startW53Scaffold() {
+    if (!requirePlan('master', 'Конструктор ответа №53')) return;
+    _w53State = { stage: 0, built: [] };
+    renderW53Scaffold();
+  }
+  function renderW53Scaffold() {
+    const st = _w53State;
+    if (!st) return;
+    if (st.stage >= W53_SCAFFOLD.stages.length) { gameModal(w53FinishHtml(), { id: 'topik-drill-modal' }); return; }
+    const stage = W53_SCAFFOLD.stages[st.stage];
+    const chipsShuffled = shuffleArr(stage.chips.map((c, i) => ({ ...c, idx: i })));
+    const chips = chipsShuffled.map(c => `<button type="button" class="wo-chip" onclick="pickW53Chip(${st.stage}, ${c.idx})">${escHtml(c.text)}</button>`).join('');
+    gameModal(`
+      ${gameHeader(t('w53.title'), t('w53.sub'), st.stage, W53_SCAFFOLD.stages.length, "closeGameModal('topik-drill-modal')")}
+      <div class="exam-passage ko" style="margin-bottom:12px; font-size:12.5px;">${escHtml(W53_SCAFFOLD.passage)}</div>
+      <div class="wo-built" style="text-align:left;">${st.built.length ? escHtml(st.built.join(' ')) : t(stage.hintKey)}</div>
+      <div style="display:grid; gap:8px; margin-top:12px;">${chips}</div>
+      <div id="w53-fb" style="text-align:center; margin-top:10px; font-size:12px; font-weight:700; min-height:16px;"></div>
+    `, { id: 'topik-drill-modal' });
+  }
+  function pickW53Chip(stageIdx, chipIdx) {
+    const st = _w53State;
+    if (!st || st.stage !== stageIdx) return;
+    const chip = W53_SCAFFOLD.stages[stageIdx].chips[chipIdx];
+    if (chip.correct) {
+      st.built.push(chip.text);
+      st.stage++;
+      renderW53Scaffold();
+    } else {
+      const fb = document.getElementById('w53-fb');
+      if (fb) { fb.style.color = 'var(--bad-ink)'; fb.textContent = t('w53.tryAgain'); }
+    }
+  }
+  function w53FinishHtml() {
+    const st = _w53State;
+    const built = st.built.join(' ');
+    _w53State = null;
+    addXp(15, false);
+    return `
+      <div style="padding: 8px 0;">
+        <div style="text-align:center; font-size:44px;">✍️</div>
+        <div class="display" style="font-size:20px; color:var(--berry); text-align:center; margin-top:6px;">${t('w53.done')}</div>
+        <div class="topik-drill-explain" style="margin-top:14px;"><b>${t('w53.yourText')}:</b><br>${escHtml(built)}</div>
+        <div class="topik-drill-explain" style="margin-top:10px;"><b>${t('w53.modelText')}:</b><br>${escHtml(W53_SCAFFOLD.model)}</div>
+        <button onclick="closeGameModal('topik-drill-modal')" class="btn btn-primary btn-block" style="margin-top:16px;">${t('common.done')}</button>
+      </div>`;
+  }
+
   // ── Game 8: Sentence Build (Собери фразу) ──
   const sentenceData = [
     { ko:['저는','학생입니다'],              ru:'Я студент' },
@@ -34391,7 +36565,8 @@
   // Каждая черта — ломаная в нормированном квадрате 0..1. Порядок черт — официальный 필순.
   const WRITE_NAMES = {
     'ㄱ':'기역','ㄴ':'니은','ㄷ':'디귿','ㄹ':'리을','ㅁ':'미음','ㅂ':'비읍','ㅅ':'시옷','ㅇ':'이응','ㅈ':'지읒','ㅎ':'히읗',
-    'ㅏ':'아','ㅑ':'야','ㅓ':'어','ㅕ':'여','ㅗ':'오','ㅛ':'요','ㅜ':'우','ㅠ':'유','ㅡ':'으','ㅣ':'이'
+    'ㅊ':'치읓','ㅋ':'키읔','ㅌ':'티읕','ㅍ':'피읖','ㄲ':'쌍기역','ㄸ':'쌍디귿','ㅃ':'쌍비읍','ㅆ':'쌍시옷','ㅉ':'쌍지읒',
+    'ㅏ':'아','ㅑ':'야','ㅓ':'어','ㅕ':'여','ㅗ':'오','ㅛ':'요','ㅜ':'우','ㅠ':'유','ㅡ':'으','ㅣ':'이','ㅐ':'애','ㅔ':'에'
   };
   const JAMO_STROKES = {
     'ㄱ': [[[0.18,0.2],[0.78,0.2],[0.7,0.84]]],
@@ -34413,12 +36588,27 @@
     'ㅜ': [[[0.12,0.38],[0.88,0.38]], [[0.5,0.38],[0.5,0.86]]],
     'ㅠ': [[[0.12,0.38],[0.88,0.38]], [[0.35,0.38],[0.35,0.86]], [[0.65,0.38],[0.65,0.86]]],
     'ㅡ': [[[0.12,0.5],[0.88,0.5]]],
-    'ㅣ': [[[0.5,0.08],[0.5,0.92]]]
+    'ㅣ': [[[0.5,0.08],[0.5,0.92]]],
+    // ФАЗА E4: придыхательные + самые частые сложные гласные — открывают короткие слова (커피, 노래, 책…)
+    'ㅋ': [[[0.18,0.2],[0.78,0.2],[0.7,0.84]], [[0.24,0.52],[0.66,0.52]]],
+    'ㅌ': [[[0.2,0.16],[0.82,0.16]], [[0.2,0.48],[0.76,0.48]], [[0.2,0.16],[0.2,0.84],[0.84,0.84]]],
+    'ㅍ': [[[0.14,0.2],[0.86,0.2]], [[0.3,0.2],[0.28,0.8]], [[0.7,0.2],[0.72,0.8]], [[0.12,0.8],[0.88,0.8]]],
+    'ㅊ': [[[0.36,0.07],[0.64,0.07]], [[0.16,0.24],[0.84,0.24]], [[0.5,0.24],[0.42,0.52],[0.16,0.86]], [[0.46,0.5],[0.8,0.86]]],
+    'ㅐ': [[[0.32,0.08],[0.32,0.92]], [[0.32,0.5],[0.64,0.5]], [[0.64,0.08],[0.64,0.92]]],
+    'ㅔ': [[[0.16,0.5],[0.44,0.5]], [[0.44,0.08],[0.44,0.92]], [[0.72,0.08],[0.72,0.92]]]
   };
-  const _V_VERTICAL = ['ㅏ','ㅑ','ㅓ','ㅕ','ㅣ']; // гласная справа от согласной
+  const _V_VERTICAL = ['ㅏ','ㅑ','ㅓ','ㅕ','ㅣ','ㅐ','ㅔ']; // гласная справа от согласной
   function _mapBox(strokes, bx, by, bw, bh) {
     return strokes.map(st => st.map(([x, y]) => [bx + x * bw, by + y * bh]));
   }
+  // ФАЗА E4: двойные (쌍-) согласные — та же буква дважды, каждая в своей половине
+  // квадрата; 필순 сохраняется сам собой (сначала все черты левой, потом правой).
+  [['ㄲ','ㄱ'],['ㄸ','ㄷ'],['ㅃ','ㅂ'],['ㅆ','ㅅ'],['ㅉ','ㅈ']].forEach(([dbl, base]) => {
+    JAMO_STROKES[dbl] = [
+      ..._mapBox(JAMO_STROKES[base], 0.02, 0.1, 0.46, 0.8),
+      ..._mapBox(JAMO_STROKES[base], 0.52, 0.1, 0.46, 0.8)
+    ];
+  });
   // Полная сборка слога в символ (включая патчим) по таблицам юникода 한글
   const _CHO = ['ㄱ','ㄲ','ㄴ','ㄷ','ㄸ','ㄹ','ㅁ','ㅂ','ㅃ','ㅅ','ㅆ','ㅇ','ㅈ','ㅉ','ㅊ','ㅋ','ㅌ','ㅍ','ㅎ'];
   const _JUNG = ['ㅏ','ㅐ','ㅑ','ㅒ','ㅓ','ㅔ','ㅕ','ㅖ','ㅗ','ㅘ','ㅙ','ㅚ','ㅛ','ㅜ','ㅝ','ㅞ','ㅟ','ㅠ','ㅡ','ㅢ','ㅣ'];
@@ -34458,26 +36648,86 @@
       ..._mapBox(JAMO_STROKES[f], 0.24, 0.64, 0.52, 0.32)
     ];
   }
-  const writeTotal = 6;
-  let writeMode = 'letters'; // 'letters' | 'syllables'
+  const WRITE_ROUNDS = 6;
+  let writeTotal = WRITE_ROUNDS; // в режиме «слова» = фактическое число слогов
+  let writeMode = 'letters'; // 'letters' | 'syllables' | 'final' | 'words'
   let writePool = [], writeRound = 0, writeScore = 0, writeStrokeIdx = 0, writeDone = false;
   const WRITE_FINALS = ['ㄱ','ㄴ','ㄹ','ㅁ','ㅂ','ㅇ']; // самые частые патчимы
+  // ФАЗА E4: разбор готового слога на чамо (обратно composeSyllable) — для режима «слова»
+  function decomposeSyllable(ch) {
+    const code = ch.charCodeAt(0) - 0xAC00;
+    if (code < 0 || code >= 11172) return null;
+    const ji = code % 28, vi = Math.floor(code / 28) % 21, ci = Math.floor(code / 588);
+    const f = _JONG[ji];
+    return f ? [_CHO[ci], _JUNG[vi], f] : [_CHO[ci], _JUNG[vi]];
+  }
+  // Короткие настоящие слова: только те, чьи слоги целиком покрыты штрихами JAMO_STROKES
+  // (страховка writeWordSupported — если слово с неподдержанной чамо, оно просто не выпадет).
+  const WRITE_WORDS = [
+    { ko:'나무', ru:'дерево', en:'tree', uz:'daraxt', emoji:'🌳' },
+    { ko:'바다', ru:'море', en:'sea', uz:'dengiz', emoji:'🌊' },
+    { ko:'아이', ru:'ребёнок', en:'child', uz:'bola', emoji:'👶' },
+    { ko:'우유', ru:'молоко', en:'milk', uz:'sut', emoji:'🥛' },
+    { ko:'오리', ru:'утка', en:'duck', uz:'oʻrdak', emoji:'🦆' },
+    { ko:'머리', ru:'голова', en:'head', uz:'bosh', emoji:'🙂' },
+    { ko:'나비', ru:'бабочка', en:'butterfly', uz:'kapalak', emoji:'🦋' },
+    { ko:'모자', ru:'шапка', en:'hat', uz:'bosh kiyim', emoji:'🧢' },
+    { ko:'구두', ru:'туфли', en:'shoes', uz:'tufli', emoji:'👞' },
+    { ko:'노래', ru:'песня', en:'song', uz:'qoʻshiq', emoji:'🎵' },
+    { ko:'커피', ru:'кофе', en:'coffee', uz:'qahva', emoji:'☕' },
+    { ko:'포도', ru:'виноград', en:'grapes', uz:'uzum', emoji:'🍇' },
+    { ko:'토끼', ru:'кролик', en:'rabbit', uz:'quyon', emoji:'🐰' },
+    { ko:'아빠', ru:'папа', en:'dad', uz:'dada', emoji:'👨' },
+    { ko:'엄마', ru:'мама', en:'mom', uz:'ona', emoji:'👩' },
+    { ko:'김치', ru:'кимчи', en:'kimchi', uz:'kimchi', emoji:'🥬' },
+    { ko:'가방', ru:'сумка', en:'bag', uz:'sumka', emoji:'👜' },
+    { ko:'사랑', ru:'любовь', en:'love', uz:'sevgi', emoji:'💕' },
+    { ko:'한국', ru:'Корея', en:'Korea', uz:'Koreya', emoji:'🇰🇷' },
+    { ko:'서울', ru:'Сеул', en:'Seoul', uz:'Seul', emoji:'🏙️' },
+    { ko:'책', ru:'книга', en:'book', uz:'kitob', emoji:'📖' },
+    { ko:'물', ru:'вода', en:'water', uz:'suv', emoji:'💧' },
+    { ko:'집', ru:'дом', en:'house', uz:'uy', emoji:'🏠' },
+    { ko:'밥', ru:'рис · еда', en:'rice · meal', uz:'guruch · ovqat', emoji:'🍚' },
+    { ko:'산', ru:'гора', en:'mountain', uz:'togʻ', emoji:'⛰️' },
+    { ko:'눈', ru:'снег · глаза', en:'snow · eyes', uz:'qor · koʻz', emoji:'❄️' },
+    { ko:'달', ru:'луна', en:'moon', uz:'oy', emoji:'🌙' },
+    { ko:'별', ru:'звезда', en:'star', uz:'yulduz', emoji:'⭐' },
+    { ko:'꿈', ru:'мечта', en:'dream', uz:'orzu', emoji:'💭' },
+    { ko:'빵', ru:'хлеб', en:'bread', uz:'non', emoji:'🍞' }
+  ];
+  function writeWordSupported(w) {
+    return [...w.ko].every(ch => {
+      const j = decomposeSyllable(ch);
+      return j && j.every(x => JAMO_STROKES[x]);
+    });
+  }
+  function _writeWordMeaning(w) {
+    return APP_LANG === 'en' ? (w.en || w.ru) : APP_LANG === 'uz' ? (w.uz || w.ru) : w.ru;
+  }
   function startWriting(mode) {
     writeMode = mode || writeMode || 'letters';
     if (writeMode === 'letters') {
-      writePool = shuffleArr([...consonants, ...vowels]).slice(0, writeTotal).map(ch => ({ jamo: [ch], label: ch }));
+      writePool = shuffleArr(Object.keys(JAMO_STROKES)).slice(0, WRITE_ROUNDS).map(ch => ({ jamo: [ch], label: ch }));
     } else if (writeMode === 'syllables') {
-      writePool = shuffleArr(consonants).slice(0, writeTotal).map(c => {
+      writePool = shuffleArr(consonants).slice(0, WRITE_ROUNDS).map(c => {
         const v = shuffleArr(vowels)[0];
         return { jamo: [c, v], label: composeSyllable(c, v) };
       });
-    } else { // 'final' — слоги с патчимом (3 буквы)
-      writePool = shuffleArr(consonants).slice(0, writeTotal).map(c => {
+    } else if (writeMode === 'final') { // слоги с патчимом (3 буквы)
+      writePool = shuffleArr(consonants).slice(0, WRITE_ROUNDS).map(c => {
         const v = shuffleArr(vowels)[0];
         const f = shuffleArr(WRITE_FINALS)[0];
         return { jamo: [c, v, f], label: composeSyllable(c, v, f) };
       });
+    } else { // ФАЗА E4: 'words' — короткие настоящие слова, слог за слогом
+      writePool = [];
+      for (const w of shuffleArr(WRITE_WORDS.filter(writeWordSupported))) {
+        if (writePool.length >= WRITE_ROUNDS) break;
+        const syls = [...w.ko];
+        syls.forEach((ch, i) => writePool.push({ jamo: decomposeSyllable(ch), label: ch, word: w, syl: i, sylTotal: syls.length }));
+      }
     }
+    writeTotal = writePool.length;
     writeRound = 0; writeScore = 0;
     renderWriting();
   }
@@ -34490,13 +36740,25 @@
     const rom = single
       ? (translitMap[it.label] || (it.label === 'ㅇ' ? 'ng' : ''))
       : it.jamo.map((j, i) => (i === 2 && j === 'ㅇ') ? 'ng' : (translitMap[j] || '')).join('');
+    // ФАЗА E4: в режиме «слова» над слогом — всё слово с подсветкой (готовые слоги
+    // зелёные, текущий коралловый) и переводом, чтобы писать осмысленно, а не абстрактно.
+    const wordCtx = it.word ? `
+      <div style="text-align:center; margin-bottom:6px;">
+        <span style="font-size:16px;">${it.word.emoji || ''}</span>
+        <span class="ko" style="font-size:22px; font-weight:800; letter-spacing:2px; margin:0 6px;">
+          ${[...it.word.ko].map((ch, i) => `<span style="color:${i === it.syl ? 'var(--coral)' : (i < it.syl ? 'var(--sage)' : 'var(--soft)')};">${ch}</span>`).join('')}
+        </span>
+        <span style="font-size:12.5px; color:var(--soft);">— ${escHtml(_writeWordMeaning(it.word))}</span>
+      </div>` : '';
     gameModal(`
       ${gameHeader('🖌️ ПИШИ БУКВЫ · 따라쓰기', 'веди по стрелке — черта за чертой', writeRound, writeTotal)}
-      <div style="display:flex; gap:6px; justify-content:center; margin-bottom:10px;">
-        <button class="auth-tab ${writeMode === 'letters' ? 'auth-tab-active' : ''}" style="flex:0 1 105px; font-size:12px; padding:8px 4px;" onclick="startWriting('letters')">${t('ui.526')}</button>
-        <button class="auth-tab ${writeMode === 'syllables' ? 'auth-tab-active' : ''}" style="flex:0 1 105px; font-size:12px; padding:8px 4px;" onclick="startWriting('syllables')">${t('ui.527')}</button>
-        <button class="auth-tab ${writeMode === 'final' ? 'auth-tab-active' : ''}" style="flex:0 1 105px; font-size:12px; padding:8px 4px;" onclick="startWriting('final')">${t('ui.528')}</button>
+      <div style="display:flex; gap:5px; justify-content:center; margin-bottom:10px;">
+        <button class="auth-tab ${writeMode === 'letters' ? 'auth-tab-active' : ''}" style="flex:1 1 0; min-width:0; font-size:11.5px; padding:8px 2px;" onclick="startWriting('letters')">${t('ui.526')}</button>
+        <button class="auth-tab ${writeMode === 'syllables' ? 'auth-tab-active' : ''}" style="flex:1 1 0; min-width:0; font-size:11.5px; padding:8px 2px;" onclick="startWriting('syllables')">${t('ui.527')}</button>
+        <button class="auth-tab ${writeMode === 'final' ? 'auth-tab-active' : ''}" style="flex:1 1 0; min-width:0; font-size:11.5px; padding:8px 2px;" onclick="startWriting('final')">${t('ui.528')}</button>
+        <button class="auth-tab ${writeMode === 'words' ? 'auth-tab-active' : ''}" style="flex:1 1 0; min-width:0; font-size:11.5px; padding:8px 2px;" onclick="startWriting('words')">${t('e4.tab.words')}</button>
       </div>
+      ${wordCtx}
       <div style="text-align:center; margin-bottom:10px;">
         <span class="ko" style="font-size:20px; font-weight:700; color:var(--berry);">${title}</span>
         <span style="font-size:13px; color:var(--coral); margin-left:8px;">[ ${rom || '—'} ]</span>
@@ -34529,7 +36791,13 @@
       const rgb = (cs.getPropertyValue('--accent-rgb').trim() || '107,139,214');
       return { ink, done: ink, cur: `rgba(${rgb},.28)`, faint: 'rgba(231,235,244,.10)', grid: 'rgba(231,235,244,.08)', dotText: '#161618' };
     }
-    return { ink: '#E07686', done: '#E07686', cur: 'rgba(242,166,174,.35)', faint: 'rgba(92,42,51,.07)',   grid: 'rgba(92,42,51,.07)',   dotText: 'white' };
+    // Ревью 07.07: было захардкожено #E07686 — цвет --coral ДО ребрендинга (см.
+    // комментарий у самого токена: заменён на #BC4B5E ради WCAG AA 4.9:1 вместо
+    // 2.96:1) — чернила штрихов заметно расходились с остальным экраном (эйброу,
+    // активная вкладка). Резолвим текущий --coral, как это уже делает тёмная ветка.
+    const cs = getComputedStyle(document.body);
+    const coral = (cs.getPropertyValue('--coral').trim() || '#BC4B5E');
+    return { ink: coral, done: coral, cur: 'rgba(242,166,174,.35)', faint: 'rgba(92,42,51,.07)',   grid: 'rgba(92,42,51,.07)',   dotText: 'white' };
   }
   function initWriteCanvas() {
     const wrap = document.getElementById('write-wrap');
@@ -34657,8 +36925,15 @@
       try { if (navigator.vibrate) navigator.vibrate(8); } catch (_) {}
       if (writeStrokeIdx >= _writeStrokes.length) {
         writeDone = true; writeScore++; addXp(8); recordHangulInteraction();
-        if (v) { v.style.color = 'var(--sage)'; v.textContent = '잘했어! Все черты верно ✨'; }
-        setTimeout(() => { writeRound++; renderWriting(); }, 900);
+        // ФАЗА E4: дописано целое слово — озвучиваем его и напоминаем перевод
+        const it = writePool[writeRound];
+        const lastSyl = !!(it && it.word && it.syl === it.sylTotal - 1);
+        if (lastSyl) { try { playSyllable(it.word.ko, null); } catch (_) {} }
+        if (v) {
+          v.style.color = 'var(--sage)';
+          v.textContent = lastSyl ? `잘했어! ${it.word.ko} — ${_writeWordMeaning(it.word)} ✨` : '잘했어! Все черты верно ✨';
+        }
+        setTimeout(() => { writeRound++; renderWriting(); }, lastSyl ? 1400 : 900);
       } else if (v) {
         v.style.color = 'var(--soft)';
         v.innerHTML = t('ui.532', {no: `<span id="write-stroke-no">${writeStrokeIdx + 1}</span>`, total: _writeStrokes.length});
@@ -34993,6 +37268,239 @@
           <div style="display:flex; gap:5px; flex-wrap:wrap; margin-top:6px;">${_dictChips(d.antonyms, 'chip-coral')}</div>
         </div>
       </div>`;
+  }
+
+  // ═══════════════ ФАЗА D2: письменная практика RU→KO ✍️ ═══════════════
+  // Раздел открывается вместе с Модулем 3. Банк заданий трёх типов (перевод фраз,
+  // описание сцены-подсказки из эмодзи, развёрнутый ответ на вопрос) на 3 уровня.
+  // Проверка — тот же мост aiCallChat, что у ИИ-учителя/ИИ-словаря (JSON-ответ,
+  // см. _dictParse), ЛИБО отправка ответа Мади в существующий чат — обе бесплатны
+  // по доступу к заданиям, платна только САМА ИИ-проверка (requirePlan('proai')).
+  const WRITING_TASKS = [
+    { id:'w0-tr', lvl:0, type:'translate', phrases:['Меня зовут Мин Джи.', 'Я студентка.', 'Сегодня хорошая погода.'] },
+    { id:'w0-de', lvl:0, type:'describe', scene:'☕📖🌸', hint:'кофе, книга, весна' },
+    { id:'w0-an', lvl:0, type:'answer', question:'Что ты обычно ешь на завтрак?' },
+    { id:'w1-tr', lvl:1, type:'translate', phrases:['Вчера я ходила в кино с другом.', 'Я хочу выучить корейский, потому что люблю K-pop.', 'Извините, где находится ближайшая станция метро?'] },
+    { id:'w1-de', lvl:1, type:'describe', scene:'🌧️🏠👨‍👩‍👧', hint:'дождь, дом, семья' },
+    { id:'w1-an', lvl:1, type:'answer', question:'Как ты обычно проводишь выходные?' },
+    { id:'w2-tr', lvl:2, type:'translate', phrases:['Несмотря на то, что было трудно, она не сдалась.', 'Если бы у меня было больше времени, я бы путешествовала по Корее.', 'Мне кажется, что изучение языка требует терпения и постоянной практики.'] },
+    { id:'w2-de', lvl:2, type:'describe', scene:'🎓📚✈️🌏', hint:'учёба, книги, путешествие, мир' },
+    { id:'w2-an', lvl:2, type:'answer', question:'Расскажи о своей мечте — куда бы ты хотела поехать в Корее и почему?' }
+  ];
+  function writingTaskLabel(task) {
+    if (task.type === 'translate') return t('wp.type.translate', { n: task.phrases.length });
+    if (task.type === 'describe') return t('wp.type.describe');
+    return t('wp.type.answer');
+  }
+  function writingTaskPromptHtml(task) {
+    if (task.type === 'translate') return `<ol style="margin:0; padding-left:18px; line-height:1.7;">${task.phrases.map(p => `<li>${escHtml(p)}</li>`).join('')}</ol>`;
+    if (task.type === 'describe') return `<div style="font-size:34px; text-align:center; margin-bottom:8px;">${task.scene}</div><div style="text-align:center; font-size:13px; color:var(--berry); font-weight:600;">${t('wp.describeInstruction')}</div><div style="text-align:center; font-size:11.5px; color:var(--soft); margin-top:4px;">${t('wp.hintPrefix')}: ${escHtml(task.hint)}</div>`;
+    return `<div style="font-size:14px; color:var(--berry); font-weight:600;">${escHtml(task.question)}</div>`;
+  }
+  function writingTasksDoneIds() { try { return new Set((stats.writingSubmits || []).map(x => x.taskId)); } catch (_) { return new Set(); } }
+  let _wpLevel = 0;
+  function openWritingPractice() {
+    if (!isModuleUnlocked('m3')) return;
+    _wpLevel = Math.max(0, Math.min(2, userLevelRank()));
+    const m = document.createElement('div');
+    m.className = 'modal-bg modal-center';
+    m.id = 'writing-practice-modal';
+    m.onclick = e => { if (e.target === m) m.remove(); };
+    document.body.appendChild(m);
+    _renderWritingList(m);
+  }
+  function _renderWritingList(m) {
+    m = m || document.getElementById('writing-practice-modal');
+    if (!m) return;
+    const done = writingTasksDoneIds();
+    const tasks = WRITING_TASKS.filter(x => x.lvl === _wpLevel);
+    m.innerHTML = `
+      <div class="modal-card" style="max-width:400px;">
+        <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:12px;">
+          <div>
+            <div class="page-eyebrow">${t('wp.eyebrow')}</div>
+            <div class="display" style="font-size:20px; color:var(--berry); margin-top:2px;">${t('wp.title')}</div>
+          </div>
+          <div onclick="this.closest('.modal-bg').remove()" style="font-size:24px; line-height:1; color:var(--soft); cursor:pointer; padding:4px;">×</div>
+        </div>
+        <div style="display:flex; gap:6px; margin-bottom:14px;">
+          ${STUDY_LEVELS.slice(0, 3).map((lv, i) => `<button type="button" class="wt-chip${_wpLevel === i ? ' active' : ''}" onclick="_wpLevel=${i}; _renderWritingList();">${t(lv.tk)}</button>`).join('')}
+        </div>
+        <div style="display:grid; gap:10px;">
+          ${tasks.map(task => `
+            <div class="quest-item" onclick="startWritingTask('${task.id}')">
+              <span class="quest-item-ico">${task.type === 'translate' ? '🔤' : task.type === 'describe' ? '🖼️' : '💬'}</span>
+              <div class="quest-item-main">
+                <div class="quest-item-title">${writingTaskLabel(task)}</div>
+                <div class="quest-item-sub">${task.type === 'translate' ? escHtml(task.phrases[0]) : task.type === 'describe' ? escHtml(task.hint) : escHtml(task.question)}</div>
+              </div>
+              ${done.has(task.id) ? '<span class="quest-item-val" style="color:var(--ok-ink);">✓</span>' : ''}
+              <span class="quest-item-chev">›</span>
+            </div>`).join('')}
+        </div>
+      </div>`;
+  }
+  let _wpCurTask = null;
+  function startWritingTask(id) {
+    const task = WRITING_TASKS.find(x => x.id === id);
+    if (!task) return;
+    _wpCurTask = task;
+    const m = document.getElementById('writing-practice-modal');
+    if (!m) return;
+    m.innerHTML = `
+      <div class="modal-card" style="max-width:400px;">
+        <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:12px;">
+          <div>
+            <div class="page-eyebrow">${writingTaskLabel(task)}</div>
+            <div class="display" style="font-size:18px; color:var(--berry); margin-top:2px;">${t('wp.writeTitle')}</div>
+          </div>
+          <button onclick="_renderWritingList()" class="chat-back-btn" aria-label="${t('a11y.back')}"><i class="fa-solid fa-arrow-left"></i></button>
+        </div>
+        <div class="exam-passage" style="margin-bottom:12px;">${writingTaskPromptHtml(task)}</div>
+        <textarea id="wp-answer" class="input ko" rows="5" placeholder="${t('wp.placeholder')}" style="resize:vertical; width:100%; font-size:15px;"></textarea>
+        <div style="display:grid; gap:8px; margin-top:12px;">
+          <button onclick="checkWritingWithAi()" class="btn btn-rose btn-block">✨ ${t('wp.checkAi')}</button>
+          <button onclick="sendWritingToMadie()" class="btn btn-ghost btn-block">💌 ${t('wp.sendMadie')}</button>
+        </div>
+        <div id="wp-result" style="margin-top:14px;"></div>
+      </div>`;
+    setTimeout(() => document.getElementById('wp-answer')?.focus(), 100);
+  }
+  function _wpRecordSubmit(taskId) {
+    if (!Array.isArray(stats.writingSubmits)) stats.writingSubmits = [];
+    stats.writingSubmits.push({ taskId, ts: Date.now() });
+    if (stats.writingSubmits.length > 200) stats.writingSubmits.splice(0, stats.writingSubmits.length - 200);
+    UStore.set('stats', stats);
+  }
+  function _wpTaskDescRu(task) {
+    if (task.type === 'translate') return 'Переведи на корейский:\n' + task.phrases.map((p, i) => `${i + 1}. ${p}`).join('\n');
+    if (task.type === 'describe') return `Опиши на корейском 3-5 предложениями сцену: ${task.scene} (${task.hint})`;
+    return `Ответь на корейском 4-6 предложениями на вопрос: ${task.question}`;
+  }
+  const WP_PROMPT_HEAD = [
+    'Ты — корейский преподаватель, проверяешь письменное задание русскоязычной ученицы приложения «Korean with Madie».',
+    'Отвечай ТОЛЬКО валидным JSON без markdown вокруг, строго такой формы:',
+    '{"score":число от 0 до 100, "corrected":"её текст с точечными исправлениями на корейском (сохрани стиль, поправь только ошибки)",',
+    '"mistakes":["по-русски, кратко: одна конкретная ошибка и как исправить", "..."],',
+    '"praise":"по-русски, одна тёплая фраза о том, что получилось хорошо"}',
+    'Если ответ пустой или совсем не по-корейски — верни {"error":"empty"}.'
+  ].join('\n');
+  let _wpBusy = false;
+  async function checkWritingWithAi() {
+    if (!requirePlan('proai', 'ИИ-проверка письма')) return;
+    if (_wpBusy || !_wpCurTask) return;
+    const answer = (document.getElementById('wp-answer')?.value || '').trim();
+    const slot = document.getElementById('wp-result');
+    if (!answer) { toast(t('wp.empty')); return; }
+    _wpBusy = true;
+    if (slot) slot.innerHTML = `<div style="text-align:center; padding:14px 0; color:var(--soft); font-size:12px;">${t('ui.540')}</div>`;
+    try {
+      const prompt = WP_PROMPT_HEAD + '\n\nЗАДАНИЕ:\n' + _wpTaskDescRu(_wpCurTask) + '\n\nОТВЕТ ученицы:\n' + answer;
+      const resp = await aiCallChat(prompt);
+      const d = _dictParse(_aiExtract(resp));
+      if (!d || d.error) { if (slot) slot.innerHTML = `<div style="text-align:center; padding:10px 0; color:var(--soft); font-size:12px;">${t('wp.aiEmpty')}</div>`; return; }
+      _wpRecordSubmit(_wpCurTask.id);
+      if (slot) slot.innerHTML = `
+        <div style="border-top:1px dashed var(--line-strong); padding-top:12px;">
+          <div style="display:flex; align-items:center; justify-content:space-between;">
+            <span style="font-size:11px; letter-spacing:.14em; color:var(--coral); font-weight:700;">${t('wp.score')}</span>
+            <span class="display" style="font-size:20px; color:var(--berry);">${Math.round(d.score || 0)}%</span>
+          </div>
+          <div class="ko" style="background:var(--paper); border-radius:12px; padding:10px 12px; margin-top:8px; font-size:14px; color:var(--berry); line-height:1.6;">${escHtml(d.corrected || '')}</div>
+          ${Array.isArray(d.mistakes) && d.mistakes.length ? `<div style="margin-top:10px; font-size:11px; letter-spacing:.14em; color:var(--coral); font-weight:700;">${t('wp.mistakes')}</div><ul style="margin:6px 0 0; padding-left:18px; font-size:12.5px; color:var(--text2); line-height:1.6;">${d.mistakes.map(x => `<li>${escHtml(x)}</li>`).join('')}</ul>` : ''}
+          ${d.praise ? `<div class="ko-quote" style="margin-top:12px;">${escHtml(d.praise)}</div>` : ''}
+        </div>`;
+      recordAiLessonUsed();
+      _renderWritingListBadgeSoon();
+    } catch (e) {
+      console.warn('writing AI check error:', e);
+      if (slot) slot.innerHTML = `<div style="text-align:center; padding:10px 0; color:var(--soft); font-size:12px;">${t('ui.r079')}${escHtml(_aiErrText(e))}</div>`;
+    } finally {
+      _wpBusy = false;
+    }
+  }
+  // Мелкая деталь: список заданий уже не на экране (мы внутри задания), поэтому
+  // просто помечаем — при следующем открытии списка галочка отрисуется сама.
+  function _renderWritingListBadgeSoon() {}
+  async function sendWritingToMadie() {
+    if (!_wpCurTask) return;
+    // Ревью 07.07: без этой проверки гость долетал до sendChatMessage(), та бросала
+    // 'Войди в аккаунт', и он видел «не получилось, попробуй ещё раз» вместо
+    // понятного «сначала войди» — тот же паттерн, что уже есть в selectPlan().
+    const u = Store.get('user');
+    if (!u || u.guest) { toast(t('ui.061')); return; }
+    const answer = (document.getElementById('wp-answer')?.value || '').trim();
+    if (!answer) { toast(t('wp.empty')); return; }
+    try {
+      if (!_usersDirCache) await loadUsersDirectory();
+      const adminEntry = Object.entries(_usersDirCache || {}).find(([, v]) => v && v.isAdmin);
+      if (!adminEntry) { toast(t('ui.063')); return; }
+      const [adminUid, adminInfo] = adminEntry;
+      const msg = `✍️ ${t('wp.chatPrefix')}\n\n${_wpTaskDescRu(_wpCurTask)}\n\n💬 ${answer}`;
+      await sendChatMessage(adminUid, adminInfo.name || 'Мади', msg);
+      _wpRecordSubmit(_wpCurTask.id);
+      document.getElementById('writing-practice-modal')?.remove();
+      switchScreen('social');
+      openChat(adminUid, adminInfo.name || 'Мади');
+      toast(t('wp.sentToMadie'), 'var(--sage)');
+    } catch (e) {
+      console.warn('sendWritingToMadie error:', e);
+      toast(t('ui.064'));
+    }
+  }
+  function renderWritingEntry() {
+    const el = document.getElementById('lessons-write-entry');
+    if (el) el.style.display = isModuleUnlocked('m3') ? '' : 'none';
+  }
+
+  // ═══════════════ ФАЗА D3: статус «Сонбэ 선배» 🎓 ═══════════════
+  // Триггер — 6+ пройденных модулей (на момент написания это ровно «дошла до
+  // конца Модуля 6», но считаем по количеству, а не по конкретному id — само
+  // подстроится, если в будущем перед m6 вставят ещё модуль). Разовая церемония
+  // (Комдори + Мади), постоянный бейдж 선배 — байтовая запись usersPublic/<uid>/sonbae,
+  // которую уже читают чат (friendRowHtml) и профиль. «+XP за спасибо» из плана
+  // сознательно НЕ делаем — нужна отдельная антиабьюз-логика, не в этой фазе.
+  function sonbaeModuleCount() { return Object.keys(LESSON_MODULES).filter(isModuleComplete).length; }
+  function grantSonbaeStatus() {
+    if (typeof _db === 'undefined') return;
+    const uid = firebaseUserId();
+    if (!uid || uid === 'guest') return;
+    try { _db.ref(`usersPublic/${uid}/sonbae`).set(1); } catch (_) {}
+    // Ревью 07.07: loadUsersDirectory() у Мади читает узел `users`, а не
+    // `usersPublic` (тот — для обычных учениц) — без этой записи бейдж 🎓
+    // никогда не появлялся в её собственном чат-листе.
+    try { _db.ref(`users/${uid}/sonbae`).set(1); } catch (_) {}
+  }
+  function checkSonbaeMilestone() {
+    if (stats.sonbaeAwarded) return;
+    if (sonbaeModuleCount() < 6) return;
+    stats.sonbaeAwarded = true;
+    UStore.set('stats', stats);
+    addXp(150, false);
+    grantSonbaeStatus();
+    const badge = document.getElementById('profile-sonbae-badge');
+    if (badge) badge.style.display = 'inline-flex';
+    setTimeout(showSonbaeCeremony, 1000); // после того как закроется попап завершения урока
+  }
+  function showSonbaeCeremony() {
+    try { spawnConfetti(); } catch (_) {}
+    const m = document.createElement('div');
+    m.className = 'modal-bg modal-center';
+    m.id = 'sonbae-modal';
+    m.onclick = e => { if (e.target === m) m.remove(); };
+    m.innerHTML = `
+      <div class="modal-card" style="max-width:380px; text-align:center;">
+        <div style="font-size:52px;">🎓</div>
+        <div class="display" style="font-size:24px; color:var(--berry); margin-top:8px;">${t('sonbae.title')}</div>
+        <div class="ko" style="font-size:20px; font-weight:700; color:var(--coral); margin-top:4px;">선배</div>
+        <div style="display:flex; justify-content:center; gap:10px; margin-top:16px;">
+          <img src="assets/bear5.png" alt="" style="width:52px; height:52px; object-fit:contain;" onerror="this.style.display='none'">
+        </div>
+        <div style="font-size:13px; color:var(--text2); line-height:1.6; margin-top:14px;">${t('sonbae.body', { verb: gw('прошла', 'прошёл') })}</div>
+        <div class="chip chip-gold" style="margin-top:14px;">${t('sonbae.xp', { xp: 150 })}</div>
+        <button onclick="this.closest('.modal-bg').remove()" class="btn btn-primary btn-block" style="margin-top:18px;">${t('sonbae.cta')}</button>
+      </div>`;
+    document.body.appendChild(m);
   }
 
   // ── Учебная комната: фокус-таймер + кто сейчас занимается (공부방) ──
@@ -35851,7 +38359,10 @@
     { tk: 'guide.tip.cal.t',    sk: 'guide.tip.cal.s',    img: 'assets/bear3.png', action: 'showCalendar()' },
     { tk: 'guide.tip.ai.t',     sk: 'guide.tip.ai.s',     img: 'assets/bear5.png', action: 'openAiTutor()' },
     { tk: 'guide.tip.book.t',   sk: 'guide.tip.book.s',   img: 'assets/bear1.png', action: "switchScreen('textbook')" },
-    { tk: 'guide.tip.social.t', sk: 'guide.tip.social.s', img: 'assets/bear2.png', action: "switchScreen('social')" }
+    { tk: 'guide.tip.social.t', sk: 'guide.tip.social.s', img: 'assets/bear2.png', action: "switchScreen('social')" },
+    { tk: 'guide.tip.invite.t', sk: 'guide.tip.invite.s', img: 'assets/bear3.png', action: 'shareInviteLink()' },
+    { tk: 'guide.tip.leveltest.t', sk: 'guide.tip.leveltest.s', img: 'assets/bear5.png', action: 'startLevelTest()' },
+    { tk: 'guide.tip.seasonal.t', sk: 'guide.tip.seasonal.s', img: 'assets/bear3.png', action: 'openSeasonalWords()' }
   ];
   // Короткое имя для обращений: аккаунт → имя из знакомства (гостевое «Гостья 🌸» не считаем)
   function guideUserName() {
@@ -35891,6 +38402,23 @@
     // 5.5) Зарегистрирован, но тур не пройден — предложим экскурсию
     if (!guest && !Store.get('tourDone'))
       return { img: 'assets/bear1.png', title: t('guide.tour.t'), sub: t('guide.tour.s'), cta: t('guide.tour.c'), action: 'startAppTour()' };
+    // 5.6) ФАЗА B1: подарочный Master тает в течение суток — мягкий апселл
+    if (!guest) {
+      const po = myPlanObj();
+      if (po.until && po.id === 'master') {
+        const hoursLeft = (po.until - Date.now()) / 3600000;
+        if (hoursLeft > 0 && hoursLeft <= 24)
+          return { img: 'assets/bear3.png', title: t('guide.giftEnding.t'), sub: t('guide.giftEnding.s'), cta: t('guide.giftEnding.c'), action: 'openPlanPage()' };
+      }
+    }
+    // 5.7) ФАЗА C2: марафон TOPIK — напоминание за 3 дня и в день М
+    if (!guest) {
+      const mInfo = nextMarathonInfo();
+      if (mInfo && mInfo.daysUntil === 3)
+        return { img: 'assets/bear5.png', title: t('guide.marathon3.t'), sub: t('guide.marathon3.s'), cta: t('guide.open'), action: "switchScreen('topik')" };
+      if (mInfo && mInfo.daysUntil === 0 && !(_marathonMyResultCache && _marathonMyResultCache.month === mInfo.month))
+        return { img: 'assets/bear5.png', title: t('guide.marathonToday.t'), sub: t('guide.marathonToday.s'), cta: t('guide.marathonToday.c'), action: "switchScreen('topik')" };
+    }
     // 6) Цель выполнена (или уроки кончились) — советы: новый на каждый заход на Главную
     const doneToday = dxp >= goal;
     const tipIdx = Math.floor(Date.now() / 36e5) + _guideTipSeed;
@@ -35900,11 +38428,16 @@
         { img: 'assets/bear3.png', title: t('guide.reg.t'), sub: t('guide.reg.s'), cta: t('guide.reg.c'), action: 'goRegister()' },
         { img: 'assets/bear3.png', title: (doneToday ? '🎉 ' : '') + t('guide.tip.cal.t'), sub: t('guide.tip.cal.s'), cta: t('guide.open'), action: 'showCalendar()' }
       ];
+      if (shouldSuggestLevelTest()) gTips.push({ img: 'assets/bear5.png', title: (doneToday ? '🎉 ' : '') + t('guide.tip.leveltest.t'), sub: t('guide.tip.leveltest.s'), cta: t('guide.open'), action: 'startLevelTest()' });
+      if (activeSeasonEvent()) gTips.push({ img: 'assets/bear3.png', title: (doneToday ? '🎉 ' : '') + t('guide.tip.seasonal.t'), sub: t('guide.tip.seasonal.s'), cta: t('guide.open'), action: 'openSeasonalWords()' });
       return gTips[tipIdx % gTips.length];
     }
     const prof = Store.get('onboardProfile') || {};
     // Советуем только то, что реально откроется: ИИ-урок — лишь на тарифе Pro AI
-    let tips = GUIDE_TIPS.filter(x => x.action !== 'openAiTutor()' || planAtLeast('proai'));
+    let tips = GUIDE_TIPS.filter(x => x.action !== 'openAiTutor()' || planAtLeast('proai'))
+      .filter(x => x.action !== 'startLevelTest()' || shouldSuggestLevelTest())
+      .filter(x => x.action !== 'openSeasonalWords()' || !!activeSeasonEvent())
+      .filter(x => x.action !== 'shareInviteLink()' || INVITE_FEATURE_ENABLED);
     if (Array.isArray(prof.goals) && prof.goals.includes('topik')) {
       const ti = tips.findIndex(x => x.action === 'openTopik()');
       if (ti > 0) tips.unshift(...tips.splice(ti, 1)); // цель TOPIK — его совет первым в ротации
@@ -35912,12 +38445,656 @@
     const tip = tips[tipIdx % tips.length];
     return { img: tip.img, title: (doneToday ? '🎉 ' : '') + t(tip.tk), sub: t(tip.sk), cta: t('guide.open'), action: tip.action };
   }
+
+  // ── ФАЗА A3: недельные квесты от Комдори 📜 ──
+  // Каждый тип сам вычисляет прогресс по snap-снимку, сделанному в момент генерации
+  // (в понедельник), — так квест не зависит от отдельного счётчика «за неделю».
+  const CORE_GAME_KEYS = ['flashcards','match','memory','listen','translate','build','numbers','sentence','kpop'];
+  function tdDoneCount() { try { return Object.keys(tdDoneMap()).length; } catch (_) { return 0; } }
+  function weekStartIso() {
+    const d = new Date(todayIsoDate() + 'T00:00:00Z');
+    d.setUTCDate(d.getUTCDate() - ((d.getUTCDay() + 6) % 7)); // понедельник этой ISO-недели
+    return d.toISOString().slice(0, 10);
+  }
+  function weekGoalStreakProgress() {
+    const start = weekStartIso();
+    const dates = (stats.dailyGoalReachedDates || []).filter(d => d >= start).sort();
+    let best = 0, run = 0, prev = null;
+    dates.forEach(d => {
+      run = (prev && Math.round((new Date(d) - new Date(prev)) / 86400000) === 1) ? run + 1 : 1;
+      if (run > best) best = run;
+      prev = d;
+    });
+    return best;
+  }
+  function randInt(a, b) { return a + Math.floor(Math.random() * (b - a + 1)); }
+  const QUEST_TYPES = {
+    words:      { icon: '💬',  minT: 8, maxT: 15, tKey: 'quest.words.t',      sKey: 'quest.words.s',
+                  snap: () => (stats.wordsLearned || []).length,
+                  progress: snap => Math.max(0, (stats.wordsLearned || []).length - snap),
+                  eligible: () => true },
+    lessons:    { icon: '📖',  minT: 2, maxT: 4,  tKey: 'quest.lessons.t',    sKey: 'quest.lessons.s',
+                  snap: () => stats.lessons || 0,
+                  progress: snap => Math.max(0, (stats.lessons || 0) - snap),
+                  eligible: () => true },
+    newgame:    { icon: '🎮',  minT: 1, maxT: 1,  tKey: 'quest.newgame.t',    sKey: 'quest.newgame.s',
+                  snap: () => CORE_GAME_KEYS.filter(g => !((stats.gamePlays || {})[g] >= 1)),
+                  progress: snap => (Array.isArray(snap) && snap.some(g => (stats.gamePlays || {})[g] >= 1)) ? 1 : 0,
+                  eligible: () => CORE_GAME_KEYS.some(g => !((stats.gamePlays || {})[g] >= 1)) },
+    topik:      { icon: '🇰🇷', minT: 1, maxT: 1,  tKey: 'quest.topik.t',      sKey: 'quest.topik.s',
+                  snap: () => tdDoneCount(),
+                  progress: snap => Math.max(0, tdDoneCount() - snap),
+                  eligible: () => true },
+    goalstreak: { icon: '🔥',  minT: 3, maxT: 3,  tKey: 'quest.goalstreak.t', sKey: 'quest.goalstreak.s',
+                  snap: () => null,
+                  progress: () => weekGoalStreakProgress(),
+                  eligible: () => true },
+    gameofday:  { icon: '🌟',  minT: 1, maxT: 1,  tKey: 'quest.gameofday.t',  sKey: 'quest.gameofday.s',
+                  snap: () => (stats.gameOfDayPlayedDates || []).length,
+                  progress: snap => Math.max(0, (stats.gameOfDayPlayedDates || []).length - snap),
+                  eligible: () => true },
+    blitz10:    { icon: '🎯',  minT: 1, maxT: 1,  tKey: 'quest.blitz.t',      sKey: 'quest.blitz.s',
+                  snap: () => (stats.blitzPlayedDates || []).length,
+                  progress: snap => Math.max(0, (stats.blitzPlayedDates || []).length - snap),
+                  eligible: () => true },
+    // ФАЗА C1: сезонный квест — доступен только в окно активного ивента; выполнение
+    // («открыла слова ивента») тут же выдаёт лимитированную ачивку (grantWeekQuestReward).
+    seasonal:   { icon: '🎏',  minT: 1, maxT: 1,  tKey: 'quest.seasonal.t',   sKey: 'quest.seasonal.s',
+                  snap: () => 0,
+                  progress: () => { const ev = activeSeasonEvent(); return (ev && stats.seasonalVisited && stats.seasonalVisited[ev.id]) ? 1 : 0; },
+                  eligible: () => !!activeSeasonEvent() },
+    // ФАЗА D2: письменная практика — доступна только с Модуля 3
+    writing:    { icon: '✍️',  minT: 1, maxT: 1,  tKey: 'quest.writing.t',    sKey: 'quest.writing.s',
+                  snap: () => (stats.writingSubmits || []).length,
+                  progress: snap => Math.max(0, (stats.writingSubmits || []).length - snap),
+                  eligible: () => isModuleUnlocked('m3') }
+  };
+  const QUEST_STICKERS = [
+    { emoji: '🧸📚', tKey: 'sticker.bookworm' },
+    { emoji: '🧸🎮', tKey: 'sticker.gamer' },
+    { emoji: '🧸🇰🇷', tKey: 'sticker.topik' },
+    { emoji: '🧸🔥', tKey: 'sticker.onfire' },
+    { emoji: '🧸🌸', tKey: 'sticker.allrounder' }
+  ];
+  // Генерирует 3 квеста на новую ISO-неделю; несобранный сундучок с прошлой недели
+  // выдаётся автоматически (с задержкой — чтобы не рекурсировать в renderBearGuide).
+  function ensureWeekQuests() {
+    const wk = isoWeekKey();
+    const wq = stats.weekQuests;
+    if (wq && wq.week === wk) return;
+    if (wq && Array.isArray(wq.q) && wq.q.length && !wq.claimed && wq.q.every(x => x.done)) {
+      setTimeout(() => grantWeekQuestReward(wq, true), 300);
+    }
+    const pool = Object.keys(QUEST_TYPES).filter(id => { try { return QUEST_TYPES[id].eligible(); } catch (_) { return false; } });
+    const picked = shuffleArr(pool).slice(0, 3);
+    const q = picked.map(id => {
+      const qt = QUEST_TYPES[id];
+      return { id, snap: qt.snap(), target: randInt(qt.minT, qt.maxT), cur: 0, done: false };
+    });
+    stats.weekQuests = { week: wk, q, claimed: false };
+    UStore.set('stats', stats);
+  }
+  function refreshWeekQuestsProgress() {
+    const wq = stats.weekQuests;
+    if (!wq || !Array.isArray(wq.q)) return wq;
+    let changed = false;
+    wq.q.forEach(item => {
+      const qt = QUEST_TYPES[item.id];
+      if (!qt) return;
+      let cur = 0;
+      try { cur = Math.min(item.target, Math.max(0, qt.progress(item.snap))); } catch (_) {}
+      const nowDone = cur >= item.target;
+      if (item.cur !== cur) { item.cur = cur; changed = true; }
+      if (item.done !== nowDone) { item.done = nowDone; changed = true; }
+    });
+    if (changed) UStore.set('stats', stats);
+    return wq;
+  }
+  function grantWeekQuestReward(wq, viaBoot) {
+    if (!wq || wq.claimed) return null;
+    wq.claimed = true;
+    addXp(60, false);
+    const sticker = QUEST_STICKERS[Math.floor(Math.random() * QUEST_STICKERS.length)];
+    const entry = { emoji: sticker.emoji, tKey: sticker.tKey, week: wq.week, ts: Date.now() };
+    if (!Array.isArray(stats.stickers)) stats.stickers = [];
+    stats.stickers.push(entry);
+    UStore.set('stats', stats);
+    renderStickerShelf();
+    // ФАЗА C1: если среди квестов недели был выполненный «сезонный» — тут же лимитка
+    const seasonalDone = Array.isArray(wq.q) && wq.q.some(item => item.id === 'seasonal' && item.done);
+    if (seasonalDone) { const ev = activeSeasonEvent(); if (ev) setTimeout(() => grantSeasonalAchievement(ev), 900); }
+    if (viaBoot) toast(t('quest.chest.autoClaimed', { xp: 60 }), 'var(--gold)');
+    else showWeekQuestRewardModal(entry);
+    return entry;
+  }
+  function renderWeekQuestRow() {
+    try { ensureWeekQuests(); } catch (e) { console.warn('[quests]', e); return ''; }
+    const wq = refreshWeekQuestsProgress();
+    if (!wq || !Array.isArray(wq.q) || !wq.q.length) return '';
+    const done = wq.q.filter(x => x.done).length;
+    const total = wq.q.length;
+    const chestReady = done === total && !wq.claimed;
+    return `
+      <div class="week-quest-row" onclick="openWeekQuestsSheet()">
+        <span class="week-quest-ico">📜</span>
+        <span class="week-quest-txt">${t('quest.row', { done, total })}</span>
+        ${chestReady ? '<span class="week-quest-chest">🎁</span>' : ''}
+        <span class="week-quest-chev">›</span>
+      </div>`;
+  }
+  function openWeekQuestsSheet() {
+    const wq = refreshWeekQuestsProgress();
+    if (!wq || !Array.isArray(wq.q) || !wq.q.length) return;
+    const m = document.createElement('div');
+    m.className = 'modal-bg modal-center';
+    m.id = 'quest-sheet';
+    m.onclick = e => { if (e.target === m) m.remove(); };
+    const rows = wq.q.map(item => {
+      const qt = QUEST_TYPES[item.id];
+      const pct = Math.round(Math.min(100, (item.cur || 0) / item.target * 100));
+      return `
+        <div class="quest-item${item.done ? ' done' : ''}" onclick="questItemAction('${item.id}')">
+          <span class="quest-item-ico">${qt ? qt.icon : '📜'}</span>
+          <div class="quest-item-main">
+            <div class="quest-item-title">${qt ? t(qt.tKey, { n: item.target }) : item.id}</div>
+            <div class="quest-item-sub">${qt ? t(qt.sKey, { n: item.target }) : ''}</div>
+            <div class="quest-item-track"><div class="quest-item-fill" style="width:${pct}%"></div></div>
+          </div>
+          <span class="quest-item-val">${item.done ? '✓' : `${item.cur || 0}/${item.target}`}</span>
+          <span class="quest-item-chev">›</span>
+        </div>`;
+    }).join('');
+    const allDone = wq.q.every(x => x.done);
+    const chestBtn = allDone && !wq.claimed
+      ? `<button onclick="claimWeekQuestChest()" class="btn btn-primary btn-block" style="margin-top:16px;">${t('quest.claim')}</button>`
+      : (wq.claimed ? `<div style="text-align:center; font-size:11.5px; color:var(--soft); margin-top:14px;">${t('quest.claimed')}</div>` : '');
+    m.innerHTML = `
+      <div class="modal-card" style="max-width:380px;">
+        <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:12px;">
+          <div>
+            <div class="page-eyebrow">${t('quest.sheet.eyebrow')}</div>
+            <div class="display" style="font-size:20px; color:var(--berry); margin-top:2px;">${t('quest.sheet.title')}</div>
+          </div>
+          <div onclick="this.closest('.modal-bg').remove()" style="font-size:24px; line-height:1; color:var(--soft); cursor:pointer; padding:4px;">×</div>
+        </div>
+        <div style="display:grid; gap:10px;">${rows}</div>
+        ${chestBtn}
+      </div>`;
+    document.body.appendChild(m);
+  }
+  function claimWeekQuestChest() {
+    document.getElementById('quest-sheet')?.remove();
+    grantWeekQuestReward(stats.weekQuests, false);
+  }
+  // По тапу на квест в шторке — закрыть шторку и сразу открыть то, что нужно
+  // пройти для его выполнения (а не просто показать прогресс без действия).
+  function questItemAction(id) {
+    document.getElementById('quest-sheet')?.remove();
+    if (id === 'words') { switchScreen('games'); setTimeout(startFlashcards, 150); }
+    else if (id === 'lessons') switchScreen('lessons');
+    else if (id === 'newgame') switchScreen('games');
+    else if (id === 'topik') switchScreen('topik');
+    else if (id === 'blitz10') startTopikBlitz();
+    else if (id === 'seasonal') openSeasonalWords();
+    else if (id === 'gameofday') {
+      switchScreen('games');
+      setTimeout(() => document.querySelector('#screen-games .gcv-of-day')?.scrollIntoView({ behavior: 'smooth', block: 'center' }), 150);
+    } else if (id === 'goalstreak') {
+      switchScreen('home');
+      setTimeout(() => document.getElementById('daily-goal-widget')?.scrollIntoView({ behavior: 'smooth', block: 'center' }), 150);
+    }
+  }
+  function showWeekQuestRewardModal(entry) {
+    try { spawnConfetti(); } catch (_) {}
+    const m = document.createElement('div');
+    m.className = 'modal-bg modal-center';
+    m.id = 'quest-reward-popup';
+    m.onclick = e => { if (e.target === m) m.remove(); };
+    m.innerHTML = `
+      <div class="modal-card lesson-complete-card">
+        <img src="assets/bear5.png" alt="" class="lesson-complete-bear" onerror="this.style.display='none'">
+        <div class="page-eyebrow" style="color:var(--coral);">${t('quest.reward.eyebrow')}</div>
+        <div class="display" style="font-size:22px; color:var(--berry); margin-top:6px;">${t('quest.reward.title')}</div>
+        <div style="margin:16px auto 0; max-width:220px; background:var(--paper); border:1px dashed var(--line-strong); border-radius:16px; padding:16px;">
+          <div style="font-size:38px;">${entry.emoji}</div>
+          <div style="font-size:13px; font-weight:700; color:var(--berry); margin-top:6px;">${t(entry.tKey)}</div>
+          <div style="font-size:10.5px; color:var(--soft); margin-top:2px;">${t('quest.reward.week', { week: entry.week.slice(6) })}</div>
+        </div>
+        <div style="margin-top:12px; font-size:13px; color:var(--soft);">${t('quest.reward.xp', { xp: 60 })}</div>
+        <button onclick="this.closest('.modal-bg').remove()" class="btn btn-primary" style="margin-top:20px; width:100%; justify-content:center;">${t('quest.reward.cta')}</button>
+      </div>`;
+    document.body.appendChild(m);
+  }
+  // Полочка стикеров в профиле (профиль → рядом с достижениями)
+  function renderStickerShelf() {
+    const slot = document.getElementById('sticker-shelf-slot');
+    if (!slot) return;
+    const stickers = Array.isArray(stats.stickers) ? stats.stickers : [];
+    if (!stickers.length) { slot.innerHTML = ''; return; }
+    const recent = stickers.slice(-8).reverse();
+    slot.innerHTML = `
+      <div style="margin-top:20px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; padding: 0 4px; margin-bottom: 10px;">
+          <div style="font-size: 10px; letter-spacing: 0.2em; color: var(--soft);">${t('sticker.shelf.title')} <span style="color:var(--coral); font-weight:700; letter-spacing:.04em;">${stickers.length}</span></div>
+        </div>
+        <div class="scroll-x">
+          ${recent.map(s => `
+            <div style="flex-shrink:0; width:74px; text-align:center;">
+              <div class="sticker-tile">${s.emoji}</div>
+              <div style="font-size:9.5px; color:var(--berry); margin-top:4px; line-height:1.15; font-weight:600; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${t(s.tKey)}</div>
+            </div>
+          `).join('')}
+        </div>
+      </div>`;
+  }
+
+  // ── ФАЗА A4: месячный отчёт от Мади 💌 ──
+  function monthlyReportData(mk) {
+    const m = (stats.monthly && stats.monthly[mk]) || { xp: 0, words: 0, lessons: 0, bestStreak: 0 };
+    const activeDays = (stats.dates || []).filter(d => d.startsWith(mk)).length;
+    return { month: mk, xp: m.xp || 0, words: m.words || 0, lessons: m.lessons || 0, bestStreak: m.bestStreak || 0, activeDays };
+  }
+  function prevMonthKey(mk) {
+    const [y, mo] = mk.split('-').map(Number);
+    const d = new Date(Date.UTC(y, mo - 2, 1)); // mo 1-индексирован; mo-2 → предыдущий месяц (0-индекс Date)
+    return d.getUTCFullYear() + '-' + String(d.getUTCMonth() + 1).padStart(2, '0');
+  }
+  function monthLabel(mk) {
+    const [y, mo] = mk.split('-').map(Number);
+    const names = { ru: ['января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября','декабря'],
+                     en: ['January','February','March','April','May','June','July','August','September','October','November','December'],
+                     uz: ['yanvar','fevral','mart','aprel','may','iyun','iyul','avgust','sentabr','oktabr','noyabr','dekabr'] };
+    const L = names[APP_LANG] || names.ru;
+    return `${L[mo - 1]} ${y}`;
+  }
+  // Показ — как только открыли приложение в новом месяце (не обязательно 1-го числа);
+  // ровно один раз на месяц (stats.lastReportShown), не поверх онбординга/тура/возвращения.
+  function maybeShowMonthlyReport() {
+    if (!Store.get('onboardDone') || Store.get('tourPending') || document.getElementById('app-tour')) return;
+    const curMk = _monthKey();
+    const prevMk = prevMonthKey(curMk);
+    if (stats.lastReportShown === prevMk) return; // уже показывали за этот месяц
+    if (!stats.monthly || !stats.monthly[prevMk]) { stats.lastReportShown = prevMk; UStore.set('stats', stats); return; } // нет данных (новый пользователь) — не мучаем
+    const data = monthlyReportData(prevMk);
+    stats.lastReportShown = prevMk;
+    UStore.set('stats', stats);
+    if (data.activeDays < 3) return; // мало активности за месяц — молча пропускаем
+    showMonthlyReportModal(data);
+  }
+  function showMonthlyReportModal(data) {
+    const prevPrevMk = prevMonthKey(data.month);
+    const cmp = stats.monthly && stats.monthly[prevPrevMk]; // первый месяц — без сравнения
+    const deltaTxt = (field, val) => {
+      if (!cmp) return '';
+      const diff = val - (cmp[field] || 0);
+      if (diff === 0) return '';
+      const sign = diff > 0 ? '+' : '';
+      return `<span class="report-delta ${diff > 0 ? 'up' : 'down'}">${sign}${diff}</span>`;
+    };
+    const rows = [
+      { icon: '✨', label: t('report.xp'), value: data.xp, field: 'xp' },
+      { icon: '💬', label: t('report.words'), value: data.words, field: 'words' },
+      { icon: '📖', label: t('report.lessons'), value: data.lessons, field: 'lessons' },
+      { icon: '🔥', label: t('report.streak'), value: data.bestStreak, field: 'bestStreak' }
+    ];
+    const m = document.createElement('div');
+    m.className = 'modal-bg modal-center';
+    m.id = 'monthly-report-popup';
+    m.onclick = e => { if (e.target === m) m.remove(); };
+    m.innerHTML = `
+      <div class="modal-card lesson-complete-card" id="monthly-report-card">
+        <img src="assets/bear5.png" alt="" class="lesson-complete-bear" onerror="this.style.display='none'">
+        <div class="page-eyebrow" style="color:var(--coral);">${t('report.eyebrow')}</div>
+        <div class="display" style="font-size:20px; color:var(--berry); margin-top:6px; line-height:1.2;">${t('report.title', { month: monthLabel(data.month) })}</div>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:16px;">
+          ${rows.map(r => `
+            <div class="card card-padded" style="text-align:center; padding:12px 6px;">
+              <div style="font-size:18px;">${r.icon}</div>
+              <div class="display" style="font-size:18px; color:var(--berry); margin-top:2px;">${r.value} ${deltaTxt(r.field, r.value)}</div>
+              <div style="font-size:9.5px; color:var(--soft); margin-top:1px;">${r.label}</div>
+            </div>`).join('')}
+        </div>
+        <div style="margin-top:14px; font-size:12.5px; color:var(--soft); line-height:1.5; padding:0 4px;">${t('report.madie')}</div>
+        <button onclick="shareMonthlyReport(this)" class="btn btn-rose btn-block" style="margin-top:18px;">${t('report.share')}</button>
+        <button onclick="this.closest('.modal-bg').remove()" class="btn btn-ghost btn-block" style="margin-top:8px;">${t('report.close')}</button>
+      </div>`;
+    document.body.appendChild(m);
+    _lastMonthlyReportData = data;
+  }
+  let _lastMonthlyReportData = null;
+  async function shareMonthlyReport(btn) {
+    const data = _lastMonthlyReportData;
+    if (!data) return;
+    try {
+      if (btn) { btn.disabled = true; btn.textContent = t('report.sharing'); }
+      const png = await generateShareCardPNG({
+        eyebrow: 'KOREAN WITH MADIE',
+        title: t('report.title', { month: monthLabel(data.month) }),
+        lines: [
+          { label: t('report.xp'), value: data.xp },
+          { label: t('report.words'), value: data.words },
+          { label: t('report.lessons'), value: data.lessons },
+          { label: t('report.streak'), value: data.bestStreak }
+        ],
+        footer: 'koreanmadie.study 🌸'
+      });
+      await shareCanvasImage(png, t('report.title', { month: monthLabel(data.month) }));
+    } catch (e) { console.warn('[report-share]', e); }
+    finally { if (btn) { btn.disabled = false; btn.textContent = t('report.share'); } }
+  }
+  // ── Переиспользуемый генератор шер-карточки (канвас 1080×1350, бренд-цвета + Комдори) ──
+  // Нужен здесь (месячный отчёт) и позже в тесте уровня — принимает только контент снаружи.
+  function _shareCardRoundRect(ctx, x, y, w, h, r) {
+    ctx.beginPath();
+    ctx.moveTo(x + r, y);
+    ctx.arcTo(x + w, y, x + w, y + h, r);
+    ctx.arcTo(x + w, y + h, x, y + h, r);
+    ctx.arcTo(x, y + h, x, y, r);
+    ctx.arcTo(x, y, x + w, y, r);
+    ctx.closePath();
+  }
+  function _shareCardWrapText(ctx, text, x, y, maxWidth, lineHeight) {
+    const words = String(text).split(' ');
+    let line = '', yy = y;
+    words.forEach((w, i) => {
+      const test = line + w + ' ';
+      if (ctx.measureText(test).width > maxWidth && i > 0) { ctx.fillText(line, x, yy); line = w + ' '; yy += lineHeight; }
+      else line = test;
+    });
+    ctx.fillText(line, x, yy);
+    return yy;
+  }
+  function generateShareCardPNG(config) {
+    return new Promise(resolve => {
+      const W = 1080, H = 1350;
+      const canvas = document.createElement('canvas');
+      canvas.width = W; canvas.height = H;
+      const ctx = canvas.getContext('2d');
+      const grad = ctx.createLinearGradient(0, 0, W, H);
+      grad.addColorStop(0, '#F2A6AE'); grad.addColorStop(1, '#BC4B5E');
+      ctx.fillStyle = grad; ctx.fillRect(0, 0, W, H);
+      const pad = 64;
+      ctx.fillStyle = '#FFFFFF';
+      _shareCardRoundRect(ctx, pad, 170, W - pad * 2, H - 170 - 130, 40);
+      ctx.fill();
+      ctx.fillStyle = '#BC4B5E';
+      ctx.font = '700 30px system-ui, sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText(config.eyebrow || '', W / 2, 270);
+      ctx.fillStyle = '#5C2A33';
+      ctx.font = '800 52px system-ui, sans-serif';
+      const titleEndY = _shareCardWrapText(ctx, config.title || '', W / 2, 350, W - pad * 2 - 100, 62);
+      let y = Math.max(titleEndY + 100, 520);
+      (config.lines || []).forEach(line => {
+        ctx.fillStyle = '#5C2A33';
+        ctx.font = '800 60px system-ui, sans-serif';
+        ctx.textAlign = 'left';
+        ctx.fillText(String(line.value), pad + 60, y);
+        ctx.fillStyle = 'rgba(92,42,51,.65)';
+        ctx.font = '500 26px system-ui, sans-serif';
+        ctx.fillText(line.label, pad + 60, y + 34);
+        y += 105;
+      });
+      ctx.fillStyle = '#FFFFFF';
+      ctx.font = '700 32px system-ui, sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText(config.footer || 'Korean with Madie 🌸', W / 2, H - 60);
+      canvas.toBlob(blob => resolve({ blob, dataUrl: canvas.toDataURL('image/png') }), 'image/png');
+    });
+  }
+  async function shareCanvasImage(pngResult, shareTitle) {
+    try {
+      if (navigator.share && navigator.canShare && pngResult.blob) {
+        const file = new File([pngResult.blob], 'madie-report.png', { type: 'image/png' });
+        if (navigator.canShare({ files: [file] })) {
+          await navigator.share({ files: [file], title: shareTitle || 'Korean with Madie' });
+          return;
+        }
+      }
+    } catch (_) {}
+    const a = document.createElement('a');
+    a.href = pngResult.dataUrl;
+    a.download = 'madie-report.png';
+    document.body.appendChild(a); a.click(); a.remove();
+  }
+
+  // ── ФАЗА E1: подсветка карточки «игры дня» на экране игр ──
+  // Экран игр всегда в DOM (просто скрыт классом .screen без .active), поэтому карточку
+  // можно читать/декорировать независимо от того, какой экран сейчас активен.
+  function decorateGameOfDayCard() {
+    const key = todayGameKey();
+    document.querySelectorAll('#screen-games .game-card-v2[data-game-key]').forEach(card => {
+      if (card.dataset.gameKey === key) return;
+      card.classList.remove('gcv-of-day');
+      const old = card.querySelector('.gcv-of-day-badge'); if (old) old.remove();
+    });
+    const card = document.querySelector(`#screen-games .game-card-v2[data-game-key="${key}"]`);
+    if (!card || card.classList.contains('gcv-of-day')) return; // уже декорирована на этот же ключ
+    card.classList.add('gcv-of-day');
+    const badge = document.createElement('span');
+    badge.className = 'gcv-of-day-badge';
+    badge.textContent = t('e1.badge');
+    card.appendChild(badge);
+  }
+  // Плашка «игра дня» на Главной — переиспользует уже локализованные иконку/название/подпись
+  // из статической карточки на экране игр (единый источник правды, без дублей i18n).
+  function renderGameOfDayPlaque() {
+    const slot = document.getElementById('game-of-day-widget');
+    if (!slot) return;
+    const key = todayGameKey();
+    const card = document.querySelector(`#screen-games .game-card-v2[data-game-key="${key}"]`);
+    if (!card) { slot.innerHTML = ''; return; }
+    const iconEl = card.querySelector('.gcv-icon');
+    const titleEl = card.querySelector('.gcv-title');
+    const subEl = card.querySelector('.gcv-sub');
+    const action = card.getAttribute('onclick') || '';
+    slot.innerHTML = `
+      <div onclick="${escAttrSafe(action)}" class="card card-press god-widget" style="position:relative;">
+        <span class="god-badge">${t('e1.home.eyebrow')}</span>
+        <div class="god-ico">${iconEl ? iconEl.innerHTML : '🌟'}</div>
+        <div class="god-main">
+          <div class="god-title">${escHtml(titleEl ? titleEl.textContent : key)}</div>
+          <div class="god-sub">${escHtml(subEl ? subEl.textContent : '')}</div>
+        </div>
+        <span class="god-arrow">›</span>
+      </div>`;
+  }
+
+  // ═══════════════ ФАЗА C1: сезонные ивенты 🎏 ═══════════════
+  // Один движок, ивенты — данные. Окно ±windowDays от dateKey ('MM-DD'), проверяем
+  // и прошлый/следующий год на случай дат у самой границы года (наши сейчас — нет,
+  // но общий движок должен быть корректен и для будущих).
+  const SEASON_EVENTS = [
+    { id: 'gwangbok2026', dateKey: '08-15', windowDays: 3, ico: '🎆',
+      titleKey: 'season.gwangbok.title', subKey: 'season.gwangbok.sub',
+      achId: 'seasonal-gwangbok2026', achTitleKey: 'season.gwangbok.ach',
+      words: [
+        ['광복절','День освобождения','🎆'], ['독립','независимость','🕊️'], ['태극기','флаг Тхэгыкки','🇰🇷'],
+        ['애국가','гимн (песнь любви к родине)','🎵'], ['자유','свобода','🌤️'], ['평화','мир','☮️'],
+        ['역사','история','📜'], ['민족','нация, народ','🤝'], ['광복','освобождение (от колонии)','🌅'],
+        ['기념일','памятная дата','📅'], ['조국','родина, отечество','🏞️'], ['희생','жертва (самопожертвование)','🕯️'],
+        ['용기','мужество','💪'], ['통일','объединение (Севера и Юга)','🌉'], ['만세','ура! (клич победы)','📣']
+      ]
+    }
+  ];
+  function activeSeasonEvent() {
+    const now = new Date(todayIsoDate() + 'T00:00:00Z');
+    const year = now.getUTCFullYear();
+    for (const ev of SEASON_EVENTS) {
+      for (const y of [year - 1, year, year + 1]) {
+        const evDate = new Date(`${y}-${ev.dateKey}T00:00:00Z`);
+        if (Math.abs(Math.round((now - evDate) / 86400000)) <= ev.windowDays) return ev;
+      }
+    }
+    return null;
+  }
+  function renderSeasonBanner() {
+    const slot = document.getElementById('season-banner-slot');
+    if (!slot) return;
+    const ev = activeSeasonEvent();
+    if (!ev) { slot.innerHTML = ''; return; }
+    slot.innerHTML = `
+      <div onclick="openSeasonalWords()" class="card card-press card-padded" style="cursor:pointer; display:flex; align-items:center; gap:12px; background:linear-gradient(135deg, var(--berry), var(--coral)); color:#fff; border:none;">
+        <div style="font-size:32px;">${ev.ico}</div>
+        <div style="flex:1; min-width:0;">
+          <div style="font-weight:700; font-size:14px;">${t(ev.titleKey)}</div>
+          <div style="font-size:11px; opacity:.9; margin-top:2px;">${t(ev.subKey)}</div>
+        </div>
+        <i class="fa-solid fa-chevron-right" style="opacity:.85; flex-shrink:0;"></i>
+      </div>`;
+  }
+  function openSeasonalWords() {
+    const ev = activeSeasonEvent();
+    if (!ev) return;
+    if (!stats.seasonalVisited || typeof stats.seasonalVisited !== 'object') stats.seasonalVisited = {};
+    if (!stats.seasonalVisited[ev.id]) { stats.seasonalVisited[ev.id] = true; UStore.set('stats', stats); }
+    const rows = ev.words.map(([ko, ru, emoji]) => `
+      <div onclick="playSyllable(${JSON.stringify(ko)})" class="card card-press" style="padding:12px; text-align:center; cursor:pointer;">
+        <div style="font-size:26px;">${emoji}</div>
+        <div class="ko" style="font-size:16px; font-weight:700; color:var(--berry); margin-top:4px;">${escHtml(ko)}</div>
+        <div style="font-size:10.5px; color:var(--soft); margin-top:2px;">${escHtml(ru)}</div>
+      </div>`).join('');
+    const m = document.createElement('div');
+    m.className = 'modal-bg modal-center';
+    m.id = 'season-words-modal';
+    m.onclick = e => { if (e.target === m) m.remove(); };
+    m.innerHTML = `
+      <div class="modal-card" style="max-width:420px; max-height:80vh; display:flex; flex-direction:column;">
+        <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:10px; flex-shrink:0;">
+          <div>
+            <div class="page-eyebrow" style="color:var(--coral);">${ev.ico} ${t(ev.titleKey)}</div>
+            <div class="display" style="font-size:18px; color:var(--berry); margin-top:2px;">${t('season.wordsTitle')}</div>
+          </div>
+          <div onclick="this.closest('.modal-bg').remove()" style="font-size:24px; color:var(--soft); cursor:pointer;">×</div>
+        </div>
+        <div style="overflow-y:auto; min-height:0;">
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">${rows}</div>
+        </div>
+      </div>`;
+    document.body.appendChild(m);
+  }
+  function grantSeasonalAchievement(ev) {
+    if (!ev) return;
+    if (!Array.isArray(stats.seasonal)) stats.seasonal = [];
+    if (stats.seasonal.includes(ev.achId)) return; // уже получено — лимитка не выдаётся дважды
+    stats.seasonal.push(ev.achId);
+    addXp(50, false);
+    if (!Array.isArray(stats.stickers)) stats.stickers = [];
+    stats.stickers.push({ emoji: ev.ico + '🎉', tKey: ev.achTitleKey, week: isoWeekKey(), ts: Date.now() });
+    UStore.set('stats', stats);
+    try { renderStickerShelf(); } catch (_) {}
+    const m = document.createElement('div');
+    m.className = 'modal-bg modal-center';
+    m.id = 'seasonal-ach-popup';
+    m.onclick = e => { if (e.target === m) m.remove(); };
+    m.innerHTML = `
+      <div class="modal-card lesson-complete-card">
+        <img src="assets/bear5.png" alt="" class="lesson-complete-bear" onerror="this.style.display='none'">
+        <div class="page-eyebrow" style="color:var(--coral);">${t('season.ach.eyebrow')}</div>
+        <div class="display" style="font-size:22px; color:var(--berry); margin-top:6px;">${ev.ico} ${t(ev.achTitleKey)}</div>
+        <div style="font-size:12.5px; color:var(--soft); margin-top:10px; line-height:1.5;">${t('season.ach.sub')}</div>
+        <button onclick="this.closest('.modal-bg').remove()" class="btn btn-primary btn-block" style="margin-top:18px;">${t('quest.reward.cta')}</button>
+      </div>`;
+    document.body.appendChild(m);
+  }
+
+  // ═══════════════ ФАЗА C2: ежемесячный TOPIK-марафон 📅 ═══════════════
+  // Расписание на несколько месяцев вперёд — без админки (v1). Зачёт — секция 읽기
+  // назначенного 회차, ровно в день марафона (первая суббота месяца); пересдача в
+  // тот же день — берём лучший результат. Единственная новая сетевая точка — один
+  // узел на участника: shared/marathon/<YYYY-MM>/<uid> (байты, см. принципы плана).
+  const MARATHON_SCHEDULE = {
+    '2026-08': { examNo: 102, lvl: 1 },
+    '2026-09': { examNo: 96,  lvl: 1 },
+    '2026-10': { examNo: 91,  lvl: 2 },
+    '2026-11': { examNo: 83,  lvl: 2 },
+    '2026-12': { examNo: 64,  lvl: 1 },
+    '2027-01': { examNo: 60,  lvl: 2 }
+  };
+  function firstSaturdayOfMonth(monthKey) {
+    const [y, mo] = monthKey.split('-').map(Number);
+    const d = new Date(Date.UTC(y, mo - 1, 1));
+    d.setUTCDate(d.getUTCDate() + ((6 - d.getUTCDay() + 7) % 7)); // 6 = суббота
+    return d.toISOString().slice(0, 10);
+  }
+  // Ближайший марафон — «этот месяц» ИЛИ следующие (до 2 месяцев вперёд). Без
+  // этого поиска обратный отсчёт ломался в последние дни месяца ПЕРЕД марафоном:
+  // если суббота выпадает на 1–2 число, «за 3 дня» приходится на предыдущий месяц,
+  // у которого своей записи в расписании нет — marathonDaysUntil() возвращал null
+  // вместо 3 (баг, пойман тестами до релиза).
+  function nextMarathonInfo() {
+    const now = new Date(todayIsoDate() + 'T00:00:00Z');
+    for (let offset = 0; offset <= 2; offset++) {
+      const d = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth() + offset, 1));
+      const mk = d.toISOString().slice(0, 7);
+      const sched = MARATHON_SCHEDULE[mk];
+      if (!sched) continue;
+      const sat = firstSaturdayOfMonth(mk);
+      const daysUntil = Math.round((new Date(sat + 'T00:00:00Z') - now) / 86400000);
+      if (daysUntil >= 0) return { month: mk, examNo: sched.examNo, lvl: sched.lvl, sat, daysUntil };
+    }
+    return null;
+  }
+  function marathonDaysUntil() {
+    const info = nextMarathonInfo();
+    return info ? info.daysUntil : null;
+  }
+  function activeMarathon() {
+    const info = nextMarathonInfo();
+    if (!info || info.daysUntil !== 0) return null;
+    return { month: info.month, examNo: info.examNo, lvl: info.lvl };
+  }
+  let _marathonMyResultCache = null;
+  function submitMarathonResult(m, score) {
+    if (typeof _db === 'undefined') return;
+    const uid = (typeof firebaseUserId === 'function' ? firebaseUserId() : '') || '';
+    if (!uid || uid === 'guest') return;
+    const u = Store.get('user');
+    const path = `shared/marathon/${m.month}/${uid}`;
+    _db.ref(path).once('value').then(snap => {
+      const prev = snap.val();
+      const best = Math.max(score, (prev && Number(prev.score)) || 0);
+      if (!prev || (Number(prev.score) || 0) < score) {
+        _db.ref(path).set({ score, name: (u && u.name) || 'Ученица', lvl: m.lvl, ts: Date.now() });
+      }
+      _marathonMyResultCache = { score: best, month: m.month };
+      try { renderMarathonCard(); } catch (_) {}
+    }).catch(() => {});
+  }
+  function renderMarathonCard() {
+    const slot = document.getElementById('marathon-card-slot');
+    if (!slot) return;
+    const info = nextMarathonInfo();
+    if (!info) { slot.innerHTML = ''; return; }
+    const lvlLabel = info.lvl === 2 ? 'TOPIK II' : 'TOPIK I';
+    let body, clickable = false;
+    if (_marathonMyResultCache && _marathonMyResultCache.month === info.month) {
+      body = t('marathon.card.done', { score: _marathonMyResultCache.score });
+    } else if (info.daysUntil === 0) {
+      body = t('marathon.card.today'); clickable = true;
+    } else {
+      body = t('marathon.card.countdown', { n: info.daysUntil });
+    }
+    const action = clickable ? `startTopikExam(${info.examNo},'reading'${info.lvl === 2 ? ',2' : ''})` : `toast(${JSON.stringify(t('marathon.notYet'))})`;
+    slot.innerHTML = `
+      <div onclick="${action}" class="topik-exam-card" style="cursor:pointer; margin-top:14px; background:linear-gradient(135deg, var(--gold-ink), var(--coral));">
+        <span class="topik-exam-ico">📅</span>
+        <div class="topik-exam-tx">
+          <div class="topik-exam-t">${t('marathon.card.title')} · ${lvlLabel}</div>
+          <div class="topik-exam-s">${body}</div>
+        </div>
+        <i class="fa-solid fa-chevron-right topik-exam-arrow"></i>
+      </div>`;
+  }
+
   function renderBearGuide() {
     const slot = document.getElementById('bear-guide-slot');
     if (!slot) return;
     let s = null;
     try { s = guideNextStep(); } catch (e) { console.warn('[guide]', e); }
     if (!s) { slot.innerHTML = ''; return; }
+    let questRow = '';
+    try { questRow = renderWeekQuestRow(); } catch (e) { console.warn('[quests]', e); }
     slot.innerHTML = `
       <div class="bear-guide">
         <img class="bear-guide-img" src="${s.img}" alt="" onerror="this.style.visibility='hidden'">
@@ -35928,7 +39105,8 @@
           <span class="chip chip-coral bear-guide-cta">${s.cta}</span>
         </button>
         <button type="button" class="bear-tour-btn" onclick="startAppTour()" aria-label="${escHtml(t('set.tour'))}" title="${escHtml(t('set.tour'))}">🧭</button>
-      </div>`;
+      </div>
+      ${questRow}`;
   }
 
   // ── Тур по приложению: экскурсия с Комдори (прожектор + карточка-шаг) ──
@@ -36145,6 +39323,8 @@
     if (email) email.textContent = savedUser.email || (savedUser.guest ? 'гостевой режим' : 'без email');
     const adminBadge = document.getElementById('profile-admin-badge');
     if (adminBadge) adminBadge.style.display = savedUser.isAdmin ? 'inline-flex' : 'none';
+    const sonbaeBadge2 = document.getElementById('profile-sonbae-badge');
+    if (sonbaeBadge2) sonbaeBadge2.style.display = stats.sonbaeAwarded ? 'inline-flex' : 'none';
     setProfileAdminMode(!!savedUser.isAdmin);
   } else {
     // Гость, назвавший имя в знакомстве, — здороваемся по имени

@@ -34,11 +34,11 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
 
-<link rel="stylesheet" href="styles.css?v=20260703d">
+<link rel="stylesheet" href="styles.css?v=20260707p">
 
 <!-- Предзагрузка тяжёлого JS: скачивание стартует сразу, параллельно с CSS/шрифтами -->
 <link rel="preload" href="assets/textbook/textbook-data.js?v=20260629a" as="script">
-<link rel="preload" href="app.js?v=20260706a" as="script">
+<link rel="preload" href="app.js?v=20260707p" as="script">
 </head>
 
 <body>
@@ -124,8 +124,9 @@
         </div>
       </div>
       <div style="display:flex; align-items:center; gap:8px;">
-        <span class="stat-pill"><span class="ico" style="color:var(--coral)">🔥</span><span id="streak-value">0</span></span>
-        <span class="stat-pill"><span class="ico" style="color:var(--gold)">✨</span><span id="xp-value">0</span></span>
+        <span class="stat-pill stat-pill-btn" role="button" tabindex="0" onclick="openStreakInfo()" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault(); openStreakInfo();}" aria-label="Стрик" data-i18n-aria="a11y.streakPill"><span class="ico" style="color:var(--coral)">🔥</span><span id="streak-value">0</span></span>
+        <span id="freeze-pill" class="stat-pill stat-pill-btn" style="display:none;" role="button" tabindex="0" onclick="openDailyGoalSettings()" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault(); openDailyGoalSettings();}" aria-label="Заморозки стрика" data-i18n-aria="a11y.freezePill"><span class="ico" style="color:var(--soft)">🧊</span><span id="freeze-value">0</span></span>
+        <span class="stat-pill stat-pill-btn" role="button" tabindex="0" onclick="showRanksList()" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault(); showRanksList();}" aria-label="Опыт и уровень" data-i18n-aria="a11y.xpPill"><span class="ico" style="color:var(--gold)">✨</span><span id="xp-value">0</span></span>
         <button onclick="openSettingsModal()" class="chat-back-btn" aria-label="Настройки" title="Настройки" data-i18n-aria="set.title" data-i18n-title="set.title"><i class="fa-solid fa-gear"></i></button>
       </div>
     </header>
@@ -181,6 +182,15 @@
 
     <!-- SRS "review today" widget (dynamic; hidden when nothing is due) -->
     <div id="srs-widget" style="padding: 0 20px 16px;"></div>
+
+    <!-- Сезонный ивент (ФАЗА C1, dynamic; скрыт вне окна ивента) -->
+    <div id="season-banner-slot" style="padding: 0 20px 16px;"></div>
+
+    <!-- «Игра дня» ×2 XP (ФАЗА E1, dynamic) -->
+    <div id="game-of-day-widget" style="padding: 0 20px 16px;"></div>
+
+    <!-- «Вопрос дня» TOPIK (ФАЗА T2, dynamic; скрыт, если не нужно показывать сегодня) -->
+    <div id="topik-question-widget" style="padding: 0 20px 16px;"></div>
 
     <!-- TOPIK prep entry (над текущим уроком) -->
     <div style="padding: 0 20px 20px;">
@@ -275,6 +285,14 @@
           <span class="topik-entry-title" data-i18n="lessons.reading">Чтение · 말하기</span>
           <span class="topik-entry-sub" data-i18n="lessons.reading.sub">тексты KO-RU · разбор слов · читать вслух за диктором</span>
         </span>
+      </button>
+      <button type="button" id="lessons-write-entry" style="display:none;" onclick="openWritingPractice()" class="topik-entry be-write" aria-label="Письмо RU→KO" data-i18n-aria="lessons.write">
+        <span class="topik-entry-badge be-badge">쓰기 ✍️</span>
+        <span class="topik-entry-text">
+          <span class="topik-entry-title" data-i18n="lessons.write">Письмо RU→KO</span>
+          <span class="topik-entry-sub" data-i18n="lessons.write.sub">переведи · опиши · ответь — с ИИ-проверкой или Мади</span>
+        </span>
+        <i class="fa-solid fa-chevron-right topik-entry-arrow" aria-hidden="true"></i>
       </button>
       <button type="button" onclick="openTextbook()" class="topik-entry be-book" aria-label="Учебник — корейский с нуля">
         <span class="topik-entry-badge be-badge">교과서 📖</span>
@@ -434,12 +452,38 @@
           <button type="button" role="tab" id="game-src-mine" class="wt-chip" onclick="setGameSource('mine')">💗 <span data-i18n="games.src.mine">Мои слова</span> <span id="game-src-mine-n"></span></button>
         </div>
         <div style="font-size:10px; color:var(--hush); margin-top:6px; line-height:1.45;" data-i18n="games.src.hint">Выбор действует на игры со словами: перевод, слух, память, сборка, карточки, кроссворд, поиск слов</div>
+        <div id="hardcore-toggle-slot"></div>
       </div>
 
       <!-- ⭐ Избранные игры — всплывают наверх -->
       <div id="games-fav-wrap" style="display:none;">
         <div class="section-head"><div class="left"><div class="rule"></div><span class="title"><span data-i18n="games.fav">Избранное</span> <span style="color:var(--gold); margin-left:6px;">★</span></span></div><span class="meta" data-i18n="games.fav.m">любимые игры</span></div>
         <div class="games-grid" id="games-fav-grid"></div>
+      </div>
+
+      <!-- ✨ Новинки — последние добавленные игры/режимы, всегда первыми в списке -->
+      <div class="section-head"><div class="left"><div class="rule"></div><span class="title"><span data-i18n="games.sec.new">Новинки</span> <span style="color:var(--gold); margin-left:6px;">✨</span></span></div><span class="meta" data-i18n="games.sec.new.m">только что добавили</span></div>
+      <div class="games-grid">
+        <div onclick="startParticles()" class="game-card-v2 gcv-wide gcv-accent" data-game-key="particles">
+          <span class="gcv-flag" data-i18n="games.flag.new">Новинка</span>
+          <div class="gcv-icon"><div class="gcv-emoji-icon gcv-svg"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg></div></div>
+          <div class="gcv-title" data-i18n="games.c.part">Частицы</div>
+          <div class="gcv-ko ko">조사</div>
+          <div class="gcv-sub" data-i18n="games.c.part.sub">Выбери 은/는 · 이/가 · 을/를 · 에/에서</div>
+          <div class="gcv-foot">
+            <span class="best-score gcv-best">Ещё не играли</span>
+            <span class="gcv-xp">+6 XP</span>
+          </div>
+        </div>
+      </div>
+      <div onclick="openTopikPracticeFromGames()" class="topik-exam-card" style="margin-top:8px; cursor:pointer; position:relative;">
+        <span class="gcv-flag" data-i18n="games.flag.new">Новинка</span>
+        <span class="topik-exam-ico">🎯</span>
+        <div class="topik-exam-tx">
+          <div class="topik-exam-t" data-i18n="games.topikLink.t">TOPIK-тренажёры</div>
+          <div class="topik-exam-s" data-i18n="games.topikLink.s">Связки · Порядок · колоды слов · дриллы</div>
+        </div>
+        <i class="fa-solid fa-chevron-right topik-exam-arrow"></i>
       </div>
 
       <!-- Хангыль · 한글 -->
@@ -549,7 +593,7 @@
       </div>
 
       <!-- Перевод & грамматика · 번역 + 문법 -->
-      <div class="section-head" style="margin-top:8px;"><div class="left"><div class="rule"></div><span class="title"><span data-i18n="games.sec.tr">Перевод и грамматика</span> <span class="ko" style="color:var(--coral); font-weight:500; margin-left:6px;">번역 · 문법</span></span></div><span class="meta" data-i18n="games.sec.tr.m">5 игр</span></div>
+      <div class="section-head" style="margin-top:8px;"><div class="left"><div class="rule"></div><span class="title"><span data-i18n="games.sec.tr">Перевод и грамматика</span> <span class="ko" style="color:var(--coral); font-weight:500; margin-left:6px;">번역 · 문법</span></span></div><span class="meta" data-i18n="games.sec.tr.m">4 игры</span></div>
       <div class="games-grid">
         <div onclick="startTranslate()" class="game-card-v2 gcv-wide" data-game-key="translate">
           <div class="gcv-icon"><div class="gcv-emoji-icon gcv-svg"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h7"/><path d="M7.5 4c0 4.5-2 7.5-4.5 9.5"/><path d="M5 9c.6 1.7 2.2 3.7 4.5 4.8"/><path d="m12.5 20 4-9 4 9"/><path d="M14 17h5"/></svg></div></div>
@@ -591,16 +635,6 @@
             <span class="gcv-xp">+20 XP</span>
           </div>
         </div>
-        <div onclick="openParticles()" class="game-card-v2 gcv-wide" data-game-key="particles">
-          <div class="gcv-icon"><div class="gcv-emoji-icon gcv-svg"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg></div></div>
-          <div class="gcv-title" data-i18n="games.c.part">Частицы</div>
-          <div class="gcv-ko ko">조사</div>
-          <div class="gcv-sub" data-i18n="games.c.part.sub">Выбери 은/는 · 이/가 · 을/를 · 에/에서</div>
-          <div class="gcv-foot">
-            <span class="best-score gcv-best">Ещё не играли</span>
-            <span class="gcv-xp">+6 XP</span>
-          </div>
-        </div>
       </div>
 
       <!-- Музыка · 케이팝 -->
@@ -627,9 +661,10 @@
     <header class="topbar">
       <div>
         <div class="page-eyebrow" data-i18n="profile.eyebrow">ПРОФИЛЬ</div>
-        <div style="display:flex; align-items:center; gap:8px; margin-top:2px;">
-          <h1 class="display" style="font-size:22px; color:var(--berry);" id="profile-name">Гость</h1>
-          <span id="profile-admin-badge" class="chip chip-coral" style="display:none; font-size:9px;" data-i18n="ix.adminBadge">🔑 АДМИН</span>
+        <div style="display:flex; flex-wrap:wrap; align-items:center; gap:4px 8px; margin-top:2px;">
+          <h1 class="display" style="font-size:22px; color:var(--berry); min-width:0;" id="profile-name">Гость</h1>
+          <span id="profile-admin-badge" class="chip chip-coral" style="display:none; font-size:9px; flex-shrink:0;" data-i18n="ix.adminBadge">🔑 АДМИН</span>
+          <span id="profile-sonbae-badge" class="chip chip-gold" style="display:none; font-size:9px; flex-shrink:0;" title="선배" data-i18n-title="sonbae.badge.title">🎓 선배</span>
         </div>
       </div>
       <div style="display:flex; align-items:center; gap:8px; flex-shrink:0;">
@@ -763,6 +798,7 @@
           <span onclick="showAllAchievements()" style="font-size: 11px; color: var(--coral); font-weight: 600; cursor: pointer;" data-i18n="profile.all">Все →</span>
         </div>
         <div id="ach-strip" class="scroll-x"></div>
+        <div id="sticker-shelf-slot"></div>
       </div>
 
       <!-- Stats grid (student only) -->
@@ -825,6 +861,8 @@
 
       <!-- Tariff plan (student only) — внизу профиля -->
       <div id="profile-plan-slot" class="profile-student-only" style="margin-top:22px;"></div>
+      <!-- «Пригласи друга» (ФАЗА B1, dynamic) -->
+      <div id="profile-invite-slot" class="profile-student-only"></div>
 
       <!-- «Редактировать профиль» и «Выйти» — в Настройках (⚙️ сверху) -->
       <button onclick="shareProgress()" class="btn btn-primary btn-block profile-student-only" style="margin-top: 14px;">
@@ -1049,7 +1087,7 @@
 
 <!-- ─────────────── DATA + LOGIC ─────────────── -->
 <script src="assets/textbook/textbook-data.js?v=20260629a"></script>
-<script src="app.js?v=20260706a"></script>
+<script src="app.js?v=20260707p"></script>
 
 </body>
 </html>
