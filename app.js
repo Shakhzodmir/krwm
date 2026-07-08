@@ -2480,6 +2480,30 @@
   document.addEventListener('touchend', _unlockIosAudioOnce, { once: true, passive: true });
   document.addEventListener('click', _unlockIosAudioOnce, { once: true });
 
+  // ── iOS: возврат нижней навигации после клавиатуры ──
+  // Баг Safari: position:fixed-элементы (нижняя навигация) после закрытия клавиатуры —
+  // особенно при автозаполнении пароля — иногда остаются отрисованными ЗА нижней
+  // границей экрана, пока страницу не поскроллишь. Когда visualViewport возвращается
+  // к полной высоте, мягко перещёлкиваем layout: скролл-«тычок» + пересчёт transform.
+  (function () {
+    const isIos = /iPhone|iPad|iPod/.test(navigator.userAgent) ||
+      (/Macintosh/.test(navigator.userAgent) && navigator.maxTouchPoints > 1); // iPadOS прикидывается Mac
+    if (!isIos || !window.visualViewport) return;
+    let vvTimer = null;
+    window.visualViewport.addEventListener('resize', () => {
+      clearTimeout(vvTimer);
+      vvTimer = setTimeout(() => {
+        if (window.visualViewport.height < window.innerHeight - 60) return; // клавиатура ещё открыта
+        window.scrollTo(window.scrollX, window.scrollY);   // якорим fixed-элементы заново
+        const nav = document.querySelector('.bottomnav');
+        if (nav) {
+          nav.style.transform = 'translateX(-50%) translateZ(0)';
+          requestAnimationFrame(() => { nav.style.transform = ''; }); // вернуть значение из CSS
+        }
+      }, 150);
+    });
+  })();
+
   // ── Нативный корейский TTS (Google Cloud TTS через Cloudflare Worker) ──
   // URL воркера задаётся Мади в админке (раздаётся всем через shared/config/ttsProxyUrl)
   // или через window.KM_TTS_PROXY_URL / localStorage 'km_tts_proxy'. Пусто => фолбэк
@@ -5677,7 +5701,7 @@
   // Версия сборки: держать В РУЧНУЮ синхронной с ?v= в index.html при каждом деплое
   // (те же 3 места — stylesheet/preload/script). Используется только для попапа
   // «доступно обновление» ниже — сама загрузка кода по-прежнему идёт через ?v=.
-  const APP_VERSION = '20260708d';
+  const APP_VERSION = '20260708e';
   function showUpdateAvailableModal() {
     if (document.getElementById('update-avail-modal')) return;
     const m = document.createElement('div');

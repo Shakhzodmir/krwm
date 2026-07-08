@@ -8,7 +8,7 @@ importScripts('https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js
 importScripts('https://www.gstatic.com/firebasejs/10.12.2/firebase-messaging-compat.js');
 
 // ───────────────────────── PWA APP-SHELL CACHE ─────────────────────────
-const CACHE_VERSION = 'madie-v3';
+const CACHE_VERSION = 'madie-v4';
 const SHELL = [
   './',
   './index.html',
@@ -50,8 +50,12 @@ self.addEventListener('fetch', e => {
     if (isCode && !versioned) {
       // index.html и немаркированный код: без версии в URL мы не знаем, свежий ли
       // кэш — поэтому всегда идём в сеть, кэш только для офлайна.
+      // cache:'no-cache' обязателен: GitHub Pages отдаёт max-age=600, и обычный fetch
+      // до 10 минут молча брал СТАРЫЙ index.html из HTTP-кэша браузера («обновляю —
+      // ничего не меняется»). С no-cache браузер всегда сверяется с сервером по ETag
+      // (ответ 304 — дёшево), и новая версия видна с первой перезагрузки.
       e.respondWith(
-        fetch(req).then(res => {
+        fetch(req, { cache: 'no-cache' }).then(res => {
           if (res && res.ok) {
             const copy = res.clone();
             caches.open(CACHE_VERSION).then(c => c.put(req, copy));
