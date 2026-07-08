@@ -827,10 +827,11 @@
     'plans.master.f3': { ru: 'K-Pop Fill — учим корейский по любимым песням', en: 'K-Pop Fill — learn Korean through your favorite songs', uz: 'K-Pop Fill — sevimli qoʻshiqlar orqali koreyschani oʻrganish' },
     'plans.master.f4': { ru: 'Архив реальных экзаменов с аудио', en: 'Archive of real exams with audio', uz: 'Audio bilan haqiqiy imtihonlar arxivi' },
     'plans.master.f5': { ru: 'Домашние задания с проверкой от Мади', en: 'Homework checked by Madie', uz: 'Madie tekshiradigan uy vazifalari' },
+    'plans.master.f6': { ru: 'ИИ-словарь: перевод, примеры, синонимы и похожие слова', en: 'AI dictionary: translation, examples, synonyms and related words', uz: 'AI lugʻat: tarjima, misollar, sinonimlar va oʻxshash soʻzlar' },
     'plans.proai.tagline': { ru: 'Максимум + личный ИИ', en: 'Maximum + your personal AI', uz: 'Maksimum + shaxsiy sunʼiy intellekt' },
     'plans.proai.f1': { ru: 'Всё из Master', en: 'Everything in Master', uz: 'Masterdagi barchasi' },
     'plans.proai.f2': { ru: 'ИИ-репетитор 24/7 — урок с ИИ в любое время', en: 'AI tutor 24/7 — a lesson with AI anytime', uz: 'Sunʼiy intellekt repetitor 24/7 — istalgan vaqtda AI bilan dars' },
-    'plans.proai.f3': { ru: 'ИИ-словарь: примеры, синонимы, похожие слова', en: 'AI dictionary: examples, synonyms, related words', uz: 'Sunʼiy intellekt lugʻat: misollar, sinonimlar, oʻxshash soʻzlar' },
+    'plans.proai.f3': { ru: 'ИИ-проверка письма: оценка, исправления и разбор ошибок', en: 'AI writing check: score, corrections and mistake breakdown', uz: 'AI yozuv tekshiruvi: baho, tuzatishlar va xatolar tahlili' },
     'plans.proai.f4': { ru: 'Объяснение ошибок и подсказки от ИИ', en: 'AI explains mistakes and gives hints', uz: 'Xatolarni tushuntirish va sunʼiy intellektdan maslahatlar' },
     // ── 08.07: сплошной аудит захардкоженных RU-строк вне i18n (toast/innerHTML/textContent) ──
     'audio.soundOff': { ru: 'Озвучка выключена в настройках 🔇', en: 'Sound is off in settings 🔇', uz: 'Ovoz sozlamalarda oʻchirilgan 🔇' },
@@ -1150,6 +1151,11 @@
     'lessons.write.sub':  { ru: 'переведи · опиши · ответь — с ИИ-проверкой или Мади', en: 'translate · describe · answer — checked by AI or Madie', uz: 'tarjima · tasvirlash · javob — AI yoki Madie tekshiradi' },
     'wp.eyebrow':      { ru: 'ПИСЬМЕННАЯ ПРАКТИКА', en: 'WRITING PRACTICE', uz: 'YOZMA AMALIYOT' },
     'wp.title':        { ru: 'RU → KO ✍️', en: 'RU → KO ✍️', uz: 'RU → KO ✍️' },
+    'wp.intro':        { ru: 'Выбери задание, напиши ответ по-корейски и получи разбор от ИИ или отправь его Мади.', en: 'Pick a task, write your answer in Korean and get an AI review — or send it to Madie.', uz: 'Topshiriqni tanlang, javobni koreyscha yozing va AI tahlilini oling yoki Madiega yuboring.' },
+    'wp.backToList':   { ru: 'К заданиям', en: 'Back to tasks', uz: 'Topshiriqlarga' },
+    'wp.locked.title': { ru: 'Письменная практика закрыта', en: 'Writing practice is locked', uz: 'Yozma amaliyot yopiq' },
+    'wp.locked.msg':   { ru: 'Сначала пройди Модуль 2 — и раздел письма откроется 🌸', en: 'Finish Module 2 first — then writing practice opens 🌸', uz: 'Avval 2-modulni tugating — soʻng yozma amaliyot ochiladi 🌸' },
+    'wp.locked.btn':   { ru: 'К урокам', en: 'To lessons', uz: 'Darslarga' },
     'wp.writeTitle':   { ru: 'Напиши ответ по-корейски', en: 'Write your answer in Korean', uz: 'Javobni koreyscha yozing' },
     'wp.placeholder':  { ru: 'Пиши здесь на корейском…', en: 'Write in Korean here…', uz: 'Bu yerga koreyscha yozing…' },
     'wp.checkAi':      { ru: 'Проверить с ИИ', en: 'Check with AI', uz: 'AI bilan tekshirish' },
@@ -2497,7 +2503,17 @@
     if (_ttsCache.has(key)) return _ttsCache.get(key);
     const params = new URLSearchParams({ text: text, rate: slow ? '0.7' : '1.0' });
     if (voice) params.set('voice', voice);
-    const resp = await fetch(ttsProxyUrl() + '/tts?' + params.toString());
+    // Таймаут обязателен: у части провайдеров (РФ душит Cloudflare) соединение к воркеру
+    // не падает, а ВИСНЕТ — без abort() fetch ждал бы вечно, фолбэк на голос браузера
+    // не срабатывал, и озвучка молчала совсем (отзыв ученицы 08.07).
+    const ctrl = (typeof AbortController === 'function') ? new AbortController() : null;
+    const timer = ctrl ? setTimeout(() => { try { ctrl.abort(); } catch (_) {} }, 4000) : null;
+    let resp;
+    try {
+      resp = await fetch(ttsProxyUrl() + '/tts?' + params.toString(), ctrl ? { signal: ctrl.signal } : undefined);
+    } finally {
+      if (timer) clearTimeout(timer);
+    }
     if (!resp.ok) throw new Error('tts proxy ' + resp.status);
     const blob = await resp.blob();
     const url = URL.createObjectURL(blob);
@@ -5356,7 +5372,7 @@
       id: 'master', name: 'Master', emoji: '🌸',
       get tagline() { return t('plans.master.tagline'); },
       priceM: 10, priceYM: 8, priceY: 99, firstM: 5,
-      get features() { return [t('plans.master.f1'), t('plans.master.f2'), t('plans.master.f3'), t('plans.master.f4'), t('plans.master.f5')]; }
+      get features() { return [t('plans.master.f1'), t('plans.master.f2'), t('plans.master.f3'), t('plans.master.f4'), t('plans.master.f5'), t('plans.master.f6')]; }
     },
     proai: {
       id: 'proai', name: 'Pro AI', emoji: '✨',
@@ -5661,7 +5677,7 @@
   // Версия сборки: держать В РУЧНУЮ синхронной с ?v= в index.html при каждом деплое
   // (те же 3 места — stylesheet/preload/script). Используется только для попапа
   // «доступно обновление» ниже — сама загрузка кода по-прежнему идёт через ?v=.
-  const APP_VERSION = '20260708c';
+  const APP_VERSION = '20260708d';
   function showUpdateAvailableModal() {
     if (document.getElementById('update-avail-modal')) return;
     const m = document.createElement('div');
@@ -37170,11 +37186,21 @@
   // без входа в аккаунт — ключи провайдеров живут только в секретах воркера.
   async function aiCallChat(payload) {
     const messages = Array.isArray(payload) ? payload : [{ role: 'user', content: String(payload) }];
-    const resp = await fetch(AI_PROXY_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ messages: messages })
-    });
+    // Таймаут: зависшее (а не упавшее) соединение к воркеру иначе держало бы «ИИ печатает…»
+    // вечно — тот же класс проблемы, что и в _ttsFetchUrl (провайдеры, душащие Cloudflare).
+    const ctrl = (typeof AbortController === 'function') ? new AbortController() : null;
+    const timer = ctrl ? setTimeout(() => { try { ctrl.abort(); } catch (_) {} }, 45000) : null;
+    let resp;
+    try {
+      resp = await fetch(AI_PROXY_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ messages: messages }),
+        signal: ctrl ? ctrl.signal : undefined
+      });
+    } finally {
+      if (timer) clearTimeout(timer);
+    }
     if (!resp.ok) {
       const detail = await resp.text().catch(() => '');
       throw new Error(`ai proxy ${resp.status}: ${detail.slice(0, 200)}`);
@@ -37371,7 +37397,7 @@
     try { return JSON.parse(t.slice(a, b + 1)); } catch (_) { return null; }
   }
   async function dictLookup() {
-    if (!requirePlan('proai', t('feat.aiDict'))) return;
+    if (!requirePlan('master', t('feat.aiDict'))) return;
     if (_dictBusy) return;
     const q = (document.getElementById('dict-q')?.value || '').trim();
     const slot = document.getElementById('dict-result');
@@ -37445,15 +37471,33 @@
   // см. _dictParse), ЛИБО отправка ответа Мади в существующий чат — обе бесплатны
   // по доступу к заданиям, платна только САМА ИИ-проверка (requirePlan('proai')).
   const WRITING_TASKS = [
+    // ── Уровень 0 · начинающий (настоящее время, базовая лексика) ──
     { id:'w0-tr', lvl:0, type:'translate', phrases:['Меня зовут Мин Джи.', 'Я студентка.', 'Сегодня хорошая погода.'] },
     { id:'w0-de', lvl:0, type:'describe', scene:'☕📖🌸', hint:'кофе, книга, весна' },
     { id:'w0-an', lvl:0, type:'answer', question:'Что ты обычно ешь на завтрак?' },
+    { id:'w0-tr2', lvl:0, type:'translate', phrases:['Это моя подруга.', 'Я люблю корейскую еду.', 'Завтра я иду в школу.'] },
+    { id:'w0-an2', lvl:0, type:'answer', question:'Расскажи немного о себе: как тебя зовут и откуда ты?' },
+    { id:'w0-de2', lvl:0, type:'describe', scene:'🍜🥢😋', hint:'лапша, палочки, вкусно' },
+    { id:'w0-an3', lvl:0, type:'answer', question:'Какое твоё любимое время года и почему?' },
+    { id:'w0-tr3', lvl:0, type:'translate', phrases:['Сколько это стоит?', 'Я не понимаю.', 'Повторите, пожалуйста.'] },
+    // ── Уровень 1 · средний (прошедшее время, причины, связки) ──
     { id:'w1-tr', lvl:1, type:'translate', phrases:['Вчера я ходила в кино с другом.', 'Я хочу выучить корейский, потому что люблю K-pop.', 'Извините, где находится ближайшая станция метро?'] },
     { id:'w1-de', lvl:1, type:'describe', scene:'🌧️🏠👨‍👩‍👧', hint:'дождь, дом, семья' },
     { id:'w1-an', lvl:1, type:'answer', question:'Как ты обычно проводишь выходные?' },
+    { id:'w1-tr2', lvl:1, type:'translate', phrases:['Я изучаю корейский уже год.', 'На прошлой неделе я была очень занята.', 'Давай встретимся в субботу днём.'] },
+    { id:'w1-an2', lvl:1, type:'answer', question:'Расскажи о своём любимом корейском блюде — как оно выглядит и из чего готовится.' },
+    { id:'w1-de2', lvl:1, type:'describe', scene:'🎂🎈👯', hint:'торт, шарики, подруги — день рождения' },
+    { id:'w1-an3', lvl:1, type:'answer', question:'Почему ты начала учить корейский язык?' },
+    { id:'w1-tr3', lvl:1, type:'translate', phrases:['Хотя шёл дождь, мы пошли гулять.', 'После работы мне нужно зайти в магазин.'] },
+    // ── Уровень 2 · продвинутый (сложная грамматика, мнение) ──
     { id:'w2-tr', lvl:2, type:'translate', phrases:['Несмотря на то, что было трудно, она не сдалась.', 'Если бы у меня было больше времени, я бы путешествовала по Корее.', 'Мне кажется, что изучение языка требует терпения и постоянной практики.'] },
     { id:'w2-de', lvl:2, type:'describe', scene:'🎓📚✈️🌏', hint:'учёба, книги, путешествие, мир' },
-    { id:'w2-an', lvl:2, type:'answer', question:'Расскажи о своей мечте — куда бы ты хотела поехать в Корее и почему?' }
+    { id:'w2-an', lvl:2, type:'answer', question:'Расскажи о своей мечте — куда бы ты хотела поехать в Корее и почему?' },
+    { id:'w2-tr2', lvl:2, type:'translate', phrases:['Чем больше я учу корейский, тем интереснее мне становится.', 'Говорят, что этот сериал обязательно стоит посмотреть.'] },
+    { id:'w2-an2', lvl:2, type:'answer', question:'Как, по-твоему, технологии изменили нашу повседневную жизнь?' },
+    { id:'w2-de2', lvl:2, type:'describe', scene:'🌆🚇💼', hint:'город, метро, работа — будни в Сеуле' },
+    { id:'w2-an3', lvl:2, type:'answer', question:'Согласна ли ты, что путешествия делают человека мудрее? Обоснуй свой ответ.' },
+    { id:'w2-tr3', lvl:2, type:'translate', phrases:['Если бы я знала об этом раньше, я бы поступила по-другому.', 'Несмотря на усталость, она продолжала заниматься.'] }
   ];
   function writingTaskLabel(task) {
     if (task.type === 'translate') return t('wp.type.translate', { n: task.phrases.length });
@@ -37467,44 +37511,83 @@
   }
   function writingTasksDoneIds() { try { return new Set((stats.writingSubmits || []).map(x => x.taskId)); } catch (_) { return new Set(); } }
   let _wpLevel = 0;
+  let _wpView = 'list';
   function openWritingPractice() {
-    if (!isModuleUnlocked('m3')) return;
+    if (document.getElementById('writing-practice-page')) return;
     _wpLevel = Math.max(0, Math.min(2, userLevelRank()));
+    _wpView = 'list';
     const m = document.createElement('div');
-    m.className = 'modal-bg modal-center';
-    m.id = 'writing-practice-modal';
-    m.onclick = e => { if (e.target === m) m.remove(); };
+    m.className = 'wp-page';
+    m.id = 'writing-practice-page';
+    m.innerHTML = `
+      <div class="wp-shell">
+        <header class="wp-header">
+          <div class="wp-header-inner">
+            <button onclick="_wpBack()" class="chat-back-btn" aria-label="${t('a11y.back')}"><i class="fa-solid fa-arrow-left"></i></button>
+            <div class="wp-header-ava"><span>✍️</span></div>
+            <div style="flex:1; min-width:0;">
+              <div class="wp-header-title">${t('wp.title')} <span class="ai-tutor-badge">쓰기</span></div>
+              <div class="wp-header-sub">${t('lessons.write.sub')}</div>
+            </div>
+          </div>
+        </header>
+        <div class="wp-body" id="wp-body"></div>
+      </div>`;
     document.body.appendChild(m);
-    _renderWritingList(m);
+    document.body.classList.add('chat-open'); // полноэкранный режим: прячем нижнюю навигацию
+    // Плитку видят все, но письмо открывается только после Модуля 2 (админу — всегда).
+    // Кто не прошёл — видит понятную заглушку, а не пустой экран.
+    if (isModuleUnlocked('m3') || isAdmin()) { _renderWritingList(); }
+    else { _renderWritingLocked(); }
   }
-  function _renderWritingList(m) {
-    m = m || document.getElementById('writing-practice-modal');
-    if (!m) return;
+  function _renderWritingLocked() {
+    _wpView = 'locked';
+    const body = document.getElementById('wp-body');
+    if (!body) return;
+    body.innerHTML = `
+      <div class="wp-body-inner">
+        <div class="wp-locked">
+          <div class="wp-locked-ico">🔒</div>
+          <div class="wp-locked-title">${t('wp.locked.title')}</div>
+          <div class="wp-locked-msg">${t('wp.locked.msg')}</div>
+          <button class="btn btn-rose" onclick="closeWritingPractice(); switchScreen('lessons');">${t('wp.locked.btn')}</button>
+        </div>
+      </div>`;
+  }
+  function closeWritingPractice() {
+    document.getElementById('writing-practice-page')?.remove();
+    // Снимаем полноэкранный режим, только если под письмом нет другого оверлея.
+    if (!document.getElementById('chat-page') && !document.getElementById('ai-tutor-modal') && !document.getElementById('plan-page')) {
+      document.body.classList.remove('chat-open');
+    }
+  }
+  function _wpBack() {
+    if (_wpView === 'task') { _renderWritingList(); }
+    else { closeWritingPractice(); }
+  }
+  function _renderWritingList() {
+    _wpView = 'list';
+    const body = document.getElementById('wp-body');
+    if (!body) return;
     const done = writingTasksDoneIds();
     const tasks = WRITING_TASKS.filter(x => x.lvl === _wpLevel);
-    m.innerHTML = `
-      <div class="modal-card" style="max-width:400px;">
-        <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:12px;">
-          <div>
-            <div class="page-eyebrow">${t('wp.eyebrow')}</div>
-            <div class="display" style="font-size:20px; color:var(--berry); margin-top:2px;">${t('wp.title')}</div>
-          </div>
-          <div onclick="this.closest('.modal-bg').remove()" style="font-size:24px; line-height:1; color:var(--soft); cursor:pointer; padding:4px;">×</div>
-        </div>
-        <div style="display:flex; gap:6px; margin-bottom:14px;">
+    body.innerHTML = `
+      <div class="wp-body-inner">
+        <div class="wp-intro">${t('wp.intro')}</div>
+        <div class="wp-levels">
           ${STUDY_LEVELS.slice(0, 3).map((lv, i) => `<button type="button" class="wt-chip${_wpLevel === i ? ' active' : ''}" onclick="_wpLevel=${i}; _renderWritingList();">${t(lv.tk)}</button>`).join('')}
         </div>
-        <div style="display:grid; gap:10px;">
+        <div class="wp-tasks">
           ${tasks.map(task => `
-            <div class="quest-item" onclick="startWritingTask('${task.id}')">
-              <span class="quest-item-ico">${task.type === 'translate' ? '🔤' : task.type === 'describe' ? '🖼️' : '💬'}</span>
-              <div class="quest-item-main">
-                <div class="quest-item-title">${writingTaskLabel(task)}</div>
-                <div class="quest-item-sub">${task.type === 'translate' ? escHtml(task.phrases[0]) : task.type === 'describe' ? escHtml(task.hint) : escHtml(task.question)}</div>
-              </div>
-              ${done.has(task.id) ? '<span class="quest-item-val" style="color:var(--ok-ink);">✓</span>' : ''}
-              <span class="quest-item-chev">›</span>
-            </div>`).join('')}
+            <button type="button" class="wp-card" onclick="startWritingTask('${task.id}')">
+              <span class="wp-card-ico">${task.type === 'translate' ? '🔤' : task.type === 'describe' ? '🖼️' : '💬'}</span>
+              <span class="wp-card-main">
+                <span class="wp-card-title" style="display:block;">${writingTaskLabel(task)}</span>
+                <span class="wp-card-sub" style="display:block;">${task.type === 'translate' ? escHtml(task.phrases[0]) : task.type === 'describe' ? escHtml(task.hint) : escHtml(task.question)}</span>
+              </span>
+              ${done.has(task.id) ? '<span class="wp-card-done">✓</span>' : ''}
+              <span class="wp-card-chev">›</span>
+            </button>`).join('')}
         </div>
       </div>`;
   }
@@ -37513,26 +37596,24 @@
     const task = WRITING_TASKS.find(x => x.id === id);
     if (!task) return;
     _wpCurTask = task;
-    const m = document.getElementById('writing-practice-modal');
-    if (!m) return;
-    m.innerHTML = `
-      <div class="modal-card" style="max-width:400px;">
-        <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:12px;">
-          <div>
-            <div class="page-eyebrow">${writingTaskLabel(task)}</div>
-            <div class="display" style="font-size:18px; color:var(--berry); margin-top:2px;">${t('wp.writeTitle')}</div>
-          </div>
-          <button onclick="_renderWritingList()" class="chat-back-btn" aria-label="${t('a11y.back')}"><i class="fa-solid fa-arrow-left"></i></button>
+    _wpView = 'task';
+    const body = document.getElementById('wp-body');
+    if (!body) return;
+    body.innerHTML = `
+      <div class="wp-body-inner">
+        <button type="button" class="wp-task-back" onclick="_renderWritingList()"><i class="fa-solid fa-arrow-left"></i> ${t('wp.backToList')}</button>
+        <div class="wp-prompt">
+          <div class="wp-prompt-label">${writingTaskLabel(task)}</div>
+          ${writingTaskPromptHtml(task)}
         </div>
-        <div class="exam-passage" style="margin-bottom:12px;">${writingTaskPromptHtml(task)}</div>
-        <textarea id="wp-answer" class="input ko" rows="5" placeholder="${t('wp.placeholder')}" style="resize:vertical; width:100%; font-size:15px;"></textarea>
-        <div style="display:grid; gap:8px; margin-top:12px;">
+        <textarea id="wp-answer" class="wp-textarea ko" placeholder="${t('wp.placeholder')}"></textarea>
+        <div class="wp-actions">
           <button onclick="checkWritingWithAi()" class="btn btn-rose btn-block">✨ ${t('wp.checkAi')}</button>
           <button onclick="sendWritingToMadie()" class="btn btn-ghost btn-block">💌 ${t('wp.sendMadie')}</button>
         </div>
-        <div id="wp-result" style="margin-top:14px;"></div>
+        <div id="wp-result" class="wp-result"></div>
       </div>`;
-    setTimeout(() => document.getElementById('wp-answer')?.focus(), 100);
+    setTimeout(() => document.getElementById('wp-answer')?.focus(), 120);
   }
   function _wpRecordSubmit(taskId) {
     if (!Array.isArray(stats.writingSubmits)) stats.writingSubmits = [];
@@ -37561,28 +37642,28 @@
     const slot = document.getElementById('wp-result');
     if (!answer) { toast(t('wp.empty')); return; }
     _wpBusy = true;
-    if (slot) slot.innerHTML = `<div style="text-align:center; padding:14px 0; color:var(--soft); font-size:12px;">${t('ui.540')}</div>`;
+    if (slot) slot.innerHTML = `<div class="wp-status">${t('ui.540')}</div>`;
     try {
       const prompt = WP_PROMPT_HEAD + '\n\nЗАДАНИЕ:\n' + _wpTaskDescRu(_wpCurTask) + '\n\nОТВЕТ ученицы:\n' + answer;
       const resp = await aiCallChat(prompt);
       const d = _dictParse(_aiExtract(resp));
-      if (!d || d.error) { if (slot) slot.innerHTML = `<div style="text-align:center; padding:10px 0; color:var(--soft); font-size:12px;">${t('wp.aiEmpty')}</div>`; return; }
+      if (!d || d.error) { if (slot) slot.innerHTML = `<div class="wp-status">${t('wp.aiEmpty')}</div>`; return; }
       _wpRecordSubmit(_wpCurTask.id);
       if (slot) slot.innerHTML = `
-        <div style="border-top:1px dashed var(--line-strong); padding-top:12px;">
-          <div style="display:flex; align-items:center; justify-content:space-between;">
-            <span style="font-size:11px; letter-spacing:.14em; color:var(--coral); font-weight:700;">${t('wp.score')}</span>
-            <span class="display" style="font-size:20px; color:var(--berry);">${Math.round(d.score || 0)}%</span>
+        <div class="wp-score-card">
+          <div class="wp-score-row">
+            <span class="wp-score-label">${t('wp.score')}</span>
+            <span class="wp-score-val">${Math.round(d.score || 0)}%</span>
           </div>
-          <div class="ko" style="background:var(--paper); border-radius:12px; padding:10px 12px; margin-top:8px; font-size:14px; color:var(--berry); line-height:1.6;">${escHtml(d.corrected || '')}</div>
-          ${Array.isArray(d.mistakes) && d.mistakes.length ? `<div style="margin-top:10px; font-size:11px; letter-spacing:.14em; color:var(--coral); font-weight:700;">${t('wp.mistakes')}</div><ul style="margin:6px 0 0; padding-left:18px; font-size:12.5px; color:var(--text2); line-height:1.6;">${d.mistakes.map(x => `<li>${escHtml(x)}</li>`).join('')}</ul>` : ''}
+          <div class="wp-corrected ko">${escHtml(d.corrected || '')}</div>
+          ${Array.isArray(d.mistakes) && d.mistakes.length ? `<div class="wp-mistakes-label">${t('wp.mistakes')}</div><ul class="wp-mistakes">${d.mistakes.map(x => `<li>${escHtml(x)}</li>`).join('')}</ul>` : ''}
           ${d.praise ? `<div class="ko-quote" style="margin-top:12px;">${escHtml(d.praise)}</div>` : ''}
         </div>`;
       recordAiLessonUsed();
       _renderWritingListBadgeSoon();
     } catch (e) {
       console.warn('writing AI check error:', e);
-      if (slot) slot.innerHTML = `<div style="text-align:center; padding:10px 0; color:var(--soft); font-size:12px;">${t('ui.r079')}${escHtml(_aiErrText(e))}</div>`;
+      if (slot) slot.innerHTML = `<div class="wp-status">${t('ui.r079')}${escHtml(_aiErrText(e))}</div>`;
     } finally {
       _wpBusy = false;
     }
@@ -37607,7 +37688,7 @@
       const msg = `✍️ ${t('wp.chatPrefix')}\n\n${_wpTaskDescRu(_wpCurTask)}\n\n💬 ${answer}`;
       await sendChatMessage(adminUid, adminInfo.name || 'Мади', msg);
       _wpRecordSubmit(_wpCurTask.id);
-      document.getElementById('writing-practice-modal')?.remove();
+      closeWritingPractice();
       switchScreen('social');
       openChat(adminUid, adminInfo.name || 'Мади');
       toast(t('wp.sentToMadie'), 'var(--sage)');
@@ -37617,8 +37698,9 @@
     }
   }
   function renderWritingEntry() {
+    // Письменная практика доступна ВСЕМ ученицам — без гейта модуля (ИИ-проверка внутри всё равно за proai).
     const el = document.getElementById('lessons-write-entry');
-    if (el) el.style.display = isModuleUnlocked('m3') ? '' : 'none';
+    if (el) el.style.display = '';
   }
 
   // ═══════════════ ФАЗА D3: статус «Сонбэ 선배» 🎓 ═══════════════
@@ -39455,6 +39537,7 @@
     if (e.key !== 'Escape') return;
     const modals = document.querySelectorAll('.modal-bg');
     if (modals.length) { modals[modals.length - 1].remove(); return; }
+    if (document.getElementById('writing-practice-page')) { closeWritingPractice(); return; }
     if (document.getElementById('user-profile-page')) { closeUserProfile(); return; }
     const gamePages = document.querySelectorAll('.game-page');
     if (gamePages.length) { closeGameModal(gamePages[gamePages.length - 1].id); return; }
