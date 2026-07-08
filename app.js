@@ -5701,7 +5701,7 @@
   // Версия сборки: держать В РУЧНУЮ синхронной с ?v= в index.html при каждом деплое
   // (те же 3 места — stylesheet/preload/script). Используется только для попапа
   // «доступно обновление» ниже — сама загрузка кода по-прежнему идёт через ?v=.
-  const APP_VERSION = '20260708e';
+  const APP_VERSION = '20260708f';
   function showUpdateAvailableModal() {
     if (document.getElementById('update-avail-modal')) return;
     const m = document.createElement('div');
@@ -5757,17 +5757,18 @@
       try { if (url) localStorage.setItem('km_tts_proxy', url); else localStorage.removeItem('km_tts_proxy'); } catch (_) {}
       window.KM_TTS_PROXY_URL = url;
     });
-    // Оповещение об обновлении: первый клиент, открывший сайт ПОСЛЕ деплоя, сам
-    // «поднимает» отметку версии в облаке (лексикографически новее — формат YYYYMMDD+буква
-    // сравнивается строками корректно) — отдельного шага в админке не требуется. Вкладки,
-    // уже открытые со старой версией app.js в памяти, услышат это через listener и один раз
-    // предложат обновить страницу — только зарегистрированным (не гостям), один раз на версию.
+    // Отметка версии (телеметрия деплоя): первый клиент с новой версией поднимает её
+    // в облаке. САМА ПО СЕБЕ никого не дёргает — просьба 08.07: не показывать
+    // «обновите страницу» при каждом пуше.
     const appVerRef = _db.ref('shared/config/appVersion');
     appVerRef.once('value').then(snap => {
       const remote = (snap.val() || '').toString();
       if (APP_VERSION > remote) appVerRef.set(APP_VERSION).catch(() => {});
     }).catch(() => {});
-    appVerRef.on('value', snap => {
+    // Оповещение об обновлении показывается ТОЛЬКО когда Мади нажмёт «Оповестить»
+    // в админке (Школа → Обновление) — та кнопка пишет shared/config/promptVersion.
+    // Формат YYYYMMDD+буква сравнивается строками корректно; один раз на версию.
+    _db.ref('shared/config/promptVersion').on('value', snap => {
       const remote = (snap.val() || '').toString();
       if (!remote || !(remote > APP_VERSION) || isGuestish()) return;
       let seen = '';
@@ -31936,7 +31937,22 @@
           <button onclick="adminSaveTtsProxy()" class="btn btn-primary" style="flex:1; padding:8px 10px; font-size:11.5px;"><i class="fa-solid fa-check"></i> ${t('ui.296')}</button>
           <button onclick="adminTestTtsProxy(this)" class="btn btn-ghost" style="flex:1; padding:8px 10px; font-size:11.5px;"><i class="fa-solid fa-play"></i> ${t('ui.297')}</button>
         </div>
+      </div>
+      <div style="background:linear-gradient(135deg, var(--blush), var(--petal)); border-radius:14px; padding:12px; margin-top:12px;">
+        <div style="font-size:12px; font-weight:700; color:var(--berry); margin-bottom:6px;"><i class="fa-solid fa-bell"></i> Обновление приложения</div>
+        <div style="font-size:10.5px; color:var(--soft); line-height:1.5; margin-bottom:8px;">Открытым вкладкам со старой версией один раз предложит обновить страницу. Само по себе после пуша НЕ показывается — только по этой кнопке.</div>
+        <button onclick="adminAnnounceUpdate()" class="btn btn-primary" style="width:100%; padding:8px 10px; font-size:11.5px;"><i class="fa-solid fa-bullhorn"></i> Оповестить об обновлении (v${APP_VERSION})</button>
       </div>`;
+  }
+  // Оповестить всех об обновлении — ТОЛЬКО вручную из админки (просьба 08.07:
+  // не дёргать учениц при каждом пуше). Пишет promptVersion, listener в
+  // initFirebaseSync показывает модалку вкладкам со старой версией.
+  function adminAnnounceUpdate() {
+    if (!ensureAdminAccess()) return;
+    if (typeof _db === 'undefined' || !_db) { toast('Нет соединения с базой', 'var(--berry)'); return; }
+    _db.ref('shared/config/promptVersion').set(APP_VERSION)
+      .then(() => toast('Оповещение отправлено 🌸 вкладки со старой версией предложат обновиться', 'var(--ok-ink)'))
+      .catch(e => toast('Не получилось: ' + (e && e.message || e), 'var(--berry)'));
   }
   // Сохранить адрес TTS-воркера: локально + раздать всем через Firebase shared/config.
   function adminSaveTtsProxy() {
