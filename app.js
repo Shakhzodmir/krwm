@@ -2528,6 +2528,24 @@
     if (typeof getSettings === 'function' && getSettings().sound === false) return false;
     return true;
   }
+  // Резервный TTS-прокси (Фаза 2, 08.07): Firebase Function на инфраструктуре Google —
+  // доступен ученикам, у которых провайдер «душит» Cloudflare (РФ) и основной воркер
+  // висит. Клиент запоминает, какой прокси ответил последним ('km_tts_pref'), и
+  // начинает со следующего раза с него — иначе заблокированный ученик ждал бы
+  // 4с таймаута основного на КАЖДОЙ новой фразе.
+  const _TTS_RESERVE_URL = 'https://europe-west1-koreanmadie.cloudfunctions.net';
+  const _TTS_PREF_KEY = 'km_tts_pref';   // 'primary' | 'reserve'
+  function _ttsReserveUrl() {
+    let u = '';
+    try { u = (window.KM_TTS_PROXY_URL2 || localStorage.getItem('km_tts_proxy2') || _TTS_RESERVE_URL).toString(); } catch (_) { u = _TTS_RESERVE_URL; }
+    return u.trim().replace(/\/+$/, '');
+  }
+  function _ttsPref() {
+    try { return localStorage.getItem(_TTS_PREF_KEY) === 'reserve' ? 'reserve' : 'primary'; } catch (_) { return 'primary'; }
+  }
+  function _ttsSetPref(p) {
+    try { if (_ttsPref() !== p) localStorage.setItem(_TTS_PREF_KEY, p); } catch (_) {}
+  }
   // «Липкий» фолбэк (отзыв 08.07: у заблокированных провайдером ученикц КАЖДЫЙ клик ждал
   // 4с таймаута). 2 неудачи подряд → 6 часов ходим сразу во встроенный голос (флаг
   // переживает перезагрузку); при старте приложения тихо перепроверяем в фоне и,
@@ -2552,24 +2570,39 @@
     return true;
   }
   function _ttsKey(text, slow, voice) { return text + '|' + (slow ? 's' : 'n') + '|' + (voice || ''); }
+  // Один запрос к одному прокси. Таймаут обязателен: у части провайдеров (РФ душит
+  // Cloudflare) соединение к воркеру не падает, а ВИСНЕТ — без abort() fetch ждал бы
+  // вечно, фолбэк не срабатывал, и озвучка молчала совсем (отзыв ученицы 08.07).
+  async function _ttsFetchOne(base, params) {
+    const ctrl = (typeof AbortController === 'function') ? new AbortController() : null;
+    const timer = ctrl ? setTimeout(() => { try { ctrl.abort(); } catch (_) {} }, 4000) : null;
+    let resp;
+    try {
+      resp = await fetch(base + '/tts?' + params.toString(), ctrl ? { signal: ctrl.signal } : undefined);
+    } finally {
+      if (timer) clearTimeout(timer);
+    }
+    if (!resp.ok) throw new Error('tts proxy ' + resp.status);
+    return resp.blob();
+  }
   async function _ttsFetchUrl(text, slow, voice) {
     const key = _ttsKey(text, slow, voice);
     if (_ttsCache.has(key)) return _ttsCache.get(key);
     const params = new URLSearchParams({ text: text, rate: slow ? '0.7' : '1.0' });
     if (voice) params.set('voice', voice);
-    // Таймаут обязателен: у части провайдеров (РФ душит Cloudflare) соединение к воркеру
-    // не падает, а ВИСНЕТ — без abort() fetch ждал бы вечно, фолбэк на голос браузера
-    // не срабатывал, и озвучка молчала совсем (отзыв ученицы 08.07).
-    const ctrl = (typeof AbortController === 'function') ? new AbortController() : null;
-    const timer = ctrl ? setTimeout(() => { try { ctrl.abort(); } catch (_) {} }, 4000) : null;
-    let resp;
-    try {
-      resp = await fetch(ttsProxyUrl() + '/tts?' + params.toString(), ctrl ? { signal: ctrl.signal } : undefined);
-    } finally {
-      if (timer) clearTimeout(timer);
+    // Каскад из двух прокси: основной (Cloudflare-воркер, кэш на краю) и резервный
+    // (Firebase Function на инфраструктуре Google). Начинаем с того, кто отвечал
+    // последним; бросаем ошибку (→ голос браузера + _ttsMarkFail) только если
+    // не ответили ОБА.
+    const primary = ttsProxyUrl(), reserve = _ttsReserveUrl();
+    const order = (_ttsPref() === 'reserve' && reserve) ? [reserve, primary] : [primary, reserve];
+    const bases = order.filter(Boolean);
+    let blob = null, used = '';
+    for (let i = 0; i < bases.length; i++) {
+      try { blob = await _ttsFetchOne(bases[i], params); used = bases[i]; break; }
+      catch (e) { if (i === bases.length - 1) throw e; }
     }
-    if (!resp.ok) throw new Error('tts proxy ' + resp.status);
-    const blob = await resp.blob();
+    _ttsSetPref(used === reserve && reserve !== primary ? 'reserve' : 'primary');
     const url = URL.createObjectURL(blob);
     _ttsCache.set(key, url);
     _ttsCacheOrder.push(key);
@@ -2611,16 +2644,31 @@
     }
     _koSpeakOneWeb(text, opts, finish, myGen);
   }
-  // Фоновая перепроверка «залипшего» основного TTS при старте: если ожил — снимаем флаг,
-  // натуральный голос возвращается сам (например, ученица включила VPN или блок сняли).
+  // Фоновая перепроверка при старте (тихо, одна крошечная фраза):
+  // 1) «залип» (оба прокси молчали) → пробуем основной, затем резервный; ожил хоть
+  //    один — снимаем флаг, натуральный голос возвращается сам (VPN/блок сняли);
+  // 2) сидим на резервном → пробуем основной; ожил — возвращаемся на него
+  //    (там кэш на краю Cloudflare, повторные фразы бесплатны и быстрее).
   setTimeout(() => {
-    if (!_ttsProxyStuck() || !ttsProxyEnabled()) return;
-    const ctrl = (typeof AbortController === 'function') ? new AbortController() : null;
-    const timer = ctrl ? setTimeout(() => { try { ctrl.abort(); } catch (_) {} }, 5000) : null;
-    fetch(ttsProxyUrl() + '/tts?text=' + encodeURIComponent('아') + '&rate=1.0', ctrl ? { signal: ctrl.signal } : undefined)
-      .then(r => { if (r.ok) _ttsMarkOk(); })
-      .catch(() => {})
-      .finally(() => { if (timer) clearTimeout(timer); });
+    if (!ttsProxyEnabled()) return;
+    const stuck = _ttsProxyStuck();
+    if (!stuck && _ttsPref() !== 'reserve') return;
+    const probe = (base) => {
+      if (!base) return Promise.resolve(false);
+      const ctrl = (typeof AbortController === 'function') ? new AbortController() : null;
+      const timer = ctrl ? setTimeout(() => { try { ctrl.abort(); } catch (_) {} }, 5000) : null;
+      return fetch(base + '/tts?text=' + encodeURIComponent('아') + '&rate=1.0', ctrl ? { signal: ctrl.signal } : undefined)
+        .then(r => !!r.ok)
+        .catch(() => false)
+        .finally(() => { if (timer) clearTimeout(timer); });
+    };
+    probe(ttsProxyUrl()).then(okPrimary => {
+      if (okPrimary) { _ttsMarkOk(); _ttsSetPref('primary'); return; }
+      if (!stuck) return;   // сидим на рабочем резервном — основной так и лежит, ничего не меняем
+      probe(_ttsReserveUrl()).then(okReserve => {
+        if (okReserve) { _ttsMarkOk(); _ttsSetPref('reserve'); }
+      });
+    });
   }, 3500);
   function _koSpeakOneWeb(text, opts, finish, myGen) {
     if (myGen !== _koGen) return;
@@ -5746,7 +5794,7 @@
   // Версия сборки: держать В РУЧНУЮ синхронной с ?v= в index.html при каждом деплое
   // (те же 3 места — stylesheet/preload/script). Используется только для попапа
   // «доступно обновление» ниже — сама загрузка кода по-прежнему идёт через ?v=.
-  const APP_VERSION = '20260708g';
+  const APP_VERSION = '20260708h';
   function showUpdateAvailableModal() {
     if (document.getElementById('update-avail-modal')) return;
     const m = document.createElement('div');
