@@ -5794,7 +5794,7 @@
   // Версия сборки: держать В РУЧНУЮ синхронной с ?v= в index.html при каждом деплое
   // (те же 3 места — stylesheet/preload/script). Используется только для попапа
   // «доступно обновление» ниже — сама загрузка кода по-прежнему идёт через ?v=.
-  const APP_VERSION = '20260708h';
+  const APP_VERSION = '20260709a';
   function showUpdateAvailableModal() {
     if (document.getElementById('update-avail-modal')) return;
     const m = document.createElement('div');
@@ -37332,17 +37332,29 @@
     const m = (e && (e.message || (e.error && e.error.message) || (typeof e === 'string' ? e : ''))) || '';
     return m ? ` ${t('ui.r077', {details: String(m).slice(0, 140)})}` : '';
   }
-  // Единая точка вызова ИИ: POST в km-ai (каскад Gemini → Groq → Workers AI на сервере),
-  // без входа в аккаунт — ключи провайдеров живут только в секретах воркера.
-  async function aiCallChat(payload) {
-    const messages = Array.isArray(payload) ? payload : [{ role: 'user', content: String(payload) }];
+  // Резервный путь к ИИ: Firebase Function «мостик» на инфраструктуре Google —
+  // перекидывает запрос тому же km-ai изнутри (сервер→Cloudflare не блокируют).
+  // Для учениц, у которых провайдер душит Cloudflare (РФ) и воркер висит.
+  const AI_RESERVE_URL = 'https://europe-west1-koreanmadie.cloudfunctions.net/ai';
+  const _AI_PREF_KEY = 'km_ai_pref';   // 'primary' | 'reserve'
+  function _aiPref() {
+    try {
+      const v = localStorage.getItem(_AI_PREF_KEY);
+      if (v === 'reserve' || v === 'primary') return v;
+    } catch (_) {}
+    // Своей истории ещё нет — берём подсказку у озвучки: она обычно первой
+    // выясняет, жив ли Cloudflare на этом устройстве (km_tts_pref), и тогда
+    // ИИ не ждёт 45с таймаута воркера, а сразу идёт через Google.
+    return (typeof _ttsPref === 'function') ? _ttsPref() : 'primary';
+  }
+  async function _aiPostOne(url, messages) {
     // Таймаут: зависшее (а не упавшее) соединение к воркеру иначе держало бы «ИИ печатает…»
     // вечно — тот же класс проблемы, что и в _ttsFetchUrl (провайдеры, душащие Cloudflare).
     const ctrl = (typeof AbortController === 'function') ? new AbortController() : null;
     const timer = ctrl ? setTimeout(() => { try { ctrl.abort(); } catch (_) {} }, 45000) : null;
     let resp;
     try {
-      resp = await fetch(AI_PROXY_URL, {
+      resp = await fetch(url, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ messages: messages }),
@@ -37353,9 +37365,32 @@
     }
     if (!resp.ok) {
       const detail = await resp.text().catch(() => '');
-      throw new Error(`ai proxy ${resp.status}: ${detail.slice(0, 200)}`);
+      const err = new Error(`ai proxy ${resp.status}: ${detail.slice(0, 200)}`);
+      err.httpStatus = resp.status;   // сервер ОТВЕТИЛ — путь живой, каскад не нужен
+      throw err;
     }
     return resp.json();
+  }
+  // Единая точка вызова ИИ: POST в km-ai (каскад Gemini → Groq → Workers AI на сервере),
+  // без входа в аккаунт — ключи провайдеров живут только в секретах воркера.
+  // Каскад путей: воркер ↔ мостик Google; на второй путь переходим ТОЛЬКО при сетевой
+  // ошибке/таймауте (сигнатура блокировки) — HTTP-ошибка (лимит 429 и т.п.) значит,
+  // что путь живой, и повторять тот же запрос через второй путь бессмысленно.
+  async function aiCallChat(payload) {
+    const messages = Array.isArray(payload) ? payload : [{ role: 'user', content: String(payload) }];
+    const order = _aiPref() === 'reserve' ? [AI_RESERVE_URL, AI_PROXY_URL] : [AI_PROXY_URL, AI_RESERVE_URL];
+    let lastErr = null;
+    for (let i = 0; i < order.length; i++) {
+      try {
+        const r = await _aiPostOne(order[i], messages);
+        try { localStorage.setItem(_AI_PREF_KEY, order[i] === AI_RESERVE_URL ? 'reserve' : 'primary'); } catch (_) {}
+        return r;
+      } catch (e) {
+        lastErr = e;
+        if (e && e.httpStatus) throw e;
+      }
+    }
+    throw lastErr;
   }
   const AI_TUTOR_SYSTEM = [
     'Ты — AI 선생님 приложения «Korean with Madie» (учительница — Мади). Помогаешь русскоязычной ученице учить корейский язык и Корею.',
