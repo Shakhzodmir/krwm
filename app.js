@@ -126,6 +126,12 @@
     'set.sound.sub':    { ru: 'Произношение слогов и слов', en: 'Pronunciation of syllables and words', uz: 'Boʻgʻin va soʻzlar talaffuzi' },
     'set.slow':         { ru: 'Медленный голос', en: 'Slow voice', uz: 'Sekin ovoz' },
     'set.slow.sub':     { ru: 'Озвучка помедленнее — легче расслышать', en: 'Slower playback — easier to catch', uz: 'Sekinroq talaffuz — eshitish osonroq' },
+    'set.voice':        { ru: 'Голос озвучки', en: 'Voice engine', uz: 'Ovoz turi' },
+    'set.voice.note':   { ru: '— если натуральный ждёт/молчит, выбери встроенный', en: '— if the natural voice lags, pick built-in', uz: '— tabiiy ovoz kechiksa, oʻrnatilganini tanlang' },
+    'set.voice.auto':   { ru: '✨ Натуральный', en: '✨ Natural', uz: '✨ Tabiiy' },
+    'set.voice.device': { ru: '📱 Встроенный', en: '📱 Built-in', uz: '📱 Oʻrnatilgan' },
+    'set.voice.toastAuto':   { ru: 'Натуральный голос включён ✨', en: 'Natural voice on ✨', uz: 'Tabiiy ovoz yoqildi ✨' },
+    'set.voice.toastDevice': { ru: 'Встроенный голос — отвечает мгновенно 📱', en: 'Built-in voice — instant playback 📱', uz: 'Oʻrnatilgan ovoz — bir zumda 📱' },
     'set.petals':       { ru: 'Лепестки сакуры', en: 'Sakura petals', uz: 'Sakura gulbarglari' },
     'set.petals.sub':   { ru: 'Падающие лепестки на фоне', en: 'Falling petals in the background', uz: 'Fonda tushayotgan gulbarglar' },
     'set.calm':         { ru: 'Спокойный режим', en: 'Calm mode', uz: 'Tinch rejim' },
@@ -2071,7 +2077,7 @@
     "terms.s4.h": { ru: "4. Что видят другие ученики", en: "4. What other students can see", uz: "4. Boshqa oʻquvchilar nimani koʻradi" },
     "terms.s4.p": { ru: "Madie — маленькая школа, поэтому часть профиля видна другим ученикам: имя, email, аватар, обложка, «о себе», уровень, XP, стрик и когда ты был(а) в сети. Посты, лайки и комментарии в ленте видят все ученики; общий чат сообщества открыт всем зарегистрированным; личные и групповые чаты видят их участники. Пожалуйста, не публикуй адрес, телефон и другие личные данные.", en: "Madie is a small school, so part of your profile is visible to other students: name, email, avatar, cover, “about me”, level, XP, streak and when you were last online. Feed posts, likes and comments are visible to all students; the community chat is open to everyone registered; private and group chats are visible to their members. Please do not post your address, phone number or other personal data.", uz: "Madie — kichik maktab, shuning uchun profilning bir qismi boshqa oʻquvchilarga koʻrinadi: ism, email, avatar, muqova, «oʻzim haqimda», daraja, XP, strik va oxirgi marta qachon tarmoqda boʻlganingiz. Lentadagi postlar, layklar va izohlarni barcha oʻquvchilar koʻradi; umumiy hamjamiyat chati barcha roʻyxatdan oʻtganlarga ochiq; shaxsiy va guruh chatlarini ularning aʼzolari koʻradi. Iltimos, manzil, telefon va boshqa shaxsiy maʼlumotlarni eʼlon qilmang." },
     "terms.s5.h": { ru: "5. Сторонние сервисы", en: "5. Third-party services", uz: "5. Uchinchi tomon xizmatlari" },
-    "terms.s5.p": { ru: "Для работы приложения мы используем сервисы-обработчики:<br>• Google Firebase — база данных, вход, хранилище файлов и push-уведомления (в уведомлении через серверы Google проходит имя отправителя и начало сообщения).<br>• Puter.js — ИИ-словарь и ИИ-урок (тариф Pro AI): текст твоих запросов к ИИ обрабатывают серверы Puter и сторонние ИИ-модели; может понадобиться бесплатный вход в Puter. Не пиши в ИИ-чат личные данные.<br>• Озвучка корейского: текст фразы отправляется на сервер озвучки (Google Text-to-Speech через Cloudflare) либо озвучивается встроенным голосом браузера.<br>• CDN-серверы шрифтов и иконок (Google Fonts, cdnjs) получают стандартные данные запроса (IP-адрес).<br>У этих сервисов свои условия и политики. Рекламных трекеров и внешней аналитики в приложении нет.", en: "To run the app we use processing services:<br>• Google Firebase — database, sign-in, file storage and push notifications (the sender’s name and the beginning of the message pass through Google servers in a notification).<br>• Puter.js — AI dictionary and AI lesson (Pro AI plan): the text of your AI requests is processed by Puter servers and third-party AI models; a free Puter sign-in may be required. Do not write personal data in the AI chat.<br>• Korean voice-over: the phrase text is sent to a speech server (Google Text-to-Speech via Cloudflare) or spoken by the browser’s built-in voice.<br>• Font and icon CDNs (Google Fonts, cdnjs) receive standard request data (IP address).<br>These services have their own terms and policies. There are no ad trackers or external analytics in the app.", uz: "Ilova ishlashi uchun biz qayta ishlovchi xizmatlardan foydalanamiz:<br>• Google Firebase — maʼlumotlar bazasi, kirish, fayl ombori va push-bildirishnomalar (bildirishnomada yuboruvchi ismi va xabarning boshi Google serverlari orqali oʻtadi).<br>• Puter.js — AI-lugʻat va AI-dars (Pro AI tarifi): AI soʻrovlaringiz matnini Puter serverlari va uchinchi tomon AI-modellari qayta ishlaydi; Puter tizimiga bepul kirish talab qilinishi mumkin. AI-chatga shaxsiy maʼlumotlarni yozmang.<br>• Koreyscha ovozlashtirish: ibora matni ovoz serveriga yuboriladi (Cloudflare orqali Google Text-to-Speech) yoki brauzerning oʻrnatilgan ovozi bilan oʻqiladi.<br>• Shrift va ikonka CDN-serverlari (Google Fonts, cdnjs) soʻrovning standart maʼlumotlarini (IP-manzil) oladi.<br>Bu xizmatlarning oʻz shartlari va siyosatlari bor. Ilovada reklama trekerlari va tashqi analitika yoʻq." },
+    "terms.s5.p": { ru: "Для работы приложения мы используем сервисы-обработчики:<br>• Google Firebase — база данных, вход, хранилище файлов и push-уведомления (в уведомлении через серверы Google проходит имя отправителя и начало сообщения).<br>• ИИ-функции (словарь, урок с ИИ, проверка письма): текст запроса обрабатывается нашим сервером-прокси (Cloudflare) и ИИ-провайдерами (Google Gemini, Groq, Cloudflare AI) — без входа в сторонние аккаунты. Не пиши в ИИ-чат личные данные.<br>• Озвучка корейского: текст фразы отправляется на сервер озвучки (Google Text-to-Speech через Cloudflare) либо озвучивается встроенным голосом браузера.<br>• CDN-серверы шрифтов (Google Fonts) получают стандартные данные запроса (IP-адрес).<br>У этих сервисов свои условия и политики. Рекламных трекеров и внешней аналитики в приложении нет.", en: "To run the app we use processing services:<br>• Google Firebase — database, sign-in, file storage and push notifications (the sender’s name and the beginning of the message pass through Google servers in a notification).<br>• AI features (dictionary, AI lesson, writing check): your request text is processed by our proxy server (Cloudflare) and AI providers (Google Gemini, Groq, Cloudflare AI) — no third-party sign-in needed. Do not write personal data in the AI chat.<br>• Korean voice-over: the phrase text is sent to a speech server (Google Text-to-Speech via Cloudflare) or spoken by the browser’s built-in voice.<br>• Font CDNs (Google Fonts) receive standard request data (IP address).<br>These services have their own terms and policies. There are no ad trackers or external analytics in the app.", uz: "Ilova ishlashi uchun biz qayta ishlovchi xizmatlardan foydalanamiz:<br>• Google Firebase — maʼlumotlar bazasi, kirish, fayl ombori va push-bildirishnomalar (bildirishnomada yuboruvchi ismi va xabarning boshi Google serverlari orqali oʻtadi).<br>• AI funksiyalari (lugʻat, AI-dars, yozuv tekshiruvi): soʻrov matni bizning proksi-serverimiz (Cloudflare) va AI-provayderlar (Google Gemini, Groq, Cloudflare AI) tomonidan qayta ishlanadi — tashqi akkauntga kirish shart emas. AI-chatga shaxsiy maʼlumotlarni yozmang.<br>• Koreyscha ovozlashtirish: ibora matni ovoz serveriga yuboriladi (Cloudflare orqali Google Text-to-Speech) yoki brauzerning oʻrnatilgan ovozi bilan oʻqiladi.<br>• Shrift CDN-serverlari (Google Fonts) soʻrovning standart maʼlumotlarini (IP-manzil) oladi.<br>Bu xizmatlarning oʻz shartlari va siyosatlari bor. Ilovada reklama trekerlari va tashqi analitika yoʻq." },
     "terms.s6.h": { ru: "6. Дети и подростки", en: "6. Children and teenagers", uz: "6. Bolalar va oʻsmirlar" },
     "terms.s6.p": { ru: "Приложение подходит для всех возрастов. Если тебе меньше 14 лет — попроси родителей помочь с регистрацией: регистрируясь, они соглашаются с этими условиями за тебя. Платный тариф может оплачивать только совершеннолетний — сам(а) или родители.", en: "The app is suitable for all ages. If you are under 14, ask your parents to help with registration: by registering, they accept these terms on your behalf. A paid plan may be paid for only by an adult — yourself or your parents.", uz: "Ilova barcha yoshlar uchun mos. Agar 14 yoshdan kichik boʻlsangiz — roʻyxatdan oʻtishda ota-onangizdan yordam soʻrang: roʻyxatdan oʻtar ekan, ular ushbu shartlarga siz uchun rozilik bildiradi. Pullik tarifni faqat voyaga yetgan kishi toʻlashi mumkin — oʻzingiz yoki ota-onangiz." },
     "terms.s7.h": { ru: "7. Тарифы, оплата и возвраты", en: "7. Plans, payment and refunds", uz: "7. Tariflar, toʻlov va qaytarishlar" },
@@ -2522,8 +2528,32 @@
     if (typeof getSettings === 'function' && getSettings().sound === false) return false;
     return true;
   }
+  // «Липкий» фолбэк (отзыв 08.07: у заблокированных провайдером ученикц КАЖДЫЙ клик ждал
+  // 4с таймаута). 2 неудачи подряд → 6 часов ходим сразу во встроенный голос (флаг
+  // переживает перезагрузку); при старте приложения тихо перепроверяем в фоне и,
+  // если основной ожил, снимаем флаг. Кэшированные фразы играют натуральным всегда.
+  const _TTS_STUCK_KEY = 'km_tts_stuck_until';
+  let _ttsProxyFails = 0;
+  function _ttsProxyStuck() {
+    try { return Date.now() < (parseInt(localStorage.getItem(_TTS_STUCK_KEY), 10) || 0); } catch (_) { return false; }
+  }
+  function _ttsMarkFail() {
+    _ttsProxyFails++;
+    if (_ttsProxyFails >= 2) { try { localStorage.setItem(_TTS_STUCK_KEY, String(Date.now() + 6 * 3600 * 1000)); } catch (_) {} }
+  }
+  function _ttsMarkOk() {
+    _ttsProxyFails = 0;
+    try { localStorage.removeItem(_TTS_STUCK_KEY); } catch (_) {}
+  }
+  // Ручной выбор движка в настройках: 'auto' (натуральный, по умолчанию) | 'device' (встроенный).
+  function _ttsUseProxy() {
+    if (!ttsProxyEnabled()) return false;
+    if (typeof getSettings === 'function' && getSettings().voiceEngine === 'device') return false;
+    return true;
+  }
+  function _ttsKey(text, slow, voice) { return text + '|' + (slow ? 's' : 'n') + '|' + (voice || ''); }
   async function _ttsFetchUrl(text, slow, voice) {
-    const key = text + '|' + (slow ? 's' : 'n') + '|' + (voice || '');
+    const key = _ttsKey(text, slow, voice);
     if (_ttsCache.has(key)) return _ttsCache.get(key);
     const params = new URLSearchParams({ text: text, rate: slow ? '0.7' : '1.0' });
     if (voice) params.set('voice', voice);
@@ -2562,8 +2592,12 @@
     opts = opts || {};
     const myGen = _koGen;
     const finish = () => { if (myGen === _koGen) cb && cb(); };
-    if (ttsProxyEnabled()) {
+    // Кэшированные фразы играют натуральным мгновенно даже в «липком» режиме;
+    // не в кэше + прокси «залип» → сразу встроенный голос, без 4с ожидания.
+    const cached = _ttsCache.has(_ttsKey(text, !!opts.slow, opts.voice));
+    if (_ttsUseProxy() && (cached || !_ttsProxyStuck())) {
       _ttsFetchUrl(text, !!opts.slow, opts.voice).then(url => {
+        if (!cached) _ttsMarkOk();                    // кэш-хит не говорит о здоровье сети — флаг не трогаем
         if (myGen !== _koGen) return;                 // остановлено во время загрузки → тихо выходим
         // Переиспользуем один заранее «разблокированный» <audio> (см. _unlockIosAudioOnce) —
         // на iOS Safari новый new Audio(), запущенный после fetch, play() молча отклоняет.
@@ -2572,11 +2606,22 @@
         a.onended = a.onerror = () => { if (currentAudio === a) currentAudio = null; finish(); };
         a.src = url;
         a.play().catch(() => _koSpeakOneWeb(text, opts, finish, myGen));
-      }).catch(() => _koSpeakOneWeb(text, opts, finish, myGen));
+      }).catch(() => { if (!cached) _ttsMarkFail(); _koSpeakOneWeb(text, opts, finish, myGen); });
       return;
     }
     _koSpeakOneWeb(text, opts, finish, myGen);
   }
+  // Фоновая перепроверка «залипшего» основного TTS при старте: если ожил — снимаем флаг,
+  // натуральный голос возвращается сам (например, ученица включила VPN или блок сняли).
+  setTimeout(() => {
+    if (!_ttsProxyStuck() || !ttsProxyEnabled()) return;
+    const ctrl = (typeof AbortController === 'function') ? new AbortController() : null;
+    const timer = ctrl ? setTimeout(() => { try { ctrl.abort(); } catch (_) {} }, 5000) : null;
+    fetch(ttsProxyUrl() + '/tts?text=' + encodeURIComponent('아') + '&rate=1.0', ctrl ? { signal: ctrl.signal } : undefined)
+      .then(r => { if (r.ok) _ttsMarkOk(); })
+      .catch(() => {})
+      .finally(() => { if (timer) clearTimeout(timer); });
+  }, 3500);
   function _koSpeakOneWeb(text, opts, finish, myGen) {
     if (myGen !== _koGen) return;
     if (!('speechSynthesis' in window)) { finish(); return; }
@@ -5701,7 +5746,7 @@
   // Версия сборки: держать В РУЧНУЮ синхронной с ?v= в index.html при каждом деплое
   // (те же 3 места — stylesheet/preload/script). Используется только для попапа
   // «доступно обновление» ниже — сама загрузка кода по-прежнему идёт через ?v=.
-  const APP_VERSION = '20260708f';
+  const APP_VERSION = '20260708g';
   function showUpdateAvailableModal() {
     if (document.getElementById('update-avail-modal')) return;
     const m = document.createElement('div');
@@ -8374,7 +8419,7 @@
   }
 
   // ─────────────────────────── НАСТРОЙКИ ПРИЛОЖЕНИЯ ───────────────────────────
-  const SETTINGS_DEFAULTS = { sound: true, slowVoice: false, petals: true, calmMotion: false, scape: null, scapeVol: 0.5, darkTheme: false, darkAuto: false, colorTheme: 'madie', gender: '' };
+  const SETTINGS_DEFAULTS = { sound: true, slowVoice: false, voiceEngine: 'auto', petals: true, calmMotion: false, scape: null, scapeVol: 0.5, darkTheme: false, darkAuto: false, colorTheme: 'madie', gender: '' };
   // Пол пользователя ('f'|'m'|''). Пусто → спрашиваем. Гендерные обращения по всему UI.
   function userGender() {
     const g = getSettings().gender;
@@ -8382,6 +8427,16 @@
   }
   // gw(женская_форма, мужская_форма) — выбирает по полу пользователя (по умолчанию женская).
   function gw(f, m) { return userGender() === 'm' ? m : f; }
+  // Ручной выбор движка озвучки: 'auto' — натуральный с фолбэком, 'device' — сразу встроенный
+  // (для учениц за блокировкой, чтобы не ждать таймаут; отзыв 08.07).
+  function setVoiceEngine(v) {
+    const s = getSettings();
+    s.voiceEngine = (v === 'device') ? 'device' : 'auto';
+    UStore.set('settings', s);
+    if (s.voiceEngine === 'auto') _ttsMarkOk(); // вернулись вручную — даём натуральному чистый шанс
+    renderSettingsCard();
+    toast(s.voiceEngine === 'device' ? t('set.voice.toastDevice') : t('set.voice.toastAuto'), 'var(--ok-ink)');
+  }
   function setGender(g) {
     const s = getSettings();
     s.gender = (g === 'm') ? 'm' : 'f';
@@ -8516,6 +8571,13 @@
       </div>`,
       row('🔊', t('set.sound'), t('set.sound.sub'), sw(s.sound), "toggleSetting('sound')", 'sound'),
       row('🐢', t('set.slow'), t('set.slow.sub'), sw(s.slowVoice), "toggleSetting('slowVoice')", 'slowVoice'),
+      `<div class="gender-pick">
+        <div class="gender-pick-title">🗣️ ${t('set.voice')} <span style="font-weight:500; color:var(--hush); font-size:10.5px;">${t('set.voice.note')}</span></div>
+        <div class="gender-pick-row">
+          <button type="button" class="gender-opt ${(s.voiceEngine || 'auto') === 'auto' ? 'active' : ''}" onclick="setVoiceEngine('auto')">${t('set.voice.auto')}</button>
+          <button type="button" class="gender-opt ${s.voiceEngine === 'device' ? 'active' : ''}" onclick="setVoiceEngine('device')">${t('set.voice.device')}</button>
+        </div>
+      </div>`,
       row('🌸', t('set.petals'), t('set.petals.sub'), sw(s.petals), "toggleSetting('petals')", 'petals'),
       row('🕊️', t('set.calm'), t('set.calm.sub'), sw(s.calmMotion), "toggleSetting('calmMotion')", 'calmMotion'),
       row('🌙', t('set.dark'), t('set.dark.sub'), sw(s.darkTheme), "toggleSetting('darkTheme')", 'darkTheme'),

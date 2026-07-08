@@ -26,19 +26,20 @@
 <meta name="twitter:card" content="summary">
 <!-- Ранние подключения: убираем DNS/TLS-задержку для CDN и базы (быстрее первый кадр) -->
 <link rel="preconnect" href="https://www.gstatic.com" crossorigin>
-<link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
 <link rel="preconnect" href="https://koreanmadie-default-rtdb.asia-southeast1.firebasedatabase.app" crossorigin>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<!-- Font Awesome — self-host (НЕ cdnjs!): у части провайдеров (РФ) Cloudflare-CDN висит,
+     а зависший stylesheet в head блокирует выполнение app.js → «вечное интро» (08.07). -->
+<link rel="stylesheet" href="assets/vendor/fontawesome/css/all.min.css?v=651">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
 
-<link rel="stylesheet" href="styles.css?v=20260708e">
+<link rel="stylesheet" href="styles.css?v=20260708g">
 
 <!-- Предзагрузка тяжёлого JS: скачивание стартует сразу, параллельно с CSS/шрифтами -->
 <link rel="preload" href="assets/textbook/textbook-data.js?v=20260629a" as="script">
-<link rel="preload" href="app.js?v=20260708f" as="script">
+<link rel="preload" href="app.js?v=20260708g" as="script">
 </head>
 
 <body>
@@ -1087,7 +1088,7 @@
 
 <!-- ─────────────── DATA + LOGIC ─────────────── -->
 <script src="assets/textbook/textbook-data.js?v=20260629a"></script>
-<script src="app.js?v=20260708f"></script>
+<script src="app.js?v=20260708g"></script>
 
 </body>
 </html>
