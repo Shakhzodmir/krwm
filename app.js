@@ -374,6 +374,8 @@
     'grp.members':     { ru: 'УЧАСТНИКИ', en: 'MEMBERS', uz: 'AʼZOLAR' },
     'grp.defFriend':   { ru: 'Друг', en: 'Friend', uz: 'Doʻst' },
     'grp.defStudent':  { ru: 'Ученица', en: 'Student', uz: 'Oʻquvchi' },
+    'grp.defTitle':    { ru: 'Группа', en: 'Group', uz: 'Guruh' },
+    'grp.defMember':   { ru: 'Участник', en: 'Member', uz: 'Aʼzo' },
     'grp.create':      { ru: 'Создать группу', en: 'Create group', uz: 'Guruh yaratish' },
     'grp.needName':    { ru: 'Дай группе название 🌸', en: 'Give the group a name 🌸', uz: 'Guruhga nom bering 🌸' },
     'grp.needMember':  { ru: 'Выбери хотя бы одного участника', en: 'Pick at least one member', uz: 'Kamida bitta aʼzo tanlang' },
@@ -488,6 +490,7 @@
     'ep.recentLogin':  { ru: 'Для смены пароля нужен свежий вход. Перелогинься.', en: 'Changing the password needs a recent sign-in. Please re-login.', uz: 'Parolni oʻzgartirish uchun yangi kirish kerak. Qayta kiring.' },
     'ep.saveFail':     { ru: 'Не удалось сохранить: ', en: 'Couldn’t save: ', uz: 'Saqlab boʻlmadi: ' },
     'auth.guest':      { ru: 'Гость', en: 'Guest', uz: 'Mehmon' },
+    'auth.guestF':     { ru: 'Гостья', en: 'Guest', uz: 'Mehmon' },
     'auth.friend':     { ru: 'друг', en: 'friend', uz: 'doʻst' },
     'auth.loggedOut':  { ru: 'Вышли из аккаунта 👋', en: 'Logged out 👋', uz: 'Akkauntdan chiqdingiz 👋' },
     'ep.coverUpdated': { ru: 'Обложка обновлена 🌸', en: 'Cover updated 🌸', uz: 'Muqova yangilandi 🌸' },
@@ -810,6 +813,95 @@
     'inv.card.sub.n':  { ru: 'Уже пригласила: {n}', en: 'Already invited: {n}', uz: 'Allaqachon taklif qilingan: {n}' },
     'inv.card.cta':    { ru: 'Позвать →', en: 'Invite →', uz: 'Taklif qilish →' },
     'plan.giftDays':   { ru: 'Master ещё {n} дн.', en: 'Master for {n} more days', uz: 'Master yana {n} kun' },
+    // ── Тарифы (PLANS) — name/tagline/features рендерятся через геттеры, чтобы не
+    // застыть на языке первой загрузки (см. i18n-frozen-label-bug-class) ──
+    'plans.free.name':    { ru: 'Базовый', en: 'Basic', uz: 'Bazaviy' },
+    'plans.free.tagline': { ru: 'Старт в корейском', en: 'Start your Korean journey', uz: 'Koreyschani boshlash' },
+    'plans.free.f1': { ru: 'Все уроки хангыля и первые слова', en: 'All Hangul lessons and first words', uz: 'Barcha Hangul darslari va birinchi soʻzlar' },
+    'plans.free.f2': { ru: 'Мини-игры и Hangul Lab', en: 'Mini-games and Hangul Lab', uz: 'Mini-oʻyinlar va Hangul Lab' },
+    'plans.free.f3': { ru: 'Личный словарик, стрики и достижения', en: 'Personal vocabulary, streaks and achievements', uz: 'Shaxsiy lugʻat, striklar va yutuqlar' },
+    'plans.free.f4': { ru: 'Чат с друзьями и учителем', en: 'Chat with friends and the teacher', uz: 'Doʻstlar va oʻqituvchi bilan chat' },
+    'plans.master.tagline': { ru: 'Полный курс без границ', en: 'The full course, no limits', uz: 'Toʻliq kurs, chegarasiz' },
+    'plans.master.f1': { ru: 'Всё из Базового', en: 'Everything in Basic', uz: 'Bazaviydagi barchasi' },
+    'plans.master.f2': { ru: 'TOPIK I и TOPIK II — полные тренажёры с разборами', en: 'TOPIK I and TOPIK II — full practice with explanations', uz: 'TOPIK I va TOPIK II — tushuntirishli toʻliq mashqlar' },
+    'plans.master.f3': { ru: 'K-Pop Fill — учим корейский по любимым песням', en: 'K-Pop Fill — learn Korean through your favorite songs', uz: 'K-Pop Fill — sevimli qoʻshiqlar orqali koreyschani oʻrganish' },
+    'plans.master.f4': { ru: 'Архив реальных экзаменов с аудио', en: 'Archive of real exams with audio', uz: 'Audio bilan haqiqiy imtihonlar arxivi' },
+    'plans.master.f5': { ru: 'Домашние задания с проверкой от Мади', en: 'Homework checked by Madie', uz: 'Madie tekshiradigan uy vazifalari' },
+    'plans.proai.tagline': { ru: 'Максимум + личный ИИ', en: 'Maximum + your personal AI', uz: 'Maksimum + shaxsiy sunʼiy intellekt' },
+    'plans.proai.f1': { ru: 'Всё из Master', en: 'Everything in Master', uz: 'Masterdagi barchasi' },
+    'plans.proai.f2': { ru: 'ИИ-репетитор 24/7 — урок с ИИ в любое время', en: 'AI tutor 24/7 — a lesson with AI anytime', uz: 'Sunʼiy intellekt repetitor 24/7 — istalgan vaqtda AI bilan dars' },
+    'plans.proai.f3': { ru: 'ИИ-словарь: примеры, синонимы, похожие слова', en: 'AI dictionary: examples, synonyms, related words', uz: 'Sunʼiy intellekt lugʻat: misollar, sinonimlar, oʻxshash soʻzlar' },
+    'plans.proai.f4': { ru: 'Объяснение ошибок и подсказки от ИИ', en: 'AI explains mistakes and gives hints', uz: 'Xatolarni tushuntirish va sunʼiy intellektdan maslahatlar' },
+    // ── 08.07: сплошной аудит захардкоженных RU-строк вне i18n (toast/innerHTML/textContent) ──
+    'audio.soundOff': { ru: 'Озвучка выключена в настройках 🔇', en: 'Sound is off in settings 🔇', uz: 'Ovoz sozlamalarda oʻchirilgan 🔇' },
+    'quiz.correct10': { ru: '잘했어! Всё верно 🌸 +10 XP', en: '잘했어! All correct 🌸 +10 XP', uz: '잘했어! Barchasi toʻgʻri 🌸 +10 XP' },
+    'quiz.correct8':  { ru: '맞아요! Верно 🌸 +8 XP', en: '맞아요! Correct 🌸 +8 XP', uz: '맞아요! Toʻgʻri 🌸 +8 XP' },
+    'quiz.correctSave': { ru: '맞아요! Верно 🌸 ', en: '맞아요! Correct 🌸 ', uz: '맞아요! Toʻgʻri 🌸 ' },
+    'profile.photoUpdated': { ru: 'Фото обновлено 📷', en: 'Photo updated 📷', uz: 'Rasm yangilandi 📷' },
+    'plan.reqSentMadie': { ru: 'Заявка отправлена Мади 💌', en: 'Request sent to Madie 💌', uz: 'Soʻrov Madiega yuborildi 💌' },
+    'social.reqSent':    { ru: 'Заявка отправлена 🌸', en: 'Request sent 🌸', uz: 'Soʻrov yuborildi 🌸' },
+    'social.nowFriends': { ru: 'Теперь вы друзья 💗', en: 'You’re friends now 💗', uz: 'Endi doʻstsizlar 💗' },
+    'push.alreadyOn': { ru: 'Уведомления уже включены ✓', en: 'Notifications are already on ✓', uz: 'Bildirishnomalar allaqachon yoqilgan ✓' },
+    'push.enabled':   { ru: 'Push-уведомления включены 🔔', en: 'Push notifications enabled 🔔', uz: 'Push-bildirishnomalar yoqildi 🔔' },
+    'topik.sectionSoon': { ru: 'Этот раздел готовится 🌸', en: 'This section is coming soon 🌸', uz: 'Bu boʻlim tayyorlanmoqda 🌸' },
+    'topik.testSoon':    { ru: 'Этот тест готовится 🌸', en: 'This test is coming soon 🌸', uz: 'Bu test tayyorlanmoqda 🌸' },
+    'feed.guestPhotoGate': { ru: 'Войди в профиль, чтобы делиться фото 🌸', en: 'Sign in to share photos 🌸', uz: 'Rasm ulashish uchun profilga kiring 🌸' },
+    'feed.published':   { ru: 'Опубликовано 🌸', en: 'Published 🌸', uz: 'Eʼlon qilindi 🌸' },
+    'feed.postDeleted': { ru: 'Пост удалён', en: 'Post deleted', uz: 'Post oʻchirildi' },
+    'feed.reported':    { ru: 'Спасибо! Мади проверит этот пост 🌸', en: 'Thank you! Madie will review this post 🌸', uz: 'Rahmat! Madie bu postni koʻrib chiqadi 🌸' },
+    'focus.tooShort':   { ru: 'В другой раз получится 🌸', en: 'Next time it’ll work out 🌸', uz: 'Boshqa safar chiqadi 🌸' },
+    'chat.needFocusTimer': { ru: 'Запусти таймер, чтобы писать в чат 🌸', en: 'Start the timer to write in chat 🌸', uz: 'Chatga yozish uchun taymerni ishga tushiring 🌸' },
+    'chat.guestGate':      { ru: 'Войди в аккаунт, чтобы общаться 🌸', en: 'Sign in to chat 🌸', uz: 'Muloqot qilish uchun akkauntga kiring 🌸' },
+    'net.offline': { ru: 'Нет интернета 🌐 — изменения сохранятся, когда связь вернётся', en: 'No internet 🌐 — changes will save once you’re back online', uz: 'Internet yoʻq 🌐 — aloqa qaytganda oʻzgarishlar saqlanadi' },
+    'net.online':  { ru: 'Снова в сети 🌸', en: 'Back online 🌸', uz: 'Qayta onlaynsiz 🌸' },
+    'settings.genderSetM': { ru: 'Готово — обращаемся в мужском роде 🙂', en: 'Done — we’ll use masculine phrasing 🙂', uz: 'Tayyor — erkak shaklida murojaat qilamiz 🙂' },
+    'settings.genderSetF': { ru: 'Готово — обращаемся в женском роде 🙂', en: 'Done — we’ll use feminine phrasing 🙂', uz: 'Tayyor — ayol shaklida murojaat qilamiz 🙂' },
+    'settings.soundOnToast':  { ru: 'Озвучка включена 🔊', en: 'Sound is on 🔊', uz: 'Ovoz yoqildi 🔊' },
+    'settings.soundOffToast': { ru: 'Озвучка выключена 🔇', en: 'Sound is off 🔇', uz: 'Ovoz oʻchirildi 🔇' },
+    'feat.topikDrill':  { ru: 'Дрилл по типам TOPIK', en: 'TOPIK drill by type', uz: 'TOPIK turlari boʻyicha mashq' },
+    'feat.topikWrongs': { ru: 'Тетрадь ошибок TOPIK', en: 'TOPIK mistake notebook', uz: 'TOPIK xatolar daftari' },
+    'feat.topikExam':   { ru: 'Пробный экзамен TOPIK', en: 'TOPIK mock exam', uz: 'TOPIK sinov imtihoni' },
+    'feat.topikAudio':  { ru: 'Аудио-дриллы TOPIK', en: 'TOPIK audio drills', uz: 'TOPIK audio mashqlari' },
+    'feat.grammarTrainer': { ru: 'Тренажёр -ㄴ다/-는다', en: '-ㄴ다/-는다 trainer', uz: '-ㄴ다/-는다 mashqi' },
+    'feat.writing53':   { ru: 'Конструктор ответа №53', en: 'Answer builder #53', uz: '53-javob konstruktori' },
+    'feat.aiLesson':    { ru: 'Урок с ИИ', en: 'AI lesson', uz: 'AI bilan dars' },
+    'feat.aiDict':      { ru: 'ИИ-словарь', en: 'AI dictionary', uz: 'AI lugʻat' },
+    'feat.aiWritingCheck': { ru: 'ИИ-проверка письма', en: 'AI writing check', uz: 'AI yozuv tekshiruvi' },
+    'tb.loadError':       { ru: 'Учебник не загрузился 🌸<br><small>Обнови страницу.</small>', en: 'The textbook didn’t load 🌸<br><small>Refresh the page.</small>', uz: 'Darslik yuklanmadi 🌸<br><small>Sahifani yangilang.</small>' },
+    'tb.answersShown':    { ru: 'Ответы показаны 🌸', en: 'Answers shown 🌸', uz: 'Javoblar koʻrsatildi 🌸' },
+    'tb.allHighlighted':  { ru: 'Все слова подсвечены 🌸', en: 'All words highlighted 🌸', uz: 'Barcha soʻzlar belgilandi 🌸' },
+    'tb.learned':      { ru: 'Изучено ✓', en: 'Learned ✓', uz: 'Oʻrganildi ✓' },
+    'tb.markLearned':  { ru: 'Отметить изученным', en: 'Mark as learned', uz: 'Oʻrganilgan deb belgilash' },
+    'auth.showPw': { ru: 'Показать пароль', en: 'Show password', uz: 'Parolni koʻrsatish' },
+    'auth.hidePw': { ru: 'Скрыть пароль', en: 'Hide password', uz: 'Parolni yashirish' },
+    'mw.emptySub': { ru: 'Личный словарик', en: 'Personal vocabulary', uz: 'Shaxsiy lugʻat' },
+    'access.pausedTitle':    { ru: 'Занятия на паузе', en: 'Classes paused', uz: 'Darslar pauzada' },
+    'access.suspendedTitle': { ru: 'Доступ приостановлен', en: 'Access suspended', uz: 'Kirish toʻxtatilgan' },
+    'access.unpaidBody': { ru: 'Похоже, занятия ещё не оплачены. Напиши Мади, чтобы продолжить обучение — прогресс никуда не денется 🌸', en: 'Looks like classes aren’t paid yet. Message Madie to continue learning — your progress is safe 🌸', uz: 'Darslar hali toʻlanmaganga oʻxshaydi. Oʻqishni davom ettirish uchun Madiega yozing — progress yoʻqolmaydi 🌸' },
+    'access.bye': { ru: '곧 다시 만나요! · До скорой встречи!', en: '곧 다시 만나요! · See you soon!', uz: '곧 다시 만나요! · Tez orada koʻrishguncha!' },
+    'chat.newMsg': { ru: 'Новое сообщение', en: 'New message', uz: 'Yangi xabar' },
+    'chat.unpin': { ru: 'Открепить', en: 'Unpin', uz: 'Yechish' },
+    'chat.pin':   { ru: 'Закрепить', en: 'Pin', uz: 'Mahkamlash' },
+    'xp.allTime': { ru: 'по всему опыту', en: 'all-time XP', uz: 'barcha vaqt XP' },
+    'xp.weekly':  { ru: 'XP с понедельника', en: 'XP since Monday', uz: 'Dushanbadan beri XP' },
+    'td.writingPart':     { ru: '문제 51–54 · письменная часть', en: '문제 51–54 · writing section', uz: '문제 51–54 · yozuv qismi' },
+    'td.questionsPrefix': { ru: 'вопросы ', en: 'questions ', uz: 'savollar ' },
+    'profile.guestMode': { ru: 'гостевой режим', en: 'guest mode', uz: 'mehmon rejimi' },
+    'profile.noEmail':   { ru: 'без email', en: 'no email', uz: 'email yoʻq' },
+    'game.msgGood': { ru: '잘했어 🌸 ещё немного и идеально', en: '잘했어 🌸 a bit more and it’ll be perfect', uz: '잘했어 🌸 yana bir oz va mukammal boʻladi' },
+    'game.msgTry':  { ru: '괜찮아 🌸 пробуй ещё, всё получится', en: '괜찮아 🌸 try again, you’ll get there', uz: '괜찮아 🌸 yana urinib koʻr, hammasi chiqadi' },
+    'numbers.sino':   { ru: '시노 — китайско-кор. (일이삼)', en: '시노 — Sino-Korean (일이삼)', uz: '시노 — xitoy-koreyscha (일이삼)' },
+    'numbers.native': { ru: '네이티브 — родные (하나둘셋)', en: '네이티브 — native (하나둘셋)', uz: '네이티브 — ona tili (하나둘셋)' },
+    'numbers.kindSino':   { ru: 'СИНО', en: 'SINO', uz: 'SINO' },
+    'numbers.kindNative': { ru: 'НЕЙТИВ', en: 'NATIVE', uz: 'NEYTIV' },
+    'common.friendFallback': { ru: 'Друг', en: 'Friend', uz: 'Doʻst' },
+    'write.startHint':  { ru: 'Начни с точки ● и веди по стрелке', en: 'Start at the dot ● and follow the arrow', uz: 'Nuqtadan ● boshlang va strelka boʻyicha yuring' },
+    'write.almostHint': { ru: 'Почти! Веди ближе к линии 🌸', en: 'Almost! Stay closer to the line 🌸', uz: 'Deyarli! Chiziqqa yaqinroq yuring 🌸' },
+    'focus.minimize':  { ru: 'Свернуть', en: 'Minimize', uz: 'Yigʻish' },
+    'focus.startPomo': { ru: 'Начать помодоро 🍅', en: 'Start pomodoro 🍅', uz: 'Pomodoroni boshlash 🍅' },
+    'focus.startFree': { ru: 'Начать фокус 🌸', en: 'Start focus 🌸', uz: 'Fokusni boshlash 🌸' },
+    'chat.inputPh':       { ru: 'Напиши что-нибудь… 🌸', en: 'Write something… 🌸', uz: 'Nimadir yozing… 🌸' },
+    'chat.inputPhLocked': { ru: 'Запусти таймер, чтобы писать', en: 'Start the timer to write', uz: 'Yozish uchun taymerni ishga tushiring' },
     'guide.tip.invite.t': { ru: 'Пригласи подругу 🎁', en: 'Invite a friend 🎁', uz: 'Doʻstingizni taklif qiling 🎁' },
     'guide.tip.invite.s': { ru: 'Обеим — неделя Master и +200 XP', en: 'A week of Master and +200 XP for both of you', uz: 'Ikkalangizga ham bir hafta Master va +200 XP' },
     'guide.giftEnding.t': { ru: 'Master тает завтра 🌸', en: 'Master fades tomorrow 🌸', uz: 'Master ertaga tugaydi 🌸' },
@@ -947,7 +1039,7 @@
     'words.dict':        { ru: 'Словарь-переводчик · 사전', en: 'Dictionary & translator · 사전', uz: 'Lugʻat-tarjimon · 사전' },
     'words.dict.sub':    { ru: 'слово или грамматика → перевод, примеры, синонимы', en: 'word or grammar → translation, examples, synonyms', uz: 'soʻz yoki grammatika → tarjima, misollar, sinonimlar' },
     'words.dict.ph':     { ru: 'Например: 먹다, любовь, -(으)면…', en: 'E.g.: 먹다, love, -(으)면…', uz: 'Masalan: 먹다, sevgi, -(으)면…' },
-    'words.dict.note':   { ru: 'Работает на Puter.js (бесплатно, без ключей). При первом поиске может попросить быстрый вход Puter.', en: 'Powered by Puter.js (free, no keys). The first search may ask for a quick Puter sign-in.', uz: 'Puter.js asosida (bepul, kalitsiz). Birinchi qidiruvda Puter’ga tez kirishni soʻrashi mumkin.' },
+    'words.dict.note':   { ru: 'Отвечает ИИ — бесплатно, без входа и ключей.', en: 'Answered by AI — free, no sign-in, no keys.', uz: 'Sun\'iy intellekt javob beradi — bepul, kirishsiz va kalitsiz.' },
     'a11y.back':         { ru: 'Назад', en: 'Back', uz: 'Orqaga' },
     'a11y.search':       { ru: 'Найти', en: 'Search', uz: 'Qidirish' },
     'a11y.settings':     { ru: 'Настройки', en: 'Settings', uz: 'Sozlamalar' },
@@ -1207,6 +1299,11 @@
     "ui.008": { ru: "Слова", en: "Words", uz: "Soʻzlar" },
     "ui.009": { ru: "Грамматика", en: "Grammar", uz: "Grammatika" },
     "ui.010": { ru: "Фразы", en: "Phrases", uz: "Iboralar" },
+    "wordtype.word":    { ru: "слово", en: "word", uz: "soʻz" },
+    "wordtype.grammar": { ru: "грамматика", en: "grammar point", uz: "grammatika" },
+    "wordtype.phrase":  { ru: "фраза", en: "phrase", uz: "ibora" },
+    "wordtype.proverb": { ru: "пословица", en: "proverb", uz: "maqol" },
+    "wordtype.idiom":   { ru: "фразеологизм", en: "idiom", uz: "frazeologizm" },
     "ui.011": { ru: "Поиск слова…", en: "Search a word…", uz: "Soʻz qidirish…" },
     "ui.012": { ru: "Поиск по словарику", en: "Search the vocabulary", uz: "Lugʻat boʻyicha qidirish" },
     "ui.013": { ru: "Новые", en: "Newest", uz: "Yangilar" },
@@ -1731,7 +1828,7 @@
     "ui.532": { ru: "Черта {no} из {total} · отлично, дальше!", en: "Stroke {no} of {total} · great, keep going!", uz: "{no}-chiziq, jami {total} · zoʻr, davom eting!" },
     "ui.533": { ru: "помощница Мади · всегда на связи", en: "Madie's helper · always online", uz: "Madie yordamchisi · doim aloqada" },
     "ui.534": { ru: "Спроси про корейский или Корею…", en: "Ask about Korean or Korea…", uz: "Koreys tili yoki Koreya haqida soʻrang…" },
-    "ui.535": { ru: "Работает на Puter.js · бесплатно, без ключей 🌸", en: "Powered by Puter.js · free, no keys 🌸", uz: "Puter.js asosida ishlaydi · bepul, kalitsiz 🌸" },
+    "ui.535": { ru: "Отвечает ИИ · бесплатно, без входа 🌸", en: "Answered by AI · free, no sign-in 🌸", uz: "Sun'iy intellekt javob beradi · bepul, kirishsiz 🌸" },
     "ui.536": { ru: "Помощница Мади 🌸 Спрашивай про корейский язык и Корею — слова, грамматику, культуру, K-pop. Сделаю мини-урок и карточки с озвучкой.", en: "Madie's helper 🌸 Ask about the Korean language and Korea — words, grammar, culture, K-pop. I'll make a mini-lesson and flashcards with audio.", uz: "Madie yordamchisi 🌸 Koreys tili va Koreya haqida soʻrang — soʻzlar, grammatika, madaniyat, K-pop. Mini-dars va ovozli kartalar tayyorlayman." },
     "ui.537": { ru: "Озвучить", en: "Play audio", uz: "Ovozini eshitish" },
     "ui.538": { ru: "Озвучить корейское", en: "Play the Korean", uz: "Koreyschani eshitish" },
@@ -1870,7 +1967,7 @@
     "ui.r076": { ru: "📄 Скачать фирменные прописи Madie (PDF)", en: "📄 Download Madie's branded handwriting workbook (PDF)", uz: "📺 Madie firmali xattotlik daftarini yuklab oling (PDF)" },
     "ui.r077": { ru: "Детали: {details}", en: "Details: {details}", uz: "Tafsilotlar: {details}" },
     "ui.r078": { ru: "В мой словарик", en: "Add to my vocabulary", uz: "Mening lugʻatimga" },
-    "ui.r079": { ru: "Не получилось связаться со словарём 😔 Если появилось окно входа Puter — войди (бесплатно) и попробуй ещё раз.", en: "Couldn't reach the dictionary 😔 If a Puter sign-in window appeared — sign in (it's free) and try again.", uz: "Lugʻatga ulanib boʻlmadi 😔 Agar Puter kirish oynasi chiqqan boʻlsa — kiring (bepul) va yana urinib koʻring." },
+    "ui.r079": { ru: "Не получилось связаться со словарём 😔 Попробуй ещё раз через минуту.", en: "Couldn't reach the dictionary 😔 Try again in a minute.", uz: "Lugʻatga ulanib boʻlmadi 😔 Bir daqiqadan keyin qayta urinib koʻring." },
     "ui.r080": { ru: "{min} мин", en: "{min} min", uz: "{min} daq" },
     "ui.r081": { ru: "после четвёртого — длинный отдых 15 мин", en: "after the fourth — a long break of 15 min", uz: "toʻrtinchidan keyin — 15 daqiqalik uzoq dam" },
     "ui.r082": { ru: "🍅 РАБОТА · ЦИКЛ {cycle}/{total}", en: "🍅 WORK · CYCLE {cycle}/{total}", uz: "🍅 ISH · SIKL {cycle}/{total}" },
@@ -2008,6 +2105,8 @@
     "hc.hint": { ru: "Слова из всех модулей (даже не открытых) + таймер на раунд в Переводе, Сборке слова и Слухе", en: "Words from every module (even locked ones) + a round timer in Translate, Build a Word and Listening", uz: "Barcha modullardan soʻzlar (ochilmaganlari ham) + Tarjima, Soʻz yigʻish va Tinglashda raund taymeri" },
     "hc.on":   { ru: "Хардкор включён 🔥 — держись!", en: "Hardcore is on 🔥 — hang in there!", uz: "Hardkor yoqildi 🔥 — chidang!" },
     "hc.off":  { ru: "Хардкор выключен", en: "Hardcore is off", uz: "Hardkor oʻchirildi" },
+    "hc.unlock.t": { ru: "Хардкор режим открыт! 🔥", en: "Hardcore mode unlocked! 🔥", uz: "Hardkor rejimi ochildi! 🔥" },
+    "hc.unlock.s": { ru: "Ты {verb} 3 модуля — теперь на экране «Игры» доступен тумблер 🔥 Хардкор: слова из всех модулей и таймер на раунд", en: "You finished 3 modules — the 🔥 Hardcore toggle is now on the Games screen: words from every module and a round timer", uz: "3 ta modulni tugatding — endi «Oʻyinlar» ekranida 🔥 Hardkor tumbleri mavjud: barcha modullardan soʻzlar va raund taymeri" },
     "mw.g.flash":    { ru: "Карточки", en: "Flashcards", uz: "Kartochkalar" },
     "mw.g.translate":{ ru: "Быстрый перевод", en: "Quick translate", uz: "Tez tarjima" },
     "mw.g.listen":   { ru: "На слух", en: "By ear", uz: "Eshitib topish" },
@@ -2501,7 +2600,7 @@
 
   function playSyllable(text, btn) {
     if (!ttsProxyEnabled() && !('speechSynthesis' in window)) { toast(t('ui.000')); return; }
-    if (typeof getSettings === 'function' && !getSettings().sound) { toast('Озвучка выключена в настройках 🔇', 'var(--berry)'); return; }
+    if (typeof getSettings === 'function' && !getSettings().sound) { toast(t('audio.soundOff'), 'var(--berry)'); return; }
     // Toggle: tapping the same button while playing -> stop
     if (btn && btn === currentBtn && btn.dataset.playing) { stopSpeech(); return; }
     stopSpeech();
@@ -2638,7 +2737,7 @@
     inp.type = showing ? 'password' : 'text';
     const icon = btn.querySelector('i');
     if (icon) icon.className = showing ? 'fa-solid fa-eye' : 'fa-solid fa-eye-slash';
-    btn.setAttribute('aria-label', showing ? 'Показать пароль' : 'Скрыть пароль');
+    btn.setAttribute('aria-label', showing ? t('auth.showPw') : t('auth.hidePw'));
   }
 
   // ── Hangul Lab: сборка слова из слогов ──
@@ -2761,9 +2860,9 @@
     } else {
       saveMyWord(ko, ru, translit, emoji, source, type);
       const tp = type || classifyWordType(ko);
-      const note = tp === 'grammar' ? 'грамматика' : tp === 'phrase' ? 'фраза'
-        : tp === 'proverb' ? 'пословица' : tp === 'idiom' ? 'фразеологизм' : 'слово';
-      toast(t('ui.007',{note: note, ko: ko}), 'var(--sage)');
+      const noteKey = tp === 'grammar' ? 'wordtype.grammar' : tp === 'phrase' ? 'wordtype.phrase'
+        : tp === 'proverb' ? 'wordtype.proverb' : tp === 'idiom' ? 'wordtype.idiom' : 'wordtype.word';
+      toast(t('ui.007',{note: t(noteKey), ko: ko}), 'var(--sage)');
     }
     // Re-paint button if provided (поддержка видов: лейбл-кнопка, чип-слово разбора, иконка-сердечко)
     if (btn) {
@@ -2807,9 +2906,11 @@
     const countEl = document.getElementById('profile-words-count');
     if (countEl) {
       const n = list.length;
-      const wf = (n % 10 === 1 && n % 100 !== 11) ? 'слово'
+      const wf = APP_LANG === 'en' ? (n === 1 ? 'word' : 'words')
+        : APP_LANG === 'uz' ? 'soʻz'
+        : (n % 10 === 1 && n % 100 !== 11) ? 'слово'
         : ([2,3,4].includes(n % 10) && ![12,13,14].includes(n % 100)) ? 'слова' : 'слов';
-      countEl.textContent = n ? t('ui.r003',{n: n, wf: wf}) : 'Личный словарик';
+      countEl.textContent = n ? t('ui.r003',{n: n, wf: wf}) : t('mw.emptySub');
     }
     const slot = document.getElementById('saved-words-list');
     if (!slot) return;
@@ -3377,7 +3478,7 @@
   // ── Homework (общий блок: урок + профиль) ──
   function homeworkBodyHtml(lesson) {
     const hw = (lesson && lesson.homework) || {};
-    const tasks = Array.isArray(hw.tasks) ? hw.tasks : [];
+    const tasks = skLocA(hw, 'tasks');
     const words = Array.isArray(lesson && lesson.vocab) ? lesson.vocab : [];
     const file = hw.file;
     const taskHtml = tasks.map((t,i) => `
@@ -3388,14 +3489,14 @@
     const wordsHtml = words.map(w => `
       <div style="display:flex; align-items:center; gap:8px; padding:8px 10px; background:var(--card); border:1px solid var(--line); border-radius:12px;">
         <span class="ko" style="font-size:17px; font-weight:700; color:var(--berry); flex-shrink:0;">${w.ko}</span>
-        <span style="font-size:11px; color:var(--soft); line-height:1.25;">${w.ru}</span>
+        <span style="font-size:11px; color:var(--soft); line-height:1.25;">${skLoc(w, 'ru')}</span>
       </div>`).join('');
     const fileHtml = file ? `
       <div style="font-size:10px; letter-spacing:.18em; color:var(--soft); margin:18px 0 8px;">${t('hw.materials')}</div>
       <div class="card card-padded" style="display:flex; align-items:center; gap:12px;">
         <div style="width:42px; height:42px; flex-shrink:0; border-radius:12px; background:rgba(201,165,92,.15); display:flex; align-items:center; justify-content:center; font-size:20px;">📄</div>
         <div style="flex:1; min-width:0;">
-          <div style="font-weight:600; color:var(--berry); font-size:12.5px;">${file.label}</div>
+          <div style="font-weight:600; color:var(--berry); font-size:12.5px;">${skLoc(file, 'label')}</div>
           <div style="font-size:10.5px; color:var(--soft); margin-top:1px;">${file.note || ''}</div>
         </div>
         ${file.url
@@ -3514,8 +3615,8 @@
         <div style="text-align:center;">
           <div class="page-eyebrow">${t('lesson.lessonU')} ${lesson.num}</div>
           <div class="ko" style="font-size:56px; font-weight:800; color:var(--berry); margin-top:10px; line-height:1;">${lesson.ko}</div>
-          <div class="display" style="font-size:23px; color:var(--berry); margin-top:8px;">${slide.title}</div>
-          <div style="font-size:13px; color:var(--text2); margin-top:6px;">${slide.sub}</div>
+          <div class="display" style="font-size:23px; color:var(--berry); margin-top:8px;">${skLoc(slide, 'title')}</div>
+          <div style="font-size:13px; color:var(--text2); margin-top:6px;">${skLoc(slide, 'sub')}</div>
         </div>
         <div class="ko-quote" style="margin-top:22px;">
           <div style="display:flex; align-items:center; gap:10px; margin-bottom:8px;">
@@ -3527,7 +3628,7 @@
         <div style="margin-top:20px;">
           <div style="font-size:10px; letter-spacing:0.18em; color:var(--soft); padding:0 4px; margin-bottom:8px;">${t('lesson.whatLearn')}</div>
           <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:8px;">
-            ${(slide.learn||[]).map(([e,t]) => `<div class="card card-padded" style="text-align:center; padding:12px 8px;"><div style="font-size:22px;">${e}</div><div style="font-size:10.5px; margin-top:4px;">${t}</div></div>`).join('')}
+            ${(() => { const learnLabels = skLocA(slide, 'learn'); return (Array.isArray(slide.learn) ? slide.learn : []).map((pair, i) => { const raw = learnLabels[i]; const lbl = raw == null ? pair[1] : (Array.isArray(raw) ? raw[1] : raw); return `<div class="card card-padded" style="text-align:center; padding:12px 8px;"><div style="font-size:22px;">${pair[0]}</div><div style="font-size:10.5px; margin-top:4px;">${lbl}</div></div>`; }).join(''); })()}
           </div>
         </div>
         <button onclick="nextLesson()" class="btn btn-rose btn-block" style="margin-top:22px;">${t('lesson.go')} <span class="ko">시작!</span> <i class="fa-solid fa-arrow-right" style="font-size:11px;"></i></button>
@@ -3539,7 +3640,7 @@
         const tap = slide.noPlay ? '' : `onclick="lessonPlay('${g.ko}', this)"`;
         return `<div class="card card-padded" ${tap} style="text-align:center; padding:12px 6px; ${slide.noPlay?'':'cursor:pointer;'} ${cols===1?'display:flex; align-items:center; gap:14px; text-align:left;':''}">
           <div class="ko" style="font-size:${cols===1?'22px':'30px'}; font-weight:700; color:var(--berry); ${cols===1?'flex-shrink:0; min-width:96px;':''}">${g.ko}</div>
-          <div style="font-size:${cols===1?'12.5px':'11px'}; color:var(--soft); margin-top:${cols===1?'0':'3px'};">${g.ru}</div>
+          <div style="font-size:${cols===1?'12.5px':'11px'}; color:var(--soft); margin-top:${cols===1?'0':'3px'};">${skLoc(g, 'ru')}</div>
         </div>`;
       }).join('');
       // Сетки букв (cols ≥ 4) — адаптивные: колонки переносятся, ничего не обрезается
@@ -3548,19 +3649,20 @@
         : cols >= 4 ? 'repeat(auto-fill, minmax(64px, 1fr))'
         : `repeat(${cols}, minmax(0, 1fr))`;
       return `
-        <div class="page-eyebrow">${slide.eyebrow}</div>
-        <div class="display" style="font-size:22px; color:var(--berry); margin-top:4px;">${slide.title}</div>
-        <div class="ko" style="font-size:13px; color:var(--coral); margin-top:2px;">${slide.sub||''}</div>
+        <div class="page-eyebrow">${skLoc(slide, 'eyebrow')}</div>
+        <div class="display" style="font-size:22px; color:var(--berry); margin-top:4px;">${skLoc(slide, 'title')}</div>
+        <div class="ko" style="font-size:13px; color:var(--coral); margin-top:2px;">${skLoc(slide, 'sub')}</div>
         <div style="display:grid; grid-template-columns:${gridCols}; gap:8px; margin-top:16px;">${cells}</div>
-        ${hint(slide.note)}
+        ${hint(skLoc(slide, 'note'))}
         ${lessonNav(t('common.gotIt'))}
       `;
     }
     if (slide.kind === 'quiz') {
-      const rows = slide.items.map(it => lessonQuizItem(it, slide.pool)).join('');
+      const quizPool = skLocA(slide, 'pool');
+      const rows = slide.items.map(it => lessonQuizItem(it, quizPool)).join('');
       return `
-        <div class="page-eyebrow">${slide.eyebrow}</div>
-        <div class="display" style="font-size:21px; color:var(--berry); margin-top:4px;">${slide.title}</div>
+        <div class="page-eyebrow">${skLoc(slide, 'eyebrow')}</div>
+        <div class="display" style="font-size:21px; color:var(--berry); margin-top:4px;">${skLoc(slide, 'title')}</div>
         <div style="font-size:12px; color:var(--coral); margin-top:2px;">${t('lesson.quizPick')}</div>
         <div id="quiz-grid" style="display:grid; gap:10px; margin-top:16px;">${rows}</div>
         ${lessonNav(t('common.next'), true)}
@@ -3572,11 +3674,11 @@
           ${lessonSaveHeart(w.ko, w.ru, w.translit || '', w.emoji || '🌸', 'lesson-word', 'lsave-corner')}
           <div style="font-size:32px;">${w.emoji}</div>
           <div class="ko" style="font-size:22px; font-weight:700; color:var(--berry); margin-top:4px;">${w.ko}</div>
-          <div style="font-size:11px; color:var(--soft); margin-top:2px;">${w.ru}</div>
+          <div style="font-size:11px; color:var(--soft); margin-top:2px;">${skLoc(w, 'ru')}</div>
         </div>`).join('');
       return `
-        <div class="page-eyebrow">${slide.eyebrow}</div>
-        <div class="display" style="font-size:22px; color:var(--berry); margin-top:4px;">${slide.title}</div>
+        <div class="page-eyebrow">${skLoc(slide, 'eyebrow')}</div>
+        <div class="display" style="font-size:22px; color:var(--berry); margin-top:4px;">${skLoc(slide, 'title')}</div>
         <div style="font-size:12px; color:var(--coral); margin-top:2px;">${t('lesson.tapHear')}</div>
         <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:16px;">${cards}</div>
         ${lessonNav(t('common.next'))}
@@ -3596,23 +3698,24 @@
     if (slide.kind === 'dialog') {
       const bubbles = (slide.lines || []).map((ln, i) => {
         const isB = ln.who === 'B';
+        const lnRu = skLoc(ln, 'ru');
         return `
           <div class="dlg-row ${isB ? 'b' : 'a'}" data-dlg-i="${i}">
             <div class="dlg-ava">${ln.av || (isB ? '🧑' : '🙂')}</div>
             <div class="dlg-bubble" onclick="lessonPlay('${jsStr(ln.ko)}', this)">
               <div class="ko dlg-ko">${escHtml(ln.ko)}</div>
-              ${ln.ru ? `<div class="dlg-ru">${escHtml(ln.ru)}</div>` : ''}
+              ${lnRu ? `<div class="dlg-ru">${escHtml(lnRu)}</div>` : ''}
             </div>
             ${lessonSaveHeart(ln.ko, ln.ru || '', '', '💬', 'lesson-dialog', 'lsave-inline')}
           </div>`;
       }).join('');
       return `
-        <div class="page-eyebrow">${slide.eyebrow || t('lesson.dialogEb')}</div>
-        <div class="display" style="font-size:21px; color:var(--berry); margin-top:4px;">${slide.title}</div>
-        ${slide.sub ? `<div style="font-size:12px; color:var(--coral); margin-top:2px;">${slide.sub}</div>` : ''}
+        <div class="page-eyebrow">${skLoc(slide, 'eyebrow') || t('lesson.dialogEb')}</div>
+        <div class="display" style="font-size:21px; color:var(--berry); margin-top:4px;">${skLoc(slide, 'title')}</div>
+        ${skLoc(slide, 'sub') ? `<div style="font-size:12px; color:var(--coral); margin-top:2px;">${skLoc(slide, 'sub')}</div>` : ''}
         <button onclick="lessonSpeakDialog(this)" class="btn btn-rose btn-block" style="margin-top:14px;"><i class="fa-solid fa-headphones"></i> ${t('lesson.listenDialog')}</button>
         <div class="dlg-list" style="margin-top:14px;">${bubbles}</div>
-        ${hint(slide.note)}
+        ${hint(skLoc(slide, 'note'))}
         ${lessonNav(t('common.next'))}
       `;
     }
@@ -3620,26 +3723,28 @@
     if (slide.kind === 'pattern') {
       const examples = (slide.examples || []).map(ex => `
         <div class="card card-padded" onclick="lessonPlay('${jsStr(ex.ko)}', this)" style="cursor:pointer; display:flex; align-items:center; gap:10px; margin-top:8px;">
-          <div style="flex:1; min-width:0;"><div class="ko" style="font-size:15px; color:var(--berry); font-weight:600;">${escHtml(ex.ko)}</div><div style="font-size:12px; color:var(--soft); margin-top:2px;">${escHtml(ex.ru)}</div></div>
+          <div style="flex:1; min-width:0;"><div class="ko" style="font-size:15px; color:var(--berry); font-weight:600;">${escHtml(ex.ko)}</div><div style="font-size:12px; color:var(--soft); margin-top:2px;">${escHtml(skLoc(ex, 'ru'))}</div></div>
           <i class="fa-solid fa-volume-up" style="color:var(--coral); flex-shrink:0;"></i>
           ${lessonSaveHeart(ex.ko, ex.ru || '', '', '📝', 'lesson-grammar', 'lsave-inline')}
         </div>`).join('');
       const drills = (slide.drills || []).map(d => {
         const opts = shuffleArr([...d.options]);
+        const dRu = skLoc(d, 'ru');
+        const dQ = skLoc(d, 'q');
         return `<div class="pattern-drill card card-padded" data-done="0" style="margin-top:10px;">
-          <div class="ko" style="font-size:15px; color:var(--berry); font-weight:600; line-height:1.4;">${escHtml(d.q)}</div>
-          ${d.ru ? `<div style="font-size:11.5px; color:var(--soft); margin-top:3px;">${escHtml(d.ru)}</div>` : ''}
+          <div class="ko" style="font-size:15px; color:var(--berry); font-weight:600; line-height:1.4;">${escHtml(dQ)}</div>
+          ${dRu ? `<div style="font-size:11.5px; color:var(--soft); margin-top:3px;">${escHtml(dRu)}</div>` : ''}
           <div style="display:flex; gap:8px; flex-wrap:wrap; margin-top:10px;">
             ${opts.map(o => `<button class="btn btn-ghost lesson-opt" style="flex:1; min-width:78px; padding:10px 8px;" onclick="lessonPatternPick(this, '${jsStr(o)}', '${jsStr(d.answer)}')">${escHtml(o)}</button>`).join('')}
           </div>
         </div>`;
       }).join('');
       return `
-        <div class="page-eyebrow">${slide.eyebrow || t('lesson.grammarEb')}</div>
-        <div class="display" style="font-size:21px; color:var(--berry); margin-top:4px;">${slide.title}</div>
-        ${slide.sub ? `<div style="font-size:12px; color:var(--coral); margin-top:2px;">${slide.sub}</div>` : ''}
+        <div class="page-eyebrow">${skLoc(slide, 'eyebrow') || t('lesson.grammarEb')}</div>
+        <div class="display" style="font-size:21px; color:var(--berry); margin-top:4px;">${skLoc(slide, 'title')}</div>
+        ${skLoc(slide, 'sub') ? `<div style="font-size:12px; color:var(--coral); margin-top:2px;">${skLoc(slide, 'sub')}</div>` : ''}
         <div class="card card-padded" style="background:rgba(201,165,92,.10); border-color:rgba(201,165,92,.4); margin-top:14px;">
-          <div style="font-size:13px; color:var(--berry); line-height:1.6;">${slide.rule}</div>
+          <div style="font-size:13px; color:var(--berry); line-height:1.6;">${skLoc(slide, 'rule')}</div>
         </div>
         ${examples ? `<div style="margin-top:8px;">${examples}</div>` : ''}
         ${drills ? `<div style="margin-top:14px;"><div style="font-size:10px; letter-spacing:.18em; color:var(--soft); margin-bottom:2px;">${t('lesson.practice')}</div>${drills}</div>` : ''}
@@ -3650,14 +3755,15 @@
     if (slide.kind === 'build') {
       const chips = shuffleArr([...(slide.target || []), ...(slide.pool || [])]);
       const chipHtml = chips.map(w => `<button type="button" class="build-chip" data-w="${escHtml(w)}" onclick="lessonBuildPick(this)">${escHtml(w)}</button>`).join('');
+      const buildRu = skLoc(slide, 'ru');
       return `
-        <div class="page-eyebrow">${slide.eyebrow || t('lesson.buildEb')}</div>
-        <div class="display" style="font-size:21px; color:var(--berry); margin-top:4px;">${slide.title}</div>
+        <div class="page-eyebrow">${skLoc(slide, 'eyebrow') || t('lesson.buildEb')}</div>
+        <div class="display" style="font-size:21px; color:var(--berry); margin-top:4px;">${skLoc(slide, 'title')}</div>
         <div class="card card-padded" style="margin-top:12px; text-align:center;">
           <div style="font-size:10px; color:var(--soft); letter-spacing:.16em;">${t('lesson.translateKo')}</div>
-          <div style="font-size:16px; color:var(--berry); font-weight:600; margin-top:6px;">${escHtml(slide.ru)}</div>
+          <div style="font-size:16px; color:var(--berry); font-weight:600; margin-top:6px;">${escHtml(buildRu)}</div>
         </div>
-        <div id="build-answer" class="build-answer" data-target="${(slide.target || []).map(escHtml).join('|')}" data-ru="${escHtml(slide.ru || '')}"></div>
+        <div id="build-answer" class="build-answer" data-target="${(slide.target || []).map(escHtml).join('|')}" data-ru="${escHtml(buildRu)}"></div>
         <div id="build-pool" class="build-pool">${chipHtml}</div>
         <div id="build-feedback" style="text-align:center; font-size:13px; margin-top:10px; min-height:18px;"></div>
         <div style="display:flex; gap:10px; margin-top:8px;">
@@ -3668,17 +3774,18 @@
     }
     // ── Модуль 2: аудирование — услышь и выбери ──
     if (slide.kind === 'listen') {
-      const opts = shuffleArr([...(slide.options || [])]);
+      const opts = shuffleArr(skLocA(slide, 'options'));
+      const listenAnswer = skLoc(slide, 'answer');
       return `
-        <div class="page-eyebrow">${slide.eyebrow || t('lesson.listenEb')}</div>
-        <div class="display" style="font-size:21px; color:var(--berry); margin-top:4px;">${slide.title}</div>
-        <div style="font-size:12px; color:var(--coral); margin-top:2px;">${slide.sub || t('lesson.listenSub')}</div>
+        <div class="page-eyebrow">${skLoc(slide, 'eyebrow') || t('lesson.listenEb')}</div>
+        <div class="display" style="font-size:21px; color:var(--berry); margin-top:4px;">${skLoc(slide, 'title')}</div>
+        <div style="font-size:12px; color:var(--coral); margin-top:2px;">${skLoc(slide, 'sub') || t('lesson.listenSub')}</div>
         <div style="text-align:center; margin:20px 0;">
           <button onclick="lessonPlay('${jsStr(slide.ko)}', this)" class="listen-play" aria-label="${t('lesson.listenAria')}"><i class="fa-solid fa-play"></i></button>
           <div style="font-size:11px; color:var(--soft); margin-top:10px;">${t('lesson.tapReplay')}</div>
         </div>
         <div id="quiz-grid" style="display:grid; gap:10px;" data-save-ko="${escHtml(slide.ko || '')}" data-save-ru="${escHtml(slide.ru || '')}">
-          ${opts.map(o => `<button class="btn btn-ghost lesson-opt" onclick="lessonChoicePick(this, '${jsStr(o)}', '${jsStr(slide.answer)}')" style="padding:13px;">${escHtml(o)}</button>`).join('')}
+          ${opts.map(o => `<button class="btn btn-ghost lesson-opt" onclick="lessonChoicePick(this, '${jsStr(o)}', '${jsStr(listenAnswer)}')" style="padding:13px;">${escHtml(o)}</button>`).join('')}
         </div>
         ${lessonNav(t('common.next'), true)}
       `;
@@ -3701,8 +3808,9 @@
     `;
   }
   function lessonQuizItem(it, pool) {
-    const wrong = shuffleArr((pool||[]).filter(s => s !== it.ru)).slice(0, 2);
-    const opts = shuffleArr([it.ru, ...wrong]);
+    const itText = skLoc(it, 'ru');
+    const wrong = shuffleArr((pool||[]).filter(s => s !== itText)).slice(0, 2);
+    const opts = shuffleArr([itText, ...wrong]);
     // Korean column auto-widens to its content (white-space: nowrap),
     // font shrinks for longer verbs so 4-char words stay on one line.
     const koLen = (it.ko || '').replace(/\s/g, '').length;
@@ -3711,7 +3819,7 @@
       <div class="card card-padded quiz-row" style="display:flex; align-items:center; gap:14px; padding:14px 16px;">
         <div class="ko" style="font-size:${koSize}; font-weight:800; color:var(--berry); flex-shrink:0; white-space:nowrap; line-height:1.1; min-width:64px; text-align:center;">${it.ko}</div>
         <div style="display:flex; gap:8px; flex:1; flex-wrap:wrap; min-width:0;">
-          ${opts.map(o => `<button onclick="lessonQuizPick(this, '${o}', '${it.ru}')" class="btn btn-ghost" style="flex:1; min-width:70px; padding:10px 8px; font-size:12.5px; white-space:nowrap;">${o}</button>`).join('')}
+          ${opts.map(o => `<button onclick="lessonQuizPick(this, '${jsStr(o)}', '${jsStr(itText)}')" class="btn btn-ghost" style="flex:1; min-width:70px; padding:10px 8px; font-size:12.5px; white-space:nowrap;">${o}</button>`).join('')}
         </div>
       </div>`;
   }
@@ -3749,7 +3857,7 @@
         nb.style.opacity = '1';
         nb.style.pointerEvents = '';
         addXp(10);
-        toast('잘했어! Всё верно 🌸 +10 XP', 'var(--sage)');
+        toast(t('quiz.correct10'), 'var(--sage)');
       }
     }
   }
@@ -3768,11 +3876,11 @@
   }
   function speakKoSequence(items, btn) {
     if (!ttsProxyEnabled() && !('speechSynthesis' in window)) { toast(t('ui.000')); return; }
-    if (typeof getSettings === 'function' && !getSettings().sound) { toast('Озвучка выключена в настройках 🔇', 'var(--berry)'); return; }
+    if (typeof getSettings === 'function' && !getSettings().sound) { toast(t('audio.soundOff'), 'var(--berry)'); return; }
     if (btn && btn === _seqBtn && _seqItems) { stopKoSequence(); return; } // toggle
     stopSpeech(); stopKoSequence();
     _seqBtn = btn || null;
-    if (btn) { if (!btn.dataset.idle) btn.dataset.idle = btn.innerHTML; btn.classList.add('playing'); btn.innerHTML = '<i class="fa-solid fa-stop"></i> Остановить'; }
+    if (btn) { if (!btn.dataset.idle) btn.dataset.idle = btn.innerHTML; btn.classList.add('playing'); btn.innerHTML = '<i class="fa-solid fa-stop"></i> ' + t('listendrill.stop'); }
     const slow = (typeof getSettings === 'function' && getSettings().slowVoice);
     _seqItems = items.slice(); _seqIdx = 0;
     const next = () => {
@@ -3808,7 +3916,7 @@
       const nb = document.getElementById('quiz-next-btn');
       if (nb && nb.hasAttribute('disabled')) {
         nb.removeAttribute('disabled'); nb.style.opacity = '1'; nb.style.pointerEvents = '';
-        addXp(8); toast('맞아요! Верно 🌸 +8 XP', 'var(--sage)');
+        addXp(8); toast(t('quiz.correct8'), 'var(--sage)');
       }
       // Услышанную фразу можно сохранить в словарик (показываем после верного ответа).
       const koSave = grid.dataset && grid.dataset.saveKo;
@@ -3875,7 +3983,7 @@
       const ruPhrase = ans.dataset.ru || '';
       if (fb) {
         fb.style.color = 'var(--ok-ink)';
-        fb.innerHTML = '맞아요! Верно 🌸 ' + lessonSaveHeart(koPhrase, ruPhrase, '', '🧩', 'lesson-build', 'lsave-inline');
+        fb.innerHTML = t('quiz.correctSave') + lessonSaveHeart(koPhrase, ruPhrase, '', '🧩', 'lesson-build', 'lsave-inline');
       }
       addXp(10); toast('잘했어요! +10 XP', 'var(--sage)');
       btn.textContent = t('common.next');
@@ -3918,6 +4026,7 @@
     }
     const xp = 20;
     const wasComplete = isModuleComplete(_activeModule);
+    const hcBefore = hardcoreEligible(); // ФАЗА D1: анонс разблокировки хардкора — засечь ДО завершения урока
     completeCurrentLesson();
     addXp(xp);
     renderModuleSwitcher();   // вдруг открылся следующий модуль — обновим вкладки
@@ -3932,7 +4041,10 @@
       const next = order[idx + 1];
       if (next) setTimeout(() => toast(t('ui.026',{num: idx + 1, name: LESSON_MODULES[next].short}), 'var(--sage)'), 900);
     }
-    showLessonCompletePopup(lesson, xp);
+    // Тумблер хардкора на экране Игр иначе легко пропустить — анонсируем ровно в
+    // момент разблокировки (переход 3-го модуля из «не пройден» в «пройден»).
+    const hcJustUnlocked = !hcBefore && hardcoreEligible();
+    showLessonCompletePopup(lesson, xp, hcJustUnlocked);
     checkAchievements();
     checkSonbaeMilestone(); // ФАЗА D3: возможно, только что завершён 6-й модуль
   }
@@ -3980,7 +4092,7 @@
     writeRound = 0; writeScore = 0;
     renderWriting();
   }
-  function showLessonCompletePopup(lesson, xp) {
+  function showLessonCompletePopup(lesson, xp, hcJustUnlocked) {
     if (!lesson) return;
     document.getElementById('lesson-complete-page')?.remove();
     const m = document.createElement('div');
@@ -3999,6 +4111,17 @@
         </div>
         <span class="lgs-arrow">›</span>
       </div>` : '';
+    // ФАЗА D1 (доп.): маленький тумблер на экране Игр легко пропустить — анонсируем
+    // разблокировку хардкор-режима прямо тут, в фокусном моменте завершения урока.
+    const hcBannerHtml = hcJustUnlocked ? `
+      <div onclick="document.getElementById('lesson-complete-page')?.remove(); switchScreen('games', true);" class="card card-press lesson-game-suggest" style="border-color:var(--coral); background:linear-gradient(135deg, rgba(var(--accent-rgb),.12), transparent);">
+        <span class="lgs-ico">🔥</span>
+        <div class="lgs-main">
+          <div class="lgs-title">${t('hc.unlock.t')}</div>
+          <div class="lgs-sub">${t('hc.unlock.s', { verb: gw('прошла','прошёл') })}</div>
+        </div>
+        <span class="lgs-arrow">›</span>
+      </div>` : '';
     m.innerHTML = `
       <div class="lesson-complete-inner">
         <img src="assets/bear5.png" alt="" class="lesson-complete-bear-big" onerror="this.style.display='none'">
@@ -4009,6 +4132,7 @@
         <div style="margin-top:18px; font-size:14px; color:var(--soft); line-height:1.55; max-width:320px;">
           ${t('ui.r011')}
         </div>
+        ${hcBannerHtml}
         ${suggestHtml}
       </div>
       <button onclick="document.getElementById('lesson-complete-page')?.remove()" class="btn btn-primary lesson-complete-cta">
@@ -4439,7 +4563,7 @@
         const finish = finalUrl => {
           UStore.set('avatar', finalUrl);
           applyAvatar(finalUrl);
-          toast('Фото обновлено 📷', 'var(--sage)');
+          toast(t('profile.photoUpdated'), 'var(--sage)');
           recordAvatarSet();
           if (isAdmin()) pushProfilePublicField('avatar', finalUrl); // у админа авто-синк отключён — публикуем фото ученицам явно
           pushUserToCloud();
@@ -4707,7 +4831,7 @@
     // Push profile metadata for both students and admins (so they're discoverable in chat search).
     // Per-user stats/unlocks/etc still skip admin via pushUserField guards.
     const profile = {
-      name: u.name || 'Без имени',
+      name: u.name || t('friend.noName'),
       email: u.email || '',
       lastSeen: Date.now(),
       joinedAt: stats.firstOpenTs || Date.now(),
@@ -5195,13 +5319,13 @@
     const html = `
       <div style="max-width:340px; text-align:center; padding:32px 24px;">
         <div style="font-size:54px;">${frozen ? '❄️' : '🌙'}</div>
-        <div class="display" style="font-size:24px; color:var(--berry); margin-top:14px; line-height:1.2;">${frozen ? 'Занятия на паузе' : 'Доступ приостановлен'}</div>
+        <div class="display" style="font-size:24px; color:var(--berry); margin-top:14px; line-height:1.2;">${frozen ? t('access.pausedTitle') : t('access.suspendedTitle')}</div>
         <div style="font-size:13.5px; color:var(--soft); margin-top:10px; line-height:1.6;">
           ${frozen
             ? t('ui.r014',{ready: gw('готова', 'готов')})
-            : 'Похоже, занятия ещё не оплачены. Напиши Мади, чтобы продолжить обучение — прогресс никуда не денется 🌸'}
+            : t('access.unpaidBody')}
         </div>
-        <div class="ko" style="font-size:13px; color:var(--coral); margin-top:14px;">곧 다시 만나요! · До скорой встречи!</div>
+        <div class="ko" style="font-size:13px; color:var(--coral); margin-top:14px;">${t('access.bye')}</div>
         <button onclick="logoutUser(); document.getElementById('access-gate')?.remove();" class="btn btn-ghost btn-block" style="margin-top:22px;">${t('ui.045')}</button>
       </div>`;
     if (gate) { gate.firstElementChild?.remove(); gate.insertAdjacentHTML('beforeend', html); return; }
@@ -5217,34 +5341,28 @@
   // Синк: users/<uid>/plan (слушатель в attachUserListeners, запись через pushUserField).
   // Оплаты в клиенте НЕТ (статичный сайт без бэкенда) — платный тариф подключает Мади
   // вручную из админки; кнопка «Подключить» отправляет ей сообщение в чат.
+  // Имена name «Master»/«Pro AI» — брендовые (как «K-Pop Fill»), сознательно не
+  // переводятся. tagline/features — геттеры поверх t(), а не готовые строки: те же
+  // объекты живут с первой загрузки скрипта и не должны застывать на одном языке
+  // (см. [[i18n-frozen-label-bug-class]]).
   const PLANS = {
     free: {
-      id: 'free', name: 'Базовый', emoji: '🌱', tagline: 'Старт в корейском',
-      priceM: 0, features: [
-        'Все уроки хангыля и первые слова',
-        'Мини-игры и Hangul Lab',
-        'Личный словарик, стрики и достижения',
-        'Чат с друзьями и учителем'
-      ]
+      id: 'free', get name() { return t('plans.free.name'); }, emoji: '🌱',
+      get tagline() { return t('plans.free.tagline'); },
+      priceM: 0,
+      get features() { return [t('plans.free.f1'), t('plans.free.f2'), t('plans.free.f3'), t('plans.free.f4')]; }
     },
     master: {
-      id: 'master', name: 'Master', emoji: '🌸', tagline: 'Полный курс без границ',
-      priceM: 10, priceYM: 8, priceY: 99, firstM: 5, features: [
-        'Всё из Базового',
-        'TOPIK I и TOPIK II — полные тренажёры с разборами',
-        'K-Pop Fill — учим корейский по любимым песням',
-        'Архив реальных экзаменов с аудио',
-        'Домашние задания с проверкой от Мади'
-      ]
+      id: 'master', name: 'Master', emoji: '🌸',
+      get tagline() { return t('plans.master.tagline'); },
+      priceM: 10, priceYM: 8, priceY: 99, firstM: 5,
+      get features() { return [t('plans.master.f1'), t('plans.master.f2'), t('plans.master.f3'), t('plans.master.f4'), t('plans.master.f5')]; }
     },
     proai: {
-      id: 'proai', name: 'Pro AI', emoji: '✨', tagline: 'Максимум + личный ИИ',
-      priceM: 18, priceYM: 16, priceY: 199, firstM: 9, features: [
-        'Всё из Master',
-        'ИИ-репетитор 24/7 — урок с ИИ в любое время',
-        'ИИ-словарь: примеры, синонимы, похожие слова',
-        'Объяснение ошибок и подсказки от ИИ'
-      ]
+      id: 'proai', name: 'Pro AI', emoji: '✨',
+      get tagline() { return t('plans.proai.tagline'); },
+      priceM: 18, priceYM: 16, priceY: 199, firstM: 9,
+      get features() { return [t('plans.proai.f1'), t('plans.proai.f2'), t('plans.proai.f3'), t('plans.proai.f4')]; }
     }
   };
   const PLAN_ORDER = { free: 0, master: 1, proai: 2 };
@@ -5511,7 +5629,7 @@
       closePlanPage();
       switchScreen('social');
       openChat(adminUid, adminInfo.name || 'Мади');
-      toast('Заявка отправлена Мади 💌', 'var(--sage)');
+      toast(t('plan.reqSentMadie'), 'var(--sage)');
     } catch (e) {
       console.warn(e);
       toast(t('ui.064'));
@@ -5543,7 +5661,7 @@
   // Версия сборки: держать В РУЧНУЮ синхронной с ?v= в index.html при каждом деплое
   // (те же 3 места — stylesheet/preload/script). Используется только для попапа
   // «доступно обновление» ниже — сама загрузка кода по-прежнему идёт через ?v=.
-  const APP_VERSION = '20260707p';
+  const APP_VERSION = '20260708c';
   function showUpdateAvailableModal() {
     if (document.getElementById('update-avail-modal')) return;
     const m = document.createElement('div');
@@ -5642,7 +5760,7 @@
   let _typingClearTimer = null;    // clears my typing flag after a pause
   let _sendingFriendReq = new Set();
   function myUid() { return firebaseUserId(); }
-  function myName() { const u = Store.get('user'); return (u && u.name) || 'Без имени'; }
+  function myName() { const u = Store.get('user'); return (u && u.name) || t('friend.noName'); }
   function chatIdFor(a, b) { return [a, b].sort().join('__'); }
 
   function escHtml(s) {
@@ -5872,7 +5990,7 @@
         inboxKey: ref.key
       };
       await _db.ref().update(updates);
-      toast('Заявка отправлена 🌸', 'var(--sage)');
+      toast(t('social.reqSent'), 'var(--sage)');
     } catch (e) {
       console.warn('sendFriendRequest failed:', e);
       toast(t('ui.072') + (e.code || e.message || t('ui.072')));
@@ -5911,7 +6029,7 @@
     updates[`users/${fromUid}/outgoing/${me}`] = null;
     try {
       await _db.ref().update(updates);
-      toast('Теперь вы друзья 💗', 'var(--sage)');
+      toast(t('social.nowFriends'), 'var(--sage)');
     } catch (e) { console.warn(e); toast(t('ui.075')); }
   }
 
@@ -6302,8 +6420,8 @@
     const dir = (_usersDirCache && _usersDirCache[key]) || {};
     const fr  = (_friendsCache && _friendsCache[key]) || {};
     const name = isGroup
-      ? (_groupsCache[key].title || 'Группа')
-      : (dir.name || fr.name || 'Новое сообщение');
+      ? (_groupsCache[key].title || t('grp.defTitle'))
+      : (dir.name || fr.name || t('chat.newMsg'));
     showChatPopup(key, name, isGroup ? '' : (dir.avatar || ''), '', isGroup);
     // Enrich with the actual last message text once it's available.
     if (typeof _db !== 'undefined') {
@@ -6499,14 +6617,14 @@
           <div class="chat-row-bottom">
             <span class="chat-row-preview">${preview}</span>
             ${unread > 0 ? `<span class="chat-unread-badge">${unread > 99 ? '99+' : unread}</span>` : ''}
-            <button class="chat-pin-btn" onclick="event.stopPropagation(); toggleChatPin('${escHtml(uid)}')" aria-label="${pinned ? 'Открепить' : 'Закрепить'}" title="${pinned ? 'Открепить' : 'Закрепить'}"><i class="fa-solid fa-thumbtack"></i></button>
+            <button class="chat-pin-btn" onclick="event.stopPropagation(); toggleChatPin('${escHtml(uid)}')" aria-label="${pinned ? t('chat.unpin') : t('chat.pin')}" title="${pinned ? t('chat.unpin') : t('chat.pin')}"><i class="fa-solid fa-thumbtack"></i></button>
           </div>
         </div>
       </div>`;
   }
 
   function groupRowHtml(gid, info) {
-    const rawTitle = (info && info.title) || (_chatMetaCache[gid] && _chatMetaCache[gid].title) || 'Группа';
+    const rawTitle = (info && info.title) || (_chatMetaCache[gid] && _chatMetaCache[gid].title) || t('grp.defTitle');
     const title = escHtml(rawTitle);
     const unread = unreadCountFor(gid);
     const meta = _chatMetaCache[gid] || {};
@@ -6536,14 +6654,14 @@
           <div class="chat-row-bottom">
             <span class="chat-row-preview">${preview}</span>
             ${unread > 0 ? `<span class="chat-unread-badge">${unread > 99 ? '99+' : unread}</span>` : ''}
-            <button class="chat-pin-btn" onclick="event.stopPropagation(); toggleChatPin('${escHtml(gid)}')" aria-label="${pinned ? 'Открепить' : 'Закрепить'}" title="${pinned ? 'Открепить' : 'Закрепить'}"><i class="fa-solid fa-thumbtack"></i></button>
+            <button class="chat-pin-btn" onclick="event.stopPropagation(); toggleChatPin('${escHtml(gid)}')" aria-label="${pinned ? t('chat.unpin') : t('chat.pin')}" title="${pinned ? t('chat.unpin') : t('chat.pin')}"><i class="fa-solid fa-thumbtack"></i></button>
           </div>
         </div>
       </div>`;
   }
 
   function requestRowHtml(reqKey, req) {
-    const name = escHtml(req.fromName || 'Без имени');
+    const name = escHtml(req.fromName || t('friend.noName'));
     const fromUid = escHtml(req.from);
     return `
       <div class="card card-padded" style="display:flex;align-items:center;gap:10px;background:var(--grad-cream);">
@@ -6796,7 +6914,7 @@
       if (!u || u.isAdmin) return;            // учителей в рейтинг учеников не включаем
       if (uid === myUid) return;              // себя добавим из живой статы ниже
       const s = u.stats || {};
-      globalRows.push({ uid, name: u.name || 'Ученик', week: _weekXpFrom(s.xpByDay), all: (+s.xp || 0) });
+      globalRows.push({ uid, name: u.name || t('feed.studentName'), week: _weekXpFrom(s.xpByDay), all: (+s.xp || 0) });
     });
     globalRows.push(myRow);
     _lbGlobalRows = globalRows;
@@ -6822,7 +6940,7 @@
     const scope = (_lbScope === 'friends' && !hasFriends) ? 'friends' : _lbScope; // оставим вкладку, покажем подсказку
     const src = scope === 'global' ? (_lbGlobalRows || []) : (_lbFriendRows || []);
     const rows = src.map(r => ({ ...r, xp: mode === 'all' ? (r.all || 0) : (r.week || 0) })).sort((a, b) => b.xp - a.xp);
-    const sub = mode === 'all' ? 'по всему опыту' : 'XP с понедельника';
+    const sub = mode === 'all' ? t('xp.allTime') : t('xp.weekly');
     const medal = i => i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : `<span style="font-size:11px;color:var(--hush);font-weight:700;">${i + 1}</span>`;
     const myIdx = rows.findIndex(r => r.me);
     const rowHtml = (r, i) => `
@@ -6962,7 +7080,7 @@
   }
 
   function adminChatRowHtml(u) {
-    const name = escHtml(u.name || 'Без имени');
+    const name = escHtml(u.name || t('friend.noName'));
     const unread = unreadCountFor(u.uid);
     const xp = (u.stats && u.stats.xp) || 0;
     const lvl = getLevel(xp);
@@ -6998,7 +7116,7 @@
             <span class="chat-row-preview">${preview}</span>
             ${unread > 0 ? `<span class="chat-unread-badge">${unread > 99 ? '99+' : unread}</span>` : ''}
             ${lvlChip}
-            <button class="chat-pin-btn" onclick="event.stopPropagation(); toggleChatPin('${escHtml(u.uid)}')" aria-label="${pinned ? 'Открепить' : 'Закрепить'}" title="${pinned ? 'Открепить' : 'Закрепить'}"><i class="fa-solid fa-thumbtack"></i></button>
+            <button class="chat-pin-btn" onclick="event.stopPropagation(); toggleChatPin('${escHtml(u.uid)}')" aria-label="${pinned ? t('chat.unpin') : t('chat.pin')}" title="${pinned ? t('chat.unpin') : t('chat.pin')}"><i class="fa-solid fa-thumbtack"></i></button>
           </div>
         </div>
       </div>`;
@@ -7038,7 +7156,7 @@
       .filter(([, u]) => u && !u.isAdmin)
       .map(([uid, u]) => {
         const s = u.stats || {};
-        return { uid, name: u.name || 'Ученица', avatar: u.avatar || '', week: _weekXpFrom(s.xpByDay), all: (+s.xp || 0), streak: (+s.streak || 0) };
+        return { uid, name: u.name || t('grp.defStudent'), avatar: u.avatar || '', week: _weekXpFrom(s.xpByDay), all: (+s.xp || 0), streak: (+s.streak || 0) };
       })
       .sort((a, b) => (_admRatingMode === 'week' ? (b.week - a.week || b.all - a.all) : (b.all - a.all || b.week - a.week)));
     const medal = i => i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : `<span style="font-size:11px;color:var(--hush);font-weight:700;">${i + 1}</span>`;
@@ -7248,7 +7366,7 @@
 
   function openGroupChat(gid, title) {
     if (!isLoggedInForChat()) { toast(t('ui.102')); return; }
-    const gtitle = title || (_groupsCache && _groupsCache[gid] && _groupsCache[gid].title) || 'Группа';
+    const gtitle = title || (_groupsCache && _groupsCache[gid] && _groupsCache[gid].title) || t('grp.defTitle');
     _openConversation({ isGroup: true, key: gid, chatId: gid, title: gtitle });
   }
 
@@ -7411,7 +7529,7 @@
       const names = {};
       Object.keys(members).forEach(uid => {
         const d = (_usersDirCache && _usersDirCache[uid]) || {};
-        names[uid] = d.name || (_friendsCache && _friendsCache[uid] && _friendsCache[uid].name) || 'Участник';
+        names[uid] = d.name || (_friendsCache && _friendsCache[uid] && _friendsCache[uid].name) || t('grp.defMember');
       });
       _chatMembers = names;
       // Фото группы в шапку (если задано)
@@ -7465,7 +7583,7 @@
     let pool;
     if (isAdmin()) {
       const dir = _usersDirCache || {};
-      pool = {}; Object.keys(dir).forEach(uid => { if (uid !== me && !(dir[uid] && dir[uid].isAdmin)) pool[uid] = { name: dir[uid].name || 'Ученик' }; });
+      pool = {}; Object.keys(dir).forEach(uid => { if (uid !== me && !(dir[uid] && dir[uid].isAdmin)) pool[uid] = { name: dir[uid].name || t('feed.studentName') }; });
     } else pool = _friendsCache || {};
     const current = _chatMembers || {};
     const candidates = Object.keys(pool).filter(uid => !current[uid]);
@@ -7479,7 +7597,7 @@
         <div class="display" style="font-size:18px;color:var(--berry);margin:2px 0 12px;">${t('ui.116')}</div>
         <div style="display:grid;gap:6px;max-height:300px;overflow-y:auto;">
           ${candidates.map(uid => {
-            const nm = (pool[uid] && pool[uid].name) || (_usersDirCache && _usersDirCache[uid] && _usersDirCache[uid].name) || 'Участник';
+            const nm = (pool[uid] && pool[uid].name) || (_usersDirCache && _usersDirCache[uid] && _usersDirCache[uid].name) || t('grp.defMember');
             return `<button type="button" class="cw-lobby-card" style="padding:9px 12px;" onclick="addGroupMember('${escHtml(gid)}','${escHtml(uid)}','${escHtml(nm).replace(/'/g,'&#39;')}')">
               <div class="chat-row-av chat-row-av-initial" style="width:34px;height:34px;font-size:13px;">${escHtml(nm.charAt(0).toUpperCase())}</div>
               <span style="flex:1;font-size:13px;font-weight:600;color:var(--berry);text-align:left;">${escHtml(nm)}</span>
@@ -7493,7 +7611,7 @@
   async function addGroupMember(gid, uid, nm) {
     if (typeof _db === 'undefined') return;
     const now = Date.now();
-    const title = (_chatGroupMeta && _chatGroupMeta.title) || (_groupsCache[gid] && _groupsCache[gid].title) || 'Группа';
+    const title = (_chatGroupMeta && _chatGroupMeta.title) || (_groupsCache[gid] && _groupsCache[gid].title) || t('grp.defTitle');
     const updates = {};
     updates[`chats/${gid}/meta/members/${uid}`] = true;
     updates[`users/${uid}/groups/${gid}`] = { title, since: now };
@@ -7554,7 +7672,7 @@
   // Открывается тапом по имени/аватару в шапке чата (и по своему профилю).
   // Сверху — фон-обложка, поверх — аватар, ниже — имя, статус, уровень, «о себе».
   function _userProfileHtml(o) {
-    const name = escHtml(o.name || 'Профиль');
+    const name = escHtml(o.name || t('nav.profile'));
     const initial = escHtml((o.name || '?').charAt(0).toUpperCase());
     const coverStyle = o.cover ? `background-image:url(${o.cover});` : '';
     const avInner = o.avatar
@@ -7937,7 +8055,7 @@
       const mine = m.from === me;
       // Group chats: show the sender name on the first bubble of each run (Telegram-style).
       const senderHtml = (_chatIsGroup && !mine && m.from !== prevFrom)
-        ? `<div class="chat-sender-name nc-${nameColorIdx(m.from)}">${escHtml(m.fromName || (_chatMembers && _chatMembers[m.from]) || 'Участник')}</div>`
+        ? `<div class="chat-sender-name nc-${nameColorIdx(m.from)}">${escHtml(m.fromName || (_chatMembers && _chatMembers[m.from]) || t('grp.defMember'))}</div>`
         : '';
       prevFrom = m.from;
       const time = `${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
@@ -8070,7 +8188,7 @@
       return;
     }
     if (Notification.permission === 'granted') {
-      toast('Уведомления уже включены ✓', 'var(--sage)');
+      toast(t('push.alreadyOn'), 'var(--sage)');
       return;
     }
     if (Notification.permission === 'denied') {
@@ -8088,7 +8206,7 @@
     } catch (e) { console.warn('[push] SW register failed', e); return; }
     await registerFcmToken(swReg);
     attachForegroundMessageHandler();
-    toast('Push-уведомления включены 🔔', 'var(--sage)');
+    toast(t('push.enabled'), 'var(--sage)');
     renderSettingsCard(); // строка «Уведомления» сразу показывает «ВКЛ ✓»
   }
 
@@ -8116,7 +8234,7 @@
     _pushUnsubFg = _messaging.onMessage(payload => {
       const data = payload.data || {};
       const noti = payload.notification || {};
-      const title = noti.title || data.fromName || 'Новое сообщение';
+      const title = noti.title || data.fromName || t('chat.newMsg');
       const body  = noti.body  || '';
       // Suppress if the chat with that sender is already open
       const fromUid = data.from || '';
@@ -8210,7 +8328,7 @@
       stats.referralsCount = (stats.referralsCount || 0) + 1;
       UStore.set('stats', stats);
       renderInviteCard();
-      toast(t('ui.r039',{name: escHtml(v.fromName || 'Друг'), xp: REFERRAL_XP}), 'var(--sage)');
+      toast(t('ui.r039',{name: escHtml(v.fromName || t('common.friendFallback')), xp: REFERRAL_XP}), 'var(--sage)');
     });
   }
 
@@ -8234,7 +8352,7 @@
     try { syncAchievementsStrip(); } catch (_) {}
     try { renderMyLevelChip(); } catch (_) {}
     try { if (_curScreen === 'profile') switchScreen('profile', true); } catch (_) {}
-    toast(g === 'm' ? 'Готово — обращаемся в мужском роде 🙂' : 'Готово — обращаемся в женском роде 🙂', 'var(--berry)');
+    toast(g === 'm' ? t('settings.genderSetM') : t('settings.genderSetF'), 'var(--berry)');
   }
   // Для конкретного пользователя (ученика в админке): пол берём из meta.gender 'Ж'/'М'.
   function gwFor(metaGender, f, m) { return metaGender === 'М' ? m : f; }
@@ -8279,7 +8397,7 @@
     // Плавно: переключаем класс на месте, без перерисовки всей карточки
     const sw = document.querySelector(`#settings-card [data-setting="${key}"] .switch`);
     if (sw) sw.classList.toggle('on', s[key]); else renderSettingsCard();
-    if (key === 'sound') toast(s.sound ? 'Озвучка включена 🔊' : 'Озвучка выключена 🔇', 'var(--berry)');
+    if (key === 'sound') toast(s.sound ? t('settings.soundOnToast') : t('settings.soundOffToast'), 'var(--berry)');
   }
   function openSettingsModal() {
     const m = document.createElement('div');
@@ -8438,7 +8556,7 @@
     _db.ref('shared/feedback').push({
       type: _fbType,
       text: text.slice(0, 2000),
-      name: u.name || 'Гость',
+      name: u.name || t('auth.guest'),
       email: u.email || '',
       uid: (typeof firebaseUserId === 'function' ? firebaseUserId() : '') || '',
       ts: Date.now(),
@@ -8490,7 +8608,7 @@
           <span style="font-size:10px; color:var(--hush);">${f.ts ? new Date(f.ts).toLocaleString('ru-RU', { day:'numeric', month:'short', hour:'2-digit', minute:'2-digit' }) : ''}</span>
         </div>
         <div style="font-size:13px; color:var(--ink); line-height:1.55; white-space:pre-wrap; word-break:break-word;">${escHtml(f.text || '')}</div>
-        <div style="font-size:10.5px; color:var(--soft); margin-top:8px;">${escHtml(f.name || 'Гость')}${f.email ? ` · ${escHtml(f.email)}` : ''}</div>
+        <div style="font-size:10.5px; color:var(--soft); margin-top:8px;">${escHtml(f.name || t('auth.guest'))}${f.email ? ` · ${escHtml(f.email)}` : ''}</div>
         <div style="display:flex; gap:8px; margin-top:10px;">
           <button onclick="adminToggleFeedbackDone('${f.id}', ${f.done ? 'false' : 'true'})" class="btn btn-ghost" style="flex:1; padding:7px 8px; font-size:11px;">${f.done ? '↩ Вернуть в новые' : '✓ Прочитано'}</button>
           <button onclick="adminDeleteFeedback('${f.id}')" class="btn btn-ghost" style="padding:7px 12px; font-size:11px; color:var(--bad-ink); border-color:rgba(179,58,74,.25);"><i class="fa-solid fa-trash"></i></button>
@@ -10734,7 +10852,7 @@
   // (см. _lessonsWordPool: hardcore приравнивается к admin-ветке — берём словарь
   // ВСЕХ модулей, а не только открытых по прогрессу) и на визуальный таймер раунда
   // в Переводе/Сборке слова/Слухе (см. gameHeader).
-  function hardcoreEligible() { return Object.keys(LESSON_MODULES).filter(isModuleComplete).length >= 3; }
+  function hardcoreEligible() { return isAdmin() || Object.keys(LESSON_MODULES).filter(isModuleComplete).length >= 3; }
   function hardcoreOn() { return hardcoreEligible() && UStore.get('hardcore', false) === true; }
   function setHardcore(v) {
     UStore.set('hardcore', !!v);
@@ -10750,7 +10868,7 @@
       <button type="button" role="switch" aria-checked="${on}" class="wt-chip${on ? ' active' : ''}" onclick="setHardcore(${!on})" style="margin-top:8px; display:flex; align-items:center; justify-content:center; min-height:44px;">
         🔥 <span>${t('hc.chip')}</span><span class="ko" style="color:var(--coral); font-weight:500; margin-left:6px;">고급</span>
       </button>
-      ${on ? `<div style="font-size:10px; color:var(--hush); margin-top:6px; line-height:1.45;">${t('hc.hint')}</div>` : ''}
+      <div style="font-size:10px; color:var(--hush); margin-top:6px; line-height:1.45;">${t('hc.hint')}</div>
     `;
   }
   // Кол-во раундов растёт с числом пройденных уроков (+1 за урок, максимум +6)
@@ -10784,58 +10902,63 @@
       homework:{ tasks:[
         'Составь 3 предложения о себе: 저는 …이에요/예요.',
         'Спроси у друга: 이름이 뭐예요? — и запиши ответ.'
+      ], tasks_uz:[
+        'Oʻzingiz haqingizda 3 ta gap tuzing: 저는 …이에요/예요.',
+        'Doʻstingizdan soʻrang: 이름이 뭐예요? — va javobini yozib oling.'
       ]},
       slides:[
-        { kind:'intro', title:'Тема и подлежащее', sub:t('ui.160'),
+        { kind:'intro', title:'Тема и подлежащее', title_uz:'Mavzu va ega', sub:t('ui.160'),
           intro:'«Теперь, когда ты знаешь хангыль, начнём строить предложения! Сегодня — две самые важные частицы: <span class="ko">은/는</span> (тема) и <span class="ko">이/가</span> (подлежащее). С ними ты расскажешь о себе 🌸 화이팅!»',
-          learn:[['📌','2 частицы'],['🗣️','о себе'],['🎯','дрилы']] },
-        { kind:'pattern', eyebrow:'ГРАММАТИКА', title:'은/는 и 이/가', sub:'тема против подлежащего',
+          learn:[['📌','2 частицы'],['🗣️','о себе'],['🎯','дрилы']], learn_uz:['2 ta yuklama','oʻzim haqida','mashqlar'] },
+        { kind:'pattern', eyebrow:'ГРАММАТИКА', eyebrow_uz:'GRAMMATIKA', title:'은/는 и 이/가', title_uz:'은/는 va 이/가', sub:'тема против подлежащего', sub_uz:'mavzu yuklamasi va ega yuklamasi',
           rule:'<b>은 / 는</b> — частица <b>темы</b> («что касается…»). После согласной — <span class="ko">은</span>, после гласной — <span class="ko">는</span>.<br><b>이 / 가</b> — частица <b>подлежащего</b> (кто/что делает). После согласной — <span class="ko">이</span>, после гласной — <span class="ko">가</span>.',
+          rule_uz:'<b>은 / 는</b> — <b>mavzu</b> yuklamasi («...ga kelsak»). Undoshdan keyin — <span class="ko">은</span>, unlidan keyin — <span class="ko">는</span>.<br><b>이 / 가</b> — <b>ega</b> yuklamasi (kim/nima harakat qiladi). Undoshdan keyin — <span class="ko">이</span>, unlidan keyin — <span class="ko">가</span>.',
           examples:[
-            {ko:'저는 학생이에요.', ru:'Я студент.'},
-            {ko:'이름이 뭐예요?', ru:'Как тебя зовут? (букв. имя — что?)'},
-            {ko:'친구가 와요.', ru:'Друг приходит.'}
+            {ko:'저는 학생이에요.', ru:'Я студент.', ru_uz:'Men talabaman.'},
+            {ko:'이름이 뭐예요?', ru:'Как тебя зовут? (букв. имя — что?)', ru_uz:'Ismingiz nima? (soʻzma-soʻz: ism — nima?)'},
+            {ko:'친구가 와요.', ru:'Друг приходит.', ru_uz:'Doʻstim keladi.'}
           ],
           drills:[
-            { q:'저__ 한국 사람이에요.', ru:'Я кореец.', options:['는','가','을'], answer:'는' },
-            { q:'이름__ 뭐예요?', ru:'Как тебя зовут?', options:['은','이','를'], answer:'이' },
-            { q:'친구__ 와요.', ru:'Друг приходит.', options:['가','를','에'], answer:'가' }
+            { q:'저__ 한국 사람이에요.', ru:'Я кореец.', ru_uz:'Men koreysman.', options:['는','가','을'], answer:'는' },
+            { q:'이름__ 뭐예요?', ru:'Как тебя зовут?', ru_uz:'Ismingiz nima?', options:['은','이','를'], answer:'이' },
+            { q:'친구__ 와요.', ru:'Друг приходит.', ru_uz:'Doʻstim keladi.', options:['가','를','에'], answer:'가' }
           ] },
-        { kind:'pattern', eyebrow:'ГРАММАТИКА', title:'이에요 / 예요', sub:'связка «быть»',
+        { kind:'pattern', eyebrow:'ГРАММАТИКА', eyebrow_uz:'GRAMMATIKA', title:'이에요 / 예요', title_uz:'이에요 / 예요', sub:'связка «быть»', sub_uz:'«boʻlmoq» bogʻlovchisi',
           rule:'Связка «есть / являюсь»: после согласной — <span class="ko">이에요</span>, после гласной — <span class="ko">예요</span>. <span class="ko">학생이에요</span> — (я) студент, <span class="ko">친구예요</span> — (это) друг.',
+          rule_uz:'«bor / -man» bogʻlovchisi: undoshdan keyin — <span class="ko">이에요</span>, unlidan keyin — <span class="ko">예요</span>. <span class="ko">학생이에요</span> — (men) talabaman, <span class="ko">친구예요</span> — (bu) doʻst.',
           examples:[
-            {ko:'저는 학생이에요.', ru:'Я студент.'},
-            {ko:'이분은 친구예요.', ru:'Это друг.'},
-            {ko:'저는 한국 사람이에요.', ru:'Я кореец.'}
+            {ko:'저는 학생이에요.', ru:'Я студент.', ru_uz:'Men talabaman.'},
+            {ko:'이분은 친구예요.', ru:'Это друг.', ru_uz:'Bu doʻst.'},
+            {ko:'저는 한국 사람이에요.', ru:'Я кореец.', ru_uz:'Men koreysman.'}
           ],
           drills:[
-            { q:'학생___ (после согласной)', ru:'студент', options:['이에요','예요','이가'], answer:'이에요' },
-            { q:'친구___ (после гласной)', ru:'друг', options:['예요','이에요','은'], answer:'예요' }
+            { q:'학생___ (после согласной)', q_uz:'학생___ (undoshdan keyin)', ru:'студент', ru_uz:'talaba', options:['이에요','예요','이가'], answer:'이에요' },
+            { q:'친구___ (после гласной)', q_uz:'친구___ (unlidan keyin)', ru:'друг', ru_uz:'doʻst', options:['예요','이에요','은'], answer:'예요' }
           ] },
-        { kind:'words', eyebrow:'СЛОВА', title:'Рассказываем о себе',
+        { kind:'words', eyebrow:'СЛОВА', eyebrow_uz:'SOʻZLAR', title:'Рассказываем о себе', title_uz:'Oʻzim haqida gapiraman',
           items:[
-            {ko:'저', ru:'я (вежливо)', emoji:'🙋'}, {ko:'이름', ru:'имя', emoji:'🏷️'},
-            {ko:'학생', ru:'студент', emoji:'🎓'}, {ko:'친구', ru:'друг', emoji:'🧑‍🤝‍🧑'},
-            {ko:'한국 사람', ru:'кореец', emoji:'🇰🇷'}, {ko:'선생님', ru:'учитель', emoji:'👩‍🏫'}
+            {ko:'저', ru:'я (вежливо)', ru_uz:'men (xushmuomalalik bilan)', emoji:'🙋'}, {ko:'이름', ru:'имя', ru_uz:'ism', emoji:'🏷️'},
+            {ko:'학생', ru:'студент', ru_uz:'talaba', emoji:'🎓'}, {ko:'친구', ru:'друг', ru_uz:'doʻst', emoji:'🧑‍🤝‍🧑'},
+            {ko:'한국 사람', ru:'кореец', ru_uz:'koreys', emoji:'🇰🇷'}, {ko:'선생님', ru:'учитель', ru_uz:'oʻqituvchi', emoji:'👩‍🏫'}
           ] },
-        { kind:'build', eyebrow:'СОБЕРИ ФРАЗУ', title:'Я — студент', ru:'Я — студент.',
+        { kind:'build', eyebrow:'СОБЕРИ ФРАЗУ', eyebrow_uz:'JUMLA TUZ', title:'Я — студент', title_uz:'Men — talabaman', ru:'Я — студент.', ru_uz:'Men — talabaman.',
           target:['저는','학생이에요'], pool:['친구가'] },
-        { kind:'dialog', eyebrow:'ДИАЛОГ', title:'Знакомство', sub:'첫 만남',
+        { kind:'dialog', eyebrow:'ДИАЛОГ', eyebrow_uz:'MULOQOT', title:'Знакомство', title_uz:'Tanishuv', sub:'첫 만남',
           lines:[
-            { who:'A', av:'🙂', ko:'안녕하세요? 이름이 뭐예요?', ru:'Здравствуйте! Как вас зовут?' },
-            { who:'B', av:'🧑', ko:'저는 미나예요.', ru:'Я Мина.' },
-            { who:'A', av:'🙂', ko:'저는 안톤이에요. 학생이에요?', ru:'Я Антон. Вы студент?' },
-            { who:'B', av:'🧑', ko:'네, 저는 학생이에요.', ru:'Да, я студент.' }
+            { who:'A', av:'🙂', ko:'안녕하세요? 이름이 뭐예요?', ru:'Здравствуйте! Как вас зовут?', ru_uz:'Assalomu alaykum! Ismingiz nima?' },
+            { who:'B', av:'🧑', ko:'저는 미나예요.', ru:'Я Мина.', ru_uz:'Men Minaman.' },
+            { who:'A', av:'🙂', ko:'저는 안톤이에요. 학생이에요?', ru:'Я Антон. Вы студент?', ru_uz:'Men Antonman. Siz talabamisiz?' },
+            { who:'B', av:'🧑', ko:'네, 저는 학생이에요.', ru:'Да, я студент.', ru_uz:'Ha, men talabaman.' }
           ],
           note:t('ui.161') },
-        { kind:'listen', eyebrow:'АУДИРОВАНИЕ', title:'Кто это?', sub:t('ui.162'),
+        { kind:'listen', eyebrow:'АУДИРОВАНИЕ', eyebrow_uz:'TINGLASH', title:'Кто это?', title_uz:'Bu kim?', sub:t('ui.162'),
           ko:'저는 한국 사람이에요.', ru:'Я кореец.',
-          options:['Я кореец.','Я студент.','Это мой друг.'], answer:'Я кореец.' },
-        { kind:'build', eyebrow:'СОБЕРИ ФРАЗУ', title:'Как тебя зовут', ru:'Как тебя зовут?',
+          options:['Я кореец.','Я студент.','Это мой друг.'], options_uz:['Men koreysman.','Men talabaman.','Bu mening doʻstim.'], answer:'Я кореец.', answer_uz:'Men koreysman.' },
+        { kind:'build', eyebrow:'СОБЕРИ ФРАЗУ', eyebrow_uz:'JUMLA TUZ', title:'Как тебя зовут', title_uz:'Ismingiz nima', ru:'Как тебя зовут?', ru_uz:'Ismingiz nima?',
           target:['이름이','뭐예요'], pool:['친구가'] },
-        { kind:'quiz', eyebrow:'ПРОВЕРКА', title:'Слова урока',
-          items:[ {ko:'친구',ru:'друг'}, {ko:'이름',ru:'имя'}, {ko:'학생',ru:'студент'} ],
-          pool:['друг','имя','студент','я','книга','это'] },
+        { kind:'quiz', eyebrow:'ПРОВЕРКА', eyebrow_uz:'TEKSHIRUV', title:'Слова урока', title_uz:'Dars soʻzlari',
+          items:[ {ko:'친구',ru:'друг', ru_uz:'doʻst'}, {ko:'이름',ru:'имя', ru_uz:'ism'}, {ko:'학생',ru:'студент', ru_uz:'talaba'} ],
+          pool:['друг','имя','студент','я','книга','это'], pool_uz:['doʻst','ism','talaba','men','kitob','bu'] },
         { kind:'homework' },
         { kind:'done' }
       ]
@@ -10854,47 +10977,51 @@
       homework:{ tasks:[
         'Проспрягай 5 глаголов в форме -아요/어요.',
         'Напиши, что ты делаешь сегодня: 저는 … -아요/어요.'
+      ], tasks_uz:[
+        '5 ta feʼlni -아요/어요 shaklida tuslang.',
+        'Bugun nima qilayotganingizni yozing: 저는 … -아요/어요.'
       ]},
       slides:[
-        { kind:'intro', title:'Настоящее время', sub:'Вежливый стиль -아요/어요',
+        { kind:'intro', title:'Настоящее время', title_uz:'Hozirgi zamon', sub:'Вежливый стиль -아요/어요',
           intro:'«Глаголы в корейском меняют окончание. Вежливая форма настоящего времени — <span class="ko">-아요/어요</span>. Научимся её собирать — и сразу заговорим! 🌸»',
-          learn:[['🔁','спряжение'],['🗣️','диалог'],['👂','аудио']] },
-        { kind:'pattern', eyebrow:'ГРАММАТИКА', title:'Как получить -아요/어요', sub:'현재형',
+          learn:[['🔁','спряжение'],['🗣️','диалог'],['👂','аудио']], learn_uz:['tuslash','muloqot','audio'] },
+        { kind:'pattern', eyebrow:'ГРАММАТИКА', eyebrow_uz:'GRAMMATIKA', title:'Как получить -아요/어요', title_uz:'-아요/어요 qanday hosil qilinadi', sub:'현재형',
           rule:'Убери <span class="ko">-다</span> у глагола. Если последняя гласная основы <span class="ko">ㅏ</span> или <span class="ko">ㅗ</span> → добавь <b>아요</b>, иначе → <b>어요</b>. Особый случай: <span class="ko">하다 → 해요</span>.',
+          rule_uz:'Feʼldan <span class="ko">-다</span>ni olib tashlang. Agar negizning oxirgi unlisi <span class="ko">ㅏ</span> yoki <span class="ko">ㅗ</span> boʻlsa → <b>아요</b> qoʻshing, aks holda → <b>어요</b>. Alohida holat: <span class="ko">하다 → 해요</span>.',
           examples:[
-            {ko:'가다 → 가요', ru:'идти → иду'},
-            {ko:'먹다 → 먹어요', ru:'есть → ем'},
-            {ko:'마시다 → 마셔요', ru:'пить → пью'},
-            {ko:'하다 → 해요', ru:'делать → делаю'}
+            {ko:'가다 → 가요', ru:'идти → иду', ru_uz:'bormoq → boraman'},
+            {ko:'먹다 → 먹어요', ru:'есть → ем', ru_uz:'yemoq → yeyman'},
+            {ko:'마시다 → 마셔요', ru:'пить → пью', ru_uz:'ichmoq → ichaman'},
+            {ko:'하다 → 해요', ru:'делать → делаю', ru_uz:'qilmoq → qilaman'}
           ],
           drills:[
             { q:'먹다 → ?', options:['먹어요','먹아요','머거요'], answer:'먹어요' },
             { q:'가다 → ?', options:['가요','가어요','거요'], answer:'가요' },
             { q:'하다 → ?', options:['해요','하요','하어요'], answer:'해요' }
           ] },
-        { kind:'words', eyebrow:'ГЛАГОЛЫ', title:'Что мы делаем',
+        { kind:'words', eyebrow:'ГЛАГОЛЫ', eyebrow_uz:'FEʼLLAR', title:'Что мы делаем', title_uz:'Nima qilamiz',
           items:[
-            {ko:'가다', ru:'идти', emoji:'🚶'}, {ko:'먹다', ru:'есть', emoji:'🍽️'},
-            {ko:'마시다', ru:'пить', emoji:'🥤'}, {ko:'하다', ru:'делать', emoji:'✨'},
-            {ko:'읽다', ru:'читать', emoji:'📖'}, {ko:'보다', ru:'смотреть', emoji:'👀'}
+            {ko:'가다', ru:'идти', ru_uz:'bormoq', emoji:'🚶'}, {ko:'먹다', ru:'есть', ru_uz:'yemoq', emoji:'🍽️'},
+            {ko:'마시다', ru:'пить', ru_uz:'ichmoq', emoji:'🥤'}, {ko:'하다', ru:'делать', ru_uz:'qilmoq', emoji:'✨'},
+            {ko:'읽다', ru:'читать', ru_uz:'oʻqimoq', emoji:'📖'}, {ko:'보다', ru:'смотреть', ru_uz:'koʻrmoq', emoji:'👀'}
           ] },
-        { kind:'build', eyebrow:'СОБЕРИ ФРАЗУ', title:'Я пью кофе', ru:'Я пью кофе.',
+        { kind:'build', eyebrow:'СОБЕРИ ФРАЗУ', eyebrow_uz:'JUMLA TUZ', title:'Я пью кофе', title_uz:'Men kofe ichaman', ru:'Я пью кофе.', ru_uz:'Men kofe ichaman.',
           target:['저는','커피를','마셔요'], pool:['먹어요'] },
-        { kind:'listen', eyebrow:'АУДИРОВАНИЕ', title:'Что он делает?', sub:t('ui.162'),
+        { kind:'listen', eyebrow:'АУДИРОВАНИЕ', eyebrow_uz:'TINGLASH', title:'Что он делает?', title_uz:'U nima qilyapti?', sub:t('ui.162'),
           ko:'저는 책을 읽어요.', ru:'Я читаю книгу.',
-          options:['Я читаю книгу.','Я смотрю книгу.','Я пишу книгу.'], answer:'Я читаю книгу.' },
-        { kind:'dialog', eyebrow:'ДИАЛОГ', title:'Что ты делаешь?', sub:'지금 뭐 해요?',
+          options:['Я читаю книгу.','Я смотрю книгу.','Я пишу книгу.'], options_uz:['Men kitob oʻqiyapman.','Men kitob koʻryapman.','Men kitob yozyapman.'], answer:'Я читаю книгу.', answer_uz:'Men kitob oʻqiyapman.' },
+        { kind:'dialog', eyebrow:'ДИАЛОГ', eyebrow_uz:'MULOQOT', title:'Что ты делаешь?', title_uz:'Nima qilyapsan?', sub:'지금 뭐 해요?',
           lines:[
-            { who:'A', av:'🙂', ko:'지금 뭐 해요?', ru:'Что сейчас делаешь?' },
-            { who:'B', av:'🧑', ko:'커피를 마셔요.', ru:'Пью кофе.' },
-            { who:'A', av:'🙂', ko:'저는 책을 읽어요.', ru:'А я читаю книгу.' },
-            { who:'B', av:'🧑', ko:'우리 같이 공부해요!', ru:'Давай учиться вместе!' }
+            { who:'A', av:'🙂', ko:'지금 뭐 해요?', ru:'Что сейчас делаешь?', ru_uz:'Hozir nima qilyapsan?' },
+            { who:'B', av:'🧑', ko:'커피를 마셔요.', ru:'Пью кофе.', ru_uz:'Kofe ichyapman.' },
+            { who:'A', av:'🙂', ko:'저는 책을 읽어요.', ru:'А я читаю книгу.', ru_uz:'Men esa kitob oʻqiyapman.' },
+            { who:'B', av:'🧑', ko:'우리 같이 공부해요!', ru:'Давай учиться вместе!', ru_uz:'Keling, birga oʻqiymiz!' }
           ] },
-        { kind:'build', eyebrow:'СОБЕРИ ФРАЗУ', title:'Я читаю книгу', ru:'Я читаю книгу.',
+        { kind:'build', eyebrow:'СОБЕРИ ФРАЗУ', eyebrow_uz:'JUMLA TUZ', title:'Я читаю книгу', title_uz:'Men kitob oʻqiyapman', ru:'Я читаю книгу.', ru_uz:'Men kitob oʻqiyapman.',
           target:['저는','책을','읽어요'], pool:['마셔요'] },
-        { kind:'quiz', eyebrow:'ПРОВЕРКА', title:'Слова урока',
-          items:[ {ko:'가다',ru:'идти'}, {ko:'먹다',ru:'есть'}, {ko:'마시다',ru:'пить'} ],
-          pool:['идти','есть','пить','читать','смотреть','делать'] },
+        { kind:'quiz', eyebrow:'ПРОВЕРКА', eyebrow_uz:'TEKSHIRUV', title:'Слова урока', title_uz:'Dars soʻzlari',
+          items:[ {ko:'가다',ru:'идти', ru_uz:'bormoq'}, {ko:'먹다',ru:'есть', ru_uz:'yemoq'}, {ko:'마시다',ru:'пить', ru_uz:'ichmoq'} ],
+          pool:['идти','есть','пить','читать','смотреть','делать'], pool_uz:['bormoq','yemoq','ichmoq','oʻqimoq','koʻrmoq','qilmoq'] },
         { kind:'homework' },
         { kind:'done' }
       ]
@@ -10913,45 +11040,49 @@
       homework:{ tasks:[
         'Составь 4 фразы «… 을/를 …해요».',
         'Запиши, какой фильм ты смотришь: 저는 …을/를 봐요.'
+      ], tasks_uz:[
+        '«… 을/를 …해요» qolipida 4 ta jumla tuzing.',
+        'Qanday film koʻrayotganingizni yozing: 저는 …을/를 봐요.'
       ]},
       slides:[
-        { kind:'intro', title:'Объект действия', sub:'Частица 을/를 — кого/что?',
+        { kind:'intro', title:'Объект действия', title_uz:'Harakat obyekti', sub:'Частица 을/를 — кого/что?',
           intro:'«Чтобы сказать, НА ЧТО направлено действие, нужна частица объекта <span class="ko">을/를</span>: 밥을 먹어요 — ем рис, 커피를 마셔요 — пью кофе 🌸»',
-          learn:[['🎯','частица 을/를'],['🍚','новые слова'],['✍️','сборка']] },
-        { kind:'pattern', eyebrow:'ГРАММАТИКА', title:'Частица объекта 을/를', sub:'목적격',
+          learn:[['🎯','частица 을/를'],['🍚','новые слова'],['✍️','сборка']], learn_uz:['을/를 yuklamasi','yangi soʻzlar','yigʻish'] },
+        { kind:'pattern', eyebrow:'ГРАММАТИКА', eyebrow_uz:'GRAMMATIKA', title:'Частица объекта 을/를', title_uz:'Obyekt yuklamasi 을/를', sub:'목적격',
           rule:'<b>을</b> — после согласной, <b>를</b> — после гласной. Ставится после слова, на которое направлено действие.',
+          rule_uz:'<b>을</b> — undoshdan keyin, <b>를</b> — unlidan keyin. Harakat qaratilgan soʻzdan keyin qoʻyiladi.',
           examples:[
-            {ko:'밥을 먹어요.', ru:'Ем рис.'},
-            {ko:'커피를 마셔요.', ru:'Пью кофе.'},
-            {ko:'한국어를 공부해요.', ru:'Учу корейский.'}
+            {ko:'밥을 먹어요.', ru:'Ем рис.', ru_uz:'Ovqat yeyman.'},
+            {ko:'커피를 마셔요.', ru:'Пью кофе.', ru_uz:'Kofe ichaman.'},
+            {ko:'한국어를 공부해요.', ru:'Учу корейский.', ru_uz:'Koreys tilini oʻrganaman.'}
           ],
           drills:[
             { q:'밥__ 먹어요.', options:['을','를','이'], answer:'을' },
             { q:'커피__ 마셔요.', options:['를','을','가'], answer:'를' },
             { q:'영화__ 봐요.', options:['를','을','에'], answer:'를' }
           ] },
-        { kind:'words', eyebrow:'СЛОВА', title:'Что можно делать',
+        { kind:'words', eyebrow:'СЛОВА', eyebrow_uz:'SOʻZLAR', title:'Что можно делать', title_uz:'Nima qilish mumkin',
           items:[
-            {ko:'밥', ru:'еда', emoji:'🍚'}, {ko:'영화', ru:'фильм', emoji:'🎬'},
-            {ko:'음악', ru:'музыка', emoji:'🎵'}, {ko:'물', ru:'вода', emoji:'💧'}
+            {ko:'밥', ru:'еда', ru_uz:'ovqat', emoji:'🍚'}, {ko:'영화', ru:'фильм', ru_uz:'film', emoji:'🎬'},
+            {ko:'음악', ru:'музыка', ru_uz:'musiqa', emoji:'🎵'}, {ko:'물', ru:'вода', ru_uz:'suv', emoji:'💧'}
           ] },
-        { kind:'build', eyebrow:'СОБЕРИ ФРАЗУ', title:'Я смотрю фильм', ru:'Я смотрю фильм.',
+        { kind:'build', eyebrow:'СОБЕРИ ФРАЗУ', eyebrow_uz:'JUMLA TUZ', title:'Я смотрю фильм', title_uz:'Men film koʻryapman', ru:'Я смотрю фильм.', ru_uz:'Men film koʻryapman.',
           target:['저는','영화를','봐요'], pool:['밥을'] },
-        { kind:'dialog', eyebrow:'ДИАЛОГ', title:'Чем заняты', sub:'뭐 해요?',
+        { kind:'dialog', eyebrow:'ДИАЛОГ', eyebrow_uz:'MULOQOT', title:'Чем заняты', title_uz:'Nima bilan band', sub:'뭐 해요?',
           lines:[
-            { who:'A', av:'🙂', ko:'지금 뭐 해요?', ru:'Что сейчас делаешь?' },
-            { who:'B', av:'🧑', ko:'밥을 먹어요.', ru:'Ем.' },
-            { who:'A', av:'🙂', ko:'저는 한국어를 공부해요.', ru:'А я учу корейский.' },
-            { who:'B', av:'🧑', ko:'우리 같이 영화를 봐요!', ru:'Давай вместе посмотрим фильм!' }
+            { who:'A', av:'🙂', ko:'지금 뭐 해요?', ru:'Что сейчас делаешь?', ru_uz:'Hozir nima qilyapsan?' },
+            { who:'B', av:'🧑', ko:'밥을 먹어요.', ru:'Ем.', ru_uz:'Ovqatlanyapman.' },
+            { who:'A', av:'🙂', ko:'저는 한국어를 공부해요.', ru:'А я учу корейский.', ru_uz:'Men esa koreys tilini oʻrganyapman.' },
+            { who:'B', av:'🧑', ko:'우리 같이 영화를 봐요!', ru:'Давай вместе посмотрим фильм!', ru_uz:'Keling, birga film koʻramiz!' }
           ] },
-        { kind:'listen', eyebrow:'АУДИРОВАНИЕ', title:'Что он делает?', sub:t('ui.162'),
+        { kind:'listen', eyebrow:'АУДИРОВАНИЕ', eyebrow_uz:'TINGLASH', title:'Что он делает?', title_uz:'U nima qilyapti?', sub:t('ui.162'),
           ko:'저는 한국어를 공부해요.', ru:'Я учу корейский.',
-          options:['Я учу корейский.','Я смотрю фильм.','Я слушаю музыку.'], answer:'Я учу корейский.' },
-        { kind:'build', eyebrow:'СОБЕРИ ФРАЗУ', title:'Я ем рис', ru:'Я ем рис.',
+          options:['Я учу корейский.','Я смотрю фильм.','Я слушаю музыку.'], options_uz:['Men koreys tilini oʻrganyapman.','Men film koʻryapman.','Men musiqa tinglayapman.'], answer:'Я учу корейский.', answer_uz:'Men koreys tilini oʻrganyapman.' },
+        { kind:'build', eyebrow:'СОБЕРИ ФРАЗУ', eyebrow_uz:'JUMLA TUZ', title:'Я ем рис', title_uz:'Men ovqat yeyapman', ru:'Я ем рис.', ru_uz:'Men ovqat yeyapman.',
           target:['저는','밥을','먹어요'], pool:['영화를'] },
-        { kind:'quiz', eyebrow:'ПРОВЕРКА', title:'Слова урока',
-          items:[ {ko:'영화',ru:'фильм'}, {ko:'음악',ru:'музыка'}, {ko:'한국어',ru:'корейский'} ],
-          pool:['фильм','музыка','корейский','вода','рис','кофе'] },
+        { kind:'quiz', eyebrow:'ПРОВЕРКА', eyebrow_uz:'TEKSHIRUV', title:'Слова урока', title_uz:'Dars soʻzlari',
+          items:[ {ko:'영화',ru:'фильм', ru_uz:'film'}, {ko:'음악',ru:'музыка', ru_uz:'musiqa'}, {ko:'한국어',ru:'корейский', ru_uz:'koreys tili'} ],
+          pool:['фильм','музыка','корейский','вода','рис','кофе'], pool_uz:['film','musiqa','koreys tili','suv','guruch','kofe'] },
         { kind:'homework' },
         { kind:'done' }
       ]
@@ -10970,44 +11101,48 @@
       homework:{ tasks:[
         'Составь по 2 фразы с 에 и с 에서.',
         'Опиши свой день: куда идёшь (에) и где что делаешь (에서).'
+      ], tasks_uz:[
+        '에 va 에서 bilan 2 tadan jumla tuzing.',
+        'Kuningizni tasvirlang: qayerga borasiz (에) va qayerda nima qilasiz (에서).'
       ]},
       slides:[
-        { kind:'intro', title:'Где и куда', sub:'Частицы места 에 / 에서',
+        { kind:'intro', title:'Где и куда', title_uz:'Qayerda va qayerga', sub:'Частицы места 에 / 에서',
           intro:'«Две частицы места легко перепутать. <span class="ko">에</span> — где находишься или куда идёшь. <span class="ko">에서</span> — где происходит действие. Разберёмся на примерах 🌸»',
-          learn:[['📍','에 / 에서'],['☕','диалог в кафе'],['👂','аудио']] },
-        { kind:'pattern', eyebrow:'ГРАММАТИКА', title:'에 и 에서', sub:'장소 조사',
+          learn:[['📍','에 / 에서'],['☕','диалог в кафе'],['👂','аудио']], learn_uz:['에 / 에서','kafedagi muloqot','audio'] },
+        { kind:'pattern', eyebrow:'ГРАММАТИКА', eyebrow_uz:'GRAMMATIKA', title:'에 и 에서', title_uz:'에 va 에서', sub:'장소 조사',
           rule:'<b>에</b> — место нахождения или направление: <span class="ko">집에 있어요</span> (дома), <span class="ko">학교에 가요</span> (в школу).<br><b>에서</b> — место, где идёт действие: <span class="ko">카페에서 공부해요</span> (учусь в кафе).',
+          rule_uz:'<b>에</b> — joylashuv yoki yoʻnalish: <span class="ko">집에 있어요</span> (uydaman), <span class="ko">학교에 가요</span> (maktabga boraman).<br><b>에서</b> — harakat sodir boʻlayotgan joy: <span class="ko">카페에서 공부해요</span> (kafeda oʻqiyman).',
           examples:[
-            {ko:'집에 있어요.', ru:'Я дома.'},
-            {ko:'학교에 가요.', ru:'Иду в школу.'},
-            {ko:'카페에서 커피를 마셔요.', ru:'Пью кофе в кафе.'}
+            {ko:'집에 있어요.', ru:'Я дома.', ru_uz:'Men uydaman.'},
+            {ko:'학교에 가요.', ru:'Иду в школу.', ru_uz:'Maktabga boryapman.'},
+            {ko:'카페에서 커피를 마셔요.', ru:'Пью кофе в кафе.', ru_uz:'Kafeda kofe ichyapman.'}
           ],
           drills:[
-            { q:'학교__ 가요.', ru:'Иду в школу.', options:['에','에서','을'], answer:'에' },
-            { q:'카페__ 커피를 마셔요.', ru:'Пью кофе в кафе.', options:['에서','에','를'], answer:'에서' },
-            { q:'집__ 있어요.', ru:'Я дома.', options:['에','에서','가'], answer:'에' }
+            { q:'학교__ 가요.', ru:'Иду в школу.', ru_uz:'Maktabga boryapman.', options:['에','에서','을'], answer:'에' },
+            { q:'카페__ 커피를 마셔요.', ru:'Пью кофе в кафе.', ru_uz:'Kafeda kofe ichyapman.', options:['에서','에','를'], answer:'에서' },
+            { q:'집__ 있어요.', ru:'Я дома.', ru_uz:'Men uydaman.', options:['에','에서','가'], answer:'에' }
           ] },
-        { kind:'dialog', eyebrow:'ДИАЛОГ', title:'В кафе', sub:'카페에서',
+        { kind:'dialog', eyebrow:'ДИАЛОГ', eyebrow_uz:'MULOQOT', title:'В кафе', title_uz:'Kafeda', sub:'카페에서',
           lines:[
-            { who:'A', av:'🙂', ko:'어디에 가요?', ru:'Куда идёшь?' },
-            { who:'B', av:'🧑', ko:'카페에 가요.', ru:'Иду в кафе.' },
-            { who:'A', av:'🙂', ko:'카페에서 뭐 해요?', ru:'Что делаешь в кафе?' },
-            { who:'B', av:'🧑', ko:'친구를 만나요.', ru:'Встречаю друга.' }
+            { who:'A', av:'🙂', ko:'어디에 가요?', ru:'Куда идёшь?', ru_uz:'Qayerga boryapsan?' },
+            { who:'B', av:'🧑', ko:'카페에 가요.', ru:'Иду в кафе.', ru_uz:'Kafega boryapman.' },
+            { who:'A', av:'🙂', ko:'카페에서 뭐 해요?', ru:'Что делаешь в кафе?', ru_uz:'Kafeda nima qilyapsan?' },
+            { who:'B', av:'🧑', ko:'친구를 만나요.', ru:'Встречаю друга.', ru_uz:'Doʻstim bilan uchrashyapman.' }
           ] },
-        { kind:'listen', eyebrow:'АУДИРОВАНИЕ', title:'Куда он идёт?', sub:t('ui.162'),
+        { kind:'listen', eyebrow:'АУДИРОВАНИЕ', eyebrow_uz:'TINGLASH', title:'Куда он идёт?', title_uz:'U qayerga boryapti?', sub:t('ui.162'),
           ko:'저는 학교에 가요.', ru:'Я иду в школу.',
-          options:['Я иду в школу.','Я дома.','Я в кафе.'], answer:'Я иду в школу.' },
-        { kind:'build', eyebrow:'СОБЕРИ ФРАЗУ', title:'Учусь в кафе', ru:'Я учусь в кафе.',
+          options:['Я иду в школу.','Я дома.','Я в кафе.'], options_uz:['Men maktabga boryapman.','Men uydaman.','Men kafedaman.'], answer:'Я иду в школу.', answer_uz:'Men maktabga boryapman.' },
+        { kind:'build', eyebrow:'СОБЕРИ ФРАЗУ', eyebrow_uz:'JUMLA TUZ', title:'Учусь в кафе', title_uz:'Kafeda oʻqiyman', ru:'Я учусь в кафе.', ru_uz:'Men kafeda oʻqiyapman.',
           target:['저는','카페에서','공부해요'], pool:['학교에'] },
-        { kind:'words', eyebrow:'МЕСТА', title:'Где мы бываем',
+        { kind:'words', eyebrow:'МЕСТА', eyebrow_uz:'JOYLAR', title:'Где мы бываем', title_uz:'Qayerda boʻlamiz',
           items:[
-            {ko:'집', ru:'дом', emoji:'🏠'}, {ko:'학교', ru:'школа', emoji:'🏫'},
-            {ko:'카페', ru:'кафе', emoji:'☕'}, {ko:'시장', ru:'рынок', emoji:'🛒'},
-            {ko:'도서관', ru:'библиотека', emoji:'📚'}, {ko:'회사', ru:'работа, фирма', emoji:'🏢'}
+            {ko:'집', ru:'дом', ru_uz:'uy', emoji:'🏠'}, {ko:'학교', ru:'школа', ru_uz:'maktab', emoji:'🏫'},
+            {ko:'카페', ru:'кафе', ru_uz:'kafe', emoji:'☕'}, {ko:'시장', ru:'рынок', ru_uz:'bozor', emoji:'🛒'},
+            {ko:'도서관', ru:'библиотека', ru_uz:'kutubxona', emoji:'📚'}, {ko:'회사', ru:'работа, фирма', ru_uz:'ish, firma', emoji:'🏢'}
           ] },
-        { kind:'quiz', eyebrow:'ПРОВЕРКА', title:'Слова урока',
-          items:[ {ko:'집',ru:'дом'}, {ko:'학교',ru:'школа'}, {ko:'시장',ru:'рынок'} ],
-          pool:['дом','школа','рынок','кафе','библиотека','работа'] },
+        { kind:'quiz', eyebrow:'ПРОВЕРКА', eyebrow_uz:'TEKSHIRUV', title:'Слова урока', title_uz:'Dars soʻzlari',
+          items:[ {ko:'집',ru:'дом', ru_uz:'uy'}, {ko:'학교',ru:'школа', ru_uz:'maktab'}, {ko:'시장',ru:'рынок', ru_uz:'bozor'} ],
+          pool:['дом','школа','рынок','кафе','библиотека','работа'], pool_uz:['uy','maktab','bozor','kafe','kutubxona','ish'] },
         { kind:'homework' },
         { kind:'done' }
       ]
@@ -11026,47 +11161,51 @@
       homework:{ tasks:[
         'Расскажи, что ты делал(а) вчера: 어제 저는 … -았/었어요.',
         'Проспрягай 5 глаголов в прошедшем времени.'
+      ], tasks_uz:[
+        'Kecha nima qilganingizni ayting: 어제 저는 … -았/었어요.',
+        '5 ta feʼlni oʻtgan zamonda tuslang.'
       ]},
       slides:[
-        { kind:'intro', title:'Прошедшее время', sub:'Окончание -았/었어요',
+        { kind:'intro', title:'Прошедшее время', title_uz:'Oʻtgan zamon', sub:'Окончание -았/었어요',
           intro:'«Чтобы рассказать о прошлом, добавляем <span class="ko">-았어요/었어요</span>. Принцип тот же, что у настоящего времени: смотрим на гласную основы 🌸»',
-          learn:[['🕐','прошлое'],['🗣️','диалог'],['🎯','дрилы']] },
-        { kind:'pattern', eyebrow:'ГРАММАТИКА', title:'Как получить прошедшее', sub:'과거형',
+          learn:[['🕐','прошлое'],['🗣️','диалог'],['🎯','дрилы']], learn_uz:['oʻtmish','muloqot','mashqlar'] },
+        { kind:'pattern', eyebrow:'ГРАММАТИКА', eyebrow_uz:'GRAMMATIKA', title:'Как получить прошедшее', title_uz:'Oʻtgan zamon qanday hosil qilinadi', sub:'과거형',
           rule:'Если последняя гласная основы <span class="ko">ㅏ/ㅗ</span> → <b>-았어요</b>, иначе → <b>-었어요</b>. <span class="ko">하다 → 했어요</span>.',
+          rule_uz:'Agar negizning oxirgi unlisi <span class="ko">ㅏ/ㅗ</span> boʻlsa → <b>-았어요</b>, aks holda → <b>-었어요</b>. <span class="ko">하다 → 했어요</span>.',
           examples:[
-            {ko:'가다 → 갔어요', ru:'идти → ходил'},
-            {ko:'먹다 → 먹었어요', ru:'есть → ел'},
-            {ko:'보다 → 봤어요', ru:'смотреть → смотрел'},
-            {ko:'하다 → 했어요', ru:'делать → делал'}
+            {ko:'가다 → 갔어요', ru:'идти → ходил', ru_uz:'bormoq → bordim'},
+            {ko:'먹다 → 먹었어요', ru:'есть → ел', ru_uz:'yemoq → yedim'},
+            {ko:'보다 → 봤어요', ru:'смотреть → смотрел', ru_uz:'koʻrmoq → koʻrdim'},
+            {ko:'하다 → 했어요', ru:'делать → делал', ru_uz:'qilmoq → qildim'}
           ],
           drills:[
-            { q:'어제 영화를 ___.', ru:'Вчера смотрел фильм.', options:['봤어요','봐요','보었어요'], answer:'봤어요' },
-            { q:'밥을 ___.', ru:'Поел.', options:['먹었어요','먹았어요','먹어요'], answer:'먹었어요' },
-            { q:'숙제를 ___.', ru:'Сделал домашку.', options:['했어요','하았어요','해어요'], answer:'했어요' }
+            { q:'어제 영화를 ___.', ru:'Вчера смотрел фильм.', ru_uz:'Kecha film koʻrdim.', options:['봤어요','봐요','보었어요'], answer:'봤어요' },
+            { q:'밥을 ___.', ru:'Поел.', ru_uz:'Ovqatlandim.', options:['먹었어요','먹았어요','먹어요'], answer:'먹었어요' },
+            { q:'숙제를 ___.', ru:'Сделал домашку.', ru_uz:'Uy vazifasini qildim.', options:['했어요','하았어요','해어요'], answer:'했어요' }
           ] },
-        { kind:'dialog', eyebrow:'ДИАЛОГ', title:'Как прошёл день?', sub:'어제 뭐 했어요?',
+        { kind:'dialog', eyebrow:'ДИАЛОГ', eyebrow_uz:'MULOQOT', title:'Как прошёл день?', title_uz:'Kun qanday oʻtdi?', sub:'어제 뭐 했어요?',
           lines:[
-            { who:'A', av:'🙂', ko:'어제 뭐 했어요?', ru:'Что вчера делал?' },
-            { who:'B', av:'🧑', ko:'친구를 만났어요.', ru:'Встретил друга.' },
-            { who:'A', av:'🙂', ko:'뭐 먹었어요?', ru:'Что ели?' },
-            { who:'B', av:'🧑', ko:'김밥을 먹었어요. 맛있었어요!', ru:'Ел кимпаб. Было вкусно!' }
+            { who:'A', av:'🙂', ko:'어제 뭐 했어요?', ru:'Что вчера делал?', ru_uz:'Kecha nima qildingiz?' },
+            { who:'B', av:'🧑', ko:'친구를 만났어요.', ru:'Встретил друга.', ru_uz:'Doʻstim bilan uchrashdim.' },
+            { who:'A', av:'🙂', ko:'뭐 먹었어요?', ru:'Что ели?', ru_uz:'Nima yedingiz?' },
+            { who:'B', av:'🧑', ko:'김밥을 먹었어요. 맛있었어요!', ru:'Ел кимпаб. Было вкусно!', ru_uz:'Kimbap yedim. Mazali edi!' }
           ] },
-        { kind:'build', eyebrow:'СОБЕРИ ФРАЗУ', title:'Вчера встретил друга', ru:'Вчера я встретил друга.',
+        { kind:'build', eyebrow:'СОБЕРИ ФРАЗУ', eyebrow_uz:'JUMLA TUZ', title:'Вчера встретил друга', title_uz:'Kecha doʻstim bilan uchrashdim', ru:'Вчера я встретил друга.', ru_uz:'Kecha doʻstim bilan uchrashdim.',
           target:['어제','친구를','만났어요'], pool:['먹었어요'] },
-        { kind:'words', eyebrow:'КОГДА', title:'Слова времени',
+        { kind:'words', eyebrow:'КОГДА', eyebrow_uz:'QACHON', title:'Слова времени', title_uz:'Vaqt soʻzlari',
           items:[
-            {ko:'어제', ru:'вчера', emoji:'📅'}, {ko:'오늘', ru:'сегодня', emoji:'☀️'},
-            {ko:'주말', ru:'выходные', emoji:'🎉'}, {ko:'아침', ru:'утро', emoji:'🌅'},
-            {ko:'저녁', ru:'вечер', emoji:'🌆'}, {ko:'숙제', ru:'домашка', emoji:'📒'}
+            {ko:'어제', ru:'вчера', ru_uz:'kecha', emoji:'📅'}, {ko:'오늘', ru:'сегодня', ru_uz:'bugun', emoji:'☀️'},
+            {ko:'주말', ru:'выходные', ru_uz:'dam olish kunlari', emoji:'🎉'}, {ko:'아침', ru:'утро', ru_uz:'ertalab', emoji:'🌅'},
+            {ko:'저녁', ru:'вечер', ru_uz:'kechqurun', emoji:'🌆'}, {ko:'숙제', ru:'домашка', ru_uz:'uy vazifasi', emoji:'📒'}
           ] },
-        { kind:'listen', eyebrow:'АУДИРОВАНИЕ', title:'Что было вчера?', sub:t('ui.162'),
+        { kind:'listen', eyebrow:'АУДИРОВАНИЕ', eyebrow_uz:'TINGLASH', title:'Что было вчера?', title_uz:'Kecha nima boʻldi?', sub:t('ui.162'),
           ko:'어제 친구를 만났어요.', ru:'Вчера я встретил друга.',
-          options:['Вчера встретил друга.','Сегодня встречаю друга.','Завтра увижу друга.'], answer:'Вчера встретил друга.' },
-        { kind:'build', eyebrow:'СОБЕРИ ФРАЗУ', title:'Вчера смотрел фильм', ru:'Вчера я смотрел фильм.',
+          options:['Вчера встретил друга.','Сегодня встречаю друга.','Завтра увижу друга.'], options_uz:['Kecha doʻstim bilan uchrashdim.','Bugun doʻstim bilan uchrashyapman.','Ertaga doʻstimni koʻraman.'], answer:'Вчера встретил друга.', answer_uz:'Kecha doʻstim bilan uchrashdim.' },
+        { kind:'build', eyebrow:'СОБЕРИ ФРАЗУ', eyebrow_uz:'JUMLA TUZ', title:'Вчера смотрел фильм', title_uz:'Kecha film koʻrdim', ru:'Вчера я смотрел фильм.', ru_uz:'Kecha film koʻrdim.',
           target:['어제','영화를','봤어요'], pool:['먹었어요'] },
-        { kind:'quiz', eyebrow:'ПРОВЕРКА', title:'Слова урока',
-          items:[ {ko:'어제',ru:'вчера'}, {ko:'김밥',ru:'кимпаб'}, {ko:'숙제',ru:'домашка'} ],
-          pool:['вчера','кимпаб','домашка','сегодня','друг','вкусный'] },
+        { kind:'quiz', eyebrow:'ПРОВЕРКА', eyebrow_uz:'TEKSHIRUV', title:'Слова урока', title_uz:'Dars soʻzlari',
+          items:[ {ko:'어제',ru:'вчера', ru_uz:'kecha'}, {ko:'김밥',ru:'кимпаб', ru_uz:'kimbap'}, {ko:'숙제',ru:'домашка', ru_uz:'uy vazifasi'} ],
+          pool:['вчера','кимпаб','домашка','сегодня','друг','вкусный'], pool_uz:['kecha','kimbap','uy vazifasi','bugun','doʻst','mazali'] },
         { kind:'homework' },
         { kind:'done' }
       ]
@@ -11087,50 +11226,54 @@
       homework:{ tasks:[
         'Выпиши числа 1–10 в двух системах (китайские и исконные).',
         'Посчитай предметы вокруг: 사과 세 개, 친구 두 명 — составь 5 фраз.'
+      ], tasks_uz:[
+        '1–10 raqamlarini ikki tizimda yozing (xitoycha va sof koreyscha).',
+        'Atrofdagi narsalarni sanang: 사과 세 개, 친구 두 명 — 5 ta jumla tuzing.'
       ]},
       slides:[
-        { kind:'intro', title:'Числа', sub:'숫자 — две системы',
+        { kind:'intro', title:'Числа', title_uz:'Raqamlar', sub:'숫자 — две системы',
           intro:'«В корейском ДВА набора чисел. Китайские <span class="ko">일·이·삼</span> — для денег, минут, дат, номеров. Исконные <span class="ko">하나·둘·셋</span> — для счёта предметов, людей, часов и возраста. Сегодня освоим оба 🌸»',
-          learn:[['🔢','две системы'],['🍎','счётные слова'],['🎯','дрилы']] },
-        { kind:'info', eyebrow:'ЧИСЛА', title:'Китайские числа', sub:'한자어 숫자 — деньги, минуты, даты', cols:5,
+          learn:[['🔢','две системы'],['🍎','счётные слова'],['🎯','дрилы']], learn_uz:['ikki tizim','sanoq soʻzlari','mashqlar'] },
+        { kind:'info', eyebrow:'ЧИСЛА', eyebrow_uz:'RAQAMLAR', title:'Китайские числа', title_uz:'Xitoycha raqamlar', sub:'한자어 숫자 — деньги, минуты, даты', sub_uz:'한자어 숫자 — pul, daqiqa, sanalar', cols:5,
           grid:[
             {ko:'일', ru:'1'}, {ko:'이', ru:'2'}, {ko:'삼', ru:'3'}, {ko:'사', ru:'4'}, {ko:'오', ru:'5'},
             {ko:'육', ru:'6'}, {ko:'칠', ru:'7'}, {ko:'팔', ru:'8'}, {ko:'구', ru:'9'}, {ko:'십', ru:'10'}
           ],
-          note:'Дальше просто: 십일 = 11, 이십 = 20, 백 = 100, 천 = 1000.' },
-        { kind:'info', eyebrow:'ЧИСЛА', title:'Исконные числа', sub:'고유어 숫자 — счёт предметов и людей', cols:5,
+          note:'Дальше просто: 십일 = 11, 이십 = 20, 백 = 100, 천 = 1000.', note_uz:'Davomi oson: 십일 = 11, 이십 = 20, 백 = 100, 천 = 1000.' },
+        { kind:'info', eyebrow:'ЧИСЛА', eyebrow_uz:'RAQAMLAR', title:'Исконные числа', title_uz:'Sof koreyscha raqamlar', sub:'고유어 숫자 — счёт предметов и людей', sub_uz:'고유어 숫자 — buyum va odam sanash', cols:5,
           grid:[
             {ko:'하나', ru:'1'}, {ko:'둘', ru:'2'}, {ko:'셋', ru:'3'}, {ko:'넷', ru:'4'}, {ko:'다섯', ru:'5'},
             {ko:'여섯', ru:'6'}, {ko:'일곱', ru:'7'}, {ko:'여덟', ru:'8'}, {ko:'아홉', ru:'9'}, {ko:'열', ru:'10'}
           ],
-          note:'Перед счётным словом меняются: 하나→한, 둘→두, 셋→세, 넷→네 (한 개, 두 명, 세 잔).' },
-        { kind:'pattern', eyebrow:'ГРАММАТИКА', title:'Какие числа когда', sub:'숫자 + 단위',
+          note:'Перед счётным словом меняются: 하나→한, 둘→두, 셋→세, 넷→네 (한 개, 두 명, 세 잔).', note_uz:'Sanoq soʻzidan oldin oʻzgaradi: 하나→한, 둘→두, 셋→세, 넷→네 (한 개, 두 명, 세 잔).' },
+        { kind:'pattern', eyebrow:'ГРАММАТИКА', eyebrow_uz:'GRAMMATIKA', title:'Какие числа когда', title_uz:'Qaysi raqamlar qachon', sub:'숫자 + 단위',
           rule:'<b>Китайские</b> (일이삼): деньги <span class="ko">원</span>, минуты <span class="ko">분</span>, даты, номера телефонов.<br><b>Исконные</b> (하나둘셋): счёт предметов <span class="ko">개</span>, людей <span class="ko">명</span>, чашек <span class="ko">잔</span>, возраст <span class="ko">살</span>, часы <span class="ko">시</span>. Перед счётным словом: 하나→한, 둘→두, 셋→세.',
+          rule_uz:'<b>Xitoycha</b> (일이삼): pul <span class="ko">원</span>, daqiqa <span class="ko">분</span>, sanalar, telefon raqamlari.<br><b>Sof koreyscha</b> (하나둘셋): buyum sanash <span class="ko">개</span>, odam <span class="ko">명</span>, stakan <span class="ko">잔</span>, yosh <span class="ko">살</span>, soat <span class="ko">시</span>. Sanoq soʻzidan oldin: 하나→한, 둘→두, 셋→세.',
           examples:[
-            {ko:'십 분', ru:'10 минут (кит.)'},
-            {ko:'사과 세 개', ru:'три яблока (исконн.)'},
-            {ko:'스무 살', ru:'20 лет (исконн.)'},
-            {ko:'커피 두 잔', ru:'две чашки кофе'}
+            {ko:'십 분', ru:'10 минут (кит.)', ru_uz:'10 daqiqa (xitoycha)'},
+            {ko:'사과 세 개', ru:'три яблока (исконн.)', ru_uz:'uchta olma (sof koreyscha)'},
+            {ko:'스무 살', ru:'20 лет (исконн.)', ru_uz:'20 yosh (sof koreyscha)'},
+            {ko:'커피 두 잔', ru:'две чашки кофе', ru_uz:'ikki stakan kofe'}
           ],
           drills:[
-            { q:'3 яблока: 사과 ___ 개', ru:'перед счётным словом', options:['세','삼','셋'], answer:'세' },
-            { q:'10 минут: ___ 분', ru:'минуты — китайские', options:['십','열','다섯'], answer:'십' },
-            { q:'2 человека: 친구 ___ 명', ru:'перед счётным словом', options:['두','둘','이'], answer:'두' }
+            { q:'3 яблока: 사과 ___ 개', q_uz:'3 ta olma: 사과 ___ 개', ru:'перед счётным словом', ru_uz:'sanoq soʻzidan oldin', options:['세','삼','셋'], answer:'세' },
+            { q:'10 минут: ___ 분', q_uz:'10 daqiqa: ___ 분', ru:'минуты — китайские', ru_uz:'daqiqa — xitoycha', options:['십','열','다섯'], answer:'십' },
+            { q:'2 человека: 친구 ___ 명', q_uz:'2 kishi: 친구 ___ 명', ru:'перед счётным словом', ru_uz:'sanoq soʻzidan oldin', options:['두','둘','이'], answer:'두' }
           ] },
-        { kind:'words', eyebrow:'СЧЁТНЫЕ СЛОВА', title:'Что чем считаем',
+        { kind:'words', eyebrow:'СЧЁТНЫЕ СЛОВА', eyebrow_uz:'SANOQ SOʻZLARI', title:'Что чем считаем', title_uz:'Nima bilan sanaymiz',
           items:[
-            {ko:'개', ru:'штука (предмет)', emoji:'📦'}, {ko:'명', ru:'человек', emoji:'👤'},
-            {ko:'잔', ru:'чашка, стакан', emoji:'🥤'}, {ko:'병', ru:'бутылка', emoji:'🍶'},
-            {ko:'권', ru:'книга, том', emoji:'📚'}, {ko:'살', ru:'лет (возраст)', emoji:'🎂'}
+            {ko:'개', ru:'штука (предмет)', ru_uz:'dona (buyum)', emoji:'📦'}, {ko:'명', ru:'человек', ru_uz:'kishi', emoji:'👤'},
+            {ko:'잔', ru:'чашка, стакан', ru_uz:'stakan', emoji:'🥤'}, {ko:'병', ru:'бутылка', ru_uz:'shisha', emoji:'🍶'},
+            {ko:'권', ru:'книга, том', ru_uz:'kitob, jild', emoji:'📚'}, {ko:'살', ru:'лет (возраст)', ru_uz:'yosh', emoji:'🎂'}
           ] },
-        { kind:'build', eyebrow:'СОБЕРИ ФРАЗУ', title:'Три яблока', ru:'три яблока',
+        { kind:'build', eyebrow:'СОБЕРИ ФРАЗУ', eyebrow_uz:'JUMLA TUZ', title:'Три яблока', title_uz:'Uchta olma', ru:'три яблока', ru_uz:'uchta olma',
           target:['사과','세','개'], pool:['두'] },
-        { kind:'listen', eyebrow:'АУДИРОВАНИЕ', title:'Сколько чашек?', sub:t('ui.162'),
+        { kind:'listen', eyebrow:'АУДИРОВАНИЕ', eyebrow_uz:'TINGLASH', title:'Сколько чашек?', title_uz:'Nechta stakan?', sub:t('ui.162'),
           ko:'커피 두 잔이에요.', ru:'Это две чашки кофе.',
-          options:['Две чашки кофе.','Три чашки кофе.','Один кофе.'], answer:'Две чашки кофе.' },
-        { kind:'quiz', eyebrow:'ПРОВЕРКА', title:'Числа',
-          items:[ {ko:'하나',ru:'один'}, {ko:'둘',ru:'два'}, {ko:'셋',ru:'три'}, {ko:'십',ru:'десять'} ],
-          pool:['один','два','три','десять','пять','семь'] },
+          options:['Две чашки кофе.','Три чашки кофе.','Один кофе.'], options_uz:['Ikki stakan kofe.','Uch stakan kofe.','Bitta kofe.'], answer:'Две чашки кофе.', answer_uz:'Ikki stakan kofe.' },
+        { kind:'quiz', eyebrow:'ПРОВЕРКА', eyebrow_uz:'TEKSHIRUV', title:'Числа', title_uz:'Raqamlar',
+          items:[ {ko:'하나',ru:'один', ru_uz:'bir'}, {ko:'둘',ru:'два', ru_uz:'ikki'}, {ko:'셋',ru:'три', ru_uz:'uch'}, {ko:'십',ru:'десять', ru_uz:'oʻn'} ],
+          pool:['один','два','три','десять','пять','семь'], pool_uz:['bir','ikki','uch','oʻn','besh','yetti'] },
         { kind:'homework' },
         { kind:'done' }
       ]
@@ -11149,50 +11292,54 @@
       homework:{ tasks:[
         'Запиши 5 раз текущее время по-корейски (한 시, 두 시 삼십 분…).',
         'Назови все 7 дней недели и обведи сегодняшний.'
+      ], tasks_uz:[
+        'Hozirgi vaqtni koreys tilida 5 marta yozing (한 시, 두 시 삼십 분…).',
+        'Haftaning barcha 7 kunini ayting va bugungisini belgilang.'
       ]},
       slides:[
-        { kind:'intro', title:'Время и дни', sub:'몇 시예요?',
+        { kind:'intro', title:'Время и дни', title_uz:'Vaqt va kunlar', sub:'몇 시예요?',
           intro:'«Спросить время просто: <span class="ko">지금 몇 시예요?</span> Часы считаем исконными числами + <span class="ko">시</span>, минуты — китайскими + <span class="ko">분</span>. И выучим дни недели 🌸»',
-          learn:[['🕐','часы и минуты'],['📅','дни недели'],['🗣️','диалог']] },
-        { kind:'pattern', eyebrow:'ГРАММАТИКА', title:'Который час', sub:'시 + 분',
+          learn:[['🕐','часы и минуты'],['📅','дни недели'],['🗣️','диалог']], learn_uz:['soat va daqiqa','hafta kunlari','muloqot'] },
+        { kind:'pattern', eyebrow:'ГРАММАТИКА', eyebrow_uz:'GRAMMATIKA', title:'Который час', title_uz:'Necha soat', sub:'시 + 분',
           rule:'Часы — <b>исконные</b> числа + <span class="ko">시</span>: 한 시, 두 시, 세 시. Минуты — <b>китайские</b> + <span class="ko">분</span>: 십 분, 삼십 분. «Сейчас 2:30» → <span class="ko">두 시 삼십 분이에요</span>.',
+          rule_uz:'Soat — <b>sof koreyscha</b> raqam + <span class="ko">시</span>: 한 시, 두 시, 세 시. Daqiqa — <b>xitoycha</b> + <span class="ko">분</span>: 십 분, 삼십 분. «Hozir 2:30» → <span class="ko">두 시 삼십 분이에요</span>.',
           examples:[
-            {ko:'지금 몇 시예요?', ru:'Который сейчас час?'},
-            {ko:'한 시예요.', ru:'Час дня.'},
-            {ko:'두 시 삼십 분이에요.', ru:'2:30.'}
+            {ko:'지금 몇 시예요?', ru:'Который сейчас час?', ru_uz:'Hozir soat necha?'},
+            {ko:'한 시예요.', ru:'Час дня.', ru_uz:'Soat bir.'},
+            {ko:'두 시 삼십 분이에요.', ru:'2:30.', ru_uz:'2:30.'}
           ],
           drills:[
-            { q:'3 часа: ___ 시', ru:'часы — исконные', options:['세','삼','셋'], answer:'세' },
-            { q:'30 минут: 삼십 ___', ru:'единица минут', options:['분','시','명'], answer:'분' },
-            { q:'который час: 지금 몇 ___예요?', ru:'', options:['시','분','개'], answer:'시' }
+            { q:'3 часа: ___ 시', q_uz:'3 soat: ___ 시', ru:'часы — исконные', ru_uz:'soat — sof koreyscha', options:['세','삼','셋'], answer:'세' },
+            { q:'30 минут: 삼십 ___', q_uz:'30 daqiqa: 삼십 ___', ru:'единица минут', ru_uz:'daqiqa birligi', options:['분','시','명'], answer:'분' },
+            { q:'который час: 지금 몇 ___예요?', q_uz:'soat necha: 지금 몇 ___예요?', ru:'', options:['시','분','개'], answer:'시' }
           ] },
-        { kind:'info', eyebrow:'ДНИ НЕДЕЛИ', title:'요일', sub:'неделя по-корейски', cols:1,
+        { kind:'info', eyebrow:'ДНИ НЕДЕЛИ', eyebrow_uz:'HAFTA KUNLARI', title:'요일', sub:'неделя по-корейски', sub_uz:'koreyscha hafta', cols:1,
           grid:[
-            {ko:'월요일', ru:'понедельник'}, {ko:'화요일', ru:'вторник'}, {ko:'수요일', ru:'среда'},
-            {ko:'목요일', ru:'четверг'}, {ko:'금요일', ru:'пятница'}, {ko:'토요일', ru:'суббота'}, {ko:'일요일', ru:'воскресенье'}
+            {ko:'월요일', ru:'понедельник', ru_uz:'dushanba'}, {ko:'화요일', ru:'вторник', ru_uz:'seshanba'}, {ko:'수요일', ru:'среда', ru_uz:'chorshanba'},
+            {ko:'목요일', ru:'четверг', ru_uz:'payshanba'}, {ko:'금요일', ru:'пятница', ru_uz:'juma'}, {ko:'토요일', ru:'суббота', ru_uz:'shanba'}, {ko:'일요일', ru:'воскресенье', ru_uz:'yakshanba'}
           ],
-          note:'«Какой сегодня день?» → 오늘 무슨 요일이에요?' },
-        { kind:'words', eyebrow:'ВРЕМЯ СУТОК', title:'Когда',
+          note:'«Какой сегодня день?» → 오늘 무슨 요일이에요?', note_uz:'«Bugun qaysi kun?» → 오늘 무슨 요일이에요?' },
+        { kind:'words', eyebrow:'ВРЕМЯ СУТОК', eyebrow_uz:'SUTKA VAQTI', title:'Когда', title_uz:'Qachon',
           items:[
-            {ko:'오전', ru:'до полудня (AM)', emoji:'🌅'}, {ko:'오후', ru:'после полудня (PM)', emoji:'🌇'},
-            {ko:'아침', ru:'утро', emoji:'🍳'}, {ko:'점심', ru:'обед, полдень', emoji:'🍱'},
-            {ko:'저녁', ru:'вечер', emoji:'🌃'}, {ko:'밤', ru:'ночь', emoji:'🌙'}
+            {ko:'오전', ru:'до полудня (AM)', ru_uz:'tushdan oldin (AM)', emoji:'🌅'}, {ko:'오후', ru:'после полудня (PM)', ru_uz:'tushdan keyin (PM)', emoji:'🌇'},
+            {ko:'아침', ru:'утро', ru_uz:'ertalab', emoji:'🍳'}, {ko:'점심', ru:'обед, полдень', ru_uz:'tushlik, tush payti', emoji:'🍱'},
+            {ko:'저녁', ru:'вечер', ru_uz:'kechqurun', emoji:'🌃'}, {ko:'밤', ru:'ночь', ru_uz:'tun', emoji:'🌙'}
           ] },
-        { kind:'dialog', eyebrow:'ДИАЛОГ', title:'Сколько времени?', sub:'지금 몇 시예요?',
+        { kind:'dialog', eyebrow:'ДИАЛОГ', eyebrow_uz:'MULOQOT', title:'Сколько времени?', title_uz:'Soat necha?', sub:'지금 몇 시예요?',
           lines:[
-            { who:'A', av:'🙂', ko:'지금 몇 시예요?', ru:'Который сейчас час?' },
-            { who:'B', av:'🧑', ko:'세 시예요.', ru:'Три часа.' },
-            { who:'A', av:'🙂', ko:'오늘 무슨 요일이에요?', ru:'Какой сегодня день?' },
-            { who:'B', av:'🧑', ko:'금요일이에요!', ru:'Пятница!' }
+            { who:'A', av:'🙂', ko:'지금 몇 시예요?', ru:'Который сейчас час?', ru_uz:'Hozir soat necha?' },
+            { who:'B', av:'🧑', ko:'세 시예요.', ru:'Три часа.', ru_uz:'Soat uch.' },
+            { who:'A', av:'🙂', ko:'오늘 무슨 요일이에요?', ru:'Какой сегодня день?', ru_uz:'Bugun qaysi kun?' },
+            { who:'B', av:'🧑', ko:'금요일이에요!', ru:'Пятница!', ru_uz:'Juma!' }
           ] },
-        { kind:'build', eyebrow:'СОБЕРИ ФРАЗУ', title:'Сейчас два часа', ru:'Сейчас два часа.',
+        { kind:'build', eyebrow:'СОБЕРИ ФРАЗУ', eyebrow_uz:'JUMLA TUZ', title:'Сейчас два часа', title_uz:'Hozir soat ikki', ru:'Сейчас два часа.', ru_uz:'Hozir soat ikki.',
           target:['지금','두','시예요'], pool:['세'] },
-        { kind:'listen', eyebrow:'АУДИРОВАНИЕ', title:'Который час?', sub:t('ui.162'),
+        { kind:'listen', eyebrow:'АУДИРОВАНИЕ', eyebrow_uz:'TINGLASH', title:'Который час?', title_uz:'Soat necha?', sub:t('ui.162'),
           ko:'지금 네 시 삼십 분이에요.', ru:'Сейчас 4:30.',
-          options:['Сейчас 4:30.','Сейчас 3:40.','Сейчас 5:13.'], answer:'Сейчас 4:30.' },
-        { kind:'quiz', eyebrow:'ПРОВЕРКА', title:'Дни недели',
-          items:[ {ko:'월요일',ru:'понедельник'}, {ko:'토요일',ru:'суббота'}, {ko:'일요일',ru:'воскресенье'} ],
-          pool:['понедельник','суббота','воскресенье','пятница','среда','вторник'] },
+          options:['Сейчас 4:30.','Сейчас 3:40.','Сейчас 5:13.'], options_uz:['Hozir 4:30.','Hozir 3:40.','Hozir 5:13.'], answer:'Сейчас 4:30.', answer_uz:'Hozir 4:30.' },
+        { kind:'quiz', eyebrow:'ПРОВЕРКА', eyebrow_uz:'TEKSHIRUV', title:'Дни недели', title_uz:'Hafta kunlari',
+          items:[ {ko:'월요일',ru:'понедельник', ru_uz:'dushanba'}, {ko:'토요일',ru:'суббота', ru_uz:'shanba'}, {ko:'일요일',ru:'воскресенье', ru_uz:'yakshanba'} ],
+          pool:['понедельник','суббота','воскресенье','пятница','среда','вторник'], pool_uz:['dushanba','shanba','yakshanba','juma','chorshanba','seshanba'] },
         { kind:'homework' },
         { kind:'done' }
       ]
@@ -11211,56 +11358,61 @@
       homework:{ tasks:[
         'Закажи 3 напитка: «… 주세요» и спроси «얼마예요?».',
         'Запиши цены словами: 삼천 원, 사천오백 원.'
+      ], tasks_uz:[
+        '3 ta ichimlik buyurtma qiling: «… 주세요» va soʻrang «얼마예요?».',
+        'Narxlarni soʻz bilan yozing: 삼천 원, 사천오백 원.'
       ]},
       slides:[
-        { kind:'intro', title:'В кафе: заказ', sub:'카페에서 주문해요',
+        { kind:'intro', title:'В кафе: заказ', title_uz:'Kafeda: buyurtma', sub:'카페에서 주문해요',
           intro:'«Время заказать! <span class="ko">주세요</span> — «дайте, пожалуйста», <span class="ko">얼마예요?</span> — «сколько стоит?». Деньги считаем китайскими числами + <span class="ko">원</span>. Сделаем настоящий заказ 🌸»',
-          learn:[['☕','заказ'],['💰','цены'],['🗣️','диалог']] },
-        { kind:'pattern', eyebrow:'ГРАММАТИКА', title:'… 주세요', sub:'просим вежливо',
+          learn:[['☕','заказ'],['💰','цены'],['🗣️','диалог']], learn_uz:['buyurtma','narxlar','muloqot'] },
+        { kind:'pattern', eyebrow:'ГРАММАТИКА', eyebrow_uz:'GRAMMATIKA', title:'… 주세요', title_uz:'… 주세요', sub:'просим вежливо', sub_uz:'xushmuomalalik bilan soʻraymiz',
           rule:'<b>(что)</b> + <span class="ko">주세요</span> = «дайте, пожалуйста». С количеством: <span class="ko">커피 한 잔 주세요</span> — одну чашку кофе. Чтобы позвать официанта: <span class="ko">여기요!</span>',
+          rule_uz:'<b>(nima)</b> + <span class="ko">주세요</span> = «bering, iltimos». Miqdor bilan: <span class="ko">커피 한 잔 주세요</span> — bir stakan kofe bering. Ofitsiantni chaqirish uchun: <span class="ko">여기요!</span>',
           examples:[
-            {ko:'커피 주세요.', ru:'Дайте кофе.'},
-            {ko:'물 한 잔 주세요.', ru:'Дайте стакан воды.'},
-            {ko:'김밥 두 개 주세요.', ru:'Дайте два кимпаба.'}
+            {ko:'커피 주세요.', ru:'Дайте кофе.', ru_uz:'Kofe bering.'},
+            {ko:'물 한 잔 주세요.', ru:'Дайте стакан воды.', ru_uz:'Bir stakan suv bering.'},
+            {ko:'김밥 두 개 주세요.', ru:'Дайте два кимпаба.', ru_uz:'Ikkita kimbap bering.'}
           ],
           drills:[
-            { q:'«дайте кофе»: 커피 ___', ru:'', options:['주세요','가요','있어요'], answer:'주세요' },
-            { q:'две чашки: 커피 두 ___ 주세요', ru:'счётное слово', options:['잔','개','명'], answer:'잔' },
-            { q:'позвать официанта: ___', ru:'', options:['여기요','안녕','네'], answer:'여기요' }
+            { q:'«дайте кофе»: 커피 ___', q_uz:'«kofe bering»: 커피 ___', ru:'', options:['주세요','가요','있어요'], answer:'주세요' },
+            { q:'две чашки: 커피 두 ___ 주세요', q_uz:'ikki stakan: 커피 두 ___ 주세요', ru:'счётное слово', ru_uz:'sanoq soʻzi', options:['잔','개','명'], answer:'잔' },
+            { q:'позвать официанта: ___', q_uz:'ofitsiantni chaqirish: ___', ru:'', options:['여기요','안녕','네'], answer:'여기요' }
           ] },
-        { kind:'pattern', eyebrow:'ГРАММАТИКА', title:'얼마예요?', sub:'сколько стоит',
+        { kind:'pattern', eyebrow:'ГРАММАТИКА', eyebrow_uz:'GRAMMATIKA', title:'얼마예요?', title_uz:'얼마예요?', sub:'сколько стоит', sub_uz:'narxi qancha',
           rule:'<span class="ko">얼마예요?</span> — «сколько стоит?». Цена — китайские числа + <span class="ko">원</span>: 삼천 원 (3000), 오천 원 (5000).',
+          rule_uz:'<span class="ko">얼마예요?</span> — «narxi qancha?». Narx — xitoycha raqam + <span class="ko">원</span>: 삼천 원 (3000), 오천 원 (5000).',
           examples:[
-            {ko:'이거 얼마예요?', ru:'Сколько это стоит?'},
-            {ko:'삼천 원이에요.', ru:'3000 вон.'},
-            {ko:'커피는 사천 원이에요.', ru:'Кофе — 4000 вон.'}
+            {ko:'이거 얼마예요?', ru:'Сколько это стоит?', ru_uz:'Buning narxi qancha?'},
+            {ko:'삼천 원이에요.', ru:'3000 вон.', ru_uz:'3000 von.'},
+            {ko:'커피는 사천 원이에요.', ru:'Кофе — 4000 вон.', ru_uz:'Kofe — 4000 von.'}
           ],
           drills:[
-            { q:'«сколько стоит?»: ___', ru:'', options:['얼마예요','뭐예요','어디예요'], answer:'얼마예요' },
-            { q:'3000 вон: 삼천 ___', ru:'единица денег', options:['원','분','시'], answer:'원' }
+            { q:'«сколько стоит?»: ___', q_uz:'«narxi qancha?»: ___', ru:'', options:['얼마예요','뭐예요','어디예요'], answer:'얼마예요' },
+            { q:'3000 вон: 삼천 ___', q_uz:'3000 von: 삼천 ___', ru:'единица денег', ru_uz:'pul birligi', options:['원','분','시'], answer:'원' }
           ] },
-        { kind:'words', eyebrow:'СЛОВА', title:'Что в кафе',
+        { kind:'words', eyebrow:'СЛОВА', eyebrow_uz:'SOʻZLAR', title:'Что в кафе', title_uz:'Kafeda nima bor',
           items:[
-            {ko:'커피', ru:'кофе', emoji:'☕'}, {ko:'물', ru:'вода', emoji:'💧'},
-            {ko:'차', ru:'чай', emoji:'🍵'}, {ko:'주스', ru:'сок', emoji:'🧃'},
-            {ko:'케이크', ru:'торт', emoji:'🍰'}, {ko:'김밥', ru:'кимпаб', emoji:'🍙'}
+            {ko:'커피', ru:'кофе', ru_uz:'kofe', emoji:'☕'}, {ko:'물', ru:'вода', ru_uz:'suv', emoji:'💧'},
+            {ko:'차', ru:'чай', ru_uz:'choy', emoji:'🍵'}, {ko:'주스', ru:'сок', ru_uz:'sharbat', emoji:'🧃'},
+            {ko:'케이크', ru:'торт', ru_uz:'tort', emoji:'🍰'}, {ko:'김밥', ru:'кимпаб', ru_uz:'kimbap', emoji:'🍙'}
           ] },
-        { kind:'dialog', eyebrow:'ДИАЛОГ', title:'Заказ в кафе', sub:'주문할게요',
+        { kind:'dialog', eyebrow:'ДИАЛОГ', eyebrow_uz:'MULOQOT', title:'Заказ в кафе', title_uz:'Kafeda buyurtma', sub:'주문할게요',
           lines:[
-            { who:'A', av:'🙂', ko:'여기요, 메뉴 주세요.', ru:'Извините, меню, пожалуйста.' },
-            { who:'B', av:'🧑', ko:'네, 여기 있어요.', ru:'Да, вот, пожалуйста.' },
-            { who:'A', av:'🙂', ko:'커피 한 잔 주세요. 얼마예요?', ru:'Одну чашку кофе. Сколько стоит?' },
-            { who:'B', av:'🧑', ko:'사천 원이에요.', ru:'4000 вон.' }
+            { who:'A', av:'🙂', ko:'여기요, 메뉴 주세요.', ru:'Извините, меню, пожалуйста.', ru_uz:'Kechirasiz, menyu bering.' },
+            { who:'B', av:'🧑', ko:'네, 여기 있어요.', ru:'Да, вот, пожалуйста.', ru_uz:'Mana, marhamat.' },
+            { who:'A', av:'🙂', ko:'커피 한 잔 주세요. 얼마예요?', ru:'Одну чашку кофе. Сколько стоит?', ru_uz:'Bir stakan kofe. Narxi qancha?' },
+            { who:'B', av:'🧑', ko:'사천 원이에요.', ru:'4000 вон.', ru_uz:'4000 von.' }
           ],
           note:t('ui.161') },
-        { kind:'build', eyebrow:'СОБЕРИ ФРАЗУ', title:'Одну чашку кофе', ru:'Дайте одну чашку кофе.',
+        { kind:'build', eyebrow:'СОБЕРИ ФРАЗУ', eyebrow_uz:'JUMLA TUZ', title:'Одну чашку кофе', title_uz:'Bir stakan kofe', ru:'Дайте одну чашку кофе.', ru_uz:'Bir stakan kofe bering.',
           target:['커피','한','잔','주세요'], pool:['물'] },
-        { kind:'listen', eyebrow:'АУДИРОВАНИЕ', title:'Что спросили?', sub:t('ui.162'),
+        { kind:'listen', eyebrow:'АУДИРОВАНИЕ', eyebrow_uz:'TINGLASH', title:'Что спросили?', title_uz:'Nima soʻrashdi?', sub:t('ui.162'),
           ko:'이거 얼마예요?', ru:'Сколько это стоит?',
-          options:['Сколько это стоит?','Что это?','Где это?'], answer:'Сколько это стоит?' },
-        { kind:'quiz', eyebrow:'ПРОВЕРКА', title:'Слова урока',
-          items:[ {ko:'주세요',ru:'дайте'}, {ko:'얼마예요',ru:'сколько стоит'}, {ko:'메뉴',ru:'меню'} ],
-          pool:['дайте','сколько стоит','меню','вода','чай','сейчас'] },
+          options:['Сколько это стоит?','Что это?','Где это?'], options_uz:['Buning narxi qancha?','Bu nima?','Bu qayerda?'], answer:'Сколько это стоит?', answer_uz:'Buning narxi qancha?' },
+        { kind:'quiz', eyebrow:'ПРОВЕРКА', eyebrow_uz:'TEKSHIRUV', title:'Слова урока', title_uz:'Dars soʻzlari',
+          items:[ {ko:'주세요',ru:'дайте', ru_uz:'bering'}, {ko:'얼마예요',ru:'сколько стоит', ru_uz:'narxi qancha'}, {ko:'메뉴',ru:'меню', ru_uz:'menyu'} ],
+          pool:['дайте','сколько стоит','меню','вода','чай','сейчас'], pool_uz:['bering','narxi qancha','menyu','suv','choy','hozir'] },
         { kind:'homework' },
         { kind:'done' }
       ]
@@ -11279,54 +11431,59 @@
       homework:{ tasks:[
         'Поторгуйся в магазине: 이거 얼마예요? — 두 개 주세요.',
         'Опиши 3 товара через 이거/그거/저거.'
+      ], tasks_uz:[
+        'Doʻkonda savdolashing: 이거 얼마예요? — 두 개 주세요.',
+        '3 ta buyumni 이거/그거/저거 orqali tasvirlang.'
       ]},
       slides:[
-        { kind:'intro', title:'Покупки', sub:'쇼핑해요',
+        { kind:'intro', title:'Покупки', title_uz:'Xaridlar', sub:'쇼핑해요',
           intro:'«В магазине пригодятся указатели: <span class="ko">이거</span> — это (у меня), <span class="ko">그거</span> — то (у тебя), <span class="ko">저거</span> — вон то (вдалеке). И посчитаем товары счётными словами 🌸»',
-          learn:[['👉','이/그/저거'],['🛒','товары'],['🔢','счёт']] },
-        { kind:'pattern', eyebrow:'ГРАММАТИКА', title:'이거 · 그거 · 저거', sub:'указательные',
+          learn:[['👉','이/그/저거'],['🛒','товары'],['🔢','счёт']], learn_uz:['이/그/저거','tovarlar','sanoq'] },
+        { kind:'pattern', eyebrow:'ГРАММАТИКА', eyebrow_uz:'GRAMMATIKA', title:'이거 · 그거 · 저거', title_uz:'이거 · 그거 · 저거', sub:'указательные', sub_uz:'koʻrsatish olmoshlari',
           rule:'<b>이거</b> — это (рядом со мной). <b>그거</b> — то (рядом с тобой / о чём говорили). <b>저거</b> — вон то (далеко от обоих).',
+          rule_uz:'<b>이거</b> — bu (mening yonimda). <b>그거</b> — u (sizning yoningizda / gaplashilgan narsa). <b>저거</b> — ana u (ikkalamizdan ham uzoqda).',
           examples:[
-            {ko:'이거 주세요.', ru:'Дайте это.'},
-            {ko:'그거 얼마예요?', ru:'Сколько то стоит?'},
-            {ko:'저거 좋아요.', ru:'Вон то нравится.'}
+            {ko:'이거 주세요.', ru:'Дайте это.', ru_uz:'Buni bering.'},
+            {ko:'그거 얼마예요?', ru:'Сколько то стоит?', ru_uz:'Uning narxi qancha?'},
+            {ko:'저거 좋아요.', ru:'Вон то нравится.', ru_uz:'Ana u yoqadi.'}
           ],
           drills:[
-            { q:'это (у меня в руке): ___', ru:'', options:['이거','그거','저거'], answer:'이거' },
-            { q:'вон то (вдалеке): ___', ru:'', options:['저거','이거','그거'], answer:'저거' }
+            { q:'это (у меня в руке): ___', q_uz:'bu (mening qoʻlimda): ___', ru:'', options:['이거','그거','저거'], answer:'이거' },
+            { q:'вон то (вдалеке): ___', q_uz:'ana u (uzoqda): ___', ru:'', options:['저거','이거','그거'], answer:'저거' }
           ] },
-        { kind:'pattern', eyebrow:'ГРАММАТИКА', title:'Сколько штук', sub:'개 · 병 · 명',
+        { kind:'pattern', eyebrow:'ГРАММАТИКА', eyebrow_uz:'GRAMMATIKA', title:'Сколько штук', title_uz:'Nechta', sub:'개 · 병 · 명',
           rule:'Считаем товары исконными числами + счётное слово: <span class="ko">개</span> (предметы), <span class="ko">병</span> (бутылки), <span class="ko">명</span> (люди). 하나→한, 둘→두, 셋→세.',
+          rule_uz:'Tovarlarni sof koreyscha raqam + sanoq soʻzi bilan sanaymiz: <span class="ko">개</span> (buyumlar), <span class="ko">병</span> (shishalar), <span class="ko">명</span> (odamlar). 하나→한, 둘→두, 셋→세.',
           examples:[
-            {ko:'사과 세 개 주세요.', ru:'Дайте три яблока.'},
-            {ko:'물 두 병 주세요.', ru:'Дайте две бутылки воды.'},
-            {ko:'사람 네 명이에요.', ru:'Четыре человека.'}
+            {ko:'사과 세 개 주세요.', ru:'Дайте три яблока.', ru_uz:'Uchta olma bering.'},
+            {ko:'물 두 병 주세요.', ru:'Дайте две бутылки воды.', ru_uz:'Ikki shisha suv bering.'},
+            {ko:'사람 네 명이에요.', ru:'Четыре человека.', ru_uz:'Toʻrt kishi.'}
           ],
           drills:[
-            { q:'3 яблока: 사과 ___ 개', ru:'', options:['세','삼','셋'], answer:'세' },
-            { q:'2 бутылки воды: 물 두 ___', ru:'счётное слово', options:['병','잔','개'], answer:'병' }
+            { q:'3 яблока: 사과 ___ 개', q_uz:'3 ta olma: 사과 ___ 개', ru:'', options:['세','삼','셋'], answer:'세' },
+            { q:'2 бутылки воды: 물 두 ___', q_uz:'2 shisha suv: 물 두 ___', ru:'счётное слово', ru_uz:'sanoq soʻzi', options:['병','잔','개'], answer:'병' }
           ] },
-        { kind:'words', eyebrow:'СЛОВА', title:'В магазине',
+        { kind:'words', eyebrow:'СЛОВА', eyebrow_uz:'SOʻZLAR', title:'В магазине', title_uz:'Doʻkonda',
           items:[
-            {ko:'사과', ru:'яблоко', emoji:'🍎'}, {ko:'빵', ru:'хлеб', emoji:'🍞'},
-            {ko:'우유', ru:'молоко', emoji:'🥛'}, {ko:'옷', ru:'одежда', emoji:'👕'},
-            {ko:'신발', ru:'обувь', emoji:'👟'}, {ko:'가방', ru:'сумка', emoji:'👜'}
+            {ko:'사과', ru:'яблоко', ru_uz:'olma', emoji:'🍎'}, {ko:'빵', ru:'хлеб', ru_uz:'non', emoji:'🍞'},
+            {ko:'우유', ru:'молоко', ru_uz:'sut', emoji:'🥛'}, {ko:'옷', ru:'одежда', ru_uz:'kiyim', emoji:'👕'},
+            {ko:'신발', ru:'обувь', ru_uz:'poyabzal', emoji:'👟'}, {ko:'가방', ru:'сумка', ru_uz:'sumka', emoji:'👜'}
           ] },
-        { kind:'dialog', eyebrow:'ДИАЛОГ', title:'В магазине', sub:'가게에서',
+        { kind:'dialog', eyebrow:'ДИАЛОГ', eyebrow_uz:'MULOQOT', title:'В магазине', title_uz:'Doʻkonda', sub:'가게에서',
           lines:[
-            { who:'A', av:'🙂', ko:'이거 얼마예요?', ru:'Сколько это стоит?' },
-            { who:'B', av:'🧑', ko:'그거 오천 원이에요.', ru:'То — 5000 вон.' },
-            { who:'A', av:'🙂', ko:'두 개 주세요.', ru:'Дайте два.' },
-            { who:'B', av:'🧑', ko:'네, 만 원이에요.', ru:'Хорошо, 10 000 вон.' }
+            { who:'A', av:'🙂', ko:'이거 얼마예요?', ru:'Сколько это стоит?', ru_uz:'Buning narxi qancha?' },
+            { who:'B', av:'🧑', ko:'그거 오천 원이에요.', ru:'То — 5000 вон.', ru_uz:'U — 5000 von.' },
+            { who:'A', av:'🙂', ko:'두 개 주세요.', ru:'Дайте два.', ru_uz:'Ikkitasini bering.' },
+            { who:'B', av:'🧑', ko:'네, 만 원이에요.', ru:'Хорошо, 10 000 вон.', ru_uz:'Xoʻp, 10 000 von.' }
           ] },
-        { kind:'build', eyebrow:'СОБЕРИ ФРАЗУ', title:'Три яблока, пожалуйста', ru:'Дайте три яблока.',
+        { kind:'build', eyebrow:'СОБЕРИ ФРАЗУ', eyebrow_uz:'JUMLA TUZ', title:'Три яблока, пожалуйста', title_uz:'Uchta olma, iltimos', ru:'Дайте три яблока.', ru_uz:'Uchta olma bering.',
           target:['사과','세','개','주세요'], pool:['두'] },
-        { kind:'listen', eyebrow:'АУДИРОВАНИЕ', title:'Что попросили?', sub:t('ui.162'),
+        { kind:'listen', eyebrow:'АУДИРОВАНИЕ', eyebrow_uz:'TINGLASH', title:'Что попросили?', title_uz:'Nima soʻrashdi?', sub:t('ui.162'),
           ko:'저거 주세요.', ru:'Дайте вон то.',
-          options:['Дайте вон то.','Дайте это.','Сколько это?'], answer:'Дайте вон то.' },
-        { kind:'quiz', eyebrow:'ПРОВЕРКА', title:'Слова урока',
-          items:[ {ko:'이거',ru:'это'}, {ko:'저거',ru:'вон то'}, {ko:'사다',ru:'покупать'} ],
-          pool:['это','вон то','покупать','то','бутылка','сколько'] },
+          options:['Дайте вон то.','Дайте это.','Сколько это?'], options_uz:['Ana uni bering.','Buni bering.','Bu qancha?'], answer:'Дайте вон то.', answer_uz:'Ana uni bering.' },
+        { kind:'quiz', eyebrow:'ПРОВЕРКА', eyebrow_uz:'TEKSHIRUV', title:'Слова урока', title_uz:'Dars soʻzlari',
+          items:[ {ko:'이거',ru:'это', ru_uz:'bu'}, {ko:'저거',ru:'вон то', ru_uz:'ana u'}, {ko:'사다',ru:'покупать', ru_uz:'sotib olmoq'} ],
+          pool:['это','вон то','покупать','то','бутылка','сколько'], pool_uz:['bu','ana u','sotib olmoq','u','shisha','qancha'] },
         { kind:'homework' },
         { kind:'done' }
       ]
@@ -11345,54 +11502,59 @@
       homework:{ tasks:[
         'Составь 3 фразы с 안 и 3 фразы с 못.',
         'Объясни разницу: когда 안, а когда 못.'
+      ], tasks_uz:[
+        '안 bilan 3 ta va 못 bilan 3 ta jumla tuzing.',
+        'Farqini tushuntiring: qachon 안, qachon 못 ishlatiladi.'
       ]},
       slides:[
-        { kind:'intro', title:'Отрицание', sub:'안 vs 못',
+        { kind:'intro', title:'Отрицание', title_uz:'Inkor', sub:'안 vs 못',
           intro:'«Два способа сказать «нет». <span class="ko">안</span> — «не делаю» (по выбору): 안 가요. <span class="ko">못</span> — «не могу» (нет возможности или умения): 못 가요. Ставятся прямо перед глаголом 🌸»',
-          learn:[['🚫','안 / 못'],['🗣️','диалог'],['🎯','дрилы']] },
-        { kind:'pattern', eyebrow:'ГРАММАТИКА', title:'안 + глагол', sub:'не делаю',
+          learn:[['🚫','안 / 못'],['🗣️','диалог'],['🎯','дрилы']], learn_uz:['안 / 못','muloqot','mashqlar'] },
+        { kind:'pattern', eyebrow:'ГРАММАТИКА', eyebrow_uz:'GRAMMATIKA', title:'안 + глагол', title_uz:'안 + feʼl', sub:'не делаю', sub_uz:'qilmayman',
           rule:'<span class="ko">안</span> ставится <b>перед</b> глаголом и значит «не делаю» (по своему выбору). Есть и длинная форма: глагол + <span class="ko">-지 않아요</span>.',
+          rule_uz:'<span class="ko">안</span> feʼldan <b>oldin</b> qoʻyiladi va «qilmayman» (oʻz xohishimga koʻra) maʼnosini bildiradi. Uzun shakli ham bor: feʼl + <span class="ko">-지 않아요</span>.',
           examples:[
-            {ko:'저는 안 가요.', ru:'Я не иду.'},
-            {ko:'커피를 안 마셔요.', ru:'Я не пью кофе.'},
-            {ko:'오늘 안 바빠요.', ru:'Сегодня не занят.'}
+            {ko:'저는 안 가요.', ru:'Я не иду.', ru_uz:'Men bormayman.'},
+            {ko:'커피를 안 마셔요.', ru:'Я не пью кофе.', ru_uz:'Men kofe ichmayman.'},
+            {ko:'오늘 안 바빠요.', ru:'Сегодня не занят.', ru_uz:'Bugun band emasman.'}
           ],
           drills:[
-            { q:'«не иду»: ___ 가요', ru:'', options:['안','못','를'], answer:'안' },
-            { q:'«не ем»: ___ 먹어요', ru:'', options:['안','못','에'], answer:'안' }
+            { q:'«не иду»: ___ 가요', q_uz:'«bormayman»: ___ 가요', ru:'', options:['안','못','를'], answer:'안' },
+            { q:'«не ем»: ___ 먹어요', q_uz:'«yemayman»: ___ 먹어요', ru:'', options:['안','못','에'], answer:'안' }
           ] },
-        { kind:'pattern', eyebrow:'ГРАММАТИКА', title:'못 + глагол', sub:'не могу',
+        { kind:'pattern', eyebrow:'ГРАММАТИКА', eyebrow_uz:'GRAMMATIKA', title:'못 + глагол', title_uz:'못 + feʼl', sub:'не могу', sub_uz:'qila olmayman',
           rule:'<span class="ko">못</span> — «не могу» (нет возможности, времени, умения). 못 가요 — не могу пойти. 한국어를 못 해요 — не умею (не могу) по-корейски.',
+          rule_uz:'<span class="ko">못</span> — «qila olmayman» (imkoniyat, vaqt yoki mahorat yoʻq). <span class="ko">못 가요</span> — bora olmayman. <span class="ko">한국어를 못 해요</span> — koreyscha gapira olmayman.',
           examples:[
-            {ko:'오늘은 못 가요.', ru:'Сегодня не могу пойти.'},
-            {ko:'매워요. 못 먹어요.', ru:'Остро. Не могу есть.'},
-            {ko:'한국어를 못 해요.', ru:'Не умею по-корейски.'}
+            {ko:'오늘은 못 가요.', ru:'Сегодня не могу пойти.', ru_uz:'Bugun bora olmayman.'},
+            {ko:'매워요. 못 먹어요.', ru:'Остро. Не могу есть.', ru_uz:'Achchiq. Yeya olmayman.'},
+            {ko:'한국어를 못 해요.', ru:'Не умею по-корейски.', ru_uz:'Koreyscha gapira olmayman.'}
           ],
           drills:[
-            { q:'«не могу пойти»: ___ 가요', ru:'нет возможности', options:['못','안','를'], answer:'못' },
-            { q:'«не умею корейский»: 한국어를 ___ 해요', ru:'', options:['못','안','를'], answer:'못' }
+            { q:'«не могу пойти»: ___ 가요', q_uz:'«bora olmayman»: ___ 가요', ru:'нет возможности', ru_uz:'imkoniyat yoʻq', options:['못','안','를'], answer:'못' },
+            { q:'«не умею корейский»: 한국어를 ___ 해요', q_uz:'«koreyscha bilmayman»: 한국어를 ___ 해요', ru:'', options:['못','안','를'], answer:'못' }
           ] },
-        { kind:'words', eyebrow:'СЛОВА', title:'Полезные глаголы',
+        { kind:'words', eyebrow:'СЛОВА', eyebrow_uz:'SOʻZLAR', title:'Полезные глаголы', title_uz:'Foydali feʼllar',
           items:[
-            {ko:'좋아하다', ru:'любить', emoji:'❤️'}, {ko:'싫어하다', ru:'не любить', emoji:'💔'},
-            {ko:'바쁘다', ru:'быть занятым', emoji:'😵'}, {ko:'시간', ru:'время', emoji:'⏰'},
-            {ko:'운동', ru:'спорт', emoji:'🏃'}, {ko:'매일', ru:'каждый день', emoji:'📆'}
+            {ko:'좋아하다', ru:'любить', ru_uz:'yaxshi koʻrmoq', emoji:'❤️'}, {ko:'싫어하다', ru:'не любить', ru_uz:'yoqtirmaslik', emoji:'💔'},
+            {ko:'바쁘다', ru:'быть занятым', ru_uz:'band boʻlmoq', emoji:'😵'}, {ko:'시간', ru:'время', ru_uz:'vaqt', emoji:'⏰'},
+            {ko:'운동', ru:'спорт', ru_uz:'sport', emoji:'🏃'}, {ko:'매일', ru:'каждый день', ru_uz:'har kuni', emoji:'📆'}
           ] },
-        { kind:'dialog', eyebrow:'ДИАЛОГ', title:'Не могу сегодня', sub:'오늘은 못 가요',
+        { kind:'dialog', eyebrow:'ДИАЛОГ', eyebrow_uz:'MULOQOT', title:'Не могу сегодня', title_uz:'Bugun bora olmayman', sub:'오늘은 못 가요',
           lines:[
-            { who:'A', av:'🙂', ko:'오늘 같이 영화 봐요?', ru:'Посмотрим сегодня кино вместе?' },
-            { who:'B', av:'🧑', ko:'미안해요, 오늘 바빠요. 못 가요.', ru:'Извини, сегодня занят. Не могу.' },
-            { who:'A', av:'🙂', ko:'그럼 내일 어때요?', ru:'Тогда как насчёт завтра?' },
-            { who:'B', av:'🧑', ko:'좋아요!', ru:'Отлично!' }
+            { who:'A', av:'🙂', ko:'오늘 같이 영화 봐요?', ru:'Посмотрим сегодня кино вместе?', ru_uz:'Bugun birga kino koʻramizmi?' },
+            { who:'B', av:'🧑', ko:'미안해요, 오늘 바빠요. 못 가요.', ru:'Извини, сегодня занят. Не могу.', ru_uz:'Kechirasiz, bugun bandman. Bora olmayman.' },
+            { who:'A', av:'🙂', ko:'그럼 내일 어때요?', ru:'Тогда как насчёт завтра?', ru_uz:'Unda ertaga-chi?' },
+            { who:'B', av:'🧑', ko:'좋아요!', ru:'Отлично!', ru_uz:'Ajoyib!' }
           ] },
-        { kind:'build', eyebrow:'СОБЕРИ ФРАЗУ', title:'Я не пью кофе', ru:'Я не пью кофе.',
+        { kind:'build', eyebrow:'СОБЕРИ ФРАЗУ', eyebrow_uz:'JUMLA TUZ', title:'Я не пью кофе', title_uz:'Men kofe ichmayman', ru:'Я не пью кофе.', ru_uz:'Men kofe ichmayman.',
           target:['저는','커피를','안','마셔요'], pool:['못'] },
-        { kind:'listen', eyebrow:'АУДИРОВАНИЕ', title:'Что он сказал?', sub:t('ui.162'),
+        { kind:'listen', eyebrow:'АУДИРОВАНИЕ', eyebrow_uz:'TINGLASH', title:'Что он сказал?', title_uz:'U nima dedi?', sub:t('ui.162'),
           ko:'오늘은 못 가요.', ru:'Сегодня не могу пойти.',
-          options:['Сегодня не могу пойти.','Сегодня иду.','Завтра иду.'], answer:'Сегодня не могу пойти.' },
-        { kind:'quiz', eyebrow:'ПРОВЕРКА', title:'Слова урока',
-          items:[ {ko:'바쁘다',ru:'занятой'}, {ko:'시간',ru:'время'}, {ko:'내일',ru:'завтра'} ],
-          pool:['занятой','время','завтра','спорт','каждый день','любить'] },
+          options:['Сегодня не могу пойти.','Сегодня иду.','Завтра иду.'], options_uz:['Bugun bora olmayman.','Bugun boryapman.','Ertaga boraman.'], answer:'Сегодня не могу пойти.', answer_uz:'Bugun bora olmayman.' },
+        { kind:'quiz', eyebrow:'ПРОВЕРКА', eyebrow_uz:'TEKSHIRUV', title:'Слова урока', title_uz:'Dars soʻzlari',
+          items:[ {ko:'바쁘다',ru:'занятой', ru_uz:'band'}, {ko:'시간',ru:'время', ru_uz:'vaqt'}, {ko:'내일',ru:'завтра', ru_uz:'ertaga'} ],
+          pool:['занятой','время','завтра','спорт','каждый день','любить'], pool_uz:['band','vaqt','ertaga','sport','har kuni','yaxshi koʻrmoq'] },
         { kind:'homework' },
         { kind:'done' }
       ]
@@ -11411,53 +11573,58 @@
       homework:{ tasks:[
         'Напиши 3 желания: «저는 …-고 싶어요».',
         'Расскажи про хобби и план на выходные (취미가 뭐예요? 주말에 뭐 해요?).'
+      ], tasks_uz:[
+        '3 ta istagingizni yozing: «저는 …-고 싶어요».',
+        'Hobbi va dam olish kunlari rejangiz haqida gapiring (취미가 뭐예요? 주말에 뭐 해요?).'
       ]},
       slides:[
-        { kind:'intro', title:'Хочу и хобби', sub:'-고 싶어요',
+        { kind:'intro', title:'Хочу и хобби', title_uz:'Istak va hobbi', sub:'-고 싶어요',
           intro:'«Чтобы сказать «хочу что-то сделать», добавь к основе глагола <span class="ko">-고 싶어요</span>: 가고 싶어요 — хочу пойти. Поговорим о хобби и выходных 🌸»',
-          learn:[['💭','-고 싶어요'],['🎨','хобби'],['🗣️','диалог']] },
-        { kind:'pattern', eyebrow:'ГРАММАТИКА', title:'-고 싶어요', sub:'хочу сделать',
+          learn:[['💭','-고 싶어요'],['🎨','хобби'],['🗣️','диалог']], learn_uz:['-고 싶어요','hobbi','muloqot'] },
+        { kind:'pattern', eyebrow:'ГРАММАТИКА', eyebrow_uz:'GRAMMATIKA', title:'-고 싶어요', title_uz:'-고 싶어요', sub:'хочу сделать', sub_uz:'qilishni xohlayman',
           rule:'Основа глагола (без <span class="ko">-다</span>) + <span class="ko">-고 싶어요</span> = «хочу (сделать)». 가다 → 가고 싶어요, 먹다 → 먹고 싶어요.',
+          rule_uz:'Feʼl negizi (<span class="ko">-다</span>siz) + <span class="ko">-고 싶어요</span> = «qilishni xohlayman». 가다 → 가고 싶어요, 먹다 → 먹고 싶어요.',
           examples:[
-            {ko:'한국에 가고 싶어요.', ru:'Хочу поехать в Корею.'},
-            {ko:'김밥을 먹고 싶어요.', ru:'Хочу съесть кимпаб.'},
-            {ko:'쉬고 싶어요.', ru:'Хочу отдохнуть.'}
+            {ko:'한국에 가고 싶어요.', ru:'Хочу поехать в Корею.', ru_uz:'Koreyaga borishni xohlayman.'},
+            {ko:'김밥을 먹고 싶어요.', ru:'Хочу съесть кимпаб.', ru_uz:'Kimbap yeyishni xohlayman.'},
+            {ko:'쉬고 싶어요.', ru:'Хочу отдохнуть.', ru_uz:'Dam olishni xohlayman.'}
           ],
           drills:[
-            { q:'«хочу есть»: 먹___ 싶어요', ru:'', options:['고','어','지'], answer:'고' },
-            { q:'«хочу пойти в Корею»: 한국에 가고 ___', ru:'', options:['싶어요','있어요','해요'], answer:'싶어요' }
+            { q:'«хочу есть»: 먹___ 싶어요', q_uz:'«yeyishni xohlayman»: 먹___ 싶어요', ru:'', options:['고','어','지'], answer:'고' },
+            { q:'«хочу пойти в Корею»: 한국에 가고 ___', q_uz:'«Koreyaga borishni xohlayman»: 한국에 가고 ___', ru:'', options:['싶어요','있어요','해요'], answer:'싶어요' }
           ] },
-        { kind:'pattern', eyebrow:'ГРАММАТИКА', title:'Спрашиваем о хобби', sub:'취미가 뭐예요?',
+        { kind:'pattern', eyebrow:'ГРАММАТИКА', eyebrow_uz:'GRAMMATIKA', title:'Спрашиваем о хобби', title_uz:'Hobbi haqida soʻraymiz', sub:'취미가 뭐예요?',
           rule:'<span class="ko">취미가 뭐예요?</span> — «какое у тебя хобби?». <span class="ko">주말에 뭐 해요?</span> — «что делаешь на выходных?». <span class="ko">에</span> здесь — частица времени.',
+          rule_uz:'<span class="ko">취미가 뭐예요?</span> — «hobbiyingiz nima?». <span class="ko">주말에 뭐 해요?</span> — «dam olish kunlari nima qilasiz?». Bu yerda <span class="ko">에</span> — vaqt yuklamasi.',
           examples:[
-            {ko:'취미가 뭐예요?', ru:'Какое у тебя хобби?'},
-            {ko:'주말에 뭐 해요?', ru:'Что делаешь на выходных?'},
-            {ko:'저는 음악을 좋아해요.', ru:'Я люблю музыку.'}
+            {ko:'취미가 뭐예요?', ru:'Какое у тебя хобби?', ru_uz:'Hobbiyingiz nima?'},
+            {ko:'주말에 뭐 해요?', ru:'Что делаешь на выходных?', ru_uz:'Dam olish kunlari nima qilasiz?'},
+            {ko:'저는 음악을 좋아해요.', ru:'Я люблю музыку.', ru_uz:'Men musiqani yaxshi koʻraman.'}
           ],
           drills:[
-            { q:'«какое хобби?»: 취미가 ___?', ru:'', options:['뭐예요','어디예요','얼마예요'], answer:'뭐예요' }
+            { q:'«какое хобби?»: 취미가 ___?', q_uz:'«hobbi nima?»: 취미가 ___?', ru:'', options:['뭐예요','어디예요','얼마예요'], answer:'뭐예요' }
           ] },
-        { kind:'words', eyebrow:'ХОББИ', title:'Что любим делать',
+        { kind:'words', eyebrow:'ХОББИ', eyebrow_uz:'HOBBI', title:'Что любим делать', title_uz:'Nimalarni yaxshi koʻramiz',
           items:[
-            {ko:'운동', ru:'спорт', emoji:'🏃'}, {ko:'영화', ru:'кино', emoji:'🎬'},
-            {ko:'음악', ru:'музыка', emoji:'🎵'}, {ko:'여행', ru:'путешествие', emoji:'✈️'},
-            {ko:'게임', ru:'игры', emoji:'🎮'}, {ko:'요리', ru:'готовка', emoji:'🍳'}
+            {ko:'운동', ru:'спорт', ru_uz:'sport', emoji:'🏃'}, {ko:'영화', ru:'кино', ru_uz:'kino', emoji:'🎬'},
+            {ko:'음악', ru:'музыка', ru_uz:'musiqa', emoji:'🎵'}, {ko:'여행', ru:'путешествие', ru_uz:'sayohat', emoji:'✈️'},
+            {ko:'게임', ru:'игры', ru_uz:'oʻyinlar', emoji:'🎮'}, {ko:'요리', ru:'готовка', ru_uz:'ovqat pishirish', emoji:'🍳'}
           ] },
-        { kind:'dialog', eyebrow:'ДИАЛОГ', title:'Хобби и выходные', sub:'취미가 뭐예요?',
+        { kind:'dialog', eyebrow:'ДИАЛОГ', eyebrow_uz:'MULOQOT', title:'Хобби и выходные', title_uz:'Hobbi va dam olish kunlari', sub:'취미가 뭐예요?',
           lines:[
-            { who:'A', av:'🙂', ko:'취미가 뭐예요?', ru:'Какое у тебя хобби?' },
-            { who:'B', av:'🧑', ko:'저는 음악을 좋아해요. 그리고 노래하고 싶어요.', ru:'Я люблю музыку. И хочу петь.' },
-            { who:'A', av:'🙂', ko:'주말에 뭐 해요?', ru:'Что делаешь на выходных?' },
-            { who:'B', av:'🧑', ko:'친구를 만나고 영화를 봐요.', ru:'Встречаю друга и смотрю кино.' }
+            { who:'A', av:'🙂', ko:'취미가 뭐예요?', ru:'Какое у тебя хобби?', ru_uz:'Hobbiyingiz nima?' },
+            { who:'B', av:'🧑', ko:'저는 음악을 좋아해요. 그리고 노래하고 싶어요.', ru:'Я люблю музыку. И хочу петь.', ru_uz:'Men musiqani yaxshi koʻraman. Va qoʻshiq aytishni xohlayman.' },
+            { who:'A', av:'🙂', ko:'주말에 뭐 해요?', ru:'Что делаешь на выходных?', ru_uz:'Dam olish kunlari nima qilasiz?' },
+            { who:'B', av:'🧑', ko:'친구를 만나고 영화를 봐요.', ru:'Встречаю друга и смотрю кино.', ru_uz:'Doʻstim bilan uchrashaman va kino koʻraman.' }
           ] },
-        { kind:'build', eyebrow:'СОБЕРИ ФРАЗУ', title:'Хочу в Корею', ru:'Я хочу поехать в Корею.',
+        { kind:'build', eyebrow:'СОБЕРИ ФРАЗУ', eyebrow_uz:'JUMLA TUZ', title:'Хочу в Корею', title_uz:'Koreyaga borishni xohlayman', ru:'Я хочу поехать в Корею.', ru_uz:'Koreyaga borishni xohlayman.',
           target:['저는','한국에','가고','싶어요'], pool:['먹고'] },
-        { kind:'listen', eyebrow:'АУДИРОВАНИЕ', title:'Чего он хочет?', sub:t('ui.162'),
+        { kind:'listen', eyebrow:'АУДИРОВАНИЕ', eyebrow_uz:'TINGLASH', title:'Чего он хочет?', title_uz:'U nimani xohlaydi?', sub:t('ui.162'),
           ko:'저는 영화를 보고 싶어요.', ru:'Я хочу посмотреть фильм.',
-          options:['Я хочу посмотреть фильм.','Я смотрю фильм.','Я не смотрю фильм.'], answer:'Я хочу посмотреть фильм.' },
-        { kind:'quiz', eyebrow:'ПРОВЕРКА', title:'Слова урока',
-          items:[ {ko:'취미',ru:'хобби'}, {ko:'주말',ru:'выходные'}, {ko:'여행',ru:'путешествие'} ],
-          pool:['хобби','выходные','путешествие','спорт','готовка','отдыхать'] },
+          options:['Я хочу посмотреть фильм.','Я смотрю фильм.','Я не смотрю фильм.'], options_uz:['Film koʻrishni xohlayman.','Film koʻryapman.','Film koʻrmayapman.'], answer:'Я хочу посмотреть фильм.', answer_uz:'Film koʻrishni xohlayman.' },
+        { kind:'quiz', eyebrow:'ПРОВЕРКА', eyebrow_uz:'TEKSHIRUV', title:'Слова урока', title_uz:'Dars soʻzlari',
+          items:[ {ko:'취미',ru:'хобби', ru_uz:'hobbi'}, {ko:'주말',ru:'выходные', ru_uz:'dam olish kunlari'}, {ko:'여행',ru:'путешествие', ru_uz:'sayohat'} ],
+          pool:['хобби','выходные','путешествие','спорт','готовка','отдыхать'], pool_uz:['hobbi','dam olish kunlari','sayohat','sport','ovqat pishirish','dam olmoq'] },
         { kind:'homework' },
         { kind:'done' }
       ]
@@ -11476,45 +11643,49 @@
       homework:{ tasks:[
         'Соедини 3 пары предложений через 그리고, 하지만, 그래서.',
         'Составь мини-рассказ о выходных из 4–5 связанных предложений.'
+      ], tasks_uz:[
+        '3 juft jumlani 그리고, 하지만, 그래서 orqali bogʻlang.',
+        'Dam olish kunlari haqida 4–5 ta bogʻlangan jumladan iborat mini-hikoya tuzing.'
       ]},
       slides:[
-        { kind:'intro', title:'Соединяем и общаемся', sub:t('ui.163'),
+        { kind:'intro', title:'Соединяем и общаемся', title_uz:'Bogʻlash va muloqot', sub:t('ui.163'),
           intro:'«Финал модуля! Научимся связывать предложения: <span class="ko">그리고</span> (и), <span class="ko">하지만</span> (но), <span class="ko">-고</span> (сделал и…). И соберём всё в большом диалоге. 화이팅 🌸»',
-          learn:[['🔗','соединители'],['🗣️','большой диалог'],['🏆','финальный квиз']] },
-        { kind:'pattern', eyebrow:'ГРАММАТИКА', title:'Соединяем предложения', sub:'그리고 · 하지만 · -고',
+          learn:[['🔗','соединители'],['🗣️','большой диалог'],['🏆','финальный квиз']], learn_uz:['bogʻlovchilar','katta muloqot','yakuniy test'] },
+        { kind:'pattern', eyebrow:'ГРАММАТИКА', eyebrow_uz:'GRAMMATIKA', title:'Соединяем предложения', title_uz:'Jumlalarni bogʻlaymiz', sub:'그리고 · 하지만 · -고',
           rule:'<b>그리고</b> — «и» между предложениями. <b>하지만</b> — «но». <b>그래서</b> — «поэтому». <span class="ko">-고</span> соединяет действия одного человека: <span class="ko">밥을 먹고 커피를 마셔요</span> — поем и пью кофе.',
+          rule_uz:'<b>그리고</b> — gaplar orasidagi «va». <b>하지만</b> — «lekin». <b>그래서</b> — «shuning uchun». <span class="ko">-고</span> bir kishining harakatlarini bogʻlaydi: <span class="ko">밥을 먹고 커피를 마셔요</span> — ovqatlanib, kofe ichaman.',
           examples:[
-            {ko:'밥을 먹고 커피를 마셔요.', ru:'Ем и пью кофе.'},
-            {ko:'영화를 좋아해요. 하지만 시간이 없어요.', ru:'Люблю кино. Но нет времени.'},
-            {ko:'한국어를 공부해요. 그래서 한국에 가고 싶어요.', ru:'Учу корейский. Поэтому хочу в Корею.'}
+            {ko:'밥을 먹고 커피를 마셔요.', ru:'Ем и пью кофе.', ru_uz:'Ovqatlanib, kofe ichaman.'},
+            {ko:'영화를 좋아해요. 하지만 시간이 없어요.', ru:'Люблю кино. Но нет времени.', ru_uz:'Kinoni yaxshi koʻraman. Lekin vaqtim yoʻq.'},
+            {ko:'한국어를 공부해요. 그래서 한국에 가고 싶어요.', ru:'Учу корейский. Поэтому хочу в Корею.', ru_uz:'Koreys tilini oʻrganaman. Shuning uchun Koreyaga borishni xohlayman.'}
           ],
           drills:[
-            { q:'«ем и пью»: 밥을 먹__ 마셔요', ru:'соединяем действия', options:['고','지','어'], answer:'고' },
-            { q:'«но нет времени»: ___ 시간이 없어요', ru:'', options:['하지만','그리고','그래서'], answer:'하지만' }
+            { q:'«ем и пью»: 밥을 먹__ 마셔요', q_uz:'«ovqatlanib, ichaman»: 밥을 먹__ 마셔요', ru:'соединяем действия', ru_uz:'harakatlarni bogʻlaymiz', options:['고','지','어'], answer:'고' },
+            { q:'«но нет времени»: ___ 시간이 없어요', q_uz:'«lekin vaqt yoʻq»: ___ 시간이 없어요', ru:'', options:['하지만','그리고','그래서'], answer:'하지만' }
           ] },
-        { kind:'words', eyebrow:'СОЕДИНИТЕЛИ', title:'Слова-связки',
+        { kind:'words', eyebrow:'СОЕДИНИТЕЛИ', eyebrow_uz:'BOGʻLOVCHILAR', title:'Слова-связки', title_uz:'Bogʻlovchi soʻzlar',
           items:[
-            {ko:'그리고', ru:'и, к тому же', emoji:'➕'}, {ko:'하지만', ru:'но, однако', emoji:'↔️'},
-            {ko:'그래서', ru:'поэтому', emoji:'➡️'}, {ko:'같이', ru:'вместе', emoji:'🤝'},
-            {ko:'어때요', ru:'как насчёт?', emoji:'🤔'}, {ko:'내일', ru:'завтра', emoji:'📆'}
+            {ko:'그리고', ru:'и, к тому же', ru_uz:'va, shuningdek', emoji:'➕'}, {ko:'하지만', ru:'но, однако', ru_uz:'lekin, biroq', emoji:'↔️'},
+            {ko:'그래서', ru:'поэтому', ru_uz:'shuning uchun', emoji:'➡️'}, {ko:'같이', ru:'вместе', ru_uz:'birga', emoji:'🤝'},
+            {ko:'어때요', ru:'как насчёт?', ru_uz:'-chi?', emoji:'🤔'}, {ko:'내일', ru:'завтра', ru_uz:'ertaga', emoji:'📆'}
           ] },
-        { kind:'dialog', eyebrow:'ДИАЛОГ', title:'Планы на выходные', sub:'주말 계획',
+        { kind:'dialog', eyebrow:'ДИАЛОГ', eyebrow_uz:'MULOQOT', title:'Планы на выходные', title_uz:'Dam olish kunlari rejalari', sub:'주말 계획',
           lines:[
-            { who:'A', av:'🙂', ko:'주말에 뭐 하고 싶어요?', ru:'Что хочешь делать на выходных?' },
-            { who:'B', av:'🧑', ko:'친구를 만나고 영화를 보고 싶어요.', ru:'Хочу встретить друга и посмотреть кино.' },
-            { who:'A', av:'🙂', ko:'저도 영화를 좋아해요. 같이 봐요!', ru:'Я тоже люблю кино. Давай вместе!' },
-            { who:'B', av:'🧑', ko:'좋아요. 몇 시에 만나요?', ru:'Хорошо. Во сколько встречаемся?' },
-            { who:'A', av:'🙂', ko:'오후 두 시에 만나요. 토요일에 봐요!', ru:'В два часа дня. Увидимся в субботу!' }
+            { who:'A', av:'🙂', ko:'주말에 뭐 하고 싶어요?', ru:'Что хочешь делать на выходных?', ru_uz:'Dam olish kunlari nima qilishni xohlaysiz?' },
+            { who:'B', av:'🧑', ko:'친구를 만나고 영화를 보고 싶어요.', ru:'Хочу встретить друга и посмотреть кино.', ru_uz:'Doʻstim bilan uchrashib, kino koʻrishni xohlayman.' },
+            { who:'A', av:'🙂', ko:'저도 영화를 좋아해요. 같이 봐요!', ru:'Я тоже люблю кино. Давай вместе!', ru_uz:'Men ham kinoni yaxshi koʻraman. Keling, birga koʻramiz!' },
+            { who:'B', av:'🧑', ko:'좋아요. 몇 시에 만나요?', ru:'Хорошо. Во сколько встречаемся?', ru_uz:'Xoʻp. Soat nechada uchrashamiz?' },
+            { who:'A', av:'🙂', ko:'오후 두 시에 만나요. 토요일에 봐요!', ru:'В два часа дня. Увидимся в субботу!', ru_uz:'Soat ikkida. Shanba kuni koʻrishguncha!' }
           ],
           note:t('ui.164') },
-        { kind:'build', eyebrow:'СОБЕРИ ФРАЗУ', title:'Поем и попью кофе', ru:'Поем и попью кофе.',
+        { kind:'build', eyebrow:'СОБЕРИ ФРАЗУ', eyebrow_uz:'JUMLA TUZ', title:'Поем и попью кофе', title_uz:'Ovqatlanib, kofe ichaman', ru:'Поем и попью кофе.', ru_uz:'Ovqatlanib, kofe ichaman.',
           target:['밥을','먹고','커피를','마셔요'], pool:['저는'] },
-        { kind:'listen', eyebrow:'АУДИРОВАНИЕ', title:'Что он хочет?', sub:t('ui.162'),
+        { kind:'listen', eyebrow:'АУДИРОВАНИЕ', eyebrow_uz:'TINGLASH', title:'Что он хочет?', title_uz:'U nimani xohlaydi?', sub:t('ui.162'),
           ko:'주말에 친구를 만나고 싶어요.', ru:'На выходных хочу встретить друга.',
-          options:['Хочу встретить друга на выходных.','Встретил друга вчера.','Не хочу встречать друга.'], answer:'Хочу встретить друга на выходных.' },
-        { kind:'quiz', eyebrow:'ФИНАЛЬНЫЙ КВИЗ', title:'Весь модуль 2',
-          items:[ {ko:'취미',ru:'хобби'}, {ko:'주말',ru:'выходные'}, {ko:'어제',ru:'вчера'}, {ko:'같이',ru:'вместе'}, {ko:'얼마',ru:'сколько'} ],
-          pool:['хобби','выходные','вчера','вместе','сколько','сейчас','время','завтра'] },
+          options:['Хочу встретить друга на выходных.','Встретил друга вчера.','Не хочу встречать друга.'], options_uz:['Dam olish kunlari doʻstim bilan uchrashishni xohlayman.','Kecha doʻstim bilan uchrashdim.','Doʻstim bilan uchrashishni xohlamayman.'], answer:'Хочу встретить друга на выходных.', answer_uz:'Dam olish kunlari doʻstim bilan uchrashishni xohlayman.' },
+        { kind:'quiz', eyebrow:'ФИНАЛЬНЫЙ КВИЗ', eyebrow_uz:'YAKUNIY TEST', title:'Весь модуль 2', title_uz:'Butun 2-modul',
+          items:[ {ko:'취미',ru:'хобби', ru_uz:'hobbi'}, {ko:'주말',ru:'выходные', ru_uz:'dam olish kunlari'}, {ko:'어제',ru:'вчера', ru_uz:'kecha'}, {ko:'같이',ru:'вместе', ru_uz:'birga'}, {ko:'얼마',ru:'сколько', ru_uz:'qancha'} ],
+          pool:['хобби','выходные','вчера','вместе','сколько','сейчас','время','завтра'], pool_uz:['hobbi','dam olish kunlari','kecha','birga','qancha','hozir','vaqt','ertaga'] },
         { kind:'homework' },
         { kind:'done' }
       ]
@@ -11537,53 +11708,57 @@
       homework:{ tasks:[
         'Составь 3 плана на будущее: «내일/다음 주에 … -(으)ㄹ 거예요».',
         'Назови свой день рождения: 제 생일은 … 월 … 일이에요.'
+      ], tasks_uz:[
+        'Kelajakka 3 ta reja tuzing: «내일/다음 주에 … -(으)ㄹ 거예요».',
+        'Tugʻilgan kuningizni ayting: 제 생일은 … 월 … 일이에요.'
       ]},
       slides:[
-        { kind:'intro', title:'Будущее и планы', sub:'-(으)ㄹ 거예요',
+        { kind:'intro', title:'Будущее и планы', title_uz:'Kelajak va rejalar', sub:'-(으)ㄹ 거예요',
           intro:'«В Модуле 2 мы говорили о настоящем и прошлом. Теперь — о будущем! <span class="ko">-(으)ㄹ 거예요</span> значит «буду / собираюсь». И заодно научимся называть даты 🌸»',
-          learn:[['🔮','будущее'],['📅','даты'],['🗣️','планы']] },
-        { kind:'pattern', eyebrow:'ГРАММАТИКА', title:'-(으)ㄹ 거예요', sub:'буду / собираюсь',
+          learn:[['🔮','будущее'],['📅','даты'],['🗣️','планы']], learn_uz:['kelajak','sanalar','rejalar'] },
+        { kind:'pattern', eyebrow:'ГРАММАТИКА', eyebrow_uz:'GRAMMATIKA', title:'-(으)ㄹ 거예요', title_uz:'-(으)ㄹ 거예요', sub:'буду / собираюсь', sub_uz:'qilaman / qilmoqchiman',
           rule:'Основа глагола + <b>-(으)ㄹ 거예요</b>. После гласной → <span class="ko">-ㄹ 거예요</span> (가다 → 갈 거예요), после согласной → <span class="ko">-을 거예요</span> (먹다 → 먹을 거예요). Читается «꺼예요».',
+          rule_uz:'Feʼl negizi + <b>-(으)ㄹ 거예요</b>. Unlidan keyin → <span class="ko">-ㄹ 거예요</span> (가다 → 갈 거예요), undoshdan keyin → <span class="ko">-을 거예요</span> (먹다 → 먹을 거예요). «Kkoyeyo» deb oʻqiladi.',
           examples:[
-            {ko:'내일 학교에 갈 거예요.', ru:'Завтра пойду в школу.'},
-            {ko:'주말에 친구를 만날 거예요.', ru:'На выходных встречусь с другом.'},
-            {ko:'저녁에 김밥을 먹을 거예요.', ru:'Вечером съем кимпаб.'}
+            {ko:'내일 학교에 갈 거예요.', ru:'Завтра пойду в школу.', ru_uz:'Ertaga maktabga boraman.'},
+            {ko:'주말에 친구를 만날 거예요.', ru:'На выходных встречусь с другом.', ru_uz:'Dam olish kunlari doʻstim bilan uchrashaman.'},
+            {ko:'저녁에 김밥을 먹을 거예요.', ru:'Вечером съем кимпаб.', ru_uz:'Kechqurun kimbap yeyman.'}
           ],
           drills:[
             { q:'가다 → ?', options:['갈 거예요','가을 거예요','가 거예요'], answer:'갈 거예요' },
             { q:'먹다 → ?', options:['먹을 거예요','먹ㄹ 거예요','머글 거예요'], answer:'먹을 거예요' },
-            { q:'내일 뭐 ___?', ru:'Что будешь делать завтра?', options:['할 거예요','해요','했어요'], answer:'할 거예요' }
+            { q:'내일 뭐 ___?', ru:'Что будешь делать завтра?', ru_uz:'Ertaga nima qilasiz?', options:['할 거예요','해요','했어요'], answer:'할 거예요' }
           ] },
-        { kind:'info', eyebrow:'ДАТЫ', title:'Месяцы 월', sub:'китайские числа + 월', cols:3,
+        { kind:'info', eyebrow:'ДАТЫ', eyebrow_uz:'SANALAR', title:'Месяцы 월', title_uz:'Oylar 월', sub:'китайские числа + 월', sub_uz:'xitoycha raqamlar + 월', cols:3,
           grid:[
-            {ko:'일월', ru:'январь'}, {ko:'이월', ru:'февраль'}, {ko:'삼월', ru:'март'},
-            {ko:'사월', ru:'апрель'}, {ko:'오월', ru:'май'}, {ko:'유월', ru:'июнь'},
-            {ko:'칠월', ru:'июль'}, {ko:'팔월', ru:'август'}, {ko:'구월', ru:'сентябрь'},
-            {ko:'시월', ru:'октябрь'}, {ko:'십일월', ru:'ноябрь'}, {ko:'십이월', ru:'декабрь'}
+            {ko:'일월', ru:'январь', ru_uz:'yanvar'}, {ko:'이월', ru:'февраль', ru_uz:'fevral'}, {ko:'삼월', ru:'март', ru_uz:'mart'},
+            {ko:'사월', ru:'апрель', ru_uz:'aprel'}, {ko:'오월', ru:'май', ru_uz:'may'}, {ko:'유월', ru:'июнь', ru_uz:'iyun'},
+            {ko:'칠월', ru:'июль', ru_uz:'iyul'}, {ko:'팔월', ru:'август', ru_uz:'avgust'}, {ko:'구월', ru:'сентябрь', ru_uz:'sentabr'},
+            {ko:'시월', ru:'октябрь', ru_uz:'oktabr'}, {ko:'십일월', ru:'ноябрь', ru_uz:'noyabr'}, {ko:'십이월', ru:'декабрь', ru_uz:'dekabr'}
           ],
-          note:'Внимание: 6월 = 유월, 10월 = 시월 (не «육월/십월»). День — число + 일: 십오 일 (15-е).' },
-        { kind:'words', eyebrow:'СЛОВА', title:'Когда и что',
+          note:'Внимание: 6월 = 유월, 10월 = 시월 (не «육월/십월»). День — число + 일: 십오 일 (15-е).', note_uz:'Diqqat: 6월 = 유월, 10월 = 시월 («육월/십월» emas). Kun — raqam + 일: 십오 일 (15-si).' },
+        { kind:'words', eyebrow:'СЛОВА', eyebrow_uz:'SOʻZLAR', title:'Когда и что', title_uz:'Qachon va nima',
           items:[
-            {ko:'내일', ru:'завтра', emoji:'➡️'}, {ko:'다음 주', ru:'след. неделя', emoji:'📆'},
-            {ko:'계획', ru:'план', emoji:'📝'}, {ko:'약속', ru:'встреча', emoji:'🤝'},
-            {ko:'방학', ru:'каникулы', emoji:'🏖️'}, {ko:'생일', ru:'день рождения', emoji:'🎂'}
+            {ko:'내일', ru:'завтра', ru_uz:'ertaga', emoji:'➡️'}, {ko:'다음 주', ru:'след. неделя', ru_uz:'kelasi hafta', emoji:'📆'},
+            {ko:'계획', ru:'план', ru_uz:'reja', emoji:'📝'}, {ko:'약속', ru:'встреча', ru_uz:'uchrashuv', emoji:'🤝'},
+            {ko:'방학', ru:'каникулы', ru_uz:'taʼtil', emoji:'🏖️'}, {ko:'생일', ru:'день рождения', ru_uz:'tugʻilgan kun', emoji:'🎂'}
           ] },
-        { kind:'dialog', eyebrow:'ДИАЛОГ', title:'Что будешь делать?', sub:'주말 계획',
+        { kind:'dialog', eyebrow:'ДИАЛОГ', eyebrow_uz:'MULOQOT', title:'Что будешь делать?', title_uz:'Nima qilasan?', sub:'주말 계획',
           lines:[
-            { who:'A', av:'🙂', ko:'주말에 뭐 할 거예요?', ru:'Что будешь делать на выходных?' },
-            { who:'B', av:'🧑', ko:'친구를 만날 거예요.', ru:'Встречусь с другом.' },
-            { who:'A', av:'🙂', ko:'어디에 갈 거예요?', ru:'Куда пойдёте?' },
-            { who:'B', av:'🧑', ko:'영화를 볼 거예요. 같이 갈래요?', ru:'Будем смотреть кино. Пойдёшь с нами?' }
+            { who:'A', av:'🙂', ko:'주말에 뭐 할 거예요?', ru:'Что будешь делать на выходных?', ru_uz:'Dam olish kunlari nima qilasiz?' },
+            { who:'B', av:'🧑', ko:'친구를 만날 거예요.', ru:'Встречусь с другом.', ru_uz:'Doʻstim bilan uchrashaman.' },
+            { who:'A', av:'🙂', ko:'어디에 갈 거예요?', ru:'Куда пойдёте?', ru_uz:'Qayerga borasiz?' },
+            { who:'B', av:'🧑', ko:'영화를 볼 거예요. 같이 갈래요?', ru:'Будем смотреть кино. Пойдёшь с нами?', ru_uz:'Kino koʻramiz. Biz bilan borasanmi?' }
           ],
           note:t('ui.161') },
-        { kind:'build', eyebrow:'СОБЕРИ ФРАЗУ', title:'Завтра — кино', ru:'Завтра буду смотреть фильм.',
+        { kind:'build', eyebrow:'СОБЕРИ ФРАЗУ', eyebrow_uz:'JUMLA TUZ', title:'Завтра — кино', title_uz:'Ertaga — kino', ru:'Завтра буду смотреть фильм.', ru_uz:'Ertaga film koʻraman.',
           target:['내일','영화를','볼','거예요'], pool:['갈'] },
-        { kind:'listen', eyebrow:'АУДИРОВАНИЕ', title:'Какие планы?', sub:t('ui.162'),
+        { kind:'listen', eyebrow:'АУДИРОВАНИЕ', eyebrow_uz:'TINGLASH', title:'Какие планы?', title_uz:'Rejalar qanday?', sub:t('ui.162'),
           ko:'주말에 부산에 갈 거예요.', ru:'На выходных поеду в Пусан.',
-          options:['На выходных поеду в Пусан.','Был в Пусане вчера.','Живу в Пусане.'], answer:'На выходных поеду в Пусан.' },
-        { kind:'quiz', eyebrow:'ПРОВЕРКА', title:'Слова урока',
-          items:[ {ko:'내일',ru:'завтра'}, {ko:'계획',ru:'план'}, {ko:'약속',ru:'встреча'} ],
-          pool:['завтра','план','встреча','каникулы','вчера','день рождения'] },
+          options:['На выходных поеду в Пусан.','Был в Пусане вчера.','Живу в Пусане.'], options_uz:['Dam olish kunlari Pusanga boraman.','Kecha Pusanda edim.','Pusanda yashayman.'], answer:'На выходных поеду в Пусан.', answer_uz:'Dam olish kunlari Pusanga boraman.' },
+        { kind:'quiz', eyebrow:'ПРОВЕРКА', eyebrow_uz:'TEKSHIRUV', title:'Слова урока', title_uz:'Dars soʻzlari',
+          items:[ {ko:'내일',ru:'завтра', ru_uz:'ertaga'}, {ko:'계획',ru:'план', ru_uz:'reja'}, {ko:'약속',ru:'встреча', ru_uz:'uchrashuv'} ],
+          pool:['завтра','план','встреча','каникулы','вчера','день рождения'], pool_uz:['ertaga','reja','uchrashuv','taʼtil','kecha','tugʻilgan kun'] },
         { kind:'homework' },
         { kind:'done' }
       ]
@@ -11602,54 +11777,59 @@
       homework:{ tasks:[
         'Дай 3 вежливые просьбы с -(으)세요.',
         'Напиши 3 запрета с -지 마세요 (например, в музее).'
+      ], tasks_uz:[
+        '-(으)세요 bilan 3 ta xushmuomala iltimos ayting.',
+        '-지 마세요 bilan 3 ta taqiq yozing (masalan, muzeyda).'
       ]},
       slides:[
-        { kind:'intro', title:'Просьбы и запреты', sub:'-(으)세요 · -지 마세요',
+        { kind:'intro', title:'Просьбы и запреты', title_uz:'Iltimos va taqiqlar', sub:'-(으)세요 · -지 마세요',
           intro:'«В Модуле 2 ты знал только <span class="ko">주세요</span> — «дайте». Теперь любой глагол можно сделать вежливой просьбой: <span class="ko">-(으)세요</span>. А чтобы запретить — <span class="ko">-지 마세요</span> 🌸»',
-          learn:[['🙏','вежливо проси'],['🚫','запрещай'],['🗣️','диалог']] },
-        { kind:'pattern', eyebrow:'ГРАММАТИКА', title:'-(으)세요', sub:'вежливая просьба',
+          learn:[['🙏','вежливо проси'],['🚫','запрещай'],['🗣️','диалог']], learn_uz:['xushmuomala soʻra','taqiqla','muloqot'] },
+        { kind:'pattern', eyebrow:'ГРАММАТИКА', eyebrow_uz:'GRAMMATIKA', title:'-(으)세요', title_uz:'-(으)세요', sub:'вежливая просьба', sub_uz:'xushmuomala iltimos',
           rule:'Основа глагола + <b>-(으)세요</b> = вежливая просьба и форма уважения. После гласной → <span class="ko">-세요</span> (가다 → 가세요), после согласной → <span class="ko">-으세요</span> (앉다 → 앉으세요).',
+          rule_uz:'Feʼl negizi + <b>-(으)세요</b> = xushmuomala iltimos va hurmat shakli. Unlidan keyin → <span class="ko">-세요</span> (가다 → 가세요), undoshdan keyin → <span class="ko">-으세요</span> (앉다 → 앉으세요).',
           examples:[
-            {ko:'여기 앉으세요.', ru:'Садитесь здесь.'},
-            {ko:'잠깐 기다리세요.', ru:'Подождите немного.'},
-            {ko:'천천히 말하세요.', ru:'Говорите медленно.'}
+            {ko:'여기 앉으세요.', ru:'Садитесь здесь.', ru_uz:'Bu yerga oʻtiring.'},
+            {ko:'잠깐 기다리세요.', ru:'Подождите немного.', ru_uz:'Bir oz kuting.'},
+            {ko:'천천히 말하세요.', ru:'Говорите медленно.', ru_uz:'Sekin gapiring.'}
           ],
           drills:[
             { q:'앉다 → ?', options:['앉으세요','앉세요','앉아세요'], answer:'앉으세요' },
             { q:'기다리다 → ?', options:['기다리세요','기다리으세요','기다세요'], answer:'기다리세요' }
           ] },
-        { kind:'pattern', eyebrow:'ГРАММАТИКА', title:'-지 마세요', sub:'запрет',
+        { kind:'pattern', eyebrow:'ГРАММАТИКА', eyebrow_uz:'GRAMMATIKA', title:'-지 마세요', title_uz:'-지 마세요', sub:'запрет', sub_uz:'taqiq',
           rule:'Основа глагола + <b>-지 마세요</b> = «не делайте». 뛰지 마세요 — не бегайте, 사진을 찍지 마세요 — не фотографируйте.',
+          rule_uz:'Feʼl negizi + <b>-지 마세요</b> = «qilmang». 뛰지 마세요 — yugurmang, 사진을 찍지 마세요 — surat olmang.',
           examples:[
-            {ko:'여기에서 담배를 피우지 마세요.', ru:'Не курите здесь.'},
-            {ko:'사진을 찍지 마세요.', ru:'Не фотографируйте.'},
-            {ko:'늦지 마세요.', ru:'Не опаздывайте.'}
+            {ko:'여기에서 담배를 피우지 마세요.', ru:'Не курите здесь.', ru_uz:'Bu yerda chekmang.'},
+            {ko:'사진을 찍지 마세요.', ru:'Не фотографируйте.', ru_uz:'Surat olmang.'},
+            {ko:'늦지 마세요.', ru:'Не опаздывайте.', ru_uz:'Kechikmang.'}
           ],
           drills:[
-            { q:'«не курите»: 담배를 피우___ 마세요', ru:'', options:['지','으','고'], answer:'지' },
-            { q:'«не бегайте»: 뛰___ 마세요', ru:'', options:['지','세','어'], answer:'지' }
+            { q:'«не курите»: 담배를 피우___ 마세요', q_uz:'«chekmang»: 담배를 피우___ 마세요', ru:'', options:['지','으','고'], answer:'지' },
+            { q:'«не бегайте»: 뛰___ 마세요', q_uz:'«yugurmang»: 뛰___ 마세요', ru:'', options:['지','세','어'], answer:'지' }
           ] },
-        { kind:'words', eyebrow:'СЛОВА', title:'Указания',
+        { kind:'words', eyebrow:'СЛОВА', eyebrow_uz:'SOʻZLAR', title:'Указания', title_uz:'Koʻrsatmalar',
           items:[
-            {ko:'앉다', ru:'садиться', emoji:'🪑'}, {ko:'기다리다', ru:'ждать', emoji:'⏳'},
-            {ko:'들어오다', ru:'входить', emoji:'🚪'}, {ko:'조용히', ru:'тихо', emoji:'🤫'},
-            {ko:'천천히', ru:'медленно', emoji:'🐢'}, {ko:'담배', ru:'сигарета', emoji:'🚬'}
+            {ko:'앉다', ru:'садиться', ru_uz:'oʻtirmoq', emoji:'🪑'}, {ko:'기다리다', ru:'ждать', ru_uz:'kutmoq', emoji:'⏳'},
+            {ko:'들어오다', ru:'входить', ru_uz:'kirmoq', emoji:'🚪'}, {ko:'조용히', ru:'тихо', ru_uz:'jim', emoji:'🤫'},
+            {ko:'천천히', ru:'медленно', ru_uz:'sekin', emoji:'🐢'}, {ko:'담배', ru:'сигарета', ru_uz:'sigareta', emoji:'🚬'}
           ] },
-        { kind:'dialog', eyebrow:'ДИАЛОГ', title:'В кабинете', sub:'사무실에서',
+        { kind:'dialog', eyebrow:'ДИАЛОГ', eyebrow_uz:'MULOQOT', title:'В кабинете', title_uz:'Kabinetda', sub:'사무실에서',
           lines:[
-            { who:'A', av:'🧑', ko:'들어오세요. 여기 앉으세요.', ru:'Входите. Садитесь здесь.' },
-            { who:'B', av:'🙂', ko:'네, 감사합니다.', ru:'Да, спасибо.' },
-            { who:'A', av:'🧑', ko:'잠깐 기다리세요.', ru:'Подождите немного.' },
-            { who:'B', av:'🙂', ko:'네, 알겠습니다.', ru:'Да, хорошо.' }
+            { who:'A', av:'🧑', ko:'들어오세요. 여기 앉으세요.', ru:'Входите. Садитесь здесь.', ru_uz:'Kiring. Bu yerga oʻtiring.' },
+            { who:'B', av:'🙂', ko:'네, 감사합니다.', ru:'Да, спасибо.', ru_uz:'Xoʻp, rahmat.' },
+            { who:'A', av:'🧑', ko:'잠깐 기다리세요.', ru:'Подождите немного.', ru_uz:'Bir oz kuting.' },
+            { who:'B', av:'🙂', ko:'네, 알겠습니다.', ru:'Да, хорошо.', ru_uz:'Xoʻp, tushunarli.' }
           ] },
-        { kind:'build', eyebrow:'СОБЕРИ ФРАЗУ', title:'Садитесь здесь', ru:'Садитесь здесь.',
+        { kind:'build', eyebrow:'СОБЕРИ ФРАЗУ', eyebrow_uz:'JUMLA TUZ', title:'Садитесь здесь', title_uz:'Bu yerga oʻtiring', ru:'Садитесь здесь.', ru_uz:'Bu yerga oʻtiring.',
           target:['여기','앉으세요'], pool:['보세요'] },
-        { kind:'listen', eyebrow:'АУДИРОВАНИЕ', title:'Что просят?', sub:t('ui.162'),
+        { kind:'listen', eyebrow:'АУДИРОВАНИЕ', eyebrow_uz:'TINGLASH', title:'Что просят?', title_uz:'Nima soʻrashyapti?', sub:t('ui.162'),
           ko:'여기에서 조용히 하세요.', ru:'Здесь ведите себя тихо.',
-          options:['Будьте здесь потише.','Говорите громче.','Идите сюда.'], answer:'Будьте здесь потише.' },
-        { kind:'quiz', eyebrow:'ПРОВЕРКА', title:'Слова урока',
-          items:[ {ko:'앉다',ru:'садиться'}, {ko:'기다리다',ru:'ждать'}, {ko:'천천히',ru:'медленно'} ],
-          pool:['садиться','ждать','медленно','тихо','входить','сигарета'] },
+          options:['Будьте здесь потише.','Говорите громче.','Идите сюда.'], options_uz:['Bu yerda jim boʻling.','Baland gapiring.','Bu yoqqa keling.'], answer:'Будьте здесь потише.', answer_uz:'Bu yerda jim boʻling.' },
+        { kind:'quiz', eyebrow:'ПРОВЕРКА', eyebrow_uz:'TEKSHIRUV', title:'Слова урока', title_uz:'Dars soʻzlari',
+          items:[ {ko:'앉다',ru:'садиться', ru_uz:'oʻtirmoq'}, {ko:'기다리다',ru:'ждать', ru_uz:'kutmoq'}, {ko:'천천히',ru:'медленно', ru_uz:'sekin'} ],
+          pool:['садиться','ждать','медленно','тихо','входить','сигарета'], pool_uz:['oʻtirmoq','kutmoq','sekin','jim','kirmoq','sigareta'] },
         { kind:'homework' },
         { kind:'done' }
       ]
@@ -11670,49 +11850,53 @@
       homework:{ tasks:[
         'Опиши свою комнату: что где (위/아래/앞/뒤/옆/안) — 5 фраз.',
         'Составь 3 фразы с 있어요 и 3 с 없어요.'
+      ], tasks_uz:[
+        'Xonangizni tasvirlang: nima qayerda (위/아래/앞/뒤/옆/안) — 5 ta jumla.',
+        '있어요 bilan 3 ta va 없어요 bilan 3 ta jumla tuzing.'
       ]},
       slides:[
-        { kind:'intro', title:'Где что лежит', sub:'위치 표현',
+        { kind:'intro', title:'Где что лежит', title_uz:'Narsalar qayerda', sub:'위치 표현',
           intro:'«Частицы 에/에서 ты уже знаешь. Теперь добавим позиционные слова: <span class="ko">위</span> (на), <span class="ko">아래</span> (под), <span class="ko">앞·뒤·옆·안</span>. И скажем, что где есть — <span class="ko">있어요/없어요</span> 🌸»',
-          learn:[['📍','положение'],['📦','есть/нет'],['🐱','предметы']] },
-        { kind:'info', eyebrow:'ПОЛОЖЕНИЕ', title:'Позиционные слова', sub:'место + ___ + 에', cols:1,
+          learn:[['📍','положение'],['📦','есть/нет'],['🐱','предметы']], learn_uz:['joylashuv','bor/yoʻq','buyumlar'] },
+        { kind:'info', eyebrow:'ПОЛОЖЕНИЕ', eyebrow_uz:'JOYLASHUV', title:'Позиционные слова', title_uz:'Joy soʻzlari', sub:'место + ___ + 에', sub_uz:'joy + ___ + 에', cols:1,
           grid:[
-            {ko:'위', ru:'верх — на (책상 위)'}, {ko:'아래', ru:'низ — под'}, {ko:'앞', ru:'перёд — перед'},
-            {ko:'뒤', ru:'зад — позади'}, {ko:'옆', ru:'бок — рядом'}, {ko:'안', ru:'внутри — в'}, {ko:'밖', ru:'снаружи — вне'}
+            {ko:'위', ru:'верх — на (책상 위)', ru_uz:'yuqori — ustida (책상 위)'}, {ko:'아래', ru:'низ — под', ru_uz:'past — ostida'}, {ko:'앞', ru:'перёд — перед', ru_uz:'old — oldida'},
+            {ko:'뒤', ru:'зад — позади', ru_uz:'orqa — ortida'}, {ko:'옆', ru:'бок — рядом', ru_uz:'yon — yonida'}, {ko:'안', ru:'внутри — в', ru_uz:'ichi — ichida'}, {ko:'밖', ru:'снаружи — вне', ru_uz:'tashqi — tashqarisida'}
           ],
-          note:'Схема: <место> + <позиция> + 에 + 있어요. Пример: 책상 위에 책이 있어요.' },
-        { kind:'pattern', eyebrow:'ГРАММАТИКА', title:'… 에 있어요 / 없어요', sub:'есть / нет',
+          note:'Схема: <место> + <позиция> + 에 + 있어요. Пример: 책상 위에 책이 있어요.', note_uz:'Qolip: <joy> + <holat> + 에 + 있어요. Misol: 책상 위에 책이 있어요.' },
+        { kind:'pattern', eyebrow:'ГРАММАТИКА', eyebrow_uz:'GRAMMATIKA', title:'… 에 있어요 / 없어요', title_uz:'… 에 있어요 / 없어요', sub:'есть / нет', sub_uz:'bor / yoʻq',
           rule:'<b>있어요</b> — есть, находится. <b>없어요</b> — нет, отсутствует. Подлежащее берёт <span class="ko">이/가</span>: <span class="ko">고양이가 있어요</span>.',
+          rule_uz:'<b>있어요</b> — bor, joylashgan. <b>없어요</b> — yoʻq, mavjud emas. Ega <span class="ko">이/가</span> oladi: <span class="ko">고양이가 있어요</span>.',
           examples:[
-            {ko:'책상 위에 컴퓨터가 있어요.', ru:'На столе есть компьютер.'},
-            {ko:'가방 안에 책이 없어요.', ru:'В сумке нет книги.'},
-            {ko:'의자 옆에 고양이가 있어요.', ru:'Рядом со стулом есть кошка.'}
+            {ko:'책상 위에 컴퓨터가 있어요.', ru:'На столе есть компьютер.', ru_uz:'Stol ustida kompyuter bor.'},
+            {ko:'가방 안에 책이 없어요.', ru:'В сумке нет книги.', ru_uz:'Sumkada kitob yoʻq.'},
+            {ko:'의자 옆에 고양이가 있어요.', ru:'Рядом со стулом есть кошка.', ru_uz:'Stul yonida mushuk bor.'}
           ],
           drills:[
-            { q:'«на столе»: 책상 ___에', ru:'', options:['위','아래','앞'], answer:'위' },
-            { q:'«в сумке»: 가방 ___에', ru:'', options:['안','옆','뒤'], answer:'안' }
+            { q:'«на столе»: 책상 ___에', q_uz:'«stol ustida»: 책상 ___에', ru:'', options:['위','아래','앞'], answer:'위' },
+            { q:'«в сумке»: 가방 ___에', q_uz:'«sumkada»: 가방 ___에', ru:'', options:['안','옆','뒤'], answer:'안' }
           ] },
-        { kind:'words', eyebrow:'СЛОВА', title:'В комнате',
+        { kind:'words', eyebrow:'СЛОВА', eyebrow_uz:'SOʻZLAR', title:'В комнате', title_uz:'Xonada',
           items:[
-            {ko:'책상', ru:'стол', emoji:'🪑'}, {ko:'침대', ru:'кровать', emoji:'🛏️'},
-            {ko:'창문', ru:'окно', emoji:'🪟'}, {ko:'컴퓨터', ru:'компьютер', emoji:'💻'},
-            {ko:'고양이', ru:'кошка', emoji:'🐱'}, {ko:'강아지', ru:'собака', emoji:'🐶'}
+            {ko:'책상', ru:'стол', ru_uz:'stol', emoji:'🪑'}, {ko:'침대', ru:'кровать', ru_uz:'karavot', emoji:'🛏️'},
+            {ko:'창문', ru:'окно', ru_uz:'deraza', emoji:'🪟'}, {ko:'컴퓨터', ru:'компьютер', ru_uz:'kompyuter', emoji:'💻'},
+            {ko:'고양이', ru:'кошка', ru_uz:'mushuk', emoji:'🐱'}, {ko:'강아지', ru:'собака', ru_uz:'it', emoji:'🐶'}
           ] },
-        { kind:'dialog', eyebrow:'ДИАЛОГ', title:'Где мой телефон?', sub:'어디에 있어요?',
+        { kind:'dialog', eyebrow:'ДИАЛОГ', eyebrow_uz:'MULOQOT', title:'Где мой телефон?', title_uz:'Telefonim qayerda?', sub:'어디에 있어요?',
           lines:[
-            { who:'A', av:'🙂', ko:'제 핸드폰이 어디에 있어요?', ru:'Где мой телефон?' },
-            { who:'B', av:'🧑', ko:'책상 위에 있어요.', ru:'На столе.' },
-            { who:'A', av:'🙂', ko:'아니요, 거기 없어요.', ru:'Нет, там его нет.' },
-            { who:'B', av:'🧑', ko:'아, 가방 안에 있어요!', ru:'А, он в сумке!' }
+            { who:'A', av:'🙂', ko:'제 핸드폰이 어디에 있어요?', ru:'Где мой телефон?', ru_uz:'Telefonim qayerda?' },
+            { who:'B', av:'🧑', ko:'책상 위에 있어요.', ru:'На столе.', ru_uz:'Stol ustida.' },
+            { who:'A', av:'🙂', ko:'아니요, 거기 없어요.', ru:'Нет, там его нет.', ru_uz:'Yoʻq, u yerda yoʻq.' },
+            { who:'B', av:'🧑', ko:'아, 가방 안에 있어요!', ru:'А, он в сумке!', ru_uz:'A, u sumkada!' }
           ] },
-        { kind:'build', eyebrow:'СОБЕРИ ФРАЗУ', title:'Книга на столе', ru:'На столе есть книга.',
+        { kind:'build', eyebrow:'СОБЕРИ ФРАЗУ', eyebrow_uz:'JUMLA TUZ', title:'Книга на столе', title_uz:'Kitob stolda', ru:'На столе есть книга.', ru_uz:'Stol ustida kitob bor.',
           target:['책상','위에','책이','있어요'], pool:['없어요'] },
-        { kind:'listen', eyebrow:'АУДИРОВАНИЕ', title:'Что где?', sub:t('ui.162'),
+        { kind:'listen', eyebrow:'АУДИРОВАНИЕ', eyebrow_uz:'TINGLASH', title:'Что где?', title_uz:'Nima qayerda?', sub:t('ui.162'),
           ko:'가방 안에 핸드폰이 있어요.', ru:'В сумке есть телефон.',
-          options:['В сумке есть телефон.','Телефон на столе.','Сумки нет.'], answer:'В сумке есть телефон.' },
-        { kind:'quiz', eyebrow:'ПРОВЕРКА', title:'Слова урока',
-          items:[ {ko:'위',ru:'верх'}, {ko:'아래',ru:'низ'}, {ko:'옆',ru:'рядом'} ],
-          pool:['верх','низ','рядом','перёд','зад','внутри'] },
+          options:['В сумке есть телефон.','Телефон на столе.','Сумки нет.'], options_uz:['Sumkada telefon bor.','Telefon stolda.','Sumka yoʻq.'], answer:'В сумке есть телефон.', answer_uz:'Sumkada telefon bor.' },
+        { kind:'quiz', eyebrow:'ПРОВЕРКА', eyebrow_uz:'TEKSHIRUV', title:'Слова урока', title_uz:'Dars soʻzlari',
+          items:[ {ko:'위',ru:'верх', ru_uz:'yuqori'}, {ko:'아래',ru:'низ', ru_uz:'past'}, {ko:'옆',ru:'рядом', ru_uz:'yon'} ],
+          pool:['верх','низ','рядом','перёд','зад','внутри'], pool_uz:['yuqori','past','yon','old','orqa','ichi'] },
         { kind:'homework' },
         { kind:'done' }
       ]
@@ -22200,7 +22384,7 @@
     const slot = document.getElementById('textbook-hub');
     if (!slot) return;
     const books = _tbBooks();
-    if (!books.length) { slot.innerHTML = '<div class="tb-empty">Учебник не загрузился 🌸<br><small>Обнови страницу.</small></div>'; return; }
+    if (!books.length) { slot.innerHTML = `<div class="tb-empty">${t('tb.loadError')}</div>`; return; }
     if (_tbView === 'shelf') return tbRenderShelf(slot, books);
     const book = books[_tbBookIdx] || books[0];
     if (_tbView === 'cover') return tbRenderCover(slot, book);
@@ -22735,7 +22919,7 @@
   function tbCwReveal(id) {
     const root = document.getElementById(id); if (!root) return;
     root.querySelectorAll('.tb-cw-in').forEach(inp => { inp.value = inp.dataset.a; inp.classList.remove('bad'); inp.classList.add('ok'); });
-    const msg = root.querySelector('.tb-game-msg'); if (msg) { msg.textContent = 'Ответы показаны 🌸'; msg.className = 'tb-game-msg'; }
+    const msg = root.querySelector('.tb-game-msg'); if (msg) { msg.textContent = t('tb.answersShown'); msg.className = 'tb-game-msg'; }
   }
   function tbBlockWordsearch(b) {
     const G = window.TBGAMES, g = G && G.wordsearch ? G.wordsearch(b.words, b.size || 9) : null;
@@ -22766,7 +22950,7 @@
     const set = {}; (root.dataset.sol || '').split(' ').filter(Boolean).forEach(k => set[k] = 1);
     root.querySelectorAll('.tb-ws-cell').forEach(btn => { if (set[btn.dataset.k]) btn.classList.add('sol'); });
     root.querySelectorAll('.tb-ws-word').forEach(w => w.classList.add('found'));
-    const msg = root.querySelector('.tb-game-msg'); if (msg) msg.textContent = 'Все слова подсвечены 🌸';
+    const msg = root.querySelector('.tb-game-msg'); if (msg) msg.textContent = t('tb.allHighlighted');
   }
   function tbBlockAnagram(b) {
     const G = window.TBGAMES, arr = G && G.anagram ? G.anagram(b.items) : [];
@@ -23942,7 +24126,7 @@
   let _w2State = null, _w2Timer = null;
   function startTopikWriting(n) {
     const data = (TOPIK2_EXAMS[n] || {}).writing;
-    if (!data || !data.tasks || !data.tasks.length) { toast('Этот раздел готовится 🌸', 'var(--berry)'); return; }
+    if (!data || !data.tasks || !data.tasks.length) { toast(t('topik.sectionSoon'), 'var(--berry)'); return; }
     _w2State = { exam: n, label: data.label, tasks: data.tasks, answers: {}, endAt: Date.now() + (data.durationMin || 50) * 60000, finished: false };
     let ov = document.getElementById('topik-exam-overlay');
     if (!ov) { ov = document.createElement('div'); ov.id = 'topik-exam-overlay'; ov.className = 'exam-overlay'; document.body.appendChild(ov); }
@@ -26786,7 +26970,7 @@
       <div class="td-levels" role="group" aria-label="${t('ui.187')}">
         ${TD_LEVELS.map(n => `<button type="button" class="td-level-btn${n === lvl ? ' active' : ''}" onclick="tdSetLevel(${n})" aria-pressed="${n === lvl}">${n}급</button>`).join('')}
       </div>
-      <p class="td-levels-hint"><b>${lvl}급</b> · ${sec.k === 'writing' ? '문제 51–54 · письменная часть' : 'вопросы ' + tdLevelHint(lvl)}</p>
+      <p class="td-levels-hint"><b>${lvl}급</b> · ${sec.k === 'writing' ? t('td.writingPart') : t('td.questionsPrefix') + tdLevelHint(lvl)}</p>
       <div class="td-types">
         ${types.map(ty => `
           <button type="button" class="td-type${ty.ready ? '' : ' td-soon'}${ty.ready && tdIsDone(ty.id) ? ' td-type-done' : ''}" onclick="tdOpenType('${ty.id}')" aria-label="${t('ui.188',{range: ty.range, title: ty.title})}">
@@ -26885,7 +27069,7 @@
       <div class="td-block-h" style="margin-top:18px;">${exHead}</div>
       <div class="td-ex-list">${exHtml}</div>
       <button type="button" class="td-done-btn${isDone ? ' on' : ''}" id="td-done-chip" onclick="tdDoneClick('${ty.id}')">
-        <i class="fa-solid fa-check"></i> <span>${isDone ? 'Изучено ✓' : 'Отметить изученным'}</span>
+        <i class="fa-solid fa-check"></i> <span>${isDone ? t('tb.learned') : t('tb.markLearned')}</span>
       </button>`;
   }
   // Один вопрос внутри блока-задания (id уникален на вопрос → парные тексты работают независимо).
@@ -27963,7 +28147,7 @@
   // ── Дрилл по типу и Блиц-10: один общий раннер, отличается только набором вопросов ──
   let _drillState = null;
   function startTopikDrill(typeId) {
-    if (!requirePlan('master', 'Дрилл по типам TOPIK')) return;
+    if (!requirePlan('master', t('feat.topikDrill'))) return;
     const qs = shuffleArr(buildTopikBank().filter(q => q.typeId === typeId));
     if (qs.length < 3) { toast(t('topik.drill.empty')); return; }
     _drillState = { mode: 'drill', typeId, qs, idx: 0, score: 0, answered: null };
@@ -28085,7 +28269,7 @@
 
   let _reviewState = null;
   function startTopikReview() {
-    if (!requirePlan('master', 'Тетрадь ошибок TOPIK')) return;
+    if (!requirePlan('master', t('feat.topikWrongs'))) return;
     const qs = shuffleArr(topikWrongDueList());
     if (!qs.length) { toast(t('topik.review.empty'), 'var(--sage)'); return; }
     _reviewState = { qs, idx: 0, answered: null };
@@ -28373,11 +28557,11 @@
   let _examTimer = null;
 
   function startTopikExam(n, mode, lvl) {
-    if (!requirePlan('master', 'Пробный экзамен TOPIK')) return;
+    if (!requirePlan('master', t('feat.topikExam'))) return;
     const src = lvl === 2 ? (typeof TOPIK2_EXAMS !== 'undefined' ? TOPIK2_EXAMS : {}) : TOPIK_EXAMS;
     const data = (src[n] || {})[mode];
     if (!data || !data.questions || !data.questions.length) {
-      toast('Этот тест готовится 🌸', 'var(--berry)'); return;
+      toast(t('topik.testSoon'), 'var(--berry)'); return;
     }
     _examState = {
       exam: n, mode, lvl: lvl === 2 ? 2 : 1, label: data.label, questions: data.questions,
@@ -28501,7 +28685,7 @@
     if (btn && btn === _examSpeakBtn && _examSpeakLines) { stopExamScript(); return; } // toggle
     stopExamScript();
     _examSpeakBtn = btn || null;
-    if (btn) { if (!btn.dataset.idle) btn.dataset.idle = btn.innerHTML; btn.classList.add('playing'); btn.innerHTML = '<i class="fa-solid fa-stop"></i> Остановить'; }
+    if (btn) { if (!btn.dataset.idle) btn.dataset.idle = btn.innerHTML; btn.classList.add('playing'); btn.innerHTML = '<i class="fa-solid fa-stop"></i> ' + t('listendrill.stop'); }
     const slow = (typeof getSettings === 'function' && getSettings().slowVoice);
     _examSpeakLines = q.script.split('\n').map(s => s.trim()).filter(Boolean);
     _examSpeakIdx = 0;
@@ -29356,7 +29540,7 @@
 
   function openFeedComposer() {
     const u = Store.get('user');
-    if (!u || u.guest) { toast('Войди в профиль, чтобы делиться фото 🌸', 'var(--coral)'); switchScreen('profile'); return; }
+    if (!u || u.guest) { toast(t('feed.guestPhotoGate'), 'var(--coral)'); switchScreen('profile'); return; }
     _composerPhoto = null;
     const m = document.createElement('div');
     m.className = 'modal-bg modal-center';
@@ -29429,12 +29613,12 @@
       await _db.ref('shared/userFeedPosts').push(post);
       _composerPhoto = null;
       document.getElementById('feed-composer-modal')?.remove();
-      toast('Опубликовано 🌸', 'var(--sage)');
+      toast(t('feed.published'), 'var(--sage)');
       if (typeof addXp === 'function') addXp(5);
       if (typeof spawnConfetti === 'function') spawnConfetti();
     } catch (e) {
       console.warn('publishUserPost failed', e);
-      if (btn) { btn.disabled = false; btn.innerHTML = '<i class="fa-solid fa-paper-plane" style="font-size:12px;"></i> Опубликовать'; }
+      if (btn) { btn.disabled = false; btn.innerHTML = '<i class="fa-solid fa-paper-plane" style="font-size:12px;"></i> ' + t('ui.239'); }
       toast(t('ui.248'));
     }
   }
@@ -29454,7 +29638,7 @@
       _db.ref('shared/feedLikes/' + pid).remove().catch(() => {});
       _db.ref('shared/feedComments/' + pid).remove().catch(() => {});
       _db.ref('shared/feedReports/' + pid).remove().catch(() => {});
-      toast('Пост удалён', 'var(--sage)');
+      toast(t('feed.postDeleted'), 'var(--sage)');
     } catch (e) { console.warn('deleteUserPost failed', e); toast(t('ui.126')); }
   }
 
@@ -29463,7 +29647,7 @@
     const uid = socialUserId();
     try {
       await _db.ref(`shared/feedReports/${pid}/${uid}`).set({ ts: Date.now(), name: socialUserName() });
-      toast('Спасибо! Мади проверит этот пост 🌸', 'var(--sage)');
+      toast(t('feed.reported'), 'var(--sage)');
     } catch (e) { toast(t('ui.251')); }
   }
 
@@ -29758,7 +29942,7 @@
   function socialUserName() {
     const u = Store.get('user');
     if (u && u.name) return u.name;
-    return gw('Гостья', 'Гость');
+    return gw(t('auth.guestF'), t('auth.guest'));
   }
 
   // Live cache of user avatars by social uid. Comments only store the avatar
@@ -29981,7 +30165,7 @@
         <div class="${avClass}" style="${avStyle}">${avContent}</div>
         <div class="feed-comment-bubble">
           <div class="feed-comment-head">
-            <span class="feed-comment-name">${escAttrSafe(r.name || 'Без имени')}</span>
+            <span class="feed-comment-name">${escAttrSafe(r.name || t('feed.noName'))}</span>
             <span class="feed-comment-time">${relativeTime(r.ts)}</span>
             ${delBtn}
           </div>
@@ -32103,7 +32287,7 @@
           <div class="dx-lb-row">
             <span class="dx-lb-rank">${medals[i] || (i + 1)}</span>
             <span class="dx-ava dx-ava-sm">${dxAva(u)}</span>
-            <div class="dx-lb-info"><span class="dx-lb-name">${escAttrSafe(u.name || 'Без имени')}</span><span class="dx-lb-lvl">${rank.emoji} Lv ${lvl}</span></div>
+            <div class="dx-lb-info"><span class="dx-lb-name">${escAttrSafe(u.name || t('friend.noName'))}</span><span class="dx-lb-lvl">${rank.emoji} Lv ${lvl}</span></div>
             <span class="dx-lb-xp">${fmt(xp)} XP</span>
           </div>
         </div>`;
@@ -32135,7 +32319,7 @@
       const lvlTxt = u.level ? (levelLabel(u.level) || u.level) : '—';
       return `
         <tr>
-          <td><span class="dx-tbl-name"><span class="dx-ava dx-ava-xs${online ? ' dx-ava-on' : ''}">${dxAva(u)}</span><span class="dx-tbl-nm">${escAttrSafe(u.name || 'Без имени')}</span></span></td>
+          <td><span class="dx-tbl-name"><span class="dx-ava dx-ava-xs${online ? ' dx-ava-on' : ''}">${dxAva(u)}</span><span class="dx-tbl-nm">${escAttrSafe(u.name || t('friend.noName'))}</span></span></td>
           <td>${lvlTxt}</td>
           <td>${last}</td>
           <td class="num">${st.streak || 0}</td>
@@ -32900,7 +33084,7 @@
           ${avatar}
           <div style="flex:1; min-width:0;">
             <div style="display:flex; gap:6px; align-items:baseline; flex-wrap:wrap;">
-              <span style="font-weight:600; color:var(--berry); font-size:14px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width:140px;">${escAttrSafe(u.name || 'Без имени')}</span>
+              <span style="font-weight:600; color:var(--berry); font-size:14px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width:140px;">${escAttrSafe(u.name || t('friend.noName'))}</span>
               ${meta.nickname ? `<span style="font-size:11px; color:var(--coral);">@${escAttrSafe(meta.nickname)}</span>` : ''}
               <span style="font-size:11px; color:var(--coral);">${rank.emoji} Lv ${lvl}</span>${noteMark}
             </div>
@@ -32972,7 +33156,7 @@
         </div>
         <div style="text-align:center;">
           <div style="display:inline-block;">${avatar}</div>
-          <div class="display" style="font-size:21px; color:var(--berry); margin-top:8px;">${escAttrSafe(u.name || 'Без имени')}${meta.nickname ? ` <span style="font-size:13px; color:var(--coral);">@${escAttrSafe(meta.nickname)}</span>` : ''}</div>
+          <div class="display" style="font-size:21px; color:var(--berry); margin-top:8px;">${escAttrSafe(u.name || t('friend.noName'))}${meta.nickname ? ` <span style="font-size:13px; color:var(--coral);">@${escAttrSafe(meta.nickname)}</span>` : ''}</div>
           <div style="font-size:12px; color:var(--soft); margin-top:2px;">${escAttrSafe(u.email || 'без email')}</div>
           <span class="chip chip-blush" style="margin-top:8px;">${rank.emoji} ${rank.label} · Lv ${lvl}</span>
         </div>
@@ -34342,7 +34526,7 @@
       u.email = email; Store.set('user', u);
       try { pushProfilePublicField('email', email); } catch (_) {}
     }
-    el.textContent = email || (u && u.guest ? 'гостевой режим' : 'без email');
+    el.textContent = email || (u && u.guest ? t('profile.guestMode') : t('profile.noEmail'));
   }
   function setActiveUser(user) {
     detachUserListeners();
@@ -34834,7 +35018,7 @@
       try { if (navigator.vibrate) navigator.vibrate(isNew ? [18, 40, 30] : (pct >= 80 ? 24 : 10)); } catch (_) {}
       if ((isNew || pct >= 80) && typeof spawnConfetti === 'function') { try { spawnConfetti(); } catch (_) {} }
     }, 70);
-    const msg = pct >= 80 ? '와 정말 잘했어! 🌟' : pct >= 50 ? '잘했어 🌸 ещё немного и идеально' : '괜찮아 🌸 пробуй ещё, всё получится';
+    const msg = pct >= 80 ? '와 정말 잘했어! 🌟' : pct >= 50 ? t('game.msgGood') : t('game.msgTry');
     const replayBtn = replayFn ? `<button onclick="${replayFn}()" class="btn btn-rose btn-block" style="margin-top:16px;">${t('ui.491')}</button>` : '';
     return `
       <div style="text-align:center; padding: 8px 0;">
@@ -34875,7 +35059,7 @@
     renderMatch();
   }
   function renderMatch() {
-    if (matchRound >= matchTotal) { gameModal(gameFinish(matchScore, matchTotal, 'Подбери картинку', 'match', 'startMatch')); return; }
+    if (matchRound >= matchTotal) { gameModal(gameFinish(matchScore, matchTotal, t('games.c.match'), 'match', 'startMatch')); return; }
     const correct = matchPool[matchRound];
     // Distractors must have DISTINCT emoji from the answer (and each other): the
     // game scores by emoji and emojis repeat across the vocab (👩, 🏫, 🌸…), so a
@@ -34949,7 +35133,7 @@
   }
   function replayBuildCustom() { startBuild(buildCustom); }
   function renderBuild() {
-    if (buildRound >= buildTotal) { gameModal(gameFinish(buildScore, buildTotal, 'Собери слово', hardcoreOn() ? 'hc_build' : 'build', buildCustom ? 'replayBuildCustom' : 'startBuild')); return; }
+    if (buildRound >= buildTotal) { gameModal(gameFinish(buildScore, buildTotal, t('games.c.build'), hardcoreOn() ? 'hc_build' : 'build', buildCustom ? 'replayBuildCustom' : 'startBuild')); return; }
     const item = buildPool[buildRound];
     const tiles = item.word.split('');
     // Add 1-2 distractor syllables
@@ -35029,7 +35213,7 @@
   }
   function replayListenCustom() { startListen(listenCustom); }
   function renderListen() {
-    if (listenRound >= listenTotal) { gameModal(gameFinish(listenScore, listenTotal, 'На слух', hardcoreOn() ? 'hc_listen' : 'listen', listenCustom ? 'replayListenCustom' : 'startListen')); return; }
+    if (listenRound >= listenTotal) { gameModal(gameFinish(listenScore, listenTotal, t('games.c.listen'), hardcoreOn() ? 'hc_listen' : 'listen', listenCustom ? 'replayListenCustom' : 'startListen')); return; }
     const correct = listenPool[listenRound];
     const wrong = shuffleArr(listenData.filter(p => p.word !== correct.word)).slice(0, 3);
     const choices = shuffleArr([correct, ...wrong]);
@@ -35664,7 +35848,7 @@
   }
   function replayTranslateCustom() { startTranslate(trCustom); }
   function renderTranslate() {
-    if (trRound >= trTotal) { gameModal(gameFinish(trScore, trTotal, 'Быстрый перевод', hardcoreOn() ? 'hc_translate' : 'translate', trCustom ? 'replayTranslateCustom' : 'startTranslate')); return; }
+    if (trRound >= trTotal) { gameModal(gameFinish(trScore, trTotal, t('games.c.tr'), hardcoreOn() ? 'hc_translate' : 'translate', trCustom ? 'replayTranslateCustom' : 'startTranslate')); return; }
     const correct = trPool[trRound];
     // Exclude distractors that share the answer's RU meaning — otherwise the
     // prompt «как будет мама?» could show two valid Korean answers (어머니/엄마),
@@ -35736,16 +35920,16 @@
   let numScore = 0, numRound = 0, numTotal = 6, numPool = [];
   function startNumbers() { numScore = 0; numRound = 0; numPool = shuffleArr(numbersData).slice(0, numTotal); renderNumbers(); }
   function renderNumbers() {
-    if (numRound >= numTotal) { gameModal(gameFinish(numScore, numTotal, 'Числа · 숫자', 'numbers', 'startNumbers')); return; }
+    if (numRound >= numTotal) { gameModal(gameFinish(numScore, numTotal, t('games.c.num') + ' · 숫자', 'numbers', 'startNumbers')); return; }
     const correct = numPool[numRound];
     const useSino = Math.random() > 0.5;
     const correctText = useSino ? correct.sino : correct.native;
     const wrong = shuffleArr(numbersData.filter(p => p.n !== correct.n)).slice(0, 3);
     const choices = shuffleArr([correctText, ...wrong.map(w => useSino ? w.sino : w.native)]);
     gameModal(`
-      ${gameHeader('🔢 ЧИСЛА', `${useSino ? '시노 — китайско-кор. (일이삼)' : '네이티브 — родные (하나둘셋)'}`, numRound, numTotal)}
+      ${gameHeader('🔢 ЧИСЛА', `${useSino ? t('numbers.sino') : t('numbers.native')}`, numRound, numTotal)}
       <div style="text-align:center; margin-bottom:20px;">
-        <div style="font-size:11px; color:var(--soft); letter-spacing:.16em;">${t('ui.r075', {kind: useSino ? 'СИНО' : 'НЕЙТИВ'})}</div>
+        <div style="font-size:11px; color:var(--soft); letter-spacing:.16em;">${t('ui.r075', {kind: useSino ? t('numbers.kindSino') : t('numbers.kindNative')})}</div>
         <div class="display" style="font-size:74px; color:var(--berry); line-height:1; margin-top:6px;">${correct.n}</div>
       </div>
       <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
@@ -35842,7 +36026,7 @@
     renderParticles();
   }
   function renderParticles() {
-    if (ptRound >= ptTotal) { gameModal(gameFinish(ptScore, ptTotal, 'Частицы · 조사', 'particles', 'startParticles')); return; }
+    if (ptRound >= ptTotal) { gameModal(gameFinish(ptScore, ptTotal, t('games.c.part') + ' · 조사', 'particles', 'startParticles')); return; }
     const r = ptPool[ptRound];
     let choices, roleLabel;
     if (r.kind === 'loc') {
@@ -35959,7 +36143,7 @@
     renderLinks();
   }
   function renderLinks() {
-    if (lkRound >= lkTotal) { gameModal(gameFinish(lkScore, lkTotal, 'Связки · 문법', 'links', 'startLinks')); return; }
+    if (lkRound >= lkTotal) { gameModal(gameFinish(lkScore, lkTotal, t('games.links') + ' · 문법', 'links', 'startLinks')); return; }
     const item = lkPool[lkRound];
     const fullPool = linksBuildPool();
     const distractors = [...new Set(shuffleArr(fullPool).map(x => x.form).filter(f => f !== item.form))].slice(0, 3);
@@ -36021,7 +36205,7 @@
     renderWordOrder();
   }
   function renderWordOrder() {
-    if (woRound >= woTotal) { gameModal(gameFinish(woScore, woTotal, 'Порядок · 문장 배열', 'wordorder', 'startWordOrder')); return; }
+    if (woRound >= woTotal) { gameModal(gameFinish(woScore, woTotal, t('games.wordorder') + ' · 문장 배열', 'wordorder', 'startWordOrder')); return; }
     const item = woPool[woRound];
     _woCur = { segs: shuffleArr(item.segs), correctOrder: item.correctOrder, picked: [], done: false };
     renderWordOrderState();
@@ -36170,7 +36354,7 @@
   function listenBank() { return _listenBankCache || (_listenBankCache = buildListenBank()); }
   let _ldState = null;
   function startListenDrill() {
-    if (!requirePlan('master', 'Аудио-дриллы TOPIK')) return;
+    if (!requirePlan('master', t('feat.topikAudio'))) return;
     const bank = shuffleArr(listenBank());
     if (bank.length < 5) { toast(t('topik.drill.empty')); return; }
     _ldState = { qs: bank.slice(0, Math.min(scaledRounds(6), bank.length)), idx: 0, score: 0, answered: null };
@@ -36308,7 +36492,7 @@
   }
   let ndaScore = 0, ndaRound = 0, ndaTotal = 8, ndaPool = [];
   function startNdaDrill() {
-    if (!requirePlan('master', 'Тренажёр -ㄴ다/-는다')) return;
+    if (!requirePlan('master', t('feat.grammarTrainer'))) return;
     ndaTotal = Math.min(scaledRounds(8), NDA_DRILLS.length);
     ndaScore = 0; ndaRound = 0;
     ndaPool = shuffleArr(NDA_DRILLS).slice(0, ndaTotal);
@@ -36382,7 +36566,7 @@
   };
   let _w53State = null;
   function startW53Scaffold() {
-    if (!requirePlan('master', 'Конструктор ответа №53')) return;
+    if (!requirePlan('master', t('feat.writing53'))) return;
     _w53State = { stage: 0, built: [] };
     renderW53Scaffold();
   }
@@ -36443,7 +36627,7 @@
   let sntScore = 0, sntRound = 0, sntTotal = 4, sntPool = [], sntPicked = [], sntTiles = [];
   function startSentence() { sntScore = 0; sntRound = 0; sntPool = shuffleArr(sentenceData).slice(0, sntTotal); renderSentence(); }
   function renderSentence() {
-    if (sntRound >= sntTotal) { gameModal(gameFinish(sntScore, sntTotal, 'Собери фразу', 'sentence', 'startSentence')); return; }
+    if (sntRound >= sntTotal) { gameModal(gameFinish(sntScore, sntTotal, t('games.c.sent'), 'sentence', 'startSentence')); return; }
     const item = sntPool[sntRound];
     const allOther = sentenceData.filter(s => s.ru !== item.ru).flatMap(s => s.ko);
     const distractors = shuffleArr(allOther.filter(w => !item.ko.includes(w))).slice(0, 1);
@@ -36508,7 +36692,7 @@
     renderDictation();
   }
   function renderDictation() {
-    if (dictRound >= dictTotal) { gameModal(gameFinish(dictScore, dictTotal, 'Слушай и пиши', 'dictation', 'startDictation')); return; }
+    if (dictRound >= dictTotal) { gameModal(gameFinish(dictScore, dictTotal, t('games.c.dict'), 'dictation', 'startDictation')); return; }
     dictCons = null; dictVowel = null;
     drawDictation();
     const t = dictPool[dictRound];
@@ -36732,7 +36916,7 @@
     renderWriting();
   }
   function renderWriting() {
-    if (writeRound >= writeTotal) { gameModal(gameFinish(writeScore, writeTotal, 'Пиши буквы', 'writing', 'startWriting')); return; }
+    if (writeRound >= writeTotal) { gameModal(gameFinish(writeScore, writeTotal, t('games.c.write'), 'writing', 'startWriting')); return; }
     writeStrokeIdx = 0; writeDone = false;
     const it = writePool[writeRound];
     const single = it.jamo.length === 1;
@@ -36944,7 +37128,7 @@
       if (wrap) { wrap.style.animation = 'quiz-shake .3s'; setTimeout(() => wrap.style.animation = '', 320); }
       if (v) {
         v.style.color = 'var(--bad-ink)';
-        v.textContent = !startOk ? 'Начни с точки ● и веди по стрелке' : 'Почти! Веди ближе к линии 🌸';
+        v.textContent = !startOk ? t('write.startHint') : t('write.almostHint');
       }
     }
   }
@@ -36968,22 +37152,8 @@
   }
 
 
-  // ── Урок с ИИ (AI 선생님) — Puter.js, работает без API-ключей в клиенте ──
-  // Puter.js грузим лениво при первом обращении, чтобы не тормозить старт.
-  let _puterPromise = null;
-  function ensurePuter() {
-    if (window.puter && window.puter.ai) return Promise.resolve();
-    if (_puterPromise) return _puterPromise;
-    _puterPromise = new Promise((resolve, reject) => {
-      const s = document.createElement('script');
-      s.src = 'https://js.puter.com/v2/';
-      s.onload = () => (window.puter && window.puter.ai) ? resolve() : reject(new Error('puter not ready'));
-      s.onerror = () => { _puterPromise = null; reject(new Error('puter load failed')); };
-      document.head.appendChild(s);
-    });
-    return _puterPromise;
-  }
-  // Ответ puter.ai.chat бывает строкой или объектом с message.content (строка/массив)
+  // ── Урок с ИИ (AI 선생님) — свой прокси-воркер (km-ai), без логина ──
+  const AI_PROXY_URL = 'https://km-ai.koreanmadie.workers.dev/ai';
   function _aiExtract(r) {
     if (!r) return '';
     if (typeof r === 'string') return r;
@@ -36996,21 +37166,20 @@
     const m = (e && (e.message || (e.error && e.error.message) || (typeof e === 'string' ? e : ''))) || '';
     return m ? ` ${t('ui.r077', {details: String(m).slice(0, 140)})}` : '';
   }
-  // Единая точка вызова ИИ: вход Puter по клику (иначе попап-блокер режет окно),
-  // при сбое — повторная попытка с явной моделью.
+  // Единая точка вызова ИИ: POST в km-ai (каскад Gemini → Groq → Workers AI на сервере),
+  // без входа в аккаунт — ключи провайдеров живут только в секретах воркера.
   async function aiCallChat(payload) {
-    await ensurePuter();
-    try {
-      if (puter.auth && typeof puter.auth.isSignedIn === 'function' && !puter.auth.isSignedIn()) {
-        await puter.auth.signIn();
-      }
-    } catch (_) { /* окно входа закрыли — puter спросит сам при запросе */ }
-    try {
-      return await puter.ai.chat(payload);
-    } catch (e) {
-      console.warn('puter.ai.chat retry with explicit model:', e);
-      return await puter.ai.chat(payload, { model: 'gpt-4o-mini' });
+    const messages = Array.isArray(payload) ? payload : [{ role: 'user', content: String(payload) }];
+    const resp = await fetch(AI_PROXY_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ messages: messages })
+    });
+    if (!resp.ok) {
+      const detail = await resp.text().catch(() => '');
+      throw new Error(`ai proxy ${resp.status}: ${detail.slice(0, 200)}`);
     }
+    return resp.json();
   }
   const AI_TUTOR_SYSTEM = [
     'Ты — AI 선생님 приложения «Korean with Madie» (учительница — Мади). Помогаешь русскоязычной ученице учить корейский язык и Корею.',
@@ -37026,9 +37195,8 @@
   let _aiMsgs = [], _aiLogHtml = [], _aiBusy = false;
   function openAiTutor() {
     if (!requireAccount(t('lessons.ai'))) return; // гостям — сперва аккаунт, потом тариф
-    if (!requirePlan('proai', 'Урок с ИИ')) return;
+    if (!requirePlan('proai', t('feat.aiLesson'))) return;
     if (document.getElementById('ai-tutor-modal')) return;
-    ensurePuter().catch(() => {}); // прогреваем SDK заранее, пока ученица печатает
     if (!_aiMsgs.length) _aiMsgs.push({ role: 'system', content: AI_TUTOR_SYSTEM });
     const m = document.createElement('div');
     m.className = 'ai-tutor-page';
@@ -37170,7 +37338,7 @@
     } catch (e) {
       console.warn('AI tutor error:', e);
       document.getElementById('ai-typing')?.remove();
-      _aiAppend('ai', 'Не получилось связаться с ИИ 😔 Если появилось окно входа Puter — войди (бесплатно) и спроси ещё раз.' + _aiErrText(e));
+      _aiAppend('ai', 'Не получилось связаться с ИИ 😔 Попробуй спросить ещё раз через минуту.' + _aiErrText(e));
     } finally {
       _aiBusy = false;
       if (btn) btn.disabled = false;
@@ -37203,7 +37371,7 @@
     try { return JSON.parse(t.slice(a, b + 1)); } catch (_) { return null; }
   }
   async function dictLookup() {
-    if (!requirePlan('proai', 'ИИ-словарь')) return;
+    if (!requirePlan('proai', t('feat.aiDict'))) return;
     if (_dictBusy) return;
     const q = (document.getElementById('dict-q')?.value || '').trim();
     const slot = document.getElementById('dict-result');
@@ -37387,7 +37555,7 @@
   ].join('\n');
   let _wpBusy = false;
   async function checkWritingWithAi() {
-    if (!requirePlan('proai', 'ИИ-проверка письма')) return;
+    if (!requirePlan('proai', t('feat.aiWritingCheck'))) return;
     if (_wpBusy || !_wpCurTask) return;
     const answer = (document.getElementById('wp-answer')?.value || '').trim();
     const slot = document.getElementById('wp-result');
@@ -37543,7 +37711,7 @@
           <div class="page-eyebrow">УЧЕБНАЯ КОМНАТА · 공부방</div>
           <div class="display" style="font-size:22px; color:var(--berry); margin-top:2px;">${t('ui.546')}</div>
         </div>
-        <button onclick="${active ? 'minimizeFocusRoom()' : "closeGameModal('focus-room')"}" class="chat-back-btn" aria-label="${active ? 'Свернуть' : 'Закрыть'}" style="flex-shrink:0; width:40px; height:40px; font-size:15px;">${active ? '<i class="fa-solid fa-window-minimize"></i>' : '<i class="fa-solid fa-xmark"></i>'}</button>
+        <button onclick="${active ? 'minimizeFocusRoom()' : "closeGameModal('focus-room')"}" class="chat-back-btn" aria-label="${active ? t('focus.minimize') : t('ui.023')}" style="flex-shrink:0; width:40px; height:40px; font-size:15px;">${active ? '<i class="fa-solid fa-window-minimize"></i>' : '<i class="fa-solid fa-xmark"></i>'}</button>
       </div>
       <div style="font-size:12px; color:var(--soft); margin-bottom:14px;">${t('ui.547')}</div>
       <div style="text-align:center; position:relative; margin: 6px 0 10px;">
@@ -37588,7 +37756,7 @@
             ${t('ui.t018')} <strong style="color:var(--berry);">${t('ui.553')}</strong> + <strong style="color:var(--berry);">${t('ui.554')}</strong>,<br>${t('ui.r081')} 🍅
           </div>
         `}
-        <button onclick="startFocus()" class="btn btn-primary btn-block">${_focusMode === 'pomo' ? 'Начать помодоро 🍅' : 'Начать фокус 🌸'}</button>
+        <button onclick="startFocus()" class="btn btn-primary btn-block">${_focusMode === 'pomo' ? t('focus.startPomo') : t('focus.startFree')}</button>
       `}
       <div style="margin-top:16px;">
         <div style="font-size:10px; letter-spacing:.2em; color:var(--soft); margin-bottom:8px; text-align:center;">ЗВУК ФОНА · 환경음</div>
@@ -37626,7 +37794,7 @@
         <div style="font-size:10px; letter-spacing:.2em; color:var(--soft); margin-bottom:10px;">ЖИВОЙ ЧАТ КОМНАТЫ · 라이브 채팅</div>
         <div id="focus-chat-log" style="max-height:190px; overflow-y:auto; display:flex; flex-direction:column; gap:7px; padding:11px 13px; background:var(--blush); border:1px solid var(--line); border-radius:14px;"></div>
         <div style="display:flex; gap:8px; margin-top:8px;">
-          <input id="focus-chat-input" class="input" maxlength="300" ${active ? '' : 'disabled'} placeholder="${active ? 'Напиши что-нибудь… 🌸' : 'Запусти таймер, чтобы писать'}" style="flex:1; padding:10px 13px; ${active ? '' : 'opacity:.55;'}" onkeydown="if(event.key==='Enter'){event.preventDefault();sendFocusChat();}">
+          <input id="focus-chat-input" class="input" maxlength="300" ${active ? '' : 'disabled'} placeholder="${active ? t('chat.inputPh') : t('chat.inputPhLocked')}" style="flex:1; padding:10px 13px; ${active ? '' : 'opacity:.55;'}" onkeydown="if(event.key==='Enter'){event.preventDefault();sendFocusChat();}">
           <button onclick="sendFocusChat()" class="btn btn-primary" ${active ? '' : 'disabled'} style="padding:10px 16px; flex-shrink:0; ${active ? '' : 'opacity:.55;'}" aria-label="${t('ui.111')}"><i class="fa-solid fa-paper-plane"></i></button>
         </div>
         <div style="font-size:10.5px; color:var(--soft); margin-top:6px; text-align:center;">${t('ui.558')}</div>
@@ -37713,7 +37881,7 @@
     document.getElementById('focus-pill')?.remove();
     if (early) {
       if (spentMin >= 1) _focusAward(spentMin, true);
-      else toast('В другой раз получится 🌸', 'var(--berry)');
+      else toast(t('focus.tooShort'), 'var(--berry)');
       const card = document.querySelector('#focus-room .game-page-card');
       if (card) { card.innerHTML = focusRoomHtml(); renderFocusRoomList(); }
     }
@@ -37938,7 +38106,7 @@
     const uid = (typeof firebaseUserId === 'function' ? firebaseUserId() : '') || '';
     if (!u || u.guest || !uid || uid === 'guest') return;
     const ref = _db.ref('shared/studyRoom/' + uid);
-    ref.set({ name: u.name || 'Ученик', startedAt: Date.now(), until: _focusEndAt }).catch(e => console.warn('joinStudyRoom set failed:', e));
+    ref.set({ name: u.name || t('feed.studentName'), startedAt: Date.now(), until: _focusEndAt }).catch(e => console.warn('joinStudyRoom set failed:', e));
     try { ref.onDisconnect().remove().catch(() => {}); } catch (_) {}
   }
   function leaveStudyRoom() {
@@ -37977,12 +38145,12 @@
     if (!inp) return;
     const text = inp.value.trim();
     if (!text) return;
-    if (!focusActive()) { toast('Запусти таймер, чтобы писать в чат 🌸', 'var(--berry)'); return; }
+    if (!focusActive()) { toast(t('chat.needFocusTimer'), 'var(--berry)'); return; }
     const u = Store.get('user');
     const uid = (typeof firebaseUserId === 'function' ? firebaseUserId() : '') || '';
-    if (!u || u.guest || !uid || uid === 'guest') { toast('Войди в аккаунт, чтобы общаться 🌸', 'var(--berry)'); return; }
+    if (!u || u.guest || !uid || uid === 'guest') { toast(t('chat.guestGate'), 'var(--berry)'); return; }
     if (typeof _db === 'undefined') return;
-    try { _db.ref('shared/studyRoomChat').push({ name: u.name || 'Ученик', uid, text: text.slice(0, 300), at: Date.now() }); } catch (_) {}
+    try { _db.ref('shared/studyRoomChat').push({ name: u.name || t('feed.studentName'), uid, text: text.slice(0, 300), at: Date.now() }); } catch (_) {}
     inp.value = '';
     inp.focus();
   }
@@ -38000,7 +38168,7 @@
     log.innerHTML = msgs.map(m => {
       const mine = m.uid && m.uid === myUid;
       return `<div style="font-size:12.5px; line-height:1.4;">
-        <span style="font-weight:700; color:${mine ? 'var(--coral)' : 'var(--berry)'};">${escHtml(m.name || 'Ученик')}:</span>
+        <span style="font-weight:700; color:${mine ? 'var(--coral)' : 'var(--berry)'};">${escHtml(m.name || t('feed.studentName'))}:</span>
         <span style="color:var(--soft);">${escHtml(m.text)}</span>
       </div>`;
     }).join('');
@@ -38025,7 +38193,7 @@
       const mins = Math.max(1, Math.round((now - (r.startedAt || now)) / 60000));
       return `<div class="card" style="padding:10px 14px; display:flex; align-items:center; gap:10px;">
         <span style="width:32px; height:32px; flex-shrink:0; border-radius:50%; background:var(--blush); display:flex; align-items:center; justify-content:center; font-size:15px;">📖</span>
-        <span style="flex:1; min-width:0; font-weight:600; color:var(--berry); font-size:13px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${escHtml(r.name || 'Ученик')}</span>
+        <span style="flex:1; min-width:0; font-weight:600; color:var(--berry); font-size:13px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${escHtml(r.name || t('feed.studentName'))}</span>
         <span style="font-size:11px; color:var(--coral); font-weight:700; flex-shrink:0;">${t('ui.r085', {min: mins})}</span>
       </div>`;
     }).join('');
@@ -39055,7 +39223,7 @@
       const prev = snap.val();
       const best = Math.max(score, (prev && Number(prev.score)) || 0);
       if (!prev || (Number(prev.score) || 0) < score) {
-        _db.ref(path).set({ score, name: (u && u.name) || 'Ученица', lvl: m.lvl, ts: Date.now() });
+        _db.ref(path).set({ score, name: (u && u.name) || t('grp.defStudent'), lvl: m.lvl, ts: Date.now() });
       }
       _marathonMyResultCache = { score: best, month: m.month };
       try { renderMarathonCard(); } catch (_) {}
@@ -39320,7 +39488,7 @@
     if (auth) auth.style.display = 'none';
     if (content) content.style.display = 'block';
     const email = document.getElementById('profile-email');
-    if (email) email.textContent = savedUser.email || (savedUser.guest ? 'гостевой режим' : 'без email');
+    if (email) email.textContent = savedUser.email || (savedUser.guest ? t('profile.guestMode') : t('profile.noEmail'));
     const adminBadge = document.getElementById('profile-admin-badge');
     if (adminBadge) adminBadge.style.display = savedUser.isAdmin ? 'inline-flex' : 'none';
     const sonbaeBadge2 = document.getElementById('profile-sonbae-badge');
@@ -39396,8 +39564,8 @@
   // pagehide covers actual tab close / navigation away (more reliable than beforeunload on mobile).
   window.addEventListener('pagehide', flushUserFieldPushes);
   // Connection state: reassure the user and flush any queued writes on reconnect.
-  window.addEventListener('offline', () => toast('Нет интернета 🌐 — изменения сохранятся, когда связь вернётся', 'var(--berry)'));
-  window.addEventListener('online',  () => { toast('Снова в сети 🌸', 'var(--sage)'); flushUserFieldPushes(); });
+  window.addEventListener('offline', () => toast(t('net.offline'), 'var(--berry)'));
+  window.addEventListener('online',  () => { toast(t('net.online'), 'var(--sage)'); flushUserFieldPushes(); });
 
   // ── Firebase Auth: keep local session in sync with auth state ──
   _auth.onAuthStateChanged(fbUser => {
