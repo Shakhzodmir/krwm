@@ -1975,6 +1975,12 @@
     "ui.r072": { ru: "Слова — из пройденных уроков, каждый раз новые. Тапни клетку → слог снизу.", en: "Words come from the lessons you've completed, new every time. Tap a cell → syllable below.", uz: "Soʻzlar — oʻtilgan darslardan, har safar yangi. Katakka bosing → boʻgʻin pastda." },
     "ui.r073": { ru: "{size}×{size} · {count} слов · +{xp} XP", en: "{size}×{size} · {count} words · +{xp} XP", uz: "{size}×{size} · {count} soʻz · +{xp} XP" },
     "ui.r074": { ru: "Найдено: {found} из {total} 🌸", en: "Found: {found} of {total} 🌸", uz: "Topildi: {found} / {total} 🌸" },
+    "ws.wordsHead": { ru: "🔎 Найди эти слова", en: "🔎 Find these words", uz: "🔎 Bu soʻzlarni toping" },
+    "ws.dirsHint": { ru: "Слова спрятаны в любую сторону — тяни по прямой", en: "Words hide in any direction — drag in a straight line", uz: "Soʻzlar istalgan yoʻnalishda — toʻgʻri chiziq boʻylab torting" },
+    "ws.hint": { ru: "💡 Подсказка", en: "💡 Hint", uz: "💡 Maslahat" },
+    "ws.hintDone": { ru: "Все слова уже найдены 🌸", en: "All words are already found 🌸", uz: "Barcha soʻzlar allaqachon topildi 🌸" },
+    "hangul.eraseHint": { ru: "Сначала собери слог и нажми ➕ Слог", en: "First build a syllable and tap ➕ Syllable", uz: "Avval boʻgʻin tuzing va ➕ Boʻgʻin tugmasini bosing" },
+    "build.answerIs": { ru: "Правильно:", en: "Correct:", uz: "Toʻgʻri:" },
     "ui.r075": { ru: "КАК БУДЕТ {kind}", en: "HOW TO SAY IT — {kind}", uz: "QANDAY BOʻLADI {kind}" },
     "ui.r076": { ru: "📄 Скачать фирменные прописи Madie (PDF)", en: "📄 Download Madie's branded handwriting workbook (PDF)", uz: "📺 Madie firmali xattotlik daftarini yuklab oling (PDF)" },
     "ui.r077": { ru: "Детали: {details}", en: "Details: {details}", uz: "Tafsilotlar: {details}" },
@@ -2882,7 +2888,13 @@
   }
   function backspaceWord() {
     const inp = document.getElementById('hangul-word');
-    if (inp) inp.value = inp.value.slice(0, -1);
+    if (!inp) return;
+    // «Стереть» правит поле «моё слово», а не большой слог-превью сверху. Пока не
+    // нажали «➕ Слог», поле пустое — раньше клик молча ничего не делал и кнопка
+    // казалась сломанной (отзыв 09.07). Теперь объясняем модель подсказкой.
+    if (!inp.value) { toast(t('hangul.eraseHint')); return; }
+    inp.value = inp.value.slice(0, -1);
+    recordHangulInteraction();
   }
   function saveHangulWord() {
     const inp = document.getElementById('hangul-word');
@@ -2982,6 +2994,29 @@
     const list = getMyWords().filter(w => w.ko !== ko);
     UStore.set('myWords', list);
     renderSavedWords();
+  }
+  // Слияние словарика при облачной синхронизации = union по корейскому слову (ko).
+  // Словарик раньше не уезжал в облако, поэтому на разных устройствах у ученицы
+  // РАЗНЫЕ наборы — объединяем оба, ничего не теряя, с добором пустых полей
+  // (ru/translit/emoji/type) из той копии, где они заполнены. Локальные идут первыми,
+  // сохраняя их порядок/новизну. Вынесено отдельно, чтобы можно было проверить тестом.
+  function _mergeMyWords(localList, cloudVal) {
+    const cloudList = Array.isArray(cloudVal) ? cloudVal : Object.values(cloudVal || {});
+    const byKo = {}, order = [];
+    const absorb = (w) => {
+      if (!w || !w.ko) return;
+      const cur = byKo[w.ko];
+      if (!cur) { byKo[w.ko] = { ...w }; order.push(w.ko); return; }
+      if (!cur.ru && w.ru) cur.ru = w.ru;
+      if (!cur.translit && w.translit) cur.translit = w.translit;
+      if ((!cur.emoji || cur.emoji === '🌸') && w.emoji && w.emoji !== '🌸') cur.emoji = w.emoji;
+      if (w.type && cur.type !== 'grammar' && cur.type !== 'phrase') cur.type = w.type;
+      if (!cur.source && w.source) cur.source = w.source;
+      if (!cur.ts && w.ts) cur.ts = w.ts;
+    };
+    (Array.isArray(localList) ? localList : []).forEach(absorb);
+    cloudList.forEach(absorb);
+    return order.map(ko => byKo[ko]);
   }
   function isMyWord(ko) {
     return getMyWords().some(w => w.ko === ko);
@@ -5000,7 +5035,7 @@
   }
 
   // ── Per-user data sync (full mirror to Firebase) ──
-  const USTORE_SYNC_KEYS = ['stats', 'avatar', 'unlocks', 'lessonProgress', 'lessonProgress_m2', 'lessonProgress_m3', 'lessonProgress_m4', 'lessonProgress_m5', 'lessonProgress_m6', 'lessonProgress_m7', 'lessonProgress_m8', 'bestScores', 'cover', 'bio', 'wrongsTopik', 'topikTypeAcc'];
+  const USTORE_SYNC_KEYS = ['stats', 'avatar', 'unlocks', 'lessonProgress', 'lessonProgress_m2', 'lessonProgress_m3', 'lessonProgress_m4', 'lessonProgress_m5', 'lessonProgress_m6', 'lessonProgress_m7', 'lessonProgress_m8', 'bestScores', 'cover', 'bio', 'wrongsTopik', 'topikTypeAcc', 'myWords'];
   let _skipCloudPush = false;
   const _userFieldDebounce = {};
   const _userFieldPending = {};
@@ -5371,6 +5406,18 @@
               pushUserField('bestScores', merged);
               _skipCloudPush = true;
             }
+          } else if (k === 'myWords') {
+            // Union по слову. Удаления НЕ распространяются (как у lessonProgress/unlocks) —
+            // «зомби-слово» лечится вторым удалением, но потеря слова хуже, это осознанно.
+            const cloudList = Array.isArray(value) ? value : Object.values(value || {});
+            const merged = _mergeMyWords(getMyWords(), cloudList);
+            value = merged;
+            UStore.set('myWords', merged);
+            if (JSON.stringify(merged) !== JSON.stringify(cloudList)) {
+              _skipCloudPush = false;
+              pushUserField('myWords', merged);
+              _skipCloudPush = true;
+            }
           } else { UStore.set(k, value); }
           if (k === 'avatar') {
             applyAvatar(value);
@@ -5383,6 +5430,8 @@
             renderHeroLesson();
           } else if (k === 'bestScores') {
             syncBestScoreCards();
+          } else if (k === 'myWords') {
+            renderSavedWords();
           }
         } finally {
           _skipCloudPush = false;
@@ -5794,7 +5843,7 @@
   // Версия сборки: держать В РУЧНУЮ синхронной с ?v= в index.html при каждом деплое
   // (те же 3 места — stylesheet/preload/script). Используется только для попапа
   // «доступно обновление» ниже — сама загрузка кода по-прежнему идёт через ?v=.
-  const APP_VERSION = '20260709a';
+  const APP_VERSION = '20260709d';
   function showUpdateAvailableModal() {
     if (document.getElementById('update-avail-modal')) return;
     const m = document.createElement('div');
@@ -28494,8 +28543,14 @@
   function todayTopikQuestion() {
     const bank = buildTopikBank();
     if (!bank.length) return null;
+    // Не подсовываем новичкам TOPIK II (слишком сложно — отзыв 09.07). TOPIK II
+    // крутим только тем, кто реально на уровне TOPIK 2 (LEVEL_RANK ≥ 4); остальным —
+    // лишь вопросы TOPIK I. Fallback на весь банк, если TOPIK I вдруг пуст.
+    const allowTopik2 = (typeof userLevelRank === 'function' && userLevelRank() >= 4);
+    const pool = allowTopik2 ? bank : bank.filter(q => q.lvl !== 2);
+    const use = pool.length ? pool : bank;
     const days = Math.floor(new Date(todayIsoDate() + 'T00:00:00Z').getTime() / 86400000);
-    return bank[((days % bank.length) + bank.length) % bank.length];
+    return use[((days % use.length) + use.length) % use.length];
   }
   function shouldShowTopikQuestion() {
     const prof = Store.get('onboardProfile') || {};
@@ -28548,12 +28603,26 @@
     const qs = [];
     const words = shuffleArr(gameWordPool().filter(w => w.ko && w.ru));
     const vocabWords = words.slice(0, 8);
+    // В словах уроков перевод часто содержит подсказку спряжения: «петь → 노래해요».
+    // В карточках это уместно, но в вариантах теста хвост «→ корейский» выдаёт правильный
+    // ответ и выглядит чужеродно. Берём чистый глосс — часть до «→»/«|».
+    const cleanGloss = (s) => String(s || '').split(/→|\|/)[0].trim();
     vocabWords.forEach(w => {
-      const wrongPool = words.filter(x => x.ru !== w.ru);
-      const wrongs = shuffleArr(wrongPool).slice(0, 3).map(x => x.ru);
+      const answer = cleanGloss(w.ru);
+      if (!answer) return;
+      // Дистракторы — чистые глоссы других слов; дедуп по значению, чтобы среди
+      // четырёх вариантов не оказалось двух одинаковых после очистки.
+      const seen = new Set([answer]);
+      const wrongs = [];
+      for (const x of shuffleArr(words)) {
+        const g = cleanGloss(x.ru);
+        if (!g || seen.has(g)) continue;
+        seen.add(g); wrongs.push(g);
+        if (wrongs.length === 3) break;
+      }
       if (wrongs.length < 3) return; // словаря маловато — пропускаем вопрос, не подставляем дубли
-      const options = shuffleArr([w.ru, ...wrongs]);
-      qs.push({ skill: 'vocab', ko: w.ko, instr: t('leveltest.q.vocab'), options, answer: options.indexOf(w.ru) + 1, mode: 'text' });
+      const options = shuffleArr([answer, ...wrongs]);
+      qs.push({ skill: 'vocab', ko: w.ko, instr: t('leveltest.q.vocab'), options, answer: options.indexOf(answer) + 1, mode: 'text' });
     });
     const bank1 = shuffleArr(buildTopikBank().filter(q => q.lvl === 1 && q.options && q.options.length === 4));
     bank1.slice(0, 8).forEach((q, i) => {
@@ -35125,6 +35194,21 @@
     // Drop the body flag only once no game/flashcard page remains open.
     if (!document.querySelector('.game-page')) document.body.classList.remove('game-open');
   }
+  // Кнопка «Дальше →» для квиз-игр: после НЕВЕРНОГО ответа не гоним авто-таймаут
+  // (ученица не успевала прочитать разбор — отзыв 09.07), ждём осознанный клик.
+  // onNext — переход к следующему раунду; кнопка живёт в теле текущей игровой
+  // модалки и исчезает сама при перерисовке. Модалки нет — просто идём дальше.
+  function quizNextButton(onNext) {
+    const card = document.querySelector('#game-modal .game-page-card');
+    if (!card) { onNext(); return; }
+    if (card.querySelector('.quiz-next-btn')) return;
+    const b = document.createElement('button');
+    b.className = 'quiz-next-btn';
+    b.textContent = t('common.next');
+    b.onclick = () => { b.disabled = true; onNext(); };
+    card.appendChild(b);
+    requestAnimationFrame(() => b.classList.add('show'));
+  }
   // ФАЗА D1: hcTimer=true — рисуем визуальную полоску обратного отсчёта раунда
   // (хардкор-режим, «таймер −30%» из плана). Полоска ЧИСТО визуальная: по нулю не
   // форсирует провал раунда (это потребовало бы отдельного хука в 3 разных движка
@@ -35332,11 +35416,11 @@
       <div style="display:flex; gap:6px; margin-bottom:18px;">${slots}</div>
       <div style="font-size:10px; color:var(--soft); letter-spacing:.16em; margin-bottom:8px; text-align:center;">${t('ui.498')}</div>
       <div style="display:flex; flex-wrap:wrap; gap:8px; justify-content:center; margin-bottom:14px;">${tilesHtml}</div>
-      <div style="display:flex; gap:8px;">
+      <div style="display:flex; gap:8px;" id="build-actions">
         <button onclick="resetBuild()" class="btn btn-ghost" style="flex:1;">↻ ${t('ui.520')}</button>
         <button onclick="checkBuild()" class="btn btn-primary" style="flex:1.5;">${t('ui.297')}</button>
       </div>
-      <div style="text-align:center; font-size:11px; color:var(--soft); margin-top:10px;">${t('ui.500')}</div>
+      <div id="build-why" style="text-align:center; font-size:14px; color:var(--soft); margin-top:12px; min-height:44px; line-height:1.55;">${t('ui.500')}</div>
     `);
   }
   function pickBuildTile(i) {
@@ -35353,14 +35437,23 @@
     const item = buildPool[buildRound];
     if (buildPicked.length !== item.word.length) { toast(t('ui.501')); return; }
     const guess = buildPicked.join('');
+    const why = document.getElementById('build-why');
+    // блокируем повторные нажатия (тайлы + Сброс/Проверить), как в «Частицах»
+    document.querySelectorAll('#game-modal .hangul-key, #build-actions .btn').forEach(b => {
+      b.disabled = true; b.style.pointerEvents = 'none'; b.style.opacity = '.5';
+    });
     if (guess === item.word) {
       buildScore++;
       addXp(12);
-      toast(`정답! ${item.word} = ${item.meaning} ✨`, 'var(--sage)');
+      if (why) why.innerHTML = `<span class="ko" style="color:var(--ok-ink); font-weight:800; font-size:17px;">정답!</span> <span class="ko" style="color:var(--berry); font-weight:700;">${escHtml(item.word)}</span> — ${escHtml(item.meaning)} ✨`;
+      try { if (typeof getSettings !== 'function' || getSettings().sound) playSyllable(item.word); } catch (_) {}
+      setTimeout(() => { buildRound++; renderBuild(); }, 1600);
     } else {
-      toast(t('ui.502',{word: item.word}));
+      // разбор прямо в модалке (как «почему» у Частиц): что собрала и как правильно,
+      // и только по кнопке «Дальше» — идём к следующему слову (отзыв 09.07).
+      if (why) why.innerHTML = `<span class="ko" style="color:var(--bad-ink); font-weight:700;">${escHtml(guess)}</span> ✗<br><span style="font-size:12.5px;">${t('build.answerIs')} <span class="ko" style="color:var(--berry); font-weight:800;">${escHtml(item.word)}</span> — ${escHtml(item.meaning)}</span>`;
+      quizNextButton(() => { buildRound++; renderBuild(); });
     }
-    setTimeout(() => { buildRound++; renderBuild(); }, 1100);
   }
 
   // ── Game 3: Listen (На слух) ──
@@ -35751,7 +35844,7 @@
     const bank = _cw.bank.map(s => `<button type="button" class="cw-bank-key ko" onclick="cwFill('${s}')">${s}</button>`).join('');
     gameModal(`
       ${gameHeader('🧩 КРОССВОРД · ' + (CW_LEVELS[_cw.level] ? CW_LEVELS[_cw.level].label : ''), 'Тапни клетку → слог снизу', _cwFilledCount(), Object.keys(_cw.sol).length, 'openCrossword()')}
-      <div class="cw-grid" style="grid-template-columns:repeat(${_cw.maxC + 1}, 1fr);">${grid}</div>
+      <div class="cw-grid" style="grid-template-columns:repeat(${_cw.maxC + 1}, 1fr); max-width:${Math.min(320, (_cw.maxC + 1) * 52)}px;">${grid}</div>
       <div class="cw-bank">${bank}<button type="button" class="cw-bank-key cw-bank-bs" onclick="cwBackspace()" aria-label="${t('ui.511')}"><i class="fa-solid fa-delete-left"></i></button></div>
       <div class="cw-clues">
         <div class="cw-clues-col"><div class="cw-clues-head">→ По горизонтали (가로)</div>${across}</div>
@@ -35786,13 +35879,35 @@
     const i = aw.cellKeys.indexOf(_cw.active);
     if (i >= 0 && i < aw.cellKeys.length - 1) _cw.active = aw.cellKeys[i + 1];
   }
+  // Кроссворд завершается, когда все клетки заполнены. Раньше и подсказка, и ручной
+  // ввод последнего слога вызывали cwCheck(true) тем же кадром — экран итогов
+  // перерисовывался мгновенно, открытый слог/слово было не видно (отзыв 09.07).
+  // Теперь: подсветить открытую клетку, показать слово (для подсказки) и уйти на
+  // итоги с паузой. Флаг _finishing глушит повторные клики в это время.
+  function _cwWordAt(key) {
+    const w = ((_cw && _cw.words) || []).find(x => x.cellKeys && x.cellKeys.includes(key));
+    return w ? (w.ans + (w.clue ? ' — ' + w.clue : '')) : '';
+  }
+  function _cwHighlight(key) {
+    if (!key) return;
+    const el = document.querySelector(`.cw-cell[onclick*="${key}'"]`);
+    if (el) el.classList.add('cw-hint-reveal');
+  }
+  function _cwRevealAndFinish(revealKey, word) {
+    if (!_cw || _cw._finishing) return;
+    _cw._finishing = true;
+    _cwHighlight(revealKey);
+    if (word) toast('💡 ' + word, 'var(--sage)');
+    setTimeout(() => { if (_cw) { _cw._finishing = false; cwCheck(true); } }, 1300);
+  }
   function cwFill(syl) {
-    if (!_cw || _cw.won) return;
+    if (!_cw || _cw.won || _cw._finishing) return;
     _cw.user[_cw.active] = syl;
+    const filledKey = _cw.active;
     _cwAdvance();
     renderCrossword();
-    // авто-проверка, когда всё заполнено
-    if (_cwFilledCount() === Object.keys(_cw.sol).length) cwCheck(true);
+    // авто-проверка, когда всё заполнено (с паузой, чтобы увидеть последний слог)
+    if (_cwFilledCount() === Object.keys(_cw.sol).length) _cwRevealAndFinish(filledKey, null);
   }
   function cwBackspace() {
     if (!_cw) return;
@@ -35804,7 +35919,7 @@
     renderCrossword();
   }
   function cwHint() {
-    if (!_cw || _cw.won) return;
+    if (!_cw || _cw.won || _cw._finishing) return;
     // заполнить активную (или первую пустую) клетку правильным слогом
     let key = _cw.active;
     if (_cw.user[key] === _cw.sol[key]) key = Object.keys(_cw.sol).find(k => _cw.user[k] !== _cw.sol[k]);
@@ -35812,7 +35927,11 @@
     _cw.user[key] = _cw.sol[key];
     _cw.active = key;
     renderCrossword();
-    if (_cwFilledCount() === Object.keys(_cw.sol).length) cwCheck(true);
+    // последняя клетка открыта подсказкой → показать её и слово, потом итоги
+    // (иначе игра мгновенно скипала на экран результатов, не дав увидеть ответ);
+    // иначе просто подсветить открытый слог.
+    if (_cwFilledCount() === Object.keys(_cw.sol).length) _cwRevealAndFinish(key, _cwWordAt(key));
+    else _cwHighlight(key);
   }
   function cwCheck(silent) {
     if (!_cw) return;
@@ -35848,6 +35967,9 @@
   };
   const WS_FILL = ['가','나','다','라','마','바','사','아','자','차','카','타','파','하','고','노','도','로','모','보','소','오','조','구','누','두','루','무','부','수','우','주','기','니','디','리','미','비','시','이','지'];
   let _ws = null; // { level, size, grid{key}, targets[], found, sel, selecting, dragDir }
+  // Все 8 направлений (горизонталь/вертикаль/диагонали в обе стороны). Новичку
+  // помогает кнопка «Подсказка» (wsHint) — подсвечивает первую букву слова, а не
+  // ограничение направлений (решение пользователя 09.07 по отзыву Валерии).
   const WS_DIRS = [[0,1],[1,0],[1,1],[1,-1],[0,-1],[-1,0],[-1,-1],[-1,1]];
   function _wsKey(r, c) { return r + '_' + c; }
 
@@ -35931,10 +36053,34 @@
     gameModal(`
       ${gameHeader('🔍 ПОИСК СЛОВ · ' + (WS_LEVELS[_ws.level].label), 'Тяни по буквам — найди слово', _ws.found, _ws.targets.length, 'openWordSearch()')}
       <div class="ws-grid" id="ws-grid" style="grid-template-columns:repeat(${size}, 1fr);">${cells}</div>
+      <div class="ws-dirs-hint">
+        <span class="ws-dirs-rose"><span>↖</span><span>↑</span><span>↗</span><span>←</span><span class="ws-dirs-dot">●</span><span>→</span><span>↙</span><span>↓</span><span>↘</span></span>
+        <span class="ws-dirs-tx">${t('ws.dirsHint')}</span>
+      </div>
+      <div class="ws-words-head">${t('ws.wordsHead')}</div>
       <div class="ws-words">${list}</div>
-      <div style="text-align:center; font-size:11px; color:var(--soft); margin-top:12px;">${t('ui.r074', {found: _ws.found, total: _ws.targets.length})}</div>
+      <div style="text-align:center; margin-top:14px;">
+        <button onclick="wsHint()" class="btn btn-ghost ws-hint-btn">${t('ws.hint')}</button>
+      </div>
+      <div style="text-align:center; font-size:11px; color:var(--soft); margin-top:10px;">${t('ui.r074', {found: _ws.found, total: _ws.targets.length})}</div>
     `);
     _wsAttach();
+  }
+  // Подсказка: подсвечиваем первую букву одного ещё не найденного слова и само слово
+  // в списке — новичку с 8 направлениями бывает трудно найти, откуда тянуть (отзыв 09.07).
+  function wsHint() {
+    if (!_ws) return;
+    const remaining = _ws.targets.filter(t => !t.found);
+    if (!remaining.length) { toast(t('ws.hintDone')); return; }
+    const tgt = remaining[Math.floor(Math.random() * remaining.length)];
+    const firstKey = tgt.cells[0];
+    const cell = document.querySelector(`.ws-cell[data-key="${firstKey}"]`);
+    if (cell) {
+      cell.classList.add('ws-hint');
+      setTimeout(() => { const c2 = document.querySelector(`.ws-cell[data-key="${firstKey}"]`); if (c2) c2.classList.remove('ws-hint'); }, 2200);
+    }
+    const wEl = document.getElementById('ws-word-' + _ws.targets.indexOf(tgt));
+    if (wEl) { wEl.classList.add('ws-word-hinted'); setTimeout(() => wEl.classList.remove('ws-word-hinted'), 2200); }
   }
 
   let _wsStartCell = null;
@@ -36055,7 +36201,7 @@
       el.classList.add('quiz-correct-pop');
       trScore++; addXp(10);
       recordWordSeen(correct);
-      setTimeout(() => { trRound++; renderTranslate(); }, 700);
+      setTimeout(() => { trRound++; renderTranslate(); }, 1500);
     } else {
       el.style.background = 'var(--bad-bg)';
       el.style.borderColor = 'var(--bad-line)';
@@ -36066,7 +36212,8 @@
           s.style.borderColor = 'var(--ok-ink)';
         }
       }
-      setTimeout(() => { trRound++; renderTranslate(); }, 1200);
+      // ошибка — ждём кнопку «Дальше», чтобы успеть увидеть верный ответ (зелёный)
+      quizNextButton(() => { trRound++; renderTranslate(); });
     }
   }
 
@@ -36233,7 +36380,7 @@
           </div>
         `).join('')}
       </div>
-      <div id="pt-why" style="text-align:center; font-size:12px; color:var(--soft); margin-top:14px; min-height:36px; line-height:1.5;"></div>
+      <div id="pt-why" style="text-align:center; font-size:14px; color:var(--soft); margin-top:14px; min-height:44px; line-height:1.55;"></div>
     `);
   }
   function pickParticle(el, picked) {
@@ -36251,7 +36398,7 @@
       el.style.borderColor = 'var(--ok-ink)';
       el.classList.add('quiz-correct-pop');
       ptScore++; addXp(6);
-      setTimeout(() => { ptRound++; renderParticles(); }, 1600);
+      setTimeout(() => { ptRound++; renderParticles(); }, 2200);
     } else {
       el.style.background = 'var(--bad-bg)';
       el.style.borderColor = 'var(--bad-line)';
@@ -36262,7 +36409,8 @@
           s.style.borderColor = 'var(--ok-ink)';
         }
       }
-      setTimeout(() => { ptRound++; renderParticles(); }, 2600);
+      // ошибка — ждём кнопку «Дальше», чтобы успеть прочитать разбор «почему»
+      quizNextButton(() => { ptRound++; renderParticles(); });
     }
   }
 
