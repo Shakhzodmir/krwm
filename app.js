@@ -397,6 +397,14 @@
 
     // ── Чат и статусы ──
     'chat.online':   { ru: 'в сети', en: 'online', uz: 'onlayn' },
+    'chat.copy':     { ru: 'Копировать', en: 'Copy', uz: 'Nusxalash' },
+    'chat.forward':  { ru: 'Переслать', en: 'Forward', uz: 'Yuborish' },
+    'chat.copied':   { ru: 'Скопировано 📋', en: 'Copied 📋', uz: 'Nusxalandi 📋' },
+    'chat.copyFail': { ru: 'Не удалось скопировать', en: 'Copy failed', uz: 'Nusxalab boʻlmadi' },
+    'chat.forwardTo':{ ru: 'Переслать кому', en: 'Forward to', uz: 'Kimga yuborish' },
+    'chat.noFriends':{ ru: 'Пока некому переслать — добавь друзей 🌸', en: 'No one to forward to yet — add friends 🌸', uz: 'Hozircha yuborish uchun doʻst yoʻq 🌸' },
+    'chat.fwdPrefix':{ ru: '↪️ Переслано от {name}:', en: '↪️ Forwarded from {name}:', uz: '↪️ {name}dan yuborilgan:' },
+    'chat.forwarded':{ ru: 'Переслано ✓', en: 'Forwarded ✓', uz: 'Yuborildi ✓' },
     'chat.offline':  { ru: 'не в сети', en: 'offline', uz: 'oflayn' },
     'chat.lastSeen': { ru: 'был(а) в сети {time}', en: 'last seen {time}', uz: 'oxirgi marta {time}' },
     'chat.typing':   { ru: 'печатает', en: 'typing', uz: 'yozmoqda' },
@@ -846,6 +854,7 @@
     'quiz.correctSave': { ru: '맞아요! Верно 🌸 ', en: '맞아요! Correct 🌸 ', uz: '맞아요! Toʻgʻri 🌸 ' },
     'profile.photoUpdated': { ru: 'Фото обновлено 📷', en: 'Photo updated 📷', uz: 'Rasm yangilandi 📷' },
     'plan.reqSentMadie': { ru: 'Заявка отправлена Мади 💌', en: 'Request sent to Madie 💌', uz: 'Soʻrov Madiega yuborildi 💌' },
+    'plan.autoReply': { ru: 'Здравствуйте! 🌸 Вы выбрали тариф «{name}». Я помогу вам оформить подписку — напишите мне в личный Telegram: {tg} 💛', en: 'Hello! 🌸 You picked the «{name}» plan. I\'ll help you set up the subscription — message me on Telegram: {tg} 💛', uz: 'Assalomu alaykum! 🌸 Siz «{name}» tarifini tanladingiz. Obunani rasmiylashtirishga yordam beraman — Telegramga yozing: {tg} 💛' },
     'social.reqSent':    { ru: 'Заявка отправлена 🌸', en: 'Request sent 🌸', uz: 'Soʻrov yuborildi 🌸' },
     'social.nowFriends': { ru: 'Теперь вы друзья 💗', en: 'You’re friends now 💗', uz: 'Endi doʻstsizlar 💗' },
     'push.alreadyOn': { ru: 'Уведомления уже включены ✓', en: 'Notifications are already on ✓', uz: 'Bildirishnomalar allaqachon yoqilgan ✓' },
@@ -5786,6 +5795,27 @@
       <div class="plan-footnote">${t('ui.058')}</div>`;
   }
 
+  // Автоответ «от Мади» на заявку тарифа: пишем сообщение в тот же чат от имени
+  // админа (from = adminUid) — приветствие, тариф и личный Telegram. Небольшая
+  // задержка перед вызовом создаёт эффект живого ответа. Просьба пользователя 09.07.
+  async function _sendPlanAutoReply(adminUid, adminName, planName) {
+    if (typeof _db === 'undefined') return;
+    const me = myUid();
+    if (!me || me === 'guest') return;
+    const chatId = chatIdFor(me, adminUid);
+    const text = t('plan.autoReply', { name: planName, tg: KM_TELEGRAM_URL });
+    const now = Date.now();
+    const newRef = _db.ref(`chats/${chatId}/messages`).push();
+    const updates = {};
+    updates[`chats/${chatId}/messages/${newRef.key}`] = { from: adminUid, fromName: adminName, text, at: now, auto: true };
+    updates[`chats/${chatId}/meta/lastMessage`] = text.slice(0, 140);
+    updates[`chats/${chatId}/meta/lastAt`] = now;
+    updates[`chats/${chatId}/meta/lastFrom`] = adminUid;
+    updates[`chats/${chatId}/meta/lastFromName`] = adminName;
+    // Свой unreadFrom не бампаем — ученица уже в этом чате, сразу увидит и прочитает.
+    try { await _db.ref().update(updates); } catch (_) {}
+  }
+
   // Выбор тарифа: free — сразу; платный — заявка Мади в чат (без оплат в клиенте)
   async function selectPlan(id) {
     if (id === 'free') {
@@ -5812,6 +5842,8 @@
       switchScreen('social');
       openChat(adminUid, adminInfo.name || 'Мади');
       toast(t('plan.reqSentMadie'), 'var(--sage)');
+      // Автоответ «от Мади» с Telegram-ссылкой — через ~1.3с, как живой ответ.
+      setTimeout(() => { _sendPlanAutoReply(adminUid, adminInfo.name || 'Мади', p.name); }, 1300);
     } catch (e) {
       console.warn(e);
       toast(t('ui.064'));
@@ -5843,7 +5875,7 @@
   // Версия сборки: держать В РУЧНУЮ синхронной с ?v= в index.html при каждом деплое
   // (те же 3 места — stylesheet/preload/script). Используется только для попапа
   // «доступно обновление» ниже — сама загрузка кода по-прежнему идёт через ?v=.
-  const APP_VERSION = '20260709d';
+  const APP_VERSION = '20260709e';
   function showUpdateAvailableModal() {
     if (document.getElementById('update-avail-modal')) return;
     const m = document.createElement('div');
@@ -6672,6 +6704,20 @@
     wire(`users/${me}/inbox`,    val => { _inboxCache    = val; if (isAdmin()) adminAutoAcceptRequests(val); renderFriendsAndChat(); updateChatBadges(); processReferralRewards(); });
     wire(`users/${me}/outgoing`, val => { _outgoingCache = val; if (document.getElementById('add-friend-modal')) filterAddFriend(); });
     wire(`users/${me}/unreadFrom`, val => { handleUnreadFromUpdate(val); });
+    // Живой лёгкий слушатель сообщества: только meta/lastAt (одно число, НЕ members и
+    // НЕ сообщения — трафик минимален). При новом сообщении дочитываем lastFrom и
+    // обновляем бейдж вкладки «Общение», чтобы «новое» было видно, не заходя в чат.
+    const commLaRef = _db.ref(`chats/${COMMUNITY_GID}/meta/lastAt`);
+    const commLaH = async snap => {
+      const lastAt = Number(snap.val()) || 0;
+      let lastFrom = '';
+      try { lastFrom = (await _db.ref(`chats/${COMMUNITY_GID}/meta/lastFrom`).once('value')).val() || ''; } catch (_) {}
+      _chatMetaCache[COMMUNITY_GID] = Object.assign({}, _chatMetaCache[COMMUNITY_GID] || {}, { lastAt, lastFrom });
+      updateChatBadges();
+      if (document.getElementById('screen-social')?.classList.contains('active')) renderFriendsAndChat();
+    };
+    commLaRef.on('value', commLaH);
+    _friendsListenerOffs.push(() => commLaRef.off('value', commLaH));
   }
 
   // Ключ из unreadFrom «виден» в списке чатов: сообщество, моя группа, друг,
@@ -6751,7 +6797,10 @@
     const unreadCount = Object.keys(_unreadFromCache || {})
       .filter(_isVisibleChatKey)
       .reduce((a, uid) => a + unreadCountFor(uid), 0);
-    const total = requestsCount + unreadCount;
+    // Сообщество не ведёт веерный unread-счётчик (чат большой) — добавляем его как
+    // единицу «есть новое», иначе на вкладке «Общение» не видно новых сообщений
+    // сообщества, пока туда не зайдёшь (отзыв 09.07).
+    const total = requestsCount + unreadCount + (_communityHasNew() ? 1 : 0);
     document.querySelectorAll('.nav-item[data-screen="social"]').forEach(navItem => {
       let badge = navItem.querySelector('.profile-nav-badge');
       if (total > 0) {
@@ -6865,10 +6914,25 @@
   // строка рендерится отдельно поверх списка у ВСЕХ, веерных unread-записей нет
   // (сообщество большое) — «новое» считается локально от communityReadAt.
   const COMMUNITY_GID = 'g_community';
-  function communityRowHtml() {
+  // Личный Telegram Мади — кнопка в шапке чата с ней + в автоответе на заявку тарифа.
+  const KM_TELEGRAM_URL = 'https://t.me/mabdullaeva33';
+  // «Новое» в сообществе считаем локально (веерных unread-записей нет — чат большой).
+  // Сравниваем по СЕРВЕРНОМУ времени последнего сообщения (meta.lastAt), а не по
+  // Date.now(): раньше «прочитано» писалось часами моего устройства, а «новое» —
+  // часами другого ученика, и при расхождении часов «new» не гас (отзыв 09.07).
+  // И не считаем новым СВОЁ последнее сообщение (lastFrom === me).
+  function _communityHasNew() {
     const meta = _chatMetaCache[COMMUNITY_GID] || {};
     const lastRead = UStore.get('communityReadAt', 0) || 0;
-    const hasNew = !!(meta.lastAt && meta.lastAt > lastRead);
+    return !!(meta.lastAt && meta.lastAt > lastRead && meta.lastFrom && meta.lastFrom !== myUid());
+  }
+  function _markCommunityRead() {
+    const meta = _chatMetaCache[COMMUNITY_GID] || {};
+    try { UStore.set('communityReadAt', meta.lastAt || Date.now()); } catch (_) {}
+  }
+  function communityRowHtml() {
+    const meta = _chatMetaCache[COMMUNITY_GID] || {};
+    const hasNew = _communityHasNew();
     const preview = meta.lastMessage
       ? `${meta.lastFromName ? escHtml(meta.lastFromName) + ': ' : ''}${escHtml(meta.lastMessage)}`
       : t('comm.preview');
@@ -6902,7 +6966,7 @@
         metaRef.child('members/' + me).set(true).catch(() => {});
       }
     } catch (_) {}
-    try { UStore.set('communityReadAt', Date.now()); } catch (_) {}
+    _markCommunityRead();
     openGroupChat(COMMUNITY_GID, t('comm.title'));
   }
 
@@ -7592,6 +7656,7 @@
     const showRemoveBtn = !isGroup && !isAdmin();
     // Seed from cache so header doesn't flash empty before Firebase responds
     const cached = (!isGroup && _usersDirCache && _usersDirCache[key]) || {};
+    const buddyIsAdmin = !isGroup && !!(cached && cached.isAdmin); // чат с Мади → кнопка Telegram
     const initialAvatar = cached.avatar || '';
     const initialLastSeen = cached.lastSeen || 0;
     _chatBuddyLastSeen = initialLastSeen;
@@ -7612,6 +7677,7 @@
             <div class="chat-buddy-name">${escHtml(title)}</div>
             <div id="chat-buddy-status" class="chat-buddy-status">${statusInitial}</div>
           </div>
+          ${buddyIsAdmin ? `<a href="${KM_TELEGRAM_URL}" target="_blank" rel="noopener" class="chat-mini-btn chat-tg-btn" aria-label="Telegram" title="Telegram Мади"><i class="fa-brands fa-telegram"></i></a>` : ''}
           ${isGroup ? '<button id="chat-group-menu-btn" class="chat-mini-btn chat-mini-neutral" aria-label="' + t('ui.104') + '" title="' + t('ui.104') + '"><i class="fa-solid fa-ellipsis"></i></button>' : ''}
           ${showRemoveBtn ? '<button id="chat-remove-friend-btn" class="chat-mini-btn" aria-label="' + t('ui.105') + '" title="' + t('ui.105') + '"><i class="fa-solid fa-user-xmark"></i></button>' : ''}
           <div id="chat-buddy-avatar" class="${avatarClass}" ${avatarData} style="${avatarStyle}">${avatarContent}</div>
@@ -7833,7 +7899,7 @@
   function closeChat() {
     stopTyping(); // clear my typing flag before tearing down
     // Выход из чата сообщества = «прочитано до этого момента» (значок new гаснет)
-    if (_chatCurrentId === COMMUNITY_GID) { try { UStore.set('communityReadAt', Date.now()); } catch (_) {} }
+    if (_chatCurrentId === COMMUNITY_GID) { _markCommunityRead(); updateChatBadges(); }
     detachChatListener();
     detachChatBuddyListener();
     _chatCurrentId = null;
@@ -8079,6 +8145,8 @@
         </div>
         <div class="msg-menu-quote"><b>${escHtml(m.fromName || '')}</b><br>${escHtml((m.text || '').slice(0, 140))}</div>
         <button class="btn btn-ghost btn-block" style="margin-top:10px;" onclick="startReply('${mid}'); this.closest('.modal-bg').remove();"><i class="fa-solid fa-reply"></i> ${t('ui.122')}</button>
+        <button class="btn btn-ghost btn-block" style="margin-top:8px;" onclick="copyChatMessage('${mid}'); this.closest('.modal-bg').remove();"><i class="fa-solid fa-copy"></i> ${t('chat.copy')}</button>
+        <button class="btn btn-ghost btn-block" style="margin-top:8px;" onclick="forwardChatMessage('${mid}'); this.closest('.modal-bg').remove();"><i class="fa-solid fa-share"></i> ${t('chat.forward')}</button>
         ${mine ? `<button class="btn btn-ghost btn-block" style="margin-top:8px; color:var(--bad-ink); border-color:rgba(179,58,74,.25);" onclick="deleteChatMessage('${mid}'); this.closest('.modal-bg').remove();"><i class="fa-solid fa-trash"></i> ${t('ui.018')}</button>` : ''}
       </div>`;
     document.body.appendChild(sheet);
@@ -8092,6 +8160,66 @@
     try { if (cur === emoji) await ref.remove(); else await ref.set(emoji); } catch (_) {}
   }
   function quickReact(mid) { reactMessage(mid, '❤️'); }
+
+  // Копировать текст сообщения (clipboard API с фолбэком на execCommand для старых WebView).
+  function copyChatMessage(mid) {
+    const m = _lastChatMsgs[mid]; if (!m) return;
+    const text = m.text || '';
+    const done = () => toast(t('chat.copied'), 'var(--sage)');
+    const fallback = () => {
+      try {
+        const ta = document.createElement('textarea');
+        ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+        document.body.appendChild(ta); ta.focus(); ta.select();
+        document.execCommand('copy'); ta.remove(); done();
+      } catch (_) { toast(t('chat.copyFail')); }
+    };
+    try {
+      if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(done).catch(fallback);
+      else fallback();
+    } catch (_) { fallback(); }
+  }
+
+  // Переслать сообщение: лист выбора (сообщество + друзья), затем отправка с пометкой.
+  let _forwardMid = null;
+  function forwardChatMessage(mid) {
+    const m = _lastChatMsgs[mid]; if (!m) return;
+    _forwardMid = mid;
+    const me = myUid();
+    const rows = [`<button class="fwd-row" onclick="doForward('${COMMUNITY_GID}', true)"><span class="fwd-av" style="background:var(--grad-coral); color:#fff;">🌍</span><span class="fwd-name">${t('comm.title')}</span></button>`];
+    Object.keys(_friendsCache || {}).forEach(uid => {
+      if (uid === me) return;
+      const dir = (_usersDirCache && _usersDirCache[uid]) || {};
+      const name = dir.name || 'Друг';
+      const av = dir.avatar
+        ? `<span class="fwd-av" style="background:url(${dir.avatar}) center/cover no-repeat;"></span>`
+        : `<span class="fwd-av">${escHtml(name.charAt(0).toUpperCase())}</span>`;
+      rows.push(`<button class="fwd-row" onclick="doForward('${escHtml(uid)}', false)">${av}<span class="fwd-name">${escHtml(name)}</span></button>`);
+    });
+    const sheet = document.createElement('div');
+    sheet.className = 'modal-bg';
+    sheet.onclick = e => { if (e.target === sheet) sheet.remove(); };
+    sheet.innerHTML = `
+      <div class="modal-sheet" style="border-radius:24px 24px 0 0; padding:16px 16px calc(20px + env(safe-area-inset-bottom,0px)); max-height:70vh; overflow-y:auto;">
+        <div class="fwd-title">${t('chat.forwardTo')}</div>
+        <div class="fwd-list">${rows.join('')}${rows.length <= 1 ? `<div style="text-align:center; color:var(--soft); font-size:12px; padding:12px;">${t('chat.noFriends')}</div>` : ''}</div>
+      </div>`;
+    document.body.appendChild(sheet);
+  }
+  async function doForward(key, isGroup) {
+    const m = _lastChatMsgs[_forwardMid];
+    document.querySelectorAll('.modal-bg').forEach(x => x.remove());
+    if (!m) return;
+    const text = t('chat.fwdPrefix', { name: m.fromName || '' }) + '\n' + (m.text || '');
+    try {
+      if (isGroup) await sendGroupMessage(key, text);
+      else {
+        const dir = (_usersDirCache && _usersDirCache[key]) || {};
+        await sendChatMessage(key, dir.name || 'Друг', text);
+      }
+      toast(t('chat.forwarded'), 'var(--sage)');
+    } catch (_) { toast(t('ui.126')); }
+  }
 
   function startReply(mid) {
     const m = _lastChatMsgs[mid]; if (!m) return;
@@ -8195,6 +8323,16 @@
     }
   }
 
+  // Кликабельные ссылки/юзернеймы в сообщениях (как в Telegram): экранируем текст,
+  // затем оборачиваем URL и t.me-ссылки в <a>. Нужно, чтобы Telegram-ссылка в
+  // автоответе на заявку тарифа была кликабельной (просьба 09.07).
+  function linkifyChat(text) {
+    const esc = escHtml(text || '');
+    return esc.replace(/(https?:\/\/[^\s<]+|(?:www\.|t\.me\/)[^\s<]+)/g, (u) => {
+      const href = /^https?:\/\//.test(u) ? u : 'https://' + u;
+      return `<a href="${href}" target="_blank" rel="noopener" class="chat-link">${u}</a>`;
+    });
+  }
   function renderChatMessages(msgs) {
     const body = document.getElementById('chat-body');
     if (!body) return;
@@ -8271,7 +8409,7 @@
           <div class="chat-bubble ${mine ? 'mine' : 'theirs'}${jumbo}${enter}" data-mid="${m.key}">
             ${senderHtml}
             ${replyHtml}
-            <div class="chat-bubble-text">${escHtml(m.text)}</div>
+            <div class="chat-bubble-text">${linkifyChat(m.text)}</div>
             <div class="chat-bubble-meta"><span class="chat-bubble-time">${time}</span>${tick}</div>
             ${reactHtml}
           </div>
@@ -36969,11 +37107,11 @@
       <div style="display:flex; flex-wrap:wrap; gap:6px; justify-content:center; margin-bottom:18px; min-height:46px;">${slots}</div>
       <div style="font-size:10px; color:var(--soft); letter-spacing:.16em; margin-bottom:8px; text-align:center;">${t('ui.519')}</div>
       <div style="display:flex; flex-wrap:wrap; gap:8px; justify-content:center; margin-bottom:14px;">${tilesHtml}</div>
-      <div style="display:flex; gap:8px;">
+      <div style="display:flex; gap:8px;" id="sentence-actions">
         <button onclick="resetSentence()" class="btn btn-ghost" style="flex:1;">↻ ${t('ui.520')}</button>
         <button onclick="checkSentence()" class="btn btn-primary" style="flex:1.5;">${t('ui.297')}</button>
       </div>
-      <div style="text-align:center; font-size:11px; color:var(--soft); margin-top:10px;">${t('ui.521')}</div>
+      <div id="sentence-why" style="text-align:center; font-size:14px; color:var(--soft); margin-top:12px; min-height:44px; line-height:1.55;">${t('ui.521')}</div>
     `);
   }
   function pickSentenceTile(i) {
@@ -36986,13 +37124,24 @@
   function checkSentence() {
     const item = sntPool[sntRound];
     if (sntPicked.length !== item.ko.length) { toast(t('ui.501')); return; }
-    if (sntPicked.join(' ') === item.ko.join(' ')) {
+    const guess = sntPicked.join(' ');
+    const correct = item.ko.join(' ');
+    const why = document.getElementById('sentence-why');
+    // Та же структура, что в «Собери слово»: блокируем повторные нажатия, разбор
+    // с правильным ответом в теле, при верном — озвучиваем фразу; при ошибке —
+    // кнопка «Дальше» вместо авто-перехода (просьба 09.07).
+    document.querySelectorAll('#game-modal .hangul-key, #sentence-actions .btn').forEach(b => {
+      b.disabled = true; b.style.pointerEvents = 'none'; b.style.opacity = '.5';
+    });
+    if (guess === correct) {
       sntScore++; addXp(20);
-      toast(`정답! ${item.ko.join(' ')} ✨`, 'var(--sage)');
+      if (why) why.innerHTML = `<span class="ko" style="color:var(--ok-ink); font-weight:800; font-size:17px;">정답!</span> <span class="ko" style="color:var(--berry); font-weight:700;">${escHtml(correct)}</span> — ${escHtml(item.ru)} ✨`;
+      try { if (typeof getSettings !== 'function' || getSettings().sound) playSyllable(correct); } catch (_) {}
+      setTimeout(() => { sntRound++; renderSentence(); }, 1800);
     } else {
-      toast(t('ui.522', {answer: item.ko.join(' ')}));
+      if (why) why.innerHTML = `<span class="ko" style="color:var(--bad-ink); font-weight:700;">${escHtml(guess)}</span> ✗<br><span style="font-size:12.5px;">${t('build.answerIs')} <span class="ko" style="color:var(--berry); font-weight:800;">${escHtml(correct)}</span> — ${escHtml(item.ru)}</span>`;
+      quizNextButton(() => { sntRound++; renderSentence(); });
     }
-    setTimeout(() => { sntRound++; renderSentence(); }, 1300);
   }
 
   // ── Game 9: Dictation (Слушай и пиши) ──
