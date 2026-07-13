@@ -959,7 +959,7 @@
     'games.sec.cross':     { ru: 'Кроссворд', en: 'Crossword', uz: 'Krossvord' },
     'games.sec.cross.m':   { ru: 'головоломки', en: 'puzzles', uz: 'boshqotirmalar' },
     'games.sec.tr':        { ru: 'Перевод и грамматика', en: 'Translation & grammar', uz: 'Tarjima va grammatika' },
-    'games.sec.tr.m':      { ru: '4 игры', en: '4 games', uz: '4 ta oʻyin' },
+    'games.sec.tr.m':      { ru: '5 игр', en: '5 games', uz: '5 ta oʻyin' },
     'games.sec.music':     { ru: 'Музыка', en: 'Music', uz: 'Musiqa' },
     'games.sec.music.m':   { ru: 'бонусная', en: 'bonus', uz: 'bonus' },
     'games.sec.new':       { ru: 'Новинки', en: 'New', uz: 'Yangiliklar' },
@@ -3919,13 +3919,13 @@
   // Кнопка быстрого сохранения слова/фразы/грамматики в личный словарик.
   // Иконка отражает текущее состояние; toggleMyWord перерисовывает её при клике.
   // event.stopPropagation — чтобы не сработал onclick карточки (озвучка).
-  function lessonSaveHeart(ko, ru, translit, emoji, source, cls) {
+  function lessonSaveHeart(ko, ru, translit, emoji, source, cls, type) {
     if (!ko) return '';
     const saved = isMyWord(ko);
     const icon = saved
       ? '<i class="fa-solid fa-heart" style="color:var(--coral);"></i>'
       : '<i class="fa-regular fa-heart"></i>';
-    return `<button type="button" class="lsave-btn ${cls || ''}" aria-label="${t('ui.489')}" title="${t('ui.490')}" onclick="event.stopPropagation(); toggleMyWord('${jsStr(ko)}','${jsStr(ru || '')}','${jsStr(translit || '')}','${jsStr(emoji || '🌸')}','${source || 'lesson'}', this)">${icon}</button>`;
+    return `<button type="button" class="lsave-btn ${cls || ''}" aria-label="${t('ui.489')}" title="${t('ui.490')}" onclick="event.stopPropagation(); toggleMyWord('${jsStr(ko)}','${jsStr(ru || '')}','${jsStr(translit || '')}','${jsStr(emoji || '🌸')}','${source || 'lesson'}', this${type ? `, '${type}'` : ''})">${icon}</button>`;
   }
 
   function renderLessonSlide(lesson, slide) {
@@ -6051,7 +6051,7 @@
   // Версия сборки: держать В РУЧНУЮ синхронной с ?v= в index.html при каждом деплое
   // (те же 3 места — stylesheet/preload/script). Используется только для попапа
   // «доступно обновление» ниже — сама загрузка кода по-прежнему идёт через ?v=.
-  const APP_VERSION = '20260713a';
+  const APP_VERSION = '20260713c';
   function showUpdateAvailableModal() {
     if (document.getElementById('update-avail-modal')) return;
     const m = document.createElement('div');
@@ -11289,6 +11289,14 @@
   function _wForChoice(w) { return _koLen((w && w.ko) || '') <= 16; }                      // влезает в карточку-вариант (слово или короткая фраза)
   // Лексика из «Самостоятельного изучения», пригодная для игр: чистый KO-RU нужного уровня.
   const _SS_KO_OK = /^[가-힣\s?!.,~]+$/; // только хангыль-слоги, пробелы и базовые знаки (не правила/символы ≈ ↔ / ( ))
+  // Класс бага «вариант с вшитым ответом» (отзыв ученицы): ru-поле уроков бывает
+  // с подсказкой спряжения («петь → 노래해요») — в карточках/SRS это уместно, а в
+  // вариантах и подсказках игр выдаёт ответ. Глосс = часть до стрелки/черты.
+  // Вторая половина класса: в словарике бывают записи с НЕкорейским ko (грамматика
+  // «-고자 = -기 위해(서)», пары «가다 ↔ 오다», русские запросы из ИИ-словаря) — в
+  // игровой пул пускаем только чистый корейский ko; в самом словарике всё остаётся.
+  function _gameGloss(ru) { return String(ru || '').split(/[→↔|]/)[0].trim(); }
+  function _wGameClean(w) { return !!(w && w.ko && _SS_KO_OK.test(String(w.ko).trim()) && _gameGloss(w.ru)); }
   function ssGameWords(maxRank) {
     const out = [];
     SELFSTUDY.forEach(sec => {
@@ -11313,7 +11321,9 @@
   }
   function gameWordPool() {
     if (gameSource() === 'mine') {
-      const mine = myWordsPoolRaw().map(w => ({ ko: w.ko, ru: w.ru, translit: w.translit || '', emoji: w.emoji || '🌸', example: '' }));
+      // Тот же фильтр чистоты, что и в общем пуле: сохранённая грамматика/пары
+      // с «=»/«↔» остаются в словарике, но в игровые варианты не идут.
+      const mine = myWordsPoolRaw().filter(_wGameClean).map(w => ({ ko: w.ko, ru: w.ru, translit: w.translit || '', emoji: w.emoji || '🌸', example: '' }));
       if (mine.length >= 4) return mine;
     }
     return _lessonsWordPool();
@@ -11327,6 +11337,7 @@
     const seen = new Set(); const out = [];
     const add = w => {
       if (!w || !w.ko || !w.ru || seen.has(w.ko)) return;
+      if (!_wGameClean(w)) return; // не-корейский ko (грамматика «-고자 = …», «가다 ↔ 오다», кириллица) — не для игр
       seen.add(w.ko);
       out.push({ ko: w.ko, ru: w.ru, translit: w.translit || '', emoji: w.emoji || '🌸', example: w.example || '' });
     };
@@ -27418,7 +27429,19 @@
   function lwOpenLesson(lid) { _lwState.view = 'words'; _lwState.lesson = lid; renderLessonWords(); window.scrollTo(0, 0); }
   // Урок «дошли» = пройден или текущий в своём модуле (у админа — все). Слова непройденных
   // уроков не показываем (слова прибавляются по мере прохождения — см. пул игр).
-  function _lwLessonReached(mid, lid) { return isAdmin() || _moduleUnlockedIds(mid).has(lid); }
+  // У нетронутого модуля прогресса ещё нет вовсе (_moduleUnlockedIds пуст) — текущим
+  // считаем первый урок, как это делает getLessonProgress: иначе у новой ученицы
+  // в «Словах из уроков» был заперт даже самый первый урок. Вызывается только для
+  // РАЗБЛОКИРОВАННЫХ модулей, поэтому в пул игр залоченные модули не протекают.
+  function _lwReachedIds(mid) {
+    const ids = _moduleUnlockedIds(mid);
+    if (!ids.size) {
+      const first = ((LESSON_MODULES[mid] || {}).lessons || [])[0];
+      if (first) ids.add(first.id);
+    }
+    return ids;
+  }
+  function _lwLessonReached(mid, lid) { return isAdmin() || _lwReachedIds(mid).has(lid); }
   function lwSaveAllWords() {
     const mod = LESSON_MODULES[_lwState.mod]; if (!mod) return;
     const lesson = (mod.lessons || []).find(l => l.id === _lwState.lesson); if (!lesson) return;
@@ -27442,7 +27465,7 @@
       const lessons = mod.lessons || [];
       const wordCount = lessons.reduce((n, l) => n + (Array.isArray(l.vocab) ? l.vocab.length : 0), 0);
       const locked = !admin && !isModuleUnlocked(id);
-      const reached = admin ? lessons.length : lessons.filter(l => _moduleUnlockedIds(id).has(l.id)).length;
+      const reached = admin ? lessons.length : (locked ? 0 : lessons.filter(l => _lwReachedIds(id).has(l.id)).length);
       const onClick = locked ? `toast('${t('lessons.lockMsg', { n: _prevModuleNum(id) }).replace(/'/g, "\\'")}')` : `lwOpenMod('${id}')`;
       return `<button type="button" class="kc-card ${locked ? 'kc-locked' : ''}" onclick="${onClick}">
         <span class="kc-card-emoji" aria-hidden="true">${locked ? '🔒' : '🧩'}</span>
@@ -27502,15 +27525,15 @@
     const lesson = (mod.lessons || []).find(l => l.id === _lwState.lesson);
     if (!lesson) { _lwState.view = 'lessons'; return void _lwRenderLessons(hub); }
     const vocab = (Array.isArray(lesson.vocab) ? lesson.vocab : []).filter(w => w && w.ko);
+    // Компактные плитки в 2 колонки (в один ряд список выходил слишком длинным):
+    // тап по плитке = озвучка (как карточки в уроках), сердечко в углу со stopPropagation.
     const rows = vocab.map(w => {
       const ko = w.ko || '', ru = w.ru || '', tr = w.translit || '', emoji = w.emoji || '🌸';
-      return `<div style="display:flex; align-items:center; gap:10px; padding:11px 13px; border-radius:12px; border:1px solid var(--line); background:var(--card);">
-        <button type="button" onclick="playSyllable('${jsStr(ko)}', this)" aria-label="${t('a11y.listen') || 'Озвучить'}" style="flex-shrink:0; width:34px; height:34px; border-radius:50%; border:1px solid var(--line); background:var(--paper); color:var(--coral); cursor:pointer; font-size:12px;"><i class="fa-solid fa-volume-high"></i></button>
-        <div style="flex:1; min-width:0;">
-          <div class="ko" style="font-size:16px; font-weight:700; color:var(--berry);">${escHtml(ko)}${tr ? ` <span style="font-size:11px; font-weight:500; color:var(--soft);">[${escHtml(tr)}]</span>` : ''}</div>
-          ${ru ? `<div style="font-size:12.5px; color:var(--soft); margin-top:2px;">${escHtml(ru)}</div>` : ''}
-        </div>
-        ${lessonSaveHeart(ko, ru, tr, emoji, 'lesson')}
+      return `<div role="button" tabindex="0" onclick="playSyllable('${jsStr(ko)}', this)" onkeydown="if(event.key==='Enter'){playSyllable('${jsStr(ko)}', this)}" aria-label="${t('a11y.listen') || 'Озвучить'}: ${escHtml(ko)}" style="position:relative; min-width:0; padding:10px 12px; border-radius:12px; border:1px solid var(--line); background:var(--card); cursor:pointer;">
+        <div class="ko" style="font-size:15px; font-weight:700; color:var(--berry); padding-right:24px; word-break:keep-all; overflow-wrap:anywhere;"><i class="fa-solid fa-volume-high" style="font-size:9.5px; color:var(--coral); margin-right:4px;"></i>${escHtml(ko)}</div>
+        ${tr ? `<div style="font-size:10.5px; color:var(--soft); margin-top:1px;">[${escHtml(tr)}]</div>` : ''}
+        ${ru ? `<div style="font-size:12px; color:var(--soft); margin-top:3px; line-height:1.35;">${escHtml(ru)}</div>` : ''}
+        <div style="position:absolute; top:5px; right:5px;">${lessonSaveHeart(ko, ru, tr, emoji, 'lesson')}</div>
       </div>`;
     }).join('');
     hub.innerHTML = `
@@ -27519,7 +27542,7 @@
         <p class="rd-intro-txt">${t('lw.lesson')} ${lesson.num || ''} · ${escHtml(lesson.title || '')} — ${vocab.length} ${t('lw.words')}</p>
       </div>
       ${vocab.length ? `<button type="button" onclick="lwSaveAllWords()" class="btn btn-ghost btn-block" style="margin-bottom:14px;"><i class="fa-regular fa-heart"></i> ${t('lw.saveAll')}</button>` : ''}
-      <div style="display:grid; gap:8px;">${rows || `<div style="text-align:center; color:var(--soft); font-size:12.5px; padding:14px;">${t('lw.noWords')}</div>`}</div>`;
+      <div style="display:grid; grid-template-columns:repeat(2, minmax(0,1fr)); gap:8px;">${rows || `<div style="grid-column:1/-1; text-align:center; color:var(--soft); font-size:12.5px; padding:14px;">${t('lw.noWords')}</div>`}</div>`;
   }
 
   // ───────────── «Звонок с Комдори» (уровень 0: сценарный, TTS, тап-путь без микрофона) ─────────────
@@ -27946,10 +27969,12 @@
     if (!ty) { _tdState.typeId = null; tdRender(); return; }
     const secKo = _tdState.section === 'writing' ? '쓰기' : _tdState.section === 'listening' ? '듣기' : '읽기';
     const banks = [];
-    if (ty.grammar)  banks.push({ ico:'📖', title:'Грамматика',      sub:t('ui.190'), rows:ty.grammar });
-    if (ty.vocab)    banks.push({ ico:'📚', title:'Ключевые слова',   sub:t('ui.191'), rows:ty.vocab });
-    if (ty.idioms)   banks.push({ ico:'🪄', title:'Идиомы',          sub:t('ui.192'), rows:ty.idioms });
-    if (ty.keywords) banks.push({ ico:'🔑', title:'Слова-маркеры',   sub:t('ui.193'), rows:ty.keywords });
+    // tp → тип записи в «Моих словах»: грамматика уходит на вкладку «Грамматика»,
+    // идиомы — на «Фразеологизмы»; слова/маркеры классифицируются автоматически.
+    if (ty.grammar)  banks.push({ ico:'📖', title:'Грамматика',      sub:t('ui.190'), rows:ty.grammar,  tp:'grammar' });
+    if (ty.vocab)    banks.push({ ico:'📚', title:'Ключевые слова',   sub:t('ui.191'), rows:ty.vocab,    tp:'' });
+    if (ty.idioms)   banks.push({ ico:'🪄', title:'Идиомы',          sub:t('ui.192'), rows:ty.idioms,   tp:'idiom' });
+    if (ty.keywords) banks.push({ ico:'🔑', title:'Слова-маркеры',   sub:t('ui.193'), rows:ty.keywords, tp:'' });
     const banksHtml = banks.map(b => `
         <div class="topik-rule td-bank">
           <button type="button" class="topik-rule-head" onclick="this.parentElement.classList.toggle('open')">
@@ -27961,7 +27986,7 @@
           <div class="topik-rule-body">
             <div class="td-bank-sub">${b.sub}</div>
             <div class="topik-words">${b.rows.map(r => `
-              <div class="topik-word"><span class="topik-word-ko ko">${r[0]}</span><span class="topik-word-ru">${r[1] || ''}</span>${r[2] ? `<span class="topik-word-ex ko">${r[2]}</span>` : ''}</div>`).join('')}</div>
+              <div class="topik-word"><span class="topik-word-ko ko">${r[0]}</span><span class="topik-word-ru">${r[1] || ''}</span>${r[2] ? `<span class="topik-word-ex ko">${r[2]}</span>` : ''}${lessonSaveHeart(r[0], r[1] || '', '', '🌸', 'topikdeep', 'topik-word-save', b.tp)}</div>`).join('')}</div>
           </div>
         </div>`).join('');
     const real = tdRealExamples(ty);
@@ -28012,7 +28037,7 @@
       questions:[{ q:ex.q, ru:ex.ru, options:ex.options, answer:ex.answer, explain:ex.explain }] };
     let head = '';
     if (block.passage) head += `<div class="td-passage ko">${block.passage}</div>${block.passageRu ? `<div class="td-passage-ru">${block.passageRu}</div>` : ''}`;
-    if (block.sentences) head += `<div class="td-sentences">${block.sentences.map(s => `<div class="td-sentence"><span class="ko">${s[0]}</span>${s[1] ? `<span class="td-sentence-ru">${s[1]}</span>` : ''}${lessonSaveHeart(r[0], r[1] || '', '', '🌸', 'topikdeep', 'topik-word-save')}</div>`).join('')}</div>`;
+    if (block.sentences) head += `<div class="td-sentences">${block.sentences.map(s => `<div class="td-sentence"><span class="ko">${s[0]}</span>${s[1] ? `<span class="td-sentence-ru">${s[1]}</span>` : ''}</div>`).join('')}</div>`;
     if (block.insert) head += `<div class="td-insert"><div class="td-insert-label">&lt;보기&gt;</div><div class="ko">${block.insert.sentence}</div>${block.insert.ru ? `<div class="td-insert-ru">${block.insert.ru}</div>` : ''}</div>`;
     const qs = block.questions.map((q, j) => tdQuestionHtml(q, i, j)).join('');
     return `<div class="td-ex">${head}${qs}${block.src ? `<div class="td-src">${block.src}</div>` : ''}</div>`;
@@ -36030,7 +36055,7 @@
       toast(t('games.src.matchFallback'));
       pool = _lessonsWordPool(); emo = pool.filter(_wHasEmoji);
     }
-    matchData = (emo.length >= 4 ? emo : pool).map(w => ({ word:w.ko, emoji:w.emoji||'🌸', meaning:w.ru }));
+    matchData = (emo.length >= 4 ? emo : pool).map(w => ({ word:w.ko, emoji:w.emoji||'🌸', meaning:_gameGloss(w.ru) }));
     matchTotal = Math.min(scaledRounds(5), matchData.length);
     matchScore = 0; matchRound = 0;
     matchPool = shuffleArr(matchData).slice(0, matchTotal);
@@ -36102,7 +36127,7 @@
   let buildScore = 0, buildRound = 0, buildTotal = 5, buildPool = [], buildPicked = [], buildTiles = [];
   function startBuild(customList) {
     buildCustom = Array.isArray(customList) && customList.length ? customList : null;
-    buildData = (buildCustom || gameWordPool()).filter(_wCompact).map(w => ({ word:w.ko, meaning:w.ru }));
+    buildData = (buildCustom || gameWordPool()).filter(_wCompact).map(w => ({ word:w.ko, meaning:_gameGloss(w.ru) }));
     if (buildData.length < 2) { toast(t('ui.019')); return; }
     buildTotal = Math.min(scaledRounds(5), buildData.length);
     buildScore = 0; buildRound = 0;
@@ -36191,7 +36216,7 @@
   let listenScore = 0, listenRound = 0, listenTotal = 5, listenPool = [];
   function startListen(customList) {
     listenCustom = Array.isArray(customList) && customList.length ? customList : null;
-    listenData = (listenCustom || gameWordPool()).filter(_wForChoice).map(w => ({ word:w.ko, meaning:w.ru }));
+    listenData = (listenCustom || gameWordPool()).filter(_wForChoice).map(w => ({ word:w.ko, meaning:_gameGloss(w.ru) }));
     if (listenData.length < 4) { toast(t('ui.019')); return; }
     listenTotal = Math.min(scaledRounds(5), listenData.length);
     listenScore = 0; listenRound = 0;
@@ -36342,7 +36367,7 @@
   let memCards = [], memFlipped = [], memMatched = 0, memMoves = 0, memPairs = 6;
   function startMemory(customList) {
     memCustom = Array.isArray(customList) && customList.length ? customList : null;
-    memoryData = (memCustom || gameWordPool()).filter(_wShort).map(w => ({ ko:w.ko, ru:w.ru }));
+    memoryData = (memCustom || gameWordPool()).filter(_wShort).map(w => ({ ko:w.ko, ru:_gameGloss(w.ru) }));
     if (memoryData.length < 3) { toast(t('ui.019')); return; }
     // Всегда 8 пар = 16 карточек = ровная сетка 4×4
     memPairs = Math.min(8, memoryData.length);
@@ -36521,7 +36546,7 @@
       maxR = Math.max(maxR, c.r); maxC = Math.max(maxC, c.c);
     }));
     const words = placed.map((p, wi) => ({
-      idx: wi, dir: p.dir, ans: p.ko, clue: p.ru,
+      idx: wi, dir: p.dir, ans: p.ko, clue: _gameGloss(p.ru),
       r: p.cells[0].r, c: p.cells[0].c, num: 0,
       cellKeys: p.cells.map(c => _cwKey(c.r, c.c))
     }));
@@ -36747,7 +36772,7 @@
         }
         if (!ok) continue;
         syl.forEach((s, i) => { grid[cellKeys[i]] = s; });
-        targets.push({ ko: word.ko, ru: word.ru, translit: word.translit || '', cells: cellKeys, found: false });
+        targets.push({ ko: word.ko, ru: _gameGloss(word.ru), translit: word.translit || '', cells: cellKeys, found: false });
         return true;
       }
       return false;
@@ -36879,7 +36904,7 @@
   let trScore = 0, trRound = 0, trTotal = 6, trPool = [];
   function startTranslate(customList) {
     trCustom = Array.isArray(customList) && customList.length ? customList : null;
-    translateData = (trCustom || gameWordPool()).filter(_wForChoice).map(w => ({ ru:w.ru, ko:w.ko }));
+    translateData = (trCustom || gameWordPool()).filter(_wForChoice).map(w => ({ ru:_gameGloss(w.ru), ko:w.ko }));
     if (translateData.length < 4) { toast(t('ui.019')); return; }
     trTotal = Math.min(scaledRounds(6), translateData.length);
     trScore = 0; trRound = 0;
@@ -37058,7 +37083,7 @@
     const ws = shuffleArr(nouns);
     for (let i = 0; rounds.length < ptTotal && ws.length; i++) {
       const w = ws.pop();
-      rounds.push({ kind: 'patchim', ko: w.ko, ru: w.ru, set: PT_SETS[i % PT_SETS.length] });
+      rounds.push({ kind: 'patchim', ko: w.ko, ru: _gameGloss(w.ru), set: PT_SETS[i % PT_SETS.length] });
     }
     ptTotal = rounds.length; // слов совсем мало — играем что есть
     if (ptTotal < 4) { toast(t('ui.019')); return; }

@@ -44,11 +44,11 @@
      вводят анимации из styles.css, поэтому без «мигания»; логотип не трогаем (fanUnfurl). -->
 <style>#intro{position:fixed;inset:0;z-index:999;display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:hidden;cursor:pointer;background:radial-gradient(120% 90% at 50% 35%,#FFFCF8 0%,#FFF4F0 38%,#FBE8EA 78%,#F2D5DA 100%)}#intro>.intro-tagline,#intro>.intro-subline,#intro>.intro-cta{opacity:0}</style>
 
-<link rel="stylesheet" href="styles.css?v=20260713a">
+<link rel="stylesheet" href="styles.css?v=20260713c">
 
 <!-- Предзагрузка тяжёлого JS: скачивание стартует сразу, параллельно с CSS/шрифтами -->
 <link rel="preload" href="assets/textbook/textbook-data.js?v=20260629a" as="script">
-<link rel="preload" href="app.js?v=20260713a" as="script">
+<link rel="preload" href="app.js?v=20260713c" as="script">
 </head>
 
 <body>
@@ -471,21 +471,8 @@
         <div class="games-grid" id="games-fav-grid"></div>
       </div>
 
-      <!-- ✨ Новинки — последние добавленные игры/режимы, всегда первыми в списке -->
+      <!-- ✨ Новинки — «Новинкой» помечаем только самое свежее (сейчас: TOPIK-тренажёры) -->
       <div class="section-head"><div class="left"><div class="rule"></div><span class="title"><span data-i18n="games.sec.new">Новинки</span> <span style="color:var(--gold); margin-left:6px;">✨</span></span></div><span class="meta" data-i18n="games.sec.new.m">только что добавили</span></div>
-      <div class="games-grid">
-        <div onclick="startParticles()" class="game-card-v2 gcv-wide gcv-accent" data-game-key="particles">
-          <span class="gcv-flag" data-i18n="games.flag.new">Новинка</span>
-          <div class="gcv-icon"><div class="gcv-emoji-icon gcv-svg"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg></div></div>
-          <div class="gcv-title" data-i18n="games.c.part">Частицы</div>
-          <div class="gcv-ko ko">조사</div>
-          <div class="gcv-sub" data-i18n="games.c.part.sub">Выбери 은/는 · 이/가 · 을/를 · 에/에서</div>
-          <div class="gcv-foot">
-            <span class="best-score gcv-best">Ещё не играли</span>
-            <span class="gcv-xp">+6 XP</span>
-          </div>
-        </div>
-      </div>
       <div onclick="openTopikPracticeFromGames()" class="topik-exam-card" style="margin-top:8px; cursor:pointer; position:relative;">
         <span class="gcv-flag" data-i18n="games.flag.new">Новинка</span>
         <span class="topik-exam-ico">🎯</span>
@@ -495,53 +482,8 @@
         </div>
         <i class="fa-solid fa-chevron-right topik-exam-arrow"></i>
       </div>
-      <div onclick="openKomdoriCall()" class="topik-exam-card" style="margin-top:8px; cursor:pointer; position:relative;">
-        <span class="gcv-flag" data-i18n="games.flag.new">Новинка</span>
-        <span class="topik-exam-ico">📞</span>
-        <div class="topik-exam-tx">
-          <div class="topik-exam-t" data-i18n="kd.entry.t">Звонок с Комдори</div>
-          <div class="topik-exam-s" data-i18n="kd.entry.s">Поговори с медвежонком по-корейски 🐻</div>
-        </div>
-        <i class="fa-solid fa-chevron-right topik-exam-arrow"></i>
-      </div>
 
-      <!-- Хангыль · 한글 -->
-      <div class="section-head"><div class="left"><div class="rule"></div><span class="title"><span data-i18n="games.sec.hangul">Хангыль</span> <span class="ko" style="color:var(--coral); font-weight:500; margin-left:6px;">한글</span></span></div><span class="meta" data-i18n="games.sec.hangul.m">основа</span></div>
-      <div class="games-grid">
-        <div onclick="switchScreen('hangul')" class="game-card-v2 gcv-wide" data-game-key="hangullab">
-          <div class="gcv-icon"><div class="gcv-emoji-icon ko">가</div></div>
-          <div class="gcv-title">한글 Lab</div>
-          <div class="gcv-ko ko">한글 조합</div>
-          <div class="gcv-sub" data-i18n="games.c.lab.sub">Конструктор слогов</div>
-          <div class="gcv-foot">
-            <span class="gcv-best" data-i18n="games.c.lab.best">Собери · послушай</span>
-            <span class="gcv-xp">🧩</span>
-          </div>
-        </div>
-        <div onclick="startWriting()" class="game-card-v2 gcv-accent" data-game-key="writing">
-          <span class="gcv-flag" data-i18n="games.flag.rec">Рекомендуем</span>
-          <div class="gcv-icon"><div class="gcv-emoji-icon gcv-svg"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.24 12.24a6 6 0 0 0-8.49-8.49L5 10.5V19h8.5z"/><path d="M16 8 2 22"/><path d="M17.5 15H9"/></svg></div></div>
-          <div class="gcv-title" data-i18n="games.c.write">Пиши буквы</div>
-          <div class="gcv-ko ko">따라쓰기</div>
-          <div class="gcv-sub" data-i18n="games.c.write.sub">6 букв · обведи пальцем</div>
-          <div class="gcv-foot">
-            <span class="best-score gcv-best">Ещё не играли</span>
-            <span class="gcv-xp">+8 XP</span>
-          </div>
-        </div>
-        <div onclick="startDictation()" class="game-card-v2" data-game-key="dictation">
-          <div class="gcv-icon"><div class="gcv-emoji-icon gcv-svg"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/><path d="M4 8.5h4M4 5h6"/></svg></div></div>
-          <div class="gcv-title" data-i18n="games.c.dict">Слушай и пиши</div>
-          <div class="gcv-ko ko">받아쓰기</div>
-          <div class="gcv-sub" data-i18n="games.c.dict.sub">6 слогов · Аудио</div>
-          <div class="gcv-foot">
-            <span class="best-score gcv-best">Ещё не играли</span>
-            <span class="gcv-xp">+8 XP</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- Слова · 단어 -->
+      <!-- Слова · 단어 — самые играемые, поэтому сразу после новинок -->
       <div class="section-head" style="margin-top:8px;"><div class="left"><div class="rule"></div><span class="title"><span data-i18n="games.sec.words">Слова</span> <span class="ko" style="color:var(--coral); font-weight:500; margin-left:6px;">단어</span></span></div><span class="meta" data-i18n="games.sec.words.m">3 игры</span></div>
       <div class="games-grid">
         <div onclick="startFlashcards()" class="game-card-v2 gcv-wide" data-game-key="flashcards">
@@ -586,34 +528,19 @@
         </div>
       </div>
 
-      <!-- Кроссворд · 크로스워드 -->
-      <div class="section-head" style="margin-top:8px;"><div class="left"><div class="rule"></div><span class="title"><span data-i18n="games.sec.cross">Кроссворд</span> <span class="ko" style="color:var(--coral); font-weight:500; margin-left:6px;">크로스워드</span></span></div><span class="meta" data-i18n="games.sec.cross.m">головоломки</span></div>
-      <div class="games-grid">
-        <div onclick="openWordSearch()" class="game-card-v2" data-game-key="wordsearch">
-          <div class="gcv-icon"><div class="gcv-emoji-icon gcv-svg"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m20 20-4.7-4.7"/></svg></div></div>
-          <div class="gcv-title" data-i18n="games.c.search">Поиск слов</div>
-          <div class="gcv-ko ko">단어 찾기</div>
-          <div class="gcv-sub" data-i18n="games.c.search.sub">Найди слова в сетке · 3 уровня</div>
-          <div class="gcv-foot">
-            <span class="gcv-best" data-i18n="games.c.levels3">Лёгкий · Средний · Сложный</span>
-            <span class="gcv-xp">+25 XP</span>
-          </div>
-        </div>
-        <div onclick="openCrossword()" class="game-card-v2" data-game-key="crosswordpick">
-          <div class="gcv-icon"><div class="gcv-emoji-icon gcv-svg"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2.5"/><path d="M3 9h18M3 15h18M9 3v18M15 3v18"/></svg></div></div>
-          <div class="gcv-title" data-i18n="games.c.cross">Кроссворд</div>
-          <div class="gcv-ko ko">크로스워드</div>
-          <div class="gcv-sub" data-i18n="games.c.cross.sub">Собери слова по подсказкам · 3 уровня</div>
-          <div class="gcv-foot">
-            <span class="gcv-best" data-i18n="games.c.cross.best">Слова из уроков · каждый раз новые</span>
-            <span class="gcv-xp">+25 XP</span>
-          </div>
-        </div>
-      </div>
-
       <!-- Перевод & грамматика · 번역 + 문법 -->
-      <div class="section-head" style="margin-top:8px;"><div class="left"><div class="rule"></div><span class="title"><span data-i18n="games.sec.tr">Перевод и грамматика</span> <span class="ko" style="color:var(--coral); font-weight:500; margin-left:6px;">번역 · 문법</span></span></div><span class="meta" data-i18n="games.sec.tr.m">4 игры</span></div>
+      <div class="section-head" style="margin-top:8px;"><div class="left"><div class="rule"></div><span class="title"><span data-i18n="games.sec.tr">Перевод и грамматика</span> <span class="ko" style="color:var(--coral); font-weight:500; margin-left:6px;">번역 · 문법</span></span></div><span class="meta" data-i18n="games.sec.tr.m">5 игр</span></div>
       <div class="games-grid">
+        <div onclick="startParticles()" class="game-card-v2 gcv-wide gcv-accent" data-game-key="particles">
+          <div class="gcv-icon"><div class="gcv-emoji-icon gcv-svg"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg></div></div>
+          <div class="gcv-title" data-i18n="games.c.part">Частицы</div>
+          <div class="gcv-ko ko">조사</div>
+          <div class="gcv-sub" data-i18n="games.c.part.sub">Выбери 은/는 · 이/가 · 을/를 · 에/에서</div>
+          <div class="gcv-foot">
+            <span class="best-score gcv-best">Ещё не играли</span>
+            <span class="gcv-xp">+6 XP</span>
+          </div>
+        </div>
         <div onclick="startTranslate()" class="game-card-v2 gcv-wide" data-game-key="translate">
           <div class="gcv-icon"><div class="gcv-emoji-icon gcv-svg"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h7"/><path d="M7.5 4c0 4.5-2 7.5-4.5 9.5"/><path d="M5 9c.6 1.7 2.2 3.7 4.5 4.8"/><path d="m12.5 20 4-9 4 9"/><path d="M14 17h5"/></svg></div></div>
           <div class="gcv-title" data-i18n="games.c.tr">Быстрый перевод</div>
@@ -656,6 +583,67 @@
         </div>
       </div>
 
+      <!-- Хангыль · 한글 -->
+      <div class="section-head" style="margin-top:8px;"><div class="left"><div class="rule"></div><span class="title"><span data-i18n="games.sec.hangul">Хангыль</span> <span class="ko" style="color:var(--coral); font-weight:500; margin-left:6px;">한글</span></span></div><span class="meta" data-i18n="games.sec.hangul.m">основа</span></div>
+      <div class="games-grid">
+        <div onclick="switchScreen('hangul')" class="game-card-v2 gcv-wide" data-game-key="hangullab">
+          <div class="gcv-icon"><div class="gcv-emoji-icon ko">가</div></div>
+          <div class="gcv-title">한글 Lab</div>
+          <div class="gcv-ko ko">한글 조합</div>
+          <div class="gcv-sub" data-i18n="games.c.lab.sub">Конструктор слогов</div>
+          <div class="gcv-foot">
+            <span class="gcv-best" data-i18n="games.c.lab.best">Собери · послушай</span>
+            <span class="gcv-xp">🧩</span>
+          </div>
+        </div>
+        <div onclick="startWriting()" class="game-card-v2 gcv-accent" data-game-key="writing">
+          <span class="gcv-flag" data-i18n="games.flag.rec">Рекомендуем</span>
+          <div class="gcv-icon"><div class="gcv-emoji-icon gcv-svg"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.24 12.24a6 6 0 0 0-8.49-8.49L5 10.5V19h8.5z"/><path d="M16 8 2 22"/><path d="M17.5 15H9"/></svg></div></div>
+          <div class="gcv-title" data-i18n="games.c.write">Пиши буквы</div>
+          <div class="gcv-ko ko">따라쓰기</div>
+          <div class="gcv-sub" data-i18n="games.c.write.sub">6 букв · обведи пальцем</div>
+          <div class="gcv-foot">
+            <span class="best-score gcv-best">Ещё не играли</span>
+            <span class="gcv-xp">+8 XP</span>
+          </div>
+        </div>
+        <div onclick="startDictation()" class="game-card-v2" data-game-key="dictation">
+          <div class="gcv-icon"><div class="gcv-emoji-icon gcv-svg"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/><path d="M4 8.5h4M4 5h6"/></svg></div></div>
+          <div class="gcv-title" data-i18n="games.c.dict">Слушай и пиши</div>
+          <div class="gcv-ko ko">받아쓰기</div>
+          <div class="gcv-sub" data-i18n="games.c.dict.sub">6 слогов · Аудио</div>
+          <div class="gcv-foot">
+            <span class="best-score gcv-best">Ещё не играли</span>
+            <span class="gcv-xp">+8 XP</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Кроссворд · 크로스워드 -->
+      <div class="section-head" style="margin-top:8px;"><div class="left"><div class="rule"></div><span class="title"><span data-i18n="games.sec.cross">Кроссворд</span> <span class="ko" style="color:var(--coral); font-weight:500; margin-left:6px;">크로스워드</span></span></div><span class="meta" data-i18n="games.sec.cross.m">головоломки</span></div>
+      <div class="games-grid">
+        <div onclick="openWordSearch()" class="game-card-v2" data-game-key="wordsearch">
+          <div class="gcv-icon"><div class="gcv-emoji-icon gcv-svg"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m20 20-4.7-4.7"/></svg></div></div>
+          <div class="gcv-title" data-i18n="games.c.search">Поиск слов</div>
+          <div class="gcv-ko ko">단어 찾기</div>
+          <div class="gcv-sub" data-i18n="games.c.search.sub">Найди слова в сетке · 3 уровня</div>
+          <div class="gcv-foot">
+            <span class="gcv-best" data-i18n="games.c.levels3">Лёгкий · Средний · Сложный</span>
+            <span class="gcv-xp">+25 XP</span>
+          </div>
+        </div>
+        <div onclick="openCrossword()" class="game-card-v2" data-game-key="crosswordpick">
+          <div class="gcv-icon"><div class="gcv-emoji-icon gcv-svg"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2.5"/><path d="M3 9h18M3 15h18M9 3v18M15 3v18"/></svg></div></div>
+          <div class="gcv-title" data-i18n="games.c.cross">Кроссворд</div>
+          <div class="gcv-ko ko">크로스워드</div>
+          <div class="gcv-sub" data-i18n="games.c.cross.sub">Собери слова по подсказкам · 3 уровня</div>
+          <div class="gcv-foot">
+            <span class="gcv-best" data-i18n="games.c.cross.best">Слова из уроков · каждый раз новые</span>
+            <span class="gcv-xp">+25 XP</span>
+          </div>
+        </div>
+      </div>
+
       <!-- Музыка · 케이팝 -->
       <div class="section-head" style="margin-top:8px;"><div class="left"><div class="rule"></div><span class="title"><span data-i18n="games.sec.music">Музыка</span> <span class="ko" style="color:var(--coral); font-weight:500; margin-left:6px;">케이팝</span></span></div><span class="meta" data-i18n="games.sec.music.m">бонусная</span></div>
       <div onclick="startKpop()" class="game-card-v2 game-card-kpop" data-game-key="kpop">
@@ -667,6 +655,16 @@
           <span class="best-score gcv-best" style="color:var(--gold);">Ещё не играли</span>
           <span class="gcv-xp" style="background:rgba(201,165,92,.20); color:var(--gold);">+15 XP</span>
         </div>
+      </div>
+
+      <!-- Звонок с Комдори — разговорная практика, отдельной картой в самом низу -->
+      <div onclick="openKomdoriCall()" class="topik-exam-card" style="margin-top:16px; cursor:pointer; position:relative;">
+        <span class="topik-exam-ico">📞</span>
+        <div class="topik-exam-tx">
+          <div class="topik-exam-t" data-i18n="kd.entry.t">Звонок с Комдори</div>
+          <div class="topik-exam-s" data-i18n="kd.entry.s">Поговори с медвежонком по-корейски 🐻</div>
+        </div>
+        <i class="fa-solid fa-chevron-right topik-exam-arrow"></i>
       </div>
 
       <div style="text-align: center; font-size: 11.5px; color: var(--soft); margin-top: 22px; line-height: 1.5;" data-i18n="games.footer">
@@ -785,6 +783,15 @@
           <button onclick="goRegister()" class="btn btn-primary" style="flex:1;" data-i18n="guestcard.register">Регистрация</button>
         </div>
       </div>
+      <!-- Словарь-переводчик (ИИ) — в самом верху профиля, чтобы находился сразу -->
+      <div onclick="switchScreen('dict')" class="card card-press profile-student-only" style="margin-bottom: 18px; display:flex; align-items:center; gap:14px; cursor:pointer; padding:18px 18px;">
+        <div style="width:52px; height:52px; flex-shrink:0; border-radius:16px; background:linear-gradient(140deg,#E08AA0 0%,#BC4B5E 100%); color:#fff; display:flex; align-items:center; justify-content:center; font-size:24px;">🔎</div>
+        <div style="flex:1; min-width:0;">
+          <div style="font-weight:800; color:var(--berry); font-size:16px;" data-i18n="profile.dict">Словарь-переводчик</div>
+          <div style="font-size:12px; color:var(--soft); margin-top:2px;" data-i18n="profile.dict.sub">Слово или грамматика → перевод, примеры</div>
+        </div>
+        <i class="fa-solid fa-chevron-right" style="color:var(--coral); font-size:14px;"></i>
+      </div>
       <div style="text-align:center; margin-bottom: 20px;">
         <div style="position:relative; width:96px; height:96px; margin: 0 auto;">
           <div class="placeholder-img" style="width:96px; height:96px; border-radius:50%; border: 3px solid var(--rose); font-size: 32px; box-shadow: var(--shadow-md), inset 0 0 0 4px white;">👧🏻</div>
@@ -869,16 +876,6 @@
         <div style="flex:1; min-width:0;">
           <div style="font-weight:800; color:var(--berry); font-size:16px;" data-i18n="profile.lessonWords">Слова из уроков</div>
           <div style="font-size:12px; color:var(--soft); margin-top:2px;" data-i18n="profile.lessonWords.sub">Вся лексика по модулям и урокам</div>
-        </div>
-        <i class="fa-solid fa-chevron-right" style="color:var(--coral); font-size:14px;"></i>
-      </div>
-
-      <!-- Словарь-переводчик (ИИ) — вынесен из «Моих слов» отдельной карточкой -->
-      <div onclick="switchScreen('dict')" class="card card-press profile-student-only" style="margin-top: 14px; display:flex; align-items:center; gap:14px; cursor:pointer; padding:18px 18px;">
-        <div style="width:52px; height:52px; flex-shrink:0; border-radius:16px; background:linear-gradient(140deg,#E08AA0 0%,#BC4B5E 100%); color:#fff; display:flex; align-items:center; justify-content:center; font-size:24px;">🔎</div>
-        <div style="flex:1; min-width:0;">
-          <div style="font-weight:800; color:var(--berry); font-size:16px;" data-i18n="profile.dict">Словарь-переводчик</div>
-          <div style="font-size:12px; color:var(--soft); margin-top:2px;" data-i18n="profile.dict.sub">Слово или грамматика → перевод, примеры</div>
         </div>
         <i class="fa-solid fa-chevron-right" style="color:var(--coral); font-size:14px;"></i>
       </div>
@@ -1171,7 +1168,7 @@
 
 <!-- ─────────────── DATA + LOGIC ─────────────── -->
 <script src="assets/textbook/textbook-data.js?v=20260629a"></script>
-<script src="app.js?v=20260713a"></script>
+<script src="app.js?v=20260713c"></script>
 
 </body>
 </html>
