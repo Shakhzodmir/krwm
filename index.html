@@ -33,13 +33,22 @@
 <!-- Font Awesome — self-host (НЕ cdnjs!): у части провайдеров (РФ) Cloudflare-CDN висит,
      а зависший stylesheet в head блокирует выполнение app.js → «вечное интро» (08.07). -->
 <link rel="stylesheet" href="assets/vendor/fontawesome/css/all.min.css?v=651">
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+<!-- Google Fonts НЕблокирующим (media=print → all по onload): зависший шрифтовой CSS
+     больше не тормозит первый кадр, если CDN душат (РФ). display=swap даёт системный
+     фолбэк сразу; noscript — на случай отключённого JS. -->
+<link rel="stylesheet" media="print" onload="this.media='all'" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=Noto+Sans+KR:wght@400;500;700&display=swap">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=Noto+Sans+KR:wght@400;500;700&display=swap"></noscript>
 
-<link rel="stylesheet" href="styles.css?v=20260709e">
+<!-- Критический CSS сплэша: мгновенный брендовый фон, если styles.css/шрифты на миг
+     задержались (фон/токены 1:1 со styles.css). Текст держим opacity:0 — его плавно
+     вводят анимации из styles.css, поэтому без «мигания»; логотип не трогаем (fanUnfurl). -->
+<style>#intro{position:fixed;inset:0;z-index:999;display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:hidden;cursor:pointer;background:radial-gradient(120% 90% at 50% 35%,#FFFCF8 0%,#FFF4F0 38%,#FBE8EA 78%,#F2D5DA 100%)}#intro>.intro-tagline,#intro>.intro-subline,#intro>.intro-cta{opacity:0}</style>
+
+<link rel="stylesheet" href="styles.css?v=20260713a">
 
 <!-- Предзагрузка тяжёлого JS: скачивание стартует сразу, параллельно с CSS/шрифтами -->
 <link rel="preload" href="assets/textbook/textbook-data.js?v=20260629a" as="script">
-<link rel="preload" href="app.js?v=20260709e" as="script">
+<link rel="preload" href="app.js?v=20260713a" as="script">
 </head>
 
 <body>
@@ -486,6 +495,15 @@
         </div>
         <i class="fa-solid fa-chevron-right topik-exam-arrow"></i>
       </div>
+      <div onclick="openKomdoriCall()" class="topik-exam-card" style="margin-top:8px; cursor:pointer; position:relative;">
+        <span class="gcv-flag" data-i18n="games.flag.new">Новинка</span>
+        <span class="topik-exam-ico">📞</span>
+        <div class="topik-exam-tx">
+          <div class="topik-exam-t" data-i18n="kd.entry.t">Звонок с Комдори</div>
+          <div class="topik-exam-s" data-i18n="kd.entry.s">Поговори с медвежонком по-корейски 🐻</div>
+        </div>
+        <i class="fa-solid fa-chevron-right topik-exam-arrow"></i>
+      </div>
 
       <!-- Хангыль · 한글 -->
       <div class="section-head"><div class="left"><div class="rule"></div><span class="title"><span data-i18n="games.sec.hangul">Хангыль</span> <span class="ko" style="color:var(--coral); font-weight:500; margin-left:6px;">한글</span></span></div><span class="meta" data-i18n="games.sec.hangul.m">основа</span></div>
@@ -753,6 +771,20 @@
 
       <!-- Avatar (visible after login) -->
       <div id="profile-content" style="display:none;">
+      <!-- Гостю: заметная карточка входа/регистрации (прогресс живёт только на устройстве) -->
+      <div id="profile-guest-card" style="display:none; flex-direction:column; gap:12px; margin-bottom:20px; padding:18px; border-radius:18px; background:var(--grad-cream); border:1px solid var(--rose);">
+        <div style="display:flex; align-items:center; gap:12px;">
+          <div style="font-size:30px; flex-shrink:0;">🌸</div>
+          <div style="min-width:0;">
+            <div style="font-weight:800; color:var(--berry); font-size:15px;" data-i18n="guestcard.title">Ты в гостевом режиме</div>
+            <div style="font-size:11.5px; color:var(--soft); margin-top:2px; line-height:1.45;" data-i18n="guestcard.sub">Прогресс живёт только на этом устройстве. Войди — и он сохранится 🌸</div>
+          </div>
+        </div>
+        <div style="display:flex; gap:9px;">
+          <button onclick="goLogin()" class="btn btn-ghost" style="flex:1;" data-i18n="guestcard.login">Войти</button>
+          <button onclick="goRegister()" class="btn btn-primary" style="flex:1;" data-i18n="guestcard.register">Регистрация</button>
+        </div>
+      </div>
       <div style="text-align:center; margin-bottom: 20px;">
         <div style="position:relative; width:96px; height:96px; margin: 0 auto;">
           <div class="placeholder-img" style="width:96px; height:96px; border-radius:50%; border: 3px solid var(--rose); font-size: 32px; box-shadow: var(--shadow-md), inset 0 0 0 4px white;">👧🏻</div>
@@ -831,12 +863,22 @@
         <i class="fa-solid fa-chevron-right" style="color:var(--coral); font-size:14px;"></i>
       </div>
 
-      <!-- Учебник (книги) — видно всем -->
-      <div onclick="openTextbook()" class="card card-press" style="margin-top: 22px; display:flex; align-items:center; gap:14px; cursor:pointer; padding:18px 18px;">
-        <div style="width:52px; height:52px; flex-shrink:0; border-radius:16px; background:linear-gradient(140deg,#C76B98 0%,#7B3F6A 100%); color:#fff; display:flex; align-items:center; justify-content:center; font-size:24px;">📖</div>
+      <!-- Слова из уроков: модуль → урок → слова (Учебник убран отсюда — он в разделе «Уроки») -->
+      <div onclick="switchScreen('lessonwords')" class="card card-press profile-student-only" style="margin-top: 14px; display:flex; align-items:center; gap:14px; cursor:pointer; padding:18px 18px;">
+        <div style="width:52px; height:52px; flex-shrink:0; border-radius:16px; background:linear-gradient(140deg,#7BB86A 0%,#3E8B4F 100%); color:#fff; display:flex; align-items:center; justify-content:center; font-size:24px;">🧩</div>
         <div style="flex:1; min-width:0;">
-          <div style="font-weight:800; color:var(--berry); font-size:16px;" data-i18n="profile.textbook">Учебник</div>
-          <div style="font-size:12px; color:var(--soft); margin-top:2px;" data-i18n="profile.textbook.sub">Корейский с нуля · 2 книги с уроками и заданиями</div>
+          <div style="font-weight:800; color:var(--berry); font-size:16px;" data-i18n="profile.lessonWords">Слова из уроков</div>
+          <div style="font-size:12px; color:var(--soft); margin-top:2px;" data-i18n="profile.lessonWords.sub">Вся лексика по модулям и урокам</div>
+        </div>
+        <i class="fa-solid fa-chevron-right" style="color:var(--coral); font-size:14px;"></i>
+      </div>
+
+      <!-- Словарь-переводчик (ИИ) — вынесен из «Моих слов» отдельной карточкой -->
+      <div onclick="switchScreen('dict')" class="card card-press profile-student-only" style="margin-top: 14px; display:flex; align-items:center; gap:14px; cursor:pointer; padding:18px 18px;">
+        <div style="width:52px; height:52px; flex-shrink:0; border-radius:16px; background:linear-gradient(140deg,#E08AA0 0%,#BC4B5E 100%); color:#fff; display:flex; align-items:center; justify-content:center; font-size:24px;">🔎</div>
+        <div style="flex:1; min-width:0;">
+          <div style="font-weight:800; color:var(--berry); font-size:16px;" data-i18n="profile.dict">Словарь-переводчик</div>
+          <div style="font-size:12px; color:var(--soft); margin-top:2px;" data-i18n="profile.dict.sub">Слово или грамматика → перевод, примеры</div>
         </div>
         <i class="fa-solid fa-chevron-right" style="color:var(--coral); font-size:14px;"></i>
       </div>
@@ -903,8 +945,33 @@
       <button onclick="openSettingsModal()" class="chat-back-btn" aria-label="Настройки" title="Настройки" data-i18n-aria="set.title" data-i18n-title="set.title" style="flex-shrink:0;"><i class="fa-solid fa-gear"></i></button>
     </header>
     <div style="padding: 20px;">
-      <!-- Словарь-переводчик (ИИ) -->
-      <div class="card card-padded" style="margin-bottom: 18px;">
+      <!-- Словарь-переводчик переехал на отдельный экран (в профиле своя карточка); тут — быстрая ссылка -->
+      <button onclick="switchScreen('dict')" class="card card-press" style="width:100%; text-align:left; display:flex; align-items:center; gap:12px; margin-bottom:18px; padding:14px 16px; cursor:pointer; border:none; font-family:inherit;">
+        <div style="width:38px; height:38px; border-radius:12px; background:var(--grad-coral); color:#F2F5FA; display:flex; align-items:center; justify-content:center; font-size:15px; flex-shrink:0;"><i class="fa-solid fa-book-open-reader"></i></div>
+        <div style="flex:1; min-width:0;">
+          <div style="font-weight:700; color:var(--berry); font-size:14px;" data-i18n="words.dict">Словарь-переводчик · 사전</div>
+          <div style="font-size:10.5px; color:var(--soft); margin-top:1px;" data-i18n="words.dict.sub">слово или грамматика → перевод, примеры, синонимы</div>
+        </div>
+        <i class="fa-solid fa-chevron-right" style="color:var(--coral); font-size:13px;"></i>
+      </button>
+      <div id="saved-words-list"></div>
+    </div>
+  </section>
+
+  <!-- СЛОВАРЬ-ПЕРЕВОДЧИК (사전 · ИИ) — отдельный экран -->
+  <section id="screen-dict" class="screen" data-screen-label="Словарь">
+    <header class="topbar">
+      <div style="display:flex; align-items:center; gap:10px; min-width:0;">
+        <button onclick="switchScreen('profile', true)" class="chat-back-btn" aria-label="Назад в профиль" data-i18n-aria="a11y.back"><i class="fa-solid fa-arrow-left"></i></button>
+        <div style="min-width:0;">
+          <div class="page-eyebrow">사전 · переводчик</div>
+          <h1 class="display" style="font-size: 22px; color: var(--berry); margin-top: 2px;" data-i18n="profile.dict">Словарь-переводчик</h1>
+        </div>
+      </div>
+      <button onclick="openSettingsModal()" class="chat-back-btn" aria-label="Настройки" title="Настройки" data-i18n-aria="set.title" data-i18n-title="set.title" style="flex-shrink:0;"><i class="fa-solid fa-gear"></i></button>
+    </header>
+    <div style="padding: 20px;">
+      <div class="card card-padded">
         <div style="display:flex; align-items:center; gap:10px;">
           <div style="width:38px; height:38px; border-radius:12px; background:var(--grad-coral); color:#F2F5FA; display:flex; align-items:center; justify-content:center; font-size:16px; flex-shrink:0;"><i class="fa-solid fa-book-open-reader"></i></div>
           <div style="flex:1; min-width:0;">
@@ -917,9 +984,25 @@
           <button id="dict-go" onclick="dictLookup()" class="btn btn-primary" style="padding:0 16px; flex-shrink:0;" aria-label="Найти" data-i18n-aria="a11y.search"><i class="fa-solid fa-magnifying-glass"></i></button>
         </div>
         <div id="dict-result"></div>
-        <div style="font-size:9.5px; color:var(--hush); margin-top:8px; line-height:1.4;" data-i18n="words.dict.note">Отвечает ИИ — бесплатно, без входа и ключей.</div>
+        <div style="font-size:9.5px; color:var(--hush); margin-top:8px; line-height:1.4;" data-i18n="words.dict.note">Отвечает ИИ · 3 бесплатных запроса в день — без лимита в тарифе Master 🌸</div>
       </div>
-      <div id="saved-words-list"></div>
+    </div>
+  </section>
+
+  <!-- СЛОВА ИЗ УРОКОВ (단어 · модуль → урок → слова) -->
+  <section id="screen-lessonwords" class="screen" data-screen-label="Слова из уроков">
+    <header class="topbar">
+      <div style="display:flex; align-items:center; gap:10px; min-width:0;">
+        <button onclick="lwBack()" class="chat-back-btn" aria-label="Назад" data-i18n-aria="a11y.back"><i class="fa-solid fa-arrow-left"></i></button>
+        <div style="min-width:0;">
+          <div class="page-eyebrow">단어 · из уроков</div>
+          <h1 class="display" style="font-size: 22px; color: var(--berry); margin-top: 2px;" data-i18n="profile.lessonWords">Слова из уроков</h1>
+        </div>
+      </div>
+      <button onclick="openSettingsModal()" class="chat-back-btn" aria-label="Настройки" title="Настройки" data-i18n-aria="set.title" data-i18n-title="set.title" style="flex-shrink:0;"><i class="fa-solid fa-gear"></i></button>
+    </header>
+    <div style="padding: 16px 20px 28px;">
+      <div id="lessonwords-hub"></div>
     </div>
   </section>
 
@@ -1088,7 +1171,7 @@
 
 <!-- ─────────────── DATA + LOGIC ─────────────── -->
 <script src="assets/textbook/textbook-data.js?v=20260629a"></script>
-<script src="app.js?v=20260709e"></script>
+<script src="app.js?v=20260713a"></script>
 
 </body>
 </html>
