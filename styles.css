@@ -6370,9 +6370,12 @@
   body.theme-dark .topbar,
   body.theme-dark .bottomnav,
   body.theme-dark .sidenav,
-  body.theme-dark .exam-stick { background: rgba(22,22,24,.92); border-color: var(--line); }
+  body.theme-dark .exam-stick { background: rgba(18,18,18,.92); border-color: var(--line); }
   body.theme-dark #topik-exam-overlay,
   body.theme-dark .game-page { background: var(--linen); }
+  /* Попапы-страницы (игры, учебная комната): колонка контента НЕ красится в свой
+     серый — фон единый с оверлеем, без прямоугольника по центру (отзыв 13.07). */
+  body.theme-dark .game-page-card { background: transparent; border-color: transparent; }
   body.theme-dark .modal-bg { background: rgba(18,18,18,.8); }
   body.theme-dark #onboard { background: #141519; }
   body.theme-dark .ob-art .ob-circle { background: #24262C; box-shadow: inset 0 0 0 1px var(--line); }
@@ -6386,7 +6389,10 @@
   body.theme-dark .exam-top { background: rgba(22,22,24,.94); }
   body.theme-dark .exam-audio { background: rgba(22,22,24,.94); }
   body.theme-dark .sidenav .nav-item:hover { background: rgba(231,235,244,.07); }
-  body.theme-dark .topbar { background: rgba(18,18,18,.94); }
+  /* Шапка — ОДИН цвет с фоном приложения (#121212), не «отдельная плашка».
+     !important обязателен: duo-слой красит .topbar в var(--card) с !important,
+     и прежний override без него был мёртвым (отзыв 13.07). */
+  body.theme-dark .topbar { background: var(--linen) !important; border-bottom-color: var(--line) !important; }
   body.theme-dark .exam-navbtn { background: var(--paper); color: var(--ink); border-color: var(--line); }
   body.theme-dark .exam-next, body.theme-dark .exam-finish { background: var(--grad-coral); color: #fff; }
   body.theme-dark .chip { background: #222631; color: var(--ink); }

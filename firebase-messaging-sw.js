@@ -8,7 +8,7 @@ importScripts('https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js
 importScripts('https://www.gstatic.com/firebasejs/10.12.2/firebase-messaging-compat.js');
 
 // ───────────────────────── PWA APP-SHELL CACHE ─────────────────────────
-const CACHE_VERSION = 'madie-v4';
+const CACHE_VERSION = 'madie-v5';
 const SHELL = [
   './',
   './index.html',

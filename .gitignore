@@ -6,6 +6,7 @@ IMG_*.JPG
 .remember/logs/
 .remember/tmp/
 *pdf
+*.docx
 assets/new material/
 
 # Локальные исследовательские заметки, не относящиеся к сайту (анализ сторонних сервисов и т.п.)
