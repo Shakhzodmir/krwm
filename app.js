@@ -6077,7 +6077,7 @@
   // Версия сборки: держать В РУЧНУЮ синхронной с ?v= в index.html при каждом деплое
   // (те же 3 места — stylesheet/preload/script). Используется только для попапа
   // «доступно обновление» ниже — сама загрузка кода по-прежнему идёт через ?v=.
-  const APP_VERSION = '20260714b';
+  const APP_VERSION = '20260714c';
   function showUpdateAvailableModal() {
     if (document.getElementById('update-avail-modal')) return;
     const m = document.createElement('div');
@@ -6203,15 +6203,13 @@
   async function loadUsersDirectory() {
     if (typeof _db === 'undefined') return {};
     try {
-      if (isAdmin()) {
-        // Мади нужны полные профили (XP, тариф, доступ) — одна загрузка на сессию,
-        // кэш общий с админ-панелями (см. loadAdminUsers/loadAdminStats).
-        const snap = await _db.ref('users').once('value');
-        _usersDirCache = snap.val() || {};
-        _adminUsersCache = _usersDirCache;
-        _adminUsersCacheAt = Date.now();
-        return _usersDirCache;
-      }
+      // Третья волна трафика (14.07): у Мади справочник читал ПОЛНЫЙ узел `users`
+      // (~1 МБ на 280 профилей) при каждом старте PWA — iOS перезагружает её
+      // приложение почти при каждом возврате, и это стало главным расходом БД.
+      // Чат-листу хватает тонкого usersPublic (имя/фото/email/level/stats-lite —
+      // см. publicStatsLite), поэтому админ идёт тем же путём, что и ученицы.
+      // Полные профили админ-панели качают сами по требованию с TTL
+      // (loadAdminUsers/loadAdminStats).
       const cached = Store.get('usersDirCacheV1', null);
       if (cached && cached.data && (Date.now() - (cached.at || 0)) < DIR_CACHE_TTL_MS) {
         _dirReadyFlag = !!cached.dirReady;
@@ -6254,6 +6252,14 @@
     if (!isAdmin()) return;
     _dirMigrationRan = true;
     try {
+      // Справочник уже собран (dirReady=true) — полный проход не нужен: новые
+      // ученицы наполняют usersPublic сами при входе (pushUserToCloud + зеркала
+      // _mirrorPublicField). Без этого гейта Мади скачивала весь users (~1 МБ)
+      // через 8 секунд после КАЖДОГО старта приложения.
+      if (_dirReadyFlag === null) {
+        try { _dirReadyFlag = !!(await _db.ref('shared/config/dirReady').once('value')).val(); } catch (_) {}
+      }
+      if (_dirReadyFlag) return;
       const snap = await _db.ref('users').once('value');
       const users = snap.val() || {};
       if (!_usersDirCache) { _usersDirCache = users; _adminUsersCache = users; _adminUsersCacheAt = Date.now(); }
@@ -7579,6 +7585,9 @@
     if (!ensureAdminAccess() || typeof _db === 'undefined' || !uid) return;
     _db.ref('users/' + uid + '/level').set(id || '')
       .then(() => {
+        // Чат-лист читает тонкий usersPublic — без зеркала чип уровня откатывался бы
+        // к старому после протухания кэша (ученица обновит своё зеркало только при входе).
+        _db.ref('usersPublic/' + uid + '/level').set(id || null).catch(() => {});
         if (_usersDirCache && _usersDirCache[uid]) _usersDirCache[uid].level = id || '';
         toast(t('lvl.changed'), 'var(--sage)');
         renderAdminChatList();
@@ -7587,6 +7596,9 @@
   }
 
   async function refreshAdminChatList() {
+    // Справочник теперь кэшируется и в localStorage (TTL 10 мин) — без del()
+    // loadUsersDirectory вернула бы тот же кэш, и «Обновить» ничего не обновляло бы.
+    Store.del('usersDirCacheV1');
     _usersDirCache = null;
     _adminUsersCache = {};
     _adminUsersCacheAt = 0;
@@ -11488,7 +11500,7 @@
       ]},
       slides:[
         { kind:'intro', title:'Тема и подлежащее', title_uz:'Mavzu va ega', sub:t('ui.160'),
-          intro:'«Теперь, когда ты знаешь хангыль, начнём строить предложения! Сегодня — две самые важные частицы: <span class="ko">은/는</span> (тема) и <span class="ko">이/가</span> (подлежащее). С ними ты расскажешь о себе 🌸 화이팅!»',
+          intro:'«Теперь, когда ты знаешь хангыль, начнём строить предложения! Сегодня — две самые важные частицы: <span class="ko">은/는</span> (тема) и <span class="ko">이/가</span> (подлежащее). С ними ты расскажешь о себе 🌸 화이팅!»', intro_uz:'«Endi hangylni bilganingdan keyin, gap tuzishni boshlaymiz! Bugun — eng muhim ikkita yuklama: <span class="ko">은/는</span> (mavzu) va <span class="ko">이/가</span> (ega). Ular bilan oʻzing haqingda gapirib berasan 🌸 Fayting!»',
           learn:[['📌','2 частицы'],['🗣️','о себе'],['🎯','дрилы']], learn_uz:['2 ta yuklama','oʻzim haqida','mashqlar'] },
         { kind:'pattern', eyebrow:'ГРАММАТИКА', eyebrow_uz:'GRAMMATIKA', title:'은/는 и 이/가', title_uz:'은/는 va 이/가', sub:'тема против подлежащего', sub_uz:'mavzu yuklamasi va ega yuklamasi',
           rule:'<b>은 / 는</b> — частица <b>темы</b> («что касается…»). После согласной — <span class="ko">은</span>, после гласной — <span class="ko">는</span>.<br><b>이 / 가</b> — частица <b>подлежащего</b> (кто/что делает). После согласной — <span class="ko">이</span>, после гласной — <span class="ko">가</span>.',
@@ -11563,7 +11575,7 @@
       ]},
       slides:[
         { kind:'intro', title:'Настоящее время', title_uz:'Hozirgi zamon', sub:'Вежливый стиль -아요/어요',
-          intro:'«Глаголы в корейском меняют окончание. Вежливая форма настоящего времени — <span class="ko">-아요/어요</span>. Научимся её собирать — и сразу заговорим! 🌸»',
+          intro:'«Глаголы в корейском меняют окончание. Вежливая форма настоящего времени — <span class="ko">-아요/어요</span>. Научимся её собирать — и сразу заговорим! 🌸»', intro_uz:'«Koreys tilida feʼllar oxirini oʻzgartiradi. Hozirgi zamonning xushmuomala shakli — <span class="ko">-아요/어요</span>. Uni qanday yasashni oʻrganamiz — va darrov gapira boshlaymiz! 🌸»',
           learn:[['🔁','спряжение'],['🗣️','диалог'],['👂','аудио']], learn_uz:['tuslash','muloqot','audio'] },
         { kind:'pattern', eyebrow:'ГРАММАТИКА', eyebrow_uz:'GRAMMATIKA', title:'Как получить -아요/어요', title_uz:'-아요/어요 qanday hosil qilinadi', sub:'현재형',
           rule:'Убери <span class="ko">-다</span> у глагола. Если последняя гласная основы <span class="ko">ㅏ</span> или <span class="ko">ㅗ</span> → добавь <b>아요</b>, иначе → <b>어요</b>. Особый случай: <span class="ko">하다 → 해요</span>.',
@@ -11626,7 +11638,7 @@
       ]},
       slides:[
         { kind:'intro', title:'Объект действия', title_uz:'Harakat obyekti', sub:'Частица 을/를 — кого/что?',
-          intro:'«Чтобы сказать, НА ЧТО направлено действие, нужна частица объекта <span class="ko">을/를</span>: 밥을 먹어요 — ем рис, 커피를 마셔요 — пью кофе 🌸»',
+          intro:'«Чтобы сказать, НА ЧТО направлено действие, нужна частица объекта <span class="ko">을/를</span>: 밥을 먹어요 — ем рис, 커피를 마셔요 — пью кофе 🌸»', intro_uz:'«Harakat NIMAGA qaratilganini aytish uchun obyekt yuklamasi <span class="ko">을/를</span> kerak: 밥을 먹어요 — ovqat yeyman, 커피를 마셔요 — kofe ichaman 🌸»',
           learn:[['🎯','частица 을/를'],['🍚','новые слова'],['✍️','сборка']], learn_uz:['을/를 yuklamasi','yangi soʻzlar','yigʻish'] },
         { kind:'pattern', eyebrow:'ГРАММАТИКА', eyebrow_uz:'GRAMMATIKA', title:'Частица объекта 을/를', title_uz:'Obyekt yuklamasi 을/를', sub:'목적격',
           rule:'<b>을</b> — после согласной, <b>를</b> — после гласной. Ставится после слова, на которое направлено действие.',
@@ -11687,7 +11699,7 @@
       ]},
       slides:[
         { kind:'intro', title:'Где и куда', title_uz:'Qayerda va qayerga', sub:'Частицы места 에 / 에서',
-          intro:'«Две частицы места легко перепутать. <span class="ko">에</span> — где находишься или куда идёшь. <span class="ko">에서</span> — где происходит действие. Разберёмся на примерах 🌸»',
+          intro:'«Две частицы места легко перепутать. <span class="ko">에</span> — где находишься или куда идёшь. <span class="ko">에서</span> — где происходит действие. Разберёмся на примерах 🌸»', intro_uz:'«Ikkita joy yuklamasini adashtirish oson. <span class="ko">에</span> — qayerdasan yoki qayerga borasan. <span class="ko">에서</span> — harakat qayerda sodir boʻladi. Misollarda tushunib olamiz 🌸»',
           learn:[['📍','에 / 에서'],['☕','диалог в кафе'],['👂','аудио']], learn_uz:['에 / 에서','kafedagi muloqot','audio'] },
         { kind:'pattern', eyebrow:'ГРАММАТИКА', eyebrow_uz:'GRAMMATIKA', title:'에 и 에서', title_uz:'에 va 에서', sub:'장소 조사',
           rule:'<b>에</b> — место нахождения или направление: <span class="ko">집에 있어요</span> (дома), <span class="ko">학교에 가요</span> (в школу).<br><b>에서</b> — место, где идёт действие: <span class="ko">카페에서 공부해요</span> (учусь в кафе).',
@@ -11747,7 +11759,7 @@
       ]},
       slides:[
         { kind:'intro', title:'Прошедшее время', title_uz:'Oʻtgan zamon', sub:'Окончание -았/었어요',
-          intro:'«Чтобы рассказать о прошлом, добавляем <span class="ko">-았어요/었어요</span>. Принцип тот же, что у настоящего времени: смотрим на гласную основы 🌸»',
+          intro:'«Чтобы рассказать о прошлом, добавляем <span class="ko">-았어요/었어요</span>. Принцип тот же, что у настоящего времени: смотрим на гласную основы 🌸»', intro_uz:'«Oʻtmish haqida gapirish uchun <span class="ko">-았어요/었어요</span> qoʻshamiz. Qoida hozirgi zamondagidek: negizning unlisiga qaraymiz 🌸»',
           learn:[['🕐','прошлое'],['🗣️','диалог'],['🎯','дрилы']], learn_uz:['oʻtmish','muloqot','mashqlar'] },
         { kind:'pattern', eyebrow:'ГРАММАТИКА', eyebrow_uz:'GRAMMATIKA', title:'Как получить прошедшее', title_uz:'Oʻtgan zamon qanday hosil qilinadi', sub:'과거형',
           rule:'Если последняя гласная основы <span class="ko">ㅏ/ㅗ</span> → <b>-았어요</b>, иначе → <b>-었어요</b>. <span class="ko">하다 → 했어요</span>.',
@@ -11812,7 +11824,7 @@
       ]},
       slides:[
         { kind:'intro', title:'Числа', title_uz:'Raqamlar', sub:'숫자 — две системы',
-          intro:'«В корейском ДВА набора чисел. Китайские <span class="ko">일·이·삼</span> — для денег, минут, дат, номеров. Исконные <span class="ko">하나·둘·셋</span> — для счёта предметов, людей, часов и возраста. Сегодня освоим оба 🌸»',
+          intro:'«В корейском ДВА набора чисел. Китайские <span class="ko">일·이·삼</span> — для денег, минут, дат, номеров. Исконные <span class="ko">하나·둘·셋</span> — для счёта предметов, людей, часов и возраста. Сегодня освоим оба 🌸»', intro_uz:'«Koreys tilida IKKI xil raqamlar toʻplami bor. Xitoycha <span class="ko">일·이·삼</span> — pul, daqiqa, sana, raqamlar uchun. Sof koreyscha <span class="ko">하나·둘·셋</span> — narsalarni, odamlarni, soatlarni va yoshni sanash uchun. Bugun ikkalasini ham oʻrganamiz 🌸»',
           learn:[['🔢','две системы'],['🍎','счётные слова'],['🎯','дрилы']], learn_uz:['ikki tizim','sanoq soʻzlari','mashqlar'] },
         { kind:'info', eyebrow:'ЧИСЛА', eyebrow_uz:'RAQAMLAR', title:'Китайские числа', title_uz:'Xitoycha raqamlar', sub:'한자어 숫자 — деньги, минуты, даты', sub_uz:'한자어 숫자 — pul, daqiqa, sanalar', cols:5,
           grid:[
@@ -11878,7 +11890,7 @@
       ]},
       slides:[
         { kind:'intro', title:'Время и дни', title_uz:'Vaqt va kunlar', sub:'몇 시예요?',
-          intro:'«Спросить время просто: <span class="ko">지금 몇 시예요?</span> Часы считаем исконными числами + <span class="ko">시</span>, минуты — китайскими + <span class="ko">분</span>. И выучим дни недели 🌸»',
+          intro:'«Спросить время просто: <span class="ko">지금 몇 시예요?</span> Часы считаем исконными числами + <span class="ko">시</span>, минуты — китайскими + <span class="ko">분</span>. И выучим дни недели 🌸»', intro_uz:'«Vaqtni soʻrash oson: <span class="ko">지금 몇 시예요?</span> Soatlarni sof koreyscha raqamlar + <span class="ko">시</span> bilan, daqiqalarni esa xitoycha raqamlar + <span class="ko">분</span> bilan sanaymiz. Va hafta kunlarini ham oʻrganamiz 🌸»',
           learn:[['🕐','часы и минуты'],['📅','дни недели'],['🗣️','диалог']], learn_uz:['soat va daqiqa','hafta kunlari','muloqot'] },
         { kind:'pattern', eyebrow:'ГРАММАТИКА', eyebrow_uz:'GRAMMATIKA', title:'Который час', title_uz:'Necha soat', sub:'시 + 분',
           rule:'Часы — <b>исконные</b> числа + <span class="ko">시</span>: 한 시, 두 시, 세 시. Минуты — <b>китайские</b> + <span class="ko">분</span>: 십 분, 삼십 분. «Сейчас 2:30» → <span class="ko">두 시 삼십 분이에요</span>.',
@@ -11944,7 +11956,7 @@
       ]},
       slides:[
         { kind:'intro', title:'В кафе: заказ', title_uz:'Kafeda: buyurtma', sub:'카페에서 주문해요',
-          intro:'«Время заказать! <span class="ko">주세요</span> — «дайте, пожалуйста», <span class="ko">얼마예요?</span> — «сколько стоит?». Деньги считаем китайскими числами + <span class="ko">원</span>. Сделаем настоящий заказ 🌸»',
+          intro:'«Время заказать! <span class="ko">주세요</span> — «дайте, пожалуйста», <span class="ko">얼마예요?</span> — «сколько стоит?». Деньги считаем китайскими числами + <span class="ko">원</span>. Сделаем настоящий заказ 🌸»', intro_uz:'«Buyurtma berish vaqti keldi! <span class="ko">주세요</span> — «iltimos, bering», <span class="ko">얼마예요?</span> — «necha pul turadi?». Pulni xitoycha raqamlar + <span class="ko">원</span> bilan sanaymiz. Haqiqiy buyurtma beramiz 🌸»',
           learn:[['☕','заказ'],['💰','цены'],['🗣️','диалог']], learn_uz:['buyurtma','narxlar','muloqot'] },
         { kind:'pattern', eyebrow:'ГРАММАТИКА', eyebrow_uz:'GRAMMATIKA', title:'… 주세요', title_uz:'… 주세요', sub:'просим вежливо', sub_uz:'xushmuomalalik bilan soʻraymiz',
           rule:'<b>(что)</b> + <span class="ko">주세요</span> = «дайте, пожалуйста». С количеством: <span class="ko">커피 한 잔 주세요</span> — одну чашку кофе. Чтобы позвать официанта: <span class="ko">여기요!</span>',
@@ -12017,7 +12029,7 @@
       ]},
       slides:[
         { kind:'intro', title:'Покупки', title_uz:'Xaridlar', sub:'쇼핑해요',
-          intro:'«В магазине пригодятся указатели: <span class="ko">이거</span> — это (у меня), <span class="ko">그거</span> — то (у тебя), <span class="ko">저거</span> — вон то (вдалеке). И посчитаем товары счётными словами 🌸»',
+          intro:'«В магазине пригодятся указатели: <span class="ko">이거</span> — это (у меня), <span class="ko">그거</span> — то (у тебя), <span class="ko">저거</span> — вон то (вдалеке). И посчитаем товары счётными словами 🌸»', intro_uz:'«Doʻkonda koʻrsatish olmoshlari kerak boʻladi: <span class="ko">이거</span> — bu (mendagi), <span class="ko">그거</span> — u (sendagi), <span class="ko">저거</span> — ana u (uzoqdagi). Va tovarlarni sanoq soʻzlari bilan sanaymiz 🌸»',
           learn:[['👉','이/그/저거'],['🛒','товары'],['🔢','счёт']], learn_uz:['이/그/저거','tovarlar','sanoq'] },
         { kind:'pattern', eyebrow:'ГРАММАТИКА', eyebrow_uz:'GRAMMATIKA', title:'이거 · 그거 · 저거', title_uz:'이거 · 그거 · 저거', sub:'указательные', sub_uz:'koʻrsatish olmoshlari',
           rule:'<b>이거</b> — это (рядом со мной). <b>그거</b> — то (рядом с тобой / о чём говорили). <b>저거</b> — вон то (далеко от обоих).',
@@ -12088,7 +12100,7 @@
       ]},
       slides:[
         { kind:'intro', title:'Отрицание', title_uz:'Inkor', sub:'안 vs 못',
-          intro:'«Два способа сказать «нет». <span class="ko">안</span> — «не делаю» (по выбору): 안 가요. <span class="ko">못</span> — «не могу» (нет возможности или умения): 못 가요. Ставятся прямо перед глаголом 🌸»',
+          intro:'«Два способа сказать «нет». <span class="ko">안</span> — «не делаю» (по выбору): 안 가요. <span class="ko">못</span> — «не могу» (нет возможности или умения): 못 가요. Ставятся прямо перед глаголом 🌸»', intro_uz:'«Yoʻqlikni aytishning ikki yoʻli bor. <span class="ko">안</span> — «qilmayman» (oʻz xohishi bilan): 안 가요. <span class="ko">못</span> — «qila olmayman» (imkoniyat yoki koʻnikma yoʻqligi): 못 가요. Ikkalasi ham feʼldan bevosita oldin qoʻyiladi 🌸»',
           learn:[['🚫','안 / 못'],['🗣️','диалог'],['🎯','дрилы']], learn_uz:['안 / 못','muloqot','mashqlar'] },
         { kind:'pattern', eyebrow:'ГРАММАТИКА', eyebrow_uz:'GRAMMATIKA', title:'안 + глагол', title_uz:'안 + feʼl', sub:'не делаю', sub_uz:'qilmayman',
           rule:'<span class="ko">안</span> ставится <b>перед</b> глаголом и значит «не делаю» (по своему выбору). Есть и длинная форма: глагол + <span class="ko">-지 않아요</span>.',
@@ -12159,7 +12171,7 @@
       ]},
       slides:[
         { kind:'intro', title:'Хочу и хобби', title_uz:'Istak va hobbi', sub:'-고 싶어요',
-          intro:'«Чтобы сказать «хочу что-то сделать», добавь к основе глагола <span class="ko">-고 싶어요</span>: 가고 싶어요 — хочу пойти. Поговорим о хобби и выходных 🌸»',
+          intro:'«Чтобы сказать «хочу что-то сделать», добавь к основе глагола <span class="ko">-고 싶어요</span>: 가고 싶어요 — хочу пойти. Поговорим о хобби и выходных 🌸»', intro_uz:'««Biror narsa qilishni xohlayman» deyish uchun feʼl negiziga <span class="ko">-고 싶어요</span> qoʻsh: 가고 싶어요 — bormoqchiman. Sevimli mashgʻulot va dam olish kunlari haqida gaplashamiz 🌸»',
           learn:[['💭','-고 싶어요'],['🎨','хобби'],['🗣️','диалог']], learn_uz:['-고 싶어요','hobbi','muloqot'] },
         { kind:'pattern', eyebrow:'ГРАММАТИКА', eyebrow_uz:'GRAMMATIKA', title:'-고 싶어요', title_uz:'-고 싶어요', sub:'хочу сделать', sub_uz:'qilishni xohlayman',
           rule:'Основа глагола (без <span class="ko">-다</span>) + <span class="ko">-고 싶어요</span> = «хочу (сделать)». 가다 → 가고 싶어요, 먹다 → 먹고 싶어요.',
@@ -12229,7 +12241,7 @@
       ]},
       slides:[
         { kind:'intro', title:'Соединяем и общаемся', title_uz:'Bogʻlash va muloqot', sub:t('ui.163'),
-          intro:'«Финал модуля! Научимся связывать предложения: <span class="ko">그리고</span> (и), <span class="ko">하지만</span> (но), <span class="ko">-고</span> (сделал и…). И соберём всё в большом диалоге. 화이팅 🌸»',
+          intro:'«Финал модуля! Научимся связывать предложения: <span class="ko">그리고</span> (и), <span class="ko">하지만</span> (но), <span class="ko">-고</span> (сделал и…). И соберём всё в большом диалоге. 화이팅 🌸»', intro_uz:'«Modulning yakuni! Gaplarni bogʻlashni oʻrganamiz: <span class="ko">그리고</span> (va), <span class="ko">하지만</span> (lekin), <span class="ko">-고</span> (qilib boʻlib...). Va hammasini katta muloqotda jamlaymiz. Fayting 🌸»',
           learn:[['🔗','соединители'],['🗣️','большой диалог'],['🏆','финальный квиз']], learn_uz:['bogʻlovchilar','katta muloqot','yakuniy test'] },
         { kind:'pattern', eyebrow:'ГРАММАТИКА', eyebrow_uz:'GRAMMATIKA', title:'Соединяем предложения', title_uz:'Jumlalarni bogʻlaymiz', sub:'그리고 · 하지만 · -고',
           rule:'<b>그리고</b> — «и» между предложениями. <b>하지만</b> — «но». <b>그래서</b> — «поэтому». <span class="ko">-고</span> соединяет действия одного человека: <span class="ko">밥을 먹고 커피를 마셔요</span> — поем и пью кофе.',
@@ -12294,7 +12306,7 @@
       ]},
       slides:[
         { kind:'intro', title:'Будущее и планы', title_uz:'Kelajak va rejalar', sub:'-(으)ㄹ 거예요',
-          intro:'«В Модуле 2 мы говорили о настоящем и прошлом. Теперь — о будущем! <span class="ko">-(으)ㄹ 거예요</span> значит «буду / собираюсь». И заодно научимся называть даты 🌸»',
+          intro:'«В Модуле 2 мы говорили о настоящем и прошлом. Теперь — о будущем! <span class="ko">-(으)ㄹ 거예요</span> значит «буду / собираюсь». И заодно научимся называть даты 🌸»', intro_uz:'«Modul 2da hozirgi va oʻtgan zamon haqida gapirdik. Endi — kelasi zamon haqida! <span class="ko">-(으)ㄹ 거예요</span> «boʻlaman / niyatim bor» degani. Shu bilan birga sanalarni aytishni ham oʻrganamiz 🌸»',
           learn:[['🔮','будущее'],['📅','даты'],['🗣️','планы']], learn_uz:['kelajak','sanalar','rejalar'] },
         { kind:'pattern', eyebrow:'ГРАММАТИКА', eyebrow_uz:'GRAMMATIKA', title:'-(으)ㄹ 거예요', title_uz:'-(으)ㄹ 거예요', sub:'буду / собираюсь', sub_uz:'qilaman / qilmoqchiman',
           rule:'Основа глагола + <b>-(으)ㄹ 거예요</b>. После гласной → <span class="ko">-ㄹ 거예요</span> (가다 → 갈 거예요), после согласной → <span class="ko">-을 거예요</span> (먹다 → 먹을 거예요). Читается «꺼예요».',
@@ -12363,7 +12375,7 @@
       ]},
       slides:[
         { kind:'intro', title:'Просьбы и запреты', title_uz:'Iltimos va taqiqlar', sub:'-(으)세요 · -지 마세요',
-          intro:'«В Модуле 2 ты знал только <span class="ko">주세요</span> — «дайте». Теперь любой глагол можно сделать вежливой просьбой: <span class="ko">-(으)세요</span>. А чтобы запретить — <span class="ko">-지 마세요</span> 🌸»',
+          intro:'«В Модуле 2 ты знал только <span class="ko">주세요</span> — «дайте». Теперь любой глагол можно сделать вежливой просьбой: <span class="ko">-(으)세요</span>. А чтобы запретить — <span class="ko">-지 마세요</span> 🌸»', intro_uz:'«Modul 2da faqat <span class="ko">주세요</span> — «bering» ni bilarding. Endi istalgan feʼlni xushmuomala iltimosga aylantirish mumkin: <span class="ko">-(으)세요</span>. Taqiqlash uchun esa — <span class="ko">-지 마세요</span> 🌸»',
           learn:[['🙏','вежливо проси'],['🚫','запрещай'],['🗣️','диалог']], learn_uz:['xushmuomala soʻra','taqiqla','muloqot'] },
         { kind:'pattern', eyebrow:'ГРАММАТИКА', eyebrow_uz:'GRAMMATIKA', title:'-(으)세요', title_uz:'-(으)세요', sub:'вежливая просьба', sub_uz:'xushmuomala iltimos',
           rule:'Основа глагола + <b>-(으)세요</b> = вежливая просьба и форма уважения. После гласной → <span class="ko">-세요</span> (가다 → 가세요), после согласной → <span class="ko">-으세요</span> (앉다 → 앉으세요).',
@@ -12436,7 +12448,7 @@
       ]},
       slides:[
         { kind:'intro', title:'Где что лежит', title_uz:'Narsalar qayerda', sub:'위치 표현',
-          intro:'«Частицы 에/에서 ты уже знаешь. Теперь добавим позиционные слова: <span class="ko">위</span> (на), <span class="ko">아래</span> (под), <span class="ko">앞·뒤·옆·안</span>. И скажем, что где есть — <span class="ko">있어요/없어요</span> 🌸»',
+          intro:'«Частицы 에/에서 ты уже знаешь. Теперь добавим позиционные слова: <span class="ko">위</span> (на), <span class="ko">아래</span> (под), <span class="ko">앞·뒤·옆·안</span>. И скажем, что где есть — <span class="ko">있어요/없어요</span> 🌸»', intro_uz:'«에/에서 yuklamalarini allaqachon bilasan. Endi joy soʻzlarini qoʻshamiz: <span class="ko">위</span> (ustida), <span class="ko">아래</span> (ostida), <span class="ko">앞·뒤·옆·안</span>. Va nima qayerda borligini aytamiz — <span class="ko">있어요/없어요</span> 🌸»',
           learn:[['📍','положение'],['📦','есть/нет'],['🐱','предметы']], learn_uz:['joylashuv','bor/yoʻq','buyumlar'] },
         { kind:'info', eyebrow:'ПОЛОЖЕНИЕ', eyebrow_uz:'JOYLASHUV', title:'Позиционные слова', title_uz:'Joy soʻzlari', sub:'место + ___ + 에', sub_uz:'joy + ___ + 에', cols:1,
           grid:[
@@ -12501,7 +12513,7 @@
       ]},
       slides:[
         { kind:'intro', title:'Иду, чтобы…', title_uz:'Maqsad bilan borish', sub:'-(으)러 가다/오다',
-          intro:'«Чтобы сказать, ЗАЧЕМ ты куда-то идёшь, нужна конструкция цели: <span class="ko">-(으)러 가다/오다</span>. 밥을 먹으러 식당에 가요 — иду в столовую поесть 🌸»',
+          intro:'«Чтобы сказать, ЗАЧЕМ ты куда-то идёшь, нужна конструкция цели: <span class="ko">-(으)러 가다/오다</span>. 밥을 먹으러 식당에 가요 — иду в столовую поесть 🌸»', intro_uz:'«Qayerga NIMA UCHUN borayotganingni aytish uchun maqsad qurilmasi kerak: <span class="ko">-(으)러 가다/오다</span>. 밥을 먹으러 식당에 가요 — ovqat yeygani oshxonaga boraman 🌸»',
           learn:[['🎯','цель движения'],['🏃','глаголы'],['🗺️','места']], learn_uz:['harakat maqsadi','feʼllar','joylar'] },
         { kind:'pattern', eyebrow:'ГРАММАТИКА', eyebrow_uz:'GRAMMATIKA', title:'-(으)러 가다/오다', title_uz:'-(으)러 가다/오다', sub:'идти, чтобы…', sub_uz:'biror narsa qilgani borish',
           rule:'Основа глагола цели + <b>-(으)러</b> + <span class="ko">가다/오다</span>. После гласной → <span class="ko">-러</span> (보다 → 보러), после согласной → <span class="ko">-으러</span> (먹다 → 먹으러). Место ставится с <span class="ko">에</span>.',
@@ -12563,7 +12575,7 @@
       ]},
       slides:[
         { kind:'intro', title:'Описываем мир', title_uz:'Dunyoni tasvirlaymiz', sub:'형용사 — прилагательные',
-          intro:'«До этого мы описывали действия. Теперь — свойства! Прилагательные спрягаются как глаголы (-아요/어요), но описывают: 커요 (большой), 예뻐요 (красивый), 추워요 (холодно) 🌸»',
+          intro:'«До этого мы описывали действия. Теперь — свойства! Прилагательные спрягаются как глаголы (-아요/어요), но описывают: 커요 (большой), 예뻐요 (красивый), 추워요 (холодно) 🌸»', intro_uz:'«Shu vaqtgacha harakatlarni tasvirlardik. Endi — xususiyatlarni! Sifatlar feʼllar kabi tuslanadi (-아요/어요), lekin tasvirlaydi: 커요 (katta), 예뻐요 (chiroyli), 추워요 (sovuq) 🌸»',
           learn:[['🎨','свойства'],['🌦️','погода'],['💬','어때요?']], learn_uz:['xususiyatlar','ob-havo','어때요?'] },
         { kind:'pattern', eyebrow:'ГРАММАТИКА', eyebrow_uz:'GRAMMATIKA', title:'Прилагательные на -아요/어요', title_uz:'Sifatlar -아요/어요 bilan', sub:'описываем состояние', sub_uz:'holatni tasvirlaymiz',
           rule:'Прилагательное (형용사) спрягается как глагол. <span class="ko">크다 → 커요</span>, <span class="ko">작다 → 작아요</span>. У <span class="ko">덥다·춥다</span> особая основа (ㅂ → 우): <span class="ko">더워요·추워요</span>. Вопрос о свойстве — <span class="ko">어때요?</span>',
@@ -12623,7 +12635,7 @@
       ]},
       slides:[
         { kind:'intro', title:'Умею и могу', title_uz:'Bilaman va qila olaman', sub:'-(으)ㄹ 수 있다/없다',
-          intro:'«В Модуле 2 был <span class="ko">못</span> — «не могу сейчас». Теперь — про умение и возможность вообще: <span class="ko">-(으)ㄹ 수 있어요</span> (умею/могу) и <span class="ko">-(으)ㄹ 수 없어요</span> (не умею/не могу) 🌸»',
+          intro:'«В Модуле 2 был <span class="ko">못</span> — «не могу сейчас». Теперь — про умение и возможность вообще: <span class="ko">-(으)ㄹ 수 있어요</span> (умею/могу) и <span class="ko">-(으)ㄹ 수 없어요</span> (не умею/не могу) 🌸»', intro_uz:'«Modul 2da <span class="ko">못</span> bor edi — «hozir qila olmayman». Endi — umuman koʻnikma va imkoniyat haqida: <span class="ko">-(으)ㄹ 수 있어요</span> (bilaman/qila olaman) va <span class="ko">-(으)ㄹ 수 없어요</span> (bilmayman/qila olmayman) 🌸»',
           learn:[['💪','умения'],['🎹','инструменты'],['🗣️','диалог']], learn_uz:['koʻnikmalar','asboblar','muloqot'] },
         { kind:'pattern', eyebrow:'ГРАММАТИКА', eyebrow_uz:'GRAMMATIKA', title:'-(으)ㄹ 수 있어요', title_uz:'-(으)ㄹ 수 있어요', sub:'умею / могу', sub_uz:'bilaman / qila olaman',
           rule:'Основа глагола + <b>-(으)ㄹ 수 있어요</b> (могу) / <b>없어요</b> (не могу). После гласной → <span class="ko">-ㄹ 수</span> (가다 → 갈 수 있어요), после согласной → <span class="ko">-을 수</span> (먹다 → 먹을 수 있어요).',
@@ -12683,7 +12695,7 @@
       ]},
       slides:[
         { kind:'intro', title:'Причина', title_uz:'Sabab', sub:'-아서 / 어서',
-          intro:'«Раньше мы соединяли предложения через 그래서. Теперь — внутри одного: <span class="ko">-아서/어서</span> = «потому что / и поэтому». 비가 와서 집에 있어요 — идёт дождь, поэтому я дома 🌸»',
+          intro:'«Раньше мы соединяли предложения через 그래서. Теперь — внутри одного: <span class="ko">-아서/어서</span> = «потому что / и поэтому». 비가 와서 집에 있어요 — идёт дождь, поэтому я дома 🌸»', intro_uz:'«Ilgari gaplarni 그래서 orqali bogʻlardik. Endi — bitta gap ichida: <span class="ko">-아서/어서</span> = «chunki / shuning uchun». 비가 와서 집에 있어요 — yomgʻir yogʻyapti, shuning uchun uydaman 🌸»',
           learn:[['🔗','причина'],['🤒','самочувствие'],['🗣️','диалог']], learn_uz:['sabab','oʻzini his qilish','muloqot'] },
         { kind:'pattern', eyebrow:'ГРАММАТИКА', eyebrow_uz:'GRAMMATIKA', title:'-아서 / 어서', title_uz:'-아서 / 어서', sub:'потому что', sub_uz:'shuning uchun',
           rule:'Основа + <b>-아서/어서</b> присоединяет причину к следствию. Гласная основы ㅏ/ㅗ → <span class="ko">-아서</span>, иначе → <span class="ko">-어서</span>, <span class="ko">하다 → 해서</span>.',
@@ -12743,7 +12755,7 @@
       ]},
       slides:[
         { kind:'intro', title:'Прямо сейчас', title_uz:'Hozir aynan', sub:'-고 있어요',
-          intro:'«Чтобы подчеркнуть, что действие идёт ПРЯМО СЕЙЧАС, используем <span class="ko">-고 있어요</span>. 지금 밥을 먹고 있어요 — я сейчас ем 🌸»',
+          intro:'«Чтобы подчеркнуть, что действие идёт ПРЯМО СЕЙЧАС, используем <span class="ko">-고 있어요</span>. 지금 밥을 먹고 있어요 — я сейчас ем 🌸»', intro_uz:'«Harakat AYNI HOZIR sodir boʻlayotganini taʼkidlash uchun <span class="ko">-고 있어요</span> ishlatamiz. 지금 밥을 먹고 있어요 — men hozir ovqatlanyapman 🌸»',
           learn:[['⏳','продолжение'],['📞','действия'],['🗣️','диалог']], learn_uz:['davomiylik','harakatlar','muloqot'] },
         { kind:'pattern', eyebrow:'ГРАММАТИКА', eyebrow_uz:'GRAMMATIKA', title:'-고 있어요', title_uz:'-고 있어요', sub:'делаю прямо сейчас', sub_uz:'hozir qilyapman',
           rule:'Основа глагола + <b>-고 있어요</b> = действие происходит сейчас (как английское «-ing»). 읽다 → 읽고 있어요, 듣다 → 듣고 있어요.',
@@ -12802,7 +12814,7 @@
       ]},
       slides:[
         { kind:'intro', title:'Давайте вместе', title_uz:'Birga qilaylik', sub:'-(으)ㄹ까요? · -(으)ㅂ시다',
-          intro:'«Чтобы предложить что-то сделать вместе: <span class="ko">-(으)ㄹ까요?</span> — «может, …?». А ответить призывом: <span class="ko">-(으)ㅂ시다</span> — «давайте!» 같이 갈까요? — 갑시다! 🌸»',
+          intro:'«Чтобы предложить что-то сделать вместе: <span class="ko">-(으)ㄹ까요?</span> — «может, …?». А ответить призывом: <span class="ko">-(으)ㅂ시다</span> — «давайте!» 같이 갈까요? — 갑시다! 🌸»', intro_uz:'«Birga biror narsa qilishni taklif qilish uchun: <span class="ko">-(으)ㄹ까요?</span> — «balki, ...?». Javob sifatida chaqiriq: <span class="ko">-(으)ㅂ시다</span> — «keling!» 같이 갈까요? — 갑시다! 🌸»',
           learn:[['🙋','предложим'],['🤝','давайте'],['🗣️','диалог']], learn_uz:['taklif qilaylik','qani','muloqot'] },
         { kind:'pattern', eyebrow:'ГРАММАТИКА', eyebrow_uz:'GRAMMATIKA', title:'-(으)ㄹ까요?', title_uz:'-(으)ㄹ까요?', sub:'может, …?', sub_uz:'balki, …?',
           rule:'Основа + <b>-(으)ㄹ까요?</b> = «может, сделаем?». После гласной → <span class="ko">-ㄹ까요</span> (가다 → 갈까요?), после согласной → <span class="ko">-을까요</span> (먹다 → 먹을까요?). Призыв «давайте» → <b>-(으)ㅂ시다</b>: 갑시다!',
@@ -12862,7 +12874,7 @@
       ]},
       slides:[
         { kind:'intro', title:'Хотя… так как…', title_uz:'Garchi... shuning uchun...', sub:'-지만 · -(으)니까',
-          intro:'«Два связующих окончания внутри предложения. <span class="ko">-지만</span> — «но» (한국어는 어렵지만 재미있어요). <span class="ko">-(으)니까</span> — «так как» (비가 오니까 우산을 가져가요) 🌸»',
+          intro:'«Два связующих окончания внутри предложения. <span class="ko">-지만</span> — «но» (한국어는 어렵지만 재미있어요). <span class="ko">-(으)니까</span> — «так как» (비가 오니까 우산을 가져가요) 🌸»', intro_uz:'«Gap ichidagi ikkita bogʻlovchi qoʻshimcha. <span class="ko">-지만</span> — «lekin» (한국어는 어렵지만 재미있어요). <span class="ko">-(으)니까</span> — «chunki» (비가 오니까 우산을 가져가요) 🌸»',
           learn:[['↔️','-지만 = но'],['➡️','-(으)니까 = так как'],['🗣️','диалог']], learn_uz:['-지만 = lekin','-(으)니까 = shuning uchun','muloqot'] },
         { kind:'pattern', eyebrow:'ГРАММАТИКА', eyebrow_uz:'GRAMMATIKA', title:'-지만', title_uz:'-지만', sub:'но (внутри фразы)', sub_uz:'lekin (gap ichida)',
           rule:'Основа + <b>-지만</b> = «но / хотя» — соединяет контраст в одном предложении. <span class="ko">비싸지만 사고 싶어요</span> — дорого, но хочу купить.',
@@ -12933,7 +12945,7 @@
       ]},
       slides:[
         { kind:'intro', title:'Официальный стиль', title_uz:'Rasmiy uslub', sub:'합니다체',
-          intro:'«Кроме вежливого <span class="ko">-아요/어요</span> есть строгий официальный стиль <span class="ko">-ㅂ니다/습니다</span> — в новостях, презентациях, на работе. Звучит уважительно и серьёзно 🌸»',
+          intro:'«Кроме вежливого <span class="ko">-아요/어요</span> есть строгий официальный стиль <span class="ko">-ㅂ니다/습니다</span> — в новостях, презентациях, на работе. Звучит уважительно и серьёзно 🌸»', intro_uz:'«Xushmuomala <span class="ko">-아요/어요</span>dan tashqari qatʼiy rasmiy uslub <span class="ko">-ㅂ니다/습니다</span> ham bor — yangiliklarda, taqdimotlarda, ishda. Hurmatli va jiddiy yangraydi 🌸»',
           learn:[['🎩','формально'],['📋','работа'],['🤝','знакомство']], learn_uz:['rasmiy','ish','tanishuv'] },
         { kind:'pattern', eyebrow:'ГРАММАТИКА', eyebrow_uz:'GRAMMATIKA', title:'-ㅂ니다 / 습니다', title_uz:'-ㅂ니다 / 습니다', sub:'официальный стиль', sub_uz:'rasmiy uslub',
           rule:'Основа глагола + <b>-ㅂ니다</b> (после гласной: 가다 → 갑니다) или <b>-습니다</b> (после согласной: 먹다 → 먹습니다). Вопрос — <span class="ko">-ㅂ니까?/-습니까?</span> «есть/являюсь» → <span class="ko">입니다</span>.',
@@ -12993,7 +13005,7 @@
       ]},
       slides:[
         { kind:'intro', title:'День из жизни', title_uz:'Kundan bir kun', sub:t('ui.163'),
-          intro:'«Финал Модуля 3! Соберём всё вместе: будущее, вежливые просьбы, -고 있어요, причину -아서, контраст -지만 и официальный стиль — в одном большом диалоге. 화이팅 🌸»',
+          intro:'«Финал Модуля 3! Соберём всё вместе: будущее, вежливые просьбы, -고 있어요, причину -아서, контраст -지만 и официальный стиль — в одном большом диалоге. 화이팅 🌸»', intro_uz:'«Modul 3ning yakuni! Hammasini birlashtiramiz: kelasi zamon, xushmuomala iltimoslar, -고 있어요, -아서 sababi, -지만 qarama-qarshiligi va rasmiy uslub — bitta katta muloqotda. Fayting 🌸»',
           learn:[['🔗','всё вместе'],['🗣️','большой диалог'],['🏆','финальный квиз']], learn_uz:['barchasi birga','katta muloqot','yakuniy test'] },
         { kind:'pattern', eyebrow:'ПОВТОРЕНИЕ', eyebrow_uz:'TAKRORLASH', title:'Связки Модуля 3', title_uz:'3-modul bogʻlovchilari', sub:t('ui.165'),
           rule:'<b>-(으)ㄹ 거예요</b> — буду. <b>-(으)세요</b> — просьба. <b>-(으)러 가다</b> — иду, чтобы. <b>-(으)ㄹ 수 있다</b> — умею. <b>-아서/어서</b> — потому что. <b>-고 있다</b> — сейчас. <b>-(으)ㄹ까요?</b> — может? <b>-지만 / -(으)니까</b> — но / так как.',
@@ -13058,7 +13070,7 @@
       ]},
       slides:[
         { kind:'intro', title:'Условие', title_uz:'Shart', sub:'-(으)면',
-          intro:'«В Модуле 3 были причины (-아서, -니까). Теперь — условие: <span class="ko">-(으)면</span> = «если / когда». 시간이 있으면 만나요 — если будет время, встретимся 🌸»',
+          intro:'«В Модуле 3 были причины (-아서, -니까). Теперь — условие: <span class="ko">-(으)면</span> = «если / когда». 시간이 있으면 만나요 — если будет время, встретимся 🌸»', intro_uz:'«Modul 3da sabab (-아서, -니까) bor edi. Endi — shart: <span class="ko">-(으)면</span> = «agar / qachonki». 시간이 있으면 만나요 — agar vaqt boʻlsa, koʻrishamiz 🌸»',
           learn:[['🔀','если / когда'],['🗣️','планы'],['🎯','дрилы']], learn_uz:['agar / qachon','rejalar','mashqlar'] },
         { kind:'pattern', eyebrow:'ГРАММАТИКА', eyebrow_uz:'GRAMMATIKA', title:'-(으)면', title_uz:'-(으)면', sub:'если / когда', sub_uz:'agar / qachon',
           rule:'Основа глагола + <b>-(으)면</b>. После гласной или ㄹ → <span class="ko">-면</span> (가다 → 가면), после согласной → <span class="ko">-으면</span> (먹다 → 먹으면).',
@@ -13119,7 +13131,7 @@
       ]},
       slides:[
         { kind:'intro', title:'Когда · до · после', title_uz:'Qachon · oldin · keyin', sub:'-(으)ㄹ 때 / 전에 / 후에',
-          intro:'«Три способа привязать действие ко времени: <span class="ko">-(으)ㄹ 때</span> (когда, во время), <span class="ko">-기 전에</span> (до того как), <span class="ko">-(으)ㄴ 후에</span> (после того как) 🌸»',
+          intro:'«Три способа привязать действие ко времени: <span class="ko">-(으)ㄹ 때</span> (когда, во время), <span class="ko">-기 전에</span> (до того как), <span class="ko">-(으)ㄴ 후에</span> (после того как) 🌸»', intro_uz:'«Harakatni vaqtga bogʻlashning uchta yoʻli: <span class="ko">-(으)ㄹ 때</span> (qachon, paytida), <span class="ko">-기 전에</span> (…dan oldin), <span class="ko">-(으)ㄴ 후에</span> (…dan keyin) 🌸»',
           learn:[['🕐','когда'],['⏮️','до'],['⏭️','после']], learn_uz:['qachon','oldin','keyin'] },
         { kind:'pattern', eyebrow:'ГРАММАТИКА', eyebrow_uz:'GRAMMATIKA', title:'Время действий', title_uz:'Harakat vaqti', sub:'때 · 전에 · 후에',
           rule:'<b>-(으)ㄹ 때</b> — «когда / во время»: 밥을 먹을 때.<br><b>-기 전에</b> — «до того как»: 자기 전에.<br><b>-(으)ㄴ 후에</b> (또는 다음에) — «после того как»: 운동한 후에.',
@@ -13179,7 +13191,7 @@
       ]},
       slides:[
         { kind:'intro', title:'Намерение', title_uz:'Niyat', sub:'-(으)려고 하다 · -(으)ㄹ게요',
-          intro:'«В M3 было будущее -ㄹ 거예요. Теперь — намерение: <span class="ko">-(으)려고 하다</span> (собираюсь) и <span class="ko">-(으)ㄹ게요</span> (я сделаю — обещание/решение) 🌸»',
+          intro:'«В M3 было будущее -ㄹ 거예요. Теперь — намерение: <span class="ko">-(으)려고 하다</span> (собираюсь) и <span class="ko">-(으)ㄹ게요</span> (я сделаю — обещание/решение) 🌸»', intro_uz:'«M3da kelasi zamon -ㄹ 거예요 bor edi. Endi — niyat: <span class="ko">-(으)려고 하다</span> (qilmoqchiman) va <span class="ko">-(으)ㄹ게요</span> (men qilaman — vaʼda/qaror) 🌸»',
           learn:[['🎯','намерение'],['🤝','обещание'],['🗣️','диалог']], learn_uz:['niyat','vada','muloqot'] },
         { kind:'pattern', eyebrow:'ГРАММАТИКА', eyebrow_uz:'GRAMMATIKA', title:'-(으)려고 하다', title_uz:'-(으)려고 하다', sub:'собираюсь', sub_uz:'qilmoqchiman',
           rule:'Основа + <b>-(으)려고 하다</b> = «намереваюсь, собираюсь». 가다 → 가려고 해요, 먹다 → 먹으려고 해요. Решение/обещание прямо сейчас → <b>-(으)ㄹ게요</b>: 제가 도와줄게요.',
@@ -13239,7 +13251,7 @@
       ]},
       slides:[
         { kind:'intro', title:'Нужно и должен', title_uz:'Kerak va lozim', sub:'-아/어야 하다(되다)',
-          intro:'«Чтобы сказать «нужно / должен», добавляем <span class="ko">-아/어야 하다</span> (или 되다). 일찍 자야 해요 — нужно рано лечь 🌸»',
+          intro:'«Чтобы сказать «нужно / должен», добавляем <span class="ko">-아/어야 하다</span> (или 되다). 일찍 자야 해요 — нужно рано лечь 🌸»', intro_uz:'««Kerak / lozim» deyish uchun <span class="ko">-아/어야 하다</span> (yoki 되다) qoʻshamiz. 일찍 자야 해요 — erta yotish kerak 🌸»',
           learn:[['✅','обязательно'],['🧳','перед поездкой'],['🎯','дрилы']], learn_uz:['majburiy','sayohatdan oldin','mashqlar'] },
         { kind:'pattern', eyebrow:'ГРАММАТИКА', eyebrow_uz:'GRAMMATIKA', title:'-아/어야 하다', title_uz:'-아/어야 하다', sub:'нужно / должен', sub_uz:'kerak / lozim',
           rule:'Основа + <b>-아/어야 하다(되다)</b> = «нужно / должен». Гласная ㅏ/ㅗ → 아야, иначе → 어야, <span class="ko">하다 → 해야</span>.',
@@ -13299,7 +13311,7 @@
       ]},
       slides:[
         { kind:'intro', title:'Сделай для меня', title_uz:'Men uchun qiling', sub:'-아/어 주세요',
-          intro:'«В M3 был -(으)세요 («сделайте»). Теперь — действие В ПОЛЬЗУ кого-то: <span class="ko">-아/어 주다</span>, а вежливая просьба «сделайте для меня» — <span class="ko">-아/어 주세요</span> 🌸»',
+          intro:'«В M3 был -(으)세요 («сделайте»). Теперь — действие В ПОЛЬЗУ кого-то: <span class="ko">-아/어 주다</span>, а вежливая просьба «сделайте для меня» — <span class="ko">-아/어 주세요</span> 🌸»', intro_uz:'«M3da -(으)세요 («qiling») bor edi. Endi — kimningdir FOYDASIGA qilinadigan harakat: <span class="ko">-아/어 주다</span>, xushmuomala «men uchun qiling» iltimosi esa — <span class="ko">-아/어 주세요</span> 🌸»',
           learn:[['🤲','для кого-то'],['🙏','просьба'],['📷','услуги']], learn_uz:['kimdir uchun','iltimos','xizmatlar'] },
         { kind:'pattern', eyebrow:'ГРАММАТИКА', eyebrow_uz:'GRAMMATIKA', title:'-아/어 주세요', title_uz:'-아/어 주세요', sub:'сделайте для меня', sub_uz:'men uchun qiling',
           rule:'Глагол в форме -아/어 + <b>주다</b> = сделать для кого-то. Вежливая просьба о себе → <b>-아/어 주세요</b>. 사진을 찍어 주세요 — сфотографируйте меня.',
@@ -13359,7 +13371,7 @@
       ]},
       slides:[
         { kind:'intro', title:'Попробуй · опыт', title_uz:'Sinab koʻr · tajriba', sub:'-아/어 보다 · -(으)ㄴ 적이 있다',
-          intro:'«<span class="ko">-아/어 보다</span> = «попробовать (сделать)»: 먹어 보세요. А <span class="ko">-(으)ㄴ 적이 있다</span> = «доводилось / был опыт»: 한국에 간 적이 있어요 🌸»',
+          intro:'«<span class="ko">-아/어 보다</span> = «попробовать (сделать)»: 먹어 보세요. А <span class="ko">-(으)ㄴ 적이 있다</span> = «доводилось / был опыт»: 한국에 간 적이 있어요 🌸»', intro_uz:'«<span class="ko">-아/어 보다</span> = «sinab koʻrish»: 먹어 보세요. <span class="ko">-(으)ㄴ 적이 있다</span> esa = «boʻlgan / tajribam bor»: 한국에 간 적이 있어요 🌸»',
           learn:[['🧪','попробовать'],['🌟','опыт'],['🗣️','диалог']], learn_uz:['sinab koʻrish','tajriba','muloqot'] },
         { kind:'pattern', eyebrow:'ГРАММАТИКА', eyebrow_uz:'GRAMMATIKA', title:'-아/어 보다 · -(으)ㄴ 적이 있다', title_uz:'-아/어 보다 · -(으)ㄴ 적이 있다', sub:'попробуй / доводилось', sub_uz:'sinab koʻr / boʻlgan',
           rule:'<b>-아/어 보다</b> — «попробовать»: 입어 보세요 (примерьте). <b>-(으)ㄴ 적이 있다/없다</b> — «доводилось / не доводилось»: 가 본 적이 있어요.',
@@ -13419,7 +13431,7 @@
       ]},
       slides:[
         { kind:'intro', title:'Определения к словам', title_uz:'Soʻzlarga aniqlovchi', sub:'관형사형',
-          intro:'«Глагол может описывать существительное, как причастие: «книга, которую <b>читаю</b>». Время задаёт окончание: <span class="ko">-는</span> (наст.), <span class="ko">-(으)ㄴ</span> (прош.), <span class="ko">-(으)ㄹ</span> (буд.) 🌸»',
+          intro:'«Глагол может описывать существительное, как причастие: «книга, которую <b>читаю</b>». Время задаёт окончание: <span class="ko">-는</span> (наст.), <span class="ko">-(으)ㄴ</span> (прош.), <span class="ko">-(으)ㄹ</span> (буд.) 🌸»', intro_uz:'«Feʼl otni sifatdoshdek tasvirlashi mumkin: «men <b>oʻqiyotgan</b> kitob». Zamonni qoʻshimcha belgilaydi: <span class="ko">-는</span> (hoz.), <span class="ko">-(으)ㄴ</span> (oʻtgan), <span class="ko">-(으)ㄹ</span> (kelasi) 🌸»',
           learn:[['🧩','причастия'],['🕐','3 времени'],['🎯','дрилы']], learn_uz:['sifatdoshlar','3 ta zamon','mashqlar'] },
         { kind:'pattern', eyebrow:'ГРАММАТИКА', eyebrow_uz:'GRAMMATIKA', title:'-는 / -(으)ㄴ / -(으)ㄹ', title_uz:'-는 / -(으)ㄴ / -(으)ㄹ', sub:'глагол + существительное', sub_uz:'feʼl + ot',
           rule:'Настоящее: <b>-는</b> (읽는 책 — книга, которую читаю). Прошедшее: <b>-(으)ㄴ</b> (읽은 책 — которую прочитал). Будущее: <b>-(으)ㄹ</b> (읽을 책 — которую прочту). Прилагательное → <b>-(으)ㄴ</b> (예쁜 꽃).',
@@ -13481,7 +13493,7 @@
       ]},
       slides:[
         { kind:'intro', title:'Кажется · да?', title_uz:'Shekilli · shundaymi?', sub:'-(으)ㄹ 것 같다 · -지요?',
-          intro:'«Высказать предположение: <span class="ko">-(으)ㄹ 것 같다</span> = «кажется / думаю, что». А спросить согласия: <span class="ko">-지요?(죠?)</span> = «ведь?, правда?» 🌸»',
+          intro:'«Высказать предположение: <span class="ko">-(으)ㄹ 것 같다</span> = «кажется / думаю, что». А спросить согласия: <span class="ko">-지요?(죠?)</span> = «ведь?, правда?» 🌸»', intro_uz:'«Taxmin bildirish: <span class="ko">-(으)ㄹ 것 같다</span> = «chamasi / menimcha». Rozilik soʻrash esa: <span class="ko">-지요?(죠?)</span> = «shundaymi?, toʻgʻrimi?» 🌸»',
           learn:[['🤔','кажется'],['🙋','да?'],['🗣️','диалог']], learn_uz:['shekilli','shundaymi?','muloqot'] },
         { kind:'pattern', eyebrow:'ГРАММАТИКА', eyebrow_uz:'GRAMMATIKA', title:'-(으)ㄹ 것 같다', title_uz:'-(으)ㄹ 것 같다', sub:'кажется / думаю что', sub_uz:'shekilli / deb oʻylayman',
           rule:'Основа + <b>-(으)ㄹ 것 같아요</b> = «кажется / наверное». 비가 올 것 같아요. Запрос согласия → <b>-지요?(죠?)</b>: 맛있지요? — вкусно, правда?',
@@ -13541,7 +13553,7 @@
       ]},
       slides:[
         { kind:'intro', title:'Сравнение', title_uz:'Taqqoslash', sub:'보다 더 · 제일',
-          intro:'«Сравнить просто: <span class="ko">A는 B보다 더 …</span> = «A более …, чем B». А «самый» → <span class="ko">제일 / 가장</span>. 여름이 겨울보다 더워요 🌸»',
+          intro:'«Сравнить просто: <span class="ko">A는 B보다 더 …</span> = «A более …, чем B». А «самый» → <span class="ko">제일 / 가장</span>. 여름이 겨울보다 더워요 🌸»', intro_uz:'«Solishtirish oson: <span class="ko">A는 B보다 더 …</span> = «A B ga qaraganda koʻproq …». «Eng» esa → <span class="ko">제일 / 가장</span>. 여름이 겨울보다 더워요 🌸»',
           learn:[['⚖️','больше чем'],['🏆','самый'],['🌦️','сезоны']], learn_uz:['dan koʻra','eng','fasllar'] },
         { kind:'pattern', eyebrow:'ГРАММАТИКА', eyebrow_uz:'GRAMMATIKA', title:'보다 더 · 제일', title_uz:'보다 더 · 제일', sub:'больше чем / самый', sub_uz:'dan koʻra / eng',
           rule:'<b>B보다 더 + прилагательное</b> = «более …, чем B»: 여름이 겨울보다 더워요. <b>제일 / 가장 + прилагательное</b> = «самый»: 이게 제일 좋아요.',
@@ -13601,7 +13613,7 @@
       ]},
       slides:[
         { kind:'intro', title:'Почтение к старшим', title_uz:'Kattalarga hurmat', sub:'높임말',
-          intro:'«К старшим — особое уважение. К глаголу добавляем <span class="ko">-(으)시-</span>, подлежащее берёт <span class="ko">께서</span>, а у некоторых слов есть особые формы: 있다→계시다, 먹다→드시다, 자다→주무시다 🌸»',
+          intro:'«К старшим — особое уважение. К глаголу добавляем <span class="ko">-(으)시-</span>, подлежащее берёт <span class="ko">께서</span>, а у некоторых слов есть особые формы: 있다→계시다, 먹다→드시다, 자다→주무시다 🌸»', intro_uz:'«Kattalarga — alohida hurmat. Feʼlga <span class="ko">-(으)시-</span> qoʻshamiz, ega esa <span class="ko">께서</span> oladi, ayrim soʻzlarning esa maxsus shakli bor: 있다→계시다, 먹다→드시다, 자다→주무시다 🌸»',
           learn:[['🙇','уважение'],['👵','старшие'],['🗣️','диалог']], learn_uz:['hurmat','kattalar','muloqot'] },
         { kind:'pattern', eyebrow:'ГРАММАТИКА', eyebrow_uz:'GRAMMATIKA', title:'-(으)시- · 께서', title_uz:'-(으)시- · 께서', sub:'уважение к субъекту', sub_uz:'egaga hurmat',
           rule:'К основе добавляем <b>-(으)시-</b>: 읽다 → 읽으세요/읽으십니다. Подлежащее-старший берёт <b>께서</b> вместо 이/가. Особые: 있다→<span class="ko">계시다</span>, 먹다→<span class="ko">드시다</span>, 자다→<span class="ko">주무시다</span>, 주다(старшему)→<span class="ko">드리다</span>.',
@@ -13661,7 +13673,7 @@
       ]},
       slides:[
         { kind:'intro', title:'Дружеская речь', title_uz:'Doʻstona nutq', sub:'반말',
-          intro:'«С близкими друзьями и младшими говорят на <span class="ko">반말</span> — убирают <span class="ko">요</span>: 가요 → 가, 먹었어요 → 먹었어. «Это что?» → 이거 뭐야? Используй только со своими! 🌸»',
+          intro:'«С близкими друзьями и младшими говорят на <span class="ko">반말</span> — убирают <span class="ko">요</span>: 가요 → 가, 먹었어요 → 먹었어. «Это что?» → 이거 뭐야? Используй только со своими! 🌸»', intro_uz:'«Yaqin doʻstlar va kichiklar bilan <span class="ko">반말</span>da gaplashiladi — <span class="ko">요</span> olib tashlanadi: 가요 → 가, 먹었어요 → 먹었어. «Bu nima?» → 이거 뭐야? Faqat oʻzingnikilar bilan ishlat! 🌸»',
           learn:[['😎','неформально'],['🗣️','с друзьями'],['🎯','дрилы']], learn_uz:['norasmiy','doʻstlar bilan','mashqlar'] },
         { kind:'pattern', eyebrow:'ГРАММАТИКА', eyebrow_uz:'GRAMMATIKA', title:'반말 — убираем 요', title_uz:'반말 — 요 ni olib tashlaymiz', sub:'дружеский стиль', sub_uz:'doʻstona uslub',
           rule:'Берём вежливую форму и убираем <b>요</b>: 가요 → <span class="ko">가</span>, 먹어요 → <span class="ko">먹어</span>, 좋아요 → <span class="ko">좋아</span>. Связка (이다) → <span class="ko">야/이야</span>: 이름이 뭐야? Призыв «давай» → <span class="ko">-자</span>: 같이 가자.',
@@ -13721,7 +13733,7 @@
       ]},
       slides:[
         { kind:'intro', title:'Связный рассказ', title_uz:'Bogʻlangan hikoya', sub:t('ui.163'),
-          intro:'«Финал Модуля 4! Соберём всё: условие, время, намерение, долг, опыт, определения, сравнение — в один связный рассказ. 화이팅 🌸»',
+          intro:'«Финал Модуля 4! Соберём всё: условие, время, намерение, долг, опыт, определения, сравнение — в один связный рассказ. 화이팅 🌸»', intro_uz:'«Modul 4ning yakuni! Hammasini jamlaymiz: shart, vaqt, niyat, majburiyat, tajriba, sifatdoshlar, solishtirish — bitta izchil hikoyada. Fayting 🌸»',
           learn:[['🔗','всё вместе'],['🗣️','рассказ'],['🏆','финальный квиз']], learn_uz:['barchasi birga','hikoya','yakuniy test'] },
         { kind:'pattern', eyebrow:'ПОВТОРЕНИЕ', eyebrow_uz:'TAKRORLASH', title:'Грамматика Модуля 4', title_uz:'4-modul grammatikasi', sub:t('ui.165'),
           rule:'<b>-(으)면</b> если · <b>-(으)ㄹ 때/기 전에/ㄴ 후에</b> когда/до/после · <b>-(으)려고 하다</b> намерен · <b>-아/어야 하다</b> нужно · <b>-아/어 보다 / ㄴ 적이 있다</b> попробовать/опыт · <b>-(으)ㄹ 것 같다</b> кажется · <b>보다 더 / 제일</b> сравнение.',
@@ -14763,44 +14775,49 @@
       homework:{ tasks:[
         'Опиши 3 ситуации «почти готово / считай сделано» через -(으)ㄴ/는 셈이다.',
         'Сравни цену и скажи, что это «практически даром».'
+      ], tasks_uz:[
+        '-(으)ㄴ/는 셈이다 orqali «deyarli tayyor / hisoblanadi» holatidagi 3 ta vaziyatni tasvirlab bering.',
+        'Narxni solishtirib, bu «deyarli tekin» ekanini ayting.'
       ]},
       slides:[
-        { kind:'intro', title:'Считай что', sub:'-(으)ㄴ/는 셈이다',
+        { kind:'intro', title:'Считай что', title_uz:'Hisoblasak', sub:'-(으)ㄴ/는 셈이다',
           intro:'«Подведение итога — <span class="ko">-(으)ㄴ/는 셈이다</span>: 거의 다 했으니까 끝난 셈이에요 — почти всё сделал, так что считай закончил 🌸»',
-          learn:[['🧮','итог'],['📏','почти'],['🎯','дрилы']] },
-        { kind:'pattern', eyebrow:'ГРАММАТИКА', title:'-(으)ㄴ/는 셈이다', sub:'фактически, считай что',
+          intro_uz:'«Yakunni chiqarish — <span class="ko">-(으)ㄴ/는 셈이다</span>: 거의 다 했으니까 끝난 셈이에요 — deyarli hammasini qildim, demak tugagan hisoblanadi 🌸»',
+          learn:[['🧮','итог'],['📏','почти'],['🎯','дрилы']], learn_uz:['yakun','deyarli','mashqlar'] },
+        { kind:'pattern', eyebrow:'ГРАММАТИКА', eyebrow_uz:'GRAMMATIKA', title:'-(으)ㄴ/는 셈이다', title_uz:'-(으)ㄴ/는 셈이다', sub:'фактически, считай что', sub_uz:'aslida, hisoblansa',
           rule:'«Можно считать, что…; фактически». Глагол сейчас → <b>-는 셈이다</b>, в прошлом → <b>-(으)ㄴ 셈이다</b> (끝나다 → 끝난 셈이다). Прилагательное → <b>-(으)ㄴ 셈이다</b>. 이다 → <span class="ko">인 셈이다</span>.',
+          rule_uz:'«Deb hisoblash mumkin; aslida». Feʼl hozirgi zamon → <b>-는 셈이다</b>, oʻtgan zamon → <b>-(으)ㄴ 셈이다</b> (끝나다 → 끝난 셈이다). Sifat → <b>-(으)ㄴ 셈이다</b>. 이다 → <span class="ko">인 셈이다</span>.',
           examples:[
-            {ko:'거의 다 했으니까 끝난 셈이에요.', ru:'Почти всё доделал, так что считай закончил.'},
-            {ko:'한 명 빼고 다 왔으니까 다 온 셈이에요.', ru:'Кроме одного все пришли — считай, все в сборе.'},
-            {ko:'이 정도면 거의 공짜인 셈이에요.', ru:'За такую цену это практически даром.'}
+            {ko:'거의 다 했으니까 끝난 셈이에요.', ru:'Почти всё доделал, так что считай закончил.', ru_uz:'Deyarli hammasini qildim, demak tugagan hisoblanadi.'},
+            {ko:'한 명 빼고 다 왔으니까 다 온 셈이에요.', ru:'Кроме одного все пришли — считай, все в сборе.', ru_uz:'Bittasidan boshqa hammasi keldi — demak hammasi yigʻilgan hisoblanadi.'},
+            {ko:'이 정도면 거의 공짜인 셈이에요.', ru:'За такую цену это практически даром.', ru_uz:'Bu narxda bu deyarli tekin hisoblanadi.'}
           ],
           drills:[
-            { q:'끝나다 → 거의 끝___ 셈이다', ru:'уже почти', options:['난','나는','날'], answer:'난' },
-            { q:'오다 → 다 ___ 셈이다', ru:'уже пришли', options:['온','오는','올'], answer:'온' },
+            { q:'끝나다 → 거의 끝___ 셈이다', ru:'уже почти', ru_uz:'deyarli', options:['난','나는','날'], answer:'난' },
+            { q:'오다 → 다 ___ 셈이다', ru:'уже пришли', ru_uz:'allaqachon kelgan', options:['온','오는','올'], answer:'온' },
             { q:'공짜이다 → 공짜___ 셈이다', options:['인','한','는'], answer:'인' }
           ] },
-        { kind:'words', eyebrow:'СЛОВА', title:'Подводим итог',
+        { kind:'words', eyebrow:'СЛОВА', eyebrow_uz:'SOʻZLAR', title:'Подводим итог', title_uz:'Yakun chiqaramiz',
           items:[
-            {ko:'거의', ru:'почти', emoji:'📏'}, {ko:'셈', ru:'счёт', emoji:'🧮'},
-            {ko:'결과적으로', ru:'в итоге', emoji:'📊'}, {ko:'마찬가지', ru:'то же самое', emoji:'🔁'},
-            {ko:'공짜', ru:'даром', emoji:'🆓'}, {ko:'절반', ru:'половина', emoji:'➗'}
+            {ko:'거의', ru:'почти', ru_uz:'deyarli', emoji:'📏'}, {ko:'셈', ru:'счёт', ru_uz:'hisob', emoji:'🧮'},
+            {ko:'결과적으로', ru:'в итоге', ru_uz:'oxir-oqibat', emoji:'📊'}, {ko:'마찬가지', ru:'то же самое', ru_uz:'xuddi shunday', emoji:'🔁'},
+            {ko:'공짜', ru:'даром', ru_uz:'tekinga', emoji:'🆓'}, {ko:'절반', ru:'половина', ru_uz:'yarmi', emoji:'➗'}
           ] },
-        { kind:'dialog', eyebrow:'ДИАЛОГ', title:'Домашка почти готова', sub:'숙제 거의 끝',
+        { kind:'dialog', eyebrow:'ДИАЛОГ', eyebrow_uz:'MULOQOT', title:'Домашка почти готова', title_uz:'Uy vazifasi deyarli tayyor', sub:'숙제 거의 끝',
           lines:[
-            { who:'A', av:'🙂', ko:'숙제 다 했어요?', ru:'Домашку доделал?' },
-            { who:'B', av:'🧑', ko:'하나만 남았으니까 거의 다 한 셈이에요.', ru:'Осталось одно — считай, всё сделал.' },
-            { who:'A', av:'🙂', ko:'그럼 거의 끝났네요.', ru:'Значит почти закончил.' },
-            { who:'B', av:'🧑', ko:'네, 끝난 셈이죠.', ru:'Да, считай закончил.' }
+            { who:'A', av:'🙂', ko:'숙제 다 했어요?', ru:'Домашку доделал?', ru_uz:'Uy vazifasini hammasini qildingmi?' },
+            { who:'B', av:'🧑', ko:'하나만 남았으니까 거의 다 한 셈이에요.', ru:'Осталось одно — считай, всё сделал.', ru_uz:'Bittasi qoldi — deyarli hammasini qilgan hisoblanaman.' },
+            { who:'A', av:'🙂', ko:'그럼 거의 끝났네요.', ru:'Значит почти закончил.', ru_uz:'Demak deyarli tugatding-ku.' },
+            { who:'B', av:'🧑', ko:'네, 끝난 셈이죠.', ru:'Да, считай закончил.', ru_uz:'Ha, tugagan hisoblanadi.' }
           ] },
-        { kind:'build', eyebrow:'СОБЕРИ ФРАЗУ', title:'Практически даром', ru:'За такую цену это практически даром.',
+        { kind:'build', eyebrow:'СОБЕРИ ФРАЗУ', eyebrow_uz:'JUMLA TUZ', title:'Практически даром', title_uz:'Deyarli tekin', ru:'За такую цену это практически даром.', ru_uz:'Bu narxda bu deyarli tekin hisoblanadi.',
           target:['이','정도면','거의','공짜인','셈이에요'], pool:['절반인'] },
-        { kind:'listen', eyebrow:'АУДИРОВАНИЕ', title:'Все в сборе?', sub:t('ui.162'),
+        { kind:'listen', eyebrow:'АУДИРОВАНИЕ', eyebrow_uz:'TINGLASH', title:'Все в сборе?', title_uz:'Hammasi yigʻilganmi?', sub:t('ui.162'),
           ko:'한 명 빼고 다 왔으니까 다 온 셈이에요.', ru:'Кроме одного все пришли — считай, все.',
-          options:['Кроме одного все пришли — считай, все.','Никто не пришёл.','Пришёл только один.'], answer:'Кроме одного все пришли — считай, все.' },
-        { kind:'quiz', eyebrow:'ПРОВЕРКА', title:'Слова урока',
-          items:[ {ko:'거의',ru:'почти'}, {ko:'공짜',ru:'даром'}, {ko:'절반',ru:'половина'} ],
-          pool:['почти','счёт','в итоге','то же самое','даром','половина'] },
+          options:['Кроме одного все пришли — считай, все.','Никто не пришёл.','Пришёл только один.'], options_uz:['Bittasidan boshqa hammasi keldi — demak hammasi.','Hech kim kelmadi.','Faqat bittasi keldi.'], answer:'Кроме одного все пришли — считай, все.', answer_uz:'Bittasidan boshqa hammasi keldi — demak hammasi.' },
+        { kind:'quiz', eyebrow:'ПРОВЕРКА', eyebrow_uz:'TEKSHIRUV', title:'Слова урока', title_uz:'Dars soʻzlari',
+          items:[ {ko:'거의',ru:'почти', ru_uz:'deyarli'}, {ko:'공짜',ru:'даром', ru_uz:'tekinga'}, {ko:'절반',ru:'половина', ru_uz:'yarmi'} ],
+          pool:['почти','счёт','в итоге','то же самое','даром','половина'], pool_uz:['deyarli','hisob','oxir-oqibat','xuddi shunday','tekinga','yarmi'] },
         { kind:'homework' },
         { kind:'done' }
       ]
@@ -14819,44 +14836,49 @@
       homework:{ tasks:[
         'Опиши 3 ситуации без выбора через -(으)ㄹ 수밖에 없다.',
         'Расскажи, когда тебе пришлось от чего-то отказаться.'
+      ], tasks_uz:[
+        '-(으)ㄹ 수밖에 없다 orqali ilojsiz qolgan 3 ta vaziyatni tasvirlab bering.',
+        'Nimadandir voz kechishga toʻgʻri kelgan holatingizni aytib bering.'
       ]},
       slides:[
-        { kind:'intro', title:'Нет выбора', sub:'-(으)ㄹ 수밖에 없다',
+        { kind:'intro', title:'Нет выбора', title_uz:'Boshqa iloj yoʻq', sub:'-(으)ㄹ 수밖에 없다',
           intro:'«Когда другого выхода нет — <span class="ko">-(으)ㄹ 수밖에 없다</span>: 차가 막혀서 걸어갈 수밖에 없었어요 — из-за пробки пришлось идти пешком 🌸»',
-          learn:[['🤷','без выбора'],['🚧','пришлось'],['🎯','дрилы']] },
-        { kind:'pattern', eyebrow:'ГРАММАТИКА', title:'-(으)ㄹ 수밖에 없다', sub:'ничего, кроме как…',
+          intro_uz:'«Boshqa chiqish yoʻli boʻlmaganda — <span class="ko">-(으)ㄹ 수밖에 없다</span>: 차가 막혀서 걸어갈 수밖에 없었어요 — tirbandlik tufayli piyoda ketishga toʻgʻri keldi 🌸»',
+          learn:[['🤷','без выбора'],['🚧','пришлось'],['🎯','дрилы']], learn_uz:['ilojsiz','toʻgʻri keldi','mashqlar'] },
+        { kind:'pattern', eyebrow:'ГРАММАТИКА', eyebrow_uz:'GRAMMATIKA', title:'-(으)ㄹ 수밖에 없다', title_uz:'-(으)ㄹ 수밖에 없다', sub:'ничего, кроме как…', sub_uz:'faqat … qolmaydi',
           rule:'Основа + <b>-(으)ㄹ 수밖에 없다</b> = «не остаётся ничего, кроме как…; неизбежно». 기다리다 → 기다릴 수밖에 없어요. Прошедшее → <span class="ko">-(으)ㄹ 수밖에 없었어요</span>.',
+          rule_uz:'Negiz + <b>-(으)ㄹ 수밖에 없다</b> = «…dan boshqa iloj qolmaydi; muqarrar». 기다리다 → 기다릴 수밖에 없어요. Oʻtgan zamon → <span class="ko">-(으)ㄹ 수밖에 없었어요</span>.',
           examples:[
-            {ko:'차가 막혀서 걸어갈 수밖에 없었어요.', ru:'Из-за пробки пришлось идти пешком.'},
-            {ko:'표가 없어서 포기할 수밖에 없었어요.', ru:'Билетов не было — пришлось отказаться.'},
-            {ko:'이렇게 맛있으면 살이 찔 수밖에 없죠.', ru:'Если так вкусно, поправишься неизбежно.'}
+            {ko:'차가 막혀서 걸어갈 수밖에 없었어요.', ru:'Из-за пробки пришлось идти пешком.', ru_uz:'Tirbandlik tufayli piyoda ketishga toʻgʻri keldi.'},
+            {ko:'표가 없어서 포기할 수밖에 없었어요.', ru:'Билетов не было — пришлось отказаться.', ru_uz:'Chipta yoʻq edi — voz kechishga toʻgʻri keldi.'},
+            {ko:'이렇게 맛있으면 살이 찔 수밖에 없죠.', ru:'Если так вкусно, поправишься неизбежно.', ru_uz:'Shunchalik mazali boʻlsa, semirish muqarrar.'}
           ],
           drills:[
             { q:'기다리다 → 기다___ 수밖에 없다', options:['릴','리는','릴까'], answer:'릴' },
             { q:'포기하다 → 포기___ 수밖에 없었어요', options:['할','한','하는'], answer:'할' },
             { q:'찌다 → 살이 ___ 수밖에 없다', options:['찔','찌는','쪘'], answer:'찔' }
           ] },
-        { kind:'words', eyebrow:'СЛОВА', title:'Безвыходно',
+        { kind:'words', eyebrow:'СЛОВА', eyebrow_uz:'SOʻZLAR', title:'Безвыходно', title_uz:'Ilojsiz',
           items:[
-            {ko:'어쩔 수 없다', ru:'ничего не поделать', emoji:'🤷'}, {ko:'포기하다', ru:'сдаться', emoji:'🏳️'},
-            {ko:'막히다', ru:'пробка', emoji:'🚗'}, {ko:'결정', ru:'решение', emoji:'✔️'},
-            {ko:'상황', ru:'ситуация', emoji:'📍'}, {ko:'고장 나다', ru:'сломаться', emoji:'🛠️'}
+            {ko:'어쩔 수 없다', ru:'ничего не поделать', ru_uz:'ilojsiz', emoji:'🤷'}, {ko:'포기하다', ru:'сдаться', ru_uz:'voz kechmoq', emoji:'🏳️'},
+            {ko:'막히다', ru:'пробка', ru_uz:'tirbandlik', emoji:'🚗'}, {ko:'결정', ru:'решение', ru_uz:'qaror', emoji:'✔️'},
+            {ko:'상황', ru:'ситуация', ru_uz:'vaziyat', emoji:'📍'}, {ko:'고장 나다', ru:'сломаться', ru_uz:'buzilmoq', emoji:'🛠️'}
           ] },
-        { kind:'dialog', eyebrow:'ДИАЛОГ', title:'Пришёл пешком', sub:'걸어왔어요',
+        { kind:'dialog', eyebrow:'ДИАЛОГ', eyebrow_uz:'MULOQOT', title:'Пришёл пешком', title_uz:'Piyoda keldi', sub:'걸어왔어요',
           lines:[
-            { who:'A', av:'🙂', ko:'왜 택시 안 타고 걸어왔어요?', ru:'Почему пешком, а не на такси?' },
-            { who:'B', av:'🧑', ko:'길이 너무 막혀서 걸을 수밖에 없었어요.', ru:'Пробка дикая — пришлось идти пешком.' },
-            { who:'A', av:'🙂', ko:'고생했네요.', ru:'Намучился.' },
-            { who:'B', av:'🧑', ko:'어쩔 수 없었죠.', ru:'Деваться было некуда.' }
+            { who:'A', av:'🙂', ko:'왜 택시 안 타고 걸어왔어요?', ru:'Почему пешком, а не на такси?', ru_uz:'Nega taksiga chiqmay, piyoda kelding?' },
+            { who:'B', av:'🧑', ko:'길이 너무 막혀서 걸을 수밖에 없었어요.', ru:'Пробка дикая — пришлось идти пешком.', ru_uz:'Yoʻl juda tirband edi — piyoda yurishga toʻgʻri keldi.' },
+            { who:'A', av:'🙂', ko:'고생했네요.', ru:'Намучился.', ru_uz:'Qiynalgansan-ku.' },
+            { who:'B', av:'🧑', ko:'어쩔 수 없었죠.', ru:'Деваться было некуда.', ru_uz:'Boshqa iloj yoʻq edi.' }
           ] },
-        { kind:'build', eyebrow:'СОБЕРИ ФРАЗУ', title:'Пришлось отказаться', ru:'Билетов не было — пришлось отказаться.',
+        { kind:'build', eyebrow:'СОБЕРИ ФРАЗУ', eyebrow_uz:'JUMLA TUZ', title:'Пришлось отказаться', title_uz:'Voz kechishga toʻgʻri keldi', ru:'Билетов не было — пришлось отказаться.', ru_uz:'Chipta yoʻq edi — voz kechishga toʻgʻri keldi.',
           target:['표가','없어서','포기할','수밖에','없었어요'], pool:['기다릴'] },
-        { kind:'listen', eyebrow:'АУДИРОВАНИЕ', title:'Что пришлось сделать?', sub:t('ui.162'),
+        { kind:'listen', eyebrow:'АУДИРОВАНИЕ', eyebrow_uz:'TINGLASH', title:'Что пришлось сделать?', title_uz:'Nima qilishga toʻgʻri keldi?', sub:t('ui.162'),
           ko:'차가 막혀서 걸어갈 수밖에 없었어요.', ru:'Из-за пробки пришлось идти пешком.',
-          options:['Из-за пробки пришлось идти пешком.','Машина ехала, я сел.','Пробки не было — поехал.'], answer:'Из-за пробки пришлось идти пешком.' },
-        { kind:'quiz', eyebrow:'ПРОВЕРКА', title:'Слова урока',
-          items:[ {ko:'포기하다',ru:'сдаться'}, {ko:'막히다',ru:'пробка'}, {ko:'상황',ru:'ситуация'} ],
-          pool:['ничего не поделать','сдаться','пробка','решение','ситуация','сломаться'] },
+          options:['Из-за пробки пришлось идти пешком.','Машина ехала, я сел.','Пробки не было — поехал.'], options_uz:['Tirbandlik tufayli piyoda ketishga toʻgʻri keldi.','Mashina ketayotgan edi, mindim.','Tirbandlik yoʻq edi — ketdim.'], answer:'Из-за пробки пришлось идти пешком.', answer_uz:'Tirbandlik tufayli piyoda ketishga toʻgʻri keldi.' },
+        { kind:'quiz', eyebrow:'ПРОВЕРКА', eyebrow_uz:'TEKSHIRUV', title:'Слова урока', title_uz:'Dars soʻzlari',
+          items:[ {ko:'포기하다',ru:'сдаться', ru_uz:'voz kechmoq'}, {ko:'막히다',ru:'пробка', ru_uz:'tirbandlik'}, {ko:'상황',ru:'ситуация', ru_uz:'vaziyat'} ],
+          pool:['ничего не поделать','сдаться','пробка','решение','ситуация','сломаться'], pool_uz:['ilojsiz','voz kechmoq','tirbandlik','qaror','vaziyat','buzilmoq'] },
         { kind:'homework' },
         { kind:'done' }
       ]
@@ -14875,44 +14897,49 @@
       homework:{ tasks:[
         'Составь 3 заботливые фразы через -(으)ㄹ 텐데 (наверное X — сделай Y).',
         'Дай совет другу через -(으)ㄹ 테니까.'
+      ], tasks_uz:[
+        '-(으)ㄹ 텐데 orqali (ehtimol X — Y qil) 3 ta gʻamxoʻr ibora tuzing.',
+        '-(으)ㄹ 테니까 orqali doʻstga maslahat bering.'
       ]},
       slides:[
-        { kind:'intro', title:'Наверное, а…', sub:'-(으)ㄹ 텐데',
+        { kind:'intro', title:'Наверное, а…', title_uz:'Ehtimol, lekin…', sub:'-(으)ㄹ 텐데',
           intro:'«Предположение + забота — <span class="ko">-(으)ㄹ 텐데</span>: 피곤할 텐데 좀 쉬세요 — вы наверняка устали, отдохните. А <span class="ko">-(으)ㄹ 테니까</span> — «наверное X, поэтому…» 🌸»',
-          learn:[['🔮','наверное'],['💛','забота'],['🎯','дрилы']] },
-        { kind:'pattern', eyebrow:'ГРАММАТИКА', title:'-(으)ㄹ 텐데 · -(으)ㄹ 테니까', sub:'наверное X, а Y',
+          intro_uz:'«Taxmin + gʻamxoʻrlik — <span class="ko">-(으)ㄹ 텐데</span>: 피곤할 텐데 좀 쉬세요 — siz charchagan boʻlsangiz kerak, dam oling. <span class="ko">-(으)ㄹ 테니까</span> esa — «ehtimol X, shuning uchun…» 🌸»',
+          learn:[['🔮','наверное'],['💛','забота'],['🎯','дрилы']], learn_uz:['ehtimol','gʻamxoʻrlik','mashqlar'] },
+        { kind:'pattern', eyebrow:'ГРАММАТИКА', eyebrow_uz:'GRAMMATIKA', title:'-(으)ㄹ 텐데 · -(으)ㄹ 테니까', title_uz:'-(으)ㄹ 텐데 · -(으)ㄹ 테니까', sub:'наверное X, а Y', sub_uz:'ehtimol X, ammo Y',
           rule:'Основа + <b>-(으)ㄹ 텐데</b> = «наверное …, а/но» (предположение + контекст или забота). Основа + <b>-(으)ㄹ 테니까</b> = «наверное …, поэтому» (основание). 피곤하다 → 피곤할 텐데 / 피곤할 테니까.',
+          rule_uz:'Negiz + <b>-(으)ㄹ 텐데</b> = «ehtimol …, ammo/lekin» (taxmin + kontekst yoki gʻamxoʻrlik). Negiz + <b>-(으)ㄹ 테니까</b> = «ehtimol …, shuning uchun» (asos). 피곤하다 → 피곤할 텐데 / 피곤할 테니까.',
           examples:[
-            {ko:'많이 피곤할 텐데 좀 쉬세요.', ru:'Вы, наверное, устали — отдохните.'},
-            {ko:'곧 도착할 텐데 조금만 기다려요.', ru:'Скоро, наверное, приедет — подожди чуть-чуть.'},
-            {ko:'배고플 테니까 뭐 좀 먹어요.', ru:'Ты, наверное, голодный — поешь чего-нибудь.'}
+            {ko:'많이 피곤할 텐데 좀 쉬세요.', ru:'Вы, наверное, устали — отдохните.', ru_uz:'Siz charchagan boʻlsangiz kerak — dam oling.'},
+            {ko:'곧 도착할 텐데 조금만 기다려요.', ru:'Скоро, наверное, приедет — подожди чуть-чуть.', ru_uz:'Tez orada yetib kelsa kerak — biroz kuting.'},
+            {ko:'배고플 테니까 뭐 좀 먹어요.', ru:'Ты, наверное, голодный — поешь чего-нибудь.', ru_uz:'Sen och boʻlsang kerak — biror narsa ye.'}
           ],
           drills:[
             { q:'피곤하다 → 피곤___ 텐데', options:['할','한','하는'], answer:'할' },
             { q:'도착하다 → 곧 도착___ 텐데', options:['할','한','하는'], answer:'할' },
             { q:'배고프다 → 배고___ 테니까', options:['플','픈','파'], answer:'플' }
           ] },
-        { kind:'words', eyebrow:'СЛОВА', title:'Забота',
+        { kind:'words', eyebrow:'СЛОВА', eyebrow_uz:'SOʻZLAR', title:'Забота', title_uz:'Gʻamxoʻrlik',
           items:[
-            {ko:'아마', ru:'наверное', emoji:'🔮'}, {ko:'피곤하다', ru:'уставший', emoji:'😴'},
-            {ko:'도착하다', ru:'прибывать', emoji:'🛬'}, {ko:'챙기다', ru:'позаботиться', emoji:'🧺'},
-            {ko:'조금만', ru:'чуть-чуть', emoji:'🤏'}, {ko:'푹 쉬다', ru:'хорошо отдохнуть', emoji:'🛌'}
+            {ko:'아마', ru:'наверное', ru_uz:'ehtimol', emoji:'🔮'}, {ko:'피곤하다', ru:'уставший', ru_uz:'charchagan', emoji:'😴'},
+            {ko:'도착하다', ru:'прибывать', ru_uz:'yetib kelmoq', emoji:'🛬'}, {ko:'챙기다', ru:'позаботиться', ru_uz:'gʻamxoʻrlik qilmoq', emoji:'🧺'},
+            {ko:'조금만', ru:'чуть-чуть', ru_uz:'ozgina', emoji:'🤏'}, {ko:'푹 쉬다', ru:'хорошо отдохнуть', ru_uz:'yaxshi dam olmoq', emoji:'🛌'}
           ] },
-        { kind:'dialog', eyebrow:'ДИАЛОГ', title:'Гости вот-вот', sub:'손님이 곧 와요',
+        { kind:'dialog', eyebrow:'ДИАЛОГ', eyebrow_uz:'MULOQOT', title:'Гости вот-вот', title_uz:'Mehmonlar tez orada', sub:'손님이 곧 와요',
           lines:[
-            { who:'A', av:'🙂', ko:'손님이 곧 올 텐데 준비 다 됐어요?', ru:'Гости скоро придут — всё готово?' },
-            { who:'B', av:'🧑', ko:'거의요. 배고플 텐데 음식부터 차릴게요.', ru:'Почти. Они наверняка голодные — накрою еду.' },
-            { who:'A', av:'🙂', ko:'멀리서 와서 피곤할 텐데.', ru:'Издалека ехали — устали, наверное.' },
-            { who:'B', av:'🧑', ko:'네, 푹 쉬게 해 줘요.', ru:'Да, дадим им отдохнуть.' }
+            { who:'A', av:'🙂', ko:'손님이 곧 올 텐데 준비 다 됐어요?', ru:'Гости скоро придут — всё готово?', ru_uz:'Mehmonlar tez orada keladi — hammasi tayyormi?' },
+            { who:'B', av:'🧑', ko:'거의요. 배고플 텐데 음식부터 차릴게요.', ru:'Почти. Они наверняка голодные — накрою еду.', ru_uz:'Deyarli. Ular och boʻlsa kerak — avval ovqatni tayyorlayman.' },
+            { who:'A', av:'🙂', ko:'멀리서 와서 피곤할 텐데.', ru:'Издалека ехали — устали, наверное.', ru_uz:'Uzoqdan kelishgani uchun charchagan boʻlsa kerak.' },
+            { who:'B', av:'🧑', ko:'네, 푹 쉬게 해 줘요.', ru:'Да, дадим им отдохнуть.', ru_uz:'Ha, yaxshilab dam olishlariga imkon beramiz.' }
           ] },
-        { kind:'build', eyebrow:'СОБЕРИ ФРАЗУ', title:'Отдохните', ru:'Вы, наверное, устали — отдохните.',
+        { kind:'build', eyebrow:'СОБЕРИ ФРАЗУ', eyebrow_uz:'JUMLA TUZ', title:'Отдохните', title_uz:'Dam oling', ru:'Вы, наверное, устали — отдохните.', ru_uz:'Siz charchagan boʻlsangiz kerak — dam oling.',
           target:['많이','피곤할','텐데','좀','쉬세요'], pool:['배고플'] },
-        { kind:'listen', eyebrow:'АУДИРОВАНИЕ', title:'Какая забота?', sub:t('ui.162'),
+        { kind:'listen', eyebrow:'АУДИРОВАНИЕ', eyebrow_uz:'TINGLASH', title:'Какая забота?', title_uz:'Qanday gʻamxoʻrlik?', sub:t('ui.162'),
           ko:'배고플 테니까 뭐 좀 먹어요.', ru:'Ты наверное голодный — поешь.',
-          options:['Ты наверное голодный — поешь.','Ты не голодный — не ешь.','Я голодный — поем сам.'], answer:'Ты наверное голодный — поешь.' },
-        { kind:'quiz', eyebrow:'ПРОВЕРКА', title:'Слова урока',
-          items:[ {ko:'아마',ru:'наверное'}, {ko:'피곤하다',ru:'уставший'}, {ko:'도착하다',ru:'прибывать'} ],
-          pool:['наверное','уставший','прибывать','позаботиться','чуть-чуть','хорошо отдохнуть'] },
+          options:['Ты наверное голодный — поешь.','Ты не голодный — не ешь.','Я голодный — поем сам.'], options_uz:['Sen och boʻlsang kerak — ye.','Sen och emassan — yema.','Men ochman — oʻzim yeyman.'], answer:'Ты наверное голодный — поешь.', answer_uz:'Sen och boʻlsang kerak — ye.' },
+        { kind:'quiz', eyebrow:'ПРОВЕРКА', eyebrow_uz:'TEKSHIRUV', title:'Слова урока', title_uz:'Dars soʻzlari',
+          items:[ {ko:'아마',ru:'наверное', ru_uz:'ehtimol'}, {ko:'피곤하다',ru:'уставший', ru_uz:'charchagan'}, {ko:'도착하다',ru:'прибывать', ru_uz:'yetib kelmoq'} ],
+          pool:['наверное','уставший','прибывать','позаботиться','чуть-чуть','хорошо отдохнуть'], pool_uz:['ehtimol','charchagan','yetib kelmoq','gʻamxoʻrlik qilmoq','ozgina','yaxshi dam olmoq'] },
         { kind:'homework' },
         { kind:'done' }
       ]
@@ -14931,44 +14958,49 @@
       homework:{ tasks:[
         'Спроси у друга 3 новости через -다면서요? (слышал, что…?).',
         'Отреагируй на хорошую новость + 축하해요.'
+      ], tasks_uz:[
+        '-다면서요? orqali doʻstingizdan 3 ta yangilikni soʻrang (eshitdimki, …?).',
+        'Yaxshi yangilikka + 축하해요 bilan munosabat bildiring.'
       ]},
       slides:[
-        { kind:'intro', title:'Говорят, что…?', sub:'-다면서요?',
+        { kind:'intro', title:'Говорят, что…?', title_uz:'Deyishadi, shundaymi?', sub:'-다면서요?',
           intro:'«Уточнить услышанное — <span class="ko">-다면서요?</span>: 결혼한다면서요? — говорят, ты женишься, правда? Ждёшь подтверждения 🌸»',
-          learn:[['🗣️','слух'],['❓','правда?'],['🎯','дрилы']] },
-        { kind:'pattern', eyebrow:'ГРАММАТИКА', title:'-(느)ㄴ다면서요?', sub:'слышал, что …, да?',
+          intro_uz:'«Eshitgan narsani aniqlashtirish — <span class="ko">-다면서요?</span>: 결혼한다면서요? — deyishadiki, uylanar ekansiz, rostmi? Tasdiq kutasiz 🌸»',
+          learn:[['🗣️','слух'],['❓','правда?'],['🎯','дрилы']], learn_uz:['mishmish','rostmi?','mashqlar'] },
+        { kind:'pattern', eyebrow:'ГРАММАТИКА', eyebrow_uz:'GRAMMATIKA', title:'-(느)ㄴ다면서요?', title_uz:'-(느)ㄴ다면서요?', sub:'слышал, что …, да?', sub_uz:'eshitdim, … ekan, shundaymi?',
           rule:'Подтверждение слуха. Глагол → <b>-(느)ㄴ다면서요?</b> (가다 → 간다면서요?). Прилагательное → <b>-다면서요?</b> (바쁘다 → 바쁘다면서요?). Существительное → <span class="ko">-(이)라면서요?</span>. Прошедшее → <span class="ko">-았/었다면서요?</span>.',
+          rule_uz:'Eshitilgan gapni tasdiqlash. Feʼl → <b>-(느)ㄴ다면서요?</b> (가다 → 간다면서요?). Sifat → <b>-다면서요?</b> (바쁘다 → 바쁘다면서요?). Ot → <span class="ko">-(이)라면서요?</span>. Oʻtgan zamon → <span class="ko">-았/었다면서요?</span>.',
           examples:[
-            {ko:'다음 달에 결혼한다면서요?', ru:'Говорят, ты в следующем месяце женишься, правда?'},
-            {ko:'요즘 많이 바쁘다면서요?', ru:'Слышал, ты сейчас очень занят, да?'},
-            {ko:'시험에 합격했다면서요? 축하해요!', ru:'Говорят, ты сдал экзамен — поздравляю!'}
+            {ko:'다음 달에 결혼한다면서요?', ru:'Говорят, ты в следующем месяце женишься, правда?', ru_uz:'Deyishadi, keyingi oyda uylanar ekansiz, rostmi?'},
+            {ko:'요즘 많이 바쁘다면서요?', ru:'Слышал, ты сейчас очень занят, да?', ru_uz:'Eshitdim, hozir juda bandmisiz, shundaymi?'},
+            {ko:'시험에 합격했다면서요? 축하해요!', ru:'Говорят, ты сдал экзамен — поздравляю!', ru_uz:'Deyishadi, imtihondan oʻtibsiz — tabriklayman!'}
           ],
           drills:[
             { q:'가다 → 한국에 ___면서요?', options:['간다','가는다','갈다'], answer:'간다' },
             { q:'바쁘다 → 요즘 바쁘___면서요?', options:['다','ㄴ다','는다'], answer:'다' },
-            { q:'합격하다 → 합격___면서요?', ru:'прошедшее', options:['했다','한다','하다'], answer:'했다' }
+            { q:'합격하다 → 합격___면서요?', ru:'прошедшее', ru_uz:'oʻtgan zamon', options:['했다','한다','하다'], answer:'했다' }
           ] },
-        { kind:'words', eyebrow:'СЛОВА', title:'Новости',
+        { kind:'words', eyebrow:'СЛОВА', eyebrow_uz:'SOʻZLAR', title:'Новости', title_uz:'Yangiliklar',
           items:[
-            {ko:'소문', ru:'слух', emoji:'🗣️'}, {ko:'결혼하다', ru:'жениться', emoji:'💍'},
-            {ko:'합격하다', ru:'сдать, пройти', emoji:'🎓'}, {ko:'축하하다', ru:'поздравлять', emoji:'🎉'},
-            {ko:'유학', ru:'учёба за границей', emoji:'✈️'}, {ko:'장학금', ru:'стипендия', emoji:'💴'}
+            {ko:'소문', ru:'слух', ru_uz:'mishmish', emoji:'🗣️'}, {ko:'결혼하다', ru:'жениться', ru_uz:'uylanmoq', emoji:'💍'},
+            {ko:'합격하다', ru:'сдать, пройти', ru_uz:'oʻtmoq (imtihondan)', emoji:'🎓'}, {ko:'축하하다', ru:'поздравлять', ru_uz:'tabriklamoq', emoji:'🎉'},
+            {ko:'유학', ru:'учёба за границей', ru_uz:'chet elda oʻqish', emoji:'✈️'}, {ko:'장학금', ru:'стипендия', ru_uz:'stipendiya', emoji:'💴'}
           ] },
-        { kind:'dialog', eyebrow:'ДИАЛОГ', title:'Слухи быстрые', sub:'소문이 빨라요',
+        { kind:'dialog', eyebrow:'ДИАЛОГ', eyebrow_uz:'MULOQOT', title:'Слухи быстрые', title_uz:'Mishmish tez tarqaladi', sub:'소문이 빨라요',
           lines:[
-            { who:'A', av:'🙂', ko:'곧 유학 간다면서요?', ru:'Говорят, ты скоро на учёбу за границу, да?' },
-            { who:'B', av:'🧑', ko:'네, 다음 학기에 가요.', ru:'Да, в следующем семестре.' },
-            { who:'A', av:'🙂', ko:'장학금도 받았다면서요?', ru:'И стипендию получил, говорят?' },
-            { who:'B', av:'🧑', ko:'어떻게 알았어요? 소문 빠르네요.', ru:'Откуда знаешь? Слухи быстрые!' }
+            { who:'A', av:'🙂', ko:'곧 유학 간다면서요?', ru:'Говорят, ты скоро на учёбу за границу, да?', ru_uz:'Tez orada chet elga oʻqishga ketar ekansiz, shundaymi?' },
+            { who:'B', av:'🧑', ko:'네, 다음 학기에 가요.', ru:'Да, в следующем семестре.', ru_uz:'Ha, keyingi semestrda.' },
+            { who:'A', av:'🙂', ko:'장학금도 받았다면서요?', ru:'И стипендию получил, говорят?', ru_uz:'Stipendiya ham olibsiz, deyishadi?' },
+            { who:'B', av:'🧑', ko:'어떻게 알았어요? 소문 빠르네요.', ru:'Откуда знаешь? Слухи быстрые!', ru_uz:'Qayerdan bilding? Mishmish tez tarqalar ekan.' }
           ] },
-        { kind:'build', eyebrow:'СОБЕРИ ФРАЗУ', title:'Говорят, женишься?', ru:'Говорят, ты в следующем месяце женишься, да?',
+        { kind:'build', eyebrow:'СОБЕРИ ФРАЗУ', eyebrow_uz:'JUMLA TUZ', title:'Говорят, женишься?', title_uz:'Uylanar ekansiz, shundaymi?', ru:'Говорят, ты в следующем месяце женишься, да?', ru_uz:'Deyishadi, keyingi oyda uylanar ekansiz, rostmi?',
           target:['다음','달에','결혼한다면서요'], pool:['합격했다면서요'] },
-        { kind:'listen', eyebrow:'АУДИРОВАНИЕ', title:'Какая новость?', sub:t('ui.162'),
+        { kind:'listen', eyebrow:'АУДИРОВАНИЕ', eyebrow_uz:'TINGLASH', title:'Какая новость?', title_uz:'Qanday yangilik?', sub:t('ui.162'),
           ko:'시험에 합격했다면서요?', ru:'Говорят, ты сдал экзамен, да?',
-          options:['Говорят, ты сдал экзамен, да?','Ты не сдал экзамен.','Когда у тебя экзамен?'], answer:'Говорят, ты сдал экзамен, да?' },
-        { kind:'quiz', eyebrow:'ПРОВЕРКА', title:'Слова урока',
-          items:[ {ko:'소문',ru:'слух'}, {ko:'결혼하다',ru:'жениться'}, {ko:'축하하다',ru:'поздравлять'} ],
-          pool:['слух','жениться','сдать, пройти','поздравлять','учёба за границей','стипендия'] },
+          options:['Говорят, ты сдал экзамен, да?','Ты не сдал экзамен.','Когда у тебя экзамен?'], options_uz:['Deyishadi, imtihondan oʻtibsiz, shundaymi?','Siz imtihondan oʻtmadingiz.','Imtihoningiz qachon?'], answer:'Говорят, ты сдал экзамен, да?', answer_uz:'Deyishadi, imtihondan oʻtibsiz, shundaymi?' },
+        { kind:'quiz', eyebrow:'ПРОВЕРКА', eyebrow_uz:'TEKSHIRUV', title:'Слова урока', title_uz:'Dars soʻzlari',
+          items:[ {ko:'소문',ru:'слух', ru_uz:'mishmish'}, {ko:'결혼하다',ru:'жениться', ru_uz:'uylanmoq'}, {ko:'축하하다',ru:'поздравлять', ru_uz:'tabriklamoq'} ],
+          pool:['слух','жениться','сдать, пройти','поздравлять','учёба за границей','стипендия'], pool_uz:['mishmish','uylanmoq','oʻtmoq (imtihondan)','tabriklamoq','chet elda oʻqish','stipendiya'] },
         { kind:'homework' },
         { kind:'done' }
       ]
@@ -14987,44 +15019,49 @@
       homework:{ tasks:[
         'Запиши 3 сожаления через -았/었더라면 …었을 텐데.',
         'О чём ты сожалеешь, что не сделал раньше?'
+      ], tasks_uz:[
+        '-았/었더라면 …었을 텐데 orqali 3 ta afsusni yozing.',
+        'Nima haqida ilgariroq qilmaganingizga afsuslanasiz?'
       ]},
       slides:[
-        { kind:'intro', title:'Если бы тогда', sub:'-았/었더라면',
+        { kind:'intro', title:'Если бы тогда', title_uz:'Agar oʻshanda…', sub:'-았/었더라면',
           intro:'«Сожаление о несбывшемся прошлом — <span class="ko">-았/었더라면</span>: 일찍 출발했더라면 안 늦었을 텐데 — выйди я раньше, не опоздал бы 🌸»',
-          learn:[['😔','сожаление'],['⏪','если бы тогда'],['🎯','дрилы']] },
-        { kind:'pattern', eyebrow:'ГРАММАТИКА', title:'-았/었더라면', sub:'если бы тогда…',
+          intro_uz:'«Amalga oshmagan oʻtmishga afsuslanish — <span class="ko">-았/었더라면</span>: 일찍 출발했더라면 안 늦었을 텐데 — ertaroq chiqqanimda, kechikmagan boʻlardim 🌸»',
+          learn:[['😔','сожаление'],['⏪','если бы тогда'],['🎯','дрилы']], learn_uz:['afsus','agar oʻshanda','mashqlar'] },
+        { kind:'pattern', eyebrow:'ГРАММАТИКА', eyebrow_uz:'GRAMMATIKA', title:'-았/었더라면', title_uz:'-았/었더라면', sub:'если бы тогда…', sub_uz:'agar oʻshanda…',
           rule:'Основа + <b>-았/었더라면</b> = «если бы тогда (в прошлом)…» — о несбывшемся, с сожалением. Часто вместе с <span class="ko">-았/었을 텐데</span> / <span class="ko">-(으)ㄹ걸</span>. 공부했더라면 합격했을 텐데.',
+          rule_uz:'Negiz + <b>-았/었더라면</b> = «agar oʻshanda (oʻtmishda) … boʻlganida» — amalga oshmagan narsa haqida, afsus bilan. Koʻpincha <span class="ko">-았/었을 텐데</span> / <span class="ko">-(으)ㄹ걸</span> bilan birga keladi. 공부했더라면 합격했을 텐데.',
           examples:[
-            {ko:'조금만 일찍 출발했더라면 안 늦었을 텐데.', ru:'Выйди я чуть раньше, не опоздал бы.'},
-            {ko:'미리 알았더라면 도와줬을 거예요.', ru:'Знай я заранее, помог бы.'},
-            {ko:'그때 포기하지 않았더라면 좋았을 텐데.', ru:'Если бы тогда не сдался — было бы хорошо.'}
+            {ko:'조금만 일찍 출발했더라면 안 늦었을 텐데.', ru:'Выйди я чуть раньше, не опоздал бы.', ru_uz:'Bir oz ertaroq chiqqanimda, kechikmagan boʻlardim.'},
+            {ko:'미리 알았더라면 도와줬을 거예요.', ru:'Знай я заранее, помог бы.', ru_uz:'Oldindan bilganimda, yordam bergan boʻlardim.'},
+            {ko:'그때 포기하지 않았더라면 좋았을 텐데.', ru:'Если бы тогда не сдался — было бы хорошо.', ru_uz:'Oʻshanda voz kechmaganimda, yaxshi boʻlar edi.'}
           ],
           drills:[
             { q:'출발하다 → 일찍 출발___ 안 늦었을 텐데', options:['했더라면','하더라면','한다면'], answer:'했더라면' },
             { q:'알다 → 미리 ___ 도와줬을 거예요', options:['알았더라면','알더라면','알면'], answer:'알았더라면' },
             { q:'그때 포기하지 ___ 좋았을 텐데', options:['않았더라면','않으면','않더라면'], answer:'않았더라면' }
           ] },
-        { kind:'words', eyebrow:'СЛОВА', title:'Сожаления',
+        { kind:'words', eyebrow:'СЛОВА', eyebrow_uz:'SOʻZLAR', title:'Сожаления', title_uz:'Afsuslar',
           items:[
-            {ko:'후회', ru:'сожаление', emoji:'😔'}, {ko:'미리', ru:'заранее', emoji:'🕗'},
-            {ko:'그때', ru:'тогда', emoji:'⏪'}, {ko:'출발하다', ru:'отправляться', emoji:'🚉'},
-            {ko:'아쉽다', ru:'досадно', emoji:'😞'}, {ko:'준비하다', ru:'готовиться', emoji:'📋'}
+            {ko:'후회', ru:'сожаление', ru_uz:'afsus', emoji:'😔'}, {ko:'미리', ru:'заранее', ru_uz:'oldindan', emoji:'🕗'},
+            {ko:'그때', ru:'тогда', ru_uz:'oʻshanda', emoji:'⏪'}, {ko:'출발하다', ru:'отправляться', ru_uz:'joʻnamoq', emoji:'🚉'},
+            {ko:'아쉽다', ru:'досадно', ru_uz:'achinarli', emoji:'😞'}, {ko:'준비하다', ru:'готовиться', ru_uz:'tayyorlanmoq', emoji:'📋'}
           ] },
-        { kind:'dialog', eyebrow:'ДИАЛОГ', title:'После экзамена', sub:'시험 끝나고',
+        { kind:'dialog', eyebrow:'ДИАЛОГ', eyebrow_uz:'MULOQOT', title:'После экзамена', title_uz:'Imtihondan keyin', sub:'시험 끝나고',
           lines:[
-            { who:'A', av:'🙂', ko:'시험 어떻게 됐어요?', ru:'Как экзамен?' },
-            { who:'B', av:'🧑', ko:'조금만 더 공부했더라면 합격했을 텐데…', ru:'Поучи я чуть больше — сдал бы…' },
-            { who:'A', av:'🙂', ko:'너무 후회하지 마요.', ru:'Не казни себя так.' },
-            { who:'B', av:'🧑', ko:'다음엔 미리 준비할게요.', ru:'В следующий раз подготовлюсь заранее.' }
+            { who:'A', av:'🙂', ko:'시험 어떻게 됐어요?', ru:'Как экзамен?', ru_uz:'Imtihon qanday oʻtdi?' },
+            { who:'B', av:'🧑', ko:'조금만 더 공부했더라면 합격했을 텐데…', ru:'Поучи я чуть больше — сдал бы…', ru_uz:'Bir oz koʻproq oʻqiganimda, oʻtgan boʻlardim…' },
+            { who:'A', av:'🙂', ko:'너무 후회하지 마요.', ru:'Не казни себя так.', ru_uz:'Oʻzingni unchalik ayblama.' },
+            { who:'B', av:'🧑', ko:'다음엔 미리 준비할게요.', ru:'В следующий раз подготовлюсь заранее.', ru_uz:'Keyingi safar oldindan tayyorlanaman.' }
           ] },
-        { kind:'build', eyebrow:'СОБЕРИ ФРАЗУ', title:'Не опоздал бы', ru:'Выйди я чуть раньше, не опоздал бы.',
+        { kind:'build', eyebrow:'СОБЕРИ ФРАЗУ', eyebrow_uz:'JUMLA TUZ', title:'Не опоздал бы', title_uz:'Kechikmagan boʻlardim', ru:'Выйди я чуть раньше, не опоздал бы.', ru_uz:'Bir oz ertaroq chiqqanimda, kechikmagan boʻlardim.',
           target:['조금만','일찍','출발했더라면','안','늦었을','텐데'], pool:['알았더라면'] },
-        { kind:'listen', eyebrow:'АУДИРОВАНИЕ', title:'О чём жалеет?', sub:t('ui.162'),
+        { kind:'listen', eyebrow:'АУДИРОВАНИЕ', eyebrow_uz:'TINGLASH', title:'О чём жалеет?', title_uz:'Nimaga afsuslanadi?', sub:t('ui.162'),
           ko:'미리 알았더라면 도와줬을 거예요.', ru:'Знай я заранее — помог бы.',
-          options:['Знай я заранее — помог бы.','Я знал заранее и помог.','Я не хочу помогать.'], answer:'Знай я заранее — помог бы.' },
-        { kind:'quiz', eyebrow:'ПРОВЕРКА', title:'Слова урока',
-          items:[ {ko:'후회',ru:'сожаление'}, {ko:'미리',ru:'заранее'}, {ko:'그때',ru:'тогда'} ],
-          pool:['сожаление','заранее','тогда','отправляться','досадно','готовиться'] },
+          options:['Знай я заранее — помог бы.','Я знал заранее и помог.','Я не хочу помогать.'], options_uz:['Oldindan bilganimda, yordam bergan boʻlardim.','Men oldindan bilib, yordam berdim.','Yordam berishni xohlamayman.'], answer:'Знай я заранее — помог бы.', answer_uz:'Oldindan bilganimda, yordam bergan boʻlardim.' },
+        { kind:'quiz', eyebrow:'ПРОВЕРКА', eyebrow_uz:'TEKSHIRUV', title:'Слова урока', title_uz:'Dars soʻzlari',
+          items:[ {ko:'후회',ru:'сожаление', ru_uz:'afsus'}, {ko:'미리',ru:'заранее', ru_uz:'oldindan'}, {ko:'그때',ru:'тогда', ru_uz:'oʻshanda'} ],
+          pool:['сожаление','заранее','тогда','отправляться','досадно','готовиться'], pool_uz:['afsus','oldindan','oʻshanda','joʻnamoq','achinarli','tayyorlanmoq'] },
         { kind:'homework' },
         { kind:'done' }
       ]
@@ -15043,44 +15080,49 @@
       homework:{ tasks:[
         'Составь 3 «из-за X плохо вышло Y» через -(으)ㄴ/는 탓에.',
         'Опиши неожиданную помеху через -는 바람에.'
+      ], tasks_uz:[
+        '-(으)ㄴ/는 탓에 orqali «X tufayli Y yomon chiqdi» shaklida 3 ta gap tuzing.',
+        '-는 바람에 orqali kutilmagan toʻsiqni tasvirlab bering.'
       ]},
       slides:[
-        { kind:'intro', title:'По вине · из-за', sub:'탓에 · 바람에',
+        { kind:'intro', title:'По вине · из-за', title_uz:'Aybi bilan · tufayli', sub:'탓에 · 바람에',
           intro:'«Плохая причина — <span class="ko">탓에</span> (по вине) и <span class="ko">바람에</span> (из-за внезапного). Сравни с <span class="ko">덕분에</span> — «благодаря» (хорошее) 🌸»',
-          learn:[['👎','по вине'],['💨','внезапно'],['🎯','дрилы']] },
-        { kind:'pattern', eyebrow:'ГРАММАТИКА', title:'-(으)ㄴ/는 탓에 · -는 바람에', sub:'из-за (плохой итог)',
+          intro_uz:'«Yomon sabab — <span class="ko">탓에</span> (aybi bilan) va <span class="ko">바람에</span> (kutilmagan narsa tufayli). <span class="ko">덕분에</span> bilan solishtiring — «tufayli/sharofati bilan» (yaxshi narsa) 🌸»',
+          learn:[['👎','по вине'],['💨','внезапно'],['🎯','дрилы']], learn_uz:['aybi bilan','kutilmaganda','mashqlar'] },
+        { kind:'pattern', eyebrow:'ГРАММАТИКА', eyebrow_uz:'GRAMMATIKA', title:'-(으)ㄴ/는 탓에 · -는 바람에', title_uz:'-(으)ㄴ/는 탓에 · -는 바람에', sub:'из-за (плохой итог)', sub_uz:'tufayli (yomon natija)',
           rule:'<b>탓에</b> — «по вине / из-за» (плохой результат): глагол сейчас → 는 탓에, в прошлом → (으)ㄴ 탓에, прилаг. → (으)ㄴ 탓에, существительное → 탓에. <b>-는 바람에</b> — «из-за внезапного» (неожиданная помеха). Хорошая причина — <span class="ko">덕분에</span>.',
+          rule_uz:'<b>탓에</b> — «aybi bilan / tufayli» (yomon natija): feʼl hozirgi zamon → 는 탓에, oʻtgan zamon → (으)ㄴ 탓에, sifat → (으)ㄴ 탓에, ot → 탓에. <b>-는 바람에</b> — «kutilmagan narsa tufayli» (kutilmagan toʻsiq). Yaxshi sabab — <span class="ko">덕분에</span>.',
           examples:[
-            {ko:'늦게 잔 탓에 아침에 못 일어났어요.', ru:'Из-за того что поздно лёг, утром не встал.'},
-            {ko:'갑자기 비가 오는 바람에 다 젖었어요.', ru:'Из-за внезапного дождя весь промок.'},
-            {ko:'길이 막힌 탓에 약속에 늦었어요.', ru:'Из-за пробки опоздал на встречу.'}
+            {ko:'늦게 잔 탓에 아침에 못 일어났어요.', ru:'Из-за того что поздно лёг, утром не встал.', ru_uz:'Kech yotganim tufayli ertalab tura olmadim.'},
+            {ko:'갑자기 비가 오는 바람에 다 젖었어요.', ru:'Из-за внезапного дождя весь промок.', ru_uz:'Kutilmaganda yomgʻir yogʻgani tufayli butunlay hoʻl boʻldim.'},
+            {ko:'길이 막힌 탓에 약속에 늦었어요.', ru:'Из-за пробки опоздал на встречу.', ru_uz:'Yoʻl tirband boʻlgani tufayli uchrashuvga kechikdim.'}
           ],
           drills:[
             { q:'자다 → 늦게 잔 ___ 못 일어났어요', options:['탓에','덕분에','대신에'], answer:'탓에' },
-            { q:'오다 → 비가 오는 ___ 다 젖었어요', ru:'внезапно', options:['바람에','김에','동안'], answer:'바람에' },
+            { q:'오다 → 비가 오는 ___ 다 젖었어요', ru:'внезапно', ru_uz:'kutilmaganda', options:['바람에','김에','동안'], answer:'바람에' },
             { q:'막히다 → 길이 막힌 ___ 늦었어요', options:['탓에','덕분에','만큼'], answer:'탓에' }
           ] },
-        { kind:'words', eyebrow:'СЛОВА', title:'Помехи',
+        { kind:'words', eyebrow:'СЛОВА', eyebrow_uz:'SOʻZLAR', title:'Помехи', title_uz:'Toʻsiqlar',
           items:[
-            {ko:'탓', ru:'вина, причина', emoji:'👎'}, {ko:'갑자기', ru:'внезапно', emoji:'⚡'},
-            {ko:'젖다', ru:'промокнуть', emoji:'💧'}, {ko:'막히다', ru:'затор', emoji:'🚧'},
-            {ko:'덕분에', ru:'благодаря', emoji:'🙏'}, {ko:'고장 나다', ru:'сломаться', emoji:'🛠️'}
+            {ko:'탓', ru:'вина, причина', ru_uz:'ayb, sabab', emoji:'👎'}, {ko:'갑자기', ru:'внезапно', ru_uz:'kutilmaganda', emoji:'⚡'},
+            {ko:'젖다', ru:'промокнуть', ru_uz:'hoʻl boʻlmoq', emoji:'💧'}, {ko:'막히다', ru:'затор', ru_uz:'tirbandlik', emoji:'🚧'},
+            {ko:'덕분에', ru:'благодаря', ru_uz:'tufayli (yaxshi)', emoji:'🙏'}, {ko:'고장 나다', ru:'сломаться', ru_uz:'buzilmoq', emoji:'🛠️'}
           ] },
-        { kind:'dialog', eyebrow:'ДИАЛОГ', title:'Почему опоздал', sub:'왜 늦었어요?',
+        { kind:'dialog', eyebrow:'ДИАЛОГ', eyebrow_uz:'MULOQOT', title:'Почему опоздал', title_uz:'Nega kechikding', sub:'왜 늦었어요?',
           lines:[
-            { who:'A', av:'🙂', ko:'왜 이렇게 늦었어요?', ru:'Почему так опоздал?' },
-            { who:'B', av:'🧑', ko:'갑자기 차가 고장 나는 바람에요.', ru:'Машина внезапно сломалась.' },
-            { who:'A', av:'🙂', ko:'어휴, 고생했네요.', ru:'Ох, намучился.' },
-            { who:'B', av:'🧑', ko:'늦게 출발한 탓도 있어요.', ru:'Ещё и вышел поздно — моя вина.' }
+            { who:'A', av:'🙂', ko:'왜 이렇게 늦었어요?', ru:'Почему так опоздал?', ru_uz:'Nega bunchalik kechikding?' },
+            { who:'B', av:'🧑', ko:'갑자기 차가 고장 나는 바람에요.', ru:'Машина внезапно сломалась.', ru_uz:'Mashina birdan buzilib qoldi.' },
+            { who:'A', av:'🙂', ko:'어휴, 고생했네요.', ru:'Ох, намучился.', ru_uz:'Voy, qiynalibsan-ku.' },
+            { who:'B', av:'🧑', ko:'늦게 출발한 탓도 있어요.', ru:'Ещё и вышел поздно — моя вина.', ru_uz:'Kech chiqqanim ham bor — bu mening aybim.' }
           ] },
-        { kind:'build', eyebrow:'СОБЕРИ ФРАЗУ', title:'Весь промок', ru:'Из-за внезапного дождя весь промок.',
+        { kind:'build', eyebrow:'СОБЕРИ ФРАЗУ', eyebrow_uz:'JUMLA TUZ', title:'Весь промок', title_uz:'Butunlay hoʻl boʻldim', ru:'Из-за внезапного дождя весь промок.', ru_uz:'Kutilmaganda yomgʻir yogʻgani tufayli butunlay hoʻl boʻldim.',
           target:['갑자기','비가','오는','바람에','다','젖었어요'], pool:['막힌'] },
-        { kind:'listen', eyebrow:'АУДИРОВАНИЕ', title:'Из-за чего?', sub:t('ui.162'),
+        { kind:'listen', eyebrow:'АУДИРОВАНИЕ', eyebrow_uz:'TINGLASH', title:'Из-за чего?', title_uz:'Nima tufayli?', sub:t('ui.162'),
           ko:'늦게 잔 탓에 아침에 못 일어났어요.', ru:'Из-за позднего отбоя утром не встал.',
-          options:['Из-за позднего отбоя утром не встал.','Лёг рано и хорошо выспался.','Утром встал очень рано.'], answer:'Из-за позднего отбоя утром не встал.' },
-        { kind:'quiz', eyebrow:'ПРОВЕРКА', title:'Слова урока',
-          items:[ {ko:'갑자기',ru:'внезапно'}, {ko:'젖다',ru:'промокнуть'}, {ko:'덕분에',ru:'благодаря'} ],
-          pool:['вина, причина','внезапно','промокнуть','затор','благодаря','сломаться'] },
+          options:['Из-за позднего отбоя утром не встал.','Лёг рано и хорошо выспался.','Утром встал очень рано.'], options_uz:['Kech yotganim tufayli ertalab tura olmadim.','Erta yotib, yaxshi uxladim.','Ertalab juda erta turdim.'], answer:'Из-за позднего отбоя утром не встал.', answer_uz:'Kech yotganim tufayli ertalab tura olmadim.' },
+        { kind:'quiz', eyebrow:'ПРОВЕРКА', eyebrow_uz:'TEKSHIRUV', title:'Слова урока', title_uz:'Dars soʻzlari',
+          items:[ {ko:'갑자기',ru:'внезапно', ru_uz:'kutilmaganda'}, {ko:'젖다',ru:'промокнуть', ru_uz:'hoʻl boʻlmoq'}, {ko:'덕분에',ru:'благодаря', ru_uz:'tufayli (yaxshi)'} ],
+          pool:['вина, причина','внезапно','промокнуть','затор','благодаря','сломаться'], pool_uz:['ayb, sabab','kutilmaganda','hoʻl boʻlmoq','tirbandlik','tufayli (yaxshi)','buzilmoq'] },
         { kind:'homework' },
         { kind:'done' }
       ]
@@ -15099,44 +15141,49 @@
       homework:{ tasks:[
         'Опиши 3 «в итоге всё-таки сделал» через -고 말다.',
         'Вырази решимость довести дело до конца: …고 말겠어요.'
+      ], tasks_uz:[
+        '-고 말다 orqali «oxir-oqibat baribir qildim» holatidagi 3 ta gap tuzing.',
+        'Ishni oxirigacha olib borish qatʼiyatini bildiring: …고 말겠어요.'
       ]},
       slides:[
-        { kind:'intro', title:'В итоге всё-таки', sub:'-고 말다',
+        { kind:'intro', title:'В итоге всё-таки', title_uz:'Oxir-oqibat baribir', sub:'-고 말다',
           intro:'«Случилось вопреки желанию или доведено до конца — <span class="ko">-고 말다</span>: 울고 말았어요 — в итоге всё-таки расплакался. С решимостью: 해내고 말겠어요 — обязательно справлюсь 🌸»',
-          learn:[['🔚','в итоге'],['😣','всё-таки'],['🎯','дрилы']] },
-        { kind:'pattern', eyebrow:'ГРАММАТИКА', title:'-고 말다', sub:'в итоге сделал',
+          intro_uz:'«Xohlashga qarshi sodir boʻldi yoki oxirigacha olib borildi — <span class="ko">-고 말다</span>: 울고 말았어요 — oxir-oqibat baribir yigʻlab yubordim. Qatʼiyat bilan: 해내고 말겠어요 — albatta uddalayman 🌸»',
+          learn:[['🔚','в итоге'],['😣','всё-таки'],['🎯','дрилы']], learn_uz:['oxir-oqibat','baribir','mashqlar'] },
+        { kind:'pattern', eyebrow:'ГРАММАТИКА', eyebrow_uz:'GRAMMATIKA', title:'-고 말다', title_uz:'-고 말다', sub:'в итоге сделал', sub_uz:'oxir-oqibat qildim',
           rule:'Основа глагола + <b>-고 말다</b> = «в итоге всё-таки …» (часто с сожалением) или «довести до конца». Прошедшее → <span class="ko">-고 말았어요</span>. Решимость → <span class="ko">-고 말겠어요</span>.',
+          rule_uz:'Feʼl negizi + <b>-고 말다</b> = «oxir-oqibat baribir …» (koʻpincha afsus bilan) yoki «oxirigacha olib bormoq». Oʻtgan zamon → <span class="ko">-고 말았어요</span>. Qatʼiyat → <span class="ko">-고 말겠어요</span>.',
           examples:[
-            {ko:'참으려고 했지만 울고 말았어요.', ru:'Хотел сдержаться, но в итоге расплакался.'},
-            {ko:'비밀을 말하고 말았어요.', ru:'Я всё-таки проболтался.'},
-            {ko:'끝까지 포기하지 않고 해내고 말겠어요.', ru:'Не сдамся и обязательно доведу до конца.'}
+            {ko:'참으려고 했지만 울고 말았어요.', ru:'Хотел сдержаться, но в итоге расплакался.', ru_uz:'Chidamoqchi edim, lekin oxir-oqibat yigʻlab yubordim.'},
+            {ko:'비밀을 말하고 말았어요.', ru:'Я всё-таки проболтался.', ru_uz:'Sirni baribir aytib qoʻydim.'},
+            {ko:'끝까지 포기하지 않고 해내고 말겠어요.', ru:'Не сдамся и обязательно доведу до конца.', ru_uz:'Oxirigacha voz kechmay, albatta uddalayman.'}
           ],
           drills:[
             { q:'울다 → 결국 울___ 말았어요', options:['고','어','지'], answer:'고' },
             { q:'잊다 → 약속을 잊___ 말았어요', options:['고','어서','지'], answer:'고' },
-            { q:'해내다 → 꼭 해내___ 말겠어요', ru:'решимость', options:['고','어','지'], answer:'고' }
+            { q:'해내다 → 꼭 해내___ 말겠어요', ru:'решимость', ru_uz:'qatʼiyat', options:['고','어','지'], answer:'고' }
           ] },
-        { kind:'words', eyebrow:'СЛОВА', title:'В итоге',
+        { kind:'words', eyebrow:'СЛОВА', eyebrow_uz:'SOʻZLAR', title:'В итоге', title_uz:'Oxir-oqibat',
           items:[
-            {ko:'결국', ru:'в итоге', emoji:'🔚'}, {ko:'참다', ru:'терпеть', emoji:'😤'},
-            {ko:'비밀', ru:'секрет', emoji:'🤫'}, {ko:'실수', ru:'ошибка', emoji:'😣'},
-            {ko:'끝까지', ru:'до конца', emoji:'🏁'}, {ko:'해내다', ru:'справиться', emoji:'💪'}
+            {ko:'결국', ru:'в итоге', ru_uz:'oxir-oqibat', emoji:'🔚'}, {ko:'참다', ru:'терпеть', ru_uz:'chidamoq', emoji:'😤'},
+            {ko:'비밀', ru:'секрет', ru_uz:'sir', emoji:'🤫'}, {ko:'실수', ru:'ошибка', ru_uz:'xato', emoji:'😣'},
+            {ko:'끝까지', ru:'до конца', ru_uz:'oxirigacha', emoji:'🏁'}, {ko:'해내다', ru:'справиться', ru_uz:'uddalamoq', emoji:'💪'}
           ] },
-        { kind:'dialog', eyebrow:'ДИАЛОГ', title:'Грустный фильм', sub:'슬픈 영화',
+        { kind:'dialog', eyebrow:'ДИАЛОГ', eyebrow_uz:'MULOQOT', title:'Грустный фильм', title_uz:'Gʻamgin film', sub:'슬픈 영화',
           lines:[
-            { who:'A', av:'🙂', ko:'영화 슬펐어요?', ru:'Грустный фильм?' },
-            { who:'B', av:'🧑', ko:'너무 슬퍼서 결국 울고 말았어요.', ru:'Так грустно, что в итоге расплакался.' },
-            { who:'A', av:'🙂', ko:'저는 끝까지 참았어요.', ru:'А я сдержался до конца.' },
-            { who:'B', av:'🧑', ko:'저도 참으려고 했는데…', ru:'Я тоже хотел, но…' }
+            { who:'A', av:'🙂', ko:'영화 슬펐어요?', ru:'Грустный фильм?', ru_uz:'Film gʻamgin edimi?' },
+            { who:'B', av:'🧑', ko:'너무 슬퍼서 결국 울고 말았어요.', ru:'Так грустно, что в итоге расплакался.', ru_uz:'Shu qadar gʻamgin ediki, oxir-oqibat yigʻlab yubordim.' },
+            { who:'A', av:'🙂', ko:'저는 끝까지 참았어요.', ru:'А я сдержался до конца.', ru_uz:'Men oxirigacha chidadim.' },
+            { who:'B', av:'🧑', ko:'저도 참으려고 했는데…', ru:'Я тоже хотел, но…', ru_uz:'Men ham chidamoqchi edim, lekin…' }
           ] },
-        { kind:'build', eyebrow:'СОБЕРИ ФРАЗУ', title:'Всё-таки расплакался', ru:'Хотел сдержаться, но в итоге расплакался.',
+        { kind:'build', eyebrow:'СОБЕРИ ФРАЗУ', eyebrow_uz:'JUMLA TUZ', title:'Всё-таки расплакался', title_uz:'Baribir yigʻlab yubordim', ru:'Хотел сдержаться, но в итоге расплакался.', ru_uz:'Chidamoqchi edim, lekin oxir-oqibat yigʻlab yubordim.',
           target:['참으려고','했지만','울고','말았어요'], pool:['잊고'] },
-        { kind:'listen', eyebrow:'АУДИРОВАНИЕ', title:'Что произошло?', sub:t('ui.162'),
+        { kind:'listen', eyebrow:'АУДИРОВАНИЕ', eyebrow_uz:'TINGLASH', title:'Что произошло?', title_uz:'Nima boʻldi?', sub:t('ui.162'),
           ko:'비밀을 말하고 말았어요.', ru:'Я всё-таки выдал секрет.',
-          options:['Я всё-таки выдал секрет.','Я сохранил секрет.','Секрета не было.'], answer:'Я всё-таки выдал секрет.' },
-        { kind:'quiz', eyebrow:'ПРОВЕРКА', title:'Слова урока',
-          items:[ {ko:'결국',ru:'в итоге'}, {ko:'참다',ru:'терпеть'}, {ko:'비밀',ru:'секрет'} ],
-          pool:['в итоге','терпеть','секрет','ошибка','до конца','справиться'] },
+          options:['Я всё-таки выдал секрет.','Я сохранил секрет.','Секрета не было.'], options_uz:['Men baribir sirni aytib qoʻydim.','Men sirni saqladim.','Sir yoʻq edi.'], answer:'Я всё-таки выдал секрет.', answer_uz:'Men baribir sirni aytib qoʻydim.' },
+        { kind:'quiz', eyebrow:'ПРОВЕРКА', eyebrow_uz:'TEKSHIRUV', title:'Слова урока', title_uz:'Dars soʻzlari',
+          items:[ {ko:'결국',ru:'в итоге', ru_uz:'oxir-oqibat'}, {ko:'참다',ru:'терпеть', ru_uz:'chidamoq'}, {ko:'비밀',ru:'секрет', ru_uz:'sir'} ],
+          pool:['в итоге','терпеть','секрет','ошибка','до конца','справиться'], pool_uz:['oxir-oqibat','chidamoq','sir','xato','oxirigacha','uddalamoq'] },
         { kind:'homework' },
         { kind:'done' }
       ]
@@ -15155,44 +15202,49 @@
       homework:{ tasks:[
         'Составь 3 контраста через -기는커녕 / 은-는커녕.',
         'Повтори модуль 6: выбери 3 любимые грамматики и составь рассказ о своей неделе.'
+      ], tasks_uz:[
+        '-기는커녕 / 은-는커녕 orqali 3 ta kontrast tuzing.',
+        '6-modulni takrorlang: 3 ta sevimli grammatikangizni tanlab, haftangiz haqida hikoya tuzing.'
       ]},
       slides:[
-        { kind:'intro', title:'Куда там', sub:'-기는커녕 · 복습',
+        { kind:'intro', title:'Куда там', title_uz:'Qayerda ekan', sub:'-기는커녕 · 복습',
           intro:'«Сильный контраст — <span class="ko">-기는커녕</span> / <span class="ko">은-는커녕</span>: 칭찬은커녕 혼났어요 — какая там похвала, отругали. И повторим весь модуль 6 🌸»',
-          learn:[['🔄','наоборот'],['❗','куда там'],['🎯','повтор']] },
-        { kind:'pattern', eyebrow:'ГРАММАТИКА', title:'-기는커녕 · 은/는커녕', sub:'куда там …, наоборот',
+          intro_uz:'«Kuchli kontrast — <span class="ko">-기는커녕</span> / <span class="ko">은-는커녕</span>: 칭찬은커녕 혼났어요 — qayerda maqtov, aksincha tanbeh oldim. Va butun 6-modulni takrorlaymiz 🌸»',
+          learn:[['🔄','наоборот'],['❗','куда там'],['🎯','повтор']], learn_uz:['aksincha','qayerda ekan','takrorlash'] },
+        { kind:'pattern', eyebrow:'ГРАММАТИКА', eyebrow_uz:'GRAMMATIKA', title:'-기는커녕 · 은/는커녕', title_uz:'-기는커녕 · 은/는커녕', sub:'куда там …, наоборот', sub_uz:'qayerda ekan, aksincha',
           rule:'Существительное + <b>은/는커녕</b>, глагол + <b>기는커녕</b> = «куда там …, наоборот / даже не». Ожидали одно — вышло хуже. 칭찬은커녕 혼났어요. 쉬기는커녕 더 바빠졌어요.',
+          rule_uz:'Ot + <b>은/는커녕</b>, feʼl + <b>기는커녕</b> = «qayerda …, aksincha / hatto emas». Bir narsa kutildi — boshqasi yomonroq chiqdi. 칭찬은커녕 혼났어요. 쉬기는커녕 더 바빠졌어요.',
           examples:[
-            {ko:'칭찬은커녕 오히려 혼났어요.', ru:'Какая там похвала — наоборот отругали.'},
-            {ko:'쉬기는커녕 더 바빠졌어요.', ru:'Какой там отдых — стало ещё больше дел.'},
-            {ko:'돈을 모으기는커녕 빚만 늘었어요.', ru:'Куда там копить — только долги выросли.'}
+            {ko:'칭찬은커녕 오히려 혼났어요.', ru:'Какая там похвала — наоборот отругали.', ru_uz:'Qayerda maqtov — aksincha tanbeh oldim.'},
+            {ko:'쉬기는커녕 더 바빠졌어요.', ru:'Какой там отдых — стало ещё больше дел.', ru_uz:'Qayerda dam olish — ish yanada koʻpaydi.'},
+            {ko:'돈을 모으기는커녕 빚만 늘었어요.', ru:'Куда там копить — только долги выросли.', ru_uz:'Pul yigʻish qayerda — faqat qarz koʻpaydi.'}
           ],
           drills:[
             { q:'칭찬 → 칭찬___ 혼났어요', options:['은커녕','이커녕','는커녕'], answer:'은커녕' },
             { q:'쉬다 → 쉬___ 더 바빠졌어요', options:['기는커녕','는커녕','기커녕'], answer:'기는커녕' },
             { q:'돈 → 돈___ 빚만 늘었어요', options:['은커녕','는커녕','를커녕'], answer:'은커녕' }
           ] },
-        { kind:'words', eyebrow:'СЛОВА', title:'Наоборот',
+        { kind:'words', eyebrow:'СЛОВА', eyebrow_uz:'SOʻZLAR', title:'Наоборот', title_uz:'Aksincha',
           items:[
-            {ko:'오히려', ru:'наоборот', emoji:'🔄'}, {ko:'칭찬', ru:'похвала', emoji:'👏'},
-            {ko:'혼나다', ru:'получить нагоняй', emoji:'😠'}, {ko:'빚', ru:'долг', emoji:'💸'},
-            {ko:'모으다', ru:'копить', emoji:'🪙'}, {ko:'늘다', ru:'увеличиваться', emoji:'📈'}
+            {ko:'오히려', ru:'наоборот', ru_uz:'aksincha', emoji:'🔄'}, {ko:'칭찬', ru:'похвала', ru_uz:'maqtov', emoji:'👏'},
+            {ko:'혼나다', ru:'получить нагоняй', ru_uz:'tanbeh olmoq', emoji:'😠'}, {ko:'빚', ru:'долг', ru_uz:'qarz', emoji:'💸'},
+            {ko:'모으다', ru:'копить', ru_uz:'yigʻmoq', emoji:'🪙'}, {ko:'늘다', ru:'увеличиваться', ru_uz:'koʻpaymoq', emoji:'📈'}
           ] },
-        { kind:'dialog', eyebrow:'ДИАЛОГ', title:'Как выходные', sub:'주말 어땠어요?',
+        { kind:'dialog', eyebrow:'ДИАЛОГ', eyebrow_uz:'MULOQOT', title:'Как выходные', title_uz:'Dam olish kuni qanday oʻtdi', sub:'주말 어땠어요?',
           lines:[
-            { who:'A', av:'🙂', ko:'주말에 푹 쉬었어요?', ru:'На выходных хорошо отдохнул?' },
-            { who:'B', av:'🧑', ko:'쉬기는커녕 일만 했어요.', ru:'Какой там отдых — только работал.' },
-            { who:'A', av:'🙂', ko:'칭찬은 받았어요?', ru:'Хоть похвалили?' },
-            { who:'B', av:'🧑', ko:'칭찬은커녕 혼나기만 했어요.', ru:'Какая там похвала — только ругали.' }
+            { who:'A', av:'🙂', ko:'주말에 푹 쉬었어요?', ru:'На выходных хорошо отдохнул?', ru_uz:'Dam olish kunlari yaxshi dam oldingmi?' },
+            { who:'B', av:'🧑', ko:'쉬기는커녕 일만 했어요.', ru:'Какой там отдых — только работал.', ru_uz:'Qayerda dam olish — faqat ishladim.' },
+            { who:'A', av:'🙂', ko:'칭찬은 받았어요?', ru:'Хоть похвалили?', ru_uz:'Hech boʻlmasa maqtov oldingmi?' },
+            { who:'B', av:'🧑', ko:'칭찬은커녕 혼나기만 했어요.', ru:'Какая там похвала — только ругали.', ru_uz:'Qayerda maqtov — faqat tanbeh oldim.' }
           ] },
-        { kind:'build', eyebrow:'СОБЕРИ ФРАЗУ', title:'Наоборот отругали', ru:'Какая там похвала — наоборот отругали.',
+        { kind:'build', eyebrow:'СОБЕРИ ФРАЗУ', eyebrow_uz:'JUMLA TUZ', title:'Наоборот отругали', title_uz:'Aksincha tanbeh oldim', ru:'Какая там похвала — наоборот отругали.', ru_uz:'Qayerda maqtov — aksincha tanbeh oldim.',
           target:['칭찬은커녕','오히려','혼났어요'], pool:['쉬기는커녕'] },
-        { kind:'listen', eyebrow:'АУДИРОВАНИЕ', title:'Что вышло наоборот?', sub:t('ui.162'),
+        { kind:'listen', eyebrow:'АУДИРОВАНИЕ', eyebrow_uz:'TINGLASH', title:'Что вышло наоборот?', title_uz:'Nima aksincha chiqdi?', sub:t('ui.162'),
           ko:'쉬기는커녕 더 바빠졌어요.', ru:'Какой там отдых — стало ещё больше дел.',
-          options:['Какой там отдых — стало ещё больше дел.','Хорошо отдохнул и расслабился.','Дел стало меньше.'], answer:'Какой там отдых — стало ещё больше дел.' },
-        { kind:'quiz', eyebrow:'ПРОВЕРКА', title:'Слова урока',
-          items:[ {ko:'오히려',ru:'наоборот'}, {ko:'칭찬',ru:'похвала'}, {ko:'혼나다',ru:'получить нагоняй'} ],
-          pool:['наоборот','похвала','получить нагоняй','долг','копить','увеличиваться'] },
+          options:['Какой там отдых — стало ещё больше дел.','Хорошо отдохнул и расслабился.','Дел стало меньше.'], options_uz:['Qayerda dam olish — ish yanada koʻpaydi.','Yaxshi dam oldim va xotirjam boʻldim.','Ish kamaydi.'], answer:'Какой там отдых — стало ещё больше дел.', answer_uz:'Qayerda dam olish — ish yanada koʻpaydi.' },
+        { kind:'quiz', eyebrow:'ПРОВЕРКА', eyebrow_uz:'TEKSHIRUV', title:'Слова урока', title_uz:'Dars soʻzlari',
+          items:[ {ko:'오히려',ru:'наоборот', ru_uz:'aksincha'}, {ko:'칭찬',ru:'похвала', ru_uz:'maqtov'}, {ko:'혼나다',ru:'получить нагоняй', ru_uz:'tanbeh olmoq'} ],
+          pool:['наоборот','похвала','получить нагоняй','долг','копить','увеличиваться'], pool_uz:['aksincha','maqtov','tanbeh olmoq','qarz','yigʻmoq','koʻpaymoq'] },
         { kind:'homework' },
         { kind:'done' }
       ]
@@ -15245,6 +15297,10 @@
         "tasks": [
           "Расскажи о трёх изменениях в своей жизни через -게 되다 (например: 한국어를 잘하게 됐어요).",
           "Опиши два события дня через -다가 (например: 길을 걷다가 친구를 만났어요)."
+        ],
+        "tasks_uz": [
+          "Oʻz hayotingizdagi 3 ta oʻzgarish haqida -게 되다 orqali gapirib bering (masalan: 한국어를 잘하게 됐어요).",
+          "Kuningizdagi ikki voqeani -다가 orqali tasvirlab bering (masalan: 길을 걷다가 친구를 만났어요)."
         ]
       },
       "slides": [
@@ -15266,6 +15322,13 @@
               "➡️",
               "и тут переключился"
             ]
+          ],
+          "title_uz": "Yangi tanishuvlar",
+          "intro_uz": "«Tanishayotganda qanday boʻlganini aytasiz: <span class=\"ko\">-게 되다</span> — «shunday boʻlib chiqdi»: 여기로 이사 오게 됐어요. <span class=\"ko\">-다가</span> esa — «bir narsa qilib, boshqasiga oʻtdim»: 한국에서 살다가 여기로 왔어요 🌸»",
+          "learn_uz": [
+            "tanishuv",
+            "shunday boʻldi…",
+            "va shu payt oʻtdim"
           ]
         },
         {
@@ -15277,15 +15340,18 @@
           "examples": [
             {
               "ko": "부모님 일 때문에 여기로 이사 오게 됐어요.",
-              "ru": "Из-за работы родителей так вышло, что я переехал сюда."
+              "ru": "Из-за работы родителей так вышло, что я переехал сюда.",
+              "ru_uz": "Ota-onamning ishi tufayli shunday boʻlib chiqdiki, men shu yerga koʻchib keldim."
             },
             {
               "ko": "한국어를 꾸준히 배워서 이제 잘하게 됐어요.",
-              "ru": "Я упорно учил корейский и теперь стал хорошо говорить."
+              "ru": "Я упорно учил корейский и теперь стал хорошо говорить.",
+              "ru_uz": "Koreys tilini muntazam oʻrgandim va endi yaxshi gapiradigan boʻldim."
             },
             {
               "ko": "한글학교에서 좋은 친구를 만나게 됐어요.",
-              "ru": "В корейской школе мне довелось встретить хорошего друга."
+              "ru": "В корейской школе мне довелось встретить хорошего друга.",
+              "ru_uz": "Koreys maktabida yaxshi doʻst bilan tanishib qoldim."
             }
           ],
           "drills": [
@@ -15297,7 +15363,8 @@
                 "다가",
                 "지만"
               ],
-              "answer": "게"
+              "answer": "게",
+              "ru_uz": "shunday boʻlib chiqdi, shu yerda yashayman"
             },
             {
               "q": "이제 김치를 잘 먹___ 됐어요.",
@@ -15307,7 +15374,8 @@
                 "고",
                 "면서"
               ],
-              "answer": "게"
+              "answer": "게",
+              "ru_uz": "endi kimchini yaxshi yeydigan boʻldim"
             },
             {
               "q": "우연히 그 사람을 알___ 됐어요.",
@@ -15317,9 +15385,14 @@
                 "다가",
                 "거나"
               ],
-              "answer": "게"
+              "answer": "게",
+              "ru_uz": "tasodifan u bilan tanishib qoldim"
             }
-          ]
+          ],
+          "title_uz": "-게 되다",
+          "eyebrow_uz": "GRAMMATIKA",
+          "sub_uz": "shunday boʻlib chiqdi… / shunday boʻldi",
+          "rule_uz": "Feʼl negizi + <b>-게 되다</b> = «shunday boʻlib chiqdi…», «toʻgʻri keldi», «qila boshladim». Bu oʻz qaroringiz emas, holatlar natijasini bildiradi. 살다 → <span class=\"ko\">살게 되다</span>, 만나다 → <span class=\"ko\">만나게 되다</span>. Oʻtgan zamon — <span class=\"ko\">-게 됐어요</span>."
         },
         {
           "kind": "pattern",
@@ -15330,15 +15403,18 @@
           "examples": [
             {
               "ko": "이탈리아에서 살다가 작년에 여기로 왔어요.",
-              "ru": "Жил в Италии, а в прошлом году приехал сюда."
+              "ru": "Жил в Италии, а в прошлом году приехал сюда.",
+              "ru_uz": "Italiyada yashadim, keyin oʻtgan yili shu yerga keldim."
             },
             {
               "ko": "숙제를 하다가 친구의 전화를 받았어요.",
-              "ru": "Делал домашку, и тут раздался звонок друга."
+              "ru": "Делал домашку, и тут раздался звонок друга.",
+              "ru_uz": "Uy vazifasini qilayotgandim, shunda doʻstimning qoʻngʻirogʻi keldi."
             },
             {
               "ko": "길을 걷다가 옛날 짝꿍을 우연히 만났어요.",
-              "ru": "Шёл по улице и случайно встретил старого одноклассника."
+              "ru": "Шёл по улице и случайно встретил старого одноклассника.",
+              "ru_uz": "Koʻchada ketayotgandim va tasodifan eski sinfdoshimni uchratdim."
             }
           ],
           "drills": [
@@ -15350,7 +15426,8 @@
                 "게",
                 "려고"
               ],
-              "answer": "다가"
+              "answer": "다가",
+              "ru_uz": "yeb turgandim, shunda qoʻngʻiroqqa javob berdim"
             },
             {
               "q": "쭉 가___ 오른쪽으로 도세요.",
@@ -15360,7 +15437,8 @@
                 "게",
                 "거든"
               ],
-              "answer": "다가"
+              "answer": "다가",
+              "ru_uz": "toʻgʻri boring, keyin oʻngga buriling"
             },
             {
               "q": "한국에서 살___ 미국으로 이사 갔어요.",
@@ -15370,9 +15448,14 @@
                 "게",
                 "지만"
               ],
-              "answer": "다가"
+              "answer": "다가",
+              "ru_uz": "Koreyada yashadim, keyin AQShga koʻchib ketdim"
             }
-          ]
+          ],
+          "title_uz": "-다가",
+          "eyebrow_uz": "GRAMMATIKA",
+          "sub_uz": "bir narsa qilib — boshqasiga oʻtdim",
+          "rule_uz": "Feʼl negizi + <b>-다가</b> = harakat toʻxtadi yoki boshqasiga almashdi. 살다 → <span class=\"ko\">살다가</span> (yashadim, keyin…), 먹다 → <span class=\"ko\">먹다가</span> (yeb turgandim, shunda…). Ega odatda ikkala qismda ham bir xil."
         },
         {
           "kind": "words",
@@ -15382,34 +15465,42 @@
             {
               "ko": "첫인상",
               "ru": "первое впечатление",
-              "emoji": "👀"
+              "emoji": "👀",
+              "ru_uz": "birinchi taassurot"
             },
             {
               "ko": "자기소개",
               "ru": "самопредставление, рассказ о себе",
-              "emoji": "🙋"
+              "emoji": "🙋",
+              "ru_uz": "oʻzini tanishtirish"
             },
             {
               "ko": "긴장하다",
               "ru": "волноваться, нервничать",
-              "emoji": "😰"
+              "emoji": "😰",
+              "ru_uz": "hayajonlanmoq, asabiylashmoq"
             },
             {
               "ko": "악수하다",
               "ru": "пожимать руку",
-              "emoji": "🤝"
+              "emoji": "🤝",
+              "ru_uz": "qoʻl siqishmoq"
             },
             {
               "ko": "사이좋게 지내다",
               "ru": "ладить, дружно жить",
-              "emoji": "😊"
+              "emoji": "😊",
+              "ru_uz": "totuv yashamoq, ahil boʻlmoq"
             },
             {
               "ko": "익숙해지다",
               "ru": "привыкать, осваиваться",
-              "emoji": "🌱"
+              "emoji": "🌱",
+              "ru_uz": "oʻrganib qolmoq, koʻnikmoq"
             }
-          ]
+          ],
+          "title_uz": "Birinchi tanishuv",
+          "eyebrow_uz": "SOʻZLAR"
         },
         {
           "kind": "dialog",
@@ -15421,39 +15512,47 @@
               "who": "A",
               "av": "🙂",
               "ko": "안녕하세요. 오늘 처음 와서 좀 긴장되네요.",
-              "ru": "Здравствуйте. Я сегодня впервые тут, немного волнуюсь."
+              "ru": "Здравствуйте. Я сегодня впервые тут, немного волнуюсь.",
+              "ru_uz": "Assalomu alaykum. Men bugun birinchi marta keldim, biroz hayajonlanyapman."
             },
             {
               "who": "B",
               "av": "🧑",
               "ko": "반가워요. 어떻게 이 학교에 오게 됐어요?",
-              "ru": "Рад знакомству. Как вы оказались в этой школе?"
+              "ru": "Рад знакомству. Как вы оказались в этой школе?",
+              "ru_uz": "Tanishganimdan xursandman. Qanday qilib bu maktabga kelib qoldingiz?"
             },
             {
               "who": "A",
               "av": "🙂",
               "ko": "부모님이 여기로 이사 오게 돼서 저도 같이 왔어요.",
-              "ru": "Родители переехали сюда, и я переехал вместе с ними."
+              "ru": "Родители переехали сюда, и я переехал вместе с ними.",
+              "ru_uz": "Ota-onam shu yerga koʻchib kelishdi, men ham ular bilan koʻchib keldim."
             },
             {
               "who": "B",
               "av": "🧑",
               "ko": "그렇군요. 한국에서 살다가 오신 거예요?",
-              "ru": "Вот как. Вы жили в Корее, а потом приехали?"
+              "ru": "Вот как. Вы жили в Корее, а потом приехали?",
+              "ru_uz": "Voy, demak. Koreyada yashab, keyin kelgansiz-da?"
             },
             {
               "who": "A",
               "av": "🙂",
               "ko": "네, 어릴 때 한국에서 살다가 작년에 여기로 왔어요.",
-              "ru": "Да, в детстве жил в Корее, а в прошлом году приехал сюда."
+              "ru": "Да, в детстве жил в Корее, а в прошлом году приехал сюда.",
+              "ru_uz": "Ha, bolaligimda Koreyada yashadim, oʻtgan yili shu yerga keldim."
             },
             {
               "who": "B",
               "av": "🧑",
               "ko": "잘 왔어요. 우리 사이좋게 지내게 돼서 좋네요.",
-              "ru": "Хорошо, что приехали. Рад, что мы поладим."
+              "ru": "Хорошо, что приехали. Рад, что мы поладим.",
+              "ru_uz": "Yaxshi qildingiz. Biz totuv yashaydigan boʻlganimizdan xursandman."
             }
-          ]
+          ],
+          "title_uz": "Birinchi uchrashuv",
+          "eyebrow_uz": "MULOQOT"
         },
         {
           "kind": "build",
@@ -15470,7 +15569,10 @@
           "pool": [
             "살다가",
             "받았어요"
-          ]
+          ],
+          "title_uz": "Doʻst boʻlib qoldik",
+          "eyebrow_uz": "JUMLA TUZ",
+          "ru_uz": "Boshida noqulay edi, lekin biz yaxshi doʻst boʻlib qoldik."
         },
         {
           "kind": "listen",
@@ -15483,7 +15585,15 @@
             "Хочу переехать в Корею в следующем году.",
             "В Корее живу до сих пор и не уезжаю."
           ],
-          "answer": "Жил в Корее, а в прошлом году так вышло, что переехал сюда."
+          "answer": "Жил в Корее, а в прошлом году так вышло, что переехал сюда.",
+          "title_uz": "Qanday boʻldi?",
+          "eyebrow_uz": "TINGLASH",
+          "answer_uz": "Koreyada yashadim, oʻtgan yili shunday boʻlib chiqdiki, shu yerga koʻchib keldim.",
+          "options_uz": [
+            "Koreyada yashadim, oʻtgan yili shunday boʻlib chiqdiki, shu yerga koʻchib keldim.",
+            "Keyingi yili Koreyaga koʻchib borishni xohlayman.",
+            "Hozirgacha Koreyada yashayapman va ketmayapman."
+          ]
         },
         {
           "kind": "quiz",
@@ -15492,15 +15602,18 @@
           "items": [
             {
               "ko": "첫인상",
-              "ru": "первое впечатление"
+              "ru": "первое впечатление",
+              "ru_uz": "birinchi taassurot"
             },
             {
               "ko": "긴장하다",
-              "ru": "волноваться, нервничать"
+              "ru": "волноваться, нервничать",
+              "ru_uz": "hayajonlanmoq, asabiylashmoq"
             },
             {
               "ko": "악수하다",
-              "ru": "пожимать руку"
+              "ru": "пожимать руку",
+              "ru_uz": "qoʻl siqishmoq"
             }
           ],
           "pool": [
@@ -15510,6 +15623,16 @@
             "переехать",
             "ладить",
             "одноклассник"
+          ],
+          "title_uz": "Dars soʻzlari",
+          "eyebrow_uz": "TEKSHIRUV",
+          "pool_uz": [
+            "birinchi taassurot",
+            "hayajonlanmoq, asabiylashmoq",
+            "qoʻl siqishmoq",
+            "koʻchib oʻtmoq",
+            "totuv yashamoq",
+            "sinfdosh"
           ]
         },
         {
@@ -15562,6 +15685,10 @@
         "tasks": [
           "Назови 3 профессии и скажи через 뭐든지, что любой выбор тебе подходит.",
           "Опиши свою мечту: что ты делаешь сейчас, чтобы её достичь — используй -기 위해서."
+        ],
+        "tasks_uz": [
+          "3 ta kasbni ayting va 뭐든지 orqali har qanday tanlov sizga mos kelishini ayting.",
+          "Orzuingizni tasvirlab bering: unga erishish uchun hozir nima qilyapsiz — -기 위해서 dan foydalaning."
         ]
       },
       "slides": [
@@ -15583,6 +15710,13 @@
               "💪",
               "что делаю"
             ]
+          ],
+          "title_uz": "Kasblar va orzular",
+          "intro_uz": "«Har qanday variant mos kelganda — <span class=\"ko\">(이)든지</span>: 뭐든지 좋아요 — nima boʻlsa ham mos keladi. Maqsad haqida gapirganda esa — <span class=\"ko\">-기 위해서</span>: 의사가 되기 위해서 열심히 공부해요 — shifokor boʻlish uchun tirishqoqlik bilan oʻqiyman 🌸»",
+          "learn_uz": [
+            "har qanday variant",
+            "maqsad uchun",
+            "nima qilyapman"
           ]
         },
         {
@@ -15594,15 +15728,18 @@
           "examples": [
             {
               "ko": "저는 한국 음식이든지 다 잘 먹어요.",
-              "ru": "Я любую корейскую еду ем с удовольствием."
+              "ru": "Я любую корейскую еду ем с удовольствием.",
+              "ru_uz": "Men har qanday koreys taomini rohatlanib yeyman."
             },
             {
               "ko": "궁금한 게 있으면 언제든지 물어보세요.",
-              "ru": "Если что-то непонятно, спрашивайте в любое время."
+              "ru": "Если что-то непонятно, спрашивайте в любое время.",
+              "ru_uz": "Agar biror narsa tushunarsiz boʻlsa, istagan vaqtingizda soʻrang."
             },
             {
               "ko": "이 일은 누구든지 할 수 있어요.",
-              "ru": "Эту работу может выполнить кто угодно."
+              "ru": "Эту работу может выполнить кто угодно.",
+              "ru_uz": "Bu ishni kim boʻlsa ham bajara oladi."
             }
           ],
           "drills": [
@@ -15614,7 +15751,8 @@
                 "이든지",
                 "으로"
               ],
-              "answer": "든지"
+              "answer": "든지",
+              "ru_uz": "Menga qahva ham, choy ham — hammasi mos."
             },
             {
               "q": "궁금한 게 있으면 언제___ 연락하세요.",
@@ -15624,7 +15762,8 @@
                 "까지",
                 "부터"
               ],
-              "answer": "든지"
+              "answer": "든지",
+              "ru_uz": "Agar biror narsa tushunarsiz boʻlsa, istagan vaqtda bogʻlaning."
             },
             {
               "q": "이 책은 누구___ 빌릴 수 있어요.",
@@ -15634,9 +15773,14 @@
                 "든지",
                 "한테"
               ],
-              "answer": "든지"
+              "answer": "든지",
+              "ru_uz": "Bu kitobni kim boʻlsa ham olishi mumkin."
             }
-          ]
+          ],
+          "title_uz": "(이)든지",
+          "eyebrow_uz": "GRAMMATIKA",
+          "sub_uz": "har qanday, nima boʻlsa ham",
+          "rule_uz": "Ot + <b>(이)든지</b> = «har qanday, nima boʻlsa ham». Undoshdan keyin — <span class=\"ko\">이든지</span> (음식 → 음식이든지), unlidan keyin — <span class=\"ko\">든지</span> (요리 → 요리든지). Koʻpincha soʻroq soʻzlar bilan: <span class=\"ko\">뭐든지</span> (nima boʻlsa ham), <span class=\"ko\">언제든지</span> (qachon boʻlsa ham), <span class=\"ko\">누구든지</span> (kim boʻlsa ham)."
         },
         {
           "kind": "pattern",
@@ -15647,15 +15791,18 @@
           "examples": [
             {
               "ko": "의사가 되기 위해서 매일 열심히 공부해요.",
-              "ru": "Чтобы стать врачом, каждый день усердно учусь."
+              "ru": "Чтобы стать врачом, каждый день усердно учусь.",
+              "ru_uz": "Shifokor boʻlish uchun har kuni tirishqoqlik bilan oʻqiyman."
             },
             {
               "ko": "건강해지기 위해 아침마다 운동해요.",
-              "ru": "Чтобы стать здоровее, по утрам занимаюсь спортом."
+              "ru": "Чтобы стать здоровее, по утрам занимаюсь спортом.",
+              "ru_uz": "Sogʻlom boʻlish uchun har tong sport bilan shugʻullanaman."
             },
             {
               "ko": "꿈을 이루기 위해서 돈을 모으고 있어요.",
-              "ru": "Чтобы осуществить мечту, я коплю деньги."
+              "ru": "Чтобы осуществить мечту, я коплю деньги.",
+              "ru_uz": "Orzuimni ushlash uchun pul yigʻyapman."
             }
           ],
           "drills": [
@@ -15667,7 +15814,8 @@
                 "되니까",
                 "되지만"
               ],
-              "answer": "되기 위해서"
+              "answer": "되기 위해서",
+              "ru_uz": "Oshpaz boʻlish uchun oshpazlik kurslariga qatnayman."
             },
             {
               "q": "시험에 ___ 밤늦게까지 공부했어요.",
@@ -15677,7 +15825,8 @@
                 "합격해서",
                 "합격하면"
               ],
-              "answer": "합격하기 위해서"
+              "answer": "합격하기 위해서",
+              "ru_uz": "Imtihondan oʻtish uchun kech tungacha oʻqidim."
             },
             {
               "q": "한국에서 ___ 한국어를 배우고 있어요.",
@@ -15687,9 +15836,14 @@
                 "일하는데",
                 "일하거나"
               ],
-              "answer": "일하기 위해서"
+              "answer": "일하기 위해서",
+              "ru_uz": "Koreyada ishlash uchun koreys tilini oʻrganyapman."
             }
-          ]
+          ],
+          "title_uz": "-기 위해(서)",
+          "eyebrow_uz": "GRAMMATIKA",
+          "sub_uz": "uchun, deb",
+          "rule_uz": "Feʼl negizi + <b>-기 위해서</b> = «(biror narsa qilish) uchun», «deb». Harakatning maqsadini koʻrsatadi: 합격하다 → <span class=\"ko\">합격하기 위해서</span>. <span class=\"ko\">서</span> qismini tushirib qoldirish mumkin: <span class=\"ko\">-기 위해</span>. «Ot uchun» deyish uchun <span class=\"ko\">을/를 위해서</span> ishlatiladi: 꿈을 위해서."
         },
         {
           "kind": "words",
@@ -15699,34 +15853,42 @@
             {
               "ko": "교사",
               "ru": "учитель",
-              "emoji": "👩‍🏫"
+              "emoji": "👩‍🏫",
+              "ru_uz": "oʻqituvchi"
             },
             {
               "ko": "요리사",
               "ru": "повар, кулинар",
-              "emoji": "👨‍🍳"
+              "emoji": "👨‍🍳",
+              "ru_uz": "oshpaz"
             },
             {
               "ko": "소방관",
               "ru": "пожарный",
-              "emoji": "👨‍🚒"
+              "emoji": "👨‍🚒",
+              "ru_uz": "oʻt oʻchiruvchi"
             },
             {
               "ko": "기자",
               "ru": "журналист",
-              "emoji": "📰"
+              "emoji": "📰",
+              "ru_uz": "jurnalist"
             },
             {
               "ko": "의사",
               "ru": "врач",
-              "emoji": "👨‍⚕️"
+              "emoji": "👨‍⚕️",
+              "ru_uz": "shifokor"
             },
             {
               "ko": "운동선수",
               "ru": "спортсмен",
-              "emoji": "⚽"
+              "emoji": "⚽",
+              "ru_uz": "sportchi"
             }
-          ]
+          ],
+          "title_uz": "Kasblar",
+          "eyebrow_uz": "SOʻZLAR"
         },
         {
           "kind": "dialog",
@@ -15738,39 +15900,47 @@
               "who": "A",
               "av": "🙂",
               "ko": "수빈 씨는 장래 희망이 뭐예요?",
-              "ru": "Субин, кем вы хотите стать в будущем?"
+              "ru": "Субин, кем вы хотите стать в будущем?",
+              "ru_uz": "Subin, kelajakda kim boʻlishni xohlaysiz?"
             },
             {
               "who": "B",
               "av": "😊",
               "ko": "제 꿈은 요리사예요. 맛있는 음식을 만드는 게 정말 좋아요.",
-              "ru": "Моя мечта — стать поваром. Мне очень нравится готовить вкусную еду."
+              "ru": "Моя мечта — стать поваром. Мне очень нравится готовить вкусную еду.",
+              "ru_uz": "Mening orzuim — oshpaz boʻlish. Mazali taom tayyorlashni juda yaxshi koʻraman."
             },
             {
               "who": "A",
               "av": "🙂",
               "ko": "멋지네요! 요리사가 되기 위해서 지금 뭐 하고 있어요?",
-              "ru": "Здорово! А что вы делаете сейчас, чтобы стать поваром?"
+              "ru": "Здорово! А что вы делаете сейчас, чтобы стать поваром?",
+              "ru_uz": "Ajoyib! Oshpaz boʻlish uchun hozir nima qilyapsiz?"
             },
             {
               "who": "B",
               "av": "😊",
               "ko": "주말마다 요리 학원에 다니고, 새로운 요리를 많이 만들어 봐요.",
-              "ru": "Каждые выходные хожу на кулинарные курсы и пробую готовить много новых блюд."
+              "ru": "Каждые выходные хожу на кулинарные курсы и пробую готовить много новых блюд.",
+              "ru_uz": "Har dam olish kuni oshpazlik kursiga boraman va koʻplab yangi taomlar tayyorlab koʻraman."
             },
             {
               "who": "A",
               "av": "🙂",
               "ko": "어떤 음식을 제일 만들고 싶어요?",
-              "ru": "Какое блюдо вам больше всего хочется приготовить?"
+              "ru": "Какое блюдо вам больше всего хочется приготовить?",
+              "ru_uz": "Qaysi taomni eng koʻp tayyorlashni xohlaysiz?"
             },
             {
               "who": "B",
               "av": "😊",
               "ko": "한식이든지 양식이든지 다 좋아요. 사람들을 행복하게 해 주고 싶어요.",
-              "ru": "И корейская, и европейская — любая кухня мне по душе. Хочу делать людей счастливыми."
+              "ru": "И корейская, и европейская — любая кухня мне по душе. Хочу делать людей счастливыми.",
+              "ru_uz": "Koreys taomi ham, yevropa taomi ham — hammasi yoqadi. Odamlarni baxtli qilishni xohlayman."
             }
-          ]
+          ],
+          "title_uz": "Mening orzuim",
+          "eyebrow_uz": "MULOQOT"
         },
         {
           "kind": "build",
@@ -15788,7 +15958,10 @@
           "pool": [
             "되니까",
             "꿈을"
-          ]
+          ],
+          "title_uz": "Shifokor boʻlish uchun",
+          "eyebrow_uz": "JUMLA TUZ",
+          "ru_uz": "Shifokor boʻlish uchun har kuni tirishqoqlik bilan oʻqiyman."
         },
         {
           "kind": "listen",
@@ -15801,7 +15974,15 @@
             "Я уже осуществил свою мечту.",
             "Без мечты жить трудно."
           ],
-          "answer": "Чтобы осуществить мечту, я каждый день стараюсь."
+          "answer": "Чтобы осуществить мечту, я каждый день стараюсь.",
+          "title_uz": "Qanday orzu?",
+          "eyebrow_uz": "TINGLASH",
+          "answer_uz": "Orzuimni ushlash uchun har kuni harakat qilyapman.",
+          "options_uz": [
+            "Orzuimni ushlash uchun har kuni harakat qilyapman.",
+            "Men orzuimga allaqachon erishdim.",
+            "Orzusiz yashash qiyin."
+          ]
         },
         {
           "kind": "quiz",
@@ -15810,15 +15991,18 @@
           "items": [
             {
               "ko": "요리사",
-              "ru": "повар, кулинар"
+              "ru": "повар, кулинар",
+              "ru_uz": "oshpaz"
             },
             {
               "ko": "소방관",
-              "ru": "пожарный"
+              "ru": "пожарный",
+              "ru_uz": "oʻt oʻchiruvchi"
             },
             {
               "ko": "의사",
-              "ru": "врач"
+              "ru": "врач",
+              "ru_uz": "shifokor"
             }
           ],
           "pool": [
@@ -15828,6 +16012,16 @@
             "учитель",
             "журналист",
             "спортсмен"
+          ],
+          "title_uz": "Dars soʻzlari",
+          "eyebrow_uz": "TEKSHIRUV",
+          "pool_uz": [
+            "oshpaz",
+            "oʻt oʻchiruvchi",
+            "shifokor",
+            "oʻqituvchi",
+            "jurnalist",
+            "sportchi"
           ]
         },
         {
@@ -15880,6 +16074,10 @@
         "tasks": [
           "Передай 3 чужих утверждения о внешности через -ㄴ/는다고: «친구가 그 사람이 날씬하다고 했어요».",
           "Опиши, какие 3 вопроса тебе задали при знакомстве, через -냐고: «새 친구가 머리가 곱슬머리냐고 물어봤어요»."
+        ],
+        "tasks_uz": [
+          "-ㄴ/는다고 orqali tashqi koʻrinish haqida boshqa odamning 3 ta gapini yetkazing: «친구가 그 사람이 날씬하다고 했어요».",
+          "Tanishuvda sizga berilgan 3 ta savolni -냐고 orqali tasvirlab bering: «새 친구가 머리가 곱슬머리냐고 물어봤어요»."
         ]
       },
       "slides": [
@@ -15901,6 +16099,13 @@
               "❓",
               "-냐고 (вопрос)"
             ]
+          ],
+          "title_uz": "Tashqi koʻrinish",
+          "intro_uz": "«Boshqa odamning tashqi koʻrinish haqidagi gapini qayta aytyapsizmi? Tasdiq — <span class=\"ko\">-ㄴ/는다고</span>: 통통하다 → 통통하다고 해요 (toʻlacha ekan deyishadi). Boshqa odamning savoli — <span class=\"ko\">-냐고</span>: 날씬하냐고 물어봤어요 (ozgʻinmi deb soʻradi) 🌸»",
+          "learn_uz": [
+            "boshqa odam gapi",
+            "-다고 (fakt)",
+            "-냐고 (savol)"
           ]
         },
         {
@@ -15912,15 +16117,18 @@
           "examples": [
             {
               "ko": "친구가 그 배우는 정말 잘생겼다고 했어요.",
-              "ru": "Подруга сказала, что тот актёр и правда красивый."
+              "ru": "Подруга сказала, что тот актёр и правда красивый.",
+              "ru_uz": "Doʻstim oʻsha aktyor rostdan ham chiroyli ekanini aytdi."
             },
             {
               "ko": "언니가 살이 빠져서 날씬해졌다고 해요.",
-              "ru": "Говорят, сестра похудела и стала стройной."
+              "ru": "Говорят, сестра похудела и стала стройной.",
+              "ru_uz": "Opam ozib, ozgʻin boʻlib qolgan ekan, deyishadi."
             },
             {
               "ko": "동생은 곱슬머리가 더 잘 어울린다고 했어요.",
-              "ru": "Младший сказал, что кудрявые волосы идут ему больше."
+              "ru": "Младший сказал, что кудрявые волосы идут ему больше.",
+              "ru_uz": "Ukam jingalak sochlar unga koʻproq yarashishini aytdi."
             }
           ],
           "drills": [
@@ -15932,7 +16140,8 @@
                 "한다고",
                 "하냐고"
               ],
-              "answer": "하다고"
+              "answer": "하다고",
+              "ru_uz": "Doʻstim oʻsha odam toʻlacha ekanini aytdi."
             },
             {
               "q": "누나가 머리를 짧게 ___ 해요.",
@@ -15942,7 +16151,8 @@
                 "자르다고",
                 "자르냐고"
               ],
-              "answer": "자른다고"
+              "answer": "자른다고",
+              "ru_uz": "Opam sochini qisqa qirqar ekan, deyishadi."
             },
             {
               "q": "엄마가 나는 아빠를 많이 ___ 하셨어요.",
@@ -15952,9 +16162,14 @@
                 "닮았냐고",
                 "닮는다고"
               ],
-              "answer": "닮았다고"
+              "answer": "닮았다고",
+              "ru_uz": "Onam men otamga juda oʻxshaganimni aytdi."
             }
-          ]
+          ],
+          "title_uz": "-ㄴ/는다고",
+          "eyebrow_uz": "GRAMMATIKA",
+          "sub_uz": "deyishadiki, …",
+          "rule_uz": "Boshqa odamning <b>tasdiqlovchi gapi</b>ni yetkazamiz. Feʼl: undoshdan keyin <span class=\"ko\">-는다고</span> (먹다 → 먹는다고), unlidan keyin <span class=\"ko\">-ㄴ다고</span> (가다 → 간다고). Sifat — shunchaki <b>-다고</b> (날씬하다 → 날씬하다고). 이다 → <span class=\"ko\">-(이)라고</span> (생머리라고). Koʻpincha 해요 / 했어요 bilan birga keladi."
         },
         {
           "kind": "pattern",
@@ -15965,15 +16180,18 @@
           "examples": [
             {
               "ko": "새 친구가 제 머리가 원래 곱슬머리냐고 물어봤어요.",
-              "ru": "Новая подруга спросила, кудрявые ли у меня волосы от природы."
+              "ru": "Новая подруга спросила, кудрявые ли у меня волосы от природы.",
+              "ru_uz": "Yangi doʻstim sochim tabiiy jingalakmi deb soʻradi."
             },
             {
               "ko": "선생님께서 보조개가 양쪽에 다 있냐고 물으셨어요.",
-              "ru": "Учитель спросил, ямочки ли у меня с обеих сторон."
+              "ru": "Учитель спросил, ямочки ли у меня с обеих сторон.",
+              "ru_uz": "Oʻqituvchi ikkala yonogʻimda ham chuqurcha bormi deb soʻradi."
             },
             {
               "ko": "친구가 쌍꺼풀 수술을 했냐고 물어봤어요.",
-              "ru": "Подруга спросила, делала ли я операцию на двойное веко."
+              "ru": "Подруга спросила, делала ли я операцию на двойное веко.",
+              "ru_uz": "Doʻstim qovoq operatsiyasi qilganmanmi deb soʻradi."
             }
           ],
           "drills": [
@@ -15985,7 +16203,8 @@
                 "빠졌다고",
                 "빠지라고"
               ],
-              "answer": "빠졌냐고"
+              "answer": "빠졌냐고",
+              "ru_uz": "Doʻstim mendan ozib qolganmi deb soʻradi."
             },
             {
               "q": "새 친구가 머리가 ___ 물어봤어요.",
@@ -15995,7 +16214,8 @@
                 "생머리라고",
                 "생머리다고"
               ],
-              "answer": "생머리냐고"
+              "answer": "생머리냐고",
+              "ru_uz": "Yangi doʻstim sochim toʻgʻrimi deb soʻradi."
             },
             {
               "q": "할머니께서 키가 ___ 물으셨어요.",
@@ -16005,9 +16225,14 @@
                 "크다고",
                 "크라고"
               ],
-              "answer": "크냐고"
+              "answer": "크냐고",
+              "ru_uz": "Buvim boʻyim balandmi deb soʻradi."
             }
-          ]
+          ],
+          "title_uz": "-냐고",
+          "eyebrow_uz": "GRAMMATIKA",
+          "sub_uz": "…mi deb soʻradi",
+          "rule_uz": "Boshqa odamning <b>savoli</b>ni yetkazamiz. Feʼl va sifat negiziga <b>-냐고</b> qoʻshiladi (있다 → 있냐고, 날씬하다 → 날씬하냐고). 이다 bilan → <span class=\"ko\">-(이)냐고</span> (생머리냐고). Odatda 물어봤어요 / 물으셨어요 (soʻradi) bilan birga keladi."
         },
         {
           "kind": "words",
@@ -16017,34 +16242,42 @@
             {
               "ko": "곱슬머리",
               "ru": "кудрявые волосы",
-              "emoji": "🌀"
+              "emoji": "🌀",
+              "ru_uz": "jingalak sochlar"
             },
             {
               "ko": "생머리",
               "ru": "прямые волосы",
-              "emoji": "💇"
+              "emoji": "💇",
+              "ru_uz": "toʻgʻri sochlar"
             },
             {
               "ko": "통통하다",
               "ru": "полненький, пухлый",
-              "emoji": "🐹"
+              "emoji": "🐹",
+              "ru_uz": "toʻlacha, buqoq"
             },
             {
               "ko": "날씬하다",
               "ru": "стройный",
-              "emoji": "🤸"
+              "emoji": "🤸",
+              "ru_uz": "ozgʻin, nozik"
             },
             {
               "ko": "보조개",
               "ru": "ямочки на щеках",
-              "emoji": "😊"
+              "emoji": "😊",
+              "ru_uz": "yonoq chuqurchalari"
             },
             {
               "ko": "쌍꺼풀",
               "ru": "двойное веко",
-              "emoji": "👁️"
+              "emoji": "👁️",
+              "ru_uz": "ikki qavatli qovoq"
             }
-          ]
+          ],
+          "title_uz": "Tashqi koʻrinish va tana tuzilishi",
+          "eyebrow_uz": "SOʻZLAR"
         },
         {
           "kind": "dialog",
@@ -16056,33 +16289,40 @@
               "who": "A",
               "av": "🙂",
               "ko": "오늘 새로 온 친구 봤어? 어떻게 생겼어?",
-              "ru": "Видел сегодня новенького? Как он выглядит?"
+              "ru": "Видел сегодня новенького? Как он выглядит?",
+              "ru_uz": "Bugun yangi kelgan bolani koʻrdingmi? Qanday koʻrinishga ega?"
             },
             {
               "who": "B",
               "av": "🧑",
               "ko": "응, 키가 크고 좀 날씬하더라. 웃으면 보조개도 생겨.",
-              "ru": "Ага, высокий и довольно стройный. Когда улыбается, появляются ямочки."
+              "ru": "Ага, высокий и довольно стройный. Когда улыбается, появляются ямочки.",
+              "ru_uz": "Ha, boʻyi baland va ancha ozgʻin. Kulganda yonoqlarida chuqurcha paydo boʻladi."
             },
             {
               "who": "A",
               "av": "🙂",
               "ko": "머리는? 곱슬머리야, 생머리야?",
-              "ru": "А волосы? Кудрявые или прямые?"
+              "ru": "А волосы? Кудрявые или прямые?",
+              "ru_uz": "Sochi-chi? Jingalakmi, toʻgʻrimi?"
             },
             {
               "who": "B",
               "av": "🧑",
               "ko": "생머리야. 아까 나한테 우리 반에 친구가 많냐고 물어봤어.",
-              "ru": "Прямые. Он недавно спросил меня, много ли друзей в нашем классе."
+              "ru": "Прямые. Он недавно спросил меня, много ли друзей в нашем классе.",
+              "ru_uz": "Toʻgʻri sochli. U hozirgina mendan bizning sinfda doʻstlar koʻpmi deb soʻradi."
             },
             {
               "who": "A",
               "av": "🙂",
               "ko": "좋네. 선생님도 그 친구가 인상이 참 좋다고 하셨어.",
-              "ru": "Здорово. Учитель тоже сказал, что у него очень приятное впечатление."
+              "ru": "Здорово. Учитель тоже сказал, что у него очень приятное впечатление.",
+              "ru_uz": "Zoʻr-ku. Oʻqituvchi ham uning taassuroti juda yaxshi ekanini aytdi."
             }
-          ]
+          ],
+          "title_uz": "Sinfdagi yangi bola",
+          "eyebrow_uz": "MULOQOT"
         },
         {
           "kind": "build",
@@ -16099,7 +16339,10 @@
           "pool": [
             "곱슬머리라고",
             "날씬하다고"
-          ]
+          ],
+          "title_uz": "Boshqa odam savoli",
+          "eyebrow_uz": "JUMLA TUZ",
+          "ru_uz": "Doʻstim sochim jingalakmi deb soʻradi."
         },
         {
           "kind": "listen",
@@ -16112,7 +16355,15 @@
             "Сестра спросила, стройный ли тот человек.",
             "Сестра сказала, что тот человек пухленький."
           ],
-          "answer": "Сестра сказала, что тот человек правда стройный."
+          "answer": "Сестра сказала, что тот человек правда стройный.",
+          "title_uz": "Nima yetkazildi?",
+          "eyebrow_uz": "TINGLASH",
+          "answer_uz": "Opam oʻsha odam rostdan ham ozgʻin ekanini aytdi.",
+          "options_uz": [
+            "Opam oʻsha odam rostdan ham ozgʻin ekanini aytdi.",
+            "Opam oʻsha odam ozgʻinmi deb soʻradi.",
+            "Opam oʻsha odam toʻlacha ekanini aytdi."
+          ]
         },
         {
           "kind": "quiz",
@@ -16121,15 +16372,18 @@
           "items": [
             {
               "ko": "곱슬머리",
-              "ru": "кудрявые волосы"
+              "ru": "кудрявые волосы",
+              "ru_uz": "jingalak sochlar"
             },
             {
               "ko": "날씬하다",
-              "ru": "стройный"
+              "ru": "стройный",
+              "ru_uz": "ozgʻin, nozik"
             },
             {
               "ko": "보조개",
-              "ru": "ямочки на щеках"
+              "ru": "ямочки на щеках",
+              "ru_uz": "yonoq chuqurchalari"
             }
           ],
           "pool": [
@@ -16139,6 +16393,16 @@
             "двойное веко",
             "прямые волосы",
             "полненький"
+          ],
+          "title_uz": "Dars soʻzlari",
+          "eyebrow_uz": "TEKSHIRUV",
+          "pool_uz": [
+            "jingalak sochlar",
+            "ozgʻin, nozik",
+            "yonoq chuqurchalari",
+            "ikki qavatli qovoq",
+            "toʻgʻri sochlar",
+            "toʻlacha"
           ]
         },
         {
@@ -16191,6 +16455,10 @@
         "tasks": [
           "Передай 3 чужие просьбы через -(으)라고: 엄마가 …라고 하셨어요.",
           "Расскажи, что друг предложил, через -자고: 친구가 같이 …자고 했어요."
+        ],
+        "tasks_uz": [
+          "-(으)라고 orqali boshqa odamning 3 ta iltimosini yetkazing: 엄마가 …라고 하셨어요.",
+          "Doʻstingiz nima taklif qilganini -자고 orqali gapirib bering: 친구가 같이 …자고 했어요."
         ]
       },
       "slides": [
@@ -16212,6 +16480,13 @@
               "😊",
               "говорим о характере"
             ]
+          ],
+          "title_uz": "Insonning xarakteri",
+          "intro_uz": "«Boshqa odamning iltimosi yoki buyrugʻini qayta aytganda — <span class=\"ko\">-(으)라고</span>: 엄마가 일찍 자라고 하셨어요. Boshqa odamning «birga …qaylik» taklifini yetkazganda esa — <span class=\"ko\">-자고</span>: 친구가 같이 가자고 했어요 🌸»",
+          "learn_uz": [
+            "iltimosni yetkaz",
+            "«qaylik»ni yetkaz",
+            "xarakter haqida gapiramiz"
           ]
         },
         {
@@ -16223,15 +16498,18 @@
           "examples": [
             {
               "ko": "선생님께서 책을 많이 읽으라고 하셨어요.",
-              "ru": "Учитель сказал побольше читать."
+              "ru": "Учитель сказал побольше читать.",
+              "ru_uz": "Oʻqituvchi koʻproq kitob oʻqishni aytdi."
             },
             {
               "ko": "엄마가 솔직하게 말하라고 하셨어요.",
-              "ru": "Мама велела говорить честно."
+              "ru": "Мама велела говорить честно.",
+              "ru_uz": "Onam rostgoʻy boʻlib gapirishni buyurdi."
             },
             {
               "ko": "형이 늦지 말라고 했어요.",
-              "ru": "Старший брат сказал не опаздывать."
+              "ru": "Старший брат сказал не опаздывать.",
+              "ru_uz": "Akam kechikmaslikni aytdi."
             }
           ],
           "drills": [
@@ -16243,7 +16521,8 @@
                 "자자고",
                 "잤다고"
               ],
-              "answer": "자라고"
+              "answer": "자라고",
+              "ru_uz": "Onam erta yotib uxlashni buyurdi."
             },
             {
               "q": "선생님이 떠들지 ___ 하셨어요.",
@@ -16253,7 +16532,8 @@
                 "말자고",
                 "말다고"
               ],
-              "answer": "말라고"
+              "answer": "말라고",
+              "ru_uz": "Oʻqituvchi shovqin qilmaslikni aytdi."
             },
             {
               "q": "친구가 좀 도와 ___ 했어요. (주다)",
@@ -16263,9 +16543,14 @@
                 "주자고",
                 "주냐고"
               ],
-              "answer": "달라고"
+              "answer": "달라고",
+              "ru_uz": "Doʻstim biroz yordam berishimni soʻradi."
             }
-          ]
+          ],
+          "title_uz": "-(으)라고",
+          "eyebrow_uz": "GRAMMATIKA",
+          "sub_uz": "boshqa odamning iltimosi yoki buyrugʻini yetkazamiz",
+          "rule_uz": "Boshqa odamning gapidagi <b>buyruq shakli</b>ni olib, <b>-(으)라고 하다</b> orqali qayta aytamiz. Undoshdan keyin — <span class=\"ko\">-으라고</span>, unlidan keyin — <span class=\"ko\">-라고</span>: 읽다 → 읽으라고, 가다 → 가라고. Inkor: <span class=\"ko\">-지 말라고</span> (지각하지 말라고 하셨어요)."
         },
         {
           "kind": "pattern",
@@ -16276,15 +16561,18 @@
           "examples": [
             {
               "ko": "친구가 주말에 같이 영화를 보자고 했어요.",
-              "ru": "Друг предложил в выходные вместе посмотреть фильм."
+              "ru": "Друг предложил в выходные вместе посмотреть фильм.",
+              "ru_uz": "Doʻstim dam olish kunlari birga kino koʻrishni taklif qildi."
             },
             {
               "ko": "동생이 같이 운동하자고 했어요.",
-              "ru": "Младший предложил вместе позаниматься спортом."
+              "ru": "Младший предложил вместе позаниматься спортом.",
+              "ru_uz": "Ukam birga sport bilan shugʻullanishni taklif qildi."
             },
             {
               "ko": "우리 이제 싸우지 말자고 했어요.",
-              "ru": "Договорились больше не ссориться."
+              "ru": "Договорились больше не ссориться.",
+              "ru_uz": "Endi janjallashmaslikka kelishdik."
             }
           ],
           "drills": [
@@ -16296,7 +16584,8 @@
                 "먹으라고",
                 "먹냐고"
               ],
-              "answer": "먹자고"
+              "answer": "먹자고",
+              "ru_uz": "Doʻstim birga tushlik qilishni taklif qildi."
             },
             {
               "q": "누나가 주말에 같이 ___ 했어요. (놀다)",
@@ -16306,7 +16595,8 @@
                 "놀라고",
                 "놀았다고"
               ],
-              "answer": "놀자고"
+              "answer": "놀자고",
+              "ru_uz": "Opam dam olish kunlari birga sayr qilishni taklif qildi."
             },
             {
               "q": "우리 늦지 ___ 약속했어요.",
@@ -16316,9 +16606,14 @@
                 "말라고",
                 "말다고"
               ],
-              "answer": "말자고"
+              "answer": "말자고",
+              "ru_uz": "Biz kechikmaslikka vaʼda berdik."
             }
-          ]
+          ],
+          "title_uz": "-자고",
+          "eyebrow_uz": "GRAMMATIKA",
+          "sub_uz": "boshqa odamning «birga …qaylik» taklifini yetkazamiz",
+          "rule_uz": "Boshqa odamning <span class=\"ko\">-자</span> («qaylik…») shaklidagi taklifini <b>-자고 하다</b> orqali qayta aytamiz. Feʼl negizi + <b>-자고</b>: 가다 → 가자고, 먹다 → 먹자고. Inkor: <span class=\"ko\">-지 말자고</span> (싸우지 말자고 했어요)."
         },
         {
           "kind": "words",
@@ -16328,34 +16623,42 @@
             {
               "ko": "활발하다",
               "ru": "быть активным, бойким",
-              "emoji": "⚡"
+              "emoji": "⚡",
+              "ru_uz": "faol, jonli boʻlmoq"
             },
             {
               "ko": "명랑하다",
               "ru": "быть жизнерадостным",
-              "emoji": "😄"
+              "emoji": "😄",
+              "ru_uz": "quvnoq boʻlmoq"
             },
             {
               "ko": "솔직하다",
               "ru": "быть честным, прямым",
-              "emoji": "💬"
+              "emoji": "💬",
+              "ru_uz": "rostgoʻy, toʻgʻri boʻlmoq"
             },
             {
               "ko": "꼼꼼하다",
               "ru": "быть дотошным, аккуратным",
-              "emoji": "🔍"
+              "emoji": "🔍",
+              "ru_uz": "dongʻi, sinchkov boʻlmoq"
             },
             {
               "ko": "덜렁대다",
               "ru": "быть рассеянным, несобранным",
-              "emoji": "😵"
+              "emoji": "😵",
+              "ru_uz": "esankiragan, tartibsiz boʻlmoq"
             },
             {
               "ko": "고집이 세다",
               "ru": "быть упрямым",
-              "emoji": "🐂"
+              "emoji": "🐂",
+              "ru_uz": "qaysar boʻlmoq"
             }
-          ]
+          ],
+          "title_uz": "Xarakter",
+          "eyebrow_uz": "SOʻZLAR"
         },
         {
           "kind": "dialog",
@@ -16367,39 +16670,47 @@
               "who": "A",
               "av": "🙂",
               "ko": "오빠는 성격이 정말 활발한 것 같아.",
-              "ru": "Брат, у тебя характер правда очень бойкий."
+              "ru": "Брат, у тебя характер правда очень бойкий.",
+              "ru_uz": "Akajon, sening xarakting rostdan ham juda jonli-ku."
             },
             {
               "who": "B",
               "av": "🧑",
               "ko": "맞아, 너는 좀 꼼꼼하고 조용하잖아.",
-              "ru": "Ага, а ты вот аккуратная и тихая."
+              "ru": "Ага, а ты вот аккуратная и тихая.",
+              "ru_uz": "Toʻgʻri, sen esa biroz sinchkov va jimjitsan-ku."
             },
             {
               "who": "A",
               "av": "🙂",
               "ko": "엄마가 나한테는 항상 덜렁대지 말라고 하셔.",
-              "ru": "Мама мне всегда говорит не быть рассеянной."
+              "ru": "Мама мне всегда говорит не быть рассеянной.",
+              "ru_uz": "Onam menga doim tartibsiz boʻlma, deydi."
             },
             {
               "who": "B",
               "av": "🧑",
               "ko": "나한테는 친구들이랑 사이좋게 지내라고 하시고.",
-              "ru": "А мне велит жить дружно с друзьями."
+              "ru": "А мне велит жить дружно с друзьями.",
+              "ru_uz": "Menga esa doʻstlar bilan totuv yasha, deydi."
             },
             {
               "who": "A",
               "av": "🙂",
               "ko": "어제 아빠가 주말에 다 같이 등산 가자고 하셨어.",
-              "ru": "Вчера папа предложил в выходные всем вместе пойти в горы."
+              "ru": "Вчера папа предложил в выходные всем вместе пойти в горы.",
+              "ru_uz": "Kecha dadam dam olish kuni hammamiz birga togʻga chiqaylik dedi."
             },
             {
               "who": "B",
               "av": "🧑",
               "ko": "좋아, 그럼 솔직하게 누가 더 빨리 오르는지 보자!",
-              "ru": "Отлично, тогда честно посмотрим, кто быстрее поднимется!"
+              "ru": "Отлично, тогда честно посмотрим, кто быстрее поднимется!",
+              "ru_uz": "Zoʻr, unda kim tezroq chiqishini koʻramiz!"
             }
-          ]
+          ],
+          "title_uz": "Aka-singil",
+          "eyebrow_uz": "MULOQOT"
         },
         {
           "kind": "build",
@@ -16415,7 +16726,10 @@
           "pool": [
             "가자고",
             "꼼꼼하게"
-          ]
+          ],
+          "title_uz": "Iltimosni yetkaz",
+          "eyebrow_uz": "JUMLA TUZ",
+          "ru_uz": "Onam rostgoʻy boʻlib gapirishni buyurdi."
         },
         {
           "kind": "listen",
@@ -16428,7 +16742,15 @@
             "Друг велел заниматься спортом в одиночку.",
             "Друг спросил, занимаюсь ли я спортом."
           ],
-          "answer": "Друг предложил в выходные вместе позаниматься спортом."
+          "answer": "Друг предложил в выходные вместе позаниматься спортом.",
+          "title_uz": "Doʻst nima taklif qildi?",
+          "eyebrow_uz": "TINGLASH",
+          "answer_uz": "Doʻstim dam olish kunlari birga sport bilan shugʻullanishni taklif qildi.",
+          "options_uz": [
+            "Doʻstim dam olish kunlari birga sport bilan shugʻullanishni taklif qildi.",
+            "Doʻstim sport bilan yolgʻiz shugʻullanishni buyurdi.",
+            "Doʻstim sport bilan shugʻullanayapsizmi deb soʻradi."
+          ]
         },
         {
           "kind": "quiz",
@@ -16437,15 +16759,18 @@
           "items": [
             {
               "ko": "활발하다",
-              "ru": "быть активным, бойким"
+              "ru": "быть активным, бойким",
+              "ru_uz": "faol, jonli boʻlmoq"
             },
             {
               "ko": "솔직하다",
-              "ru": "быть честным, прямым"
+              "ru": "быть честным, прямым",
+              "ru_uz": "rostgoʻy, toʻgʻri boʻlmoq"
             },
             {
               "ko": "고집이 세다",
-              "ru": "быть упрямым"
+              "ru": "быть упрямым",
+              "ru_uz": "qaysar boʻlmoq"
             }
           ],
           "pool": [
@@ -16455,6 +16780,16 @@
             "быть рассеянным",
             "быть жизнерадостным",
             "быть дотошным"
+          ],
+          "title_uz": "Dars soʻzlari",
+          "eyebrow_uz": "TEKSHIRUV",
+          "pool_uz": [
+            "faol, jonli boʻlmoq",
+            "rostgoʻy, toʻgʻri boʻlmoq",
+            "qaysar boʻlmoq",
+            "esankiragan boʻlmoq",
+            "quvnoq boʻlmoq",
+            "sinchkov boʻlmoq"
           ]
         },
         {
@@ -16507,6 +16842,10 @@
         "tasks": [
           "Опиши свои привычки питания: что ты делаешь по выходным — 책을 읽는다거나 …",
           "Сделай 3 предположения о ситуации через -나 보다 (например: 식당에 사람이 많나 봐요)."
+        ],
+        "tasks_uz": [
+          "Ovqatlanish odatlaringizni tasvirlab bering: dam olish kunlari nima qilasiz — 책을 읽는다거나 …",
+          "-나 보다 orqali vaziyat haqida 3 ta taxmin qiling (masalan: 식당에 사람이 많나 봐요)."
         ]
       },
       "slides": [
@@ -16528,6 +16867,13 @@
               "🤔",
               "догадываюсь по виду"
             ]
+          ],
+          "title_uz": "Ovqat va ovqatlanish odatlari",
+          "intro_uz": "«Harakatlarni misol sifatida sanaysiz — <span class=\"ko\">-ㄴ/는다거나</span>: 채소를 먹는다거나 골고루 먹어요. Koʻrinishidan vaziyatni taxmin qilganda esa — <span class=\"ko\">-나 보다</span>: 냄새가 좋네요, 맛있는 걸 만드나 봐요 🌸»",
+          "learn_uz": [
+            "ovqat odatlari",
+            "misollarni sanash",
+            "koʻrinishidan taxmin qilaman"
           ]
         },
         {
@@ -16539,15 +16885,18 @@
           "examples": [
             {
               "ko": "편식을 한다거나 과식을 하는 것은 몸에 안 좋아요.",
-              "ru": "Привередничать в еде или переедать — вредно для здоровья."
+              "ru": "Привередничать в еде или переедать — вредно для здоровья.",
+              "ru_uz": "Ovqatda tanlab yeyish yoki ortiqcha yeyish — salomatlikka zarar."
             },
             {
               "ko": "저는 주말에 채소를 볶는다거나 국을 끓여요.",
-              "ru": "По выходным я то овощи обжариваю, то суп варю."
+              "ru": "По выходным я то овощи обжариваю, то суп варю.",
+              "ru_uz": "Dam olish kunlari men goh sabzavot qovuraman, goh shoʻrva qaynataman."
             },
             {
               "ko": "간식으로 과일을 먹는다거나 우유를 마셔요.",
-              "ru": "На перекус я то фрукты ем, то молоко пью."
+              "ru": "На перекус я то фрукты ем, то молоко пью.",
+              "ru_uz": "Yengil tamaddi sifatida goh meva yeyman, goh sut ichaman."
             }
           ],
           "drills": [
@@ -16559,7 +16908,8 @@
                 "먹다거나",
                 "먹은다거나"
               ],
-              "answer": "먹는다거나"
+              "answer": "먹는다거나",
+              "ru_uz": "goh sabzavot yeyman (va hokazo), turlicha ovqatlanaman"
             },
             {
               "q": "영화를 ___ 게임을 하면서 쉬어요.",
@@ -16569,7 +16919,8 @@
                 "보는다거나",
                 "봤다거나"
               ],
-              "answer": "본다거나"
+              "answer": "본다거나",
+              "ru_uz": "goh film koʻraman, goh oʻyin oʻynab dam olaman"
             },
             {
               "q": "인스턴트 음식을 ___ 과식을 하면 건강에 나빠요.",
@@ -16579,9 +16930,14 @@
                 "먹는거나",
                 "먹다거나"
               ],
-              "answer": "먹는다거나"
+              "answer": "먹는다거나",
+              "ru_uz": "tez tayyor ovqat yeyish yoki ortiqcha yeyish — zararli"
             }
-          ]
+          ],
+          "title_uz": "-ㄴ/는다거나",
+          "eyebrow_uz": "GRAMMATIKA",
+          "sub_uz": "goh…, goh… (harakat misollari)",
+          "rule_uz": "Feʼl negizi + <b>-ㄴ다거나</b> (unlidan keyin) / <b>-는다거나</b> (undoshdan keyin) = «(qilib) goh…, goh…», harakatlarni <b>misol</b> sifatida sanash. 먹다 → <span class=\"ko\">먹는다거나</span>, 보다 → <span class=\"ko\">본다거나</span>. Sifatlarda — shunchaki <span class=\"ko\">-다거나</span>: 맵다 → 맵다거나. Koʻpincha ikkinchi feʼl bilan -거나siz tugaydi."
         },
         {
           "kind": "pattern",
@@ -16592,15 +16948,18 @@
           "examples": [
             {
               "ko": "냄새가 좋네요. 엄마가 맛있는 걸 만드나 봐요.",
-              "ru": "Как вкусно пахнет. Похоже, мама готовит что-то вкусное."
+              "ru": "Как вкусно пахнет. Похоже, мама готовит что-то вкусное.",
+              "ru_uz": "Hidi juda yoqimli. Shekilli, onam mazali narsa tayyorlayapti."
             },
             {
               "ko": "음식이 하나도 안 남았어요. 다들 맛있게 먹었나 봐요.",
-              "ru": "Еды совсем не осталось. Видимо, все с удовольствием поели."
+              "ru": "Еды совсем не осталось. Видимо, все с удовольствием поели.",
+              "ru_uz": "Ovqatdan hech narsa qolmadi. Shekilli, hamma rohatlanib yegan."
             },
             {
               "ko": "채소를 안 먹네요. 채식을 별로 안 좋아하나 봐요.",
-              "ru": "Овощи не ест. Похоже, не очень любит растительную пищу."
+              "ru": "Овощи не ест. Похоже, не очень любит растительную пищу.",
+              "ru_uz": "Sabzavot yemayapti. Shekilli, u oʻsimlik taomini unchalik yoqtirmaydi."
             }
           ],
           "drills": [
@@ -16612,7 +16971,8 @@
                 "맛있는다 봐요",
                 "맛있다 봐요"
               ],
-              "answer": "맛있나 봐요"
+              "answer": "맛있나 봐요",
+              "ru_uz": "navbat uzun — shekilli, ovqat mazali"
             },
             {
               "q": "접시가 비었어요. 다 ___.",
@@ -16622,7 +16982,8 @@
                 "먹나 봐요",
                 "먹는다 봐요"
               ],
-              "answer": "먹었나 봐요"
+              "answer": "먹었나 봐요",
+              "ru_uz": "idish boʻsh — shekilli, hammasini yeb qoʻyishdi"
             },
             {
               "q": "국에서 김이 나요. 지금 ___.",
@@ -16632,9 +16993,14 @@
                 "끓는다 봐요",
                 "끓이나다 봐요"
               ],
-              "answer": "끓나 봐요"
+              "answer": "끓나 봐요",
+              "ru_uz": "shoʻrvadan bugʻ chiqyapti — shekilli, hozir qaynayapti"
             }
-          ]
+          ],
+          "title_uz": "-나 보다",
+          "eyebrow_uz": "GRAMMATIKA",
+          "sub_uz": "shekilli, koʻrinishidan…",
+          "rule_uz": "Feʼl negizi + <b>-나 보다</b> = «shekilli, …», <b>koʻrinadigan belgilar</b> asosidagi taxmin. Sifatlarda — <span class=\"ko\">-(으)ㄴ가 보다</span>: 맵다 → 매운가 보다. Oʻtgan zamon: <span class=\"ko\">-았/었나 보다</span> → 먹었나 봐요 («shekilli, yegan»). Nutqda odatda <span class=\"ko\">-나 봐요</span>."
         },
         {
           "kind": "words",
@@ -16644,34 +17010,42 @@
             {
               "ko": "식습관",
               "ru": "пищевые привычки",
-              "emoji": "🍱"
+              "emoji": "🍱",
+              "ru_uz": "ovqatlanish odatlari"
             },
             {
               "ko": "편식",
               "ru": "привередливость в еде",
-              "emoji": "🙅"
+              "emoji": "🙅",
+              "ru_uz": "tanlab yeyish"
             },
             {
               "ko": "과식",
               "ru": "переедание",
-              "emoji": "🍽️"
+              "emoji": "🍽️",
+              "ru_uz": "ortiqcha yeyish"
             },
             {
               "ko": "채식",
               "ru": "растительная пища",
-              "emoji": "🥦"
+              "emoji": "🥦",
+              "ru_uz": "oʻsimlik taomi"
             },
             {
               "ko": "골고루",
               "ru": "всё подряд, разнообразно",
-              "emoji": "🔀"
+              "emoji": "🔀",
+              "ru_uz": "hammasidan, turlicha"
             },
             {
               "ko": "볶다",
               "ru": "жарить помешивая",
-              "emoji": "🍳"
+              "emoji": "🍳",
+              "ru_uz": "qovurmoq"
             }
-          ]
+          ],
+          "title_uz": "Ovqat va odatlar",
+          "eyebrow_uz": "SOʻZLAR"
         },
         {
           "kind": "dialog",
@@ -16683,39 +17057,47 @@
               "who": "A",
               "av": "🙂",
               "ko": "와, 냄새 좋다. 엄마가 맛있는 걸 만드나 봐요.",
-              "ru": "Ого, как вкусно пахнет. Похоже, мама готовит что-то вкусное."
+              "ru": "Ого, как вкусно пахнет. Похоже, мама готовит что-то вкусное.",
+              "ru_uz": "Voy, hidi juda yoqimli. Shekilli, onam mazali narsa tayyorlayapti."
             },
             {
               "who": "B",
               "av": "🧑‍🍳",
               "ko": "응, 채소를 볶는다거나 국을 끓이면서 저녁을 준비했어.",
-              "ru": "Да, я то овощи обжаривала, то суп варила — готовила ужин."
+              "ru": "Да, я то овощи обжаривала, то суп варила — готовила ужин.",
+              "ru_uz": "Ha, men goh sabzavot qovurdim, goh shoʻrva qaynatdim — kechki ovqat tayyorladim."
             },
             {
               "who": "A",
               "av": "🙂",
               "ko": "고기만 먹어도 돼요? 저는 채소를 좀 별로……",
-              "ru": "А можно есть только мясо? Я овощи не очень…"
+              "ru": "А можно есть только мясо? Я овощи не очень…",
+              "ru_uz": "Faqat goʻsht yesam boʻladimi? Men sabzavotni unchalik…"
             },
             {
               "who": "B",
               "av": "🧑‍🍳",
               "ko": "편식을 한다거나 과식을 하면 건강에 안 좋아. 골고루 먹어야지.",
-              "ru": "Привередничать или переедать вредно. Нужно питаться разнообразно."
+              "ru": "Привередничать или переедать вредно. Нужно питаться разнообразно.",
+              "ru_uz": "Tanlab yeyish yoki ortiqcha yeyish salomatlikka zarar. Turlicha ovqatlanish kerak."
             },
             {
               "who": "A",
               "av": "😅",
               "ko": "알겠어요. 채소도 먹을게요. 오늘은 배가 많이 고프나 봐요.",
-              "ru": "Хорошо, овощи тоже поем. Похоже, я сегодня сильно проголодался."
+              "ru": "Хорошо, овощи тоже поем. Похоже, я сегодня сильно проголодался.",
+              "ru_uz": "Xoʻp boʻladi. Sabzavotni ham yeyman. Bugun shekilli juda ochman."
             },
             {
               "who": "B",
               "av": "🧑‍🍳",
               "ko": "그래, 천천히 먹어. 많이 만들었으니까.",
-              "ru": "Давай, ешь не спеша. Я много приготовила."
+              "ru": "Давай, ешь не спеша. Я много приготовила.",
+              "ru_uz": "Mayli, shoshilmay ye. Koʻp tayyorlaganman."
             }
-          ]
+          ],
+          "title_uz": "Dasturxon atrofida",
+          "eyebrow_uz": "MULOQOT"
         },
         {
           "kind": "build",
@@ -16732,7 +17114,10 @@
           "pool": [
             "맛있나",
             "끓이면서"
-          ]
+          ],
+          "title_uz": "Goh oʻqiyman, goh koʻraman",
+          "eyebrow_uz": "JUMLA TUZ",
+          "ru_uz": "Dam olish kunlari men goh kitob oʻqiyman, goh film koʻraman."
         },
         {
           "kind": "listen",
@@ -16745,7 +17130,15 @@
             "Если есть овощи, станешь здоровым.",
             "Похоже, мама готовит что-то вкусное."
           ],
-          "answer": "Привередничать в еде или переедать — вредно для здоровья."
+          "answer": "Привередничать в еде или переедать — вредно для здоровья.",
+          "title_uz": "Onam nima deyapti?",
+          "eyebrow_uz": "TINGLASH",
+          "answer_uz": "Tanlab yeyish yoki ortiqcha yeyish — salomatlikka zarar.",
+          "options_uz": [
+            "Tanlab yeyish yoki ortiqcha yeyish — salomatlikka zarar.",
+            "Sabzavot yesangiz, sogʻlom boʻlasiz.",
+            "Shekilli, onam mazali narsa tayyorlayapti."
+          ]
         },
         {
           "kind": "quiz",
@@ -16754,15 +17147,18 @@
           "items": [
             {
               "ko": "편식",
-              "ru": "привередливость в еде"
+              "ru": "привередливость в еде",
+              "ru_uz": "tanlab yeyish"
             },
             {
               "ko": "과식",
-              "ru": "переедание"
+              "ru": "переедание",
+              "ru_uz": "ortiqcha yeyish"
             },
             {
               "ko": "골고루",
-              "ru": "всё подряд, разнообразно"
+              "ru": "всё подряд, разнообразно",
+              "ru_uz": "hammasidan, turlicha"
             }
           ],
           "pool": [
@@ -16772,6 +17168,16 @@
             "перекус",
             "вегетарианство",
             "еда вне дома"
+          ],
+          "title_uz": "Dars soʻzlari",
+          "eyebrow_uz": "TEKSHIRUV",
+          "pool_uz": [
+            "tanlab yeyish",
+            "ortiqcha yeyish",
+            "hammasidan, turlicha",
+            "yengil tamaddi",
+            "vegetarianlik",
+            "tashqarida ovqatlanish"
           ]
         },
         {
@@ -16824,6 +17230,10 @@
         "tasks": [
           "Расскажи о трёх старых привычках через -았/었었-: что было раньше, а сейчас уже нет.",
           "Опиши через -다(가) 보니까, какое изменение в здоровье дало регулярное действие."
+        ],
+        "tasks_uz": [
+          "-았/었었- orqali 3 ta eski odatingiz haqida gapirib bering: ilgari nima boʻlgan-u, hozir yoʻqligi haqida.",
+          "-다(가) 보니까 orqali muntazam harakat sogʻliqqa qanday oʻzgarish keltirganini tasvirlab bering."
         ]
       },
       "slides": [
@@ -16845,6 +17255,13 @@
               "💪",
               "и стал здоровым"
             ]
+          ],
+          "title_uz": "Sogʻlom turmush tarzi",
+          "intro_uz": "«Ilgari tushgacha uxlardim, endi erta turaman — bu <span class=\"ko\">-았/었었-</span>, uzoq oʻtmish haqida. Odat natija berganda esa — <span class=\"ko\">-다(가) 보니까</span>: 매일 걷다 보니까 건강해졌어요 🌸»",
+          "learn_uz": [
+            "ilgari shunday edi",
+            "doim qilardim",
+            "va sogʻlom boʻldim"
           ]
         },
         {
@@ -16856,15 +17273,18 @@
           "examples": [
             {
               "ko": "전에는 매일 늦잠을 잤었는데 지금은 일찍 일어나요.",
-              "ru": "Раньше я каждый день спал до обеда, а сейчас встаю рано."
+              "ru": "Раньше я каждый день спал до обеда, а сейчас встаю рано.",
+              "ru_uz": "Ilgari har kuni tushgacha uxlardim, hozir esa erta turaman."
             },
             {
               "ko": "학생 때는 양치질도 자주 잊었었어요.",
-              "ru": "В студенчестве я даже про чистку зубов часто забывал."
+              "ru": "В студенчестве я даже про чистку зубов часто забывал.",
+              "ru_uz": "Talabalik davrimda tishlarimni yuvishni ham koʻp unutgan edim."
             },
             {
               "ko": "예전에는 자세가 정말 안 좋았었어요.",
-              "ru": "В прошлом у меня была совсем плохая осанка."
+              "ru": "В прошлом у меня была совсем плохая осанка.",
+              "ru_uz": "Ilgari qomatim rostdan ham yomon edi."
             }
           ],
           "drills": [
@@ -16876,7 +17296,8 @@
                 "먹겠는데",
                 "먹는데"
               ],
-              "answer": "먹었었는데"
+              "answer": "먹었었는데",
+              "ru_uz": "ilgari achchiq ovqatni yeyolmasdim (endi esa yaxshi koʻraman)"
             },
             {
               "q": "어렸을 때는 운동을 안 ___.",
@@ -16886,7 +17307,8 @@
                 "할래요",
                 "하네요"
               ],
-              "answer": "했었어요"
+              "answer": "했었어요",
+              "ru_uz": "bolaligimda sport bilan shugʻullanmagandim (endi shugʻullanaman)"
             },
             {
               "q": "전에는 자는 시간이 불규칙적 ___.",
@@ -16896,9 +17318,14 @@
                 "일까요",
                 "이래요"
               ],
-              "answer": "이었었어요"
+              "answer": "이었었어요",
+              "ru_uz": "ilgari uyqu vaqtim tartibsiz edi"
             }
-          ]
+          ],
+          "title_uz": "-았/었었-",
+          "eyebrow_uz": "GRAMMATIKA",
+          "sub_uz": "uzoq oʻtmish: boʻlgan, lekin oʻtib ketgan",
+          "rule_uz": "Feʼl/sifat negizi + <b>-았었-/-었었-</b> = «bir paytlar qilgandim, lekin endi yoʻq». Bu uzoq oʻtmish zamoni: holat oʻtmishda qolganini va hozir boshqacha ekanini taʼkidlaydi. 자다 → <span class=\"ko\">잤었어요</span>, 먹다 → <span class=\"ko\">먹었었어요</span>. Koʻpincha yonida 전에는 (ilgari) va qarama-qarshi 지금은 (hozir) boʻladi."
         },
         {
           "kind": "pattern",
@@ -16909,15 +17336,18 @@
           "examples": [
             {
               "ko": "매일 일찍 자다 보니까 늦잠을 안 자게 됐어요.",
-              "ru": "Стал каждый день рано ложиться — и перестал спать до обеда."
+              "ru": "Стал каждый день рано ложиться — и перестал спать до обеда.",
+              "ru_uz": "Har kuni erta yotib uxlaydigan boʻldim — va tushgacha uxlashni tashladim."
             },
             {
               "ko": "규칙적으로 운동하다 보니까 정말 건강해졌어요.",
-              "ru": "Занимался по режиму — и в итоге правда стал здоровым."
+              "ru": "Занимался по режиму — и в итоге правда стал здоровым.",
+              "ru_uz": "Muntazam sport bilan shugʻullandim — va rostdan ham sogʻlom boʻlib qoldim."
             },
             {
               "ko": "바른 자세로 앉다 보니까 허리가 안 아파요.",
-              "ru": "Стал сидеть с правильной осанкой — и спина не болит."
+              "ru": "Стал сидеть с правильной осанкой — и спина не болит.",
+              "ru_uz": "Toʻgʻri qomatda oʻtiradigan boʻldim — va belim ogʻrimaydi."
             }
           ],
           "drills": [
@@ -16929,7 +17359,8 @@
                 "먹어서",
                 "먹으면"
               ],
-              "answer": "먹다"
+              "answer": "먹다",
+              "ru_uz": "sabzavotni tez-tez yeydigan boʻldim — va tanam yengillashdi"
             },
             {
               "q": "매일 양치질을 ___ 보니까 치아가 건강해졌어요.",
@@ -16939,7 +17370,8 @@
                 "할까",
                 "했으면"
               ],
-              "answer": "하다"
+              "answer": "하다",
+              "ru_uz": "har kuni tish yuvadigan boʻldim — va tishlarim sogʻlom boʻldi"
             },
             {
               "q": "늦게까지 휴대전화를 ___ 보니까 눈이 나빠졌어요.",
@@ -16949,9 +17381,14 @@
                 "보고",
                 "볼래"
               ],
-              "answer": "보다"
+              "answer": "보다",
+              "ru_uz": "kech tungacha telefonga tikilib oʻtirdim — va koʻzim yomonlashdi"
             }
-          ]
+          ],
+          "title_uz": "-다(가) 보니까",
+          "eyebrow_uz": "GRAMMATIKA",
+          "sub_uz": "doim qilib turdim — va oxir-oqibat…",
+          "rule_uz": "Feʼl negizi + <b>-다(가) 보니까</b> = «biror narsani doim qilib, oxir-oqibat natija sezib/koʻrib qoldim». Takrorlanuvchi harakat qanday oʻzgarishga olib kelganini tasvirlaydi. 걷다 → <span class=\"ko\">걷다 보니까</span>, 먹다 → <span class=\"ko\">먹다 보니까</span>. Natija odatda oʻtgan zamonda: 건강해졌어요, 늘었어요."
         },
         {
           "kind": "words",
@@ -16961,34 +17398,42 @@
             {
               "ko": "생활 습관",
               "ru": "образ жизни, привычки",
-              "emoji": "🌿"
+              "emoji": "🌿",
+              "ru_uz": "turmush tarzi, odatlar"
             },
             {
               "ko": "규칙적",
               "ru": "регулярный, по режиму",
-              "emoji": "⏰"
+              "emoji": "⏰",
+              "ru_uz": "muntazam, tartibli"
             },
             {
               "ko": "자세",
               "ru": "поза, осанка",
-              "emoji": "🧍"
+              "emoji": "🧍",
+              "ru_uz": "qomat, holat"
             },
             {
               "ko": "늦잠",
               "ru": "долгий утренний сон",
-              "emoji": "😴"
+              "emoji": "😴",
+              "ru_uz": "uzoq tong uyqusi"
             },
             {
               "ko": "양치질",
               "ru": "чистка зубов",
-              "emoji": "🪥"
+              "emoji": "🪥",
+              "ru_uz": "tish yuvish"
             },
             {
               "ko": "건강하다",
               "ru": "быть здоровым",
-              "emoji": "💪"
+              "emoji": "💪",
+              "ru_uz": "sogʻlom boʻlmoq"
             }
-          ]
+          ],
+          "title_uz": "Odatlar va salomatlik",
+          "eyebrow_uz": "SOʻZLAR"
         },
         {
           "kind": "dialog",
@@ -17000,39 +17445,47 @@
               "who": "A",
               "av": "🙂",
               "ko": "요즘 정말 건강해 보여요. 비결이 뭐예요?",
-              "ru": "Ты в последнее время выглядишь очень здоровым. В чём секрет?"
+              "ru": "Ты в последнее время выглядишь очень здоровым. В чём секрет?",
+              "ru_uz": "Oxirgi paytda juda sogʻlom koʻrinasiz. Sirri nimada?"
             },
             {
               "who": "B",
               "av": "🧑",
               "ko": "전에는 매일 늦잠을 잤었는데 지금은 일찍 일어나요.",
-              "ru": "Раньше я каждый день спал до обеда, а теперь встаю рано."
+              "ru": "Раньше я каждый день спал до обеда, а теперь встаю рано.",
+              "ru_uz": "Ilgari har kuni tushgacha uxlardim, hozir esa erta turaman."
             },
             {
               "who": "A",
               "av": "🙂",
               "ko": "우와, 어떻게 습관을 바꿨어요?",
-              "ru": "Ого, как тебе удалось поменять привычку?"
+              "ru": "Ого, как тебе удалось поменять привычку?",
+              "ru_uz": "Voy, odatingizni qanday oʻzgartirdingiz?"
             },
             {
               "who": "B",
               "av": "🧑",
               "ko": "매일 아침에 걷다 보니까 몸이 가벼워지고 건강해졌어요.",
-              "ru": "Стал каждое утро гулять — и тело стало лёгким, и здоровье поправилось."
+              "ru": "Стал каждое утро гулять — и тело стало лёгким, и здоровье поправилось.",
+              "ru_uz": "Har tong yuradigan boʻldim — va tanam yengillashdi, sogʻligʻim tuzaldi."
             },
             {
               "who": "A",
               "av": "🙂",
               "ko": "저도 자세가 안 좋았었는데 한번 따라 해 볼게요.",
-              "ru": "У меня тоже была плохая осанка, попробую так же."
+              "ru": "У меня тоже была плохая осанка, попробую так же.",
+              "ru_uz": "Menda ham qomat yomon edi, men ham shu yoʻlni sinab koʻraman."
             },
             {
               "who": "B",
               "av": "🧑",
               "ko": "규칙적으로 하다 보니까 어렵지 않아요. 같이 해요!",
-              "ru": "Когда делаешь по режиму, это совсем не сложно. Давай вместе!"
+              "ru": "Когда делаешь по режиму, это совсем не сложно. Давай вместе!",
+              "ru_uz": "Muntazam qilsangiz, qiyin emas. Birga qilaylik!"
             }
-          ]
+          ],
+          "title_uz": "Qanday qilib bunchalik sogʻlom boʻldingiz?",
+          "eyebrow_uz": "MULOQOT"
         },
         {
           "kind": "build",
@@ -17051,7 +17504,10 @@
           "pool": [
             "잤었어요",
             "피곤해요"
-          ]
+          ],
+          "title_uz": "Odat natija berdi",
+          "eyebrow_uz": "JUMLA TUZ",
+          "ru_uz": "Erta yotadigan boʻldim — va tushgacha uxlashni tashladim."
         },
         {
           "kind": "listen",
@@ -17064,7 +17520,15 @@
             "Раньше занимался, а теперь бросил спорт.",
             "Буду заниматься по режиму, чтобы стать здоровым."
           ],
-          "answer": "Занимался по режиму — и в итоге правда стал здоровым."
+          "answer": "Занимался по режиму — и в итоге правда стал здоровым.",
+          "title_uz": "Nima oʻzgardi?",
+          "eyebrow_uz": "TINGLASH",
+          "answer_uz": "Muntazam sport bilan shugʻullandim — va rostdan ham sogʻlom boʻlib qoldim.",
+          "options_uz": [
+            "Muntazam sport bilan shugʻullandim — va rostdan ham sogʻlom boʻlib qoldim.",
+            "Ilgari shugʻullanardim, hozir esa sportni tashladim.",
+            "Sogʻlom boʻlish uchun muntazam shugʻullanaman."
+          ]
         },
         {
           "kind": "quiz",
@@ -17073,15 +17537,18 @@
           "items": [
             {
               "ko": "규칙적",
-              "ru": "регулярный, по режиму"
+              "ru": "регулярный, по режиму",
+              "ru_uz": "muntazam, tartibli"
             },
             {
               "ko": "자세",
-              "ru": "поза, осанка"
+              "ru": "поза, осанка",
+              "ru_uz": "qomat, holat"
             },
             {
               "ko": "늦잠",
-              "ru": "долгий утренний сон"
+              "ru": "долгий утренний сон",
+              "ru_uz": "uzoq tong uyqusi"
             }
           ],
           "pool": [
@@ -17091,6 +17558,16 @@
             "чистка зубов",
             "усталость",
             "образ жизни"
+          ],
+          "title_uz": "Dars soʻzlari",
+          "eyebrow_uz": "TEKSHIRUV",
+          "pool_uz": [
+            "muntazam, tartibli",
+            "qomat, holat",
+            "uzoq tong uyqusi",
+            "tish yuvish",
+            "charchoq",
+            "turmush tarzi"
           ]
         },
         {
@@ -17143,6 +17620,10 @@
         "tasks": [
           "Сравни две команды или два вида спорта через 에 비해(서) — напиши 3 предложения.",
           "Перескажи 3 спортивные новости через -다는: 우리 팀이 이겼다는 소식을 들었어요 …"
+        ],
+        "tasks_uz": [
+          "Ikki jamoa yoki ikki sport turini 에 비해(서) orqali solishtiring — 3 ta gap yozing.",
+          "3 ta sport yangiligini -다는 orqali qayta ayting: 우리 팀이 이겼다는 소식을 들었어요 …"
         ]
       },
       "slides": [
@@ -17164,6 +17645,13 @@
               "🏆",
               "болею за команду"
             ]
+          ],
+          "title_uz": "Sport va musobaqalar",
+          "intro_uz": "«Bugun stadionga boramiz 🏟️. Jamoalarni solishtiramiz — <span class=\"ko\">상대팀에 비해서 더 잘했어요</span> (raqibga nisbatan yaxshiroq oʻynadik), va yangilikni qayta aytamiz — <span class=\"ko\">우리 팀이 이겼다는 소식</span> (jamoamiz gʻalaba qozongani haqidagi yangilik) 🌸»",
+          "learn_uz": [
+            "solishtiraman",
+            "yangilikni qayta aytaman",
+            "jamoa uchun kuylayman"
           ]
         },
         {
@@ -17175,15 +17663,18 @@
           "examples": [
             {
               "ko": "우리 팀은 상대팀에 비해서 실력이 더 좋아요.",
-              "ru": "По сравнению с командой соперника, наша команда сильнее."
+              "ru": "По сравнению с командой соперника, наша команда сильнее.",
+              "ru_uz": "Raqib jamoaga nisbatan bizning jamoamiz kuchliroq."
             },
             {
               "ko": "올해 관람객 수가 작년에 비해 두 배로 늘었어요.",
-              "ru": "Число зрителей в этом году выросло вдвое по сравнению с прошлым годом."
+              "ru": "Число зрителей в этом году выросло вдвое по сравнению с прошлым годом.",
+              "ru_uz": "Bu yil tomoshabinlar soni oʻtgan yilga nisbatan ikki barobar oshdi."
             },
             {
               "ko": "농구 경기에 비해서 축구 경기가 더 인기가 많아요.",
-              "ru": "По сравнению с баскетболом, футбол популярнее."
+              "ru": "По сравнению с баскетболом, футбол популярнее.",
+              "ru_uz": "Basketbolga nisbatan futbol koʻproq mashhur."
             }
           ],
           "drills": [
@@ -17195,7 +17686,8 @@
                 "에 대해서",
                 "를 위해서"
               ],
-              "answer": "에 비해서"
+              "answer": "에 비해서",
+              "ru_uz": "Raqibga nisbatan bizning oʻyinchilarimiz yaxshiroq oʻynadi."
             },
             {
               "q": "이 선수는 나이___ 체력이 정말 좋아요.",
@@ -17205,7 +17697,8 @@
                 "처럼",
                 "마다"
               ],
-              "answer": "에 비해"
+              "answer": "에 비해",
+              "ru_uz": "Yoshiga nisbatan bu sportchining jismoniy holati juda yaxshi."
             },
             {
               "q": "작년___ 올해 우리 순위가 많이 올랐어요.",
@@ -17215,9 +17708,14 @@
                 "보다는",
                 "까지"
               ],
-              "answer": "에 비해서"
+              "answer": "에 비해서",
+              "ru_uz": "Oʻtgan yilga nisbatan bu yil bizning oʻrnimiz ancha koʻtarildi."
             }
-          ]
+          ],
+          "title_uz": "에 비해(서)",
+          "eyebrow_uz": "GRAMMATIKA",
+          "sub_uz": "… bilan solishtirganda",
+          "rule_uz": "Ot + <b>에 비해(서)</b> = «… bilan solishtirganda», «…dan farqli oʻlaroq». Ikki narsani solishtiramiz: <span class=\"ko\">A에 비해서 B가 …</span> — «A bilan solishtirganda, B …». <span class=\"ko\">서</span> yuklamasini tushirib qoldirish mumkin: <span class=\"ko\">에 비해</span> = <span class=\"ko\">에 비해서</span>. Otdan keyin toʻgʻridan-toʻgʻri qoʻyiladi, 은/는/이/가 siz."
         },
         {
           "kind": "pattern",
@@ -17228,15 +17726,18 @@
           "examples": [
             {
               "ko": "우리 팀이 결승에 올라갔다는 소식을 들었어요.",
-              "ru": "Я услышал новость о том, что наша команда вышла в финал."
+              "ru": "Я услышал новость о том, что наша команда вышла в финал.",
+              "ru_uz": "Jamoamiz finalga chiqqani haqidagi yangilikni eshitdim."
             },
             {
               "ko": "이 경기장이 세계에서 가장 크다는 기사를 읽었어요.",
-              "ru": "Я прочитал статью о том, что этот стадион — самый большой в мире."
+              "ru": "Я прочитал статью о том, что этот стадион — самый большой в мире.",
+              "ru_uz": "Bu stadion dunyodagi eng katta stadion ekani haqidagi maqolani oʻqidim."
             },
             {
               "ko": "그 선수가 곧 은퇴한다는 이야기가 있어요.",
-              "ru": "Ходят разговоры о том, что этот спортсмен скоро уйдёт из спорта."
+              "ru": "Ходят разговоры о том, что этот спортсмен скоро уйдёт из спорта.",
+              "ru_uz": "Bu sportchi tez orada sportni tashlab ketishi haqida gaplar bor."
             }
           ],
           "drills": [
@@ -17248,7 +17749,8 @@
                 "따는데",
                 "따려고"
               ],
-              "answer": "땄다는"
+              "answer": "땄다는",
+              "ru_uz": "Koreya oltin medal olgani haqidagi yangilikni koʻrdim."
             },
             {
               "q": "이 심판이 아주 ___ 이야기를 들었어요.",
@@ -17258,7 +17760,8 @@
                 "엄격해서",
                 "엄격하면"
               ],
-              "answer": "엄격하다는"
+              "answer": "엄격하다는",
+              "ru_uz": "Bu hakam juda qattiqqoʻl ekani haqidagi gaplarni eshitdim."
             },
             {
               "q": "다음 경기가 ___ 소식을 받았어요.",
@@ -17268,9 +17771,14 @@
                 "취소되면",
                 "취소되고"
               ],
-              "answer": "취소됐다는"
+              "answer": "취소됐다는",
+              "ru_uz": "Keyingi oʻyin bekor qilingani haqidagi xabarni oldim."
             }
-          ]
+          ],
+          "title_uz": "-다는",
+          "eyebrow_uz": "GRAMMATIKA",
+          "sub_uz": "… haqidagi yangilik/mishmish (aniqlovchi)",
+          "rule_uz": "<b>-다는</b> — bu <span class=\"ko\">-다고 하는</span> ning qisqargan shakli: qayta aytilgan gap otga (<span class=\"ko\">소식, 뉴스, 이야기, 기사</span>) aniqlovchiga aylanadi. Feʼl: <span class=\"ko\">이기다 → 이긴다는 / 이겼다는</span>. Sifat: <span class=\"ko\">크다 → 크다는</span>. <span class=\"ko\">이다</span>: <span class=\"ko\">선수이다 → 선수라는</span>. Keyin albatta ot keladi: <span class=\"ko\">우승했다는 뉴스</span> — «gʻalaba qozongani haqidagi yangilik»."
         },
         {
           "kind": "words",
@@ -17280,34 +17788,42 @@
             {
               "ko": "경기장",
               "ru": "стадион, арена",
-              "emoji": "🏟️"
+              "emoji": "🏟️",
+              "ru_uz": "stadion, arena"
             },
             {
               "ko": "관람객",
               "ru": "зритель",
-              "emoji": "👥"
+              "emoji": "👥",
+              "ru_uz": "tomoshabin"
             },
             {
               "ko": "심판",
               "ru": "судья (рефери)",
-              "emoji": "🧑‍⚖️"
+              "emoji": "🧑‍⚖️",
+              "ru_uz": "hakam (referi)"
             },
             {
               "ko": "응원하다",
               "ru": "болеть, поддерживать",
-              "emoji": "📣"
+              "emoji": "📣",
+              "ru_uz": "kuylab qoʻllab-quvvatlamoq"
             },
             {
               "ko": "우승하다",
               "ru": "победить (стать чемпионом)",
-              "emoji": "🏆"
+              "emoji": "🏆",
+              "ru_uz": "gʻalaba qozonmoq (chempion boʻlmoq)"
             },
             {
               "ko": "순위",
               "ru": "место, позиция (в рейтинге)",
-              "emoji": "📊"
+              "emoji": "📊",
+              "ru_uz": "oʻrin, daraja (reytingda)"
             }
-          ]
+          ],
+          "title_uz": "Stadionda",
+          "eyebrow_uz": "SOʻZLAR"
         },
         {
           "kind": "dialog",
@@ -17319,39 +17835,47 @@
               "who": "A",
               "av": "🙂",
               "ko": "어제 축구 경기 봤어? 우리 팀이 이겼다는 소식 들었어.",
-              "ru": "Видел вчерашний футбол? Слышал новость, что наша команда выиграла."
+              "ru": "Видел вчерашний футбол? Слышал новость, что наша команда выиграла.",
+              "ru_uz": "Kechagi futbolni koʻrdingmi? Jamoamiz yutgani haqidagi yangilikni eshitdim."
             },
             {
               "who": "B",
               "av": "🧑",
               "ko": "응, 봤어. 상대팀에 비해서 우리 선수들이 훨씬 더 잘하더라.",
-              "ru": "Да, смотрел. По сравнению с соперником наши игроки сыграли куда лучше."
+              "ru": "Да, смотрел. По сравнению с соперником наши игроки сыграли куда лучше.",
+              "ru_uz": "Ha, koʻrdim. Raqibga nisbatan bizning oʻyinchilarimiz ancha yaxshiroq oʻynadi."
             },
             {
               "who": "A",
               "av": "🙂",
               "ko": "심판도 공정했지? 반칙을 정확하게 잡았다는 평가가 많아.",
-              "ru": "И судья был справедливым, да? Многие хвалят, что он точно фиксировал фолы."
+              "ru": "И судья был справедливым, да? Многие хвалят, что он точно фиксировал фолы.",
+              "ru_uz": "Hakam ham adolatli edi-a? Foullarni aniq belgilagani haqida koʻp maqtovlar bor."
             },
             {
               "who": "B",
               "av": "🧑",
               "ko": "맞아. 관람객들이 끝까지 큰 소리로 응원했어.",
-              "ru": "Точно. Зрители до самого конца громко болели."
+              "ru": "Точно. Зрители до самого конца громко болели.",
+              "ru_uz": "Toʻgʻri. Tomoshabinlar oxirigacha baland ovozda qoʻllab-quvvatlashdi."
             },
             {
               "who": "A",
               "av": "🙂",
               "ko": "이번에 우승하면 작년 순위에 비해 크게 오르겠다.",
-              "ru": "Если в этот раз станем чемпионами, место сильно поднимется по сравнению с прошлым годом."
+              "ru": "Если в этот раз станем чемпионами, место сильно поднимется по сравнению с прошлым годом.",
+              "ru_uz": "Bu safar chempion boʻlsak, oʻtgan yilgi oʻrnimizga nisbatan ancha koʻtariladi."
             },
             {
               "who": "B",
               "av": "🧑",
               "ko": "그러게. 다음 경기도 꼭 같이 보자.",
-              "ru": "И правда. Следующий матч обязательно посмотрим вместе."
+              "ru": "И правда. Следующий матч обязательно посмотрим вместе.",
+              "ru_uz": "Toʻgʻri aytasan. Keyingi oʻyinni ham albatta birga koʻramiz."
             }
-          ]
+          ],
+          "title_uz": "Kechagi oʻyin",
+          "eyebrow_uz": "MULOQOT"
         },
         {
           "kind": "build",
@@ -17369,7 +17893,10 @@
           "pool": [
             "대해서",
             "처럼"
-          ]
+          ],
+          "title_uz": "Jamoalarni solishtiramiz",
+          "eyebrow_uz": "JUMLA TUZ",
+          "ru_uz": "Raqib jamoaga nisbatan bizning jamoamiz yaxshiroq oʻynadi."
         },
         {
           "kind": "listen",
@@ -17382,7 +17909,15 @@
             "Наш спортсмен хочет взять золотую медаль.",
             "Наш спортсмен не смог взять золотую медаль."
           ],
-          "answer": "Я видел новость о том, что наш спортсмен взял золотую медаль."
+          "answer": "Я видел новость о том, что наш спортсмен взял золотую медаль.",
+          "title_uz": "Qanday yangilik?",
+          "eyebrow_uz": "TINGLASH",
+          "answer_uz": "Bizning sportchimiz oltin medal olgani haqidagi yangilikni koʻrdim.",
+          "options_uz": [
+            "Bizning sportchimiz oltin medal olgani haqidagi yangilikni koʻrdim.",
+            "Bizning sportchimiz oltin medal olishni xohlaydi.",
+            "Bizning sportchimiz oltin medal ololmadi."
+          ]
         },
         {
           "kind": "quiz",
@@ -17391,15 +17926,18 @@
           "items": [
             {
               "ko": "경기장",
-              "ru": "стадион, арена"
+              "ru": "стадион, арена",
+              "ru_uz": "stadion, arena"
             },
             {
               "ko": "심판",
-              "ru": "судья (рефери)"
+              "ru": "судья (рефери)",
+              "ru_uz": "hakam (referi)"
             },
             {
               "ko": "우승하다",
-              "ru": "победить (стать чемпионом)"
+              "ru": "победить (стать чемпионом)",
+              "ru_uz": "gʻalaba qozonmoq (chempion boʻlmoq)"
             }
           ],
           "pool": [
@@ -17409,6 +17947,16 @@
             "зритель",
             "болеть, поддерживать",
             "место в рейтинге"
+          ],
+          "title_uz": "Dars soʻzlari",
+          "eyebrow_uz": "TEKSHIRUV",
+          "pool_uz": [
+            "stadion, arena",
+            "hakam (referi)",
+            "gʻalaba qozonmoq (chempion boʻlmoq)",
+            "tomoshabin",
+            "kuylab qoʻllab-quvvatlamoq",
+            "reytingdagi oʻrin"
           ]
         },
         {
@@ -17461,6 +18009,10 @@
         "tasks": [
           "Вспомни 3 игры из детства и опиши их через -던: 어렸을 때 자주 하던 놀이는 …",
           "Объясни 3 предмета или игры через (이)라는: 이건 …(이)라는 거예요."
+        ],
+        "tasks_uz": [
+          "Bolalikdagi 3 ta oʻyinni eslang va ularni -던 orqali tasvirlab bering: 어렸을 때 자주 하던 놀이는 …",
+          "3 ta narsa yoki oʻyinni (이)라는 orqali tushuntiring: 이건 …(이)라는 거예요."
         ]
       },
       "slides": [
@@ -17482,6 +18034,13 @@
               "🏷️",
               "под названием…"
             ]
+          ],
+          "title_uz": "Xalq oʻyinlari",
+          "intro_uz": "«Bolaligingizda nima oʻynaganingizni eslayapsizmi? Oʻtmishdagi tugallanmagan yoki odatiy harakat — <span class=\"ko\">-던</span>: 어렸을 때 하던 놀이. Predmetni nomlaganda esa — <span class=\"ko\">(이)라는</span>: 공기라는 놀이 — kongi deb ataladigan oʻyin 🌸»",
+          "learn_uz": [
+            "ilgari oʻynagan",
+            "oʻtmishdagi odat",
+            "… deb ataladi"
           ]
         },
         {
@@ -17493,15 +18052,18 @@
           "examples": [
             {
               "ko": "어렸을 때 자주 하던 놀이가 공기놀이예요.",
-              "ru": "Игра, в которую я часто играл в детстве, — это конги."
+              "ru": "Игра, в которую я часто играл в детстве, — это конги.",
+              "ru_uz": "Bolaligimda tez-tez oʻynagan oʻyinim — bu kongi."
             },
             {
               "ko": "이건 할머니가 가지고 노시던 공깃돌이에요.",
-              "ru": "Это камешки, которыми играла бабушка."
+              "ru": "Это камешки, которыми играла бабушка.",
+              "ru_uz": "Bu buvim oʻynagan konshi toshlari."
             },
             {
               "ko": "우리가 같이 부르던 노래에 맞춰서 줄을 넘어요.",
-              "ru": "Прыгаем через резиночку под песню, которую мы вместе пели."
+              "ru": "Прыгаем через резиночку под песню, которую мы вместе пели.",
+              "ru_uz": "Biz birga aytgan qoʻshiqqa mos ravishda arqondan sakraymiz."
             }
           ],
           "drills": [
@@ -17513,7 +18075,8 @@
                 "한",
                 "할"
               ],
-              "answer": "하던"
+              "answer": "하던",
+              "ru_uz": "tez-tez oʻynagan oʻyin"
             },
             {
               "q": "이건 동생이 ___ 고무줄이에요.",
@@ -17523,7 +18086,8 @@
                 "가지고 놀",
                 "가지고 놀고"
               ],
-              "answer": "가지고 놀던"
+              "answer": "가지고 놀던",
+              "ru_uz": "ukam oʻynagan rezinka"
             },
             {
               "q": "우리가 자주 ___ 노래 기억나요?",
@@ -17533,9 +18097,14 @@
                 "부를",
                 "부르는데"
               ],
-              "answer": "부르던"
+              "answer": "부르던",
+              "ru_uz": "biz tez-tez aytgan qoʻshiq"
             }
-          ]
+          ],
+          "title_uz": "-던",
+          "eyebrow_uz": "GRAMMATIKA",
+          "sub_uz": "ilgari oʻynagan narsa",
+          "rule_uz": "Feʼl negizi + <b>-던</b> + ot = «(oʻsha), ilgari/odatda (qilgan)». Oʻtmishdagi <b>odatiy yoki tugallanmagan</b> harakatni tasvirlaydi: 자주 하다 → <span class=\"ko\">자주 하던 놀이</span> (tez-tez oʻynagan oʻyin). Bir martalik tugallangan fakt bilan solishtiring — u yerda <span class=\"ko\">-(으)ㄴ</span> ishlatiladi."
         },
         {
           "kind": "pattern",
@@ -17546,15 +18115,18 @@
           "examples": [
             {
               "ko": "이건 공기라는 한국 전통 놀이예요.",
-              "ru": "Это корейская народная игра под названием конги."
+              "ru": "Это корейская народная игра под названием конги.",
+              "ru_uz": "Bu kongi deb ataladigan koreys xalq oʻyini."
             },
             {
               "ko": "윷이라는 나무 막대기를 던져서 놀아요.",
-              "ru": "Играют, бросая деревянные палочки под названием ют."
+              "ru": "Играют, бросая деревянные палочки под названием ют.",
+              "ru_uz": "Yut deb ataladigan yogʻoch tayoqchalarni tashlab oʻynaladi."
             },
             {
               "ko": "한국에는 술래라는 사람을 정하는 놀이가 많아요.",
-              "ru": "В Корее много игр, где выбирают водящего."
+              "ru": "В Корее много игр, где выбирают водящего.",
+              "ru_uz": "Koreyada suylle deb ataladigan odamni tanlaydigan oʻyinlar koʻp."
             }
           ],
           "drills": [
@@ -17566,7 +18138,8 @@
                 "사방치기던",
                 "사방치기라고"
               ],
-              "answer": "사방치기라는"
+              "answer": "사방치기라는",
+              "ru_uz": "sabanchigi deb ataladigan oʻyin"
             },
             {
               "q": "___ 막대기 네 개로 윷놀이를 해요.",
@@ -17576,7 +18149,8 @@
                 "윷이던",
                 "윷라는"
               ],
-              "answer": "윷이라는"
+              "answer": "윷이라는",
+              "ru_uz": "yut deb ataladigan tayoqchalar"
             },
             {
               "q": "한국에는 ___ 놀이도 있어요.",
@@ -17586,9 +18160,14 @@
                 "고무줄놀이던",
                 "고무줄놀이라고"
               ],
-              "answer": "고무줄놀이라는"
+              "answer": "고무줄놀이라는",
+              "ru_uz": "komujullori (rezinka) deb ataladigan oʻyin"
             }
-          ]
+          ],
+          "title_uz": "(이)라는",
+          "eyebrow_uz": "GRAMMATIKA",
+          "sub_uz": "… deb ataladigan",
+          "rule_uz": "Ot + <b>(이)라는</b> + boshqa ot = «… deb ataladigan (narsa)». Bu <span class=\"ko\">-이라고 하는</span> ning qisqa shakli. Undoshdan keyin → <span class=\"ko\">-이라는</span>, unlidan keyin → <span class=\"ko\">-라는</span>: 공기 → 공기라는, 윷 → 윷이라는."
         },
         {
           "kind": "words",
@@ -17598,34 +18177,42 @@
             {
               "ko": "공기놀이",
               "ru": "игра в камешки (конги)",
-              "emoji": "🪨"
+              "emoji": "🪨",
+              "ru_uz": "tosh oʻyini (kongi)"
             },
             {
               "ko": "윷놀이",
               "ru": "юннори (игра с палочками)",
-              "emoji": "🪵"
+              "emoji": "🪵",
+              "ru_uz": "yunnori (tayoqcha oʻyini)"
             },
             {
               "ko": "사방치기",
               "ru": "классики",
-              "emoji": "🔢"
+              "emoji": "🔢",
+              "ru_uz": "klassiki"
             },
             {
               "ko": "고무줄놀이",
               "ru": "игра в резиночку",
-              "emoji": "🪀"
+              "emoji": "🪀",
+              "ru_uz": "rezinka oʻyini"
             },
             {
               "ko": "술래",
               "ru": "водящий",
-              "emoji": "🙈"
+              "emoji": "🙈",
+              "ru_uz": "izlovchi (oʻyinda)"
             },
             {
               "ko": "던지다",
               "ru": "бросать",
-              "emoji": "🤾"
+              "emoji": "🤾",
+              "ru_uz": "tashlamoq"
             }
-          ]
+          ],
+          "title_uz": "Xalq oʻyinlari",
+          "eyebrow_uz": "SOʻZLAR"
         },
         {
           "kind": "dialog",
@@ -17637,39 +18224,47 @@
               "who": "A",
               "av": "🙂",
               "ko": "이거 뭐예요? 처음 봐요.",
-              "ru": "Что это? Вижу впервые."
+              "ru": "Что это? Вижу впервые.",
+              "ru_uz": "Bu nima? Birinchi marta koʻryapman."
             },
             {
               "who": "B",
               "av": "🧑",
               "ko": "이건 공기라는 한국 전통 놀이예요. 어렸을 때 제가 자주 하던 거예요.",
-              "ru": "Это корейская народная игра под названием конги. В детстве я часто в неё играл."
+              "ru": "Это корейская народная игра под названием конги. В детстве я часто в неё играл.",
+              "ru_uz": "Bu kongi deb ataladigan koreys xalq oʻyini. Bolaligimda men tez-tez shuni oʻynardim."
             },
             {
               "who": "A",
               "av": "🙂",
               "ko": "어떻게 해요? 어려워 보여요.",
-              "ru": "Как играть? Выглядит сложно."
+              "ru": "Как играть? Выглядит сложно.",
+              "ru_uz": "Qanday oʻynaladi? Qiyinga oʻxshaydi."
             },
             {
               "who": "B",
               "av": "🧑",
               "ko": "공깃돌 하나를 위로 던지고, 떨어지기 전에 다른 돌을 집으면 돼요.",
-              "ru": "Бросаешь один камешек вверх и, пока он не упал, хватаешь другой."
+              "ru": "Бросаешь один камешек вверх и, пока он не упал, хватаешь другой.",
+              "ru_uz": "Bitta toshni yuqoriga tashlaysiz va u tushib ketmasdan boshqa toshni olishingiz kerak."
             },
             {
               "who": "A",
               "av": "🙂",
               "ko": "우리 나라에도 비슷한, 줄로 하던 놀이가 있었어요.",
-              "ru": "У нас тоже была похожая игра, в которую играли с верёвкой."
+              "ru": "У нас тоже была похожая игра, в которую играли с верёвкой.",
+              "ru_uz": "Bizning yurtimizda ham shunga oʻxshash, arqon bilan oʻynaydigan oʻyin bor edi."
             },
             {
               "who": "B",
               "av": "🧑",
               "ko": "그래요? 그럼 같이 한번 해 봐요!",
-              "ru": "Правда? Тогда давайте сыграем вместе!"
+              "ru": "Правда? Тогда давайте сыграем вместе!",
+              "ru_uz": "Rostdanmi? Unda birga bir marta oʻynab koʻraylik!"
             }
-          ]
+          ],
+          "title_uz": "Bolalikda nima oʻynagansiz",
+          "eyebrow_uz": "MULOQOT"
         },
         {
           "kind": "build",
@@ -17687,7 +18282,10 @@
           "pool": [
             "윷이라는",
             "하는"
-          ]
+          ],
+          "title_uz": "Bolalikdagi oʻyin",
+          "eyebrow_uz": "JUMLA TUZ",
+          "ru_uz": "Bolaligimda tez-tez oʻynagan oʻyinim — bu kongi."
         },
         {
           "kind": "listen",
@@ -17700,7 +18298,15 @@
             "Это игра, в которую я никогда не играл.",
             "Это новая игра, я научусь в неё играть."
           ],
-          "answer": "Это игра под названием конги, в которую я часто играл в детстве."
+          "answer": "Это игра под названием конги, в которую я часто играл в детстве.",
+          "title_uz": "Qanday oʻyin?",
+          "eyebrow_uz": "TINGLASH",
+          "answer_uz": "Bu kongi deb ataladigan oʻyin, men bolaligimda tez-tez oʻynardim.",
+          "options_uz": [
+            "Bu kongi deb ataladigan oʻyin, men bolaligimda tez-tez oʻynardim.",
+            "Bu men hech qachon oʻynamagan oʻyin.",
+            "Bu yangi oʻyin, uni oʻynashni oʻrganaman."
+          ]
         },
         {
           "kind": "quiz",
@@ -17709,15 +18315,18 @@
           "items": [
             {
               "ko": "술래",
-              "ru": "водящий"
+              "ru": "водящий",
+              "ru_uz": "izlovchi (oʻyinda)"
             },
             {
               "ko": "던지다",
-              "ru": "бросать"
+              "ru": "бросать",
+              "ru_uz": "tashlamoq"
             },
             {
               "ko": "사방치기",
-              "ru": "классики"
+              "ru": "классики",
+              "ru_uz": "klassiki"
             }
           ],
           "pool": [
@@ -17727,6 +18336,16 @@
             "резиночка",
             "камешек",
             "прыгать"
+          ],
+          "title_uz": "Dars soʻzlari",
+          "eyebrow_uz": "TEKSHIRUV",
+          "pool_uz": [
+            "izlovchi (oʻyinda)",
+            "tashlamoq",
+            "klassiki",
+            "rezinka oʻyini",
+            "toshcha",
+            "sakramoq"
           ]
         },
         {
@@ -17779,6 +18398,10 @@
         "tasks": [
           "Дай другу 3 совета о поездке через -는 게 어때요?",
           "Опиши место, где ты уже бывал(а), через -았/었던: 작년에 갔던 …"
+        ],
+        "tasks_uz": [
+          "-는 게 어때요? orqali doʻstingizga sayohat haqida 3 ta maslahat bering.",
+          "Allaqachon borgan joyingizni -았/었던 orqali tasvirlab bering: 작년에 갔던 …"
         ]
       },
       "slides": [
@@ -17800,6 +18423,13 @@
               "📸",
               "где уже был"
             ]
+          ],
+          "title_uz": "Sayohatlar",
+          "intro_uz": "«Qayerga borish haqida maslahat berasiz — <span class=\"ko\">-는 게 어때요?</span>: 제주도에 가 보는 게 어때요? — balki Chejudoga boramiz? Allaqachon borgan joyni eslaganda esa — <span class=\"ko\">-았/었던</span>: 작년에 갔던 곳 — oʻtgan yili borgan joy 🌸»",
+          "learn_uz": [
+            "sayohat maslahati",
+            "qayerga boramiz",
+            "ilgari qayerda boʻlgan"
           ]
         },
         {
@@ -17811,15 +18441,18 @@
           "examples": [
             {
               "ko": "이번 휴가에는 제주도로 여행을 가는 게 어때요?",
-              "ru": "Может, в этот отпуск съездим в путешествие на Чеджудо?"
+              "ru": "Может, в этот отпуск съездим в путешествие на Чеджудо?",
+              "ru_uz": "Bu tatilda Chejudoga sayohatga borsak, qanday boʻlardi?"
             },
             {
               "ko": "도착하면 먼저 매표소부터 찾는 게 어때요?",
-              "ru": "Когда приедем, может, сначала найдём кассу?"
+              "ru": "Когда приедем, может, сначала найдём кассу?",
+              "ru_uz": "Yetib borganimizda, avval kassani topsak, boʻladimi?"
             },
             {
               "ko": "시간이 없으니까 표를 미리 예약하는 게 어때요?",
-              "ru": "Раз времени нет, может, забронируем билеты заранее?"
+              "ru": "Раз времени нет, может, забронируем билеты заранее?",
+              "ru_uz": "Vaqt yoʻqligi sababli, chiptalarni oldindan bron qilsak, qanday boʻlardi?"
             }
           ],
           "drills": [
@@ -17831,7 +18464,8 @@
                 "구경했던",
                 "구경하던"
               ],
-              "answer": "구경하는"
+              "answer": "구경하는",
+              "ru_uz": "Balki, hanok qishlogʻida sayr qilarmiz?"
             },
             {
               "q": "여기저기 ___ 게 어때요?",
@@ -17841,7 +18475,8 @@
                 "다녀 봤던",
                 "다녀 보던"
               ],
-              "answer": "다녀 보는"
+              "answer": "다녀 보는",
+              "ru_uz": "Balki, u yer-bu yerni aylanib chiqarmiz?"
             },
             {
               "q": "늦겠어요. 좀 ___ 게 어때요?",
@@ -17851,9 +18486,14 @@
                 "서둘렀던",
                 "서두를"
               ],
-              "answer": "서두르는"
+              "answer": "서두르는",
+              "ru_uz": "Kechikamiz. Balki, shoshilarmiz?"
             }
-          ]
+          ],
+          "title_uz": "-는 게 어때요?",
+          "eyebrow_uz": "GRAMMATIKA",
+          "sub_uz": "balki, …? (maslahat, taklif)",
+          "rule_uz": "Feʼl negizi + <b>-는 게 어때요?</b> = «balki, …?», «nima boʻlardi, agar …?» — yumshoq maslahat yoki taklif. 가다 → 가는 게 어때요? Toʻliq shakli — <span class=\"ko\">-는 것이 어때요?</span>, nutqda <span class=\"ko\">-는 게</span> ga qisqaradi. Koʻpincha <span class=\"ko\">-아/어 보다</span> bilan: 가 보는 게 어때요? — «balki, borib koʻrasan?»"
         },
         {
           "kind": "pattern",
@@ -17864,15 +18504,18 @@
           "examples": [
             {
               "ko": "작년에 갔던 관광지가 자꾸 생각나요.",
-              "ru": "Туристическое место, куда я ездил в прошлом году, всё время вспоминается."
+              "ru": "Туристическое место, куда я ездил в прошлом году, всё время вспоминается.",
+              "ru_uz": "Oʻtgan yili borgan turistik joyim doim esimga tushaveradi."
             },
             {
               "ko": "이건 제주도에서 샀던 기념품이에요.",
-              "ru": "Это сувенир, который я купил на Чеджудо."
+              "ru": "Это сувенир, который я купил на Чеджудо.",
+              "ru_uz": "Bu men Chejudoda sotib olgan sovgʻa."
             },
             {
               "ko": "우리가 함께 구경했던 명소를 또 가고 싶어요.",
-              "ru": "Хочу снова съездить на то известное место, которое мы вместе осматривали."
+              "ru": "Хочу снова съездить на то известное место, которое мы вместе осматривали.",
+              "ru_uz": "Birga tomosha qilgan mashhur joyimizga yana bormoqchiman."
             }
           ],
           "drills": [
@@ -17884,7 +18527,8 @@
                 "먹는",
                 "먹을"
               ],
-              "answer": "먹었던"
+              "answer": "먹었던",
+              "ru_uz": "Bu men Koreyada yegan taom."
             },
             {
               "q": "작년에 가족과 ___ 바다가 그리워요.",
@@ -17894,7 +18538,8 @@
                 "가는",
                 "가던"
               ],
-              "answer": "갔던"
+              "answer": "갔던",
+              "ru_uz": "Oʻtgan yili oila bilan borgan dengizni sogʻinaman."
             },
             {
               "q": "어릴 때 ___ 촬영지를 드디어 봤어요.",
@@ -17904,9 +18549,14 @@
                 "구경하는",
                 "구경할"
               ],
-              "answer": "구경했던"
+              "answer": "구경했던",
+              "ru_uz": "Bolaligimda tomosha qilgan suratga olish joyini nihoyat koʻrdim."
             }
-          ]
+          ],
+          "title_uz": "-았/었던",
+          "eyebrow_uz": "GRAMMATIKA",
+          "sub_uz": "(oʻsha), … (oʻtmish haqida xotira)",
+          "rule_uz": "Feʼl/sifat negizi + <b>-았/었던</b> + ot = «(oʻsha) …gan», ilgari sodir boʻlgan, xotirada qolgan harakat haqida. 가다 → 갔던 곳 — borgan joy. 먹다 → 먹었던 음식 — yegan taom. Allaqachon boʻlib oʻtgan narsa haqidagi shaxsiy xotirani bildiradi."
         },
         {
           "kind": "words",
@@ -17916,34 +18566,42 @@
             {
               "ko": "관광지",
               "ru": "туристическое место",
-              "emoji": "🗺️"
+              "emoji": "🗺️",
+              "ru_uz": "turistik joy"
             },
             {
               "ko": "명소",
               "ru": "известное место",
-              "emoji": "🏯"
+              "emoji": "🏯",
+              "ru_uz": "mashhur joy"
             },
             {
               "ko": "매표소",
               "ru": "касса",
-              "emoji": "🎟️"
+              "emoji": "🎟️",
+              "ru_uz": "kassa"
             },
             {
               "ko": "출발하다",
               "ru": "отправляться",
-              "emoji": "🚌"
+              "emoji": "🚌",
+              "ru_uz": "joʻnab ketmoq"
             },
             {
               "ko": "구경하다",
               "ru": "осматривать",
-              "emoji": "👀"
+              "emoji": "👀",
+              "ru_uz": "tomosha qilmoq"
             },
             {
               "ko": "예약하다",
               "ru": "бронировать",
-              "emoji": "📅"
+              "emoji": "📅",
+              "ru_uz": "bron qilmoq"
             }
-          ]
+          ],
+          "title_uz": "Sayohatlar",
+          "eyebrow_uz": "SOʻZLAR"
         },
         {
           "kind": "dialog",
@@ -17955,39 +18613,47 @@
               "who": "A",
               "av": "🙂",
               "ko": "이번 휴가에는 어디로 여행을 가는 게 어때요?",
-              "ru": "А что, если в этот отпуск съездить куда-нибудь в путешествие?"
+              "ru": "А что, если в этот отпуск съездить куда-нибудь в путешествие?",
+              "ru_uz": "Bu tatilda qayergadir sayohatga borsak, qanday boʻlardi?"
             },
             {
               "who": "B",
               "av": "🧑",
               "ko": "음, 작년에 갔던 제주도가 또 생각나요.",
-              "ru": "Хм, мне опять вспоминается Чеджудо, куда мы ездили в прошлом году."
+              "ru": "Хм, мне опять вспоминается Чеджудо, куда мы ездили в прошлом году.",
+              "ru_uz": "Hmm, oʻtgan yili borgan Chejudo yana esimga tushyapti."
             },
             {
               "who": "A",
               "av": "🙂",
               "ko": "그럼 이번에는 부산에 가 보는 게 어때요? 바다 명소가 많아요.",
-              "ru": "Тогда, может, в этот раз съездим в Пусан? Там много известных мест у моря."
+              "ru": "Тогда, может, в этот раз съездим в Пусан? Там много известных мест у моря.",
+              "ru_uz": "Unda bu safar Pusanga borsak, qanday boʻlardi? U yerda dengiz boʻyida mashhur joylar koʻp."
             },
             {
               "who": "B",
               "av": "🧑",
               "ko": "좋아요. 우리가 예전에 봤던 사진 속 그 해변에 꼭 가고 싶어요.",
-              "ru": "Отлично. Очень хочу попасть на тот пляж с фотографий, которые мы когда-то смотрели."
+              "ru": "Отлично. Очень хочу попасть на тот пляж с фотографий, которые мы когда-то смотрели.",
+              "ru_uz": "Zoʻr. Ilgari koʻrgan suratlardagi oʻsha plyajga albatta bormoqchiman."
             },
             {
               "who": "A",
               "av": "🙂",
               "ko": "그러면 표를 미리 예약하는 게 어때요?",
-              "ru": "Тогда, может, заранее забронируем билеты?"
+              "ru": "Тогда, может, заранее забронируем билеты?",
+              "ru_uz": "Unda chiptalarni oldindan bron qilsak, qanday boʻlardi?"
             },
             {
               "who": "B",
               "av": "🧑",
               "ko": "네, 서두르는 게 좋겠어요. 가슴이 벌써 설레요!",
-              "ru": "Да, лучше поторопиться. У меня уже сердце замирает от волнения!"
+              "ru": "Да, лучше поторопиться. У меня уже сердце замирает от волнения!",
+              "ru_uz": "Ha, shoshilganimiz maʼqul. Yuragim allaqachon hayajondan urib ketyapti!"
             }
-          ]
+          ],
+          "title_uz": "Qayerga boramiz?",
+          "eyebrow_uz": "MULOQOT"
         },
         {
           "kind": "build",
@@ -18004,7 +18670,10 @@
           "pool": [
             "갔던",
             "어땠어요?"
-          ]
+          ],
+          "title_uz": "Sayohat maslahati",
+          "eyebrow_uz": "JUMLA TUZ",
+          "ru_uz": "Balki, bu safar Chejudoga borarmiz?"
         },
         {
           "kind": "listen",
@@ -18017,7 +18686,15 @@
             "На выходных я ездил на туристическое место.",
             "На выходных туристическое место было закрыто."
           ],
-          "answer": "Может, на выходных съездим на туристическое место?"
+          "answer": "Может, на выходных съездим на туристическое место?",
+          "title_uz": "Qanday maslahat?",
+          "eyebrow_uz": "TINGLASH",
+          "answer_uz": "Balki, dam olish kunlari turistik joyga borarmiz?",
+          "options_uz": [
+            "Balki, dam olish kunlari turistik joyga borarmiz?",
+            "Dam olish kunlari turistik joyga bordim.",
+            "Dam olish kunlari turistik joy yopiq edi."
+          ]
         },
         {
           "kind": "quiz",
@@ -18026,15 +18703,18 @@
           "items": [
             {
               "ko": "관광지",
-              "ru": "туристическое место"
+              "ru": "туристическое место",
+              "ru_uz": "turistik joy"
             },
             {
               "ko": "명소",
-              "ru": "известное место"
+              "ru": "известное место",
+              "ru_uz": "mashhur joy"
             },
             {
               "ko": "출발하다",
-              "ru": "отправляться, выезжать"
+              "ru": "отправляться, выезжать",
+              "ru_uz": "joʻnab ketmoq"
             }
           ],
           "pool": [
@@ -18044,6 +18724,16 @@
             "касса",
             "осматривать",
             "сувенир"
+          ],
+          "title_uz": "Dars soʻzlari",
+          "eyebrow_uz": "TEKSHIRUV",
+          "pool_uz": [
+            "turistik joy",
+            "mashhur joy",
+            "joʻnab ketmoq",
+            "kassa",
+            "tomosha qilmoq",
+            "sovgʻa"
           ]
         },
         {
@@ -18096,6 +18786,10 @@
         "tasks": [
           "Опиши через -а/어하다, что чувствуют 3 человека на фестивале (기뻐하다, 즐거워하다, 힘들어하다).",
           "Ответь другу 3 раза через -(으)ㄹ걸요: предположи, открыт ли музей, понравится ли подарок, холодно ли вечером."
+        ],
+        "tasks_uz": [
+          "-아/어하다 orqali festivalda 3 kishining nima his qilayotganini tasvirlab bering (기뻐하다, 즐거워하다, 힘들어하다).",
+          "Doʻstingizga -(으)ㄹ걸요 orqali 3 marta javob bering: muzey ochiqmi, sovgʻa yoqadimi, kechqurun sovuqmi — deb taxmin qiling."
         ]
       },
       "slides": [
@@ -18117,6 +18811,13 @@
               "🤔",
               "наверное…"
             ]
+          ],
+          "title_uz": "Bayramlar va festivallar",
+          "intro_uz": "«Boshqa odamning hissiyotlari haqida <span class=\"ko\">-아/어하다</span> orqali gapiramiz: 동생이 즐거워해요 — ukamga quvonchli. Ehtiyotkorona taxmin va ozgina afsus esa — <span class=\"ko\">-(으)ㄹ걸요</span>: 아마 끝났을걸요 — ehtimol, allaqachon tugagandir 🎆»",
+          "learn_uz": [
+            "festival",
+            "boshqa odam hissiyoti",
+            "ehtimol…"
           ]
         },
         {
@@ -18128,15 +18829,18 @@
           "examples": [
             {
               "ko": "동생이 불꽃놀이를 보고 정말 즐거워했어요.",
-              "ru": "Братишка посмотрел фейерверк и был очень рад."
+              "ru": "Братишка посмотрел фейерверк и был очень рад.",
+              "ru_uz": "Ukam salyutni koʻrib juda xursand boʻldi."
             },
             {
               "ko": "친구가 매운 먹을거리를 힘들어해요.",
-              "ru": "Подруге тяжело даётся острая еда (на фестивале)."
+              "ru": "Подруге тяжело даётся острая еда (на фестивале).",
+              "ru_uz": "Doʻstimga achchiq taomlar (festivalda) qiyin kelyapti."
             },
             {
               "ko": "아이들이 기념품을 받고 기뻐했어요.",
-              "ru": "Дети получили сувениры и обрадовались."
+              "ru": "Дети получили сувениры и обрадовались.",
+              "ru_uz": "Bolalar sovgʻa olib xursand boʻlishdi."
             }
           ],
           "drills": [
@@ -18148,7 +18852,8 @@
                 "어해요",
                 "아해요"
               ],
-              "answer": "워해요"
+              "answer": "워해요",
+              "ru_uz": "ukam baland ovozdan qoʻrqadi"
             },
             {
               "q": "친구가 축제를 정말 즐거___ 했어요.",
@@ -18158,7 +18863,8 @@
                 "아",
                 "어"
               ],
-              "answer": "워"
+              "answer": "워",
+              "ru_uz": "doʻstimga festivalda juda quvnoq edi"
             },
             {
               "q": "형이 오래 걷는 걸 힘들___.",
@@ -18168,9 +18874,14 @@
                 "워해요",
                 "아해요"
               ],
-              "answer": "어해요"
+              "answer": "어해요",
+              "ru_uz": "akamga uzoq yurish qiyin"
             }
-          ]
+          ],
+          "title_uz": "-아/어하다",
+          "eyebrow_uz": "GRAMMATIKA",
+          "sub_uz": "uchinchi shaxs hissiyoti",
+          "rule_uz": "<b>Oʻz</b> hissiyotlaringiz haqida sifat bilan gapirasiz (좋다, 무섭다), lekin <b>boshqa odam</b>ning hissiyotlari haqida — <b>-아/어하다</b> orqali. Sifat → feʼl: 좋다 → <span class=\"ko\">좋아하다</span>, 즐겁다 → <span class=\"ko\">즐거워하다</span>, 무섭다 → <span class=\"ko\">무서워하다</span>, 힘들다 → <span class=\"ko\">힘들어하다</span>. Oʻtgan zamon: <span class=\"ko\">기뻐했어요</span>."
         },
         {
           "kind": "pattern",
@@ -18181,15 +18892,18 @@
           "examples": [
             {
               "ko": "지금쯤 축제가 이미 시작됐을걸요.",
-              "ru": "К этому времени фестиваль, наверное, уже начался."
+              "ru": "К этому времени фестиваль, наверное, уже начался.",
+              "ru_uz": "Hozirgacha festival ehtimol allaqachon boshlangandir."
             },
             {
               "ko": "휴일이라 안내소는 닫혔을걸요.",
-              "ru": "Сегодня выходной, так что информационный пункт, наверное, закрыт."
+              "ru": "Сегодня выходной, так что информационный пункт, наверное, закрыт.",
+              "ru_uz": "Bugun dam olish kuni, shuning uchun axborot punkti ehtimol yopiqdir."
             },
             {
               "ko": "저녁에는 쌀쌀해서 좀 추울걸요.",
-              "ru": "Вечером прохладно, так что, наверное, будет зябко."
+              "ru": "Вечером прохладно, так что, наверное, будет зябко.",
+              "ru_uz": "Kechqurun salqin boʻlgani uchun ehtimol biroz sovuq boʻlar."
             }
           ],
           "drills": [
@@ -18201,7 +18915,8 @@
                 "했어요",
                 "해요"
               ],
-              "answer": "할걸요"
+              "answer": "할걸요",
+              "ru_uz": "ehtimol, salyut soat toʻqqizda boshlanadi"
             },
             {
               "q": "늦었으니까 기념품 가게는 닫___.",
@@ -18211,7 +18926,8 @@
                 "혀요",
                 "혔어요"
               ],
-              "answer": "혔을걸요"
+              "answer": "혔을걸요",
+              "ru_uz": "kech boʻlgani uchun sovgʻa doʻkoni ehtimol yopiqdir"
             },
             {
               "q": "사람이 많아서 자리가 없___.",
@@ -18221,9 +18937,14 @@
                 "어요",
                 "겠어요"
               ],
-              "answer": "을걸요"
+              "answer": "을걸요",
+              "ru_uz": "odam koʻp boʻlgani uchun ehtimol joy yoʻqdir"
             }
-          ]
+          ],
+          "title_uz": "-(으)ㄹ걸요",
+          "eyebrow_uz": "GRAMMATIKA",
+          "sub_uz": "taxmin va afsus",
+          "rule_uz": "Negiz + <b>-(으)ㄹ걸요</b> = «ehtimol, …» — ehtiyotkorona taxmin. Unlidan/ㄹ dan keyin → <span class=\"ko\">-ㄹ걸요</span> (가다 → 갈걸요), undoshdan keyin → <span class=\"ko\">-을걸요</span> (있다 → 있을걸요). Oʻtgan zamon: <span class=\"ko\">끝났을걸요</span>. Xuddi shu qoʻshimcha oʻzi haqida yengil <b>afsus</b>ni ham bildiradi: <span class=\"ko\">미리 갈걸 그랬어요</span> — oldindan borish kerak edi."
         },
         {
           "kind": "words",
@@ -18233,34 +18954,42 @@
             {
               "ko": "축제",
               "ru": "фестиваль, праздник",
-              "emoji": "🎆"
+              "emoji": "🎆",
+              "ru_uz": "festival, bayram"
             },
             {
               "ko": "불꽃놀이",
               "ru": "фейерверк",
-              "emoji": "🎇"
+              "emoji": "🎇",
+              "ru_uz": "salyut"
             },
             {
               "ko": "볼거리",
               "ru": "зрелища",
-              "emoji": "👀"
+              "emoji": "👀",
+              "ru_uz": "tomosha qilinadigan narsalar"
             },
             {
               "ko": "먹을거리",
               "ru": "еда, угощения",
-              "emoji": "🍢"
+              "emoji": "🍢",
+              "ru_uz": "ovqat, taomlar"
             },
             {
               "ko": "기념품",
               "ru": "сувенир",
-              "emoji": "🎁"
+              "emoji": "🎁",
+              "ru_uz": "sovgʻa"
             },
             {
               "ko": "체험",
               "ru": "мастер-класс",
-              "emoji": "🙌"
+              "emoji": "🙌",
+              "ru_uz": "master-klass, tajriba"
             }
-          ]
+          ],
+          "title_uz": "Festivalda",
+          "eyebrow_uz": "SOʻZLAR"
         },
         {
           "kind": "dialog",
@@ -18272,39 +19001,47 @@
               "who": "A",
               "av": "🙂",
               "ko": "이번 주말에 머드 축제에 같이 갈래요?",
-              "ru": "Пойдём в эти выходные вместе на грязевой фестиваль?"
+              "ru": "Пойдём в эти выходные вместе на грязевой фестиваль?",
+              "ru_uz": "Shu dam olish kunlari birga loy festivaliga borasizmi?"
             },
             {
               "who": "B",
               "av": "🧑",
               "ko": "좋아요! 그런데 저녁에는 불꽃놀이도 할까요?",
-              "ru": "Давайте! А вечером там будет ещё и фейерверк?"
+              "ru": "Давайте! А вечером там будет ещё и фейерверк?",
+              "ru_uz": "Albatta! Lekin kechqurun salyut ham boʻladimi?"
             },
             {
               "who": "A",
               "av": "🙂",
               "ko": "네, 아마 9시쯤 시작할걸요. 볼거리가 정말 많대요.",
-              "ru": "Да, наверное, начнётся около девяти. Говорят, там очень много зрелищ."
+              "ru": "Да, наверное, начнётся около девяти. Говорят, там очень много зрелищ.",
+              "ru_uz": "Ha, ehtimol soat toʻqqizlarda boshlanadi. Tomosha qiladigan narsa juda koʻp deyishadi."
             },
             {
               "who": "B",
               "av": "🧑",
               "ko": "동생도 데려갈까 하는데, 진흙을 무서워하면 어떡하죠?",
-              "ru": "Думаю взять с собой братишку, но что если он будет бояться грязи?"
+              "ru": "Думаю взять с собой братишку, но что если он будет бояться грязи?",
+              "ru_uz": "Ukamni ham olib borsammikan, lekin loydan qoʻrqsa nima qilaman?"
             },
             {
               "who": "A",
               "av": "🙂",
               "ko": "걱정 마세요. 체험을 해 보면 분명히 즐거워할걸요.",
-              "ru": "Не переживайте. Если попробует мастер-класс, ему точно понравится."
+              "ru": "Не переживайте. Если попробует мастер-класс, ему точно понравится.",
+              "ru_uz": "Xavotir olmang. Tajriba qilib koʻrsa, albatta yoqadi."
             },
             {
               "who": "B",
               "av": "🧑",
               "ko": "그럼 기념품도 사 와야겠어요. 동생이 기뻐할 거예요.",
-              "ru": "Тогда надо ещё купить сувенир. Братишка обрадуется."
+              "ru": "Тогда надо ещё купить сувенир. Братишка обрадуется.",
+              "ru_uz": "Unda sovgʻa ham sotib olishim kerak. Ukam xursand boʻladi."
             }
-          ]
+          ],
+          "title_uz": "Festivalga boramiz",
+          "eyebrow_uz": "MULOQOT"
         },
         {
           "kind": "build",
@@ -18320,7 +19057,10 @@
           "pool": [
             "즐거워해요",
             "끝났어요"
-          ]
+          ],
+          "title_uz": "Ehtimol, allaqachon boshlangan",
+          "eyebrow_uz": "JUMLA TUZ",
+          "ru_uz": "Hozirgacha festival ehtimol allaqachon boshlangandir."
         },
         {
           "kind": "listen",
@@ -18333,7 +19073,15 @@
             "Я хочу посмотреть фейерверк с братом.",
             "Братишка испугался фейерверка."
           ],
-          "answer": "Братишка посмотрел фейерверк и был очень рад."
+          "answer": "Братишка посмотрел фейерверк и был очень рад.",
+          "title_uz": "U nima dedi?",
+          "eyebrow_uz": "TINGLASH",
+          "answer_uz": "Ukam salyutni koʻrib juda xursand boʻldi.",
+          "options_uz": [
+            "Ukam salyutni koʻrib juda xursand boʻldi.",
+            "Men akam bilan salyut koʻrishni xohlayman.",
+            "Ukam salyutdan qoʻrqib ketdi."
+          ]
         },
         {
           "kind": "quiz",
@@ -18342,15 +19090,18 @@
           "items": [
             {
               "ko": "불꽃놀이",
-              "ru": "фейерверк"
+              "ru": "фейерверк",
+              "ru_uz": "salyut"
             },
             {
               "ko": "기념품",
-              "ru": "сувенир"
+              "ru": "сувенир",
+              "ru_uz": "sovgʻa"
             },
             {
               "ko": "먹을거리",
-              "ru": "еда, угощения"
+              "ru": "еда, угощения",
+              "ru_uz": "ovqat, taomlar"
             }
           ],
           "pool": [
@@ -18360,6 +19111,16 @@
             "зрелища",
             "мастер-класс",
             "фестиваль"
+          ],
+          "title_uz": "Dars soʻzlari",
+          "eyebrow_uz": "TEKSHIRUV",
+          "pool_uz": [
+            "salyut",
+            "sovgʻa",
+            "ovqat, taomlar",
+            "tomosha qilinadigan narsalar",
+            "master-klass, tajriba",
+            "festival, bayram"
           ]
         },
         {
@@ -18412,6 +19173,10 @@
         "tasks": [
           "Опиши 3 догадки о чужом поведении через -(으)ㄴ가 보다.",
           "Дай совет другу про корейский этикет: …다 보면 익숙해질 거예요."
+        ],
+        "tasks_uz": [
+          "-(으)ㄴ가 보다 orqali boshqa odamning xatti-harakati haqida 3 ta taxmin qiling.",
+          "Doʻstingizga koreys odob-axloqi haqida maslahat bering: …다 보면 익숙해질 거예요."
         ]
       },
       "slides": [
@@ -18433,6 +19198,13 @@
               "🔁",
               "со временем…"
             ]
+          ],
+          "title_uz": "Odob-axloq: mumkin va mumkin emas",
+          "intro_uz": "«Har bir mamlakatda oʻz qoidalari bor: baʼzi joyda boshqa odamning boshini ushlab boʻlmaydi, baʼzi joyda ismni faqat qora ruchka bilan yozadilar. Xatti-harakatni koʻrib sababini <b>taxmin qilsangiz</b> — <span class=\"ko\">-(으)ㄴ가 보다</span>. Biror narsani qayta-qayta qilib, natijaga kelsangiz esa — <span class=\"ko\">-다(가) 보면</span> 🌸»",
+          "learn_uz": [
+            "shekilli, …",
+            "odob-axloq",
+            "vaqt oʻtishi bilan…"
           ]
         },
         {
@@ -18444,15 +19216,18 @@
           "examples": [
             {
               "ko": "고개를 숙여 인사하는 걸 보니 한국 사람인가 봐요.",
-              "ru": "Кланяется при приветствии — похоже, кореец."
+              "ru": "Кланяется при приветствии — похоже, кореец.",
+              "ru_uz": "Salomlashganda bosh egib qoyapti — shekilli, koreys."
             },
             {
               "ko": "옆 사람들이 자꾸 쳐다보네요. 여기서는 그게 예의가 아닌가 봐요.",
-              "ru": "Соседи всё время смотрят. Похоже, здесь так не принято."
+              "ru": "Соседи всё время смотрят. Похоже, здесь так не принято.",
+              "ru_uz": "Yondagi odamlar tinmay qarayapti. Shekilli, bu yerda bu odob emas."
             },
             {
               "ko": "민수가 전화를 안 받아요. 많이 바쁜가 봐요.",
-              "ru": "Минсу не берёт трубку. Видимо, очень занят."
+              "ru": "Минсу не берёт трубку. Видимо, очень занят.",
+              "ru_uz": "Minsu telefonga javob bermayapti. Shekilli, juda band."
             }
           ],
           "drills": [
@@ -18464,7 +19239,8 @@
                 "은가 봐요",
                 "나 봐요"
               ],
-              "answer": "인가 봐요"
+              "answer": "인가 봐요",
+              "ru_uz": "shekilli, koreys"
             },
             {
               "q": "불이 꺼져 있어요. 벌써 잠들___.",
@@ -18474,7 +19250,8 @@
                 "은가 봐요",
                 "인가 봐요"
               ],
-              "answer": "었나 봐요"
+              "answer": "었나 봐요",
+              "ru_uz": "shekilli, allaqachon uxlab qolgan"
             },
             {
               "q": "여기서는 악수를 안 하네요. 그게 예의가 아니___.",
@@ -18484,9 +19261,14 @@
                 "나 봐요",
                 "었나 봐요"
               ],
-              "answer": "ㄴ가 봐요"
+              "answer": "ㄴ가 봐요",
+              "ru_uz": "shekilli, bu yerda bu odobsizlik"
             }
-          ]
+          ],
+          "title_uz": "-(으)ㄴ가 보다",
+          "eyebrow_uz": "GRAMMATIKA",
+          "sub_uz": "shekilli, … (koʻrinishidan taxmin)",
+          "rule_uz": "Koʻrgan yoki eshitgan narsangizga asoslangan taxmin. Sifat + <b>-(으)ㄴ가 보다</b> (받침 boʻlsa → <span class=\"ko\">-은가 보다</span>, boʻlmasa → <span class=\"ko\">-ㄴ가 보다</span>). Feʼl + <b>-나 보다</b>: 가다 → 가나 봐요. Ot + <b>-인가 보다</b>. Oʻtgan zamon → <span class=\"ko\">-았/었나 보다</span>: 갔나 봐요."
         },
         {
           "kind": "pattern",
@@ -18497,15 +19279,18 @@
           "examples": [
             {
               "ko": "외국에서 살다 보면 문화 차이에 익숙해질 거예요.",
-              "ru": "Поживёшь за границей — со временем привыкнешь к культурным различиям."
+              "ru": "Поживёшь за границей — со временем привыкнешь к культурным различиям.",
+              "ru_uz": "Chet elda yashasangiz, vaqt oʻtishi bilan madaniy farqlarga koʻnikib qolasiz."
             },
             {
               "ko": "한국 사람들을 자주 만나다 보면 예절도 자연스럽게 배우게 돼요.",
-              "ru": "Если часто общаться с корейцами, манеры усваиваются сами собой."
+              "ru": "Если часто общаться с корейцами, манеры усваиваются сами собой.",
+              "ru_uz": "Koreyaliklar bilan tez-tez uchrashsangiz, odob-axloq ham oʻz-oʻzidan oʻrganiladi."
             },
             {
               "ko": "실수를 하다 보면 그 나라 문화를 더 잘 이해하게 돼요.",
-              "ru": "Делая ошибки, начинаешь лучше понимать культуру той страны."
+              "ru": "Делая ошибки, начинаешь лучше понимать культуру той страны.",
+              "ru_uz": "Xato qilib-qilib, oʻsha mamlakat madaniyatini yaxshiroq tushuna boshlaysiz."
             }
           ],
           "drills": [
@@ -18517,7 +19302,8 @@
                 "살아 보니",
                 "살아서"
               ],
-              "answer": "살다 보면"
+              "answer": "살다 보면",
+              "ru_uz": "agar chet elda yashasangiz"
             },
             {
               "q": "한국어를 자주 ___ 실력이 늘 거예요.",
@@ -18527,7 +19313,8 @@
                 "들으면서",
                 "들어 보니"
               ],
-              "answer": "듣다 보면"
+              "answer": "듣다 보면",
+              "ru_uz": "agar tez-tez tinglasangiz"
             },
             {
               "q": "사람들과 ___ 그 나라 예절을 알게 돼요.",
@@ -18537,9 +19324,14 @@
                 "지내려고",
                 "지내서"
               ],
-              "answer": "지내다 보면"
+              "answer": "지내다 보면",
+              "ru_uz": "agar odamlar bilan qayta-qayta muomala qilsangiz"
             }
-          ]
+          ],
+          "title_uz": "-다(가) 보면",
+          "eyebrow_uz": "GRAMMATIKA",
+          "sub_uz": "qayta-qayta qilsangiz, …",
+          "rule_uz": "Harakatni takrorlasangiz, asta-sekin natijaga kelasiz. Feʼl negizi + <b>-다(가) 보면</b>, keyin odatda <span class=\"ko\">-(으)ㄹ 거예요 / -게 되다 / -겠지요</span> keladi. 만나다 → 만나다 보면, 살다 → 살다 보면. Koʻpincha «vaqt oʻtishi bilan», «asta-sekin» deb tarjima qilinadi."
         },
         {
           "kind": "words",
@@ -18549,34 +19341,42 @@
             {
               "ko": "예절",
               "ru": "этикет, манеры",
-              "emoji": "🙇"
+              "emoji": "🙇",
+              "ru_uz": "odob-axloq, odob qoidalari"
             },
             {
               "ko": "문화 차이",
               "ru": "культурное различие",
-              "emoji": "🌏"
+              "emoji": "🌏",
+              "ru_uz": "madaniy farq"
             },
             {
               "ko": "악수하다",
               "ru": "пожимать руку",
-              "emoji": "🤝"
+              "emoji": "🤝",
+              "ru_uz": "qoʻl siqishmoq"
             },
             {
               "ko": "만지다",
               "ru": "трогать, касаться",
-              "emoji": "✋"
+              "emoji": "✋",
+              "ru_uz": "ushlamoq, teginmoq"
             },
             {
               "ko": "떠들다",
               "ru": "шуметь, галдеть",
-              "emoji": "🗣️"
+              "emoji": "🗣️",
+              "ru_uz": "shovqin qilmoq"
             },
             {
               "ko": "고개를 숙이다",
               "ru": "склонять голову (в поклоне)",
-              "emoji": "🙏"
+              "emoji": "🙏",
+              "ru_uz": "bosh egmoq (taʼzim)"
             }
-          ]
+          ],
+          "title_uz": "Odob-axloq va madaniyat",
+          "eyebrow_uz": "SOʻZLAR"
         },
         {
           "kind": "dialog",
@@ -18588,33 +19388,40 @@
               "who": "A",
               "av": "🙂",
               "ko": "왜 그래? 내 이름 빨간색으로 쓰면 안 돼?",
-              "ru": "Что такое? Нельзя писать моё имя красным?"
+              "ru": "Что такое? Нельзя писать моё имя красным?",
+              "ru_uz": "Nima boʻldi? Ismimni qizil rangda yozsam boʻlmaydimi?"
             },
             {
               "who": "B",
               "av": "🧑",
               "ko": "응, 한국에서는 이름을 빨간색으로 안 써. 안 좋게 생각하나 봐.",
-              "ru": "Да, в Корее имя красным не пишут. Видимо, считают это плохой приметой."
+              "ru": "Да, в Корее имя красным не пишут. Видимо, считают это плохой приметой.",
+              "ru_uz": "Ha, Koreyada ismni qizil rangda yozmaydilar. Shekilli, yomon niyat deb hisoblashadi."
             },
             {
               "who": "A",
               "av": "🙂",
               "ko": "그렇구나. 나라마다 예절이 다른가 봐.",
-              "ru": "Вот как. Похоже, в каждой стране свой этикет."
+              "ru": "Вот как. Похоже, в каждой стране свой этикет.",
+              "ru_uz": "Voy shunaqami. Shekilli, har mamlakatning oʻz odob-axloqi bor."
             },
             {
               "who": "B",
               "av": "🧑",
               "ko": "맞아. 이런 거 하나씩 알다 보면 문화 차이도 재미있어져.",
-              "ru": "Точно. Когда узнаёшь такие мелочи одну за другой, культурные различия становятся даже интересными."
+              "ru": "Точно. Когда узнаёшь такие мелочи одну за другой, культурные различия становятся даже интересными.",
+              "ru_uz": "Toʻgʻri. Shunday mayda narsalarni birma-bir bilib borsangiz, madaniy farqlar ham qiziqarli boʻlib qoladi."
             },
             {
               "who": "A",
               "av": "🙂",
               "ko": "그럼 다른 색으로 쓸게. 알려 줘서 고마워!",
-              "ru": "Тогда напишу другим цветом. Спасибо, что подсказал!"
+              "ru": "Тогда напишу другим цветом. Спасибо, что подсказал!",
+              "ru_uz": "Unda boshqa rangda yozaman. Aytganing uchun rahmat!"
             }
-          ]
+          ],
+          "title_uz": "Qizil ruchka",
+          "eyebrow_uz": "MULOQOT"
         },
         {
           "kind": "build",
@@ -18633,7 +19440,10 @@
           "pool": [
             "보니까",
             "배웠어요"
-          ]
+          ],
+          "title_uz": "Vaqt oʻtishi bilan koʻnikasiz",
+          "eyebrow_uz": "JUMLA TUZ",
+          "ru_uz": "Chet elda yashasangiz, vaqt oʻtishi bilan madaniy farqlarga koʻnikib qolasiz."
         },
         {
           "kind": "listen",
@@ -18646,7 +19456,15 @@
             "Корейцы никогда не кланяются при встрече.",
             "Поклонись при приветствии, как кореец."
           ],
-          "answer": "Кланяется при приветствии — похоже, кореец."
+          "answer": "Кланяется при приветствии — похоже, кореец.",
+          "title_uz": "U nimani taxmin qilyapti?",
+          "eyebrow_uz": "TINGLASH",
+          "answer_uz": "Salomlashganda bosh egib qoyapti — shekilli, koreys.",
+          "options_uz": [
+            "Salomlashganda bosh egib qoyapti — shekilli, koreys.",
+            "Koreyaliklar salomlashganda hech qachon bosh egmaydi.",
+            "Koreyaliklardek salomlashganda bosh eg."
+          ]
         },
         {
           "kind": "quiz",
@@ -18655,15 +19473,18 @@
           "items": [
             {
               "ko": "예절",
-              "ru": "этикет, манеры"
+              "ru": "этикет, манеры",
+              "ru_uz": "odob-axloq, odob qoidalari"
             },
             {
               "ko": "악수하다",
-              "ru": "пожимать руку"
+              "ru": "пожимать руку",
+              "ru_uz": "qoʻl siqishmoq"
             },
             {
               "ko": "고개를 숙이다",
-              "ru": "склонять голову (в поклоне)"
+              "ru": "склонять голову (в поклоне)",
+              "ru_uz": "bosh egmoq (taʼzim)"
             }
           ],
           "pool": [
@@ -18673,6 +19494,16 @@
             "шуметь, галдеть",
             "культурное различие",
             "трогать, касаться"
+          ],
+          "title_uz": "Dars soʻzlari",
+          "eyebrow_uz": "TEKSHIRUV",
+          "pool_uz": [
+            "odob-axloq, odob qoidalari",
+            "qoʻl siqishmoq",
+            "bosh egmoq (taʼzim)",
+            "shovqin qilmoq",
+            "madaniy farq",
+            "ushlamoq, teginmoq"
           ]
         },
         {
@@ -18725,6 +19556,10 @@
         "tasks": [
           "Опиши 3 ситуации, где что-то пошло не так, через -는 바람에.",
           "Расскажи о случае из жизни по схеме «действие + -았/었더니 + результат»: 신발을 신고 들어갔더니 …"
+        ],
+        "tasks_uz": [
+          "-는 바람에 orqali nimadir notoʻgʻri ketgan 3 ta vaziyatni tasvirlab bering.",
+          "Hayotdan bir voqeani «harakat + -았/었더니 + natija» sxemasi boʻyicha gapirib bering: 신발을 신고 들어갔더니 …"
         ]
       },
       "slides": [
@@ -18746,6 +19581,13 @@
               "👀",
               "и оказалось…"
             ]
+          ],
+          "title_uz": "Madaniy farqlar",
+          "intro_uz": "«Boshqa madaniyatda xatoga yoʻl qoʻyish oson. <span class=\"ko\">-는 바람에</span> — «shu tufayli» (nimadir toʻsqinlik qildi): 늦잠을 자는 바람에 지각했어요. <span class=\"ko\">-았/었더니</span> esa — «qildim — va shunday chiqdi»: 신발을 벗었더니 다들 웃었어요 🌸»",
+          "learn_uz": [
+            "boshqa madaniyat",
+            "toʻsqinlik qildi…",
+            "va shunday chiqdi…"
           ]
         },
         {
@@ -18757,15 +19599,18 @@
           "examples": [
             {
               "ko": "문화 차이를 몰라서 실수하는 바람에 무척 창피했어요.",
-              "ru": "Из-за того что не знал культурных различий и оплошал, мне было очень стыдно."
+              "ru": "Из-за того что не знал культурных различий и оплошал, мне было очень стыдно.",
+              "ru_uz": "Madaniy farqlarni bilmay xato qilganim uchun juda uyaldim."
             },
             {
               "ko": "버스가 갑자기 서는 바람에 옆 사람과 부딪쳤어요.",
-              "ru": "Из-за того что автобус резко затормозил, я столкнулся с соседом."
+              "ru": "Из-за того что автобус резко затормозил, я столкнулся с соседом.",
+              "ru_uz": "Avtobus birdan toʻxtagani tufayli yonimdagi odam bilan toʻqnashib ketdim."
             },
             {
               "ko": "이름을 잘못 부르는 바람에 그 사람이 오해했어요.",
-              "ru": "Из-за того что я неправильно назвал имя, тот человек меня не так понял."
+              "ru": "Из-за того что я неправильно назвал имя, тот человек меня не так понял.",
+              "ru_uz": "Ismni notoʻgʻri aytganim tufayli oʻsha odam meni notoʻgʻri tushundi."
             }
           ],
           "drills": [
@@ -18777,7 +19622,8 @@
                 "잤더니",
                 "자더라고요"
               ],
-              "answer": "자는 바람에"
+              "answer": "자는 바람에",
+              "ru_uz": "uxlab qolganim tufayli maktabga kechikdim"
             },
             {
               "q": "길을 ___ 약속에 늦었어요.",
@@ -18787,7 +19633,8 @@
                 "잃었더니",
                 "잃는데"
               ],
-              "answer": "잃는 바람에"
+              "answer": "잃는 바람에",
+              "ru_uz": "yoʻldan adashganim tufayli uchrashuvga kechikdim"
             },
             {
               "q": "예절을 ___ 어른들이 놀랐어요.",
@@ -18797,9 +19644,14 @@
                 "어겼더니",
                 "어기니까"
               ],
-              "answer": "어기는 바람에"
+              "answer": "어기는 바람에",
+              "ru_uz": "odob-axloqni buzganim tufayli kattalar hayron qolishdi"
             }
-          ]
+          ],
+          "title_uz": "-는 바람에",
+          "eyebrow_uz": "GRAMMATIKA",
+          "sub_uz": "shu tufayli (toʻsqinlik qildi)",
+          "rule_uz": "Feʼl negizi + <b>-는 바람에</b> = «shu tufayli…», «shu sababdan…». <b>Kutilmagan yoki noxush sabab</b>ni koʻrsatadi, shu tufayli yomon narsa sodir boʻladi: <span class=\"ko\">늦잠을 자는 바람에 지각했어요</span> — uxlab qoldim, shu tufayli kechikdim. Sabab odatda bizning nazoratimizdan tashqarida, natija esa — salbiy. Kesimdan keyin zamondan qatʼi nazar <span class=\"ko\">-는</span> shaklida qoʻyiladi."
         },
         {
           "kind": "pattern",
@@ -18810,15 +19662,18 @@
           "examples": [
             {
               "ko": "한국 친구에게 직접 물어봤더니 쉽게 이해됐어요.",
-              "ru": "Я сам спросил у корейского друга — и сразу всё понял."
+              "ru": "Я сам спросил у корейского друга — и сразу всё понял.",
+              "ru_uz": "Koreys doʻstimdan toʻgʻridan-toʻgʻri soʻradim — va darrov tushundim."
             },
             {
               "ko": "두 손으로 컵을 드렸더니 어른이 좋아하셨어요.",
-              "ru": "Я подал чашку двумя руками — и старшему это понравилось."
+              "ru": "Я подал чашку двумя руками — и старшему это понравилось.",
+              "ru_uz": "Piyolani ikki qoʻlim bilan uzatdim — va kattaga bu yoqdi."
             },
             {
               "ko": "바로 사과했더니 친구가 괜찮다고 했어요.",
-              "ru": "Я сразу извинился — и друг сказал, что всё в порядке."
+              "ru": "Я сразу извинился — и друг сказал, что всё в порядке.",
+              "ru_uz": "Darrov uzr soʻradim — va doʻstim hammasi joyida dedi."
             }
           ],
           "drills": [
@@ -18830,7 +19685,8 @@
                 "들어가는 바람에",
                 "들어가더니"
               ],
-              "answer": "들어갔더니"
+              "answer": "들어갔더니",
+              "ru_uz": "poyabzal bilan kirdim — va hamma seskanib ketdi"
             },
             {
               "q": "문화 차이를 ___ 오해가 풀렸어요.",
@@ -18840,7 +19696,8 @@
                 "설명하는 바람에",
                 "설명하려고"
               ],
-              "answer": "설명했더니"
+              "answer": "설명했더니",
+              "ru_uz": "madaniy farqni tushuntirdim — va notoʻgʻri tushunish yoʻqoldi"
             },
             {
               "q": "규칙을 ___ 사람들이 고마워했어요.",
@@ -18850,9 +19707,14 @@
                 "지키는 바람에",
                 "지킬더니"
               ],
-              "answer": "지켰더니"
+              "answer": "지켰더니",
+              "ru_uz": "qoidaga rioya qildim — va odamlar minnatdor boʻlishdi"
             }
-          ]
+          ],
+          "title_uz": "-았/었더니",
+          "eyebrow_uz": "GRAMMATIKA",
+          "sub_uz": "qildim — va shunday chiqdi",
+          "rule_uz": "Feʼl negizi oʻtgan zamonda + <b>-았/었더니</b> = «(men) biror narsa qildim — va natijada…». Soʻzlovchi oʻzi harakat qilgan, keyin uning natijasini yoki boshqa odamning munosabatini kuzatgan: <span class=\"ko\">신발을 벗었더니 다들 웃었어요</span> — poyabzalimni yechdim, va hamma kuldi. Birinchi qismning egasi — <b>«men»</b>, ikkinchi qismda esa koʻpincha men sezgan yoki javob sifatida sodir boʻlgan narsa tasvirlanadi."
         },
         {
           "kind": "words",
@@ -18862,34 +19724,42 @@
             {
               "ko": "문화",
               "ru": "культура",
-              "emoji": "🌏"
+              "emoji": "🌏",
+              "ru_uz": "madaniyat"
             },
             {
               "ko": "차이",
               "ru": "различие, разница",
-              "emoji": "↔️"
+              "emoji": "↔️",
+              "ru_uz": "farq, tafovut"
             },
             {
               "ko": "예절",
               "ru": "этикет, манеры",
-              "emoji": "🙇"
+              "emoji": "🙇",
+              "ru_uz": "odob-axloq, odob qoidalari"
             },
             {
               "ko": "질서",
               "ru": "порядок (общественный)",
-              "emoji": "🚦"
+              "emoji": "🚦",
+              "ru_uz": "tartib (ijtimoiy)"
             },
             {
               "ko": "오해하다",
               "ru": "неправильно понять",
-              "emoji": "😕"
+              "emoji": "😕",
+              "ru_uz": "notoʻgʻri tushunmoq"
             },
             {
               "ko": "실수",
               "ru": "оплошность, ошибка",
-              "emoji": "💥"
+              "emoji": "💥",
+              "ru_uz": "xato"
             }
-          ]
+          ],
+          "title_uz": "Madaniyat haqida soʻzlar",
+          "eyebrow_uz": "SOʻZLAR"
         },
         {
           "kind": "dialog",
@@ -18901,39 +19771,47 @@
               "who": "A",
               "av": "🙂",
               "ko": "한국 친구 집에서 실수한 적 있어요?",
-              "ru": "Бывало, что ты оплошал в гостях у корейского друга?"
+              "ru": "Бывало, что ты оплошал в гостях у корейского друга?",
+              "ru_uz": "Koreys doʻstingnikida xato qilganmisan?"
             },
             {
               "who": "B",
               "av": "🧑",
               "ko": "네, 신발을 신고 들어가는 바람에 다들 놀랐어요.",
-              "ru": "Да, из-за того что я вошёл в обуви, все удивились."
+              "ru": "Да, из-за того что я вошёл в обуви, все удивились.",
+              "ru_uz": "Ha, poyabzal bilan kirganim tufayli hamma hayron boʻldi."
             },
             {
               "who": "A",
               "av": "🙂",
               "ko": "그래서 어떻게 했어요?",
-              "ru": "И что ты тогда сделал?"
+              "ru": "И что ты тогда сделал?",
+              "ru_uz": "Shunda nima qilding?"
             },
             {
               "who": "B",
               "av": "🧑",
               "ko": "바로 신발을 벗고 사과했더니 친구가 웃으며 괜찮다고 했어요.",
-              "ru": "Я тут же разулся и извинился — и друг с улыбкой сказал, что всё в порядке."
+              "ru": "Я тут же разулся и извинился — и друг с улыбкой сказал, что всё в порядке.",
+              "ru_uz": "Darrov poyabzalni yechib uzr soʻradim — va doʻstim kulib, hammasi joyida dedi."
             },
             {
               "who": "A",
               "av": "🙂",
               "ko": "문화 차이 때문에 오해할 뻔했네요.",
-              "ru": "Чуть не вышло недопонимание из-за культурной разницы."
+              "ru": "Чуть не вышло недопонимание из-за культурной разницы.",
+              "ru_uz": "Madaniy farq tufayli notoʻgʻri tushunish chiqishiga oz qoldi-ku."
             },
             {
               "who": "B",
               "av": "🧑",
               "ko": "맞아요. 그 뒤로 예절을 더 잘 지키게 됐어요.",
-              "ru": "Точно. После этого я стал лучше соблюдать этикет."
+              "ru": "Точно. После этого я стал лучше соблюдать этикет.",
+              "ru_uz": "Toʻgʻri. Shundan keyin odob-axloqqa yaxshiroq rioya qiladigan boʻldim."
             }
-          ]
+          ],
+          "title_uz": "Poyabzalni yechdim",
+          "eyebrow_uz": "MULOQOT"
         },
         {
           "kind": "build",
@@ -18950,7 +19828,10 @@
           "pool": [
             "잤더니",
             "지각하는"
-          ]
+          ],
+          "title_uz": "Uxlab qolib kechikdim",
+          "eyebrow_uz": "JUMLA TUZ",
+          "ru_uz": "Uxlab qolganim tufayli uchrashuvga kechikdim."
         },
         {
           "kind": "listen",
@@ -18963,7 +19844,15 @@
             "Я не извинился, и друг рассердился.",
             "Друг извинился передо мной первым."
           ],
-          "answer": "Я сразу извинился — и друг сказал, что всё в порядке."
+          "answer": "Я сразу извинился — и друг сказал, что всё в порядке.",
+          "title_uz": "Nima boʻldi?",
+          "eyebrow_uz": "TINGLASH",
+          "answer_uz": "Darrov uzr soʻradim — va doʻstim hammasi joyida dedi.",
+          "options_uz": [
+            "Darrov uzr soʻradim — va doʻstim hammasi joyida dedi.",
+            "Men uzr soʻramadim, va doʻstim jahli chiqdi.",
+            "Doʻstim mendan birinchi boʻlib uzr soʻradi."
+          ]
         },
         {
           "kind": "quiz",
@@ -18972,15 +19861,18 @@
           "items": [
             {
               "ko": "예절",
-              "ru": "этикет, манеры"
+              "ru": "этикет, манеры",
+              "ru_uz": "odob-axloq, odob qoidalari"
             },
             {
               "ko": "오해하다",
-              "ru": "неправильно понять"
+              "ru": "неправильно понять",
+              "ru_uz": "notoʻgʻri tushunmoq"
             },
             {
               "ko": "차이",
-              "ru": "различие, разница"
+              "ru": "различие, разница",
+              "ru_uz": "farq, tafovut"
             }
           ],
           "pool": [
@@ -18990,6 +19882,16 @@
             "порядок (общественный)",
             "культура",
             "оплошность, ошибка"
+          ],
+          "title_uz": "Dars soʻzlari",
+          "eyebrow_uz": "TEKSHIRUV",
+          "pool_uz": [
+            "odob-axloq, odob qoidalari",
+            "notoʻgʻri tushunmoq",
+            "farq, tafovut",
+            "tartib (ijtimoiy)",
+            "madaniyat",
+            "xato"
           ]
         },
         {
@@ -19047,6 +19949,10 @@
         "tasks": [
           "Напишите 3 предложения с -(으)니만큼/느니만큼 о том, почему важна возобновляемая энергия. Образец: <span class=\"ko\">에너지 자원이 무한하지 않으니만큼 절약이 필요하다.</span> (Раз энергоресурсы не бесконечны, экономия необходима.)",
           "Составьте 2 предложения с 조차 о последствиях нехватки энергии. Образец: <span class=\"ko\">전기가 끊기면 냉장고조차 쓸 수 없다.</span> (Если отключат электричество, нельзя будет пользоваться даже холодильником.)"
+        ],
+        "tasks_uz": [
+          "-(으)니만큼/느니만큼 yordamida qayta tiklanadigan energiya nima uchun muhimligi haqida 3 ta gap yozing. Namuna: <span class=\"ko\">에너지 자원이 무한하지 않으니만큼 절약이 필요하다.</span> (Energiya resurslari cheksiz boʻlmagani uchun, tejash zarur.)",
+          "조차 yordamida energiya yetishmasligi oqibatlari haqida 2 ta gap tuzing. Namuna: <span class=\"ko\">전기가 끊기면 냉장고조차 쓸 수 없다.</span> (Agar elektr oʻchirilsa, hatto muzlatgichdan ham foydalanib boʻlmaydi.)"
         ]
       },
       "slides": [
@@ -19068,6 +19974,13 @@
               "⚡",
               "조차 «даже»"
             ]
+          ],
+          "title_uz": "Qayta tiklanadigan energiya",
+          "intro_uz": "Bugun Quyosh, shamol va suv bizga qanday toza energiya berishini va uni nega asrash juda muhimligini tushuntirishni oʻrganamiz — <span class=\"ko\">신재생 에너지</span>. Sen allaqachon 고급 darajadasan, shuning uchun bu jiddiy qurilmalar senga oson boʻladi 🌸",
+          "learn_uz": [
+            "energiya tejash va samaradorlik",
+            "-(으)니만큼/느니만큼 «ekan, shuning uchun»",
+            "조차 «hatto»"
           ]
         },
         {
@@ -19079,15 +19992,18 @@
           "examples": [
             {
               "ko": "에너지 자원이 무한하지 않으니만큼 신재생 에너지 개발이 꼭 필요하다.",
-              "ru": "Поскольку энергоресурсы не бесконечны, разработка возобновляемой энергии совершенно необходима."
+              "ru": "Поскольку энергоресурсы не бесконечны, разработка возобновляемой энергии совершенно необходима.",
+              "ru_uz": "Energiya resurslari cheksiz boʻlmagani uchun, qayta tiklanadigan energiyani rivojlantirish juda zarur."
             },
             {
               "ko": "여름에 에어컨 사용이 급증하느니만큼 전력 공급에 문제가 생길 수 있다.",
-              "ru": "Раз летом использование кондиционеров резко растёт, могут возникнуть проблемы с электроснабжением."
+              "ru": "Раз летом использование кондиционеров резко растёт, могут возникнуть проблемы с электроснабжением.",
+              "ru_uz": "Yozda konditsionerlardan foydalanish keskin oshgani sababli, elektr taʼminotida muammolar yuzaga kelishi mumkin."
             },
             {
               "ko": "신재생 에너지인 만큼 햇빛과 바람은 고갈될 걱정이 없다.",
-              "ru": "Поскольку это возобновляемая энергия, за солнце и ветер можно не бояться, что они истощатся."
+              "ru": "Поскольку это возобновляемая энергия, за солнце и ветер можно не бояться, что они истощатся.",
+              "ru_uz": "Bu qayta tiklanadigan energiya boʻlgani uchun, quyosh va shamol tugab qolishidan xavotirlanishga hojat yoʻq."
             }
           ],
           "drills": [
@@ -19099,7 +20015,8 @@
                 "심각하니만큼",
                 "심각하조차"
               ],
-              "answer": "심각하니만큼"
+              "answer": "심각하니만큼",
+              "ru_uz": "Energiya tugash muammosi jiddiy boʻlgani uchun, qayta tiklanadigan energiyani rivojlantirishni tezlashtirish kerak."
             },
             {
               "q": "전기 요금이 계속 ___ 에너지 효율이 높은 제품을 사는 게 이득이다.",
@@ -19109,7 +20026,8 @@
                 "오르니조차",
                 "오르이니만큼"
               ],
-              "answer": "오르느니만큼"
+              "answer": "오르느니만큼",
+              "ru_uz": "Elektr narxi tinimsiz oshib borayotgani uchun, energiya tejamkor mahsulotlarni sotib olish foydali."
             },
             {
               "q": "태양광은 청정 ___ 환경 오염 걱정이 적다.",
@@ -19119,9 +20037,13 @@
                 "에너지조차",
                 "에너지이니만큼"
               ],
-              "answer": "에너지니만큼"
+              "answer": "에너지니만큼",
+              "ru_uz": "Quyosh energiyasi toza boʻlgani uchun, atrof-muhit ifloslanishidan xavotir kamroq."
             }
-          ]
+          ],
+          "eyebrow_uz": "GRAMMATIKA",
+          "sub_uz": "chunki/ekan (faktni asos sifatida tan olish)",
+          "rule_uz": "Soʻzlovchi <b>maʼlum bir faktni tan olib, uni keyingi xulosaga asos qilib olishini</b> koʻrsatadi: «ekan, demak…». Feʼllar bilan — <span class=\"ko\">느니만큼</span>, sifatlar bilan — <span class=\"ko\">-(으)니만큼</span> (patchim boʻlsa → 으니만큼, boʻlmasa → 니만큼), otlar bilan — <span class=\"ko\">(이)니만큼</span>. Ham nutqda, ham yozma matnda ishlatiladi."
         },
         {
           "kind": "pattern",
@@ -19132,15 +20054,18 @@
           "examples": [
             {
               "ko": "전기가 없으면 냉장고조차 사용할 수 없게 된다.",
-              "ru": "Без электричества нельзя будет пользоваться даже холодильником."
+              "ru": "Без электричества нельзя будет пользоваться даже холодильником.",
+              "ru_uz": "Elektr boʻlmasa, hatto muzlatgichdan ham foydalanib boʻlmaydi."
             },
             {
               "ko": "물을 아껴 쓰지 않으면 마실 물조차 얻지 못할 수 있다.",
-              "ru": "Если не экономить воду, можно остаться даже без питьевой воды."
+              "ru": "Если не экономить воду, можно остаться даже без питьевой воды.",
+              "ru_uz": "Suvni tejab ishlatmasa, hatto ichimlik suvisiz ham qolish mumkin."
             },
             {
               "ko": "올해는 장마철에조차 비가 오지 않아 댐 수위가 최저를 기록했다.",
-              "ru": "В этом году дождей не было даже в сезон ливней, и уровень воды в дамбе достиг минимума."
+              "ru": "В этом году дождей не было даже в сезон ливней, и уровень воды в дамбе достиг минимума.",
+              "ru_uz": "Bu yil hatto yomgʻirli mavsumda ham yomgʻir yogʻmay, toʻgʻondagi suv sathi eng past darajani koʻrsatdi."
             }
           ],
           "drills": [
@@ -19152,7 +20077,8 @@
                 "니만큼",
                 "으므로"
               ],
-              "answer": "조차"
+              "answer": "조차",
+              "ru_uz": "Energiya yetishmasa, hatto koʻcha chiroqlarini ham yoqib boʻlmaydigan shaharlar paydo boʻladi."
             },
             {
               "q": "화석 연료가 고갈되면 난방___ 어려워질 것이다.",
@@ -19162,7 +20088,8 @@
                 "조차",
                 "이니만큼"
               ],
-              "answer": "조차"
+              "answer": "조차",
+              "ru_uz": "Fosil yoqilgʻi tugasa, hatto isitish bilan ham qiyinchilik tugʻiladi."
             },
             {
               "q": "전력난이 심해 공장___ 가동을 멈춰야 했다.",
@@ -19172,9 +20099,13 @@
                 "니만큼",
                 "와는 달리"
               ],
-              "answer": "조차"
+              "answer": "조차",
+              "ru_uz": "Elektr tanqisligi shu qadar kuchli ediki, hatto zavodlarni ham toʻxtatishga toʻgʻri keldi."
             }
-          ]
+          ],
+          "eyebrow_uz": "GRAMMATIKA",
+          "sub_uz": "hatto (chekka, kutilmagan holat)",
+          "rule_uz": "«<b>Hatto</b>» maʼnosini bildiradi — soʻzlovchi endi kutmayotgan <b>eng oddiy, kutilgan narsani</b> ham gapga kiritadi. Otga (shuningdek <span class=\"ko\">-는 것</span>ga) qoʻshiladi, <span class=\"ko\">조차</span>dan keyin odatda <b>salbiy</b> vaziyat keladi: «hatto X ham yoʻq/boʻlmaydi»."
         },
         {
           "kind": "words",
@@ -19184,34 +20115,42 @@
             {
               "ko": "태양열",
               "ru": "солнечное тепло",
-              "emoji": "☀️"
+              "emoji": "☀️",
+              "ru_uz": "quyosh issiqligi"
             },
             {
               "ko": "풍력 발전소",
               "ru": "ветровая электростанция",
-              "emoji": "🌬️"
+              "emoji": "🌬️",
+              "ru_uz": "shamol elektr stansiyasi"
             },
             {
               "ko": "수력",
               "ru": "гидроэнергия",
-              "emoji": "💧"
+              "emoji": "💧",
+              "ru_uz": "gidroenergiya"
             },
             {
               "ko": "화석 연료",
               "ru": "ископаемое топливо",
-              "emoji": "🛢️"
+              "emoji": "🛢️",
+              "ru_uz": "fosil yoqilgʻi"
             },
             {
               "ko": "전기 요금",
               "ru": "плата за электричество",
-              "emoji": "💡"
+              "emoji": "💡",
+              "ru_uz": "elektr toʻlovi"
             },
             {
               "ko": "환경 오염",
               "ru": "загрязнение окружающей среды",
-              "emoji": "🌫️"
+              "emoji": "🌫️",
+              "ru_uz": "atrof-muhit ifloslanishi"
             }
-          ]
+          ],
+          "title_uz": "Energiya mavzusidagi soʻzlar",
+          "eyebrow_uz": "SOʻZLAR"
         },
         {
           "kind": "dialog",
@@ -19223,51 +20162,62 @@
               "who": "A",
               "av": "🧑",
               "ko": "엄마, 이 냉장고 어때요? 옆에 있는 거랑 비슷해 보이는데 가격은 더 싸요.",
-              "ru": "Мам, как тебе этот холодильник? Похож на соседний, а стоит дешевле."
+              "ru": "Мам, как тебе этот холодильник? Похож на соседний, а стоит дешевле.",
+              "ru_uz": "Mam, koʻrdingmi, bu muzlatgich qanday? Yonidagisiga oʻxshaydi, lekin narxi arzonroq."
             },
             {
               "who": "B",
               "av": "👩",
               "ko": "조금 비싸도 이게 더 좋아 보여. 에너지 효율 등급이 1등급이거든.",
-              "ru": "Пусть чуть дороже, этот выглядит лучше — у него класс энергоэффективности первый."
+              "ru": "Пусть чуть дороже, этот выглядит лучше — у него класс энергоэффективности первый.",
+              "ru_uz": "Biroz qimmatroq boʻlsa ham, bu menga koʻra yaxshiroq koʻrinadi. Energiya samaradorligi sinfi birinchi."
             },
             {
               "who": "A",
               "av": "🧑",
               "ko": "숫자가 작을수록 효율이 높은 거죠? 그럼 전기 요금도 덜 나오겠네요.",
-              "ru": "Чем меньше цифра, тем выше эффективность, да? Тогда и за электричество платить меньше."
+              "ru": "Чем меньше цифра, тем выше эффективность, да? Тогда и за электричество платить меньше.",
+              "ru_uz": "Raqam qancha kichik boʻlsa, samaradorlik shuncha yuqori boʻladi-a? Unda elektr toʻlovi ham kamroq chiqadi."
             },
             {
               "who": "B",
               "av": "👩",
               "ko": "맞아. 에너지 자원이 무한하지 않으니만큼 우리도 절약에 신경 써야지.",
-              "ru": "Верно. Раз энергоресурсы не бесконечны, и нам стоит думать об экономии."
+              "ru": "Верно. Раз энергоресурсы не бесконечны, и нам стоит думать об экономии.",
+              "ru_uz": "Toʻgʻri. Energiya resurslari cheksiz emasligi sababli, bizga ham tejashga eʼtibor berish kerak."
             },
             {
               "who": "A",
               "av": "🧑",
               "ko": "듣고 보니 효율 높은 제품이 에너지도 아끼고 돈도 절약하는 길이네요.",
-              "ru": "Выходит, эффективная техника — это и про экономию энергии, и про экономию денег."
+              "ru": "Выходит, эффективная техника — это и про экономию энергии, и про экономию денег.",
+              "ru_uz": "Demak, samarali mahsulot ham energiya tejaydi, ham pul tejaydi ekan."
             },
             {
               "who": "B",
               "av": "👩",
               "ko": "그럼. 전기가 끊기면 냉장고조차 못 쓰게 되니 미리 아끼는 게 최고야.",
-              "ru": "Конечно. Отключат свет — и даже холодильником не попользуешься, так что беречь надо заранее."
+              "ru": "Конечно. Отключат свет — и даже холодильником не попользуешься, так что беречь надо заранее.",
+              "ru_uz": "Albatta. Elektr oʻchirilsa, hatto muzlatgichdan ham foydalanib boʻlmay qoladi, shuning uchun oldindan tejagan afzal."
             },
             {
               "who": "A",
               "av": "🧑",
               "ko": "앞으로는 태양광 같은 신재생 에너지도 더 많이 써야겠어요.",
-              "ru": "А в будущем надо больше использовать и возобновляемую энергию вроде солнечной."
+              "ru": "А в будущем надо больше использовать и возобновляемую энергию вроде солнечной.",
+              "ru_uz": "Kelajakda quyosh kabi qayta tiklanadigan energiyani koʻproq ishlatishimiz kerak ekan."
             },
             {
               "who": "B",
               "av": "👩",
               "ko": "바로 그거야. 그야말로 일석이조지!",
-              "ru": "Вот именно. Как говорится, одним выстрелом двух зайцев!"
+              "ru": "Вот именно. Как говорится, одним выстрелом двух зайцев!",
+              "ru_uz": "Aynan shu! Rostdan ham bir oʻq bilan ikki quyonni urish!"
             }
-          ]
+          ],
+          "title_uz": "Maishiy texnika doʻkonida",
+          "eyebrow_uz": "MULOQOT",
+          "sub_uz": "Hijun onasi bilan muzlatgich tanlayapti"
         },
         {
           "kind": "build",
@@ -19285,7 +20235,10 @@
           "pool": [
             "조차",
             "고갈되다"
-          ]
+          ],
+          "title_uz": "Jumlani yigʻing",
+          "eyebrow_uz": "JUMLA TUZ",
+          "ru_uz": "Energiya resurslari cheksiz boʻlmagani uchun, tejash zarur."
         },
         {
           "kind": "listen",
@@ -19298,7 +20251,15 @@
             "Холодильник потребляет много электричества.",
             "Чтобы холодильник работал, нужно много энергии."
           ],
-          "answer": "Если отключат электричество, нельзя будет пользоваться даже холодильником."
+          "answer": "Если отключат электричество, нельзя будет пользоваться даже холодильником.",
+          "title_uz": "Tinglang va tarjimasini tanlang",
+          "eyebrow_uz": "TINGLASH",
+          "answer_uz": "Agar elektr oʻchirilsa, hatto muzlatgichdan ham foydalanib boʻlmaydi.",
+          "options_uz": [
+            "Agar elektr oʻchirilsa, hatto muzlatgichdan ham foydalanib boʻlmaydi.",
+            "Muzlatgich koʻp elektr sarflaydi.",
+            "Muzlatgich ishlashi uchun koʻp energiya kerak."
+          ]
         },
         {
           "kind": "quiz",
@@ -19307,15 +20268,18 @@
           "items": [
             {
               "ko": "태양광",
-              "ru": "солнечная энергия"
+              "ru": "солнечная энергия",
+              "ru_uz": "quyosh energiyasi"
             },
             {
               "ko": "풍력",
-              "ru": "энергия ветра"
+              "ru": "энергия ветра",
+              "ru_uz": "shamol energiyasi"
             },
             {
               "ko": "고갈되다",
-              "ru": "истощаться"
+              "ru": "истощаться",
+              "ru_uz": "tugash, tanqislanish"
             }
           ],
           "pool": [
@@ -19325,6 +20289,16 @@
             "загрязнение",
             "экономить",
             "эффективность"
+          ],
+          "title_uz": "Soʻz va maʼnosini moslashtiring",
+          "eyebrow_uz": "TEKSHIRUV",
+          "pool_uz": [
+            "quyosh energiyasi",
+            "shamol energiyasi",
+            "tugash, tanqislanish",
+            "ifloslanish",
+            "tejamoq",
+            "samaradorlik"
           ]
         },
         {
@@ -19377,6 +20351,10 @@
         "tasks": [
           "Опишите климат своего города по схеме «температура — осадки — времена года», обязательно используя конструкцию -(으)ㄹ뿐더러. Например: 우리 도시는 겨울이 길 뿐더러 눈도 많이 내려요.",
           "Сравните два разных места (например, тропики и тундру) одним предложением с 은/는…대로, показав, что у каждого своя прелесть. Например: 열대 지역은 열대 지역대로, 한대 지역은 한대 지역대로 매력이 있어요."
+        ],
+        "tasks_uz": [
+          "Oʻz shahringiz iqlimini «harorat — yogʻin — fasllar» sxemasi boʻyicha tasvirlab bering, albatta -(으)ㄹ뿐더러 qurilmasidan foydalaning. Masalan: <span class=\"ko\">우리 도시는 겨울이 길 뿐더러 눈도 많이 내려요.</span>",
+          "Ikki xil joyni (masalan, tropik va tundra) 은/는…대로 orqali bir gapda solishtiring, har birining oʻz jozibasi borligini koʻrsating. Masalan: <span class=\"ko\">열대 지역은 열대 지역대로, 한대 지역은 한대 지역대로 매력이 있어요.</span>"
         ]
       },
       "slides": [
@@ -19398,6 +20376,13 @@
               "🌦️",
               "называть погодные явления и катаклизмы"
             ]
+          ],
+          "title_uz": "Dunyo iqlimi",
+          "intro_uz": "Bugun sayyoramiz iqlimlari boʻylab sayohat qilamiz: issiqlik va sovuq, yogʻin va harorat farqi haqida gapirishni oʻrganamiz. <span class=\"ko\">-(으)ㄹ뿐더러</span> va <span class=\"ko\">은/는…대로</span> qurilmalari bilan nutqingiz butunlay kattalarcha yangraydi 🌸",
+          "learn_uz": [
+            "turli mintaqalar iqlimini farqlash va tasvirlash",
+            "«nafaqat…, balki ham…» iboralarini tuzish",
+            "ob-havo hodisalari va tabiiy ofatlarni nomlash"
           ]
         },
         {
@@ -19409,15 +20394,18 @@
           "examples": [
             {
               "ko": "열대 지역은 기온이 높을뿐더러 습도도 높아서 살기 불편하다.",
-              "ru": "В тропиках не только высокая температура, но и высокая влажность, поэтому жить там некомфортно."
+              "ru": "В тропиках не только высокая температура, но и высокая влажность, поэтому жить там некомфортно.",
+              "ru_uz": "Tropik hududlarda nafaqat harorat yuqori, balki namlik ham yuqori boʻlgani uchun u yerda yashash noqulay."
             },
             {
               "ko": "이 지역은 홍수 피해가 빈번할뿐더러 대규모 태풍도 잦다.",
-              "ru": "В этом регионе не только часты наводнения, но и нередки крупные тайфуны."
+              "ru": "В этом регионе не только часты наводнения, но и нередки крупные тайфуны.",
+              "ru_uz": "Bu mintaqada nafaqat suv toshqinlari tez-tez boʻladi, balki yirik toʻfonlar ham koʻp uchraydi."
             },
             {
               "ko": "온대 기후는 사계절이 뚜렷할뿐더러 강수량도 적당해서 벼농사에 유리하다.",
-              "ru": "В умеренном климате не только чётко выражены времена года, но и осадков в меру, поэтому он удобен для рисоводства."
+              "ru": "В умеренном климате не только чётко выражены времена года, но и осадков в меру, поэтому он удобен для рисоводства.",
+              "ru_uz": "Moʻʻtadil iqlimda nafaqat toʻrt fasl aniq ifodalangan, balki yogʻin ham meʼyorida boʻlgani uchun sholi ekish uchun qulay."
             }
           ],
           "drills": [
@@ -19429,7 +20417,8 @@
                 "커서",
                 "많아서"
               ],
-              "answer": "작아서"
+              "answer": "작아서",
+              "ru_uz": "Bu orolda nafaqat ob-havo issiq, balki kunlik harorat farqi ham kichik, shuning uchun dam olish uchun juda yaxshi."
             },
             {
               "q": "건조 기후 지역은 강수량이 ___ 기온도 높아 식물이 자라기 어렵다.",
@@ -19439,7 +20428,8 @@
                 "많을뿐더러",
                 "적당할뿐더러"
               ],
-              "answer": "적을뿐더러"
+              "answer": "적을뿐더러",
+              "ru_uz": "Quruq iqlimli hududda nafaqat yogʻin kam, balki harorat ham yuqori boʻlgani uchun oʻsimliklarga oʻsish qiyin."
             },
             {
               "q": "한대 기후는 몹시 ___ 강수량도 적어서 나무가 자라지 못한다.",
@@ -19449,9 +20439,13 @@
                 "더울뿐더러",
                 "따뜻할뿐더러"
               ],
-              "answer": "추울뿐더러"
+              "answer": "추울뿐더러",
+              "ru_uz": "Qutb iqlimida nafaqat juda sovuq, balki yogʻin ham kam boʻlgani uchun daraxtlar oʻsmaydi."
             }
-          ]
+          ],
+          "eyebrow_uz": "GRAMMATIKA",
+          "sub_uz": "nafaqat…, balki ham…",
+          "rule_uz": "Feʼl yoki sifat negiziga qoʻshilib, <b>aytilganga yana bir holat qoʻshilishini</b> bildiradi: «nafaqat A, balki B ham». Muhim: ishoralar mos kelishi kerak — agar birinchi qism ijobiy boʻlsa, ikkinchisi ham ijobiy; salbiy boʻlsa — ikkinchisi ham salbiy. Patchimli negizdan keyin — <span class=\"ko\">-을뿐더러</span>, patchimsiz va ㄹ bilan tugasa — <span class=\"ko\">-ㄹ뿐더러</span>."
         },
         {
           "kind": "pattern",
@@ -19462,15 +20456,18 @@
           "examples": [
             {
               "ko": "휴양지는 휴양지대로, 자연경관은 자연경관대로 매력이 있다.",
-              "ru": "У курортов своя прелесть, а у природных пейзажей — своя."
+              "ru": "У курортов своя прелесть, а у природных пейзажей — своя.",
+              "ru_uz": "Kurort oʻz jozibasiga ega, tabiiy manzaralar esa oʻzining."
             },
             {
               "ko": "비는 비대로 오고 바람은 바람대로 불어서 여행을 제대로 하지 못했다.",
-              "ru": "И дождь шёл сам по себе, и ветер дул сам по себе, так что путешествие толком не удалось."
+              "ru": "И дождь шёл сам по себе, и ветер дул сам по себе, так что путешествие толком не удалось.",
+              "ru_uz": "Yomgʻir oʻzicha yogʻdi, shamol ham oʻzicha esdi, shuning uchun sayohat toʻliq amalga oshmadi."
             },
             {
               "ko": "열대 지역 사람들은 열대 지역 사람대로 더위에 적응하며 살아간다.",
-              "ru": "Жители тропиков по-своему, как это свойственно им, приспосабливаются к жаре и живут."
+              "ru": "Жители тропиков по-своему, как это свойственно им, приспосабливаются к жаре и живут.",
+              "ru_uz": "Tropik hudud aholisi oʻzicha, ularga xos tarzda, issiqlikka moslashib yashaydi."
             }
           ],
           "drills": [
@@ -19482,7 +20479,8 @@
                 "처럼",
                 "보다"
               ],
-              "answer": "대로"
+              "answer": "대로",
+              "ru_uz": "Yoz oʻzicha issiq, qish esa oʻzicha sovuq, shuning uchun kiyim tayyorlash oson emas."
             },
             {
               "q": "사막은 사막대로 황량하고 밀림은 ___ 울창해서 저마다 다른 매력이 있다.",
@@ -19492,7 +20490,8 @@
                 "밀림처럼",
                 "밀림보다"
               ],
-              "answer": "밀림대로"
+              "answer": "밀림대로",
+              "ru_uz": "Choʻl oʻzicha qup-quruq, jangal esa oʻzicha qalin — har birining oʻz alohida joziba bor."
             },
             {
               "q": "건기는 ___ 건조하고 우기는 우기대로 습해서 계절마다 풍경이 달라진다.",
@@ -19502,9 +20501,13 @@
                 "건기처럼",
                 "건기까지"
               ],
-              "answer": "건기대로"
+              "answer": "건기대로",
+              "ru_uz": "Quruq mavsum oʻzicha quruq, yomgʻirli mavsum esa oʻzicha nam, shuning uchun manzara mavsumdan mavsumga oʻzgaradi."
             }
-          ]
+          ],
+          "eyebrow_uz": "GRAMMATIKA",
+          "sub_uz": "har biri oʻzicha, oʻz yoʻli bilan",
+          "rule_uz": "Bitta obyekt <span class=\"ko\">명사+은/는 … 명사+대로</span> shaklida takrorlanib, narsalar yoki hodisalar <b>alohida, har biri oʻzicha, oʻz xususiyati bilan</b> mavjudligini koʻrsatadi. 은/는dan oldingi va 대로dan oldingi ot doim bir xil boʻladi. Patchim bilan — <span class=\"ko\">은</span>, patchimsiz — <span class=\"ko\">는</span>."
         },
         {
           "kind": "words",
@@ -19514,34 +20517,42 @@
             {
               "ko": "홍수",
               "ru": "наводнение",
-              "emoji": "🌊"
+              "emoji": "🌊",
+              "ru_uz": "suv toshqini"
             },
             {
               "ko": "태풍",
               "ru": "тайфун",
-              "emoji": "🌀"
+              "emoji": "🌀",
+              "ru_uz": "toʻfon"
             },
             {
               "ko": "폭설",
               "ru": "сильный снегопад",
-              "emoji": "❄️"
+              "emoji": "❄️",
+              "ru_uz": "kuchli qor yogʻishi"
             },
             {
               "ko": "가뭄",
               "ru": "засуха",
-              "emoji": "🏜️"
+              "emoji": "🏜️",
+              "ru_uz": "qurgʻoqchilik"
             },
             {
               "ko": "황사",
               "ru": "песчаная (жёлтая) пыль",
-              "emoji": "🌫️"
+              "emoji": "🌫️",
+              "ru_uz": "sariq (qum) chang"
             },
             {
               "ko": "습도",
               "ru": "влажность",
-              "emoji": "💧"
+              "emoji": "💧",
+              "ru_uz": "namlik"
             }
-          ]
+          ],
+          "title_uz": "Ob-havo va tabiat hodisalari",
+          "eyebrow_uz": "SOʻZLAR"
         },
         {
           "kind": "dialog",
@@ -19553,45 +20564,54 @@
               "who": "A",
               "av": "👧",
               "ko": "아빠, 지금 여기가 겨울이라서 저는 따뜻한 곳으로 가고 싶어요.",
-              "ru": "Папа, у нас сейчас зима, и мне хочется поехать в тёплое место."
+              "ru": "Папа, у нас сейчас зима, и мне хочется поехать в тёплое место.",
+              "ru_uz": "Dada, hozir bizda qish, shuning uchun issiq joyga borgim keladi."
             },
             {
               "who": "B",
               "av": "👨",
               "ko": "그럼 괌이나 발리 같은 열대 지역은 어떨까? 날씨가 따뜻할뿐더러 일교차도 작아서 휴양하기 딱이지.",
-              "ru": "Тогда как насчёт тропиков вроде Гуама или Бали? Там не только тепло, но и перепад температур небольшой — идеально для отдыха."
+              "ru": "Тогда как насчёт тропиков вроде Гуама или Бали? Там не только тепло, но и перепад температур небольшой — идеально для отдыха.",
+              "ru_uz": "Unda Guam yoki Bali kabi tropik hududlar-chi? Ular nafaqat issiq, balki kunlik harorat farqi ham kichik — dam olish uchun aynan mos."
             },
             {
               "who": "A",
               "av": "👧",
               "ko": "좋아요! 그런데 언니는 볼거리가 많은 곳을 더 좋아할 것 같은데요.",
-              "ru": "Здорово! Но сестре, наверное, больше понравится место, где есть на что посмотреть."
+              "ru": "Здорово! Но сестре, наверное, больше понравится место, где есть на что посмотреть.",
+              "ru_uz": "Zoʻr! Lekin opamga koʻproq tomosha qiladigan joy yoqadigan koʻrinadi."
             },
             {
               "who": "B",
               "av": "👩",
               "ko": "맞아. 난 그랜드캐니언이나 이구아수 폭포 같은 자연경관이 보고 싶어. 열대 휴양지는 좀 심심할뿐더러 더위도 부담스러워.",
-              "ru": "Точно. Я хочу увидеть природу — вроде Гранд-Каньона или водопадов Игуасу. Тропический курорт для меня и скучноват, и жара тяжело переносится."
+              "ru": "Точно. Я хочу увидеть природу — вроде Гранд-Каньона или водопадов Игуасу. Тропический курорт для меня и скучноват, и жара тяжело переносится.",
+              "ru_uz": "Toʻgʻri. Men Grand-Kanyon yoki Iguasu sharshara kabi tabiiy manzaralarni koʻrgim keladi. Tropik kurort esa menga biroz zerikarli, ustiga issiqni koʻtarish ham qiyin."
             },
             {
               "who": "B",
               "av": "👨",
               "ko": "그래, 휴양지는 휴양지대로, 자연경관은 자연경관대로 매력이 있으니까 고민이구나.",
-              "ru": "Да, у курортов своя прелесть, а у природных пейзажей — своя, вот и приходится выбирать."
+              "ru": "Да, у курортов своя прелесть, а у природных пейзажей — своя, вот и приходится выбирать.",
+              "ru_uz": "Ha, kurort oʻz jozibasiga ega, tabiiy manzara esa oʻzining, shuning uchun tanlash qiyin ekan."
             },
             {
               "who": "A",
               "av": "👧",
               "ko": "그럼 가기 전에 강수량이랑 우기가 언제인지도 꼭 확인해요. 태풍 철이면 곤란하잖아요.",
-              "ru": "Тогда перед поездкой обязательно проверим осадки и когда сезон дождей. Если попадём в сезон тайфунов — будет беда."
+              "ru": "Тогда перед поездкой обязательно проверим осадки и когда сезон дождей. Если попадём в сезон тайфунов — будет беда.",
+              "ru_uz": "Unda ketishdan oldin yogʻin miqdori va yomgʻirli mavsum qachonligini albatta tekshiraylik. Toʻfon mavsumiga tushib qolsak, yomon boʻladi-ku."
             },
             {
               "who": "B",
               "av": "👩",
               "ko": "좋은 생각이야. 엄마하고도 더 의논해서 결정하자.",
-              "ru": "Хорошая мысль. Обсудим ещё с мамой и решим."
+              "ru": "Хорошая мысль. Обсудим ещё с мамой и решим.",
+              "ru_uz": "Yaxshi fikr. Yana onam bilan maslahatlashib qaror qilaylik."
             }
-          ]
+          ],
+          "title_uz": "Taʼtilga qayerga boramiz?",
+          "eyebrow_uz": "MULOQOT"
         },
         {
           "kind": "build",
@@ -19609,7 +20629,10 @@
           "pool": [
             "습도가",
             "열대"
-          ]
+          ],
+          "title_uz": "Jumlani yigʻing",
+          "eyebrow_uz": "JUMLA TUZ",
+          "ru_uz": "Moʻʻtadil iqlimda nafaqat toʻrt fasl aniq ifodalangan, balki yogʻin ham meʼyorida."
         },
         {
           "kind": "listen",
@@ -19622,7 +20645,15 @@
             "В этом регионе после засухи всегда идёт сильный дождь.",
             "В этом регионе засуха слабая, зато тайфуны очень частые."
           ],
-          "answer": "В этом регионе не только сильная засуха, но и часто дует песчаная пыль."
+          "answer": "В этом регионе не только сильная засуха, но и часто дует песчаная пыль.",
+          "title_uz": "Tinglang va tarjimasini tanlang",
+          "eyebrow_uz": "TINGLASH",
+          "answer_uz": "Bu mintaqada nafaqat qurgʻoqchilik kuchli, balki sariq chang ham tez-tez esadi.",
+          "options_uz": [
+            "Bu mintaqada nafaqat qurgʻoqchilik kuchli, balki sariq chang ham tez-tez esadi.",
+            "Bu mintaqada qurgʻoqchilikdan keyin doim kuchli yomgʻir yogʻadi.",
+            "Bu mintaqada qurgʻoqchilik zaif, ammo toʻfonlar juda tez-tez boʻladi."
+          ]
         },
         {
           "kind": "quiz",
@@ -19631,15 +20662,18 @@
           "items": [
             {
               "ko": "강수량",
-              "ru": "количество осадков"
+              "ru": "количество осадков",
+              "ru_uz": "yogʻin miqdori"
             },
             {
               "ko": "일교차",
-              "ru": "суточный перепад температур"
+              "ru": "суточный перепад температур",
+              "ru_uz": "kunlik harorat farqi"
             },
             {
               "ko": "폭설",
-              "ru": "сильный снегопад"
+              "ru": "сильный снегопад",
+              "ru_uz": "kuchli qor yogʻishi"
             }
           ],
           "pool": [
@@ -19649,6 +20683,16 @@
             "влажность воздуха",
             "песчаная буря",
             "сезон дождей"
+          ],
+          "title_uz": "Soʻz va maʼnosini birlashtiring",
+          "eyebrow_uz": "TEKSHIRUV",
+          "pool_uz": [
+            "yogʻin miqdori",
+            "kunlik harorat farqi",
+            "kuchli qor yogʻishi",
+            "havo namligi",
+            "qum boʻroni",
+            "yomgʻirli mavsum"
           ]
         },
         {
@@ -19701,6 +20745,10 @@
         "tasks": [
           "Опишите тремя предложениями с конструкцией <span class=\"ko\">와/과는 달리</span> разницу между традиционным ханоком и современной квартирой. Пример: <span class=\"ko\">한옥과는 달리 아파트에는 마당이 없다.</span>",
           "Выберите любую особенность корейского дома и сформулируйте её через <span class=\"ko\">-ㄴ/는다는 것이다</span>. Пример: <span class=\"ko\">한옥의 특징은 지붕이 곡선으로 아름답다는 것이다.</span>"
+        ],
+        "tasks_uz": [
+          "<span class=\"ko\">와/과는 달리</span> qurilmasi bilan 3 ta gapda anʼanaviy hanok bilan zamonaviy kvartira orasidagi farqni tasvirlab bering. Namuna: <span class=\"ko\">한옥과는 달리 아파트에는 마당이 없다.</span>",
+          "Koreys uyining istalgan bir xususiyatini tanlab, uni <span class=\"ko\">-ㄴ/는다는 것이다</span> orqali ifodalang. Namuna: <span class=\"ko\">한옥의 특징은 지붕이 곡선으로 아름답다는 것이다.</span>"
         ]
       },
       "slides": [
@@ -19722,6 +20770,13 @@
               "🏠",
               "лексика корейского дома"
             ]
+          ],
+          "title_uz": "Koreys uyi: kecha va bugun",
+          "intro_uz": "Bugun koreys uyiga nazar tashlaymiz — qadimiy hanokning issiq <span class=\"ko\">온돌</span>idan tortib zamonaviy kvartiralar va umumiy uylargacha. «Kecha» va «bugun»ni solishtirishni va uy-joy xususiyatlarini chiroyli tasvirlashni oʻrganamiz. 🌸",
+          "learn_uz": [
+            "eski va yangi uyni solishtirish",
+            "uy-joy xususiyatlarini nomlash",
+            "koreys uyi leksikasi"
           ]
         },
         {
@@ -19733,15 +20788,18 @@
           "examples": [
             {
               "ko": "자연 재료로 지은 한옥과는 달리 현대식 집은 시멘트로 짓는다.",
-              "ru": "В отличие от ханока из природных материалов, современные дома строят из цемента."
+              "ru": "В отличие от ханока из природных материалов, современные дома строят из цемента.",
+              "ru_uz": "Tabiiy materiallardan qurilgan hanokdan farqli oʻlaroq, zamonaviy uylar sementdan quriladi."
             },
             {
               "ko": "마당이 있는 단독 주택과는 달리 아파트에는 베란다만 있다.",
-              "ru": "В отличие от частного дома с двором, в квартире есть только балкон."
+              "ru": "В отличие от частного дома с двором, в квартире есть только балкон.",
+              "ru_uz": "Hovlisi bor alohida uydan farqli oʻlaroq, kvartirada faqat balkon bor."
             },
             {
               "ko": "온돌을 쓰던 과거와는 달리 요즘에는 보일러 난방을 사용한다.",
-              "ru": "В отличие от прошлого, когда пользовались ондолем, сейчас применяют котловое отопление."
+              "ru": "В отличие от прошлого, когда пользовались ондолем, сейчас применяют котловое отопление.",
+              "ru_uz": "Ondol ishlatilgan oʻtmishdan farqli oʻlaroq, hozirda qozon isitish tizimidan foydalaniladi."
             }
           ],
           "drills": [
@@ -19753,7 +20811,8 @@
                 "와는 달리",
                 "처럼"
               ],
-              "answer": "과는 달리"
+              "answer": "과는 달리",
+              "ru_uz": "Sovuq shimoldan farqli oʻlaroq, janubdagi hanok ochiq tuzilishga ega."
             },
             {
               "q": "기와집___ 초가집은 볏짚으로 지붕을 만든다.",
@@ -19763,7 +20822,8 @@
                 "과는 달리",
                 "보다는"
               ],
-              "answer": "과는 달리"
+              "answer": "과는 달리",
+              "ru_uz": "Sopol tomli uydan farqli oʻlaroq, somon tomli uyda tom somondan yasaladi."
             },
             {
               "q": "과거___ 요즘에는 공간을 공유하는 집이 늘고 있다.",
@@ -19773,9 +20833,13 @@
                 "와는 달리",
                 "와 같이"
               ],
-              "answer": "와는 달리"
+              "answer": "와는 달리",
+              "ru_uz": "Oʻtmishdan farqli oʻlaroq, hozir umumiy makonli uylar soni ortib bormoqda."
             }
-          ]
+          ],
+          "eyebrow_uz": "GRAMMATIKA",
+          "sub_uz": "A dan farqli oʻlaroq — B",
+          "rule_uz": "Ikki obyektni solishtirib, ularning <b>farqini</b> taʼkidlaydi. A obyekti <span class=\"ko\">와/과는 달리</span>dan oldin, farqlanuvchi B obyekti esa keyin qoʻyiladi. Patchimli otdan keyin — <span class=\"ko\">과는 달리</span>, patchimsiz — <span class=\"ko\">와는 달리</span>."
         },
         {
           "kind": "pattern",
@@ -19786,15 +20850,18 @@
           "examples": [
             {
               "ko": "한옥의 특징은 마루와 온돌이 있다는 것이다.",
-              "ru": "Особенность ханока состоит в том, что в нём есть мару и ондоль."
+              "ru": "Особенность ханока состоит в том, что в нём есть мару и ондоль.",
+              "ru_uz": "Hanokning xususiyati shundan iboratki, unda yogʻoch ayvon (maru) va isitiladigan pol (ondol) bor."
             },
             {
               "ko": "요즘 경향은 소형 주택이 인기를 끈다는 것이다.",
-              "ru": "Нынешняя тенденция в том, что популярность набирают малогабаритные дома."
+              "ru": "Нынешняя тенденция в том, что популярность набирают малогабаритные дома.",
+              "ru_uz": "Hozirgi tendensiya shundan iboratki, kichik uylar mashhurlik qozonmoqda."
             },
             {
               "ko": "전문가의 의견은 공유 주택이 더 늘어난다는 것이었다.",
-              "ru": "Мнение экспертов было в том, что общих домов станет ещё больше."
+              "ru": "Мнение экспертов было в том, что общих домов станет ещё больше.",
+              "ru_uz": "Mutaxassislarning fikri shundan iboratki, umumiy uylar yanada koʻpayadi."
             }
           ],
           "drills": [
@@ -19806,7 +20873,8 @@
                 "한다는 것이다",
                 "할 것이다"
               ],
-              "answer": "하다는 것이다"
+              "answer": "하다는 것이다",
+              "ru_uz": "Somon tomli uyning afzalligi shundan iboratki, yozda salqin, qishda esa issiq boʻladi."
             },
             {
               "q": "주목할 점은 1인 가구가 빠르게 증가___.",
@@ -19816,7 +20884,8 @@
                 "하다는 것이다",
                 "하는 것 같다"
               ],
-              "answer": "한다는 것이다"
+              "answer": "한다는 것이다",
+              "ru_uz": "Diqqatga sazovor joyi shundan iboratki, yakka xoʻjaliklar soni tez oʻsmoqda."
             },
             {
               "q": "한옥 지붕의 매력은 곡선이 아름답___.",
@@ -19826,9 +20895,13 @@
                 "는다는 것이다",
                 "ㄴ다는 것이다"
               ],
-              "answer": "다는 것이다"
+              "answer": "다는 것이다",
+              "ru_uz": "Hanok tomining joziba nuqtasi shundan iboratki, uning egri chiziqlari chiroyli."
             }
-          ]
+          ],
+          "eyebrow_uz": "GRAMMATIKA",
+          "sub_uz": "shundan iboratki…",
+          "rule_uz": "Fakt yoki xususiyatni obyektivlashtirib, ifodalaydi. Feʼl <b>patchimli</b> boʻlsa → <span class=\"ko\">-는다는 것이다</span>, <b>patchimsiz</b> boʻlsa → <span class=\"ko\">-ㄴ다는 것이다</span>; sifat → <span class=\"ko\">-다는 것이다</span>. Koʻpincha mohiyat yoki xulosani tasvirlaydi."
         },
         {
           "kind": "words",
@@ -19838,34 +20911,42 @@
             {
               "ko": "지붕",
               "ru": "крыша",
-              "emoji": "🏠"
+              "emoji": "🏠",
+              "ru_uz": "tom"
             },
             {
               "ko": "마당",
               "ru": "двор",
-              "emoji": "🌳"
+              "emoji": "🌳",
+              "ru_uz": "hovli"
             },
             {
               "ko": "대문",
               "ru": "ворота, главная дверь",
-              "emoji": "🚪"
+              "emoji": "🚪",
+              "ru_uz": "darvoza, bosh eshik"
             },
             {
               "ko": "아파트",
               "ru": "квартира (в многоэтажке)",
-              "emoji": "🏢"
+              "emoji": "🏢",
+              "ru_uz": "kvartira (koʻp qavatli)"
             },
             {
               "ko": "오피스텔",
               "ru": "офистель (жильё-офис)",
-              "emoji": "🏬"
+              "emoji": "🏬",
+              "ru_uz": "ofistel (ofis-uy)"
             },
             {
               "ko": "공유 주택",
               "ru": "общий дом (шеринг-жильё)",
-              "emoji": "🤝"
+              "emoji": "🤝",
+              "ru_uz": "umumiy uy (sharing-uy)"
             }
-          ]
+          ],
+          "title_uz": "Mavzu soʻzlari",
+          "eyebrow_uz": "SOʻZLAR"
         },
         {
           "kind": "dialog",
@@ -19877,51 +20958,61 @@
               "who": "A",
               "av": "🧑‍🏫",
               "ko": "수업 시간에 한옥에 대해 배웠는데, 정말 멋있더라.",
-              "ru": "На уроке мы изучали ханок, и он правда красивый."
+              "ru": "На уроке мы изучали ханок, и он правда красивый.",
+              "ru_uz": "Darsda hanok haqida oʻrgandik, u haqiqatan chiroyli ekan."
             },
             {
               "who": "B",
               "av": "👩",
               "ko": "맞아. 한옥의 가장 큰 특징은 마루와 온돌이 있다는 것이야.",
-              "ru": "Да. Самая яркая черта ханока в том, что в нём есть деревянный пол мару и тёплый пол ондоль."
+              "ru": "Да. Самая яркая черта ханока в том, что в нём есть деревянный пол мару и тёплый пол ондоль.",
+              "ru_uz": "Toʻgʻri. Hanokning eng yorqin xususiyati shundan iboratki, unda yogʻoch ayvon (maru) va isitiladigan pol (ondol) bor."
             },
             {
               "who": "A",
               "av": "🧑‍🏫",
               "ko": "그런데 자연 재료로 지은 옛날 집과는 달리 요즘 집은 시멘트로 짓잖아.",
-              "ru": "Но, в отличие от старых домов из природных материалов, нынешние строят из цемента."
+              "ru": "Но, в отличие от старых домов из природных материалов, нынешние строят из цемента.",
+              "ru_uz": "Lekin tabiiy materiallardan qurilgan eski uylardan farqli oʻlaroq, hozirgi uylar sementdan quriladi-ku."
             },
             {
               "who": "B",
               "av": "👩",
               "ko": "그래서 분위기가 많이 달라졌지. 너는 어떤 집에 살고 싶어?",
-              "ru": "Поэтому атмосфера сильно изменилась. А в каком доме хочешь жить ты?"
+              "ru": "Поэтому атмосфера сильно изменилась. А в каком доме хочешь жить ты?",
+              "ru_uz": "Shuning uchun muhit ancha oʻzgardi. Sen qanday uyda yashashni xohlaysan?"
             },
             {
               "who": "A",
               "av": "🧑‍🏫",
               "ko": "나는 단독 주택과는 달리 관리가 편한 아파트가 좋아.",
-              "ru": "Мне, в отличие от частного дома, нравится квартира — за ней проще ухаживать."
+              "ru": "Мне, в отличие от частного дома, нравится квартира — за ней проще ухаживать.",
+              "ru_uz": "Menga, alohida uydan farqli oʻlaroq, parvarish qilishi oson boʻlgan kvartira yoqadi."
             },
             {
               "who": "B",
               "av": "👩",
               "ko": "요즘 인기 있는 건 공간을 함께 쓰는 공유 주택이 늘고 있다는 것이야.",
-              "ru": "А сейчас популярно то, что растёт число общих домов, где пространство делят вместе."
+              "ru": "А сейчас популярно то, что растёт число общих домов, где пространство делят вместе.",
+              "ru_uz": "Hozir mashhur boʻlgani shundan iboratki, makonni birga ishlatadigan umumiy uylar koʻpaymoqda."
             },
             {
               "who": "A",
               "av": "🧑‍🏫",
               "ko": "정말? 1인 가구가 많아지면서 집의 모습도 계속 변하고 있다는 거네.",
-              "ru": "Правда? Получается, с ростом числа одиночных хозяйств облик дома тоже постоянно меняется."
+              "ru": "Правда? Получается, с ростом числа одиночных хозяйств облик дома тоже постоянно меняется.",
+              "ru_uz": "Rostdanmi? Demak, yakka xoʻjaliklar koʻpayishi bilan uyning qiyofasi ham doimo oʻzgarib boryapti-da."
             },
             {
               "who": "B",
               "av": "👩",
               "ko": "응. 미래의 집은 또 어떻게 달라질지 궁금해.",
-              "ru": "Да. Интересно, каким станет дом будущего."
+              "ru": "Да. Интересно, каким станет дом будущего.",
+              "ru_uz": "Ha. Kelajakdagi uy yana qanday oʻzgarar ekan, qiziq."
             }
-          ]
+          ],
+          "eyebrow_uz": "MULOQOT",
+          "sub_uz": "Koreys uyi: kecha va bugun"
         },
         {
           "kind": "build",
@@ -19938,7 +21029,10 @@
           "pool": [
             "비슷하게",
             "한옥을"
-          ]
+          ],
+          "title_uz": "Jumlani yigʻing",
+          "eyebrow_uz": "JUMLA TUZ",
+          "ru_uz": "Oʻtmishdan farqli oʻlaroq, hozir kvartirada yashashadi."
         },
         {
           "kind": "listen",
@@ -19951,7 +21045,15 @@
             "В прошлом большие семьи жили в отдельных квартирах, как и сейчас.",
             "Современные семьи стали ещё больше, чем были раньше."
           ],
-          "answer": "В отличие от прошлого, когда жили большой семьёй, в наше время преобладают малые семьи."
+          "answer": "В отличие от прошлого, когда жили большой семьёй, в наше время преобладают малые семьи.",
+          "title_uz": "Tinglash",
+          "eyebrow_uz": "TINGLASH",
+          "answer_uz": "Katta oilada birga yashagan oʻtmishdan farqli oʻlaroq, hozirgi zamonda kichik oilalar koʻp.",
+          "options_uz": [
+            "Katta oilada birga yashagan oʻtmishdan farqli oʻlaroq, hozirgi zamonda kichik oilalar koʻp.",
+            "Oʻtmishda katta oilalar alohida kvartiralarda yashagan, xuddi hozirgidek.",
+            "Zamonaviy oilalar avvalgidan ham kattaroq boʻlib qoldi."
+          ]
         },
         {
           "kind": "quiz",
@@ -19960,15 +21062,18 @@
           "items": [
             {
               "ko": "한옥",
-              "ru": "традиционный корейский дом"
+              "ru": "традиционный корейский дом",
+              "ru_uz": "anʼanaviy koreys uyi"
             },
             {
               "ko": "온돌",
-              "ru": "тёплый пол (ондоль)"
+              "ru": "тёплый пол (ондоль)",
+              "ru_uz": "isitiladigan pol (ondol)"
             },
             {
               "ko": "지붕",
-              "ru": "крыша"
+              "ru": "крыша",
+              "ru_uz": "tom"
             }
           ],
           "pool": [
@@ -19978,6 +21083,16 @@
             "двор",
             "балкон",
             "прихожая"
+          ],
+          "title_uz": "Soʻzlarni moslashtiring",
+          "eyebrow_uz": "TEKSHIRUV",
+          "pool_uz": [
+            "anʼanaviy koreys uyi",
+            "isitiladigan pol (ondol)",
+            "tom",
+            "hovli",
+            "balkon",
+            "yoʻlak"
           ]
         },
         {
@@ -20030,6 +21145,10 @@
         "tasks": [
           "Опишите положение своего города на корейском, используя -(으)므로: укажите причину климата или особенностей. Пример: 우리 도시는 바다와 접해 있으므로 여름에도 시원하다.",
           "Составьте 2 предложения об оценке положения вашей страны через (으)로 볼 때. Пример: 지리적 위치로 볼 때 우리나라는 교류에 유리하다."
+        ],
+        "tasks_uz": [
+          "Oʻz shahringiz joylashuvini koreyscha -(으)므로 yordamida tasvirlab bering: iqlim yoki xususiyatlarning sababini koʻrsating. Namuna: <span class=\"ko\">우리 도시는 바다와 접해 있으므로 여름에도 시원하다.</span>",
+          "Oʻz mamlakatingiz joylashuvi haqida (으)로 볼 때 orqali 2 ta baholovchi gap tuzing. Namuna: <span class=\"ko\">지리적 위치로 볼 때 우리나라는 교류에 유리하다.</span>"
         ]
       },
       "slides": [
@@ -20051,6 +21170,13 @@
               "🔭",
               "оценка через (으)로 볼 때"
             ]
+          ],
+          "title_uz": "Dunyoning tomonlari: biz qayerdamiz",
+          "intro_uz": "Bugun mamlakat va shahar joylashuvi haqida gapirishni oʻrganamiz — <span class=\"ko\">동서남북</span> qayerda va iqlim nega aynan shunday. Ikki yangi qurilma haqiqiy mutaxassisdek sabab tushuntirish va baho berishga yordam beradi 🌸",
+          "learn_uz": [
+            "dunyoning tomonlari va joylashuv lugʻati",
+            "-(으)므로 orqali sabab",
+            "(으)로 볼 때 orqali baho"
           ]
         },
         {
@@ -20062,15 +21188,18 @@
           "examples": [
             {
               "ko": "한국은 대륙성 기후에 속하므로 여름에는 덥고 겨울에는 춥다.",
-              "ru": "Так как Корея относится к континентальному климату, летом жарко, а зимой холодно."
+              "ru": "Так как Корея относится к континентальному климату, летом жарко, а зимой холодно.",
+              "ru_uz": "Koreya kontinental iqlimga tegishli boʻlgani uchun, yozda issiq, qishda sovuq boʻladi."
             },
             {
               "ko": "한국은 삼면이 바다로 둘러싸여 있으므로 해양으로의 진출에 유리하다.",
-              "ru": "Поскольку Корея с трёх сторон окружена морем, ей удобно выходить к океану."
+              "ru": "Поскольку Корея с трёх сторон окружена морем, ей удобно выходить к океану.",
+              "ru_uz": "Koreya uch tomondan dengiz bilan oʻralgani uchun, unga okeanga chiqish qulay."
             },
             {
               "ko": "이 지역은 적도에서 멀므로 사계절이 뚜렷하게 나타난다.",
-              "ru": "Так как этот регион далёк от экватора, времена года выражены чётко."
+              "ru": "Так как этот регион далёк от экватора, времена года выражены чётко.",
+              "ru_uz": "Bu mintaqa ekvatordan uzoq boʻlgani uchun, toʻrt fasl aniq namoyon boʻladi."
             }
           ],
           "drills": [
@@ -20082,7 +21211,8 @@
                 "있는데",
                 "있지만"
               ],
-              "answer": "있으므로"
+              "answer": "있으므로",
+              "ru_uz": "Koreya yarim orolda joylashgani uchun, u ham materik, ham okean bilan aloqa qila oladi."
             },
             {
               "q": "이 도시는 위도가 높___ 겨울이 매우 길다.",
@@ -20092,7 +21222,8 @@
                 "은데도",
                 "더라도"
               ],
-              "answer": "으므로"
+              "answer": "으므로",
+              "ru_uz": "Bu shaharning kengligi yuqori boʻlgani uchun, qish juda uzoq davom etadi."
             },
             {
               "q": "독도는 한류와 난류가 ___ 좋은 어장을 이룬다.",
@@ -20102,9 +21233,13 @@
                 "만나거나",
                 "만날까봐"
               ],
-              "answer": "만나므로"
+              "answer": "만나므로",
+              "ru_uz": "Dokdoda sovuq va issiq oqimlar uchrashgani uchun, yaxshi baliqchilik hududi shakllanadi."
             }
-          ]
+          ],
+          "eyebrow_uz": "GRAMMATIKA",
+          "sub_uz": "shuning uchun, chunki (sabab, asos)",
+          "rule_uz": "<span class=\"ko\">-(으)므로</span> keyin aytiladigan narsaning <b>sababi, asosi yoki dalilini</b> bildiradi. Bu kitobiy, rasmiy ibora — u koʻpincha darslik matnlari, eʼlonlar va maʼruzalarda uchraydi. Undoshdan keyin <span class=\"ko\">-으므로</span>, unlidan va <span class=\"ko\">ㄹ</span> bilan tugagan negizlardan keyin <span class=\"ko\">-므로</span> olinadi. Muhim: undan keyin <b>buyruq yoki taklif</b> qoʻyib boʻlmaydi (<span class=\"ko\">-(으)세요, -ㅂ시다</span>dan oldin ishlatilmaydi)."
         },
         {
           "kind": "pattern",
@@ -20115,15 +21250,18 @@
           "examples": [
             {
               "ko": "수리적 위치로 볼 때 한국은 북위 33도와 43도 사이에 있다.",
-              "ru": "С точки зрения математического положения Корея находится между 33-й и 43-й северной широтой."
+              "ru": "С точки зрения математического положения Корея находится между 33-й и 43-й северной широтой.",
+              "ru_uz": "Matematik joylashuv nuqtai nazaridan, Koreya 33- va 43-shimoliy kenglik orasida joylashgan."
             },
             {
               "ko": "관계적 위치로 볼 때 한국은 일본, 중국, 러시아와 인접해 있다.",
-              "ru": "С точки зрения относительного положения Корея соседствует с Японией, Китаем и Россией."
+              "ru": "С точки зрения относительного положения Корея соседствует с Японией, Китаем и Россией.",
+              "ru_uz": "Nisbiy joylashuv nuqtai nazaridan, Koreya Yaponiya, Xitoy va Rossiya bilan qoʻshni."
             },
             {
               "ko": "지리적 위치로 볼 때 한국은 교류와 진출에 유리하다.",
-              "ru": "С точки зрения географического положения Корея удобна для обмена и расширения."
+              "ru": "С точки зрения географического положения Корея удобна для обмена и расширения.",
+              "ru_uz": "Geografik joylashuv nuqtai nazaridan, Koreya almashinuv va rivojlanish uchun qulay."
             }
           ],
           "drills": [
@@ -20135,7 +21273,8 @@
                 "보면서",
                 "본 후에"
               ],
-              "answer": "볼 때"
+              "answer": "볼 때",
+              "ru_uz": "Iqlim nuqtai nazaridan, bu mamlakat moʻʻtadil mintaqaga kiradi."
             },
             {
               "q": "경도___ 볼 때 우리 도시는 동쪽에 치우쳐 있다.",
@@ -20145,7 +21284,8 @@
                 "에서",
                 "까지"
               ],
-              "answer": "로"
+              "answer": "로",
+              "ru_uz": "Uzunlik (boʻylom) nuqtai nazaridan, bizning shahrimiz sharqqa siljigan."
             },
             {
               "q": "주변국과의 관계___ 볼 때 한국은 중심지 역할을 한다.",
@@ -20155,9 +21295,13 @@
                 "처럼",
                 "마다"
               ],
-              "answer": "로"
+              "answer": "로",
+              "ru_uz": "Qoʻshni davlatlar bilan munosabat nuqtai nazaridan, Koreya markaz vazifasini bajaradi."
             }
-          ]
+          ],
+          "eyebrow_uz": "GRAMMATIKA",
+          "sub_uz": "agar baholansa…, nuqtai nazaridan…",
+          "rule_uz": "<span class=\"ko\">(으)로 볼 때</span> otga qoʻshilib, <b>«biror narsa nuqtai nazaridan baholaganda…»</b> maʼnosini bildiradi. Ot <b>baholash mezonini</b> koʻrsatadi: <span class=\"ko\">지리적 위치로 볼 때</span> — «geografik joylashuv nuqtai nazaridan». Undoshdan keyin — <span class=\"ko\">으로 볼 때</span>, unlidan va <span class=\"ko\">ㄹ</span> bilan tugagan negizlardan keyin — <span class=\"ko\">로 볼 때</span>."
         },
         {
           "kind": "words",
@@ -20167,34 +21311,42 @@
             {
               "ko": "적도",
               "ru": "экватор",
-              "emoji": "🌍"
+              "emoji": "🌍",
+              "ru_uz": "ekvator"
             },
             {
               "ko": "북반구",
               "ru": "Северное полушарие",
-              "emoji": "🧭"
+              "emoji": "🧭",
+              "ru_uz": "Shimoliy yarim shar"
             },
             {
               "ko": "해양",
               "ru": "океан, морская акватория",
-              "emoji": "🌊"
+              "emoji": "🌊",
+              "ru_uz": "okean, dengiz akvatoriyasi"
             },
             {
               "ko": "주변국",
               "ru": "соседние страны",
-              "emoji": "🗺️"
+              "emoji": "🗺️",
+              "ru_uz": "qoʻshni davlatlar"
             },
             {
               "ko": "남동쪽",
               "ru": "юго-восток",
-              "emoji": "↘️"
+              "emoji": "↘️",
+              "ru_uz": "janubi-sharq"
             },
             {
               "ko": "중심지",
               "ru": "центр, узловое место",
-              "emoji": "📍"
+              "emoji": "📍",
+              "ru_uz": "markaz, tugun nuqta"
             }
-          ]
+          ],
+          "title_uz": "Mavzu soʻzlari: joylashuv va yoʻnalishlar",
+          "eyebrow_uz": "SOʻZLAR"
         },
         {
           "kind": "dialog",
@@ -20206,51 +21358,62 @@
               "who": "A",
               "av": "🧑",
               "ko": "오늘 수업에서 한국의 위치를 배웠는데 좀 어렵더라.",
-              "ru": "Сегодня на уроке проходили положение Кореи — было сложновато."
+              "ru": "Сегодня на уроке проходили положение Кореи — было сложновато.",
+              "ru_uz": "Bugun darsda Koreyaning joylashuvini oʻtdik, biroz qiyin edi."
             },
             {
               "who": "B",
               "av": "🧑‍🦰",
               "ko": "수리적 위치로 볼 때 한국은 북위 33도에서 43도 사이에 있어.",
-              "ru": "С точки зрения математического положения Корея между 33-й и 43-й северной широтой."
+              "ru": "С точки зрения математического положения Корея между 33-й и 43-й северной широтой.",
+              "ru_uz": "Matematik joylashuv nuqtai nazaridan, Koreya 33- va 43-shimoliy kenglik orasida."
             },
             {
               "who": "A",
               "av": "🧑",
               "ko": "아, 그럼 지리적으로는 어디에 있는 거야?",
-              "ru": "А, тогда географически где она находится?"
+              "ru": "А, тогда географически где она находится?",
+              "ru_uz": "A, unda geografik jihatdan qayerda joylashgan?"
             },
             {
               "who": "B",
               "av": "🧑‍🦰",
               "ko": "삼면이 바다로 둘러싸여 있으므로 해양 진출에 유리한 반도야.",
-              "ru": "Так как с трёх сторон окружена морем, это полуостров, удобный для выхода к океану."
+              "ru": "Так как с трёх сторон окружена морем, это полуостров, удобный для выхода к океану.",
+              "ru_uz": "Uch tomondan dengiz bilan oʻralgani uchun, bu okeanga chiqish uchun qulay yarim orol."
             },
             {
               "who": "A",
               "av": "🧑",
               "ko": "관계적 위치로 볼 때는 어떻게 설명해?",
-              "ru": "А с точки зрения относительного положения как объяснить?"
+              "ru": "А с точки зрения относительного положения как объяснить?",
+              "ru_uz": "Nisbiy joylashuv nuqtai nazaridan qanday tushuntirasan?"
             },
             {
               "who": "B",
               "av": "🧑‍🦰",
               "ko": "일본, 중국, 러시아와 인접해 있으므로 교류의 중심지라고 해.",
-              "ru": "Поскольку соседствует с Японией, Китаем и Россией, её называют центром обмена."
+              "ru": "Поскольку соседствует с Японией, Китаем и Россией, её называют центром обмена.",
+              "ru_uz": "Yaponiya, Xitoy va Rossiya bilan qoʻshni boʻlgani uchun, uni almashinuv markazi deyishadi."
             },
             {
               "who": "A",
               "av": "🧑",
               "ko": "이제 동서남북을 어떻게 말하는지 알 것 같아. 고마워!",
-              "ru": "Теперь, кажется, понимаю, как говорить про стороны света. Спасибо!"
+              "ru": "Теперь, кажется, понимаю, как говорить про стороны света. Спасибо!",
+              "ru_uz": "Endi dunyoning tomonlari haqida qanday gapirishni tushundim shekilli. Rahmat!"
             },
             {
               "who": "B",
               "av": "🧑‍🦰",
               "ko": "모르는 게 있으면 또 물어봐.",
-              "ru": "Если что-то будет непонятно — спрашивай ещё."
+              "ru": "Если что-то будет непонятно — спрашивай ещё.",
+              "ru_uz": "Tushunmagan narsa boʻlsa, yana soʻra."
             }
-          ]
+          ],
+          "title_uz": "Koreya qayerda joylashgan",
+          "eyebrow_uz": "MULOQOT",
+          "sub_uz": "Doʻstlar mamlakat joylashuvini muhokama qilishadi"
         },
         {
           "kind": "build",
@@ -20269,7 +21432,10 @@
           "pool": [
             "대륙은",
             "있으므로"
-          ]
+          ],
+          "title_uz": "Jumlani yigʻing",
+          "eyebrow_uz": "JUMLA TUZ",
+          "ru_uz": "Geografik joylashuv nuqtai nazaridan, Koreya almashinuv uchun qulay."
         },
         {
           "kind": "listen",
@@ -20282,7 +21448,15 @@
             "Корея находится на материке, поэтому у неё нет выхода к морю.",
             "С точки зрения климата Корея относится к тропическому поясу."
           ],
-          "answer": "Так как Корея расположена на полуострове, она может выходить и к материку, и к океану."
+          "answer": "Так как Корея расположена на полуострове, она может выходить и к материку, и к океану.",
+          "title_uz": "Tinglang va tarjimasini tanlang",
+          "eyebrow_uz": "TINGLASH",
+          "answer_uz": "Koreya yarim orolda joylashgani uchun, u ham materikka, ham okeanga chiqa oladi.",
+          "options_uz": [
+            "Koreya yarim orolda joylashgani uchun, u ham materikka, ham okeanga chiqa oladi.",
+            "Koreya materikda joylashgan, shuning uchun dengizga chiqishi yoʻq.",
+            "Iqlim nuqtai nazaridan, Koreya tropik mintaqaga kiradi."
+          ]
         },
         {
           "kind": "quiz",
@@ -20291,15 +21465,18 @@
           "items": [
             {
               "ko": "반도",
-              "ru": "полуостров"
+              "ru": "полуостров",
+              "ru_uz": "yarim orol"
             },
             {
               "ko": "적도",
-              "ru": "экватор"
+              "ru": "экватор",
+              "ru_uz": "ekvator"
             },
             {
               "ko": "주변국",
-              "ru": "соседние страны"
+              "ru": "соседние страны",
+              "ru_uz": "qoʻshni davlatlar"
             }
           ],
           "pool": [
@@ -20309,6 +21486,16 @@
             "широта",
             "океан",
             "столица"
+          ],
+          "title_uz": "Soʻz va maʼnosini birlashtiring",
+          "eyebrow_uz": "TEKSHIRUV",
+          "pool_uz": [
+            "yarim orol",
+            "ekvator",
+            "qoʻshni davlatlar",
+            "kenglik",
+            "okean",
+            "poytaxt"
           ]
         },
         {
@@ -20361,6 +21548,10 @@
         "tasks": [
           "Веди три дня тетрадь учёта карманных денег (<span class=\"ko\">용돈 기입장</span>): запиши каждую покупку и в конце напиши один вывод с конструкцией <span class=\"ko\">-기 십상이다</span>, например: <span class=\"ko\">계획 없이 쓰면 돈이 모자라기 십상이에요.</span>",
           "Сравни два варианта траты и выбери разумный, оформив выбор через <span class=\"ko\">-(으)ㄹ 바에야</span>, например: <span class=\"ko\">충동구매를 하고 후회할 바에야 차라리 저축을 하는 게 나아요.</span>"
+        ],
+        "tasks_uz": [
+          "3 kun davomida choʻntak pulini hisoblash daftarini (<span class=\"ko\">용돈 기입장</span>) yuriting: har bir xaridni yozib boring va oxirida <span class=\"ko\">-기 십상이다</span> qurilmasi bilan bitta xulosa yozing, masalan: <span class=\"ko\">계획 없이 쓰면 돈이 모자라기 십상이에요.</span>",
+          "Ikki xil xarajat variantini solishtirib, oqilonasini <span class=\"ko\">-(으)ㄹ 바에야</span> orqali tanlang, masalan: <span class=\"ko\">충동구매를 하고 후회할 바에야 차라리 저축을 하는 게 나아요.</span>"
         ]
       },
       "slides": [
@@ -20376,12 +21567,19 @@
             ],
             [
               "✍️",
-              "выбирать разумный вариант через -(ы)рь паэя"
+              "выбирать разумный вариант через -(으)ㄹ 바에야"
             ],
             [
               "⚠️",
-              "предупреждать о последствиях через -ки сипсанида"
+              "предупреждать о последствиях через -기 십상이다"
             ]
+          ],
+          "title_uz": "Tejamkorlik odatlari",
+          "intro_uz": "Bugun choʻntak pulini ehtiyotkorlik bilan boshqarishni va xarajatlar haqida koreyscha chiroyli fikr yuritishni oʻrganamiz. Oʻzimizning <span class=\"ko\">용돈 기입장</span>imizni yuritamiz va nimani tanlash yaxshiroq ekanini hamda oʻylanmagan xaridlar nimalarga olib kelishini aytishni oʻrganamiz. 🌸",
+          "learn_uz": [
+            "xarajat va jamgʻarma haqida gapirish",
+            "-(으)ㄹ 바에야 orqali oqilona variantni tanlash",
+            "-기 십상이다 orqali oqibatlardan ogohlantirish"
           ]
         },
         {
@@ -20393,15 +21591,18 @@
           "examples": [
             {
               "ko": "충동구매를 하고 후회할 바에야 아예 쇼핑을 하지 마세요.",
-              "ru": "Чем сделать импульсивную покупку и потом жалеть, лучше вообще не ходить за покупками."
+              "ru": "Чем сделать импульсивную покупку и потом жалеть, лучше вообще не ходить за покупками.",
+              "ru_uz": "Impulsiv xarid qilib, keyin pushaymon boʻlgandan koʻra, umuman xarid qilmagan maʼqul."
             },
             {
               "ko": "싼 중고 노트북을 사고 금방 고장 날 바에야 차라리 새 제품을 사는 게 나아요.",
-              "ru": "Чем купить дешёвый подержанный ноутбук, который скоро сломается, уж лучше взять новый."
+              "ru": "Чем купить дешёвый подержанный ноутбук, который скоро сломается, уж лучше взять новый.",
+              "ru_uz": "Arzon qoʻlbola noutbuk sotib olib, tez orada buzilgandan koʻra, yangi mahsulot olgan afzal."
             },
             {
               "ko": "용돈을 어디에 썼는지 기억도 못 할 바에야 용돈 기입장을 쓰는 게 어때요?",
-              "ru": "Чем даже не помнить, на что ушли карманные деньги, может, лучше вести тетрадь учёта?"
+              "ru": "Чем даже не помнить, на что ушли карманные деньги, может, лучше вести тетрадь учёта?",
+              "ru_uz": "Choʻntak pulini qayerga sarflaganingizni eslay olmaydigan boʻlgandan koʻra, hisob daftarini yuritsangiz-chi?"
             }
           ],
           "drills": [
@@ -20413,7 +21614,8 @@
                 "십상이라",
                 "는 한편"
               ],
-              "answer": "바에야"
+              "answer": "바에야",
+              "ru_uz": "Shunday pulni behuda sochib, keyin pushaymon boʻlgandan koʻra, aslida jamgʻaring."
             },
             {
               "q": "비를 맞으면서 행사를 ___ 차라리 며칠 연기합시다.",
@@ -20423,7 +21625,8 @@
                 "하기 십상",
                 "하는 대로"
               ],
-              "answer": "할 바에야"
+              "answer": "할 바에야",
+              "ru_uz": "Yomgʻir ostida tadbirni oʻtkazgandan koʻra, uni bir necha kunga kechiktiraylik."
             },
             {
               "q": "필요도 없는 물건을 충동적으로 살 바에야 ___ 사지 마세요.",
@@ -20433,9 +21636,13 @@
                 "점점",
                 "겨우"
               ],
-              "answer": "아예"
+              "answer": "아예",
+              "ru_uz": "Kerak boʻlmagan narsani impulsiv sotib olgandan koʻra, umuman sotib olmang."
             }
-          ]
+          ],
+          "eyebrow_uz": "GRAMMATIKA",
+          "sub_uz": "…dan koʻra, uzur…",
+          "rule_uz": "<span class=\"ko\">-(으)ㄹ 바에야</span> feʼl negiziga qoʻshilib: <b>«agar tanlash kerak boʻlsa, birinchisidan koʻra ikkinchisi afzal»</b> maʼnosini bildiradi. Birinchi variant soʻzlovchiga yoqmaydi, ikkinchisi ham ideal boʻlmasa-da, baribir afzalroq. Koʻpincha <span class=\"ko\">차라리</span> (aslida, uzri) yoki <span class=\"ko\">아예</span> (umuman, boshidanoq) qoʻshimchalari bilan kuchaytiriladi. Patchimsiz negizdan keyin — <span class=\"ko\">-ㄹ 바에야</span>, patchim bilan — <span class=\"ko\">-을 바에야</span>."
         },
         {
           "kind": "pattern",
@@ -20446,15 +21653,18 @@
           "examples": [
             {
               "ko": "계획 없이 용돈을 쓰면 돈이 모자라기 십상이에요.",
-              "ru": "Если тратить карманные деньги без плана, легко окажется, что их не хватает."
+              "ru": "Если тратить карманные деньги без плана, легко окажется, что их не хватает.",
+              "ru_uz": "Choʻntak pulini rejasiz sarflasangiz, pul yetmay qolishi hech gap emas."
             },
             {
               "ko": "가계부를 그때그때 쓰지 않고 미루면 돈을 어디에 썼는지 잊어버리기 십상이다.",
-              "ru": "Если не записывать в тетрадь сразу, а откладывать, легко забыть, на что ушли деньги."
+              "ru": "Если не записывать в тетрадь сразу, а откладывать, легко забыть, на что ушли деньги.",
+              "ru_uz": "Hisob daftarini oʻz vaqtida yozmay, orqaga surib borsangiz, pulni qayerga sarflaganingizni unutib qoʻyish oson."
             },
             {
               "ko": "청소년기부터 절약하지 않으면 어른이 되어서 빚을 지기 십상이다.",
-              "ru": "Если не экономить с подросткового возраста, во взрослой жизни легко влезть в долги."
+              "ru": "Если не экономить с подросткового возраста, во взрослой жизни легко влезть в долги.",
+              "ru_uz": "Yoshlikdan tejamkorlikni oʻrganmasangiz, katta boʻlganda qarzga botib qolish hech gap emas."
             }
           ],
           "drills": [
@@ -20466,7 +21676,8 @@
                 "나서",
                 "날까"
               ],
-              "answer": "나기"
+              "answer": "나기",
+              "ru_uz": "Svetofor signaliga rioya qilmasangiz, avariyaga tushib qolish hech gap emas."
             },
             {
               "q": "씀씀이가 큰 사람은 월급을 받자마자 다 ___ 십상이에요.",
@@ -20476,7 +21687,8 @@
                 "쓰면서",
                 "쓸수록"
               ],
-              "answer": "쓰기"
+              "answer": "쓰기",
+              "ru_uz": "Xarajati katta odam maoshini olgan zahoti hammasini sarflab qoʻyishi hech gap emas."
             },
             {
               "q": "할인 쿠폰만 보고 충동구매를 하면 오히려 낭비하기 ___.",
@@ -20486,9 +21698,13 @@
                 "마련이다",
                 "뿐이다"
               ],
-              "answer": "십상이다"
+              "answer": "십상이다",
+              "ru_uz": "Faqat chegirma kuponlariga qarab impulsiv xarid qilsangiz, aksincha behuda sarflab qoʻyish oson."
             }
-          ]
+          ],
+          "eyebrow_uz": "GRAMMATIKA",
+          "sub_uz": "oson (koʻz ochib-yumguncha) …ga olib keladi",
+          "rule_uz": "<span class=\"ko\">-기 십상이다</span> feʼl negiziga <span class=\"ko\">-기</span> orqali qoʻshilib, <b>tasvirlangan (odatda istalmagan) vaziyat juda ehtimolli, oson yuz berishini</b> bildiradi — soʻzma-soʻz «oʻn holatning toʻqqiztasida shunday boʻladi». Oʻylanmagan harakatlarning oqibatlaridan ogohlantirish uchun ishlatiladi."
         },
         {
           "kind": "words",
@@ -20498,34 +21714,42 @@
             {
               "ko": "수입",
               "ru": "доход",
-              "emoji": "💵"
+              "emoji": "💵",
+              "ru_uz": "daromad"
             },
             {
               "ko": "잔액",
               "ru": "остаток (на счёте)",
-              "emoji": "🧾"
+              "emoji": "🧾",
+              "ru_uz": "qoldiq (hisobda)"
             },
             {
               "ko": "알뜰하다",
               "ru": "быть бережливым, расчётливым",
-              "emoji": "🐿️"
+              "emoji": "🐿️",
+              "ru_uz": "tejamkor, hisobli boʻlmoq"
             },
             {
               "ko": "충동구매",
               "ru": "импульсивная покупка",
-              "emoji": "🛍️"
+              "emoji": "🛍️",
+              "ru_uz": "impulsiv xarid"
             },
             {
               "ko": "씀씀이",
               "ru": "манера тратить деньги",
-              "emoji": "💸"
+              "emoji": "💸",
+              "ru_uz": "pul sarflash uslubi"
             },
             {
               "ko": "적금을 들다",
               "ru": "открыть накопительный вклад",
-              "emoji": "🏦"
+              "emoji": "🏦",
+              "ru_uz": "jamgʻarma hisobini ochish"
             }
-          ]
+          ],
+          "title_uz": "Pul va odatlar haqida soʻzlar",
+          "eyebrow_uz": "SOʻZLAR"
         },
         {
           "kind": "dialog",
@@ -20537,51 +21761,62 @@
               "who": "A",
               "av": "🧒",
               "ko": "엄마, 용돈 좀 더 주시면 안 돼요? 벌써 다 썼어요.",
-              "ru": "Мам, можно ещё немного карманных денег? Уже всё потратил."
+              "ru": "Мам, можно ещё немного карманных денег? Уже всё потратил.",
+              "ru_uz": "Mam, yana biroz choʻntak puli bersang boʻladimi? Allaqachon hammasini sarfladim."
             },
             {
               "who": "B",
               "av": "👩",
               "ko": "월요일에 줬는데 벌써? 어디에 썼는지 기억은 나니?",
-              "ru": "Я же в понедельник дала, и уже всё? Хоть помнишь, на что потратил?"
+              "ru": "Я же в понедельник дала, и уже всё? Хоть помнишь, на что потратил?",
+              "ru_uz": "Dushanba kuni berdim-ku, shunchalik tez? Qayerga sarflaganingni eslaysanmi?"
             },
             {
               "who": "A",
               "av": "🧒",
               "ko": "음… 친구들하고 점심 먹고 책 한 권 산 것밖에 없는 것 같아요.",
-              "ru": "Эм… вроде только пообедал с друзьями и купил одну книгу, и всё."
+              "ru": "Эм… вроде только пообедал с друзьями и купил одну книгу, и всё.",
+              "ru_uz": "Xm… doʻstlarim bilan tushlik qilib, bitta kitob sotib olganim boʻlsa kerak, xolos."
             },
             {
               "who": "B",
               "av": "👩",
               "ko": "이렇게 기억도 못 할 바에야 용돈 기입장을 꼬박꼬박 쓰는 게 어때?",
-              "ru": "Чем вот так даже не помнить, может, лучше аккуратно вести тетрадь учёта?"
+              "ru": "Чем вот так даже не помнить, может, лучше аккуратно вести тетрадь учёта?",
+              "ru_uz": "Shunday eslay olmaydigan boʻlgandan koʻra, hisob daftarini muntazam yuritsang-chi?"
             },
             {
               "who": "A",
               "av": "🧒",
               "ko": "그치만 매번 적는 게 좀 귀찮아서요.",
-              "ru": "Но каждый раз записывать как-то лень."
+              "ru": "Но каждый раз записывать как-то лень.",
+              "ru_uz": "Lekin har safar yozish biroz erinchoqlik qiladi."
             },
             {
               "who": "B",
               "av": "👩",
               "ko": "계획 없이 돈을 쓰면 나중에 꼭 모자라기 십상이야.",
-              "ru": "Если тратить без плана, потом денег точно легко не хватит."
+              "ru": "Если тратить без плана, потом денег точно легко не хватит.",
+              "ru_uz": "Rejasiz pul sarflasang, keyin pul aniq yetmay qoladi."
             },
             {
               "who": "A",
               "av": "🧒",
               "ko": "알겠어요. 오늘부터는 충동구매를 줄이고 저축도 해 볼게요.",
-              "ru": "Хорошо. С сегодняшнего дня буду меньше покупать импульсивно и попробую копить."
+              "ru": "Хорошо. С сегодняшнего дня буду меньше покупать импульсивно и попробую копить.",
+              "ru_uz": "Xoʻp boʻldi. Bugundan boshlab impulsiv xaridlarni kamaytirib, jamgʻarishga ham urinib koʻraman."
             },
             {
               "who": "B",
               "av": "👩",
               "ko": "좋아. 세 살 버릇 여든까지 간다잖아, 지금 알뜰한 습관을 들여 두자.",
-              "ru": "Отлично. Привычки с детства остаются на всю жизнь — заведём бережливую привычку сейчас."
+              "ru": "Отлично. Привычки с детства остаются на всю жизнь — заведём бережливую привычку сейчас.",
+              "ru_uz": "Ajoyib. «Uch yoshdagi odat sakson yoshgacha ketadi» deydilar, hozirdan tejamkor odat hosil qilaylik."
             }
-          ]
+          ],
+          "title_uz": "Ona va Jey choʻntak puli haqida",
+          "eyebrow_uz": "MULOQOT",
+          "sub_uz": "Choʻntak pulim allaqachon tugadi"
         },
         {
           "kind": "build",
@@ -20600,7 +21835,10 @@
             "바에야",
             "저축을",
             "후회할"
-          ]
+          ],
+          "title_uz": "Jumlani yigʻing",
+          "eyebrow_uz": "JUMLA TUZ",
+          "ru_uz": "Choʻntak pulini rejasiz sarflasangiz, pul yetmay qolishi hech gap emas."
         },
         {
           "kind": "listen",
@@ -20613,7 +21851,15 @@
             "Импульсивные покупки помогают копить быстрее.",
             "Если жалеешь о покупке, верни её в магазин."
           ],
-          "answer": "Чем сделать импульсивную покупку и потом жалеть, уж лучше копите."
+          "answer": "Чем сделать импульсивную покупку и потом жалеть, уж лучше копите.",
+          "title_uz": "Tinglang va tarjimasini tanlang",
+          "eyebrow_uz": "TINGLASH",
+          "answer_uz": "Impulsiv xarid qilib, keyin pushaymon boʻlgandan koʻra, aslida jamgʻaring.",
+          "options_uz": [
+            "Impulsiv xarid qilib, keyin pushaymon boʻlgandan koʻra, aslida jamgʻaring.",
+            "Impulsiv xaridlar tezroq jamgʻarishga yordam beradi.",
+            "Xariddan afsuslansangiz, uni doʻkonga qaytaring."
+          ]
         },
         {
           "kind": "quiz",
@@ -20622,15 +21868,18 @@
           "items": [
             {
               "ko": "낭비하다",
-              "ru": "транжирить, тратить впустую"
+              "ru": "транжирить, тратить впустую",
+              "ru_uz": "behuda sarflamoq, isrof qilmoq"
             },
             {
               "ko": "저축",
-              "ru": "накопления, сбережения"
+              "ru": "накопления, сбережения",
+              "ru_uz": "jamgʻarma, tejash"
             },
             {
               "ko": "충동구매",
-              "ru": "импульсивная покупка"
+              "ru": "импульсивная покупка",
+              "ru_uz": "impulsiv xarid"
             }
           ],
           "pool": [
@@ -20640,6 +21889,16 @@
             "доход",
             "остаток на счёте",
             "экономить"
+          ],
+          "title_uz": "Tarjimasini tanlang",
+          "eyebrow_uz": "TEKSHIRUV",
+          "pool_uz": [
+            "behuda sarflamoq, isrof qilmoq",
+            "jamgʻarma, tejash",
+            "impulsiv xarid",
+            "daromad",
+            "hisobdagi qoldiq",
+            "tejamoq"
           ]
         },
         {
@@ -20692,6 +21951,10 @@
         "tasks": [
           "Опишите, как приготовить любимое блюдо, в 4-5 предложениях. В каждом используйте либо -게끔, либо -아야만/어야만. Пример: 면이 쫄깃해지게끔 끓는 물에 넣고, 마지막에 식초를 넣어야만 라면이 더 맛있어요.",
           "Запишите голосом мини-рецепт (например, 김치찌개) и проговорите 3 вкусовых прилагательных из урока. Пример: 국물이 시원하게끔 멸치 육수를 써야만 제맛이 나요."
+        ],
+        "tasks_uz": [
+          "Sevimli taomingizni qanday tayyorlashni 4-5 gapda tasvirlab bering. Har bir gapda -게끔 yoki -아야만/어야만 dan birini ishlating. Namuna: <span class=\"ko\">면이 쫄깃해지게끔 끓는 물에 넣고, 마지막에 식초를 넣어야만 라면이 더 맛있어요.</span>",
+          "Ovoz yozib mini-retsept ayting (masalan, <span class=\"ko\">김치찌개</span>) va darsdan 3 ta taʼm sifatini talaffuz qiling. Namuna: <span class=\"ko\">국물이 시원하게끔 멸치 육수를 써야만 제맛이 나요.</span>"
         ]
       },
       "slides": [
@@ -20713,6 +21976,13 @@
               "✅",
               "называть обязательное условие -아야만"
             ]
+          ],
+          "title_uz": "Beshta sezgi bilan taʼm",
+          "intro_uz": "Bugun taom haqida shunday gapirishni oʻrganamizki, tinglovchi uning taʼmini his qilsin: <span class=\"ko\">담백하게, 새콤하게, 시원하게</span>. Oshxonada nima uchun biror ish qilishimiz va nimasiz taom umuman chiqmasligi haqida gaplashamiz. 🌸",
+          "learn_uz": [
+            "pishirish usuli va taʼmni tasvirlash",
+            "-게끔 orqali maqsad haqida gapirish",
+            "-아야만 orqali majburiy shartni nomlash"
           ]
         },
         {
@@ -20724,15 +21994,18 @@
           "examples": [
             {
               "ko": "국물이 시원하게끔 멸치 육수를 써서 김치찌개를 끓여요.",
-              "ru": "Варю кимчи-чигэ на бульоне из анчоусов, чтобы навар был освежающим."
+              "ru": "Варю кимчи-чигэ на бульоне из анчоусов, чтобы навар был освежающим.",
+              "ru_uz": "Naviysi salqin boʻlishi uchun anchouis buloni ishlatib kimchi-chige qaynataman."
             },
             {
               "ko": "아이들도 잘 먹을 수 있게끔 채소를 잘게 다져서 넣었어요.",
-              "ru": "Я мелко порубил овощи и добавил, чтобы и дети ели с удовольствием."
+              "ru": "Я мелко порубил овощи и добавил, чтобы и дети ели с удовольствием.",
+              "ru_uz": "Bolalar ham mazza qilib yesin uchun sabzavotlarni mayda toʻgʻrab qoʻshdim."
             },
             {
               "ko": "양념이 잘 배게끔 고기를 삼십 분 정도 재워 두세요.",
-              "ru": "Замаринуйте мясо минут на тридцать, чтобы оно хорошо пропиталось приправой."
+              "ru": "Замаринуйте мясо минут на тридцать, чтобы оно хорошо пропиталось приправой.",
+              "ru_uz": "Ziravor yaxshi shimilishi uchun goʻshtni oʻttiz daqiqacha marinadlab qoʻying."
             }
           ],
           "drills": [
@@ -20744,7 +22017,8 @@
                 "어야만",
                 "는 대로"
               ],
-              "answer": "지게끔"
+              "answer": "지게끔",
+              "ru_uz": "Lagʻmon yanada egiluvchan boʻlishi uchun, oxirida bir tomchi sirka qoʻshing."
             },
             {
               "q": "맵지 ___ 고추장 대신 간장으로 간을 했어요.",
@@ -20754,7 +22028,8 @@
                 "않아야만",
                 "않으나"
               ],
-              "answer": "않게끔"
+              "answer": "않게끔",
+              "ru_uz": "Achchiq boʻlmasligi uchun men kochujan oʻrniga soya sousi bilan tuzladim."
             },
             {
               "q": "손님들이 편하게 먹___ 음식을 한 입 크기로 썰었어요.",
@@ -20764,9 +22039,13 @@
                 "어야만",
                 "더니만"
               ],
-              "answer": "게끔"
+              "answer": "게끔",
+              "ru_uz": "Mehmonlarga yeyish qulay boʻlishi uchun, taomni bir tishlam kattalikda kesdim."
             }
-          ]
+          ],
+          "eyebrow_uz": "GRAMMATIKA",
+          "sub_uz": "shunday qilib…; …uchun",
+          "rule_uz": "<b>-게끔</b> <b>feʼl</b> negiziga qoʻshilib, keyin sodir boʻladigan ishning <b>maqsadi, natijasi, usuli yoki darajasini</b> koʻrsatadi. Bu <span class=\"ko\">-게</span>ning kuchaytirilgan varianti, uni <span class=\"ko\">-게</span> yoki <span class=\"ko\">-도록</span> bilan almashtirish mumkin. Ham yozma, ham ogʻzaki nutqda, koʻpincha harakat maqsadi haqida gapirilganda ishlatiladi: <span class=\"ko\">맵지 않게끔 간장으로 간을 했어요</span> — «achchiq boʻlmasligi uchun soya sousi bilan tuzladim»."
         },
         {
           "kind": "pattern",
@@ -20777,15 +22056,18 @@
           "examples": [
             {
               "ko": "채소를 따로따로 볶아야만 재료 고유의 맛이 섞이지 않아요.",
-              "ru": "Только если жарить овощи по отдельности, их природные вкусы не смешиваются."
+              "ru": "Только если жарить овощи по отдельности, их природные вкусы не смешиваются.",
+              "ru_uz": "Faqat sabzavotlarni alohida-alohida qovursangiz, ularning oʻziga xos taʼmi aralashib ketmaydi."
             },
             {
               "ko": "음식을 싱겁게 먹는 습관을 들여야만 건강하게 살 수 있어요.",
-              "ru": "Лишь привыкнув есть менее солёное, можно жить здоровым."
+              "ru": "Лишь привыкнув есть менее солёное, можно жить здоровым.",
+              "ru_uz": "Faqat kam tuzli ovqatlanish odatini shakllantirsangiz, sogʻlom yashay olasiz."
             },
             {
               "ko": "김치가 새콤하게 익어야만 볶음밥이 제맛이 나요.",
-              "ru": "Жареный рис будет по-настоящему вкусным, только если кимчи проквасится до приятной кислинки."
+              "ru": "Жареный рис будет по-настоящему вкусным, только если кимчи проквасится до приятной кислинки.",
+              "ru_uz": "Kimchi yoqimli nordonlikka yetib pishgandagina, qovurilgan guruch haqiqiy mazali boʻladi."
             }
           ],
           "drills": [
@@ -20797,7 +22079,8 @@
                 "끓이게끔",
                 "끓이나"
               ],
-              "answer": "끓여야만"
+              "answer": "끓여야만",
+              "ru_uz": "Faqat birinchi qaynatilgan suvni toʻkib, qaytadan qaynatsangiz, yogʻi ketib, taʼmi nafis boʻladi."
             },
             {
               "q": "멸치 육수를 제대로 ___ 국물이 시원한 맛이 나요.",
@@ -20807,7 +22090,8 @@
                 "내게끔",
                 "내더니"
               ],
-              "answer": "내야만"
+              "answer": "내야만",
+              "ru_uz": "Faqat anchouis bulonini toʻgʻri tayyorlasangiz, naviysi salqin taʼm beradi."
             },
             {
               "q": "고기를 충분히 ___ 양념이 속까지 배어요.",
@@ -20817,9 +22101,13 @@
                 "재우게끔",
                 "재우며"
               ],
-              "answer": "재워야만"
+              "answer": "재워야만",
+              "ru_uz": "Faqat goʻshtni yetarlicha marinadlasangiz, ziravor ichigacha shimiladi."
             }
-          ]
+          ],
+          "eyebrow_uz": "GRAMMATIKA",
+          "sub_uz": "faqat …bilangina; faqat shu shart bilan",
+          "rule_uz": "<b>-아야만/어야만</b> oldingi harakat yoki holat keyingisi uchun <b>zaruriy shart</b> ekanini koʻrsatadi: usiz natija boʻlishi mumkin emas. Shakli negiz unlisiga bogʻliq: <span class=\"ko\">ㅏ/ㅗ → -아야만</span>, qolganlarida <span class=\"ko\">-어야만</span>, <span class=\"ko\">하다 → 해야만</span>. Ogʻzaki nutqda <span class=\"ko\">-아/어야지만</span> deyish ham mumkin. Masalan: <span class=\"ko\">따로 볶아야만 채소 고유의 맛을 살릴 수 있어요</span> — «faqat alohida qovursangiz, sabzavotning oʻz taʼmini saqlab qolasiz»."
         },
         {
           "kind": "words",
@@ -20829,34 +22117,42 @@
             {
               "ko": "튀기다",
               "ru": "жарить во фритюре",
-              "emoji": "🍤"
+              "emoji": "🍤",
+              "ru_uz": "yogʻda qovurmoq (fritür)"
             },
             {
               "ko": "삶다",
               "ru": "варить (в кипятке)",
-              "emoji": "🥚"
+              "emoji": "🥚",
+              "ru_uz": "qaynatmoq"
             },
             {
               "ko": "다지다",
               "ru": "мелко рубить",
-              "emoji": "🔪"
+              "emoji": "🔪",
+              "ru_uz": "mayda toʻgʻramoq"
             },
             {
               "ko": "매콤하다",
               "ru": "остренький, пикантный",
-              "emoji": "🌶️"
+              "emoji": "🌶️",
+              "ru_uz": "achchiq, ziravorli"
             },
             {
               "ko": "느끼하다",
               "ru": "приторно-жирный",
-              "emoji": "🧈"
+              "emoji": "🧈",
+              "ru_uz": "yogʻli-jirkanch (toʻyingan)"
             },
             {
               "ko": "간이 맞다",
               "ru": "в самый раз посолено",
-              "emoji": "🧂"
+              "emoji": "🧂",
+              "ru_uz": "tuzi meʼyorida boʻlmoq"
             }
-          ]
+          ],
+          "title_uz": "Oshxonada: usullar va taʼmlar",
+          "eyebrow_uz": "SOʻZLAR"
         },
         {
           "kind": "dialog",
@@ -20868,51 +22164,61 @@
               "who": "A",
               "av": "🧑",
               "ko": "엄마, 뭐 만드세요? 떡볶이인데 색이 빨갛지 않네요.",
-              "ru": "Мам, что готовишь? Вроде токпокки, а цвет не красный."
+              "ru": "Мам, что готовишь? Вроде токпокки, а цвет не красный.",
+              "ru_uz": "Mam, nima pishiryapsan? Tokpokkiga oʻxshaydi, lekin rangi qizil emas."
             },
             {
               "who": "B",
               "av": "👩",
               "ko": "궁중떡볶이야. 맵지 않게끔 고추장 대신 간장으로 간을 했어.",
-              "ru": "Это кунчжун-токпокки. Я приправила соевым соусом вместо кочхуджана, чтобы не было остро."
+              "ru": "Это кунчжун-токпокки. Я приправила соевым соусом вместо кочхуджана, чтобы не было остро.",
+              "ru_uz": "Bu — kunjung-tokpokki. Achchiq boʻlmasligi uchun kochujan oʻrniga soya sousi bilan tuzladim."
             },
             {
               "who": "A",
               "av": "🧑",
               "ko": "아, 안 매운 떡볶이도 있구나! 그런데 채소를 왜 따로따로 볶으세요?",
-              "ru": "А, бывает и неострый токпокки! А почему ты жаришь овощи по отдельности?"
+              "ru": "А, бывает и неострый токпокки! А почему ты жаришь овощи по отдельности?",
+              "ru_uz": "A, achchiq boʻlmagan tokpokki ham bor ekan-a! Nega sabzavotlarni alohida-alohida qovuryapsan?"
             },
             {
               "who": "B",
               "av": "👩",
               "ko": "채소마다 익는 속도가 달라서 따로 볶아야만 고유의 맛이 살아.",
-              "ru": "У каждого овоща своя скорость прожарки, и только если жарить отдельно, сохраняется их природный вкус."
+              "ru": "У каждого овоща своя скорость прожарки, и только если жарить отдельно, сохраняется их природный вкус.",
+              "ru_uz": "Har bir sabzavotning pishish tezligi har xil, shuning uchun faqat alohida qovursam, ularning oʻz taʼmi saqlanadi."
             },
             {
               "who": "A",
               "av": "🧑",
               "ko": "같이 볶으면 시간이 절약되잖아요.",
-              "ru": "Но если жарить вместе, экономится время же."
+              "ru": "Но если жарить вместе, экономится время же.",
+              "ru_uz": "Lekin birga qovurish vaqtni tejaydi-ku."
             },
             {
               "who": "B",
               "av": "👩",
               "ko": "그렇긴 해. 그래도 맛이 섞이지 않게끔 이렇게 하나씩 볶는 거야.",
-              "ru": "Это так. Но чтобы вкусы не перемешались, я жарю по одному."
+              "ru": "Это так. Но чтобы вкусы не перемешались, я жарю по одному.",
+              "ru_uz": "Toʻgʻri. Lekin taʼmlar aralashib ketmasligi uchun shunday birma-bir qovuryapman."
             },
             {
               "who": "A",
               "av": "🧑",
               "ko": "고기는요? 양념이 잘 배게 해야 맛있겠죠?",
-              "ru": "А мясо? Чтобы приправа хорошо пропиталась, ведь так вкуснее?"
+              "ru": "А мясо? Чтобы приправа хорошо пропиталась, ведь так вкуснее?",
+              "ru_uz": "Goʻshtga-chi? Ziravor yaxshi shimilishi uchun kerak-ku, shunday emasmi?"
             },
             {
               "who": "B",
               "av": "👩",
               "ko": "맞아. 삼십 분은 재워야만 속까지 간이 배서 담백하고 맛있어져.",
-              "ru": "Верно. Только если замариновать минут на тридцать, приправа дойдёт до середины — будет нежно и вкусно."
+              "ru": "Верно. Только если замариновать минут на тридцать, приправа дойдёт до середины — будет нежно и вкусно.",
+              "ru_uz": "Toʻgʻri. Faqat oʻttiz daqiqa marinadlasang, ziravor ichigacha yetib, nafis va mazali boʻladi."
             }
-          ]
+          ],
+          "eyebrow_uz": "MULOQOT",
+          "sub_uz": "Ona nostandart tokpokki tayyorlayapti"
         },
         {
           "kind": "build",
@@ -20930,7 +22236,10 @@
           "pool": [
             "같이",
             "빨리"
-          ]
+          ],
+          "title_uz": "Jumlani yigʻing",
+          "eyebrow_uz": "JUMLA TUZ",
+          "ru_uz": "Faqat sabzavotlarni alohida qovursangiz, ularning oʻziga xos taʼmi saqlanadi."
         },
         {
           "kind": "listen",
@@ -20943,7 +22252,15 @@
             "Бульон из анчоусов слишком солёный, поэтому не варю.",
             "Добавляю анчоусы, потому что навар уже остыл."
           ],
-          "answer": "Варю на бульоне из анчоусов, чтобы навар был освежающим."
+          "answer": "Варю на бульоне из анчоусов, чтобы навар был освежающим.",
+          "title_uz": "Tinglang va tarjimasini tanlang",
+          "eyebrow_uz": "TINGLASH",
+          "answer_uz": "Naviysi salqin boʻlishi uchun anchouis buloni ishlatib qaynataman.",
+          "options_uz": [
+            "Naviysi salqin boʻlishi uchun anchouis buloni ishlatib qaynataman.",
+            "Anchouis buloni juda shoʻr boʻlgani uchun qaynatmayman.",
+            "Naviys allaqachon sovigani uchun anchouis qoʻshaman."
+          ]
         },
         {
           "kind": "quiz",
@@ -20952,15 +22269,18 @@
           "items": [
             {
               "ko": "양념",
-              "ru": "приправа, маринад"
+              "ru": "приправа, маринад",
+              "ru_uz": "ziravor, marinad"
             },
             {
               "ko": "담백하다",
-              "ru": "нежирный, неприторный"
+              "ru": "нежирный, неприторный",
+              "ru_uz": "yogʻsiz, jirkanch boʻlmagan (taʼmda)"
             },
             {
               "ko": "새콤하다",
-              "ru": "кисловатый (приятно)"
+              "ru": "кисловатый (приятно)",
+              "ru_uz": "nordonroq (yoqimli)"
             }
           ],
           "pool": [
@@ -20970,6 +22290,16 @@
             "бульон (отвар)",
             "приторно-жирный",
             "остренький, пикантный"
+          ],
+          "title_uz": "Maʼnosini tanlang",
+          "eyebrow_uz": "TEKSHIRUV",
+          "pool_uz": [
+            "ziravor, marinad",
+            "yogʻsiz, jirkanch boʻlmagan (taʼmda)",
+            "nordonroq (yoqimli)",
+            "bulon (qaynatma)",
+            "yogʻli-jirkanch",
+            "achchiq, ziravorli"
           ]
         },
         {
@@ -21022,6 +22352,10 @@
         "tasks": [
           "Сравните две цифры из спорта, используя <span class=\"ko\">에 비해 …배가 되다/증가하다</span>. Пример: <span class=\"ko\">배드민턴 셔틀콕의 속도는 야구공에 비해 두 배가 됩니다.</span>",
           "Опишите контраст между двумя видами графиков или спортсменами через <span class=\"ko\">-(으)ㄴ/는 데 반해</span>. Пример: <span class=\"ko\">막대그래프는 비교에 좋은 데 반해 꺾은선그래프는 변화를 잘 보여 줍니다.</span>"
+        ],
+        "tasks_uz": [
+          "<span class=\"ko\">에 비해 …배가 되다/증가하다</span> yordamida sport sohasidan ikkita raqamni solishtiring. Namuna: <span class=\"ko\">배드민턴 셔틀콕의 속도는 야구공에 비해 두 배가 됩니다.</span>",
+          "Ikki xil grafik yoki sportchi orasidagi kontrastni <span class=\"ko\">-(으)ㄴ/는 데 반해</span> orqali tasvirlab bering. Namuna: <span class=\"ko\">막대그래프는 비교에 좋은 데 반해 꺾은선그래프는 변화를 잘 보여 줍니다.</span>"
         ]
       },
       "slides": [
@@ -21043,6 +22377,13 @@
               "🏅",
               "рассказывать о спортивных рекордах"
             ]
+          ],
+          "title_uz": "Yusein Bolt kabi",
+          "intro_uz": "Bugun sport sharhlovchisiga aylanamiz va raqamlarni aniq solishtirishni oʻrganamiz: necha marta tezroq, natija qanchaga oshgan yoki tushgan. <span class=\"ko\">에 비해…배가 되다</span> va <span class=\"ko\">-는 데 반해</span> qurilmalari bilan grafik va rekordlar haqidagi tasvirlaringiz haqiqiy koreyschadek yangraydi 🌸",
+          "learn_uz": [
+            "raqamlarni solishtirish: necha marta katta",
+            "ikki hodisa orasidagi kontrastni tasvirlash",
+            "sport rekordlari haqida gapirish"
           ]
         },
         {
@@ -21054,15 +22395,18 @@
           "examples": [
             {
               "ko": "고속철도는 일반 열차에 비해 속력이 세 배가 됩니다.",
-              "ru": "Высокоскоростной поезд по скорости в три раза превосходит обычный поезд."
+              "ru": "Высокоскоростной поезд по скорости в три раза превосходит обычный поезд.",
+              "ru_uz": "Tezyurar poyezd oddiy poyezdga nisbatan tezlikda uch marta ustun turadi."
             },
             {
               "ko": "배드민턴 셔틀콕의 속도는 야구공에 비해 두 배가 증가합니다.",
-              "ru": "Скорость воланчика в бадминтоне в два раза выше скорости бейсбольного мяча."
+              "ru": "Скорость воланчика в бадминтоне в два раза выше скорости бейсбольного мяча.",
+              "ru_uz": "Badmintondagi volanchik tezligi beysbol topiga nisbatan ikki marta yuqori."
             },
             {
               "ko": "올해 신기록은 작년 기록에 비해 기록 차이가 절반으로 감소했다.",
-              "ru": "Разрыв в новом рекорде по сравнению с прошлогодним сократился вдвое."
+              "ru": "Разрыв в новом рекорде по сравнению с прошлогодним сократился вдвое.",
+              "ru_uz": "Bu yilgi yangi rekordning oʻtgan yilgi natijadan farqi yarmiga kamaydi."
             }
           ],
           "drills": [
@@ -21074,7 +22418,8 @@
                 "는 데 반해",
                 "으로 볼 때"
               ],
-              "answer": "에 비해"
+              "answer": "에 비해",
+              "ru_uz": "Bu samolyotning oʻrtacha tezligi avtomobilga nisbatan taxminan besh marta yuqori."
             },
             {
               "q": "기술이 발전하면서 노트북 무게는 초기 모델에 비해 절반으로 ___.",
@@ -21084,7 +22429,8 @@
                 "태연했다",
                 "궁금했다"
               ],
-              "answer": "감소했다"
+              "answer": "감소했다",
+              "ru_uz": "Texnologiyalar rivojlanishi bilan noutbuk ogʻirligi dastlabki modelga nisbatan yarmiga kamaydi."
             },
             {
               "q": "미국의 메달 수는 한국에 비해 다섯 배가 ___ 압도적인 1위입니다.",
@@ -21094,9 +22440,13 @@
                 "초조해",
                 "완만해"
               ],
-              "answer": "증가해"
+              "answer": "증가해",
+              "ru_uz": "AQShning medallar soni Koreyaga nisbatan besh marta koʻpaygan — bu shubhasiz birinchi oʻrin."
             }
-          ]
+          ],
+          "eyebrow_uz": "GRAMMATIKA",
+          "sub_uz": "…ga nisbatan N marta oshadi/kamayadi",
+          "rule_uz": "<b>에 비해</b> solishtirish obyektini kiritadi («N ga nisbatan»), <b>배</b> esa «marta» (karrali) maʼnosini bildiradi. Birgalikda <span class=\"ko\">에 비해 …배가 되다</span> qiymat necha marta oʻzgarganini koʻrsatadi. <span class=\"ko\">되다</span> oʻrniga oʻzgarish maʼnosidagi istalgan feʼlni qoʻyish mumkin: <span class=\"ko\">증가하다/감소하다</span> (oshmoq/kamaymoq), <span class=\"ko\">늘다/줄다</span>, <span class=\"ko\">많아지다/적어지다</span>. Oʻsish yoki pasayish miqyosini raqam bilan koʻrsatish kerak boʻlganda ham nutqda, ham yozma matnda ishlatiladi."
         },
         {
           "kind": "pattern",
@@ -21107,15 +22457,18 @@
           "examples": [
             {
               "ko": "꺾은선그래프는 변화량을 잘 보여 주는 데 반해 막대그래프는 자료를 비교하기에 좋다.",
-              "ru": "Линейный график хорошо показывает динамику, тогда как столбчатый удобен для сравнения данных."
+              "ru": "Линейный график хорошо показывает динамику, тогда как столбчатый удобен для сравнения данных.",
+              "ru_uz": "Chiziqli grafik oʻzgarishlarni yaxshi koʻrsatadi, ustunli grafik esa maʼlumotlarni solishtirish uchun qulay."
             },
             {
               "ko": "우사인 볼트의 출발은 느린 데 반해 후반 속력은 누구도 따라올 수 없었다.",
-              "ru": "Старт Усэйна Болта был медленным, в отличие от его скорости на финише, которую никто не мог догнать."
+              "ru": "Старт Усэйна Болта был медленным, в отличие от его скорости на финише, которую никто не мог догнать.",
+              "ru_uz": "Yusein Boltning starti sekin edi, aksincha, uning finishdagi tezligiga hech kim yetolmasdi."
             },
             {
               "ko": "낮에는 기온이 높은 데 반해 새벽에는 기록 측정이 어려울 만큼 쌀쌀하다.",
-              "ru": "Днём температура высокая, тогда как на рассвете настолько прохладно, что трудно измерять результаты."
+              "ru": "Днём температура высокая, тогда как на рассвете настолько прохладно, что трудно измерять результаты.",
+              "ru_uz": "Kunduzi harorat yuqori boʻlsa-da, tongda natijalarni oʻlchash qiyin boʻladigan darajada salqin."
             }
           ],
           "drills": [
@@ -21127,7 +22480,8 @@
                 "에 비해",
                 "듯 합니다"
               ],
-              "answer": "데 반해"
+              "answer": "데 반해",
+              "ru_uz": "Futbol topi katta va ogʻir, volanchik esa yengil boʻlgani uchun ancha tez uchadi."
             },
             {
               "q": "이영훈 선수는 예선에서 탈락한 ___ 김지훈 선수는 신기록을 세웠다.",
@@ -21137,7 +22491,8 @@
                 "만큼",
                 "으므로"
               ],
-              "answer": "데 반해"
+              "answer": "데 반해",
+              "ru_uz": "Sportchi Li Yon Xun saralashda chetlashtirilgan boʻlsa, Kim Jixun yangi rekord oʻrnatdi."
             },
             {
               "q": "기울기가 가파른 구간은 속력이 빠른 데 반해, 완만한 구간은 속력이 ___.",
@@ -21147,9 +22502,13 @@
                 "빠르다",
                 "태연하다"
               ],
-              "answer": "느리다"
+              "answer": "느리다",
+              "ru_uz": "Tik qiyalikdagi qismda tezlik yuqori boʻlsa, tekis qismida tezlik pasayadi."
             }
-          ]
+          ],
+          "eyebrow_uz": "GRAMMATIKA",
+          "sub_uz": "…ga qaramay; aksincha",
+          "rule_uz": "Bu yerda <b>데</b> <span class=\"ko\">것</span>ga teng, <b>반해</b> esa «aksincha» degani. <span class=\"ko\">-(으)ㄴ/는 데 반해</span> qurilmasi ikkita <b>qarama-qarshi</b> faktni bogʻlaydi: avval aytilgan narsa keyingisiga zid keladi. Feʼllar bilan hozirgi zamonda — <span class=\"ko\">-는 데 반해</span>, sifatlar bilan — <span class=\"ko\">-(으)ㄴ 데 반해</span>. Ikki sportchi, grafik yoki koʻrsatkichni solishtirish uchun qulay."
         },
         {
           "kind": "words",
@@ -21159,34 +22518,42 @@
             {
               "ko": "속력",
               "ru": "скорость",
-              "emoji": "⚡"
+              "emoji": "⚡",
+              "ru_uz": "tezlik"
             },
             {
               "ko": "신기록",
               "ru": "новый рекорд",
-              "emoji": "🏆"
+              "emoji": "🏆",
+              "ru_uz": "yangi rekord"
             },
             {
               "ko": "이동 거리",
               "ru": "пройденное расстояние",
-              "emoji": "📏"
+              "emoji": "📏",
+              "ru_uz": "bosib oʻtilgan masofa"
             },
             {
               "ko": "걸린 시간",
               "ru": "затраченное время",
-              "emoji": "⏱️"
+              "emoji": "⏱️",
+              "ru_uz": "sarflangan vaqt"
             },
             {
               "ko": "꺾은선그래프",
               "ru": "линейный график",
-              "emoji": "📈"
+              "emoji": "📈",
+              "ru_uz": "chiziqli grafik"
             },
             {
               "ko": "기록을 깨다",
               "ru": "побить рекорд",
-              "emoji": "💥"
+              "emoji": "💥",
+              "ru_uz": "rekordni sindirmoq"
             }
-          ]
+          ],
+          "title_uz": "Mavzu soʻzlari: rekordlar va tezlik",
+          "eyebrow_uz": "SOʻZLAR"
         },
         {
           "kind": "dialog",
@@ -21198,51 +22565,62 @@
               "who": "A",
               "av": "🧑",
               "ko": "방금 그 선수가 100미터 세계 신기록을 세웠대요!",
-              "ru": "Говорят, этот спортсмен только что установил мировой рекорд на стометровке!"
+              "ru": "Говорят, этот спортсмен только что установил мировой рекорд на стометровке!",
+              "ru_uz": "Hozirgina bu sportchi 100 metrda dunyo rekordini oʻrnatdi deyishyapti!"
             },
             {
               "who": "B",
               "av": "👩",
               "ko": "정말요? 기록이 작년에 비해 얼마나 빨라진 거예요?",
-              "ru": "Правда? Насколько результат стал быстрее по сравнению с прошлым годом?"
+              "ru": "Правда? Насколько результат стал быстрее по сравнению с прошлым годом?",
+              "ru_uz": "Rostdanmi? Natija oʻtgan yilga nisbatan qancha tezlashdi?"
             },
             {
               "who": "A",
               "av": "🧑",
               "ko": "0.1초 정도 빨라졌는데, 이 정도면 거의 두 배의 노력이 든 셈이에요.",
-              "ru": "Стал быстрее примерно на 0,1 секунды, а это, считай, потребовало почти двойных усилий."
+              "ru": "Стал быстрее примерно на 0,1 секунды, а это, считай, потребовало почти двойных усилий.",
+              "ru_uz": "Taxminan 0,1 soniyaga tezlashdi, bu esa deyarli ikki barobar koʻproq mehnat talab qilgan, hisoblash mumkin."
             },
             {
               "who": "B",
               "av": "👩",
               "ko": "출발은 좀 느린 데 반해 후반 속력은 정말 대단하네요.",
-              "ru": "Старт был медленноватый, тогда как скорость на финише просто потрясающая."
+              "ru": "Старт был медленноватый, тогда как скорость на финише просто потрясающая.",
+              "ru_uz": "Start biroz sekinroq edi, aksincha, finishdagi tezligi haqiqatan ajoyib."
             },
             {
               "who": "A",
               "av": "🧑",
               "ko": "맞아요. 그래프로 보면 후반에 기울기가 가팔라요.",
-              "ru": "Точно. Если посмотреть на график, во второй половине наклон становится крутым."
+              "ru": "Точно. Если посмотреть на график, во второй половине наклон становится крутым.",
+              "ru_uz": "Toʻgʻri. Grafikka qaralsa, ikkinchi yarmida qiyalik keskinlashadi."
             },
             {
               "who": "B",
               "av": "👩",
               "ko": "우리 동네 육상부 기록은 이 선수에 비해 절반 수준인데도 멋있어요.",
-              "ru": "Результаты нашей школьной секции по сравнению с этим спортсменом вдвое скромнее, но всё равно здорово."
+              "ru": "Результаты нашей школьной секции по сравнению с этим спортсменом вдвое скромнее, но всё равно здорово.",
+              "ru_uz": "Bizning tuman yengil atletika boʻlimining natijalari bu sportchiga nisbatan ikki barobar kam boʻlsa-da, baribir zoʻr."
             },
             {
               "who": "A",
               "av": "🧑",
               "ko": "꾸준히 연습하면 기록은 계속 증가할 거예요.",
-              "ru": "Если упорно тренироваться, результаты будут постоянно расти."
+              "ru": "Если упорно тренироваться, результаты будут постоянно расти.",
+              "ru_uz": "Muntazam mashq qilinsa, natijalar doimo oʻsib boradi."
             },
             {
               "who": "B",
               "av": "👩",
               "ko": "맞아요, 언젠가 그 기록도 깨질지 모르죠!",
-              "ru": "Верно, кто знает — однажды и этот рекорд побьют!"
+              "ru": "Верно, кто знает — однажды и этот рекорд побьют!",
+              "ru_uz": "Toʻgʻri, kim biladi — bir kun bu rekord ham sinishi mumkin!"
             }
-          ]
+          ],
+          "title_uz": "Yugurish finalini tomosha qilamiz",
+          "eyebrow_uz": "MULOQOT",
+          "sub_uz": "Yengil atletika finalini tomosha qilib"
         },
         {
           "kind": "build",
@@ -21262,7 +22640,10 @@
             "데 반해",
             "증가하는",
             "느린"
-          ]
+          ],
+          "title_uz": "Jumlani yigʻing",
+          "eyebrow_uz": "JUMLA TUZ",
+          "ru_uz": "Tezyurar poyezd oddiy poyezdga nisbatan tezlikda uch marta ustun turadi."
         },
         {
           "kind": "listen",
@@ -21275,7 +22656,15 @@
             "Линейный график в два раза точнее столбчатого.",
             "Оба графика одинаково удобны для сравнения данных."
           ],
-          "answer": "Столбчатый график удобен для сравнения, тогда как линейный хорошо показывает изменения."
+          "answer": "Столбчатый график удобен для сравнения, тогда как линейный хорошо показывает изменения.",
+          "title_uz": "Tinglash",
+          "eyebrow_uz": "TINGLASH",
+          "answer_uz": "Ustunli grafik solishtirish uchun qulay, chiziqli grafik esa oʻzgarishlarni yaxshi koʻrsatadi.",
+          "options_uz": [
+            "Ustunli grafik solishtirish uchun qulay, chiziqli grafik esa oʻzgarishlarni yaxshi koʻrsatadi.",
+            "Chiziqli grafik ustunli grafikdan ikki marta aniqroq.",
+            "Ikkala grafik ham maʼlumotlarni solishtirish uchun bir xil qulay."
+          ]
         },
         {
           "kind": "quiz",
@@ -21284,15 +22673,18 @@
           "items": [
             {
               "ko": "속력",
-              "ru": "скорость"
+              "ru": "скорость",
+              "ru_uz": "tezlik"
             },
             {
               "ko": "신기록을 세우다",
-              "ru": "установить новый рекорд"
+              "ru": "установить новый рекорд",
+              "ru_uz": "yangi rekord oʻrnatmoq"
             },
             {
               "ko": "감소하다",
-              "ru": "уменьшаться"
+              "ru": "уменьшаться",
+              "ru_uz": "kamaymoq"
             }
           ],
           "pool": [
@@ -21302,6 +22694,16 @@
             "пройденное расстояние",
             "увеличиваться",
             "побить рекорд"
+          ],
+          "title_uz": "Soʻzlarni moslashtiring",
+          "eyebrow_uz": "TEKSHIRUV",
+          "pool_uz": [
+            "tezlik",
+            "yangi rekord oʻrnatmoq",
+            "kamaymoq",
+            "bosib oʻtilgan masofa",
+            "oshmoq",
+            "rekordni sindirmoq"
           ]
         },
         {
@@ -21354,6 +22756,10 @@
         "tasks": [
           "Опишите свою комнату 5-6 предложениями, используя -(으)며 для перечисления признаков. Например: <span class=\"ko\">제 방은 직사각형 모양이며 창문이 많아 채광이 좋습니다.</span> (Моя комната прямоугольной формы, и в ней много окон, поэтому хорошее освещение.)",
           "Сравните две геометрические фигуры одним предложением через -(으)나. Например: <span class=\"ko\">정사각형은 네 변의 길이가 같으나 마름모는 각의 크기가 다르다.</span> (У квадрата все четыре стороны равны, однако у ромба различаются углы.)"
+        ],
+        "tasks_uz": [
+          "Oʻz xonangizni 5-6 gapda tasvirlab bering, xususiyatlarni sanashda -(으)며 dan foydalaning. Namuna: <span class=\"ko\">제 방은 직사각형 모양이며 창문이 많아 채광이 좋습니다.</span> (Mening xonam toʻgʻri toʻrtburchak shaklida boʻlib, oynalari koʻp, shuning uchun yorugʻligi yaxshi.)",
+          "Ikki geometrik shaklni -(으)나 orqali bir gapda solishtiring. Namuna: <span class=\"ko\">정사각형은 네 변의 길이가 같으나 마름모는 각의 크기가 다르다.</span> (Kvadratning toʻrt tomoni teng, biroq rombning burchaklari har xil.)"
         ]
       },
       "slides": [
@@ -21375,6 +22781,13 @@
               "📐",
               "Перечисление признаков через -(으)며"
             ]
+          ],
+          "title_uz": "Shakllar va fazo dunyosi",
+          "intro_uz": "Bugun doiralar, kublar va oltin nisbat dunyosiga nazar tashlab, atrofimizdagi shakl va fazoni chiroyli tasvirlashni oʻrganamiz. Fikrlarni <span class=\"ko\">-(으)며</span> orqali bogʻlashni va ularni <span class=\"ko\">-(으)나</span> orqali yumshoq qarama-qarshi qoʻyishni bilib olasiz 🌸",
+          "learn_uz": [
+            "shakllar nomlari va fazo haqidagi soʻzlar",
+            "-(으)나 orqali qarama-qarshilik",
+            "-(으)며 orqali xususiyatlarni sanash"
           ]
         },
         {
@@ -21386,15 +22799,18 @@
           "examples": [
             {
               "ko": "우리 학교 주변은 도로가 많으나 유동 인구가 많지 않아서 복잡하지 않다.",
-              "ru": "Вокруг нашей школы много дорог, однако людей проходит немного, поэтому здесь не оживлённо."
+              "ru": "Вокруг нашей школы много дорог, однако людей проходит немного, поэтому здесь не оживлённо.",
+              "ru_uz": "Maktabimiz atrofida yoʻllar koʻp, biroq odam oqimi koʻp emas, shuning uchun bu yer band emas."
             },
             {
               "ko": "이 궁궐은 나무로 지어졌으나 관리를 잘해서 오랜 세월 잘 보존되고 있다.",
-              "ru": "Этот дворец построен из дерева, однако за ним хорошо ухаживают, и он прекрасно сохраняется уже долгие годы."
+              "ru": "Этот дворец построен из дерева, однако за ним хорошо ухаживают, и он прекрасно сохраняется уже долгие годы.",
+              "ru_uz": "Bu saroy yogʻochdan qurilgan, biroq yaxshi parvarish qilingani uchun uzoq yillar davomida yaxshi saqlanmoqda."
             },
             {
               "ko": "형의 방만큼 크지는 않으나 저는 아담한 제 방을 좋아합니다.",
-              "ru": "Моя комната не такая большая, как у брата, однако я люблю свою уютную комнату."
+              "ru": "Моя комната не такая большая, как у брата, однако я люблю свою уютную комнату.",
+              "ru_uz": "Akamning xonasi kabi katta emas, biroq men oʻzimning shinam xonamni yaxshi koʻraman."
             }
           ],
           "drills": [
@@ -21406,7 +22822,8 @@
                 "으며",
                 "으므로"
               ],
-              "answer": "으나"
+              "answer": "으나",
+              "ru_uz": "Kvadratning toʻrt tomoni teng, biroq rombning burchaklari har xil."
             },
             {
               "q": "이 방은 작___ 창문이 많아 채광이 좋다.",
@@ -21416,7 +22833,8 @@
                 "으며",
                 "거나"
               ],
-              "answer": "으나"
+              "answer": "으나",
+              "ru_uz": "Bu xona kichkina, biroq oynalari koʻp, shuning uchun yorugʻligi yaxshi."
             },
             {
               "q": "원기둥은 부피가 크___ 정육면체보다 안정적이지는 않다.",
@@ -21426,9 +22844,13 @@
                 "고",
                 "으나"
               ],
-              "answer": "나"
+              "answer": "나",
+              "ru_uz": "Silindrning hajmi katta, biroq u kubga qaraganda unchalik barqaror emas."
             }
-          ]
+          ],
+          "eyebrow_uz": "GRAMMATIKA",
+          "sub_uz": "biroq, ammo (qarama-qarshilik)",
+          "rule_uz": "Ikki gapni <b>qarama-qarshi</b> mazmun bilan bogʻlaydi: ikkinchi qismda aytilgan narsa birinchisiga zid keladi. Maʼnosi jihatidan <span class=\"ko\">-지만</span>dan deyarli farq qilmaydi va koʻpincha kitobiy jaranglaydi. Patchimli negizdan keyin (ㄹdan tashqari) — <span class=\"ko\">-으나</span>, unlidan va ㄹ bilan tugagan negizdan, shuningdek <span class=\"ko\">이다/아니다</span>dan keyin — <span class=\"ko\">-나</span>."
         },
         {
           "kind": "pattern",
@@ -21439,15 +22861,18 @@
           "examples": [
             {
               "ko": "이등변삼각형은 두 변의 길이가 같으며 두 각의 크기도 같다.",
-              "ru": "У равнобедренного треугольника две стороны равны, а также равны два угла."
+              "ru": "У равнобедренного треугольника две стороны равны, а также равны два угла.",
+              "ru_uz": "Teng yonli uchburchakning ikki tomoni teng, shuningdek ikki burchagi ham teng."
             },
             {
               "ko": "공간 지각 능력이 뛰어나며 미적 감각이 있는 사람은 디자이너가 되면 좋다.",
-              "ru": "Человеку с развитым пространственным мышлением и чувством прекрасного хорошо бы стать дизайнером."
+              "ru": "Человеку с развитым пространственным мышлением и чувством прекрасного хорошо бы стать дизайнером.",
+              "ru_uz": "Fazoviy tasavvuri kuchli va estetik didi bor odam dizayner boʻlsa yaxshi boʻlardi."
             },
             {
               "ko": "제 방은 이 층에 있으며 형 방과 마주 보고 있습니다.",
-              "ru": "Моя комната находится на втором этаже и расположена напротив комнаты брата."
+              "ru": "Моя комната находится на втором этаже и расположена напротив комнаты брата.",
+              "ru_uz": "Mening xonam ikkinchi qavatda joylashgan va akamning xonasiga qarama-qarshi turadi."
             }
           ],
           "drills": [
@@ -21459,7 +22884,8 @@
                 "으나",
                 "는데"
               ],
-              "answer": "으며"
+              "answer": "으며",
+              "ru_uz": "Bu uyning hovlisi keng, shuningdek oynalari koʻp, shuning uchun yorugʻligi yaxshi."
             },
             {
               "q": "파르테논 신전은 황금비로 지어졌___ 매우 안정적으로 보인다.",
@@ -21469,7 +22895,8 @@
                 "으나",
                 "어도"
               ],
-              "answer": "으며"
+              "answer": "으며",
+              "ru_uz": "Parfenon ibodatxonasi oltin nisbat boʻyicha qurilgan va juda barqaror koʻrinadi."
             },
             {
               "q": "육각형은 둘레의 길이가 같___ 넓이가 가장 넓은 도형이다.",
@@ -21479,9 +22906,13 @@
                 "으나",
                 "으려고"
               ],
-              "answer": "으며"
+              "answer": "으며",
+              "ru_uz": "Olti burchakning perimetri teng va shu bilan birga u eng katta yuzali shakl hisoblanadi."
             }
-          ]
+          ],
+          "eyebrow_uz": "GRAMMATIKA",
+          "sub_uz": "va, shuningdek (sanash)",
+          "rule_uz": "Ikki va undan ortiq harakat yoki holatni <b>teng huquqli</b> ravishda sanaydi — maʼnosi <span class=\"ko\">-고</span>ga yaqin. Patchimli negizdan keyin (ㄹdan tashqari) — <span class=\"ko\">-으며</span>, unlidan, ㄹ bilan tugagan negizdan va <span class=\"ko\">이다/아니다</span>dan keyin — <span class=\"ko\">-며</span>. Biroz kitobiy jaranglaydi, shuning uchun koʻpincha tavsiflar va maʼruzalarda uchraydi."
         },
         {
           "kind": "words",
@@ -21491,34 +22922,42 @@
             {
               "ko": "원",
               "ru": "круг",
-              "emoji": "⭕"
+              "emoji": "⭕",
+              "ru_uz": "doira"
             },
             {
               "ko": "육각형",
               "ru": "шестиугольник",
-              "emoji": "⬡"
+              "emoji": "⬡",
+              "ru_uz": "olti burchak"
             },
             {
               "ko": "원뿔",
               "ru": "конус",
-              "emoji": "🔺"
+              "emoji": "🔺",
+              "ru_uz": "konus"
             },
             {
               "ko": "마름모",
               "ru": "ромб",
-              "emoji": "🔶"
+              "emoji": "🔶",
+              "ru_uz": "romb"
             },
             {
               "ko": "전개도",
               "ru": "развёртка фигуры",
-              "emoji": "📐"
+              "emoji": "📐",
+              "ru_uz": "yoyilma (shakl)"
             },
             {
               "ko": "건축물",
               "ru": "архитектурное сооружение",
-              "emoji": "🏛️"
+              "emoji": "🏛️",
+              "ru_uz": "arxitektura inshooti"
             }
-          ]
+          ],
+          "title_uz": "Mavzu soʻzlari",
+          "eyebrow_uz": "SOʻZLAR"
         },
         {
           "kind": "dialog",
@@ -21530,51 +22969,62 @@
               "who": "A",
               "av": "🧑",
               "ko": "엄마, 이쪽이 아니라 저쪽으로 가야 돼요. 지난번에 와 본 길이라 기억이 나요.",
-              "ru": "Мама, надо ехать не сюда, а туда. Я здесь уже был в прошлый раз и помню дорогу."
+              "ru": "Мама, надо ехать не сюда, а туда. Я здесь уже был в прошлый раз и помню дорогу.",
+              "ru_uz": "Mam, bu tomonga emas, u tomonga borishimiz kerak. Oʻtgan safar shu yerga kelganman, yoʻlni eslayman."
             },
             {
               "who": "B",
               "av": "👩",
               "ko": "정말? 그럼 우리 아들만 믿고 운전할게. 엄마는 다닌 길도 자주 헤매는데.",
-              "ru": "Правда? Тогда поведу, полагаясь только на тебя. А я даже знакомые дороги часто путаю."
+              "ru": "Правда? Тогда поведу, полагаясь только на тебя. А я даже знакомые дороги часто путаю.",
+              "ru_uz": "Rostdanmi? Unda faqat oʻgʻlimizga ishonib mashinani haydayman. Men esa yurgan yoʻlimni ham koʻp adashtiraman."
             },
             {
               "who": "A",
               "av": "🧑",
               "ko": "엄마는 길을 잘 찾지 못하나 요리는 정말 잘하시잖아요.",
-              "ru": "Мама, ты плохо ориентируешься, однако готовишь просто прекрасно."
+              "ru": "Мама, ты плохо ориентируешься, однако готовишь просто прекрасно.",
+              "ru_uz": "Mam, sen yoʻlni yaxshi topa olmaysan, biroq ovqat pishirishni juda yaxshi bilasan-ku."
             },
             {
               "who": "B",
               "av": "👩",
               "ko": "고마워. 너는 지도를 잘 보며 퍼즐도 잘 맞추니 공간 지각 능력이 뛰어난가 봐.",
-              "ru": "Спасибо. Ты и карту хорошо читаешь, и пазлы складываешь, видимо, у тебя развито пространственное мышление."
+              "ru": "Спасибо. Ты и карту хорошо читаешь, и пазлы складываешь, видимо, у тебя развито пространственное мышление.",
+              "ru_uz": "Rahmat. Sen ham xaritani yaxshi oʻqiysan, ham pazlni yaxshi yigʻasan, koʻrinishidan fazoviy tasavvuring kuchli ekan."
             },
             {
               "who": "A",
               "av": "🧑",
               "ko": "공간 지각 능력요? 그게 뭐예요?",
-              "ru": "Пространственное мышление? А что это такое?"
+              "ru": "Пространственное мышление? А что это такое?",
+              "ru_uz": "Fazoviy tasavvur? Bu nima oʻzi?"
             },
             {
               "who": "B",
               "av": "👩",
               "ko": "도형이나 지도를 잘 이해하며 보이지 않는 공간을 머릿속으로 그려 내는 능력이야.",
-              "ru": "Это способность хорошо понимать фигуры и карты, а также мысленно представлять невидимое пространство."
+              "ru": "Это способность хорошо понимать фигуры и карты, а также мысленно представлять невидимое пространство.",
+              "ru_uz": "Bu shakl yoki xaritani yaxshi tushunish, shuningdek koʻrinmaydigan fazoni miyada tasavvur qila olish qobiliyati."
             },
             {
               "who": "A",
               "av": "🧑",
               "ko": "가우디는 건물이 복잡하나 정말 아름답던데, 그것도 그 능력 덕분이군요!",
-              "ru": "У Гауди здания сложные, однако очень красивые, значит, это тоже благодаря такой способности!"
+              "ru": "У Гауди здания сложные, однако очень красивые, значит, это тоже благодаря такой способности!",
+              "ru_uz": "Gaudining binolari murakkab, biroq juda chiroyli edi, demak bu ham shu qobiliyat tufayli ekan-da!"
             },
             {
               "who": "B",
               "av": "👩",
               "ko": "맞아. 추상적인 생각을 입체적인 공간에 표현할 줄 알았기 때문이지.",
-              "ru": "Верно. Потому что он умел выражать абстрактные мысли в объёмном пространстве."
+              "ru": "Верно. Потому что он умел выражать абстрактные мысли в объёмном пространстве.",
+              "ru_uz": "Toʻgʻri. Chunki u mavhum fikrlarni hajmli fazoda ifodalashni bilardi."
             }
-          ]
+          ],
+          "title_uz": "Yoʻlni men koʻrsataman",
+          "eyebrow_uz": "MULOQOT",
+          "sub_uz": "Fazoviy tasavvur haqida hikoya"
         },
         {
           "kind": "build",
@@ -21593,7 +23043,10 @@
           "pool": [
             "넓으며",
             "어둡고"
-          ]
+          ],
+          "title_uz": "Jumlani yigʻing",
+          "eyebrow_uz": "JUMLA TUZ",
+          "ru_uz": "Bu xona kichkina, biroq oynalari koʻp, shuning uchun yorugʻligi yaxshi."
         },
         {
           "kind": "listen",
@@ -21606,7 +23059,15 @@
             "У шестиугольника шесть углов, однако площадь у него маленькая.",
             "Круг — самая совершенная фигура из всех."
           ],
-          "answer": "Шестиугольник имеет равный периметр и является фигурой с наибольшей площадью."
+          "answer": "Шестиугольник имеет равный периметр и является фигурой с наибольшей площадью.",
+          "title_uz": "Tinglang va tanlang",
+          "eyebrow_uz": "TINGLASH",
+          "answer_uz": "Olti burchakning perimetri teng va u eng katta yuzali shakl hisoblanadi.",
+          "options_uz": [
+            "Olti burchakning perimetri teng va u eng katta yuzali shakl hisoblanadi.",
+            "Olti burchakning olti burchagi bor, biroq yuzasi kichkina.",
+            "Doira barcha shakllar ichida eng mukammali."
+          ]
         },
         {
           "kind": "quiz",
@@ -21615,15 +23076,18 @@
           "items": [
             {
               "ko": "황금비",
-              "ru": "золотое сечение"
+              "ru": "золотое сечение",
+              "ru_uz": "oltin nisbat"
             },
             {
               "ko": "채광",
-              "ru": "естественное освещение"
+              "ru": "естественное освещение",
+              "ru_uz": "tabiiy yorugʻlik"
             },
             {
               "ko": "정육면체",
-              "ru": "куб"
+              "ru": "куб",
+              "ru_uz": "kub"
             }
           ],
           "pool": [
@@ -21633,6 +23097,16 @@
             "параллелограмм",
             "развёртка фигуры",
             "пространственное мышление"
+          ],
+          "title_uz": "Soʻz va maʼnosini birlashtiring",
+          "eyebrow_uz": "TEKSHIRUV",
+          "pool_uz": [
+            "oltin nisbat",
+            "tabiiy yorugʻlik",
+            "kub",
+            "parallelogramm",
+            "yoyilma (shakl)",
+            "fazoviy tasavvur"
           ]
         },
         {
@@ -21685,6 +23159,10 @@
         "tasks": [
           "Запишите три предложения о себе с конструкцией -고자, объясняя, зачем вы подаёте заявку (지원 동기). Пример: 제 꿈을 펼치고자 이 동아리에 지원하게 되었습니다.",
           "Составьте короткую речь-각오 для собеседования из 2-3 предложений, закончив каждое на -겠습니다. Пример: 항상 최선을 다하겠습니다."
+        ],
+        "tasks_uz": [
+          "Oʻzingiz haqingizda -고자 qurilmasi bilan 3 ta gap yozing, nima uchun ariza topshirayotganingizni (지원 동기) tushuntiring. Namuna: <span class=\"ko\">제 꿈을 펼치고자 이 동아리에 지원하게 되었습니다.</span>",
+          "Suhbat uchun 2-3 gapdan iborat qisqa 각오 nutqi tuzing, har bir gapni -겠습니다 bilan tugating. Namuna: <span class=\"ko\">항상 최선을 다하겠습니다.</span>"
         ]
       },
       "slides": [
@@ -21706,6 +23184,13 @@
               "🤝",
               "лексика собеседования"
             ]
+          ],
+          "title_uz": "Isteʼdodga qanotlar",
+          "intro_uz": "Bugun suhbatda oʻzingiz haqingizda chiroyli gapirishni oʻrganamiz: maqsadingiz va vaʼdangizni aytishni. Tasavvur qiling — siz <span class=\"ko\">청소년 재능기부단</span>ga ariza topshiryapsiz va isteʼdodingizni ochib bermoqchisiz. 🌸",
+          "learn_uz": [
+            "-고자 orqali maqsad aytish",
+            "-겠습니다 orqali vaʼda berish",
+            "suhbat leksikasi"
           ]
         },
         {
@@ -21717,15 +23202,18 @@
           "examples": [
             {
               "ko": "제 꿈을 펼치고자 이 프로그램에 지원하게 되었습니다.",
-              "ru": "Я хочу раскрыть свою мечту, поэтому подал заявку на эту программу."
+              "ru": "Я хочу раскрыть свою мечту, поэтому подал заявку на эту программу.",
+              "ru_uz": "Oʻz orzumni ochib bermoqchi boʻlganim uchun, shu dasturga ariza topshirdim."
             },
             {
               "ko": "두 나라를 잇는 가교가 되고자 외교관을 꿈꾸게 되었습니다.",
-              "ru": "Желая стать мостом между двумя странами, я начал мечтать о карьере дипломата."
+              "ru": "Желая стать мостом между двумя странами, я начал мечтать о карьере дипломата.",
+              "ru_uz": "Ikki mamlakat orasida koʻprik boʻlishni istab, diplomat boʻlishni orzu qila boshladim."
             },
             {
               "ko": "지식을 넓히고자 해외 연수를 다녀오게 되었습니다.",
-              "ru": "Чтобы расширить знания, я съездил на стажировку за рубеж."
+              "ru": "Чтобы расширить знания, я съездил на стажировку за рубеж.",
+              "ru_uz": "Bilimimni kengaytirish uchun, chet elga staj oʻtashga bordim."
             }
           ],
           "drills": [
@@ -21737,7 +23225,8 @@
                 "지원하지만",
                 "지원하거나"
               ],
-              "answer": "지원하게"
+              "answer": "지원하게",
+              "ru_uz": "Kichiklarga yordam bermoqchi boʻlib, toʻgarakda yordamchi oʻqituvchilikka ariza berdim."
             },
             {
               "q": "제 재능을 ___ 이 대회에 참가하게 되었습니다.",
@@ -21747,7 +23236,8 @@
                 "펼치는데",
                 "펼치니까"
               ],
-              "answer": "펼치고자"
+              "answer": "펼치고자",
+              "ru_uz": "Isteʼdodimni namoyish qilmoqchi boʻlib, shu tanlovda qatnashishga qaror qildim."
             },
             {
               "q": "한국어 실력을 ___ 한글학교 봉사 활동을 시작하게 되었습니다.",
@@ -21757,9 +23247,13 @@
                 "키우거나",
                 "키우지만"
               ],
-              "answer": "키우고자"
+              "answer": "키우고자",
+              "ru_uz": "Koreys tilidagi bilimimni oshirmoqchi boʻlib, koreys maktabida volontyorlik qila boshladim."
             }
-          ]
+          ],
+          "eyebrow_uz": "GRAMMATIKA",
+          "sub_uz": "biror narsa qilish maqsadida / niyatida",
+          "rule_uz": "<b>-고자</b> harakatning <b>niyati yoki maqsadini</b> bildiradi (= «uchun», «maqsadida»). Koʻpincha <span class=\"ko\">-게 되다</span> («holatga kelib qolish») bilan birga ishlatiladi: <span class=\"ko\">-고자 … -게 되다</span> = niyat natijasida biror narsa yuz berdi. Feʼlga qoʻshiladi: <span class=\"ko\">펼치다 → 펼치고자</span>. Kitobiy-rasmiy uslub, koʻpincha 지원 동기 (sabab) haqida gapirilganda uchraydi."
         },
         {
           "kind": "pattern",
@@ -21770,15 +23264,18 @@
           "examples": [
             {
               "ko": "친구들에게 도움이 되기 위해 열심히 노력하겠습니다.",
-              "ru": "Я буду усердно стараться, чтобы быть полезным друзьям."
+              "ru": "Я буду усердно стараться, чтобы быть полезным друзьям.",
+              "ru_uz": "Doʻstlarimga foydali boʻlish uchun tinmay harakat qilaman."
             },
             {
               "ko": "제가 가진 재능이 도움이 된다면 최선을 다해 돕겠습니다.",
-              "ru": "Если мой талант окажется полезен, я приложу все силы, чтобы помочь."
+              "ru": "Если мой талант окажется полезен, я приложу все силы, чтобы помочь.",
+              "ru_uz": "Agar mening isteʼdodim foydali boʻlsa, yordam berish uchun bor kuchimni ayamayman."
             },
             {
               "ko": "맡은 일을 끝까지 책임지고 완수하겠습니다.",
-              "ru": "Я доведу порученное дело до конца и выполню его с полной ответственностью."
+              "ru": "Я доведу порученное дело до конца и выполню его с полной ответственностью.",
+              "ru_uz": "Menga topshirilgan ishni oxirigacha masʼuliyat bilan bajaraman."
             }
           ],
           "drills": [
@@ -21790,7 +23287,8 @@
                 "할까요",
                 "하더라도"
               ],
-              "answer": "하겠습니다"
+              "answer": "하겠습니다",
+              "ru_uz": "Meni tanlashsa, sinf ishlarini oʻz ishimdek qattiq mehnat bilan bajaraman."
             },
             {
               "q": "항상 즐거운 마음으로 끝까지 최선을 ___.",
@@ -21800,7 +23298,8 @@
                 "다했지만",
                 "다하든지"
               ],
-              "answer": "다하겠습니다"
+              "answer": "다하겠습니다",
+              "ru_uz": "Har doim quvonch bilan oxirigacha bor kuchimni beraman."
             },
             {
               "q": "이 기회를 살려 끊임없이 ___.",
@@ -21810,9 +23309,13 @@
                 "노력했겠다",
                 "노력하느라"
               ],
-              "answer": "노력하겠습니다"
+              "answer": "노력하겠습니다",
+              "ru_uz": "Bu imkoniyatdan foydalanib, toʻxtovsiz harakat qilaman."
             }
-          ]
+          ],
+          "eyebrow_uz": "GRAMMATIKA",
+          "sub_uz": "vaʼda beraman / niyatdaman (reja, qatʼiyat)",
+          "rule_uz": "<b>-겠습니다</b> soʻzlovchining <b>reja, qatʼiyat yoki vaʼdasini</b> bildiradi. Feʼlga qoʻshiladi: <span class=\"ko\">노력하다 → 노력하겠습니다</span>. <b>Rasmiy nutqda</b> ishlatiladi: suhbatda, taqdimotda, yangiliklarda. Oʻz-oʻzini tanishtirishdagi yakuniy 각오 (qatʼiyat) uchun ideal."
         },
         {
           "kind": "words",
@@ -21822,34 +23325,42 @@
             {
               "ko": "면접",
               "ru": "собеседование",
-              "emoji": "🤝"
+              "emoji": "🤝",
+              "ru_uz": "suhbat, intervyu"
             },
             {
               "ko": "자신감",
               "ru": "уверенность в себе",
-              "emoji": "💪"
+              "emoji": "💪",
+              "ru_uz": "oʻziga ishonch"
             },
             {
               "ko": "지원자",
               "ru": "кандидат, заявитель",
-              "emoji": "🙋"
+              "emoji": "🙋",
+              "ru_uz": "nomzod, ariza beruvchi"
             },
             {
               "ko": "특기",
               "ru": "особое умение",
-              "emoji": "⭐"
+              "emoji": "⭐",
+              "ru_uz": "alohida qobiliyat"
             },
             {
               "ko": "봉사 활동",
               "ru": "волонтёрская деятельность",
-              "emoji": "🤲"
+              "emoji": "🤲",
+              "ru_uz": "volontyorlik faoliyati"
             },
             {
               "ko": "꿈을 펼치다",
               "ru": "раскрыть мечту",
-              "emoji": "🕊️"
+              "emoji": "🕊️",
+              "ru_uz": "orzuni ochib bermoq"
             }
-          ]
+          ],
+          "title_uz": "Suhbat va isteʼdod mavzusidagi soʻzlar",
+          "eyebrow_uz": "SOʻZLAR"
         },
         {
           "kind": "dialog",
@@ -21861,51 +23372,62 @@
               "who": "A",
               "av": "🧑‍💼",
               "ko": "청소년 재능기부단에 지원하게 된 동기를 말씀해 주시겠어요?",
-              "ru": "Расскажите, пожалуйста, что побудило вас подать заявку в молодёжный отряд талантов?"
+              "ru": "Расскажите, пожалуйста, что побудило вас подать заявку в молодёжный отряд талантов?",
+              "ru_uz": "Yoshlar isteʼdod-hadya guruhiga ariza berish sababingiz haqida gapirib bera olasizmi?"
             },
             {
               "who": "B",
               "av": "🎻",
               "ko": "고국의 또래 친구들에게 바이올린을 가르쳐 주고자 이 프로그램에 지원하게 되었습니다.",
-              "ru": "Я хочу научить сверстников на родине играть на скрипке, поэтому подал заявку на эту программу."
+              "ru": "Я хочу научить сверстников на родине играть на скрипке, поэтому подал заявку на эту программу.",
+              "ru_uz": "Vatandagi tengdoshlarimga skripka chalishni oʻrgatmoqchi boʻlganim uchun, shu dasturga ariza topshirdim."
             },
             {
               "who": "A",
               "av": "🧑‍💼",
               "ko": "남을 가르쳐 본 경험이 있습니까?",
-              "ru": "У вас есть опыт обучения других?"
+              "ru": "У вас есть опыт обучения других?",
+              "ru_uz": "Boshqalarga dars berish tajribangiz bormi?"
             },
             {
               "who": "B",
               "av": "🎻",
               "ko": "네, 오케스트라에서 후배들을 지도한 경험이 있어서 잘 가르칠 수 있을 것 같습니다.",
-              "ru": "Да, у меня есть опыт наставничества над младшими в оркестре, так что, думаю, я справлюсь."
+              "ru": "Да, у меня есть опыт наставничества над младшими в оркестре, так что, думаю, я справлюсь.",
+              "ru_uz": "Ha, orkestrda kichiklarga ustozlik qilgan tajribam bor, shuning uchun yaxshi oʻrgata olaman deb oʻylayman."
             },
             {
               "who": "A",
               "av": "🧑‍💼",
               "ko": "마지막으로 어떤 각오로 활동에 임할지 말씀해 보세요.",
-              "ru": "Наконец, скажите, с каким настроем вы будете участвовать в работе."
+              "ru": "Наконец, скажите, с каким настроем вы будете участвовать в работе.",
+              "ru_uz": "Nihoyat, faoliyatga qanday qatʼiyat bilan kirishishingiz haqida ayting."
             },
             {
               "who": "B",
               "av": "🎻",
               "ko": "친구들에게 도움이 되기 위해 항상 즐거운 마음으로 최선을 다하겠습니다.",
-              "ru": "Я всегда буду с радостью выкладываться по полной, чтобы быть полезным друзьям."
+              "ru": "Я всегда буду с радостью выкладываться по полной, чтобы быть полезным друзьям.",
+              "ru_uz": "Doʻstlarimga foydali boʻlish uchun har doim quvonch bilan bor kuchimni beraman."
             },
             {
               "who": "A",
               "av": "🧑‍💼",
               "ko": "좋습니다. 결과는 다음 주에 게시판으로 확인하게 됩니다.",
-              "ru": "Хорошо. Результат вы сможете узнать на следующей неделе на доске объявлений."
+              "ru": "Хорошо. Результат вы сможете узнать на следующей неделе на доске объявлений.",
+              "ru_uz": "Yaxshi. Natijani kelasi hafta eʼlonlar taxtasidan bilib olasiz."
             },
             {
               "who": "B",
               "av": "🎻",
               "ko": "감사합니다. 꼭 좋은 소식 기다리겠습니다.",
-              "ru": "Спасибо. Обязательно буду ждать хороших новостей."
+              "ru": "Спасибо. Обязательно буду ждать хороших новостей.",
+              "ru_uz": "Rahmat. Yaxshi xabarni albatta kutib qolaman."
             }
-          ]
+          ],
+          "title_uz": "Isteʼdodlar guruhiga suhbatda",
+          "eyebrow_uz": "MULOQOT",
+          "sub_uz": "Intervyuchi va nomzod suhbati"
         },
         {
           "kind": "build",
@@ -21924,7 +23446,10 @@
           "pool": [
             "때문에",
             "면접관"
-          ]
+          ],
+          "title_uz": "Jumlani yigʻing",
+          "eyebrow_uz": "JUMLA TUZ",
+          "ru_uz": "Oʻz isteʼdodimni ochib bermoqchi boʻlganim uchun, shu dasturga ariza topshirdim."
         },
         {
           "kind": "listen",
@@ -21937,7 +23462,15 @@
             "Я уже хорошо знаю корейскую культуру, поэтому отказался от программы.",
             "Я попросил друга подать заявку на эту программу вместо меня."
           ],
-          "answer": "Я хочу лично познакомиться с корейской культурой, поэтому подал заявку на эту программу."
+          "answer": "Я хочу лично познакомиться с корейской культурой, поэтому подал заявку на эту программу.",
+          "title_uz": "Tinglang va tarjimasini tanlang",
+          "eyebrow_uz": "TINGLASH",
+          "answer_uz": "Koreys madaniyati bilan bevosita tanishmoqchi boʻlganim uchun, shu dasturga ariza topshirdim.",
+          "options_uz": [
+            "Koreys madaniyati bilan bevosita tanishmoqchi boʻlganim uchun, shu dasturga ariza topshirdim.",
+            "Men koreys madaniyatini allaqachon yaxshi bilaman, shuning uchun dasturdan voz kechdim.",
+            "Men doʻstimdan oʻrnimga dasturga ariza berishni soʻradim."
+          ]
         },
         {
           "kind": "quiz",
@@ -21946,15 +23479,18 @@
           "items": [
             {
               "ko": "재능",
-              "ru": "талант"
+              "ru": "талант",
+              "ru_uz": "isteʼdod"
             },
             {
               "ko": "지원 동기",
-              "ru": "мотив подачи заявки"
+              "ru": "мотив подачи заявки",
+              "ru_uz": "ariza sababi"
             },
             {
               "ko": "각오",
-              "ru": "решимость, настрой"
+              "ru": "решимость, настрой",
+              "ru_uz": "qatʼiyat, niyat"
             }
           ],
           "pool": [
@@ -21964,6 +23500,16 @@
             "опоздание",
             "недостаток",
             "увольнение"
+          ],
+          "title_uz": "Soʻz va maʼnosini birlashtiring",
+          "eyebrow_uz": "TEKSHIRUV",
+          "pool_uz": [
+            "isteʼdod",
+            "ariza sababi",
+            "qatʼiyat, niyat",
+            "kechikish",
+            "kamchilik",
+            "ishdan boʻshatish"
           ]
         },
         {
@@ -22016,6 +23562,10 @@
         "tasks": [
           "Расскажите про человека, которым вы восхищаетесь, используя <span class=\"ko\">-다시피 하다</span>: опишите, как сильно он трудился. Пример: <span class=\"ko\">그 선수는 체육관에서 살다시피 했어요.</span> — Этот спортсмен буквально жил в спортзале.",
           "Составьте 3 предложения с <span class=\"ko\">-답다</span> про знакомых вам людей или известных личностей. Пример: <span class=\"ko\">역시 최고의 예술가답네요.</span> — И правда, как и подобает лучшему художнику."
+        ],
+        "tasks_uz": [
+          "Siz hayratlanadigan odam haqida -다시피 하다 yordamida hikoya qiling: u qanchalik qattiq mehnat qilganini tasvirlang. Namuna: <span class=\"ko\">그 선수는 체육관에서 살다시피 했어요.</span> — Bu sportchi sport zalida deyarli yashagan.",
+          "Tanish odamlar yoki mashhur shaxslar haqida -답다 bilan 3 ta gap tuzing. Namuna: <span class=\"ko\">역시 최고의 예술가답네요.</span> — Rostdan ham eng zoʻr rassomga yarasha ish."
         ]
       },
       "slides": [
@@ -22037,6 +23587,13 @@
               "🌸",
               "хвалить через -답다 и -다시피 하다"
             ]
+          ],
+          "title_uz": "Orzu qilib, mehnat qilib",
+          "intro_uz": "Bugun mehnat orqali oʻz orzusiga intiladigan odamlar haqida gapirishni va ularning yutuqlariga hayratlanishni oʻrganamiz. <span class=\"ko\">연습실에서 살다시피 했어요</span> — «u repetitsiya xonasida deyarli yashadi» deyishni bilib olasiz 🌸",
+          "learn_uz": [
+            "mehnat va natija haqida gapirish",
+            "boshqalarning yutuqlariga hayratlanish",
+            "-답다 va -다시피 하다 orqali maqtash"
           ]
         },
         {
@@ -22048,15 +23605,18 @@
           "examples": [
             {
               "ko": "그 화가는 작업실에서 살다시피 하며 그림을 그렸어요.",
-              "ru": "Этот художник буквально жил в мастерской и писал картины."
+              "ru": "Этот художник буквально жил в мастерской и писал картины.",
+              "ru_uz": "Bu rassom ustaxonasida deyarli yashab, rasm chizardi."
             },
             {
               "ko": "공연을 앞두고 무용가는 끼니를 거르다시피 하며 연습했어요.",
-              "ru": "Перед выступлением танцовщик репетировал, почти не притрагиваясь к еде."
+              "ru": "Перед выступлением танцовщик репетировал, почти не притрагиваясь к еде.",
+              "ru_uz": "Chiqishdan oldin raqqosa deyarli ovqat yemasdan mashq qildi."
             },
             {
               "ko": "드라마를 하도 많이 봐서 대사를 외우다시피 했어요.",
-              "ru": "Я столько раз смотрел сериал, что почти выучил реплики наизусть."
+              "ru": "Я столько раз смотрел сериал, что почти выучил реплики наизусть.",
+              "ru_uz": "Serialni juda koʻp koʻrganim uchun, replikalarni deyarli yodlab oldim."
             }
           ],
           "drills": [
@@ -22068,7 +23628,8 @@
                 "새우는 만큼",
                 "새우든지"
               ],
-              "answer": "새우다시피"
+              "answer": "새우다시피",
+              "ru_uz": "Bu fotograf bir oy davomida tunlarda deyarli uxlamay, asarlarga tayyorlandi."
             },
             {
               "q": "바쁜 시기에는 사무실에서 ___ 했어요.",
@@ -22078,7 +23639,8 @@
                 "살다시피",
                 "살더라도"
               ],
-              "answer": "살다시피"
+              "answer": "살다시피",
+              "ru_uz": "Band paytda u ofisda deyarli yashab qoldi."
             },
             {
               "q": "시험 전날에는 긴장해서 밥도 ___ 했어요.",
@@ -22088,9 +23650,13 @@
                 "굶으려고",
                 "굶는 대신"
               ],
-              "answer": "굶다시피"
+              "answer": "굶다시피",
+              "ru_uz": "Imtihon arafasida shu qadar hayajonlandimki, deyarli ovqat yemadim."
             }
-          ]
+          ],
+          "eyebrow_uz": "GRAMMATIKA",
+          "sub_uz": "deyarli … qilmoq; goʻyoki (biror ish qilmoq)",
+          "rule_uz": "<b>-다시피 하다</b> qurilmasi <b>feʼl</b> negiziga qoʻshilib, odam biror harakatni <b>toʻliq bajarmasa-da</b>, unga <b>deyarli teng</b> darajada bajarayotganini koʻrsatadi — shu qadar intensiv holatki, unga yaqin. Koʻpincha oshirilgan darajadagi tirishqoqlikni tasvirlaydi: <span class=\"ko\">살다시피 하다</span> — «deyarli (biror joyda) yashash», <span class=\"ko\">굶다시피 하다</span> — «deyarli ochlik chekish». Ham ogʻzaki, ham yozma nutqda ishlatiladi."
         },
         {
           "kind": "pattern",
@@ -22101,15 +23667,18 @@
           "examples": [
             {
               "ko": "어려운 상황에도 여유를 잃지 않다니 정말 프로다워요.",
-              "ru": "Не теряет спокойствия даже в трудной ситуации — настоящий профессионал."
+              "ru": "Не теряет спокойствия даже в трудной ситуации — настоящий профессионал.",
+              "ru_uz": "Qiyin vaziyatda ham xotirjamligini yoʻqotmaydi — haqiqiy professional."
             },
             {
               "ko": "올해의 작가상 수상자답게 멋진 작품을 발표했어요.",
-              "ru": "Как и подобает лауреату премии «Писатель года», он представил прекрасное произведение."
+              "ru": "Как и подобает лауреату премии «Писатель года», он представил прекрасное произведение.",
+              "ru_uz": "Yilning yozuvchisi mukofoti sovrindoriga yarasha, u ajoyib asar taqdim etdi."
             },
             {
               "ko": "늘 새로운 시도를 하시는 걸 보니 역시 예술가다워요.",
-              "ru": "Вы постоянно пробуете новое — и правда, как настоящий художник."
+              "ru": "Вы постоянно пробуете новое — и правда, как настоящий художник.",
+              "ru_uz": "Doim yangi narsalarni sinab koʻrishini koʻrib, rostdan ham haqiqiy rassom ekan."
             }
           ],
           "drills": [
@@ -22121,7 +23690,8 @@
                 "같아서",
                 "처럼요"
               ],
-              "answer": "답네요"
+              "answer": "답네요",
+              "ru_uz": "Bunday qiyin raqsni shu qadar oson takrorlaydi — rostdan ham eng zoʻr aydolga yarasha."
             },
             {
               "q": "끝까지 포기하지 않는 모습이 정말 운동선수___.",
@@ -22131,7 +23701,8 @@
                 "이랍니다",
                 "이군요"
               ],
-              "answer": "답습니다"
+              "answer": "답습니다",
+              "ru_uz": "Oxirigacha taslim boʻlmasligi — rostdan ham sportchiga yarasha."
             },
             {
               "q": "세계적인 모델___ 어떤 의상도 멋지게 소화했어요.",
@@ -22141,9 +23712,13 @@
                 "이라서",
                 "처럼"
               ],
-              "answer": "답게"
+              "answer": "답게",
+              "ru_uz": "Dunyo miqyosidagi modelga yarasha, u istalgan kiyimni benuqson kiya oldi."
             }
-          ]
+          ],
+          "eyebrow_uz": "GRAMMATIKA",
+          "sub_uz": "…ga yarasha; …ga munosib",
+          "rule_uz": "<b>-답다</b> qoʻshimchasi <b>otga</b> qoʻshilib, odam yoki narsa shu ot haqida odamlar kutgan <b>xususiyatlarga ega</b> ekanini — uning <b>obraziga va xarakteriga mos</b> kelishini bildiradi. <span class=\"ko\">프로답다</span> — «haqiqiy professionaldek», <span class=\"ko\">예술가답다</span> — «rassomga yarasha». Koʻpincha samimiy maqtov sifatida jaranglaydi."
         },
         {
           "kind": "words",
@@ -22153,34 +23728,42 @@
             {
               "ko": "꿈",
               "ru": "мечта",
-              "emoji": "✨"
+              "emoji": "✨",
+              "ru_uz": "orzu"
             },
             {
               "ko": "전시회",
               "ru": "выставка",
-              "emoji": "🖼️"
+              "emoji": "🖼️",
+              "ru_uz": "koʻrgazma"
             },
             {
               "ko": "수상자",
               "ru": "лауреат премии",
-              "emoji": "🏆"
+              "emoji": "🏆",
+              "ru_uz": "mukofot sovrindori"
             },
             {
               "ko": "연습실",
               "ru": "репетиционная",
-              "emoji": "🎻"
+              "emoji": "🎻",
+              "ru_uz": "repetitsiya xonasi"
             },
             {
               "ko": "작품",
               "ru": "произведение",
-              "emoji": "🎨"
+              "emoji": "🎨",
+              "ru_uz": "asar, ijod"
             },
             {
               "ko": "도전 정신",
               "ru": "дух дерзновения",
-              "emoji": "🔥"
+              "emoji": "🔥",
+              "ru_uz": "dadillik ruhi"
             }
-          ]
+          ],
+          "title_uz": "Mavzu soʻzlari: isteʼdod va mehnat",
+          "eyebrow_uz": "SOʻZLAR"
         },
         {
           "kind": "dialog",
@@ -22192,51 +23775,62 @@
               "who": "A",
               "av": "🎙️",
               "ko": "주목받는 젊은 예술가로 선정되신 것 진심으로 축하드립니다.",
-              "ru": "Искренне поздравляю вас с тем, что вас выбрали как одного из самых заметных молодых художников."
+              "ru": "Искренне поздравляю вас с тем, что вас выбрали как одного из самых заметных молодых художников.",
+              "ru_uz": "Diqqatga sazovor yosh rassom sifatida tanlanganingiz bilan chin qalbdan tabriklayman."
             },
             {
               "who": "B",
               "av": "🎨",
               "ko": "쑥스럽네요. 이렇게 찾아 주셔서 정말 감사합니다.",
-              "ru": "Мне даже неловко. Большое спасибо, что пришли."
+              "ru": "Мне даже неловко. Большое спасибо, что пришли.",
+              "ru_uz": "Uyalib ketdim. Kelganingiz uchun katta rahmat."
             },
             {
               "who": "A",
               "av": "🎙️",
               "ko": "준비 과정이 무척 힘드셨다고 들었어요.",
-              "ru": "Я слышал, что подготовка была очень тяжёлой."
+              "ru": "Я слышал, что подготовка была очень тяжёлой.",
+              "ru_uz": "Tayyorgarlik jarayoni juda ogʻir boʻlgan deb eshitgandim."
             },
             {
               "who": "B",
               "av": "🎨",
               "ko": "맞아요. 작업하는 동안에는 작업실에서 살다시피 했어요.",
-              "ru": "Да. Пока работал, я буквально жил в мастерской."
+              "ru": "Да. Пока работал, я буквально жил в мастерской.",
+              "ru_uz": "Toʻgʻri. Ishlagan davrda ustaxonada deyarli yashadim."
             },
             {
               "who": "A",
               "av": "🎙️",
               "ko": "식사는 제대로 하셨어요?",
-              "ru": "А питались вы нормально?"
+              "ru": "А питались вы нормально?",
+              "ru_uz": "Ovqatlanish odatiy tartibda boʻldimi?"
             },
             {
               "who": "B",
               "av": "🎨",
               "ko": "바쁠 때는 끼니를 거르다시피 했지요.",
-              "ru": "Когда было много дел, я почти пропускал приёмы пищи."
+              "ru": "Когда было много дел, я почти пропускал приёмы пищи.",
+              "ru_uz": "Band paytlarda ovqatni deyarli yemas edim."
             },
             {
               "who": "A",
               "av": "🎙️",
               "ko": "그런 노력을 보니 역시 진정한 예술가다우세요.",
-              "ru": "Глядя на такое усердие, вы и правда настоящий художник."
+              "ru": "Глядя на такое усердие, вы и правда настоящий художник.",
+              "ru_uz": "Shunday tirishqoqlikni koʻrib, siz rostdan ham haqiqiy rassomga yarashasiz."
             },
             {
               "who": "B",
               "av": "🎨",
               "ko": "감사합니다. 도전 정신을 잃지 않는 작가가 되고 싶어요.",
-              "ru": "Спасибо. Хочу быть автором, который не теряет духа дерзновения."
+              "ru": "Спасибо. Хочу быть автором, который не теряет духа дерзновения.",
+              "ru_uz": "Rahmat. Dadillik ruhini yoʻqotmagan ijodkor boʻlishni xohlayman."
             }
-          ]
+          ],
+          "title_uz": "Yosh rassom bilan intervyu",
+          "eyebrow_uz": "MULOQOT",
+          "sub_uz": "Jurnalist yosh rassomdan intervyu olyapti"
         },
         {
           "kind": "build",
@@ -22253,7 +23847,10 @@
           "pool": [
             "굶다시피",
             "답게"
-          ]
+          ],
+          "title_uz": "Jumlani yigʻing",
+          "eyebrow_uz": "JUMLA TUZ",
+          "ru_uz": "Bu rassom ustaxonasida deyarli yashab qoldi."
         },
         {
           "kind": "listen",
@@ -22266,7 +23863,15 @@
             "Лауреат премии «Писатель года» был очень занят на этой неделе.",
             "Художник мечтает однажды получить премию «Писатель года»."
           ],
-          "answer": "Как и подобает лауреату премии «Писатель года», он представил прекрасное произведение."
+          "answer": "Как и подобает лауреату премии «Писатель года», он представил прекрасное произведение.",
+          "title_uz": "Tinglang va tarjimasini tanlang",
+          "eyebrow_uz": "TINGLASH",
+          "answer_uz": "Yilning yozuvchisi mukofoti sovrindoriga yarasha, u ajoyib asar taqdim etdi.",
+          "options_uz": [
+            "Yilning yozuvchisi mukofoti sovrindoriga yarasha, u ajoyib asar taqdim etdi.",
+            "Yilning yozuvchisi mukofoti sovrindori shu hafta juda band edi.",
+            "Rassom bir kun yilning yozuvchisi mukofotini olishni orzu qiladi."
+          ]
         },
         {
           "kind": "quiz",
@@ -22275,15 +23880,18 @@
           "items": [
             {
               "ko": "재능",
-              "ru": "талант"
+              "ru": "талант",
+              "ru_uz": "isteʼdod"
             },
             {
               "ko": "업적",
-              "ru": "достижение"
+              "ru": "достижение",
+              "ru_uz": "yutuq"
             },
             {
               "ko": "찬사",
-              "ru": "восхищение"
+              "ru": "восхищение",
+              "ru_uz": "hayrat, taʼzim"
             }
           ],
           "pool": [
@@ -22293,6 +23901,16 @@
             "повод",
             "выставка",
             "усилие"
+          ],
+          "title_uz": "Soʻz va tarjimasini birlashtiring",
+          "eyebrow_uz": "TEKSHIRUV",
+          "pool_uz": [
+            "isteʼdod",
+            "yutuq",
+            "hayrat, taʼzim",
+            "sabab",
+            "koʻrgazma",
+            "mehnat, harakat"
           ]
         },
         {
@@ -22345,6 +23963,10 @@
         "tasks": [
           "Опишите любимый фильм или сериал, используя -(으)ㄴ/는 한편: одна фраза о сюжете и одна о впечатлении. Пример: <span class=\"ko\">이 영화는 긴장감이 넘치는 한편 따뜻한 메시지도 담고 있다.</span> (Этот фильм держит в напряжении и при этом несёт тёплый посыл.)",
           "Напишите 3 предложения-предположения о произведении с -(으)ㄴ/는/(으)ㄹ 듯싶다. Пример: <span class=\"ko\">이 작품은 곧 뮤지컬로 만들어질 듯싶다.</span> (Похоже, это произведение скоро превратят в мюзикл.)"
+        ],
+        "tasks_uz": [
+          "Sevimli film yoki serialingizni -(으)ㄴ/는 한편 orqali tasvirlab bering: bitta gap syujet haqida, bitta gap taassurot haqida. Namuna: <span class=\"ko\">이 영화는 긴장감이 넘치는 한편 따뜻한 메시지도 담고 있다.</span> (Bu film bir tomondan kishini hayajonda ushlab turadi, shu bilan birga iliq gʻoya ham olib boradi.)",
+          "Asar haqida -(으)ㄴ/는/(으)ㄹ 듯싶다 bilan 3 ta taxminiy gap yozing. Namuna: <span class=\"ko\">이 작품은 곧 뮤지컬로 만들어질 듯싶다.</span> (Chamasi, bu asar tez orada myuziklga aylantiriladi.)"
         ]
       },
       "slides": [
@@ -22366,6 +23988,13 @@
               "🤔",
               "строим предположения и догадки"
             ]
+          ],
+          "title_uz": "Tomoshadan zavqlanishgacha",
+          "intro_uz": "Bugun tomoshabin rolidan bilimdon rolgacha oʻtamiz: filmlar va seriallarni tasvirlashni hamda <span class=\"ko\">코끝이 찡하다</span> — hayajondan burun uchi achishganda his-tuygʻularni ulashishni oʻrganamiz. Keling, sanʼatga bilimdon koʻzi bilan qaraymiz! 🌸",
+          "learn_uz": [
+            "asar va uning syujetini tasvirlash",
+            "filmdan olingan taassurotlarni ifodalash",
+            "taxmin va bashoratlar tuzish"
           ]
         },
         {
@@ -22377,15 +24006,18 @@
           "examples": [
             {
               "ko": "이 영화는 화려한 영상으로 눈을 즐겁게 하는 한편 깊은 메시지도 전한다.",
-              "ru": "Этот фильм радует глаз яркой картинкой и в то же время несёт глубокий посыл."
+              "ru": "Этот фильм радует глаз яркой картинкой и в то же время несёт глубокий посыл.",
+              "ru_uz": "Bu film yorqin tasvirlari bilan koʻzni quvontiradi, shu bilan birga chuqur gʻoyani ham yetkazadi."
             },
             {
               "ko": "그 배우는 해외 활동을 넓히는 한편 국내 작품도 소홀히 하지 않았다.",
-              "ru": "Этот актёр расширял зарубежную деятельность и при этом не пренебрегал работой на родине."
+              "ru": "Этот актёр расширял зарубежную деятельность и при этом не пренебрегал работой на родине.",
+              "ru_uz": "Bu aktyor chet eldagi faoliyatini kengaytirdi, shu bilan birga vatandagi ishlarini ham eʼtibordan chetda qoldirmadi."
             },
             {
               "ko": "주인공은 가족을 지키는 한편 자신의 꿈을 이루려는 노력도 게을리하지 않았다.",
-              "ru": "Главный герой оберегал семью и в то же время не ленился стремиться к своей мечте."
+              "ru": "Главный герой оберегал семью и в то же время не ленился стремиться к своей мечте.",
+              "ru_uz": "Bosh qahramon oilasini himoya qildi, shu bilan birga oʻz orzusiga erishishga intilishni ham kanda qilmadi."
             }
           ],
           "drills": [
@@ -22397,7 +24029,8 @@
                 "듯싶다",
                 "대신"
               ],
-              "answer": "한편"
+              "answer": "한편",
+              "ru_uz": "Bu asar tanish mavzu bilan yaqinlik hissi beradi, shu bilan birga yangi nuqtai nazarni ham koʻrsatadi."
             },
             {
               "q": "그 드라마는 시청률이 높은 ___ 작품성에 대한 평가도 좋았다.",
@@ -22407,7 +24040,8 @@
                 "한편",
                 "뿐"
               ],
-              "answer": "한편"
+              "answer": "한편",
+              "ru_uz": "Bu serialning reytingi yuqori boʻldi, shu bilan barobar badiiylik bahosi ham yaxshi boʻldi."
             },
             {
               "q": "감독은 상업성을 챙기는 ___ 예술적 완성도도 추구했다.",
@@ -22417,9 +24051,13 @@
                 "대로",
                 "조차"
               ],
-              "answer": "한편"
+              "answer": "한편",
+              "ru_uz": "Rejissyor tijoriy muvaffaqiyatga eʼtibor berdi, shu bilan birga badiiy mukammallikka ham intildi."
             }
-          ]
+          ],
+          "eyebrow_uz": "GRAMMATIKA",
+          "sub_uz": "shu bilan birga, shu bilan barobar",
+          "rule_uz": "<b>Bir vaqtning oʻzida ikki vaziyat</b> yuz berayotganini yoki hodisaning <b>ikki tomoni</b> borligini koʻrsatadi. Feʼl va sifat negiziga aniqlovchi qoʻshimcha <span class=\"ko\">-(으)ㄴ/는</span> + ot <span class=\"ko\">한편</span> orqali qoʻshiladi. Avval bir vaziyat, keyin ikkinchisi aytiladi: <span class=\"ko\">인기를 끄는 한편 비판도 받았다</span> — mashhurlikka erishgan, shu bilan birga tanqidga ham uchragan."
         },
         {
           "kind": "pattern",
@@ -22430,15 +24068,18 @@
           "examples": [
             {
               "ko": "서로 다른 길로 가는 장면은 두 사람의 이별을 암시하는 듯싶었다.",
-              "ru": "Сцена, где они расходятся по разным дорогам, словно намекала на расставание этих двоих."
+              "ru": "Сцена, где они расходятся по разным дорогам, словно намекала на расставание этих двоих.",
+              "ru_uz": "Ular turli yoʻlga ketayotgan sahna, goʻyo ikkovining ayrilishiga ishora qilayotgandek tuyulardi."
             },
             {
               "ko": "구상 노트를 보니 이번 작품은 뮤지컬로 무대에 올려질 듯싶다.",
-              "ru": "Судя по тетради с замыслами, это произведение, похоже, поставят на сцене как мюзикл."
+              "ru": "Судя по тетради с замыслами, это произведение, похоже, поставят на сцене как мюзикл.",
+              "ru_uz": "Reja daftarchasiga qarasam, bu asar chamasi myuzikl sifatida sahnalashtiriladi."
             },
             {
               "ko": "익숙한 이야기를 새롭게 풀어내서 관객들의 인기를 끄는 듯싶다.",
-              "ru": "Знакомую историю подали по-новому, и, кажется, это привлекает зрителей."
+              "ru": "Знакомую историю подали по-новому, и, кажется, это привлекает зрителей.",
+              "ru_uz": "Tanish hikoyani yangicha talqin qilib berishgan, va bu, chamasi, tomoshabinlarni oʻziga tortayotgandek."
             }
           ],
           "drills": [
@@ -22450,7 +24091,8 @@
                 "한편",
                 "만큼"
               ],
-              "answer": "듯싶다"
+              "answer": "듯싶다",
+              "ru_uz": "Yakuniy sahna shu qadar taʼsirchanki, chamasi, uzoq vaqt xotirada qoladi."
             },
             {
               "q": "배우의 눈빛을 보니 이 역할에 깊이 몰입한 ___.",
@@ -22460,7 +24102,8 @@
                 "뿐이다",
                 "대로다"
               ],
-              "answer": "듯싶다"
+              "answer": "듯싶다",
+              "ru_uz": "Aktyorning nigohiga qarasam, chamasi, u shu rolga chuqur kirib ketgan."
             },
             {
               "q": "분위기로 봐서는 주인공이 곧 위험에 빠질 ___.",
@@ -22470,9 +24113,13 @@
                 "듯싶다",
                 "척한다"
               ],
-              "answer": "듯싶다"
+              "answer": "듯싶다",
+              "ru_uz": "Muhitga qaraganda, bosh qahramon chamasi tez orada xavf-xatarga duch keladi."
             }
-          ]
+          ],
+          "eyebrow_uz": "GRAMMATIKA",
+          "sub_uz": "chamasi, shekilli, …dek tuyuladi",
+          "rule_uz": "Soʻzlovchining voqea yoki holat haqidagi <b>noaniq subyektiv taxminini</b> ifodalaydi. Aniqlovchi qoʻshimcha <span class=\"ko\">-(으)ㄴ/는/(으)ㄹ</span> + yordamchi ot <span class=\"ko\">듯</span> + feʼl <span class=\"ko\">싶다</span>dan hosil boʻladi. Zamon qoʻshimcha orqali tanlanadi: <span class=\"ko\">-(으)ㄴ</span> — oʻtgan zamon haqida, <span class=\"ko\">-는</span> — hozirgi zamon haqida, <span class=\"ko\">-(으)ㄹ</span> — kelasi zamon yoki taxmin haqida. Sarlavha va qisqa qaydlarda <span class=\"ko\">싶다</span> koʻpincha tushirib qoldiriladi: <span class=\"ko\">뮤지컬로 올려질 듯</span>."
         },
         {
           "kind": "words",
@@ -22482,34 +24129,42 @@
             {
               "ko": "개연성",
               "ru": "правдоподобность сюжета",
-              "emoji": "🧩"
+              "emoji": "🧩",
+              "ru_uz": "syujet ishonarliligi"
             },
             {
               "ko": "연기",
               "ru": "актёрская игра",
-              "emoji": "🎭"
+              "emoji": "🎭",
+              "ru_uz": "aktyorlik mahorati"
             },
             {
               "ko": "장면",
               "ru": "сцена, кадр",
-              "emoji": "🎬"
+              "emoji": "🎬",
+              "ru_uz": "sahna, kadr"
             },
             {
               "ko": "연출",
               "ru": "режиссура, постановка",
-              "emoji": "🎥"
+              "emoji": "🎥",
+              "ru_uz": "rejissura, sahnalashtirish"
             },
             {
               "ko": "감동적",
               "ru": "трогательный",
-              "emoji": "😢"
+              "emoji": "😢",
+              "ru_uz": "taʼsirchan"
             },
             {
               "ko": "인상적",
               "ru": "впечатляющий",
-              "emoji": "✨"
+              "emoji": "✨",
+              "ru_uz": "yodda qoladigan"
             }
-          ]
+          ],
+          "title_uz": "Kino va taassurotlar haqida soʻzlar",
+          "eyebrow_uz": "SOʻZLAR"
         },
         {
           "kind": "dialog",
@@ -22521,51 +24176,62 @@
               "who": "A",
               "av": "😊",
               "ko": "야, 진짜 재미있었다! 넌 어땠어?",
-              "ru": "Слушай, было правда здорово! А тебе как?"
+              "ru": "Слушай, было правда здорово! А тебе как?",
+              "ru_uz": "Voy, rostdan ham zoʻr edi! Senga qanday boʻldi?"
             },
             {
               "who": "B",
               "av": "🤔",
               "ko": "음… 나도 괜찮았어. 근데 넌 원작 웹툰 봤지? 비교하면 어때?",
-              "ru": "Хм… мне тоже норм. Но ты же читал оригинальный вебтун? Если сравнивать?"
+              "ru": "Хм… мне тоже норм. Но ты же читал оригинальный вебтун? Если сравнивать?",
+              "ru_uz": "Xm… menga ham yomon emas edi. Lekin sen originalidagi vebtunni oʻqigansan-ku? Solishtirsak, qanday?"
             },
             {
               "who": "A",
               "av": "😊",
               "ko": "웹툰은 길이 제약이 없어서 내용이 더 개연성 있게 느껴졌던 것 같아.",
-              "ru": "В вебтуне нет ограничения по длине, поэтому сюжет казался более логичным."
+              "ru": "В вебтуне нет ограничения по длине, поэтому сюжет казался более логичным.",
+              "ru_uz": "Vebtunda uzunlik chegarasi yoʻq, shuning uchun voqea menga koʻra mantiqliroq tuyuldi."
             },
             {
               "who": "B",
               "av": "🙂",
               "ko": "그래도 배우들 연기는 나무랄 데가 없더라. 주인공 눈빛 봤어?",
-              "ru": "Но к игре актёров не придраться. Видел взгляд главного героя?"
+              "ru": "Но к игре актёров не придраться. Видел взгляд главного героя?",
+              "ru_uz": "Baribir aktyorlarning oʻyiniga gap yoʻq. Bosh qahramonning nigohini koʻrdingmi?"
             },
             {
               "who": "A",
               "av": "😮",
               "ko": "맞아! 마지막 장면은 정말 인상적이어서 나도 모르게 눈물이 핑 돌더라니까.",
-              "ru": "Точно! Финальная сцена настолько впечатляющая, что у меня невольно слёзы навернулись."
+              "ru": "Точно! Финальная сцена настолько впечатляющая, что у меня невольно слёзы навернулись.",
+              "ru_uz": "Toʻgʻri! Yakuniy sahna shu qadar taʼsirchan ediki, oʻzim sezmay koʻzimga yosh keldi."
             },
             {
               "who": "B",
               "av": "😢",
               "ko": "나도 코끝이 찡했어. 화려한 영상으로 눈을 즐겁게 하는 한편 메시지도 깊었어.",
-              "ru": "У меня тоже защипало в носу. Радует глаз яркой картинкой и при этом несёт глубокий посыл."
+              "ru": "У меня тоже защипало в носу. Радует глаз яркой картинкой и при этом несёт глубокий посыл.",
+              "ru_uz": "Menda ham burun uchim achishdi. Yorqin tasvir bilan koʻzni quvontirib, shu bilan birga gʻoyasi ham chuqur edi."
             },
             {
               "who": "A",
               "av": "😊",
               "ko": "그러게. 이 감독은 다음 작품도 곧 만들 듯싶어. 기대돼!",
-              "ru": "И не говори. Кажется, этот режиссёр скоро снимет и следующий фильм. Жду с нетерпением!"
+              "ru": "И не говори. Кажется, этот режиссёр скоро снимет и следующий фильм. Жду с нетерпением!",
+              "ru_uz": "Rostdan ham. Bu rejissyor chamasi tez orada keyingi asarini ham suratga oladi. Sabrsizlik bilan kutaman!"
             },
             {
               "who": "B",
               "av": "😄",
               "ko": "나도! 다음엔 개봉 첫날에 보러 가는 한편 후기도 꼭 써야지.",
-              "ru": "Я тоже! В следующий раз пойду в первый же день проката и обязательно напишу отзыв."
+              "ru": "Я тоже! В следующий раз пойду в первый же день проката и обязательно напишу отзыв.",
+              "ru_uz": "Men ham! Keyingi safar prokat birinchi kunidayoq borib koʻraman va albatta sharh yozaman."
             }
-          ]
+          ],
+          "title_uz": "Seans tugagach",
+          "eyebrow_uz": "MULOQOT",
+          "sub_uz": "Ikki doʻst ekranlashtirishni muhokama qilishadi"
         },
         {
           "kind": "build",
@@ -22585,7 +24251,10 @@
             "듯싶다",
             "장면을",
             "대신"
-          ]
+          ],
+          "title_uz": "Jumlani yigʻing",
+          "eyebrow_uz": "JUMLA TUZ",
+          "ru_uz": "Bu film koʻzni quvontiradi, shu bilan birga chuqur gʻoyani ham yetkazadi."
         },
         {
           "kind": "listen",
@@ -22598,7 +24267,15 @@
             "Это произведение уже поставили на сцене как мюзикл.",
             "Хочу, чтобы это произведение поставили как мюзикл."
           ],
-          "answer": "Похоже, это произведение скоро поставят на сцене как мюзикл."
+          "answer": "Похоже, это произведение скоро поставят на сцене как мюзикл.",
+          "title_uz": "Tinglang va tarjimasini tanlang",
+          "eyebrow_uz": "TINGLASH",
+          "answer_uz": "Chamasi, bu asar tez orada myuzikl sifatida sahnaga qoʻyiladi.",
+          "options_uz": [
+            "Chamasi, bu asar tez orada myuzikl sifatida sahnaga qoʻyiladi.",
+            "Bu asar allaqachon myuzikl sifatida sahnaga qoʻyilgan.",
+            "Bu asarni myuzikl sifatida sahnaga qoʻyishlarini xohlayman."
+          ]
         },
         {
           "kind": "quiz",
@@ -22607,15 +24284,18 @@
           "items": [
             {
               "ko": "개연성",
-              "ru": "правдоподобность сюжета"
+              "ru": "правдоподобность сюжета",
+              "ru_uz": "syujet ishonarliligi"
             },
             {
               "ko": "연기",
-              "ru": "актёрская игра"
+              "ru": "актёрская игра",
+              "ru_uz": "aktyorlik mahorati"
             },
             {
               "ko": "장면",
-              "ru": "сцена, кадр"
+              "ru": "сцена, кадр",
+              "ru_uz": "sahna, kadr"
             }
           ],
           "pool": [
@@ -22625,6 +24305,16 @@
             "режиссура",
             "посыл фильма",
             "зрительный зал"
+          ],
+          "title_uz": "Soʻz va maʼnosini moslashtiring",
+          "eyebrow_uz": "TEKSHIRUV",
+          "pool_uz": [
+            "syujet ishonarliligi",
+            "aktyorlik mahorati",
+            "sahna, kadr",
+            "rejissura",
+            "filmning gʻoyasi",
+            "tomoshabinlar zali"
           ]
         },
         {
@@ -22677,6 +24367,10 @@
         "tasks": [
           "Опишите по-корейски любимую книгу через конструкцию -는 것이다, дав определение её главной мысли. Образец: 이 소설의 주제는 첫사랑의 아름다움을 그리는 것이다.",
           "Составьте 2 предложения с -더니만 о герое: сначала наблюдение, потом неожиданная перемена. Образец: 소년은 무뚝뚝해 보이더니만 소녀에게 조약돌을 건넸다."
+        ],
+        "tasks_uz": [
+          "Sevimli kitobingizni -는 것이다 qurilmasi orqali koreyscha tasvirlab, uning asosiy gʻoyasiga taʼrif bering. Namuna: <span class=\"ko\">이 소설의 주제는 첫사랑의 아름다움을 그리는 것이다.</span>",
+          "Qahramon haqida -더니만 bilan 2 ta gap tuzing: avval kuzatuv, keyin kutilmagan oʻzgarish. Namuna: <span class=\"ko\">소년은 무뚝뚝해 보이더니만 소녀에게 조약돌을 건넸다.</span>"
         ]
       },
       "slides": [
@@ -22698,6 +24392,13 @@
               "🌿",
               "лексику повести «Сонаги»"
             ]
+          ],
+          "title_uz": "«Sonagi» qissasi olamiga",
+          "intro_uz": "Bugun eng nozik koreys qissasi <span class=\"ko\">소나기</span> olamiga kirib boramiz — yoz jaladek qisqa va kutilmagan birinchi muhabbat haqidagi hikoya. Ona tilida gapiruvchilar kabi kitoblar haqidagi taassurotlarni ulashishni oʻrganamiz 🌸",
+          "learn_uz": [
+            "kitoblar va taassurotlar haqida gapirish",
+            "고급 darajasidagi ikki qurilma",
+            "«Sonagi» qissasi lugʻati"
           ]
         },
         {
@@ -22709,15 +24410,18 @@
           "examples": [
             {
               "ko": "소녀는 징검다리를 건너가더니만 홱 돌아서며 조약돌을 던졌다.",
-              "ru": "Девочка перешла по камням через ручей, а потом резко обернулась и бросила камешек."
+              "ru": "Девочка перешла по камням через ручей, а потом резко обернулась и бросила камешек.",
+              "ru_uz": "Qiz soy orqali koʻprikchalardan oʻtdi, keyin keskin orqasiga oʻgirilib, toshcha uloqtirdi."
             },
             {
               "ko": "소년은 처음엔 소녀에게 관심이 없어 보이더니만 어느새 매일 개울가에 나갔다.",
-              "ru": "Поначалу мальчик будто не замечал девочку, а потом незаметно стал каждый день ходить к ручью."
+              "ru": "Поначалу мальчик будто не замечал девочку, а потом незаметно стал каждый день ходить к ручью.",
+              "ru_uz": "Bola boshida qizga eʼtiborsizdek koʻrinardi, keyin sezmay har kuni soy boʻyiga chiqadigan boʻldi."
             },
             {
               "ko": "하늘이 맑더니만 갑자기 소나기가 쏟아지기 시작했다.",
-              "ru": "Небо было ясным, а потом вдруг хлынул ливень."
+              "ru": "Небо было ясным, а потом вдруг хлынул ливень.",
+              "ru_uz": "Osmon musaffo edi, keyin toʻsatdan yomgʻir quyib keldi."
             }
           ],
           "drills": [
@@ -22729,7 +24433,8 @@
                 "-는 것이다",
                 "-을 뿐"
               ],
-              "answer": "-더니만"
+              "answer": "-더니만",
+              "ru_uz": "Qiz uzoq vaqt suvda oʻynadi, keyin birdan bolaga qarab tabassum qildi."
             },
             {
               "q": "아버지는 하늘을 물끄러미 바라보___ 이내 눈물을 떨구셨다.",
@@ -22739,7 +24444,8 @@
                 "-으니까",
                 "-거든"
               ],
-              "answer": "-더니만"
+              "answer": "-더니만",
+              "ru_uz": "Ota osmonga andishali qaradi, keyin bir zumda koʻzidan yosh tomdi."
             },
             {
               "q": "소년은 며칠 동안 말이 없___ 끝내 소녀의 이사 소식을 듣고 말았다.",
@@ -22749,9 +24455,13 @@
                 "-기에",
                 "-도록"
               ],
-              "answer": "-더니만"
+              "answer": "-더니만",
+              "ru_uz": "Bola bir necha kun jim boʻlib yurdi, keyin oxiri qizning koʻchib ketishi haqidagi xabarni eshitdi."
             }
-          ]
+          ],
+          "eyebrow_uz": "GRAMMATIKA",
+          "sub_uz": "avval bir narsa edi — keyin oʻzgardi / sababi boʻldi",
+          "rule_uz": "<b>-더니만</b> (<span class=\"ko\">-더니마는</span>dan qisqargan) soʻzlovchi <b>oʻzi oʻtmishda kuzatgan</b> narsani tasvirlab, uni keyingi voqeaga qarama-qarshi qoʻyadi — yoki avvalgisi yangisiga <b>sabab</b> boʻlganini koʻrsatadi. Birinchi qism kesimi doim <span class=\"ko\">-더니만</span> shaklida boʻladi. Odatda ega 3-shaxsda boʻladi; sifatlar bilan koʻpincha soʻzlovchining oʻz holatini tasvirlaydi."
         },
         {
           "kind": "pattern",
@@ -22762,15 +24472,18 @@
           "examples": [
             {
               "ko": "진정한 배려란 상대방의 입장에서 그 사람을 생각해 주는 것이다.",
-              "ru": "Настоящая забота — это думать о другом, встав на его место."
+              "ru": "Настоящая забота — это думать о другом, встав на его место.",
+              "ru_uz": "Haqiqiy gʻamxoʻrlik — bu boshqa odamning oʻrniga oʻtib, uni oʻylashdir."
             },
             {
               "ko": "제목이 「소나기」인 것은 소년의 사랑이 소나기처럼 갑작스럽고 짧기 때문인 것이다.",
-              "ru": "Название «Сонаги» дано потому, что любовь мальчика была внезапной и короткой, как ливень."
+              "ru": "Название «Сонаги» дано потому, что любовь мальчика была внезапной и короткой, как ливень.",
+              "ru_uz": "Nomi «Sonagi» boʻlishining sababi shundaki, bolaning muhabbati yoz jaladek toʻsatdan va qisqa edi."
             },
             {
               "ko": "문학이란 결국 인생의 한 단면을 글로 그려 내는 것이다.",
-              "ru": "Литература — это, в сущности, изображение одной из граней жизни словами."
+              "ru": "Литература — это, в сущности, изображение одной из граней жизни словами.",
+              "ru_uz": "Adabiyot, oxir-oqibat, hayotning bir qirrasini soʻz bilan tasvirlashdan iboratdir."
             }
           ],
           "drills": [
@@ -22782,7 +24495,8 @@
                 "-더니만",
                 "-을 뿐이다"
               ],
-              "answer": "-는 것이다"
+              "answer": "-는 것이다",
+              "ru_uz": "Hayotda eng qiyin narsa — biror ishni muntazam qilib borishdir."
             },
             {
               "q": "주인공에게 이름이 없는 것은 모든 독자의 공감을 얻기 위한 ___.",
@@ -22792,7 +24506,8 @@
                 "뻔하다",
                 "듯싶다"
               ],
-              "answer": "것이다"
+              "answer": "것이다",
+              "ru_uz": "Bosh qahramonning ismi yoʻqligi — har bir oʻquvchining hamdardligini uygʻotish uchundir."
             },
             {
               "q": "이 작품이 전하려는 것은 첫사랑이 누구에게나 소중하다는 ___.",
@@ -22802,9 +24517,13 @@
                 "뿐이다",
                 "때문이다"
               ],
-              "answer": "것이다"
+              "answer": "것이다",
+              "ru_uz": "Bu asar yetkazmoqchi boʻlgan narsa — birinchi muhabbat har kimga qadrlidir."
             }
-          ]
+          ],
+          "eyebrow_uz": "GRAMMATIKA",
+          "sub_uz": "mohiyatni tushuntiraman, taʼrif beraman",
+          "rule_uz": "<b>-는 것이다</b> narsaning <b>mohiyatini tushuntirganda, taʼrif berganda</b> ishlatiladi — goʻyo fikrni yakunlab qoʻygandek. Feʼllar bilan — <span class=\"ko\">-는 것이다</span>, sifatlar bilan — <span class=\"ko\">-(으)ㄴ 것이다</span>; shakli zamonga qarab oʻzgaradi. Koʻpincha asarning maʼnosi haqidagi mulohazalarda yangraydi."
         },
         {
           "kind": "words",
@@ -22814,34 +24533,42 @@
             {
               "ko": "등장인물",
               "ru": "действующее лицо, персонаж",
-              "emoji": "🎭"
+              "emoji": "🎭",
+              "ru_uz": "ishtirokchi, personaj"
             },
             {
               "ko": "단편소설",
               "ru": "рассказ, короткая повесть",
-              "emoji": "📕"
+              "emoji": "📕",
+              "ru_uz": "hikoya, qisqa qissa"
             },
             {
               "ko": "복선",
               "ru": "намёк, предвестие (в сюжете)",
-              "emoji": "🔮"
+              "emoji": "🔮",
+              "ru_uz": "ishora, oldindan tuygʻu (syujetda)"
             },
             {
               "ko": "감동",
               "ru": "глубокое впечатление, волнение",
-              "emoji": "💗"
+              "emoji": "💗",
+              "ru_uz": "chuqur taassurot, toʻlqinlanish"
             },
             {
               "ko": "조약돌",
               "ru": "камешек, галька",
-              "emoji": "🪨"
+              "emoji": "🪨",
+              "ru_uz": "toshcha, mayda tosh"
             },
             {
               "ko": "개울가",
               "ru": "берег ручья",
-              "emoji": "🏞️"
+              "emoji": "🏞️",
+              "ru_uz": "soy boʻyi"
             }
-          ]
+          ],
+          "title_uz": "Adabiyot haqida soʻzlar",
+          "eyebrow_uz": "SOʻZLAR"
         },
         {
           "kind": "dialog",
@@ -22853,51 +24580,62 @@
               "who": "A",
               "av": "👩",
               "ko": "세영아, 이 책 한번 읽어 볼래? 엄마가 중학교 때 읽은 소설이야.",
-              "ru": "Сэён, прочитаешь эту книгу? Я читала её в средней школе."
+              "ru": "Сэён, прочитаешь эту книгу? Я читала её в средней школе.",
+              "ru_uz": "Seyoung, shu kitobni bir oʻqib koʻrasanmi? Men oʻrta maktabda oʻqigan romanim."
             },
             {
               "who": "B",
               "av": "🧒",
               "ko": "무슨 책인데요? 꽤 오래된 소설인가 봐요.",
-              "ru": "А что за книга? Похоже, довольно старая повесть."
+              "ru": "А что за книга? Похоже, довольно старая повесть.",
+              "ru_uz": "Qanday kitob bu? Anchayin eski qissaga oʻxshaydi."
             },
             {
               "who": "A",
               "av": "👩",
               "ko": "「소나기」라고, 시골 소년의 첫사랑 이야기야. 처음엔 관심 없어 보이더니만 결국 둘이 친구가 되거든.",
-              "ru": "«Сонаги» — история первой любви деревенского мальчика. Сначала он будто бы равнодушен, а потом они становятся друзьями."
+              "ru": "«Сонаги» — история первой любви деревенского мальчика. Сначала он будто бы равнодушен, а потом они становятся друзьями.",
+              "ru_uz": "«Sonagi» deyiladi, qishloqlik bolaning birinchi muhabbati haqidagi hikoya. Boshida u befarqdek koʻrinadi, keyin ikkovi doʻst boʻlib qoladi."
             },
             {
               "who": "B",
               "av": "🧒",
               "ko": "제목이 왜 「소나기」예요?",
-              "ru": "А почему она называется «Сонаги»?"
+              "ru": "А почему она называется «Сонаги»?",
+              "ru_uz": "Nega u «Sonagi» deb ataladi?"
             },
             {
               "who": "A",
               "av": "👩",
               "ko": "소년의 사랑이 소나기처럼 갑작스럽고 짧아서 붙여진 것이야.",
-              "ru": "Название дано потому, что любовь мальчика внезапна и коротка, как ливень."
+              "ru": "Название дано потому, что любовь мальчика внезапна и коротка, как ливень.",
+              "ru_uz": "Bolaning muhabbati yoz jaladek toʻsatdan va qisqa boʻlgani uchun shunday nom berilgan."
             },
             {
               "who": "B",
               "av": "🧒",
               "ko": "엄마는 왜 갑자기 그 책을 다시 읽으셨어요?",
-              "ru": "А почему ты вдруг снова её перечитала?"
+              "ru": "А почему ты вдруг снова её перечитала?",
+              "ru_uz": "Sen nega birdan bu kitobni qayta oʻqib chiqding?"
             },
             {
               "who": "A",
               "av": "👩",
               "ko": "책장을 정리하다가 구석에 있는 걸 봤을 뿐인데 갑자기 읽고 싶어지더니만 밤새 다 읽어 버렸어.",
-              "ru": "Я всего лишь заметила её в углу, разбирая полку, — и вдруг так захотелось читать, что прочла за ночь."
+              "ru": "Я всего лишь заметила её в углу, разбирая полку, — и вдруг так захотелось читать, что прочла за ночь.",
+              "ru_uz": "Javonni tartibga solayotib burchakda koʻrib qoldim, xolos — birdan shunchalik oʻqigim keldiki, bir kechada oʻqib tugatdim."
             },
             {
               "who": "B",
               "av": "🧒",
               "ko": "그렇게 감동적이에요? 네, 저도 한번 읽어 볼게요.",
-              "ru": "Она правда такая трогательная? Хорошо, я тоже почитаю."
+              "ru": "Она правда такая трогательная? Хорошо, я тоже почитаю.",
+              "ru_uz": "Shunchalik taʼsirchanmi? Xoʻp, men ham bir oʻqib koʻraman."
             }
-          ]
+          ],
+          "title_uz": "Ona kitob tavsiya qiladi",
+          "eyebrow_uz": "MULOQOT",
+          "sub_uz": "Seyoung va onaning suhbati"
         },
         {
           "kind": "build",
@@ -22914,7 +24652,10 @@
           "pool": [
             "뿐이다",
             "-더니만"
-          ]
+          ],
+          "title_uz": "Qissa haqidagi taassurotni yigʻing",
+          "eyebrow_uz": "JUMLA TUZ",
+          "ru_uz": "Bu qissa ham romantik, ham fojiali."
         },
         {
           "kind": "listen",
@@ -22927,7 +24668,15 @@
             "Девочка заплакала и убежала под дождём.",
             "Девочка закрыла глаза и спряталась от ливня."
           ],
-          "answer": "Девочка лишь подняла промокшие от дождя глаза и взглянула один раз."
+          "answer": "Девочка лишь подняла промокшие от дождя глаза и взглянула один раз.",
+          "title_uz": "Tinglang va tushuning",
+          "eyebrow_uz": "TINGLASH",
+          "answer_uz": "Qiz yomgʻirdan hoʻl koʻzlarini koʻtarib, faqat bir marta qaradi.",
+          "options_uz": [
+            "Qiz yomgʻirdan hoʻl koʻzlarini koʻtarib, faqat bir marta qaradi.",
+            "Qiz yigʻlab, yomgʻir ostida qochib ketdi.",
+            "Qiz koʻzlarini yumib, jaladan yashirindi."
+          ]
         },
         {
           "kind": "quiz",
@@ -22936,15 +24685,18 @@
           "items": [
             {
               "ko": "첫사랑",
-              "ru": "первая любовь"
+              "ru": "первая любовь",
+              "ru_uz": "birinchi muhabbat"
             },
             {
               "ko": "비극적",
-              "ru": "трагичный"
+              "ru": "трагичный",
+              "ru_uz": "fojiali"
             },
             {
               "ko": "징검다리",
-              "ru": "камни-переправа через ручей"
+              "ru": "камни-переправа через ручей",
+              "ru_uz": "toshcha koʻprik (soydan oʻtish uchun)"
             }
           ],
           "pool": [
@@ -22954,6 +24706,16 @@
             "намёк в сюжете",
             "берег ручья",
             "глубокое впечатление"
+          ],
+          "title_uz": "Dars soʻzlari",
+          "eyebrow_uz": "TEKSHIRUV",
+          "pool_uz": [
+            "birinchi muhabbat",
+            "fojiali",
+            "toshcha koʻprik (soydan oʻtish uchun)",
+            "syujetdagi ishora",
+            "soy boʻyi",
+            "chuqur taassurot"
           ]
         },
         {
