@@ -995,6 +995,29 @@
     'games.c.part':      { ru: 'Частицы', en: 'Particles', uz: 'Qoʻshimchalar' },
     'games.c.part.sub':  { ru: 'Выбери 은/는 · 이/가 · 을/를 · 에/에서', en: 'Pick 은/는 · 이/가 · 을/를 · 에/에서', uz: '은/는 · 이/가 · 을/를 · 에/에서 tanlang' },
 
+    // ── Игра «Разговор» (말하기 · ролевые диалоги с микрофоном) ──
+    'games.sec.speak':   { ru: 'Речь', en: 'Speaking', uz: 'Nutq' },
+    'games.sec.speak.m': { ru: 'разговорная практика', en: 'speaking practice', uz: 'ogʻzaki amaliyot' },
+    'games.c.speak':     { ru: 'Разговор', en: 'Conversation', uz: 'Suhbat' },
+    'games.c.speak.sub': { ru: 'Диалоги из уроков · говори в микрофон', en: 'Lesson dialogues · speak into the mic', uz: 'Darslardagi dialoglar · mikrofonga gapiring' },
+    'speak.h':           { ru: '🎤 РАЗГОВОР', en: '🎤 CONVERSATION', uz: '🎤 SUHBAT' },
+    'speak.pick':        { ru: 'Выбери диалог', en: 'Pick a dialogue', uz: 'Dialogni tanlang' },
+    'speak.pickSub':     { ru: 'Собеседника озвучит приложение, свою реплику говори вслух 🌸', en: 'The app voices your partner — say your line out loud 🌸', uz: 'Suhbatdoshni ilova ovozlaydi — oʻz gapingizni ovoz chiqarib ayting 🌸' },
+    'speak.starterMod':  { ru: 'Разминка', en: 'Warm-up', uz: 'Tayyorgarlik' },
+    'speak.lockedMore':  { ru: 'Ещё {n} — откроются по мере прохождения уроков 🔒', en: '{n} more unlock as you complete lessons 🔒', uz: 'Yana {n} tasi darslarni oʻtganingizda ochiladi 🔒' },
+    'speak.lines':       { ru: 'реплик: {n}', en: '{n} lines', uz: '{n} ta gap' },
+    'speak.you':         { ru: 'ТВОЯ РЕПЛИКА', en: 'YOUR LINE', uz: 'SIZNING GAPINGIZ' },
+    'speak.talk':        { ru: 'Говорить в микрофон', en: 'Speak into the mic', uz: 'Mikrofonga gapirish' },
+    'speak.listening':   { ru: 'Слушаю…', en: 'Listening…', uz: 'Tinglayapman…' },
+    'speak.said':        { ru: 'Сказала вслух ✓', en: 'I said it out loud ✓', uz: 'Ovoz chiqarib aytdim ✓' },
+    'speak.noMic':       { ru: 'Микрофон недоступен — читай реплику вслух и отмечай кнопкой', en: 'No microphone — read your line aloud and tap the button', uz: 'Mikrofon mavjud emas — gapni ovoz chiqarib oʻqing va tugmani bosing' },
+    'speak.slow':        { ru: 'Медленно', en: 'Slowly', uz: 'Sekin' },
+    'speak.perfect':     { ru: '잘했어요! Отлично, очень чисто! 👏', en: '잘했어요! Excellent, very clear! 👏', uz: '잘했어요! Ajoyib, juda aniq! 👏' },
+    'speak.near':        { ru: 'Зачтено! Послушай образец ещё раз — станет ещё чище 🌸', en: 'Counted! Listen to the sample again to polish it 🌸', uz: 'Qabul qilindi! Yana ham aniq boʻlishi uchun namunani qayta tinglang 🌸' },
+    'speak.heard':       { ru: 'Услышала: «{s}»', en: 'I heard: “{s}”', uz: 'Eshitdim: «{s}»' },
+    'speak.tryAgain':    { ru: 'Не расслышала. Послушай медленно и попробуй ещё раз 🌷', en: 'Didn’t catch that. Listen slowly and try again 🌷', uz: 'Eshitilmadi. Sekin tinglang va yana urinib koʻring 🌷' },
+    'speak.reveal':      { ru: 'Ничего страшного! Послушай и просто повтори — идём дальше 🌸', en: 'No worries! Listen and repeat — moving on 🌸', uz: 'Hechqisi yoʻq! Tinglang va takrorlang — davom etamiz 🌸' },
+
     // ── Профиль · вход/регистрация ──
     'profile.eyebrow':   { ru: 'ПРОФИЛЬ', en: 'PROFILE', uz: 'PROFIL' },
     'a11y.showPass':     { ru: 'Показать пароль', en: 'Show password', uz: 'Parolni koʻrsatish' },
@@ -6077,7 +6100,7 @@
   // Версия сборки: держать В РУЧНУЮ синхронной с ?v= в index.html при каждом деплое
   // (те же 3 места — stylesheet/preload/script). Используется только для попапа
   // «доступно обновление» ниже — сама загрузка кода по-прежнему идёт через ?v=.
-  const APP_VERSION = '20260714c';
+  const APP_VERSION = '20260716a';
   function showUpdateAvailableModal() {
     if (document.getElementById('update-avail-modal')) return;
     const m = document.createElement('div');
@@ -34860,6 +34883,7 @@
     translate:  '⚡ Быстрый перевод',
     numbers:    '🔢 Числа',
     particles:  '🔗 Частицы',
+    speak:      '🎤 Разговор',
     sentence:   '📝 Собери фразу',
     dictation:  '✍️ Слушай и пиши',
     writing:    '✏️ Пиши буквы',
@@ -39113,6 +39137,257 @@
       }
       // ошибка — ждём кнопку «Дальше», чтобы успеть прочитать разбор «почему»
       quizNextButton(() => { ptRound++; renderParticles(); });
+    }
+  }
+
+  // ── Game 7.6: Speaking (Разговор · 말하기) ──
+  // Фаза 2 плана «грамматика+разговор» (отзыв учениц: мало разговорной практики).
+  // Ролевые диалоги: реплику собеседника озвучивает TTS, свою ученица говорит в
+  // микрофон (SpeechRecognition ko-KR, та же связка, что pronounceCheck), сверка —
+  // scoreKoMatch. Контент — готовые dialog-слайды уроков (гейтинг как у «Слов из
+  // уроков») + стартовые диалоги для тех, кто ещё не дошёл до Модуля 2 (в М1
+  // диалогов нет). Микрофона нет / доступ запрещён → тап-путь как у Комдори.
+  const SPEAK_STARTERS = [
+    { title:'Как дела?', title_uz:'Qalaysiz?', lines:[
+      { who:'A', av:'🐻', ko:'안녕하세요! 잘 지냈어요?', ru:'Привет! Как поживаешь?', ru_uz:'Salom! Yaxshi yuribsizmi?' },
+      { who:'B', av:'🧑', ko:'네, 잘 지냈어요.', ru:'Да, всё хорошо.', ru_uz:'Ha, yaxshi yuribman.' },
+      { who:'A', av:'🐻', ko:'요즘 뭐 해요?', ru:'Чем сейчас занимаешься?', ru_uz:'Hozir nima bilan shugʻullanyapsiz?' },
+      { who:'B', av:'🧑', ko:'한국어를 공부해요.', ru:'Учу корейский.', ru_uz:'Koreys tilini oʻrganyapman.' },
+      { who:'A', av:'🐻', ko:'와, 멋있어요! 화이팅!', ru:'Ух ты, здорово! Файтин!', ru_uz:'Voy, zoʻr-ku! Fayting!' },
+      { who:'B', av:'🧑', ko:'감사합니다!', ru:'Спасибо!', ru_uz:'Rahmat!' }
+    ]},
+    { title:'В кафе', title_uz:'Kafeda', lines:[
+      { who:'A', av:'☕', ko:'어서 오세요! 뭐 드릴까요?', ru:'Добро пожаловать! Что вам предложить?', ru_uz:'Xush kelibsiz! Sizga nima beray?' },
+      { who:'B', av:'🧑', ko:'커피 한 잔 주세요.', ru:'Один кофе, пожалуйста.', ru_uz:'Bitta kofe bering, iltimos.' },
+      { who:'A', av:'☕', ko:'여기서 드세요?', ru:'Будете пить здесь?', ru_uz:'Shu yerda ichasizmi?' },
+      { who:'B', av:'🧑', ko:'네, 여기서 마실게요.', ru:'Да, выпью здесь.', ru_uz:'Ha, shu yerda ichaman.' },
+      { who:'A', av:'☕', ko:'삼천 원이에요.', ru:'С вас 3000 вон.', ru_uz:'3000 von boʻladi.' },
+      { who:'B', av:'🧑', ko:'여기 있어요. 감사합니다!', ru:'Вот, пожалуйста. Спасибо!', ru_uz:'Mana, marhamat. Rahmat!' }
+    ]},
+    { title:'Договорились!', title_uz:'Kelishdik!', lines:[
+      { who:'A', av:'🙂', ko:'내일 시간 있어요?', ru:'Завтра есть время?', ru_uz:'Ertaga vaqtingiz bormi?' },
+      { who:'B', av:'🧑', ko:'네, 시간 있어요.', ru:'Да, есть.', ru_uz:'Ha, vaqtim bor.' },
+      { who:'A', av:'🙂', ko:'그럼 같이 영화 볼까요?', ru:'Тогда посмотрим фильм вместе?', ru_uz:'Unda birga kino koʻramizmi?' },
+      { who:'B', av:'🧑', ko:'네, 좋아요!', ru:'Да, с удовольствием!', ru_uz:'Ha, juda yaxshi!' },
+      { who:'A', av:'🙂', ko:'두 시에 만나요!', ru:'Встречаемся в два!', ru_uz:'Soat ikkida uchrashamiz!' },
+      { who:'B', av:'🧑', ko:'네, 내일 봐요!', ru:'Да, до завтра!', ru_uz:'Ha, ertagacha!' }
+    ]}
+  ];
+  // Диалоги, доступные ученице: стартовые + из достигнутых уроков. Гейтинг тот же,
+  // что у «Слов из уроков» (_lwLessonReached) — тренажёр не открывает контент раньше уроков.
+  function _speakCatalog() {
+    const admin = (typeof isAdmin === 'function') && isAdmin();
+    const open = SPEAK_STARTERS.map(s => ({ starter: true, title: skLoc(s, 'title'), sub: t('speak.starterMod'), lines: s.lines }));
+    let locked = 0;
+    Object.keys(LESSON_MODULES).forEach(mid => {
+      const mod = LESSON_MODULES[mid];
+      // _lwLessonReached сам по себе НЕ проверяет замок модуля (его фолбэк открывает
+      // первый урок ЛЮБОГО модуля) — без isModuleUnlocked новичку показались бы
+      // диалоги уровня C1 из первых уроков M7/M8.
+      const modOpen = admin || isModuleUnlocked(mid);
+      (mod.lessons || []).forEach(l => {
+        (l.slides || []).forEach(sl => {
+          if (!sl || sl.kind !== 'dialog' || !Array.isArray(sl.lines) || sl.lines.length < 2) return;
+          if (!sl.lines.some(ln => ln && ln.who === 'B' && ln.ko)) return;
+          if (admin || (modOpen && _lwLessonReached(mid, l.id))) {
+            open.push({ title: skLoc(sl, 'title') || l.title || '', sub: (mod.tabLabel || mid.toUpperCase()) + ' · ' + t('lw.lesson') + ' ' + (l.num || ''), lines: sl.lines });
+          } else locked++;
+        });
+      });
+    });
+    return { open, locked };
+  }
+  let _spk = null;
+  function openSpeak() {
+    try { _spk && _spk.rec && _spk.rec.abort(); } catch (_) {}
+    const cat = _speakCatalog();
+    _spk = { list: cat.open, d: null, title: '', idx: 0, score: 0, done: 0, total: 0, tries: 0, mic: pronounceSupported(), seq: 0, listening: false, rec: null };
+    const cards = cat.open.map((d, i) => `
+      <button type="button" class="cw-lobby-card" onclick="startSpeakDialog(${i})">
+        <span class="cw-lobby-ico">${d.starter ? '🐻' : '💬'}</span>
+        <span class="cw-lobby-tx"><span class="cw-lobby-title">${escHtml(d.title)}</span><span class="cw-lobby-sub">${escHtml(d.sub)} · ${t('speak.lines', { n: d.lines.length })}</span></span>
+      </button>`).join('');
+    gameModal(`
+      ${gameHeader(t('speak.h'), t('speak.pick'), 0, 0)}
+      <div style="font-size:12.5px; color:var(--soft); margin:-6px 0 12px; line-height:1.5;">${t('speak.pickSub')}</div>
+      <div class="cw-lobby">${cards}</div>
+      ${cat.locked ? `<div style="text-align:center; font-size:11.5px; color:var(--hush); margin-top:12px;">${t('speak.lockedMore', { n: cat.locked })}</div>` : ''}
+    `);
+  }
+  function startSpeakDialog(i) {
+    const st = _spk; if (!st || !st.list[i]) return;
+    st.d = st.list[i]; st.title = st.d.title;
+    st.idx = 0; st.score = 0; st.done = 0; st.tries = 0; st.seq = 0;
+    st.total = st.d.lines.filter(ln => ln && ln.who === 'B').length;
+    _spkRender();
+  }
+  function _spkRender() {
+    const st = _spk; if (!st || !st.d) return;
+    st.seq++;
+    try { st.rec && st.rec.abort(); } catch (_) {}
+    st.listening = false;
+    const d = st.d;
+    if (st.idx >= d.lines.length) {
+      gameModal(gameFinish(st.score, st.total, t('games.c.speak') + ' · 말하기', 'speak', 'openSpeak'));
+      return;
+    }
+    const cur = d.lines[st.idx];
+    const isStudent = cur.who === 'B';
+    // партнёрская текущая реплика видна сразу (её слушаем), своя — только в зоне задания
+    const past = d.lines.slice(0, st.idx + (isStudent ? 0 : 1));
+    const bubbles = past.map(ln => {
+      const isB = ln.who === 'B';
+      const lnRu = skLoc(ln, 'ru');
+      return `
+        <div class="dlg-row ${isB ? 'b' : 'a'}">
+          <div class="dlg-ava">${ln.av || (isB ? '🧑' : '🙂')}</div>
+          <div class="dlg-bubble" onclick="playSyllable('${jsStr(ln.ko)}', this)">
+            <div class="ko dlg-ko">${escHtml(ln.ko)}</div>
+            ${lnRu ? `<div class="dlg-ru">${escHtml(lnRu)}</div>` : ''}
+          </div>
+        </div>`;
+    }).join('');
+    let action;
+    if (!isStudent) {
+      action = `<button onclick="_spkNext()" class="btn btn-rose btn-block" style="margin-top:14px;">${t('common.next')}</button>`;
+    } else {
+      const ruHint = skLoc(cur, 'ru');
+      action = `
+        <div style="margin-top:14px; border:1.5px dashed var(--rose); border-radius:14px; padding:14px;">
+          <div style="font-size:10px; letter-spacing:.14em; color:var(--soft); margin-bottom:6px;">${t('speak.you')} · ${st.done + 1}/${st.total}</div>
+          <div class="ko" style="font-size:19px; font-weight:700; color:var(--coral); line-height:1.5;">${escHtml(cur.ko)}</div>
+          ${ruHint ? `<div style="font-size:12.5px; color:var(--soft); margin-top:4px;">${escHtml(ruHint)}</div>` : ''}
+          <div style="display:flex; gap:8px; margin-top:10px;">
+            <button onclick="playSyllable('${jsStr(cur.ko)}', this)" class="btn btn-ghost" style="flex:1; font-size:12px; padding:7px 10px;"><i class="fa-solid fa-volume-high"></i> ${t('kd.repeat')}</button>
+            <button onclick="spkSlow()" class="btn btn-ghost" style="flex:1; font-size:12px; padding:7px 10px;">🐢 ${t('speak.slow')}</button>
+          </div>
+        </div>
+        ${st.mic
+          ? `<button id="spk-mic" onclick="spkListen()" class="btn btn-primary btn-block" style="margin-top:12px;"><i class="fa-solid fa-microphone"></i> ${t('speak.talk')}</button>`
+          : `<div style="font-size:11px; color:var(--soft); text-align:center; margin-top:10px; line-height:1.45;">${t('speak.noMic')}</div>
+             <button id="spk-mic" onclick="spkSaidTap()" class="btn btn-primary btn-block" style="margin-top:8px;"><i class="fa-solid fa-microphone-slash"></i> ${t('speak.said')}</button>`}
+        <div id="spk-fb" style="text-align:center; font-size:13px; margin-top:10px; min-height:38px; line-height:1.5;"></div>
+      `;
+    }
+    gameModal(`
+      ${gameHeader(t('speak.h'), escHtml(st.title), st.done, st.total, 'openSpeak()')}
+      <div class="dlg-list">${bubbles}</div>
+      ${action}
+    `);
+    if (!isStudent) {
+      const seq = st.seq;
+      setTimeout(() => {
+        if (_spk !== st || st.seq !== seq) return;
+        try { if (typeof getSettings !== 'function' || getSettings().sound) playSyllable(cur.ko); } catch (_) {}
+      }, 350);
+    }
+  }
+  function _spkNext() { const st = _spk; if (!st) return; st.idx++; st.tries = 0; _spkRender(); }
+  function spkSlow() {
+    const st = _spk; if (!st || !st.d) return;
+    const cur = st.d.lines[st.idx]; if (!cur) return;
+    if (typeof getSettings === 'function' && !getSettings().sound) { toast(t('audio.soundOff'), 'var(--berry)'); return; }
+    try { stopSpeech(); _koSpeakOne(cur.ko, { slow: true, pitch: 1.05, voice: TTS_VOICE_F }); } catch (_) {}
+  }
+  function _spkResetMicBtn() {
+    const btn = document.getElementById('spk-mic'); if (!btn) return;
+    btn.disabled = false;
+    setMicState(btn, 'idle');
+    btn.innerHTML = '<i class="fa-solid fa-microphone"></i> ' + t('speak.talk');
+  }
+  // Тап-путь без микрофона (как «Звонок с Комдори»): честно верим ученице —
+  // проверить нечем, но модель произношения она слышит.
+  function spkSaidTap() {
+    const st = _spk; if (!st || !st.d) return;
+    const cur = st.d.lines[st.idx]; if (!cur) return;
+    try { if (typeof getSettings !== 'function' || getSettings().sound) playSyllable(cur.ko); } catch (_) {}
+    st.score++; st.done++; st.idx++; st.tries = 0;
+    const seq = st.seq;
+    setTimeout(() => { if (_spk === st && st.seq === seq) _spkRender(); }, 600);
+  }
+  function spkListen() {
+    const st = _spk; if (!st || !st.d || st.listening) return;
+    const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SR) { st.mic = false; _spkRender(); return; }
+    const cur = st.d.lines[st.idx]; if (!cur) return;
+    try { stopSpeech(); } catch (_) {} // TTS не должен «наговорить» в микрофон
+    const rec = new SR();
+    rec.lang = 'ko-KR'; rec.interimResults = false; rec.maxAlternatives = 3; rec.continuous = false;
+    st.listening = true; st.rec = rec;
+    const btn = document.getElementById('spk-mic');
+    setMicState(btn, 'listening');
+    if (btn) { btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-microphone-lines"></i> ' + t('speak.listening'); }
+    const seq = st.seq;
+    let got = false;
+    rec.onresult = (e) => {
+      got = true; st.listening = false;
+      if (_spk !== st || st.seq !== seq) return;
+      const alts = Array.from(e.results[0]).map(a => (a.transcript || '').trim());
+      const target = normalizeKo(cur.ko);
+      let best = { tr: alts[0] || '', score: 0 };
+      for (const a of alts) {
+        const s = scoreKoMatch(target, normalizeKo(a));
+        if (s > best.score) best = { tr: a, score: s };
+      }
+      _spkGrade(best);
+    };
+    rec.onerror = (e) => {
+      st.listening = false;
+      if (_spk !== st || st.seq !== seq) return;
+      setMicState(btn, 'idle'); _spkResetMicBtn();
+      if (e.error === 'not-allowed' || e.error === 'service-not-allowed') { st.mic = false; toast(t('ui.002')); _spkRender(); }
+      else if (e.error === 'no-speech') toast(t('ui.003'));
+      else if (e.error === 'audio-capture') toast(t('ui.004'));
+    };
+    rec.onend = () => {
+      st.listening = false;
+      if (!got && _spk === st && st.seq === seq) _spkResetMicBtn();
+    };
+    try { rec.start(); } catch (_) { st.listening = false; _spkResetMicBtn(); }
+  }
+  function _spkGrade(best) {
+    const st = _spk; if (!st || !st.d) return;
+    const cur = st.d.lines[st.idx]; if (!cur) return;
+    const btn = document.getElementById('spk-mic');
+    const fb = document.getElementById('spk-fb');
+    // та же статистика произношения, что у pronounceCheck (ачивки/дашборд), но
+    // без его addXp(5): XP тренажёра начисляет gameFinish за очки — иначе задвоение
+    try {
+      stats.pronunciationAttempts = (stats.pronunciationAttempts || 0) + 1;
+      if (best.score === 2) {
+        stats.pronunciationCorrect = (stats.pronunciationCorrect || 0) + 1;
+        stats.pronunciationStreak = (stats.pronunciationStreak || 0) + 1;
+        stats.pronunciationBestStreak = Math.max(stats.pronunciationBestStreak || 0, stats.pronunciationStreak);
+      } else if (best.score === 0) stats.pronunciationStreak = 0;
+      UStore.set('stats', stats);
+      checkAchievements(true);
+    } catch (_) {}
+    const seq = st.seq;
+    if (best.score === 2) {
+      setMicState(btn, 'ok'); if (btn) btn.disabled = true;
+      if (fb) fb.innerHTML = `<span style="color:var(--ok-ink); font-weight:700;">${t('speak.perfect')}</span>`;
+      st.score++; st.done++; st.idx++; st.tries = 0;
+      setTimeout(() => { if (_spk === st && st.seq === seq) _spkRender(); }, 1400);
+    } else if (best.score === 1) {
+      // близко — засчитываем (STT строг к длинным фразам), но показываем, что услышалось
+      setMicState(btn, 'near'); if (btn) btn.disabled = true;
+      if (fb) fb.innerHTML = `<span style="color:var(--gold-ink); font-weight:600;">${t('speak.near')}</span><br><span style="color:var(--soft); font-size:12px;">${t('speak.heard', { s: escHtml(best.tr) })}</span>`;
+      st.score++; st.done++; st.idx++; st.tries = 0;
+      quizNextButton(() => { if (_spk === st) _spkRender(); });
+    } else {
+      st.tries = (st.tries || 0) + 1;
+      setMicState(btn, 'bad');
+      // медленный повтор образца — главный обучающий момент при промахе
+      try { stopSpeech(); if (typeof getSettings !== 'function' || getSettings().sound) _koSpeakOne(cur.ko, { slow: true, pitch: 1.05, voice: TTS_VOICE_F }); } catch (_) {}
+      if (st.tries < 2) {
+        if (fb) fb.innerHTML = `<span style="color:var(--berry);">${t('speak.tryAgain')}</span>${best.tr ? `<br><span style="color:var(--soft); font-size:12px;">${t('speak.heard', { s: escHtml(best.tr) })}</span>` : ''}`;
+        setTimeout(() => { if (_spk === st && st.seq === seq) _spkResetMicBtn(); }, 900);
+      } else {
+        if (btn) btn.disabled = true;
+        if (fb) fb.innerHTML = `<span style="color:var(--berry);">${t('speak.reveal')}</span>`;
+        st.done++; st.idx++; st.tries = 0;
+        quizNextButton(() => { if (_spk === st) _spkRender(); });
+      }
     }
   }
 

@@ -44,11 +44,11 @@
      вводят анимации из styles.css, поэтому без «мигания»; логотип не трогаем (fanUnfurl). -->
 <style>#intro{position:fixed;inset:0;z-index:999;display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:hidden;cursor:pointer;background:radial-gradient(120% 90% at 50% 35%,#FFFCF8 0%,#FFF4F0 38%,#FBE8EA 78%,#F2D5DA 100%)}#intro>.intro-tagline,#intro>.intro-subline,#intro>.intro-cta{opacity:0}</style>
 
-<link rel="stylesheet" href="styles.css?v=20260714c">
+<link rel="stylesheet" href="styles.css?v=20260716a">
 
 <!-- Предзагрузка тяжёлого JS: скачивание стартует сразу, параллельно с CSS/шрифтами -->
 <link rel="preload" href="assets/textbook/textbook-data.js?v=20260629a" as="script">
-<link rel="preload" href="app.js?v=20260714c" as="script">
+<link rel="preload" href="app.js?v=20260716a" as="script">
 </head>
 
 <body>
@@ -579,6 +579,22 @@
           <div class="gcv-foot">
             <span class="best-score gcv-best">Ещё не играли</span>
             <span class="gcv-xp">+20 XP</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Речь · 말하기 -->
+      <div class="section-head" style="margin-top:8px;"><div class="left"><div class="rule"></div><span class="title"><span data-i18n="games.sec.speak">Речь</span> <span class="ko" style="color:var(--coral); font-weight:500; margin-left:6px;">말하기</span></span></div><span class="meta" data-i18n="games.sec.speak.m">разговорная практика</span></div>
+      <div class="games-grid">
+        <div onclick="openSpeak()" class="game-card-v2 gcv-wide gcv-accent" data-game-key="speak">
+          <span class="gcv-flag" data-i18n="games.flag.new">Новинка</span>
+          <div class="gcv-icon"><div class="gcv-emoji-icon gcv-svg"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="2.5" width="6" height="11.5" rx="3"/><path d="M5 11a7 7 0 0 0 14 0"/><path d="M12 18v3.5"/><path d="M8.5 21.5h7"/></svg></div></div>
+          <div class="gcv-title" data-i18n="games.c.speak">Разговор</div>
+          <div class="gcv-ko ko">말하기</div>
+          <div class="gcv-sub" data-i18n="games.c.speak.sub">Диалоги из уроков · говори в микрофон</div>
+          <div class="gcv-foot">
+            <span class="best-score gcv-best">Ещё не играли</span>
+            <span class="gcv-xp">+8 XP</span>
           </div>
         </div>
       </div>
@@ -1168,7 +1184,7 @@
 
 <!-- ─────────────── DATA + LOGIC ─────────────── -->
 <script src="assets/textbook/textbook-data.js?v=20260629a"></script>
-<script src="app.js?v=20260714c"></script>
+<script src="app.js?v=20260716a"></script>
 
 </body>
 </html>
