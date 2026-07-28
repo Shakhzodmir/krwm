@@ -425,6 +425,8 @@
     'up.teacher':      { ru: '🎓 учитель', en: '🎓 teacher', uz: '🎓 oʻqituvchi' },
     'up.withUsSince':  { ru: '🌸 с нами с {date}', en: '🌸 with us since {date}', uz: '🌸 biz bilan {date}dan' },
     'up.writeMsg':     { ru: 'Написать сообщение', en: 'Send a message', uz: 'Xabar yozish' },
+    'up.addFriend':    { ru: 'Добавить в друзья', en: 'Add friend', uz: 'Doʻst qoʻshish' },
+    'up.reqPending':   { ru: '⏳ Заявка отправлена', en: '⏳ Request sent', uz: '⏳ Soʻrov yuborildi' },
     'up.changeCover':  { ru: 'Сменить обложку', en: 'Change cover', uz: 'Muqovani almashtirish' },
 
     // ── Общие кнопки/слова ──
@@ -6338,7 +6340,7 @@
   // Версия сборки: держать В РУЧНУЮ синхронной с ?v= в index.html при каждом деплое
   // (те же 3 места — stylesheet/preload/script). Используется только для попапа
   // «доступно обновление» ниже — сама загрузка кода по-прежнему идёт через ?v=.
-  const APP_VERSION = '20260728b';
+  const APP_VERSION = '20260728c';
   function showUpdateAvailableModal() {
     if (document.getElementById('update-avail-modal')) return;
     const m = document.createElement('div');
@@ -8430,9 +8432,26 @@
       ? `<div class="up-section"><div class="up-section-label">${t('up.about')}</div><div class="up-bio">${escHtml(o.bio)}</div></div>`
       : (o.isMe ? `<div class="up-section"><div class="up-section-label">${t('up.about')}</div><div class="up-bio up-bio-empty" onclick="closeUserProfile(); showEditProfile();">${t('up.bioEmpty')}</div></div>` : '');
     const joinLine = o.joinedAt ? `<div class="up-join">${t('up.withUsSince', { date: _fmtJoinDate(o.joinedAt) })}</div>` : '';
-    const action = o.isMe
-      ? `<button class="up-action up-action-ghost" onclick="closeUserProfile(); showEditProfile();"><i class="fa-solid fa-pen"></i> ${t('set.editProfile')}</button>`
-      : `<button class="up-action up-action-primary" onclick="_profileToChat('${escHtml(o.uid)}','${name.replace(/'/g,"&#39;")}')"><i class="fa-solid fa-paper-plane"></i> ${t('up.writeMsg')}</button>`;
+    // Кнопка действия: себе — «Редактировать»; иначе — по статусу дружбы:
+    //   • Мади (админ) ИЛИ уже друг → «Написать сообщение» (личный чат);
+    //   • заявка уже отправлена → «⏳ Заявка отправлена» (неактивна);
+    //   • остальные → «Добавить в друзья» (шлём заявку, писать можно после принятия).
+    let action;
+    if (o.isMe) {
+      action = `<button class="up-action up-action-ghost" onclick="closeUserProfile(); showEditProfile();"><i class="fa-solid fa-pen"></i> ${t('set.editProfile')}</button>`;
+    } else {
+      // Писать напрямую можно: другу, Мади (o.isAdmin), а также ЕСЛИ Я САМА админ —
+      // учитель пишет любой ученице без заявки в друзья.
+      const canMsg = isAdmin() || !!o.isAdmin || !!(_friendsCache && _friendsCache[o.uid]);
+      const pending = !canMsg && !!(_outgoingCache && _outgoingCache[o.uid]);
+      if (canMsg) {
+        action = `<button class="up-action up-action-primary" onclick="_profileToChat('${jsStr(o.uid)}','${jsStr(name)}')"><i class="fa-solid fa-paper-plane"></i> ${t('up.writeMsg')}</button>`;
+      } else if (pending) {
+        action = `<button class="up-action up-action-ghost" disabled style="opacity:.75;">${t('up.reqPending')}</button>`;
+      } else {
+        action = `<button class="up-action up-action-primary" onclick="_profileAddFriend('${jsStr(o.uid)}','${jsStr(name)}')"><i class="fa-solid fa-user-plus"></i> ${t('up.addFriend')}</button>`;
+      }
+    }
     const editCover = o.isMe
       ? `<button class="up-cover-edit" onclick="closeUserProfile(); showEditProfile();" aria-label="${t('up.changeCover')}" title="${t('up.changeCover')}"><i class="fa-solid fa-camera"></i></button>`
       : '';
@@ -8500,6 +8519,13 @@
     if (_chatCurrentId && _chatCurrentId === chatIdFor(myUid(), uid)) return;
     openChat(uid, name);
   }
+  // Кнопка «Добавить в друзья» из профиля участника: шлём заявку и сразу же меняем
+  // кнопку на «Заявка отправлена» (не закрывая профиль); писать можно после принятия.
+  function _profileAddFriend(uid, name) {
+    sendFriendRequest(uid, name);
+    const btn = document.querySelector('#user-profile-page .up-action');
+    if (btn) btn.outerHTML = `<button class="up-action up-action-ghost" disabled style="opacity:.75;">${t('up.reqPending')}</button>`;
+  }
 
   // ── Chat message interactions: swipe-to-reply (Telegram-style), double-tap ❤️,
   //    long-press menu, reactions. All bound on the container via delegation so they
@@ -8513,7 +8539,9 @@
     const SW_THRESHOLD = 56, SW_MAX = 84;
     const clearLp = () => { if (lpTimer) { clearTimeout(lpTimer); lpTimer = null; } };
     const bubbleOf = e => (e.target.closest ? e.target.closest('.chat-bubble[data-mid]') : null);
-    const onChip = e => !!(e.target.closest && e.target.closest('.chat-react-chip'));
+    // Жесты пузыря (свайп-ответ, двойной тап ❤️, лонг-пресс) НЕ должны срабатывать на
+    // интерактивных элементах внутри — чипах реакций и кликабельном имени отправителя.
+    const onChip = e => !!(e.target.closest && e.target.closest('.chat-react-chip, .chat-sender-name'));
 
     const swipeArrow = () => {
       let a = document.getElementById('chat-swipe-arrow');
@@ -8856,7 +8884,7 @@
       const mine = m.from === me;
       // Group chats: show the sender name on the first bubble of each run (Telegram-style).
       const senderHtml = (_chatIsGroup && !mine && m.from !== prevFrom)
-        ? `<div class="chat-sender-name nc-${nameColorIdx(m.from)}">${escHtml(m.fromName || (_chatMembers && _chatMembers[m.from]) || t('grp.defMember'))}</div>`
+        ? `<div class="chat-sender-name nc-${nameColorIdx(m.from)}" onclick="event.stopPropagation(); openUserProfile('${jsStr(m.from)}')" style="cursor:pointer;">${escHtml(m.fromName || (_chatMembers && _chatMembers[m.from]) || t('grp.defMember'))}</div>`
         : '';
       prevFrom = m.from;
       const time = `${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
