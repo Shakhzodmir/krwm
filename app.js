@@ -6342,7 +6342,7 @@
   // Версия сборки: держать В РУЧНУЮ синхронной с ?v= в index.html при каждом деплое
   // (те же 3 места — stylesheet/preload/script). Используется только для попапа
   // «доступно обновление» ниже — сама загрузка кода по-прежнему идёт через ?v=.
-  const APP_VERSION = '20260728f';
+  const APP_VERSION = '20260728g';
   function showUpdateAvailableModal() {
     if (document.getElementById('update-avail-modal')) return;
     const m = document.createElement('div');
@@ -6447,6 +6447,14 @@
 
   function escHtml(s) {
     return String(s || '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  }
+  // Безопасная ссылка на картинку для src/background. Пропускаем ТОЛЬКО картиночные
+  // схемы (http(s)/data:image/blob) — иначе '' (не рендерим). Это закрывает XSS в
+  // ленте: пользователь мог подсунуть в поле картинки '"><img onerror=…> и исполнить
+  // чужой код у всех, кто открыл ленту (включая Мади с правами админа).
+  function safeImgUrl(url) {
+    const s = String(url == null ? '' : url).trim();
+    return /^(https?:\/\/|data:image\/|blob:)/i.test(s) ? s : '';
   }
   // Safe to drop inside a single-quoted JS string that itself lives inside a
   // double-quoted HTML attribute (e.g. onclick="fn('…')"). Escapes the JS-string
@@ -31622,14 +31630,16 @@
   function gotoVideoPage(p) { videoPage = p; renderCustomVideos(); document.getElementById('custom-videos')?.scrollIntoView({ behavior:'smooth', block:'start' }); }
 
   function feedImageHtml(image, pid) {
-    if (!image) return '';
-    const safe = String(image).replace(/['"]/g, '');
+    // Пропускаем только безопасные картиночные ссылки (иначе через '"><img onerror=…>
+    // исполнялся бы чужой код в ленте) и экранируем для атрибута src.
+    const url = safeImgUrl(image);
+    if (!url) return '';
     return `
       <div class="feed-media-wrap" ondblclick="doubleTapLike('${pid}', this, event)" ontouchend="handleMediaTouchTap('${pid}', this, event)">
         <div style="border-radius:14px; overflow:hidden; aspect-ratio:16/9; background:var(--paper); cursor:pointer;">
-          <img src="${image}" alt="" style="width:100%; height:100%; object-fit:contain; user-select:none;" draggable="false" onerror="this.closest('.feed-media-wrap').style.display='none'">
+          <img src="${escHtml(url)}" alt="" style="width:100%; height:100%; object-fit:contain; user-select:none;" draggable="false" onerror="this.closest('.feed-media-wrap').style.display='none'">
         </div>
-        <button class="feed-media-expand-btn" onclick="event.stopPropagation(); openMediaLightbox('image', '${safe}')" aria-label="${t('ui.252')}" title="${t('ui.252')}">
+        <button class="feed-media-expand-btn" onclick="event.stopPropagation(); openMediaLightbox('image', '${jsStr(url)}')" aria-label="${t('ui.252')}" title="${t('ui.252')}">
           <i class="fa-solid fa-up-right-and-down-left-from-center"></i>
         </button>
       </div>`;
@@ -31838,7 +31848,7 @@
     const av = (typeof UStore !== 'undefined') ? UStore.get('avatar') : null;
     slot.innerHTML = `
       <button type="button" onclick="openFeedComposer()" class="feed-composer">
-        ${av ? `<img class="feed-composer-av" src="${av}" alt="">` : `<div class="feed-composer-av feed-composer-av-initial">${escHtml((socialUserName() || '?').charAt(0).toUpperCase())}</div>`}
+        ${safeImgUrl(av) ? `<img class="feed-composer-av" src="${escHtml(safeImgUrl(av))}" alt="">` : `<div class="feed-composer-av feed-composer-av-initial">${escHtml((socialUserName() || '?').charAt(0).toUpperCase())}</div>`}
         <span class="feed-composer-text">${t('ui.232')}</span>
         <span class="feed-composer-cam"><i class="fa-solid fa-camera"></i></span>
       </button>`;
@@ -31853,7 +31863,7 @@
     const when = p.ts ? relativeTime(p.ts) : '';
     const head = `
       <div class="feed-student-head">
-        ${av ? `<img class="feed-student-av" src="${av}" alt="">` : `<div class="feed-student-av feed-student-av-initial">${escHtml((p.name || '?').charAt(0).toUpperCase())}</div>`}
+        ${safeImgUrl(av) ? `<img class="feed-student-av" src="${escHtml(safeImgUrl(av))}" alt="">` : `<div class="feed-student-av feed-student-av-initial">${escHtml((p.name || '?').charAt(0).toUpperCase())}</div>`}
         <div style="flex:1; min-width:0;">
           <div class="feed-student-name">${escHtml(p.name || t('feed.studentName'))}${isAuthor ? ` <span class="feed-student-you">${t('feed.you')}</span>` : ''}</div>
           <div class="feed-student-time">${t('feed.studentTag')} · ${escHtml(when)}</div>
@@ -32192,13 +32202,15 @@
     m.onclick = e => { if (e.target === m) m.remove(); };
     let content = '';
     if (kind === 'image') {
-      content = `<img src="${src}" alt="" style="max-width:96vw; max-height:88vh; object-fit:contain; border-radius:12px; display:block; box-shadow: 0 20px 60px rgba(0,0,0,.4);">`;
+      const url = safeImgUrl(src);
+      if (!url) return; // небезопасная ссылка — не открываем (защита в глубину к фиксу ленты)
+      content = `<img src="${escHtml(url)}" alt="" style="max-width:96vw; max-height:88vh; object-fit:contain; border-radius:12px; display:block; box-shadow: 0 20px 60px rgba(0,0,0,.4);">`;
     } else if (kind === 'youtube') {
       content = `<iframe src="https://www.youtube.com/embed/${src}?autoplay=1" style="width:min(960px,96vw); aspect-ratio:16/9; border:0; border-radius:12px;" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>`;
     } else if (kind === 'gdrive') {
       content = `<iframe src="https://drive.google.com/file/d/${src}/preview" style="width:min(960px,96vw); aspect-ratio:16/9; border:0; border-radius:12px;" allow="autoplay" allowfullscreen></iframe>`;
     } else if (kind === 'video') {
-      content = `<video src="${src}" controls autoplay playsinline style="max-width:96vw; max-height:88vh; border-radius:12px; background:#000;"></video>`;
+      content = `<video src="${escHtml(String(src || ''))}" controls autoplay playsinline style="max-width:96vw; max-height:88vh; border-radius:12px; background:#000;"></video>`;
     }
     m.innerHTML = `
       <div style="position:relative; display:flex; align-items:center; justify-content:center;">
