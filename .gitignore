@@ -6,6 +6,9 @@ IMG_*.JPG
 .remember/logs/
 .remember/tmp/
 *pdf
+# Исключение: фирменные прописи ученицам нужны на живом сайте (иначе ссылка
+# из игры «Пиши буквы» даёт 404). Остальные PDF по-прежнему не публикуются.
+!assets/topik1/madie-propisi.pdf
 *.docx
 assets/new material/
 
