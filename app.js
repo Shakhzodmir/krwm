@@ -6342,7 +6342,7 @@
   // Версия сборки: держать В РУЧНУЮ синхронной с ?v= в index.html при каждом деплое
   // (те же 3 места — stylesheet/preload/script). Используется только для попапа
   // «доступно обновление» ниже — сама загрузка кода по-прежнему идёт через ?v=.
-  const APP_VERSION = '20260728e';
+  const APP_VERSION = '20260728f';
   function showUpdateAvailableModal() {
     if (document.getElementById('update-avail-modal')) return;
     const m = document.createElement('div');
@@ -30753,14 +30753,19 @@
     const q = st.qs[st.idx];
     const answered = st.answered;
     let bodyHtml;
+    const passageHtml = q.passage ? `<div class="exam-passage ko">${examPassageHtml(q.passage)}</div>` : '';
     if (q.mode === 'listen') {
+      // Озвучка ненадёжна (у части учениц звук молчит: айфон на «бесшумном», нет
+      // корейского голоса устройства, прокси заблокирован). Поэтому ПОКАЗЫВАЕМ текст —
+      // вопрос решается всегда; кнопка «Прослушать» — необязательная озвучка сверху.
       bodyHtml = `
-        <div class="topik-drill-explain" style="text-align:center;">
+        <div style="text-align:center; margin-bottom:10px;">
           <button type="button" class="btn btn-rose" onclick="playSyllable(${JSON.stringify(q.passage)})"><i class="fa-solid fa-volume-up"></i> ${t('leveltest.listenBtn')}</button>
-        </div>`;
+        </div>
+        ${passageHtml}`;
     } else {
       bodyHtml = (q.ko ? `<div class="ko" style="font-size:28px; font-weight:700; color:var(--berry); text-align:center; margin:10px 0;">${escHtml(q.ko)}</div>` : '')
-        + (q.passage ? `<div class="exam-passage ko">${examPassageHtml(q.passage)}</div>` : '')
+        + passageHtml
         + (q.image ? `<img class="exam-qimg" src="${q.image}" alt="">` : '');
     }
     const opts = q.options.map((opt, i) => {
