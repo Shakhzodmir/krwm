@@ -426,6 +426,7 @@
     'up.withUsSince':  { ru: '🌸 с нами с {date}', en: '🌸 with us since {date}', uz: '🌸 biz bilan {date}dan' },
     'up.writeMsg':     { ru: 'Написать сообщение', en: 'Send a message', uz: 'Xabar yozish' },
     'up.addFriend':    { ru: 'Добавить в друзья', en: 'Add friend', uz: 'Doʻst qoʻshish' },
+    'adm.writeStudent':{ ru: 'Написать ученику', en: 'Message student', uz: 'Oʻquvchiga yozish' },
     'up.reqPending':   { ru: '⏳ Заявка отправлена', en: '⏳ Request sent', uz: '⏳ Soʻrov yuborildi' },
     'up.changeCover':  { ru: 'Сменить обложку', en: 'Change cover', uz: 'Muqovani almashtirish' },
 
@@ -6340,7 +6341,7 @@
   // Версия сборки: держать В РУЧНУЮ синхронной с ?v= в index.html при каждом деплое
   // (те же 3 места — stylesheet/preload/script). Используется только для попапа
   // «доступно обновление» ниже — сама загрузка кода по-прежнему идёт через ?v=.
-  const APP_VERSION = '20260728c';
+  const APP_VERSION = '20260728d';
   function showUpdateAvailableModal() {
     if (document.getElementById('update-avail-modal')) return;
     const m = document.createElement('div');
@@ -9170,7 +9171,12 @@
   // Пол пользователя ('f'|'m'|''). Пусто → спрашиваем. Гендерные обращения по всему UI.
   function userGender() {
     const g = getSettings().gender;
-    return (g === 'm' || g === 'f') ? g : '';
+    if (g === 'm' || g === 'f') return g;
+    // Фолбэк на пол из знакомства (onboardProfile.gender): если в настройках не задан,
+    // но выбран при знакомстве — используем его, чтобы не переспрашивать. 'x' (не
+    // говорить) → без обращения по роду.
+    const og = (Store.get('onboardProfile') || {}).gender;
+    return (og === 'm' || og === 'f') ? og : '';
   }
   // gw(женская_форма, мужская_форма) — выбирает по полу пользователя (по умолчанию женская).
   function gw(f, m) { return userGender() === 'm' ? m : f; }
@@ -9188,6 +9194,9 @@
     const s = getSettings();
     s.gender = (g === 'm') ? 'm' : 'f';
     UStore.set('settings', s);
+    // Зеркалим в onboardProfile.gender — чтобы знакомство/подсказки не переспрашивали
+    // пол, а два источника (настройки ↔ знакомство) всегда совпадали.
+    try { const prof = Store.get('onboardProfile') || {}; prof.gender = s.gender; Store.set('onboardProfile', prof); } catch (_) {}
     renderSettingsCard();
     // Перерисовать ВСЕ места с гендерными обращениями: ранг в шапке/карточке (syncStats),
     // полоска достижений, открытый профиль и чип уровня.
@@ -9339,13 +9348,13 @@
             </button>`).join('')}
         </div>
       </div>`,
-      `<div class="gender-pick" ${s.gender ? '' : 'data-required="1"'}>
-        <div class="gender-pick-title">🧑 ${t('set.gender')} <span style="font-weight:500; color:var(--hush); font-size:10.5px;">${t('set.gender.note')}${s.gender ? '' : t('set.gender.ask')}</span></div>
+      (() => { const gsel = userGender(); return `<div class="gender-pick" ${gsel ? '' : 'data-required="1"'}>
+        <div class="gender-pick-title">🧑 ${t('set.gender')} <span style="font-weight:500; color:var(--hush); font-size:10.5px;">${t('set.gender.note')}${gsel ? '' : t('set.gender.ask')}</span></div>
         <div class="gender-pick-row">
-          <button type="button" class="gender-opt ${s.gender === 'f' ? 'active' : ''}" onclick="setGender('f')">${t('set.gender.f')}</button>
-          <button type="button" class="gender-opt ${s.gender === 'm' ? 'active' : ''}" onclick="setGender('m')">${t('set.gender.m')}</button>
+          <button type="button" class="gender-opt ${gsel === 'f' ? 'active' : ''}" onclick="setGender('f')">${t('set.gender.f')}</button>
+          <button type="button" class="gender-opt ${gsel === 'm' ? 'active' : ''}" onclick="setGender('m')">${t('set.gender.m')}</button>
         </div>
-      </div>`,
+      </div>`; })(),
       ...((Store.get('user') && !Store.get('user').isAdmin) ? [
         row('💎', t('set.plan'), t('set.plan.sub', { plan: `${PLANS[myPlanId()].emoji} ${PLANS[myPlanId()].name}` }), chev, "document.getElementById('settings-modal')?.remove(); openPlanPage()")
       ] : []),
@@ -35541,6 +35550,9 @@
           <span class="chip chip-blush" style="margin-top:8px;">${rank.emoji} ${rank.label} · Lv ${lvl}</span>
         </div>
 
+        <!-- Написать ученику: Мади (админ) пишет напрямую, без заявки в друзья -->
+        <button onclick="document.getElementById('student-detail-modal')?.remove(); openChat('${jsStr(uid)}','${jsStr(u.name || '')}')" class="btn btn-primary btn-block" style="margin-top:12px;"><i class="fa-solid fa-paper-plane"></i> ${t('adm.writeStudent')}</button>
+
         <!-- Оплата и доступ -->
         <div style="margin-top:16px;">
           <div style="font-size:10px; letter-spacing:.16em; color:var(--coral); font-weight:700;">${t('ui.382')}</div>
@@ -41189,6 +41201,11 @@
       name: _obName, goals: _obGoals, level: obEffectiveLevel(), picked: _obLevel, gender: _obGender,
       miniScore: _obQuiz ? _obQuiz.score : null, miniTotal: _obQuiz ? _obQuiz.qs.length : null, at: Date.now()
     });
+    // Пол из знакомства → в настройки (обращения по роду), чтобы карточка настроек
+    // НЕ переспрашивала уже указанный пол. 'x' (не говорить) не мапим.
+    if (_obGender === 'm' || _obGender === 'f') {
+      try { const s = getSettings(); s.gender = _obGender; UStore.set('settings', s); } catch (_) {}
+    }
     document.getElementById('onboard')?.remove();
     // Гостя сразу зовём по имени (при регистрации имя переедет в форму)
     if (_obName && !Store.get('user')) {
