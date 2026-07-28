@@ -446,6 +446,16 @@
     'hw.materials':   { ru: 'МАТЕРИАЛЫ', en: 'MATERIALS', uz: 'MATERIALLAR' },
     'hw.download':    { ru: 'Скачать', en: 'Download', uz: 'Yuklab olish' },
     'hw.fileSoon':    { ru: 'Файл скоро добавим 🌸', en: 'The file is coming soon 🌸', uz: 'Fayl tez orada qoʻshiladi 🌸' },
+    // Печатный лист материалов урока (генерится из содержимого урока → PDF)
+    'mat.btn':        { ru: 'Материалы урока · сохранить PDF', en: 'Lesson materials · save PDF', uz: 'Dars materiallari · PDF saqlash' },
+    'mat.words':      { ru: 'Слова урока', en: 'Lesson words', uz: 'Dars soʻzlari' },
+    'mat.grammar':    { ru: 'Грамматика и примеры', en: 'Grammar and examples', uz: 'Grammatika va misollar' },
+    'mat.homework':   { ru: 'Домашнее задание', en: 'Homework', uz: 'Uy vazifasi' },
+    'mat.print':      { ru: '🖨️ Сохранить в PDF / печать', en: '🖨️ Save as PDF / print', uz: '🖨️ PDF saqlash / chop etish' },
+    'mat.hint':       { ru: 'В окне печати выбери «Сохранить как PDF» (поля — по умолчанию).', en: 'In the print dialog choose “Save as PDF” (default margins).', uz: 'Chop etish oynasida «PDF sifatida saqlash»ni tanlang (standart chekkalar).' },
+    'mat.forLesson':  { ru: 'Материалы урока', en: 'Lesson materials', uz: 'Dars materiallari' },
+    'mat.noContent':  { ru: 'Для этого урока материалов пока нет 🌸', en: 'No materials for this lesson yet 🌸', uz: 'Bu dars uchun hozircha material yoʻq 🌸' },
+    'mat.popupBlocked': { ru: 'Разреши всплывающие окна, чтобы открыть материалы 🌸', en: 'Allow pop-ups to open the materials 🌸', uz: 'Materiallarni ochish uchun qalqib chiquvchi oynalarga ruxsat bering 🌸' },
     'hw.wordsToLearn':{ ru: 'СЛОВА ДЛЯ ЗАУЧИВАНИЯ', en: 'WORDS TO LEARN', uz: 'YODLASH UCHUN SOʻZLAR' },
     'hw.autotest':    { ru: 'Пройти мини-тест урока', en: 'Take the lesson quiz', uz: 'Dars mini-testini oʻtish' },
     'hw.testTooFew':  { ru: 'В уроке мало слов для теста 🌸', en: 'Too few words in the lesson for a test 🌸', uz: 'Testga darsdagi soʻzlar yetarli emas 🌸' },
@@ -3789,18 +3799,23 @@
         <span class="ko" style="font-size:17px; font-weight:700; color:var(--berry); flex-shrink:0;">${w.ko}</span>
         <span style="font-size:11px; color:var(--soft); line-height:1.25;">${skLoc(w, 'ru')}</span>
       </div>`).join('');
-    const fileHtml = file ? `
-      <div style="font-size:10px; letter-spacing:.18em; color:var(--soft); margin:18px 0 8px;">${t('hw.materials')}</div>
-      <div class="card card-padded" style="display:flex; align-items:center; gap:12px;">
+    // Материалы урока (отзыв Ники): раньше здесь была мёртвая кнопка «Скоро». Теперь
+    // у КАЖДОГО урока есть настоящий печатный лист — слова + грамматика + ДЗ,
+    // генерится из содержимого урока и сохраняется в PDF (openLessonMaterials).
+    // Плюс — реальный файл, если Мади добавила ссылку (file.url).
+    const realFileHtml = (file && file.url) ? `
+      <div class="card card-padded" style="display:flex; align-items:center; gap:12px; margin-top:8px;">
         <div style="width:42px; height:42px; flex-shrink:0; border-radius:12px; background:rgba(201,165,92,.15); display:flex; align-items:center; justify-content:center; font-size:20px;">📄</div>
         <div style="flex:1; min-width:0;">
           <div style="font-weight:600; color:var(--berry); font-size:12.5px;">${skLoc(file, 'label')}</div>
           <div style="font-size:10.5px; color:var(--soft); margin-top:1px;">${file.note || ''}</div>
         </div>
-        ${file.url
-          ? `<a href="${file.url}" download class="btn btn-primary" style="flex-shrink:0; padding:9px 14px; font-size:12px;"><i class="fa-solid fa-download"></i> ${t('hw.download')}</a>`
-          : `<button onclick="toast('${jsStr(t('hw.fileSoon'))}')" class="btn btn-ghost" style="flex-shrink:0; padding:9px 14px; font-size:12px;"><i class="fa-solid fa-download"></i> ${t('common.soon')}</button>`}
+        <a href="${file.url}" download class="btn btn-ghost" style="flex-shrink:0; padding:9px 14px; font-size:12px;"><i class="fa-solid fa-download"></i> ${t('hw.download')}</a>
       </div>` : '';
+    const fileHtml = (lesson && lesson.id) ? `
+      <div style="font-size:10px; letter-spacing:.18em; color:var(--soft); margin:18px 0 8px;">${t('hw.materials')}</div>
+      <button onclick="openLessonMaterials('${jsStr(lesson.id)}')" class="btn btn-primary btn-block"><i class="fa-solid fa-file-arrow-down"></i> ${t('mat.btn')}</button>
+      ${realFileHtml}` : '';
     // ДЗ 2.0: авто-тест по словам урока (нужно ≥4 слова для вариантов).
     const hwRec = (lesson && lesson.id) ? (UStore.get('hwAuto') || {})[lesson.id] : null;
     const hwPassed = hwRec && hwRec.n && hwRec.s >= Math.ceil(hwRec.n * 0.8);
@@ -3818,6 +3833,72 @@
       ${fileHtml}
       ${hw2}
     `;
+  }
+  // ── Печатный лист материалов урока (отзыв Ники) ──────────────────────────────
+  // Генерим A4-лист из СОДЕРЖИМОГО урока (слова + грамматика/примеры + ДЗ) и
+  // открываем в новой вкладке → браузерное «Сохранить в PDF». Так у каждого урока
+  // есть реальный файл без ручной загрузки PDF. Реюз печатного подхода «Учебника».
+  function openLessonMaterials(lessonId) {
+    const lesson = _findLessonById(lessonId);
+    if (!lesson) { toast(t('mat.noContent')); return; }
+    const esc = (s) => escHtml(String(s == null ? '' : s));
+    const L = APP_LANG;
+    // 1) Слова урока
+    const vocab = (Array.isArray(lesson.vocab) ? lesson.vocab : []).filter(w => w && w.ko);
+    const vocRows = vocab.map(w => `<tr><td class="k"><span class="ko">${esc(w.ko)}</span>${w.translit ? `<span class="tr">[${esc(w.translit)}]</span>` : ''}</td><td class="r">${esc(skLoc(w, 'ru'))}</td></tr>`).join('');
+    // 2) Грамматика и примеры — из info-слайдов урока
+    const infoSlides = (Array.isArray(lesson.slides) ? lesson.slides : []).filter(s => s && s.kind === 'info' && Array.isArray(s.grid) && s.grid.length);
+    const gramBlocks = infoSlides.map(s => {
+      const head = esc(skLoc(s, 'title') || s.eyebrow || '');
+      const rows = s.grid.map(g => `<div class="gr"><span class="ko">${esc(g.ko)}</span><span class="gru">${esc(skLoc(g, 'ru'))}</span></div>`).join('');
+      const note = skLoc(s, 'note');
+      return `<div class="gb"><div class="gh">${head}</div>${rows}${note ? `<div class="gn">${esc(note)}</div>` : ''}</div>`;
+    }).join('');
+    // 3) Домашнее задание
+    const tasks = (skLocA(lesson.homework || {}, 'tasks') || []).filter(Boolean);
+    const hwList = tasks.map(x => `<li>${esc(x)}</li>`).join('');
+    if (!vocRows && !gramBlocks && !hwList) { toast(t('mat.noContent')); return; }
+    const num = lesson.num ? esc(lesson.num) + '. ' : '';
+    const section = (title, body) => body ? `<h2>${esc(title)}</h2>${body}` : '';
+    const html = `<!doctype html><html lang="${esc(L)}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>${esc(t('mat.forLesson'))}: ${num}${esc(lesson.title)}</title><style>
+      :root{ --berry:#7a2e43; --coral:#c85a72; --soft:#8a6b74; --line:#ecd9de; --cream:#fff7f9; }
+      *{ box-sizing:border-box; } html,body{ margin:0; }
+      body{ font-family:-apple-system,'Segoe UI',Roboto,'Malgun Gothic','Apple SD Gothic Neo',sans-serif; color:#2a1a20; background:#f6eef1; line-height:1.5; -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+      .bar{ position:sticky; top:0; display:flex; align-items:center; gap:12px; flex-wrap:wrap; background:#fff; border-bottom:1px solid var(--line); padding:10px 16px; font-size:13px; color:var(--berry); }
+      .bar b{ color:var(--coral); } .bar .hint{ color:var(--soft); font-size:11.5px; }
+      .btn{ font:inherit; font-weight:700; cursor:pointer; border:none; border-radius:999px; padding:9px 16px; background:var(--coral); color:#fff; }
+      .sheet{ max-width:760px; margin:16px auto; background:#fff; border-radius:14px; box-shadow:0 6px 24px rgba(122,46,67,.08); padding:26px 30px 34px; }
+      .head{ border-bottom:2px solid var(--line); padding-bottom:12px; margin-bottom:16px; }
+      .eyebrow{ letter-spacing:.18em; font-size:10px; color:var(--coral); font-weight:800; }
+      h1{ font-size:24px; color:var(--berry); margin:6px 0 2px; } .head .ko{ font-size:16px; color:var(--soft); }
+      h2{ font-size:13px; letter-spacing:.1em; text-transform:uppercase; color:var(--coral); margin:22px 0 10px; }
+      table.voc{ width:100%; border-collapse:collapse; }
+      table.voc td{ border-bottom:1px solid var(--line); padding:7px 8px; vertical-align:top; }
+      table.voc td.k{ width:46%; } .voc .ko{ font-size:16px; font-weight:700; color:var(--berry); } .voc .tr{ color:var(--soft); font-size:11px; margin-left:6px; }
+      table.voc td.r{ font-size:13px; }
+      .gb{ border:1px solid var(--line); border-radius:12px; padding:12px 14px; margin-bottom:10px; background:var(--cream); }
+      .gh{ font-weight:700; color:var(--berry); font-size:13.5px; margin-bottom:7px; }
+      .gr{ display:flex; gap:10px; padding:3px 0; font-size:12.5px; } .gr .ko{ color:var(--berry); font-weight:700; min-width:34%; } .gr .gru{ color:#3a2a30; }
+      .gn{ margin-top:7px; font-size:12px; color:var(--soft); border-top:1px dotted var(--line); padding-top:6px; }
+      ol.hw{ margin:0; padding-left:20px; } ol.hw li{ font-size:13px; margin:5px 0; }
+      .foot{ margin-top:26px; text-align:center; color:var(--soft); font-size:11px; }
+      .ko{ font-family:'Malgun Gothic','Apple SD Gothic Neo',sans-serif; }
+      @page{ size:A4; margin:14mm; }
+      @media print{ body{ background:#fff; } .bar{ display:none; } .sheet{ box-shadow:none; margin:0; max-width:none; padding:0; } .gb,.voc tr,ol.hw li{ break-inside:avoid; } }
+    </style></head><body>
+      <div class="bar"><span><b>Korean with Madie 🌸</b></span><button class="btn" onclick="window.print()">${esc(t('mat.print'))}</button><span class="hint">${esc(t('mat.hint'))}</span></div>
+      <div class="sheet">
+        <div class="head"><div class="eyebrow">${esc(t('mat.forLesson'))}</div><h1>${num}${esc(lesson.title)}</h1>${lesson.ko ? `<div class="ko">${esc(lesson.ko)}</div>` : ''}</div>
+        ${section(t('mat.words'), vocRows ? `<table class="voc">${vocRows}</table>` : '')}
+        ${section(t('mat.grammar'), gramBlocks)}
+        ${section(t('mat.homework'), hwList ? `<ol class="hw">${hwList}</ol>` : '')}
+        <div class="foot">Korean with Madie 🌸 · koreanmadie.study</div>
+      </div>
+    </body></html>`;
+    let w = null;
+    try { w = window.open('', '_blank'); } catch (_) {}
+    if (!w) { toast(t('mat.popupBlocked')); return; }
+    try { w.document.open(); w.document.write(html); w.document.close(); } catch (_) { toast(t('mat.popupBlocked')); }
   }
   // ── ДЗ 2.0: авто-тест (ko→ru, до 5 вопросов) + отправка письменного Мади ──
   let _hwTest = null;
@@ -6257,7 +6338,7 @@
   // Версия сборки: держать В РУЧНУЮ синхронной с ?v= в index.html при каждом деплое
   // (те же 3 места — stylesheet/preload/script). Используется только для попапа
   // «доступно обновление» ниже — сама загрузка кода по-прежнему идёт через ?v=.
-  const APP_VERSION = '20260728a';
+  const APP_VERSION = '20260728b';
   function showUpdateAvailableModal() {
     if (document.getElementById('update-avail-modal')) return;
     const m = document.createElement('div');

@@ -5443,6 +5443,14 @@
   body.theme-dark .dlg-ava,
   body.theme-dark .dlg-bubble,
   body.theme-dark .build-chip { background: #2A2A2E; }
+  /* Тёмная тема: правые («мои») пузыри диалога — базовый розовый градиент berry→coral
+     в тёмной теме слишком светлый, белый текст на нём читался плохо (отзыв ученицы).
+     Тёмно-розовый фон: белый ≥8.5:1, а «мои» реплики всё равно отличаются от левых.
+     Специфичность (0,3,1) перебивает базовое .dlg-row.b .dlg-bubble (0,3,0). */
+  body.theme-dark .dlg-row.b .dlg-bubble { background: linear-gradient(135deg, #5E2638, #7A2F46); border-color: transparent; }
+  body.theme-dark .dlg-row.b .dlg-ru { color: rgba(255,255,255,.9); }
+  /* Перевод у левых («партнёр») пузырей — чуть ярче для комфортного чтения. */
+  body.theme-dark .dlg-row.a .dlg-ru { color: rgba(231,235,244,.78); }
   body.theme-dark .lsave-btn { background: var(--paper); border-color: var(--line); color: var(--soft); }
 
   /* ── GAME CARDS v2 ──────────────────────────────────────── */
