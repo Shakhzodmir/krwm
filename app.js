@@ -2107,6 +2107,7 @@
     "build.answerIs": { ru: "Правильно:", en: "Correct:", uz: "Toʻgʻri:" },
     "ui.r075": { ru: "КАК БУДЕТ {kind}", en: "HOW TO SAY IT — {kind}", uz: "QANDAY BOʻLADI {kind}" },
     "ui.r076": { ru: "📄 Скачать фирменные прописи Madie (PDF)", en: "📄 Download Madie's branded handwriting workbook (PDF)", uz: "📺 Madie firmali xattotlik daftarini yuklab oling (PDF)" },
+    "ui.propView": { ru: "👁 Открыть в браузере", en: "👁 Open in browser", uz: "👁 Brauzerda ochish" },
     "ui.r077": { ru: "Детали: {details}", en: "Details: {details}", uz: "Tafsilotlar: {details}" },
     "ui.r078": { ru: "В мой словарик", en: "Add to my vocabulary", uz: "Mening lugʻatimga" },
     "ui.r079": { ru: "Не получилось связаться со словарём 😔 Попробуй ещё раз через минуту.", en: "Couldn't reach the dictionary 😔 Try again in a minute.", uz: "Lugʻatga ulanib boʻlmadi 😔 Bir daqiqadan keyin qayta urinib koʻring." },
@@ -6341,7 +6342,7 @@
   // Версия сборки: держать В РУЧНУЮ синхронной с ?v= в index.html при каждом деплое
   // (те же 3 места — stylesheet/preload/script). Используется только для попапа
   // «доступно обновление» ниже — сама загрузка кода по-прежнему идёт через ?v=.
-  const APP_VERSION = '20260728d';
+  const APP_VERSION = '20260728e';
   function showUpdateAvailableModal() {
     if (document.getElementById('update-avail-modal')) return;
     const m = document.createElement('div');
@@ -39772,8 +39773,9 @@
         <button onclick="writeRetryStroke()" class="btn btn-ghost" style="flex:1; font-size:12px;">${t('ui.530')}</button>
         <button onclick="writeSkip()" class="btn btn-ghost" style="flex:1; font-size:12px;">${t('ui.531')}</button>
       </div>
-      <div style="text-align:center; margin-top:14px;">
-        <span onclick="window.open('assets/topik1/madie-propisi.pdf','_blank')" style="font-size:11.5px; color:var(--coral); font-weight:600; cursor:pointer;">${t('ui.r076')}</span>
+      <div style="text-align:center; margin-top:14px; display:flex; gap:14px; justify-content:center; flex-wrap:wrap;">
+        <a href="assets/topik1/madie-propisi.pdf" download="Propisi-Madie.pdf" style="font-size:11.5px; color:var(--coral); font-weight:600; text-decoration:none; cursor:pointer;">${t('ui.r076')}</a>
+        <a href="assets/topik1/madie-propisi.pdf" target="_blank" rel="noopener" style="font-size:11.5px; color:var(--soft); font-weight:600; text-decoration:none; cursor:pointer;">${t('ui.propView')}</a>
       </div>
     `);
     setTimeout(initWriteCanvas, 40);
