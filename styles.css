@@ -1547,6 +1547,29 @@
   }
   .profile-plan-chip:active { transform: scale(.95); }
   .profile-plan-chip.paid { border-color: var(--rose); background: linear-gradient(135deg, var(--blush), var(--paper)); color: var(--coral); }
+  /* Обратный отсчёт срока тарифа вверху профиля — заметный, но читаемый в любой теме.
+     Тёмные чернила на янтарном фоне (≈9:1); срочный (≤3 дн.) — на тёплом красном. */
+  .profile-plan-top-row { display: flex; align-items: center; justify-content: center; gap: 7px; flex-wrap: wrap; }
+  .plan-countdown {
+    display: inline-flex; align-items: center; gap: 4px; white-space: nowrap;
+    font-family: inherit; font-weight: 800; font-size: 11.5px;
+    padding: 6px 12px; border-radius: 999px;
+    background: linear-gradient(135deg, #F7CE5B, #EE9C3C); color: #3A2410;
+  }
+  .plan-countdown.urgent { background: linear-gradient(135deg, #F6A96B, #E56A4E); color: #3A1410; }
+  /* Кнопка выхода на профиле — видимая, но спокойная (мягкий красный контур). */
+  .profile-logout-btn {
+    background: var(--bad-bg); color: var(--bad-ink);
+    border: 1.5px solid rgba(179,58,74,.28); font-weight: 700;
+  }
+  .profile-logout-btn:active { transform: scale(.98); }
+  /* Важные попапы тарифа (пробная неделя / окончание) — заметное появление, крупный
+     значок с мягким покачиванием; закрываются только кнопкой, не тапом по фону. */
+  .trial-modal-card { animation: trialPop .34s var(--ease-spring) both; box-shadow: 0 24px 60px rgba(92,42,51,.28); }
+  .trial-modal-gift { font-size: 58px; line-height: 1; display: inline-block; animation: trialGift 1.8s ease-in-out infinite; }
+  @keyframes trialPop { 0% { transform: scale(.82); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+  @keyframes trialGift { 0%,100% { transform: rotate(-7deg) translateY(0); } 50% { transform: rotate(7deg) translateY(-4px); } }
+  @media (prefers-reduced-motion: reduce) { .trial-modal-card, .trial-modal-gift { animation: none; } }
   .plan-profile-ico {
     width: 44px; height: 44px; flex-shrink: 0;
     border-radius: 14px;
@@ -3879,7 +3902,10 @@
   }
   .topik-drill-opt:hover:not(:disabled) { border-color: var(--coral); }
   .topik-drill-opt:active:not(:disabled) { transform: scale(.98); }
-  .topik-drill-opt.correct { background: var(--sage); border-color: var(--sage); color: #fff; }
+  /* «Правильный ответ»: --sage переопределён на золото (см. duo :root), белый текст на
+     нём давал 1.92:1. Тот же читаемый «зелёный правильный», что и у .lesson-opt.opt-correct —
+     мягкая заливка + var(--ok-ink) (настроен под каждую тему, включая моно/тёмную). */
+  .topik-drill-opt.correct { background: rgba(132,196,116,.22) !important; border-color: var(--ok-ink) !important; color: var(--ok-deep) !important; }
   .topik-drill-opt.wrong   { background: #F6DDDD; border-color: #E0A3A3; color: #9B3B3B; opacity: .85; }
   .topik-drill-opt:disabled { cursor: default; }
   .topik-drill-explain { margin-top: 14px; font-size: 12.5px; color: var(--berry); line-height: 1.65; background: var(--paper); border-radius: 12px; padding: 12px 14px; overflow-wrap: anywhere; }
@@ -3922,7 +3948,7 @@
     transition: border-color var(--t-base); overflow-wrap: anywhere;
   }
   .tq-opt:hover:not(:disabled) { border-color: var(--coral); }
-  .tq-opt.correct { background: var(--sage); border-color: var(--sage); color: #fff; }
+  .tq-opt.correct { background: rgba(132,196,116,.22) !important; border-color: var(--ok-ink) !important; color: var(--ok-deep) !important; }
   .tq-opt.wrong   { background: #F6DDDD; border-color: #E0A3A3; color: #9B3B3B; opacity: .85; }
   .tq-opt:disabled { cursor: default; }
   .tq-more { text-align: right; font-size: 11.5px; font-weight: 700; color: var(--coral); margin-top: 10px; cursor: pointer; }
@@ -5398,7 +5424,7 @@
     transition: transform .12s ease-out;
   }
   .listen-play:active { transform: scale(.94); }
-  .lesson-opt.opt-correct { background: rgba(132,196,116,.22) !important; border-color: var(--ok-ink) !important; color: var(--ok-ink) !important; }
+  .lesson-opt.opt-correct { background: rgba(132,196,116,.22) !important; border-color: var(--ok-ink) !important; color: var(--ok-deep) !important; }
   .lesson-opt.opt-wrong { background: var(--bad-bg) !important; border-color: var(--bad-line) !important; color: var(--bad-ink) !important; }
 
   /* ── Кнопка «в словарик» (быстрое сохранение слов/фраз/грамматики) ── */
@@ -5449,6 +5475,19 @@
     box-shadow: 0 var(--duo-lip) 0 var(--duo-berry-deep) !important;
   }
   .game-card-kpop:hover { border-color: var(--duo-berry-deep) !important; }
+  /* «Игра дня» (ФАЗА E1): золотая рамка из базового правила (.gcv-of-day) не
+     переживала duo-слой (border/box-shadow !important выше) — карточку выделял
+     только бейдж. Возвращаем золото поверх duo; :active по-прежнему утапливает. */
+  .game-card-v2.gcv-of-day {
+    border-color: var(--gold) !important;
+    box-shadow: 0 var(--duo-lip) 0 var(--gold) !important;
+  }
+  .game-card-v2.gcv-of-day:active { box-shadow: 0 0 0 var(--gold) !important; }
+  body.theme-dark .game-card-v2.gcv-of-day {
+    border-color: var(--duo-gold) !important;
+    box-shadow: 0 var(--duo-lip) 0 var(--duo-gold) !important;
+  }
+  body.theme-dark .game-card-v2.gcv-of-day:active { box-shadow: 0 0 0 var(--duo-gold) !important; }
 
   /* ── HOME GREETING — make mascot a feature ──────────────── */
   /* Avatar uses background-image so the bear fallback works
@@ -6305,6 +6344,13 @@
     --dk-surf:        #2C1A1E;
     --dk-surf-2:      #3A2228;
   }
+  /* «Игра дня» (ФАЗА E1): в тёмной теме --gold — серо-голубой ТЕКСТОВЫЙ цвет,
+     из-за этого фирменный градиент бейджей (gold→coral) становился грязным, а белый
+     текст на его светлой части тонул (1.8:1). Тёмное золото → глубокий акцент:
+     белый на обоих концах ≥5.2:1. Рамка карточки — в duo-слое (см. GAME CARDS v2). */
+  body.theme-dark .god-badge,
+  body.theme-dark .gcv-of-day-badge { background: linear-gradient(140deg, var(--duo-gold), var(--grad-coral)); }
+  body.theme-dark .hc-timer-fill { background: linear-gradient(90deg, var(--duo-gold), var(--grad-coral)); }
   /* ───── ТЁМНАЯ ВЕРСИЯ КАЖДОГО СВОТЧА ─────
      body.ct-X.theme-dark (специфичность 0,2,1) перебивает базовую тёмную (0,1,1):
      сохраняем проверенные тёмные поверхности/текст/тени/статусы, но перекрашиваем
@@ -6848,7 +6894,7 @@
   }
   .tb-opt:hover:not(:disabled) { border-color: var(--tb-acc); transform: translateY(-1px); }
   .tb-opt:active:not(:disabled) { transform: scale(.97); }
-  .tb-opt.ok { background: var(--sage); border-color: var(--sage); color: #fff; }
+  .tb-opt.ok { background: rgba(132,196,116,.22) !important; border-color: var(--ok-ink) !important; color: var(--ok-deep) !important; }
   .tb-opt.no { background: #F6DDDD; border-color: #E0A3A3; color: #9B3B3B; opacity: .8; }
   .tb-opt:disabled { cursor: default; }
 
@@ -6862,8 +6908,8 @@
   .tb-mt-l { font-size: 22px; font-weight: 700; color: var(--berry); }
   .tb-mt:hover:not(:disabled) { border-color: var(--tb-acc); }
   .tb-mt.sel { border-color: var(--tb-acc); background: var(--blush); box-shadow: 0 0 0 3px rgba(188,75,94,.18); }
-  .tb-mt.done { background: var(--sage); border-color: var(--sage); color: #fff; cursor: default; }
-  .tb-mt.done.tb-mt-l { color: #fff; }
+  .tb-mt.done { background: rgba(132,196,116,.22) !important; border-color: var(--ok-ink) !important; color: var(--ok-deep) !important; cursor: default; }
+  .tb-mt.done.tb-mt-l { color: var(--ok-deep) !important; }
   .tb-mt.shake { animation: tbShake .4s; border-color: #E0A3A3; }
   @keyframes tbShake { 0%,100%{transform:translateX(0);} 25%{transform:translateX(-5px);} 75%{transform:translateX(5px);} }
 
@@ -6961,7 +7007,7 @@
   .tb-word:hover:not(:disabled) { border-color: var(--tb-acc); transform: translateY(-1px); }
   .tb-word.placed { background: var(--blush); }
   .tb-word:disabled { cursor: default; }
-  .tb-order-slot.ok .tb-word { background: var(--sage); border-color: var(--sage); color: #fff; }
+  .tb-order-slot.ok .tb-word { background: rgba(132,196,116,.22) !important; border-color: var(--ok-ink) !important; color: var(--ok-deep) !important; }
 
   /* ── Игры: кроссворд / филворд / анаграмма ── */
   .tb-game-actions { display: flex; flex-wrap: wrap; gap: 9px; align-items: center; margin-top: 13px; }
@@ -7012,7 +7058,7 @@
   .tb-ana-chip:hover:not(:disabled) { transform: translateY(-1px); border-color: var(--tb-acc); }
   .tb-ana-chip.placed { background: var(--blush); }
   .tb-ana-chip:disabled { cursor: default; }
-  .tb-ana-slot.ok .tb-ana-chip { background: var(--sage); border-color: var(--sage); color: #fff; }
+  .tb-ana-slot.ok .tb-ana-chip { background: rgba(132,196,116,.22) !important; border-color: var(--ok-ink) !important; color: var(--ok-deep) !important; }
 
   /* Адаптив */
   @media (max-width: 384px) {
@@ -7040,11 +7086,7 @@
   body.theme-dark .tb-opt, body.theme-dark .tb-mt, body.theme-dark .tb-syl,
   body.theme-dark .tb-letter-ex, body.theme-dark .tb-gex { background: var(--paper); }
   body.theme-dark .tb-opt.no { background: rgba(224,107,125,.18); border-color: var(--bad-line); color: var(--bad-ink); }
-  body.theme-dark .tb-opt.ok, body.theme-dark .tb-mt.done { background: var(--sage); border-color: var(--sage); color: #1B1C1F; }
+  /* .tb-opt.ok / .tb-mt.done / .topik-drill-opt.correct / .tq-opt.correct теперь
+     читаемы в обеих темах из базового правила (мягкая заливка + var(--ok-ink) с
+     !important) — отдельные тёмные оверрайды больше не нужны. */
   body.theme-dark .tb-hw-note { background: var(--paper); }
-
-  /* Ревью 07.07: --sage в тёмной теме переопределён на золотой (для Duo-плиток,
-     см. выше) — «правильные» карточки с белым текстом (color:#fff), написанные
-     до этого переопределения, дают ~2.3:1 (провал WCAG AA). Тот же фикс, что уже
-     стоит для .tb-opt.ok/.tb-mt.done выше — тёмные чернила вместо белого текста. */
-  body.theme-dark .topik-drill-opt.correct, body.theme-dark .tq-opt.correct { color: #1B1C1F; }

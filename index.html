@@ -44,11 +44,11 @@
      вводят анимации из styles.css, поэтому без «мигания»; логотип не трогаем (fanUnfurl). -->
 <style>#intro{position:fixed;inset:0;z-index:999;display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:hidden;cursor:pointer;background:radial-gradient(120% 90% at 50% 35%,#FFFCF8 0%,#FFF4F0 38%,#FBE8EA 78%,#F2D5DA 100%)}#intro>.intro-tagline,#intro>.intro-subline,#intro>.intro-cta{opacity:0}</style>
 
-<link rel="stylesheet" href="styles.css?v=20260716a">
+<link rel="stylesheet" href="styles.css?v=20260728a">
 
 <!-- Предзагрузка тяжёлого JS: скачивание стартует сразу, параллельно с CSS/шрифтами -->
 <link rel="preload" href="assets/textbook/textbook-data.js?v=20260629a" as="script">
-<link rel="preload" href="app.js?v=20260716a" as="script">
+<link rel="preload" href="app.js?v=20260728a" as="script">
 </head>
 
 <body>
@@ -920,12 +920,15 @@
       <!-- «Пригласи друга» (ФАЗА B1, dynamic) -->
       <div id="profile-invite-slot" class="profile-student-only"></div>
 
-      <!-- «Редактировать профиль» и «Выйти» — в Настройках (⚙️ сверху) -->
       <button onclick="shareProgress()" class="btn btn-primary btn-block profile-student-only" style="margin-top: 14px;">
         <i class="fa-solid fa-share-alt"></i> <span data-i18n="profile.share">Поделиться прогрессом</span>
       </button>
       <button onclick="shareInviteLink()" class="btn btn-rose btn-block profile-student-only" style="margin-top: 10px;" data-i18n="profile.invite">
         💌 Пригласить друга · +200 XP обоим
+      </button>
+      <!-- Выход из аккаунта — заметной кнопкой прямо на профиле (не только в Настройках) -->
+      <button onclick="logoutUser()" class="btn btn-block profile-student-only profile-logout-btn" style="margin-top: 16px;">
+        <i class="fa-solid fa-arrow-right-from-bracket"></i> <span data-i18n="ui.045">Выйти из аккаунта</span>
       </button>
     </div><!-- /profile-content -->
     </div><!-- /padding -->
@@ -1184,7 +1187,7 @@
 
 <!-- ─────────────── DATA + LOGIC ─────────────── -->
 <script src="assets/textbook/textbook-data.js?v=20260629a"></script>
-<script src="app.js?v=20260716a"></script>
+<script src="app.js?v=20260728a"></script>
 
 </body>
 </html>
