@@ -1170,8 +1170,12 @@
   .chat-tg-btn { color: #fff; background: #29A9EB; display: flex; align-items: center; justify-content: center; text-decoration: none; }
   .chat-tg-btn:active { transform: scale(.92); }
   /* Кликабельные ссылки в сообщениях */
-  .chat-link { color: #1d9bf0; text-decoration: underline; word-break: break-all; }
+  /* #1d9bf0 давал 3.0:1 на светлом пузыре — темнее для читаемости (≈5:1);
+     в тёмной теме пузырь тёмный, поэтому светло-голубой. */
+  .chat-link { color: #0B62A8; text-decoration: underline; word-break: break-all; }
   .chat-bubble.mine .chat-link { color: #fff; }
+  body.theme-dark .chat-link { color: #7FC4FF; }
+  body.theme-dark .chat-bubble.mine .chat-link { color: #fff; }
   /* Лист «Переслать кому» */
   .fwd-title { font-weight: 800; font-size: 15px; color: var(--berry); text-align: center; margin: 4px 0 12px; }
   .fwd-list { display: flex; flex-direction: column; gap: 4px; }
@@ -2829,7 +2833,7 @@
   .gcv-of-day-badge {
     position: absolute; top: 10px; left: 10px; z-index: 2;
     font-size: 8.5px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase;
-    background: linear-gradient(140deg, var(--gold), var(--coral)); color: #fff;
+    background: linear-gradient(140deg, var(--gold-ink), var(--coral)); color: #fff;
     padding: 3px 8px; border-radius: 999px;
     box-shadow: 0 3px 8px -2px rgba(201,165,92,.5);
   }
@@ -2838,7 +2842,7 @@
   .god-badge {
     position: absolute; top: -8px; left: 14px;
     font-size: 8.5px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase;
-    background: linear-gradient(140deg, var(--gold), var(--coral)); color: #fff;
+    background: linear-gradient(140deg, var(--gold-ink), var(--coral)); color: #fff;
     padding: 3px 9px; border-radius: 999px;
   }
   .god-ico { width: 48px; height: 48px; flex-shrink: 0; }
@@ -6359,6 +6363,11 @@
   body.theme-dark .god-badge,
   body.theme-dark .gcv-of-day-badge { background: linear-gradient(140deg, var(--duo-gold), var(--grad-coral)); }
   body.theme-dark .hc-timer-fill { background: linear-gradient(90deg, var(--duo-gold), var(--grad-coral)); }
+  /* Активный пункт навигации в тёмной теме: --coral (#BC4B5E) на тёмном давал 3.38:1
+     (мелкий текст, нужно 4.5). Осветляем розовый до ≈5.9:1. !important — чтобы перебить
+     duo-слой .nav-item.active. */
+  body.theme-dark .nav-item.active { color: #EA8CA0 !important; }
+  body.theme-dark .nav-item.active i { color: #EA8CA0 !important; }
   /* ───── ТЁМНАЯ ВЕРСИЯ КАЖДОГО СВОТЧА ─────
      body.ct-X.theme-dark (специфичность 0,2,1) перебивает базовую тёмную (0,1,1):
      сохраняем проверенные тёмные поверхности/текст/тени/статусы, но перекрашиваем

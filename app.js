@@ -2447,11 +2447,15 @@
   // ── Keyboard accessibility: clickable <div>s (with onclick) become focusable and
   //    respond to Enter/Space like a real button, without rewriting every card. ──
   function tagInteractive(root) {
-    (root || document).querySelectorAll('[onclick]:not([data-kbd]):not(button):not(a):not(input):not(textarea):not(select)').forEach(el => {
+    const r = root || document;
+    r.querySelectorAll('[onclick]:not([data-kbd]):not(button):not(a):not(input):not(textarea):not(select)').forEach(el => {
       el.setAttribute('data-kbd', '1');
       if (!el.hasAttribute('tabindex')) el.setAttribute('tabindex', '0');
       if (!el.hasAttribute('role')) el.setAttribute('role', 'button');
     });
+    // Доступность: помечаем корейский текст lang="ko" — иначе скринридер читает
+    // хангыль русским голосом (каша). Класс .ko — стилевой маркер корейского.
+    r.querySelectorAll('.ko:not([lang])').forEach(el => el.setAttribute('lang', 'ko'));
   }
   document.addEventListener('keydown', e => {
     if (e.key !== 'Enter' && e.key !== ' ' && e.key !== 'Spacebar') return;
@@ -3559,7 +3563,7 @@
           </div>
 
           <!-- Today card -->
-          <div class="card card-padded" style="background: linear-gradient(135deg, var(--coral), var(--rose)); color:white; border:none; margin-bottom:16px;">
+          <div class="card card-padded" style="background: linear-gradient(135deg, var(--coral), var(--berry)); color:white; border:none; margin-bottom:16px;">
             <span class="chip" style="background:rgba(255,255,255,.28); color:white;">${t('cal.today')}</span>
             <div class="ko" style="font-weight:700; font-size:18px; margin-top:8px;">${TODAY.m+1}월 ${TODAY.d}일</div>
             <div style="font-size:13px;">${TODAY.d} ${monthNameGen(TODAY.m)} · ${weekdayLongName(new Date(TODAY.y, TODAY.m, TODAY.d))}</div>
@@ -6342,7 +6346,7 @@
   // Версия сборки: держать В РУЧНУЮ синхронной с ?v= в index.html при каждом деплое
   // (те же 3 места — stylesheet/preload/script). Используется только для попапа
   // «доступно обновление» ниже — сама загрузка кода по-прежнему идёт через ?v=.
-  const APP_VERSION = '20260728g';
+  const APP_VERSION = '20260728h';
   function showUpdateAvailableModal() {
     if (document.getElementById('update-avail-modal')) return;
     const m = document.createElement('div');
