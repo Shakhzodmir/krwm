@@ -28,6 +28,7 @@ SUPABASE-KAKAO-SETUP.md
 Todos.md
 database.rules.json
 database.rules.interim.json
+database.rules.interim2.json
 firebase.json
 .firebaserc
 serverless/

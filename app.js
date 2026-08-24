@@ -170,6 +170,25 @@
     'set.editProfile.sub': { ru: 'Имя, аватар и фон профиля', en: 'Name, avatar and profile background', uz: 'Ism, avatar va profil foni' },
     'set.logout':       { ru: 'Выйти из аккаунта', en: 'Log out', uz: 'Akkauntdan chiqish' },
     'set.logout.sub':   { ru: 'Прогресс сохранён — вернёшься в любой момент', en: 'Progress is saved — come back anytime', uz: 'Progress saqlangan — istalgan vaqt qaytasiz' },
+    'set.delacc':       { ru: 'Удалить аккаунт', en: 'Delete account', uz: 'Akkauntni oʻchirish' },
+    'set.delacc.sub':   { ru: 'Профиль, прогресс и вход — навсегда', en: 'Profile, progress and login — forever', uz: 'Profil, progress va kirish — butunlay' },
+    'delacc.title':     { ru: 'Удалить аккаунт?', en: 'Delete account?', uz: 'Akkaunt oʻchirilsinmi?' },
+    'delacc.p1':        { ru: 'Это действие необратимо. Будут удалены:', en: 'This cannot be undone. This will delete:', uz: 'Bu amalni bekor qilib boʻlmaydi. Oʻchiriladi:' },
+    'delacc.li1':       { ru: 'профиль, аватар и настройки', en: 'profile, avatar and settings', uz: 'profil, avatar va sozlamalar' },
+    'delacc.li2':       { ru: 'весь прогресс: XP, стрик, слова, достижения', en: 'all progress: XP, streak, words, achievements', uz: 'butun progress: XP, strik, soʻzlar, yutuqlar' },
+    'delacc.li3':       { ru: 'доступ к тарифу и возможность входа', en: 'plan access and the ability to log in', uz: 'tarifga kirish va login imkoniyati' },
+    'delacc.keep':      { ru: 'Сообщения и комментарии, отправленные другим, могут остаться в переписках и ленте (как в условиях использования).', en: 'Messages and comments you sent to others may remain in conversations and the feed (as per the terms of use).', uz: 'Boshqalarga yuborilgan xabar va izohlar yozishmalar va lentada qolishi mumkin (foydalanish shartlariga koʻra).' },
+    'delacc.passWhy':   { ru: 'Для защиты аккаунта подтверди пароль:', en: 'To protect your account, confirm your password:', uz: 'Akkauntni himoya qilish uchun parolni tasdiqlang:' },
+    'delacc.passPh':    { ru: 'Пароль от аккаунта', en: 'Account password', uz: 'Akkaunt paroli' },
+    'delacc.agree':     { ru: 'Понимаю, что восстановить данные будет нельзя', en: 'I understand my data cannot be restored', uz: 'Maʼlumotlarni tiklab boʻlmasligini tushunaman' },
+    'delacc.btn':       { ru: 'Удалить навсегда', en: 'Delete forever', uz: 'Butunlay oʻchirish' },
+    'delacc.cancel':    { ru: 'Отмена', en: 'Cancel', uz: 'Bekor qilish' },
+    'delacc.needAgree': { ru: 'Отметь галочку — что понимаешь: это навсегда', en: 'Tick the box to confirm you understand it is permanent', uz: 'Bu butunlay ekanini tushunganingizni belgilang' },
+    'delacc.needPass':  { ru: 'Введи пароль от аккаунта', en: 'Enter your account password', uz: 'Akkaunt parolini kiriting' },
+    'delacc.wrongPass': { ru: 'Пароль не подходит — попробуй ещё раз', en: 'Wrong password — try again', uz: 'Parol notoʻgʻri — yana urinib koʻring' },
+    'delacc.working':   { ru: 'Удаляю…', en: 'Deleting…', uz: 'Oʻchirilmoqda…' },
+    'delacc.done':      { ru: 'Аккаунт удалён. Спасибо за время с нами 🌸', en: 'Account deleted. Thank you for your time with us 🌸', uz: 'Akkaunt oʻchirildi. Biz bilan oʻtkazgan vaqtingiz uchun rahmat 🌸' },
+    'delacc.fail':      { ru: 'Не получилось удалить аккаунт: ', en: 'Couldn’t delete the account: ', uz: 'Akkauntni oʻchirib boʻlmadi: ' },
 
     // ── Общее / бренд ──
     'brand.tagline':    { ru: 'с первого шага', en: 'from the very first step', uz: 'birinchi qadamdan' },
@@ -1046,6 +1065,8 @@
     'auth.soon':         { ru: 'СКОРО', en: 'SOON', uz: 'TEZ ORADA' },
     'auth.appleTitle':   { ru: 'Подключим позже', en: 'Coming later', uz: 'Keyinroq qoʻshamiz' },
     'auth.sessionLost':  { ru: 'Сессия входа обновилась — зайди в Профиль и войди заново, чтобы всё синхронизировалось 🌸', en: 'Your sign-in session expired — open Profile and sign in again to keep everything synced 🌸', uz: 'Kirish sessiyasi eskirdi — Profilga kirib, qaytadan tizimga kiring, hammasi sinxron boʻlsin 🌸' },
+    'adm.authMismatch':  { ru: 'Пароль облачного аккаунта не совпадает — синхронизация админки может не работать. Напиши разработчику.', en: 'Cloud account password mismatch — admin sync may not work. Contact the developer.', uz: 'Bulut akkaunt paroli mos kelmadi — admin sinxronizatsiyasi ishlamasligi mumkin. Dasturchiga yozing.' },
+    'adm.authOffline':   { ru: 'Не получилось подтвердить вход на сервере — синхронизация админки может не работать. Проверь интернет и войди ещё раз.', en: 'Could not confirm sign-in with the server — admin sync may not work. Check your connection and sign in again.', uz: 'Serverda kirishni tasdiqlab boʻlmadi — admin sinxronizatsiyasi ishlamasligi mumkin. Internetni tekshirib, qayta kiring.' },
     'comm.title':        { ru: 'Чат сообщества', en: 'Community chat', uz: 'Jamiyat chati' },
     'comm.badge':        { ru: 'ВСЕ', en: 'ALL', uz: 'HAMMA' },
     'comm.preview':      { ru: 'Общий чат всех учениц и Мади — заходи! 🌸', en: 'One shared chat for all students and Madie — come join! 🌸', uz: 'Barcha oʻquvchilar va Madie uchun umumiy chat — kiring! 🌸' },
@@ -2222,7 +2243,7 @@
     "terms.s11.h": { ru: "11. Без гарантий: сбои и сохранность данных", en: "11. No warranties: failures and data safety", uz: "11. Kafolatlarsiz: nosozliklar va maʼlumotlar saqlanishi" },
     "terms.s11.p": { ru: "Приложение развивается и предоставляется «как есть»: возможны ошибки, перерывы в работе и изменения функций. Мы стараемся бережно хранить твои данные, но НЕ гарантируем их сохранность и восстановление: при сбое, ошибке, взломе, потере данных на серверах, прекращении работы сторонних сервисов (Google Firebase, GitHub, Puter и др.) или закрытии приложения данные могут быть утеряны безвозвратно — никто не гарантирует их возврат. Отдельные резервные копии не гарантируются. Ответы ИИ могут содержать ошибки — проверяй важное. Мы можем изменить или прекратить работу отдельных функций или всего приложения; о существенных изменениях постараемся предупредить заранее в приложении. Наша совокупная ответственность в любом случае ограничена суммой твоего последнего платежа. За результаты экзаменов мы не отвечаем — но искренне за тебя болеем 🌸", en: "The app is under active development and is provided “as is”: errors, downtime and feature changes are possible. We do our best to keep your data safe, but we do NOT guarantee its safety or recovery: in case of a failure, error, hack, data loss on servers, shutdown of third-party services (Google Firebase, GitHub, Puter and others) or closure of the app, data may be lost permanently — nobody guarantees its return. Separate backups are not guaranteed. AI answers may contain mistakes — double-check what matters. We may change or discontinue individual features or the whole app; we will try to give advance notice of significant changes in the app. In any case our total liability is limited to the amount of your last payment. We are not responsible for exam results — but we sincerely root for you 🌸", uz: "Ilova rivojlanmoqda va «qanday boʻlsa, shundayligicha» taqdim etiladi: xatolar, ish uzilishlari va funksiyalar oʻzgarishi mumkin. Biz maʼlumotlaringizni ehtiyotkorlik bilan saqlashga harakat qilamiz, lekin ularning saqlanishi va tiklanishiga KAFOLAT BERMAYMIZ: nosozlik, xato, buzib kirish, serverlarda maʼlumotlar yoʻqolishi, uchinchi tomon xizmatlari (Google Firebase, GitHub, Puter va b.) ishini toʻxtatishi yoki ilova yopilishi holatlarida maʼlumotlar qaytarib boʻlmas darajada yoʻqolishi mumkin — ularning qaytishini hech kim kafolatlamaydi. Alohida zaxira nusxalar kafolatlanmaydi. AI javoblarida xatolar boʻlishi mumkin — muhim narsalarni tekshiring. Biz alohida funksiyalar yoki butun ilova ishini oʻzgartirishimiz yoki toʻxtatishimiz mumkin; muhim oʻzgarishlar haqida ilovada oldindan ogohlantirishga harakat qilamiz. Har qanday holatda umumiy javobgarligimiz oxirgi toʻlovingiz summasi bilan cheklangan. Imtihon natijalari uchun javob bermaymiz — lekin chin dildan sizni qoʻllab-quvvatlaymiz 🌸" },
     "terms.s12.h": { ru: "12. Удаление данных", en: "12. Data deletion", uz: "12. Maʼlumotlarni oʻchirish" },
-    "terms.s12.p": { ru: "Хочешь удалить аккаунт и данные — напиши нам через «Настройки → Написать нам»: в течение 30 дней удалим аккаунт, профиль и прогресс. Сообщения, которые ты отправил(а) другим, комментарии и лайки могут остаться в переписках и ленте. Данные на своём устройстве можно стереть очисткой данных сайта в браузере.", en: "Want to delete your account and data — write to us via “Settings → Contact us”: within 30 days we will delete the account, profile and progress. Messages you sent to others, comments and likes may remain in conversations and the feed. Data on your own device can be erased by clearing the site data in the browser.", uz: "Akkaunt va maʼlumotlarni oʻchirmoqchi boʻlsangiz — «Sozlamalar → Bizga yozing» orqali murojaat qiling: 30 kun ichida akkaunt, profil va progressni oʻchiramiz. Boshqalarga yuborgan xabarlaringiz, izohlar va layklar yozishmalar va lentada qolishi mumkin. Qurilmangizdagi maʼlumotlarni brauzerda sayt maʼlumotlarini tozalash orqali oʻchirish mumkin." },
+    "terms.s12.p": { ru: "Удалить аккаунт и данные можно самостоятельно и сразу: «Профиль → Настройки → Удалить аккаунт» — будут стёрты аккаунт, профиль и прогресс. Либо напиши нам через «Настройки → Написать нам» — удалим в течение 30 дней. Сообщения, которые ты отправил(а) другим, комментарии и лайки могут остаться в переписках и ленте. Данные на своём устройстве можно стереть очисткой данных сайта в браузере.", en: "You can delete your account and data yourself, instantly: “Profile → Settings → Delete account” — the account, profile and progress will be erased. Or write to us via “Settings → Contact us” and we will delete them within 30 days. Messages you sent to others, comments and likes may remain in conversations and the feed. Data on your own device can be erased by clearing the site data in the browser.", uz: "Akkaunt va maʼlumotlarni oʻzingiz darhol oʻchirishingiz mumkin: «Profil → Sozlamalar → Akkauntni oʻchirish» — akkaunt, profil va progress oʻchiriladi. Yoki «Sozlamalar → Bizga yozing» orqali murojaat qiling — 30 kun ichida oʻchiramiz. Boshqalarga yuborgan xabarlaringiz, izohlar va layklar yozishmalar va lentada qolishi mumkin. Qurilmangizdagi maʼlumotlarni brauzerda sayt maʼlumotlarini tozalash orqali oʻchirish mumkin." },
     "terms.s13.h": { ru: "13. Изменения условий", en: "13. Changes to these terms", uz: "13. Shartlarning oʻzgarishi" },
     "terms.s13.p": { ru: "Мы можем обновлять эти условия. О существенных изменениях сообщим в приложении. Продолжая пользоваться Madie после изменений, ты принимаешь новую версию.", en: "We may update these terms. We will announce significant changes in the app. By continuing to use Madie after changes, you accept the new version.", uz: "Biz ushbu shartlarni yangilashimiz mumkin. Muhim oʻzgarishlar haqida ilovada xabar beramiz. Oʻzgarishlardan soʻng Madie ilovasidan foydalanishda davom etar ekansiz, yangi versiyani qabul qilasiz." },
     "terms.s14.h": { ru: "14. Связь с нами", en: "14. Contact us", uz: "14. Biz bilan aloqa" },
@@ -6346,7 +6367,7 @@
   // Версия сборки: держать В РУЧНУЮ синхронной с ?v= в index.html при каждом деплое
   // (те же 3 места — stylesheet/preload/script). Используется только для попапа
   // «доступно обновление» ниже — сама загрузка кода по-прежнему идёт через ?v=.
-  const APP_VERSION = '20260728h';
+  const APP_VERSION = '20260824a';
   function showUpdateAvailableModal() {
     if (document.getElementById('update-avail-modal')) return;
     const m = document.createElement('div');
@@ -9380,6 +9401,11 @@
       ...(Store.get('user') ? [
         row('✏️', t('set.editProfile'), t('set.editProfile.sub'), chev, "document.getElementById('settings-modal')?.remove(); showEditProfile()"),
         row('🚪', t('set.logout'), t('set.logout.sub'), `<i class="fa-solid fa-arrow-right-from-bracket" style="color:var(--bad-ink); font-size:13px;"></i>`, "document.getElementById('settings-modal')?.remove(); logoutUser()")
+      ] : []),
+      // Самостоятельное удаление аккаунта — требование Google Play и App Store.
+      // Только для вошедших учениц: у гостя аккаунта нет, админ себя не удаляет.
+      ...((() => { const u = Store.get('user'); return u && !u.guest && !u.isAdmin; })() ? [
+        row('🗑️', `<span style="color:var(--bad-ink);">${t('set.delacc')}</span>`, t('set.delacc.sub'), `<i class="fa-solid fa-trash-can" style="color:var(--bad-ink); font-size:12px;"></i>`, "document.getElementById('settings-modal')?.remove(); openDeleteAccountModal()")
       ] : [])
     ].join('');
   }
@@ -37108,7 +37134,33 @@
       const ok = admin.passHash ? ((await sha256Hex(pass)) === admin.passHash) : (pass === admin.password);
       if (!ok) { toast(t('ui.463')); return; }
       const display = admin.name.charAt(0).toUpperCase() + admin.name.slice(1);
+      // Локальный сеанс — ДО Firebase-входа: onAuthStateChanged скипает админов по
+      // local.isAdmin, иначе он успеет записать Мади как обычную ученицу (гонка).
       setActiveUser({ name: display, email: admin.email, isAdmin: true });
+      // Правила БД (interim-2) пускают чтения только с auth != null — поэтому админу
+      // нужна НАСТОЯЩАЯ Firebase-сессия. Аккаунт создаётся при первом входе с тем же
+      // паролем (хеш уже сверен выше); дальше сессия персистится сама.
+      _authBusy = true;
+      try {
+        try {
+          await _auth.signInWithEmailAndPassword(admin.email, pass);
+        } catch (e) {
+          const c = (e && e.code) || '';
+          // Новые SDK прячут «нет такого юзера» за invalid-credential (анти-энумерация),
+          // поэтому на ЛЮБУЮ ошибку входа пробуем создать аккаунт: занят → пароль иной.
+          if (c === 'auth/user-not-found' || c === 'auth/invalid-credential' ||
+              c === 'auth/invalid-login-credentials' || c === 'auth/wrong-password') {
+            await _auth.createUserWithEmailAndPassword(admin.email, pass);
+          } else { throw e; }
+        }
+      } catch (e) {
+        const c = (e && e.code) || '';
+        console.warn('admin firebase auth:', c || e);
+        if (c === 'auth/email-already-in-use') toast(t('adm.authMismatch'), 'var(--berry)');
+        else toast(t('adm.authOffline'), 'var(--berry)');
+      } finally {
+        _authBusy = false;
+      }
       toast(t('ui.464',{name: display}), 'var(--sage)');
       return;
     }
@@ -37394,6 +37446,117 @@
     // После выхода — на страницу входа (экран профиля показывает форму логина)
     try { switchScreen('profile'); } catch (_) {}
     toast(t('auth.loggedOut'));
+  }
+
+  // ── Удаление аккаунта (самообслуживание — требование Google Play / App Store) ──
+  // Порядок строгий: сначала подтверждаем пароль (без свежей Auth-сессии Firebase
+  // не даст удалить аккаунт → осталось бы полу-состояние «данные стёрты, вход жив»),
+  // затем чистим облако (Storage-аватарки → users → usersPublic), затем Auth-аккаунт.
+  // Сообщения/комментарии другим НЕ трогаем — так обещано в условиях использования.
+  function openDeleteAccountModal() {
+    const u = Store.get('user');
+    if (!u || u.guest || u.isAdmin) return;
+    document.getElementById('delacc-modal')?.remove();
+    const m = document.createElement('div');
+    m.className = 'modal-bg modal-center';
+    m.id = 'delacc-modal';
+    m.onclick = e => { if (e.target === m) m.remove(); };
+    m.innerHTML = `
+      <div class="modal-card" style="max-width:400px;">
+        <div style="display:flex; align-items:center; gap:10px; margin-bottom:10px;">
+          <span style="width:36px; height:36px; border-radius:12px; background:var(--bad-bg); display:flex; align-items:center; justify-content:center; font-size:16px;">🗑️</span>
+          <div class="display" style="font-size:19px; color:var(--bad-ink);">${t('delacc.title')}</div>
+        </div>
+        <div style="font-size:13px; color:var(--ink); line-height:1.5; margin-bottom:6px;">${t('delacc.p1')}</div>
+        <ul style="margin:0 0 10px; padding-left:20px; font-size:12.5px; color:var(--ink); line-height:1.6;">
+          <li>${t('delacc.li1')}</li>
+          <li>${t('delacc.li2')}</li>
+          <li>${t('delacc.li3')}</li>
+        </ul>
+        <div style="font-size:11.5px; color:var(--hush); line-height:1.5; margin-bottom:12px;">${t('delacc.keep')}</div>
+        <div style="font-size:12px; color:var(--soft); margin-bottom:6px;">${t('delacc.passWhy')}</div>
+        <div class="pass-wrap" style="margin-bottom:10px;">
+          <input id="delacc-pass" class="input" type="password" placeholder="${t('delacc.passPh')}" autocomplete="current-password">
+          <button type="button" class="pass-toggle" onclick="togglePass(this)" aria-label="${t('auth.showPw')}" tabindex="-1"><i class="fa-solid fa-eye"></i></button>
+        </div>
+        <label style="display:flex; gap:9px; align-items:flex-start; font-size:12.5px; color:var(--ink); line-height:1.45; cursor:pointer; margin-bottom:14px;">
+          <input id="delacc-agree" type="checkbox" style="margin-top:2px; flex-shrink:0; width:16px; height:16px; accent-color:var(--bad-line);">
+          <span>${t('delacc.agree')}</span>
+        </label>
+        <button id="delacc-btn" onclick="confirmDeleteAccount()" class="btn btn-block" style="background:var(--bad-bg); color:var(--bad-ink); border:1px solid var(--bad-line);">${t('delacc.btn')}</button>
+        <button onclick="this.closest('.modal-bg').remove()" class="btn btn-ghost btn-block" style="margin-top:8px;">${t('delacc.cancel')}</button>
+      </div>`;
+    document.body.appendChild(m);
+  }
+  async function confirmDeleteAccount() {
+    const u = Store.get('user');
+    if (!u || u.guest || u.isAdmin) return;
+    const agree = document.getElementById('delacc-agree');
+    if (!agree || !agree.checked) { toast(t('delacc.needAgree')); return; }
+    const pass = (document.getElementById('delacc-pass')?.value || '');
+    if (!pass) { toast(t('delacc.needPass')); return; }
+    const btn = document.getElementById('delacc-btn');
+    const lockBtn = on => {
+      if (!btn) return;
+      btn.disabled = on;
+      btn.style.opacity = on ? '.6' : '';
+      btn.textContent = on ? t('delacc.working') : t('delacc.btn');
+    };
+    lockBtn(true);
+    try {
+      // 1) Свежая Auth-сессия: reauth активной или вход заново по email+паролю
+      const email = ((_auth.currentUser && _auth.currentUser.email) || u.email || '').toLowerCase();
+      let fbUser = null;
+      try {
+        if (_auth.currentUser) {
+          const cred = firebase.auth.EmailAuthProvider.credential(email, pass);
+          await _auth.currentUser.reauthenticateWithCredential(cred);
+          fbUser = _auth.currentUser;
+        } else if (email) {
+          const res = await _auth.signInWithEmailAndPassword(email, pass);
+          fbUser = res.user;
+        }
+      } catch (e) {
+        console.warn('delacc reauth error:', e);
+        toast(t('delacc.wrongPass'));
+        lockBtn(false);
+        return;
+      }
+      const uid = firebaseUserId();
+      // 2) Аватар/обложка в Storage — best-effort: URL может быть внешним или уже мёртвым
+      try {
+        const pub = (await _db.ref('usersPublic/' + uid).once('value')).val() || {};
+        for (const k of ['avatar', 'cover']) {
+          const url = pub[k];
+          if (url && typeof url === 'string' && url.includes('firebasestorage') && typeof _storage !== 'undefined') {
+            try { await _storage.refFromURL(url).delete(); } catch (_) {}
+          }
+        }
+      } catch (_) {}
+      // 3) Облако: профиль+прогресс и запись в тонком справочнике
+      await _db.ref('users/' + uid).remove();
+      try { await _db.ref('usersPublic/' + uid).remove(); } catch (_) {}
+      // 4) Auth-аккаунт (сессия свежая после шага 1 — requires-recent-login не будет)
+      if (fbUser) await fbUser.delete();
+      // 5) Локальное зеркало данных аккаунта: madie_u_<uid>_* (собрать ДО Store.del('user'),
+      //    пока currentUserId() ещё указывает на удаляемый аккаунт)
+      try {
+        const prefix = 'madie_' + uKey('');
+        const doomed = [];
+        for (let i = 0; i < localStorage.length; i++) {
+          const k = localStorage.key(i);
+          if (k && k.startsWith(prefix)) doomed.push(k);
+        }
+        doomed.forEach(k => localStorage.removeItem(k));
+      } catch (_) {}
+      document.getElementById('delacc-modal')?.remove();
+      logoutUser();
+      toast(t('delacc.done'), 'var(--sage)');
+    } catch (e) {
+      console.warn('delete account error:', e);
+      toast(t('delacc.fail') + (e.message || e.code || ''));
+      lockBtn(false);
+    }
   }
 
   // ── Heart-save button for vocab in games ──────────────────
@@ -42544,8 +42707,17 @@
   // ── Firebase Auth: keep local session in sync with auth state ──
   _auth.onAuthStateChanged(fbUser => {
     const local = Store.get('user');
-    // Skip auth sync for admins and guests — they don't use Firebase Auth
-    if (local && (local.isAdmin || local.guest)) return;
+    // Админ: локальный сеанс не трогаем, но с правил interim-2 чтения БД требуют
+    // auth — без Firebase-сессии админке нужен перелогин (создаст/обновит сессию).
+    if (local && local.isAdmin) {
+      if (!fbUser && !window._authReloginHinted) {
+        window._authReloginHinted = true;
+        setTimeout(() => { try { toast(t('auth.sessionLost'), 'var(--berry)'); } catch (_) {} }, 2500);
+      }
+      return;
+    }
+    // Skip auth sync for guests — they don't use Firebase Auth
+    if (local && local.guest) return;
     if (fbUser) {
       // Firebase confirms a session
       const fbName = fbUser.displayName || (fbUser.email || '').split('@')[0];
