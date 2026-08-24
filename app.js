@@ -457,12 +457,6 @@
     'common.done':  { ru: 'Готово ✓', en: 'Done ✓', uz: 'Tayyor ✓' },
     'common.check': { ru: 'Проверить', en: 'Check', uz: 'Tekshirish' },
 
-    // ── Попап «доступно обновление» ──
-    'update.title': { ru: 'Вышло обновление!', en: 'An update is available!', uz: 'Yangilanish chiqdi!' },
-    'update.body':  { ru: 'Мы кое-что улучшили. Обнови страницу, чтобы получить новую версию 🌸', en: "We've made some improvements. Refresh the page to get the new version 🌸", uz: 'Biz nimadir yaxshiladik. Yangi versiyani olish uchun sahifani yangilang 🌸' },
-    'update.cta':   { ru: 'Обновить страницу', en: 'Refresh page', uz: 'Sahifani yangilash' },
-    'update.later': { ru: 'Позже', en: 'Later', uz: 'Keyinroq' },
-
     // ── Домашнее задание ──
     'hw.title':       { ru: 'Домашнее задание', en: 'Homework', uz: 'Uy vazifasi' },
     'hw.materials':   { ru: 'МАТЕРИАЛЫ', en: 'MATERIALS', uz: 'MATERIALLAR' },
@@ -2862,9 +2856,12 @@
       try { toast(t('tts.iphoneMute'), 'var(--berry)'); } catch (_) {}
     }, 1500);
   }
-  // Голоса Google ko-KR-Neural2 для разведения собеседников в диалогах/скриптах.
-  const TTS_VOICE_F = 'ko-KR-Neural2-A';   // женский (Мади, реплики «여자»/B)
-  const TTS_VOICE_M = 'ko-KR-Neural2-C';   // мужской (реплики «남자»/A)
+  // Голоса Google ko-KR для разведения собеседников в диалогах/скриптах.
+  // 25.08.2026: Neural2 → WaveNet — звучит почти так же, но бесплатной квоты
+  // вчетверо больше (4 млн симв/мес против 1 млн), перебор $4/1М против $16/1М.
+  // Оба прокси уже принимают WaveNet (проверено живьём) — каскад/адреса не менялись.
+  const TTS_VOICE_F = 'ko-KR-Wavenet-A';   // женский (Мади, реплики «여자»/B)
+  const TTS_VOICE_M = 'ko-KR-Wavenet-C';   // мужской (реплики «남자»/A)
 
   function setBtnPlaying(btn, isPlaying) {
     if (!btn) return;
@@ -6364,26 +6361,59 @@
     document.body.appendChild(m);
   }
 
-  // Версия сборки: держать В РУЧНУЮ синхронной с ?v= в index.html при каждом деплое
-  // (те же 3 места — stylesheet/preload/script). Используется только для попапа
-  // «доступно обновление» ниже — сама загрузка кода по-прежнему идёт через ?v=.
-  const APP_VERSION = '20260824a';
-  function showUpdateAvailableModal() {
-    if (document.getElementById('update-avail-modal')) return;
-    const m = document.createElement('div');
-    m.className = 'modal-bg modal-center';
-    m.id = 'update-avail-modal';
-    m.onclick = e => { if (e.target === m) m.remove(); };
-    m.innerHTML = `
-      <div class="modal-card" style="max-width:360px; text-align:center;">
-        <div style="font-size:44px;">🌸✨</div>
-        <div class="display" style="font-size:20px; color:var(--berry); margin-top:10px;">${t('update.title')}</div>
-        <div style="font-size:12.5px; color:var(--soft); margin-top:8px; line-height:1.6;">${t('update.body')}</div>
-        <button onclick="location.reload()" class="btn btn-primary btn-block" style="margin-top:16px;">${t('update.cta')}</button>
-        <button onclick="this.closest('.modal-bg').remove()" class="btn btn-ghost btn-block" style="margin-top:8px;">${t('update.later')}</button>
-      </div>`;
-    document.body.appendChild(m);
+  // Версия сборки: держать ВРУЧНУЮ синхронной с ?v= в index.html при каждом деплое
+  // (те же 3 места — stylesheet/preload/script). Используется тихим автообновлением
+  // ниже — сама загрузка кода по-прежнему идёт через ?v=.
+  const APP_VERSION = '20260825a';
+  // ── Тихое автообновление (25.08.2026, вместо попапа «Вышло обновление!») ──
+  // Узнав из облака про новую версию (appVersion пишет первый клиент нового деплоя,
+  // promptVersion — кнопка «Оповестить» в админке), вкладка НЕ дёргает ученицу:
+  // ждёт, пока приложение пробудет свёрнутым >= _UPD_HIDDEN_MS (не рвать игру или
+  // тест на середине), затем проверяет, что новая версия РЕАЛЬНО доступна на
+  // хостинге (GitHub Pages кэширует index.html до 10 минут — без проверки вкладка
+  // зациклилась бы, перезагружая старую версию), и перезагружается с обходом кэша.
+  // Активную (видимую) вкладку не трогаем вообще: она получит новую версию при
+  // следующем естественном открытии. На iOS фоновые таймеры заморожены — там
+  // просто сработает естественная перезагрузка при следующем запуске PWA.
+  const _UPD_HIDDEN_MS = 5 * 60 * 1000;    // столько подряд в фоне = можно тихо перезагрузить
+  const _UPD_RETRY_GAP = 10 * 60 * 1000;   // проверять хостинг не чаще раза в 10 минут
+  let _updPendingV = '';                   // версия новее APP_VERSION, о которой узнали из облака
+  let _updHiddenTimer = null;
+  let _updLastTry = 0;
+  function _updSchedule(remote) {
+    remote = (remote || '').toString();
+    if (!remote || !(remote > APP_VERSION)) return;
+    _updPendingV = remote;
+    if (document.hidden) _updArmTimer();
   }
+  function _updArmTimer() {
+    if (!_updPendingV || _updHiddenTimer) return;
+    _updHiddenTimer = setTimeout(_updTryReload, _UPD_HIDDEN_MS);
+  }
+  function _updTryReload() {
+    _updHiddenTimer = null;
+    if (!document.hidden || !_updPendingV) return;
+    const now = Date.now();
+    if (now - _updLastTry < _UPD_RETRY_GAP) { _updArmTimer(); return; }
+    _updLastTry = now;
+    // cache:'reload' — принудительно с сервера, минуя HTTP-кэш, И с обновлением
+    // кэша: следующий location.reload() возьмёт уже свежий index.html. Через SW
+    // запрос тоже идёт network-first (no-cache + ETag) и обновляет app-shell кэш.
+    fetch(location.pathname, { cache: 'reload' })
+      .then(r => r.ok ? r.text() : '')
+      .then(html => {
+        const m = (html || '').match(/app\.js\?v=([0-9a-z]+)/i);
+        // Деплой ещё не докатился до хостинга/CDN — тихо подождём и проверим позже.
+        if (!m || !(m[1] > APP_VERSION)) { _updArmTimer(); return; }
+        if (!document.hidden) return;   // ученица вернулась, пока грузили — не мешаем
+        location.reload();
+      })
+      .catch(() => { _updArmTimer(); });
+  }
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) _updArmTimer();
+    else if (_updHiddenTimer) { clearTimeout(_updHiddenTimer); _updHiddenTimer = null; }
+  });
 
   function initFirebaseSync() {
     if (typeof _db === 'undefined') return;
@@ -6423,26 +6453,20 @@
       try { if (url) localStorage.setItem('km_tts_proxy', url); else localStorage.removeItem('km_tts_proxy'); } catch (_) {}
       window.KM_TTS_PROXY_URL = url;
     });
-    // Отметка версии (телеметрия деплоя): первый клиент с новой версией поднимает её
-    // в облаке. САМА ПО СЕБЕ никого не дёргает — просьба 08.07: не показывать
-    // «обновите страницу» при каждом пуше.
+    // Версия в облаке: первый клиент с новой версией поднимает её (телеметрия
+    // деплоя) — а вкладки со старой версией по этому же сигналу планируют ТИХОЕ
+    // автообновление (см. _updSchedule: только в фоне, без попапов; просьба 08.07
+    // «не дёргать при каждом пуше» соблюдена — ученица вообще ничего не видит).
+    // Формат YYYYMMDD+буква сравнивается строками корректно.
     const appVerRef = _db.ref('shared/config/appVersion');
-    appVerRef.once('value').then(snap => {
+    appVerRef.on('value', snap => {
       const remote = (snap.val() || '').toString();
       if (APP_VERSION > remote) appVerRef.set(APP_VERSION).catch(() => {});
-    }).catch(() => {});
-    // Оповещение об обновлении показывается ТОЛЬКО когда Мади нажмёт «Оповестить»
-    // в админке (Школа → Обновление) — та кнопка пишет shared/config/promptVersion.
-    // Формат YYYYMMDD+буква сравнивается строками корректно; один раз на версию.
-    _db.ref('shared/config/promptVersion').on('value', snap => {
-      const remote = (snap.val() || '').toString();
-      if (!remote || !(remote > APP_VERSION) || isGuestish()) return;
-      let seen = '';
-      try { seen = localStorage.getItem('km_update_seen_v') || ''; } catch (_) {}
-      if (seen === remote) return;
-      try { localStorage.setItem('km_update_seen_v', remote); } catch (_) {}
-      showUpdateAvailableModal();
+      else _updSchedule(remote);
     });
+    // Кнопка «Оповестить» в админке (Школа → Обновление) пишет promptVersion —
+    // теперь это просто ручной форс того же тихого механизма.
+    _db.ref('shared/config/promptVersion').on('value', snap => _updSchedule(snap.val()));
   }
   // ── Friends & Chat ──
   let _friendsCache = {};
@@ -34277,7 +34301,7 @@
       </div>
       <div style="background:linear-gradient(135deg, var(--blush), var(--petal)); border-radius:14px; padding:12px; margin-top:12px;">
         <div style="font-size:12px; font-weight:700; color:var(--berry); margin-bottom:6px;"><i class="fa-solid fa-bell"></i> Обновление приложения</div>
-        <div style="font-size:10.5px; color:var(--soft); line-height:1.5; margin-bottom:8px;">Открытым вкладкам со старой версией один раз предложит обновить страницу. Само по себе после пуша НЕ показывается — только по этой кнопке.</div>
+        <div style="font-size:10.5px; color:var(--soft); line-height:1.5; margin-bottom:8px;">Обновление проходит само и незаметно: вкладки со старой версией тихо перезагружаются, когда приложение свёрнуто ≥5 минут. Кнопка ниже — ручной форс на случай срочного фикса (тоже без попапов).</div>
         <button onclick="adminAnnounceUpdate()" class="btn btn-primary" style="width:100%; padding:8px 10px; font-size:11.5px;"><i class="fa-solid fa-bullhorn"></i> Оповестить об обновлении (v${APP_VERSION})</button>
       </div>`;
   }
@@ -34288,7 +34312,7 @@
     if (!ensureAdminAccess()) return;
     if (typeof _db === 'undefined' || !_db) { toast('Нет соединения с базой', 'var(--berry)'); return; }
     _db.ref('shared/config/promptVersion').set(APP_VERSION)
-      .then(() => toast('Оповещение отправлено 🌸 вкладки со старой версией предложат обновиться', 'var(--ok-ink)'))
+      .then(() => toast('Готово 🌸 вкладки со старой версией тихо обновятся, как только уйдут в фон', 'var(--ok-ink)'))
       .catch(e => toast('Не получилось: ' + (e && e.message || e), 'var(--berry)'));
   }
   // Сохранить адрес TTS-воркера: локально + раздать всем через Firebase shared/config.
