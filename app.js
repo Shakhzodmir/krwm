@@ -1408,6 +1408,21 @@
     "ui.002": { ru: "Разреши доступ к микрофону 🎤", en: "Allow microphone access 🎤", uz: "Mikrofonga ruxsat bering 🎤" },
     "ui.003": { ru: "Не услышала — попробуй ещё 🌸", en: "I didn't catch that — try again 🌸", uz: "Eshitmadim — yana bir bor urinib koʻring 🌸" },
     "ui.004": { ru: "Микрофон не найден", en: "Microphone not found", uz: "Mikrofon topilmadi" },
+    // ── Голосовой ввод: понятные состояния вместо молчания (отзыв ученицы 25.08.2026) ──
+    'mic.listening':   { ru: 'Слушаю… говори по-корейски', en: 'Listening… say it in Korean', uz: 'Tinglayapman… koreyscha ayting' },
+    'mic.hintSpeak':   { ru: 'Скажи вслух и подожди секунду', en: 'Say it out loud and wait a moment', uz: 'Ovoz chiqarib ayting va biroz kuting' },
+    'mic.tapToStop':   { ru: 'Нажми, чтобы остановить', en: 'Tap to stop', uz: 'Toʻxtatish uchun bosing' },
+    'mic.network':     { ru: 'Распознавание речи не отвечает 😔 Обычно это блокировки у провайдера. Скажи фразу вслух и нажми «Я сказала» — засчитаю на слово.', en: 'Speech recognition is not responding 😔 Usually a provider block. Say the phrase out loud and tap “I said it”.', uz: 'Nutqni aniqlash javob bermayapti 😔 Odatda provayder blokirovkasi. Iborani ovoz chiqarib ayting va «Aytdim» tugmasini bosing.' },
+    'mic.unsupported': { ru: 'Этот браузер не умеет распознавать речь 😔 Открой сайт в Chrome — или скажи вслух и нажми «Я сказала».', en: 'This browser cannot recognise speech 😔 Open the site in Chrome — or say it aloud and tap “I said it”.', uz: 'Bu brauzer nutqni aniqlay olmaydi 😔 Saytni Chrome’da oching — yoki ovoz chiqarib ayting va «Aytdim» bosing.' },
+    'mic.insecure':    { ru: 'Микрофон работает только на защищённом соединении (https)', en: 'The microphone only works over a secure connection (https)', uz: 'Mikrofon faqat xavfsiz ulanishda (https) ishlaydi' },
+    'mic.timeout':     { ru: 'Не расслышала 🌸 Попробуй ещё раз — говори чуть громче', en: 'I didn’t catch it 🌸 Try again — a little louder', uz: 'Eshitolmadim 🌸 Yana urinib koʻring — balandroq ayting' },
+    'mic.failed':      { ru: 'Распознавание не сработало 🌸 Попробуй ещё раз', en: 'Recognition failed 🌸 Please try again', uz: 'Aniqlash ishlamadi 🌸 Yana urinib koʻring' },
+    'mic.saidIt':      { ru: '🗣️ Я сказала', en: '🗣️ I said it', uz: '🗣️ Aytdim' },
+    'mic.retry':       { ru: '🎤 Ещё раз', en: '🎤 Try again', uz: '🎤 Yana' },
+    'mic.close':       { ru: 'Закрыть', en: 'Close', uz: 'Yopish' },
+    'mic.trusted':     { ru: 'Верю на слово 🌸 Слушай образец и повторяй', en: 'I trust you 🌸 Listen to the model and repeat', uz: 'Ishonaman 🌸 Namunani tinglang va takrorlang' },
+    // Админка Мади в облегчённом режиме (нет Firebase-сессии → полный /users закрыт)
+    'adm.liteMode':    { ru: 'данные из справочника · войди заново, чтобы видеть тарифы', en: 'directory data · sign in again to see plans', uz: 'maʼlumotnomadan · tariflarni koʻrish uchun qayta kiring' },
     "ui.005": { ru: "Сначала собери или впиши слово 🌸", en: "First build or type a word 🌸", uz: "Avval soʻzni tuzing yoki yozing 🌸" },
     "ui.006": { ru: "Это слово уже сохранено 🌸", en: "This word is already saved 🌸", uz: "Bu soʻz allaqachon saqlangan 🌸" },
     "ui.007": { ru: "🌸 {note} «{ko}» — в словарике", en: "🌸 {note} «{ko}» — added to your vocabulary", uz: "🌸 {note} «{ko}» — lugʻatga qoʻshildi" },
@@ -2938,13 +2953,97 @@
       if (state === 'bad')  btn.classList.add('mic-bad');
     }
   }
+  // ── Голосовой ввод: видимое состояние вместо тишины ──────────────────────
+  // Отзыв ученицы 25.08.2026: «доступ к микрофону разрешён, микрофон работает,
+  // но ничего не происходит». Молчать приложение могло по трём причинам, и НИ ОДНА
+  // раньше не показывалась:
+  //   1) движок распознавания отсутствует (наша Android-обёртка на WebView, часть
+  //      iOS-браузеров) — код делал молчаливый return;
+  //   2) ошибка 'network' — Chrome распознаёт речь НА СЕРВЕРАХ Google, у части
+  //      провайдеров РФ они недоступны; этот код в onerror вообще не разбирался;
+  //   3) движок закрывался, не прислав ни result, ни error — ловим сторожевым
+  //      таймером.
+  // Плюс всегда даём выход «Я сказала»: голосовое задание не должно быть тупиком.
+  let _micPanelEl = null, _micPanelTimer = null;
+  function micPanelHide() {
+    if (_micPanelTimer) { clearTimeout(_micPanelTimer); _micPanelTimer = null; }
+    if (!_micPanelEl) return;
+    const el = _micPanelEl; _micPanelEl = null;
+    el.classList.remove('mic-panel-in');
+    setTimeout(() => { try { el.remove(); } catch (_) {} }, 220);
+  }
+  // kind: 'listening' — живой индикатор; 'msg' — объяснение + кнопки действий.
+  function micPanelShow(kind, text, actions, hint) {
+    micPanelHide();
+    const el = document.createElement('div');
+    el.className = 'mic-panel ' + (kind === 'listening' ? 'mic-panel-live' : 'mic-panel-msg');
+    el.setAttribute('role', 'status');
+    el.setAttribute('aria-live', 'polite');
+    const ico = kind === 'listening'
+      ? '<span class="mic-eq" aria-hidden="true"><i></i><i></i><i></i><i></i></span>'
+      : '<span class="mic-panel-ico" aria-hidden="true">🎤</span>';
+    const btns = (actions || []).map((a, i) =>
+      `<button type="button" class="mic-panel-btn${a.primary ? ' mic-panel-btn-main' : ''}" data-mic-act="${i}">${escHtml(a.label)}</button>`
+    ).join('');
+    el.innerHTML =
+      `<div class="mic-panel-row">${ico}<div class="mic-panel-text">${escHtml(text)}` +
+      (hint ? `<span class="mic-panel-hint">${escHtml(hint)}</span>` : '') + `</div></div>` +
+      (btns ? `<div class="mic-panel-actions">${btns}</div>` : '');
+    document.body.appendChild(el);
+    requestAnimationFrame(() => el.classList.add('mic-panel-in'));
+    (actions || []).forEach((a, i) => {
+      const b = el.querySelector('[data-mic-act="' + i + '"]');
+      if (b) b.onclick = () => { micPanelHide(); try { a.fn && a.fn(); } catch (_) {} };
+    });
+    _micPanelEl = el;
+    // Сообщение не висит вечно; «слушаю» снимет сам вызывающий код.
+    if (kind !== 'listening') _micPanelTimer = setTimeout(micPanelHide, 14000);
+    return el;
+  }
+  // Почему распознавание недоступно ДО попытки старта ('' — доступно).
+  function micUnavailableReason() {
+    if (!(window.SpeechRecognition || window.webkitSpeechRecognition)) return 'unsupported';
+    if (window.isSecureContext === false && location.protocol !== 'file:') return 'insecure';
+    return '';
+  }
+  // Код ошибки движка → понятный текст ('' = молчим, это отмена пользователем).
+  function micErrorKey(code) {
+    switch (code) {
+      case 'not-allowed':
+      case 'service-not-allowed':    return 'ui.002';
+      case 'no-speech':              return 'mic.timeout';
+      case 'audio-capture':          return 'ui.004';
+      case 'network':                return 'mic.network';
+      case 'language-not-supported': return 'mic.unsupported';
+      case 'aborted':                return '';
+      default:                       return 'mic.failed';
+    }
+  }
+  // Запасной путь, когда распознать нечем: проигрываем образец и верим на слово.
+  // XP за это НЕ даём (проверить нечем), но игру не запираем — иначе на половине
+  // устройств голосовые задания непроходимы.
+  function micTrustSaid(targetKo, btn, opts) {
+    opts = opts || {};
+    setMicState(btn, 'idle');
+    try { playSyllable(targetKo, btn); } catch (_) {}
+    toast(t('mic.trusted'), 'var(--gold)');
+    if (typeof opts.onCorrect === 'function') opts.onCorrect();
+  }
   function pronounceCheck(targetKo, btn, opts) {
     opts = opts || {};
     const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-    if (!SR) { toast(t('ui.001')); return; }
+    // Повторный тап по кнопке = «хватит слушать»
     if (btn && btn.dataset.listening === '1') {
       try { btn._rec && btn._rec.abort(); } catch (_) {}
-      setMicState(btn, 'idle'); return;
+      setMicState(btn, 'idle'); micPanelHide(); return;
+    }
+    const blocked = micUnavailableReason();
+    if (blocked) {
+      micPanelShow('msg', t(blocked === 'insecure' ? 'mic.insecure' : 'mic.unsupported'), [
+        { label: t('mic.saidIt'), primary: true, fn: () => micTrustSaid(targetKo, btn, opts) },
+        { label: t('mic.close') }
+      ]);
+      return;
     }
     // Pause TTS so it doesn't bleed into the mic
     try { speechSynthesis.cancel(); } catch (_) {}
@@ -2954,10 +3053,29 @@
     rec.maxAlternatives = 3;
     rec.continuous = false;
     setMicState(btn, 'listening');
+    micPanelShow('listening', t('mic.listening'), null, t('mic.hintSpeak'));
     if (btn) btn._rec = rec;
-    let gotResult = false;
+    let settled = false;
+    const finish = () => { settled = true; clearTimeout(watchdog); micPanelHide(); };
+    const showProblem = (key) => {
+      setMicState(btn, 'idle');
+      if (!key) { micPanelHide(); return; }
+      micPanelShow('msg', t(key), [
+        { label: t('mic.retry'), primary: true, fn: () => pronounceCheck(targetKo, btn, opts) },
+        { label: t('mic.saidIt'), fn: () => micTrustSaid(targetKo, btn, opts) },
+        { label: t('mic.close') }
+      ]);
+    };
+    // Сторожевой таймер: движок иногда закрывается молча (ни result, ни error).
+    const watchdog = setTimeout(() => {
+      if (settled) return;
+      settled = true;
+      try { rec.abort(); } catch (_) {}
+      showProblem('mic.timeout');
+    }, 9000);
     rec.onresult = (e) => {
-      gotResult = true;
+      if (settled) return;
+      finish();
       const alts = Array.from(e.results[0]).map(a => (a.transcript || '').trim());
       const target = normalizeKo(targetKo);
       let best = { transcript: alts[0] || '', score: 0 };
@@ -2968,13 +3086,17 @@
       finishPronounce(btn, best, targetKo, opts);
     };
     rec.onerror = (e) => {
-      setMicState(btn, 'idle');
-      if (e.error === 'not-allowed' || e.error === 'service-not-allowed') toast(t('ui.002'));
-      else if (e.error === 'no-speech') toast(t('ui.003'));
-      else if (e.error === 'audio-capture') toast(t('ui.004'));
+      if (settled) return;
+      finish();
+      showProblem(micErrorKey(e && e.error));
     };
-    rec.onend = () => { if (!gotResult) setMicState(btn, 'idle'); };
-    try { rec.start(); } catch (_) { setMicState(btn, 'idle'); }
+    rec.onend = () => {
+      if (settled) return;
+      finish();
+      showProblem('mic.timeout');   // закрылся молча — это «не расслышала»
+    };
+    try { rec.start(); }
+    catch (_) { finish(); showProblem('mic.failed'); }
   }
   function finishPronounce(btn, result, targetKo, opts) {
     const state = result.score === 2 ? 'ok' : result.score === 1 ? 'near' : 'bad';
@@ -6364,7 +6486,7 @@
   // Версия сборки: держать ВРУЧНУЮ синхронной с ?v= в index.html при каждом деплое
   // (те же 3 места — stylesheet/preload/script). Используется тихим автообновлением
   // ниже — сама загрузка кода по-прежнему идёт через ?v=.
-  const APP_VERSION = '20260825b';
+  const APP_VERSION = '20260825c';
   // ── Тихое автообновление (25.08.2026, вместо попапа «Вышло обновление!») ──
   // Узнав из облака про новую версию (appVersion пишет первый клиент нового деплоя,
   // promptVersion — кнопка «Оповестить» в админке), вкладка НЕ дёргает ученицу:
@@ -34413,9 +34535,15 @@
         _adminUsersCacheAt = Date.now();
       } catch (e) {
         console.warn(e);
-        const el = document.getElementById(bodyId);
-        if (el) el.innerHTML = `<div style="text-align:center; padding:24px 12px; color:var(--soft); font-size:12.5px;">${t('ui.301')}</div>`;
-        return;
+        // Та же страховка, что и в списке учениц: аналитика считается по
+        // стата-лайту из справочника, а не показывает пустой экран.
+        if (await _adminUsersFallback()) {
+          usersObj = _adminUsersCache;
+        } else {
+          const el = document.getElementById(bodyId);
+          if (el) el.innerHTML = `<div style="text-align:center; padding:24px 12px; color:var(--soft); font-size:12.5px;">${t('ui.301')}</div>`;
+          return;
+        }
       }
     }
     const el = document.getElementById(bodyId);
@@ -35415,6 +35543,24 @@
   let _adminUsersCache = {};
   let _adminUsersCacheAt = 0;             // когда кэш загружен; свежий (<5 мин) не перекачиваем
   const ADMIN_USERS_CACHE_MS = 5 * 60 * 1000;
+  // Облегчённый режим админки: полный узел `users` правила (interim-3) отдают
+  // только с Firebase-сессией. Если её вдруг нет (сессия вычищена браузером),
+  // списки НЕ должны оказаться пустыми — берём тонкий справочник usersPublic,
+  // он читается всегда. Тарифа/доступа там нет: их дочитываем точечно при
+  // открытии карточки ученицы (точечное чтение правила разрешают всем).
+  let _adminUsersLite = false;
+  async function _adminUsersFallback() {
+    try {
+      const dir = await loadUsersDirectory();
+      if (dir && Object.keys(dir).length) {
+        _adminUsersCache = dir;
+        _adminUsersCacheAt = Date.now();
+        _adminUsersLite = true;
+        return true;
+      }
+    } catch (_) {}
+    return false;
+  }
   // Категории учениц и статусы доступа
   const STUDENT_CATS = ['초급','중급','고급','TOPIK1','TOPIK2'];
   const ACCESS_INFO = {
@@ -35473,10 +35619,14 @@
         const snap = await _db.ref('users').once('value');
         _adminUsersCache = snap.val() || {};
         _adminUsersCacheAt = Date.now();
+        _adminUsersLite = false;
       }
       filterAdminUsers();
     } catch (e) {
       console.warn(e);
+      // Пустой список — худший исход: Мади не понимает, что случилось. Берём
+      // справочник и показываем учениц, честно пометив, чего в нём нет.
+      if (await _adminUsersFallback()) { filterAdminUsers(); return; }
       if (summary) summary.textContent = t('ui.377');
     }
   }
@@ -35564,14 +35714,30 @@
       });
     }
     const summary = document.getElementById('admin-users-summary');
-    if (summary) summary.textContent = (q || _adminUserFilter.status !== 'all' || _adminUserFilter.plan !== 'all' || _adminUserFilter.cat !== 'all')
-      ? t('ui.r053',{count: arr.length, total: total})
-      : t('ui.r054',{total: total});
+    if (summary) {
+      summary.textContent = (q || _adminUserFilter.status !== 'all' || _adminUserFilter.plan !== 'all' || _adminUserFilter.cat !== 'all')
+        ? t('ui.r053',{count: arr.length, total: total})
+        : t('ui.r054',{total: total});
+      // Честная пометка вместо загадочно неполных данных.
+      if (_adminUsersLite) summary.textContent += ' · ' + t('adm.liteMode');
+    }
     renderAdminUsersList(arr);
   }
   function showStudentDetail(uid) {
     const u = _adminUsersCache[uid];
     if (!u) { toast(t('ui.380')); return; }
+    // Облегчённый режим: в справочнике нет тарифа/доступа/прогресса. Точечное
+    // чтение профиля правила разрешают всем — дочитываем и перерисовываем карточку,
+    // чтобы Мади видела полные данные даже без Firebase-сессии.
+    if (_adminUsersLite && !u._full && typeof _db !== 'undefined') {
+      _db.ref('users/' + uid).once('value').then(snap => {
+        const full = snap.val();
+        if (!full) return;
+        _adminUsersCache[uid] = Object.assign({}, full, { _full: true });
+        document.getElementById('student-detail-modal')?.remove();
+        showStudentDetail(uid);
+      }).catch(() => {});
+    }
     document.getElementById('student-detail-modal')?.remove();
     const xp = u.stats?.xp || 0;
     const lvl = getLevel(xp);
@@ -39022,7 +39188,17 @@
   function spkListen() {
     const st = _spk; if (!st || !st.d || st.listening) return;
     const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-    if (!SR) { st.mic = false; _spkRender(); return; }
+    const blocked = micUnavailableReason();
+    if (blocked) {
+      // Раньше здесь был молчаливый переход в тап-режим — ученица видела ровно
+      // ничего и не понимала, почему микрофон «не работает». Теперь объясняем.
+      st.mic = false; _spkRender();
+      micPanelShow('msg', t(blocked === 'insecure' ? 'mic.insecure' : 'mic.unsupported'), [
+        { label: t('mic.saidIt'), primary: true, fn: () => { try { spkSaidTap(); } catch (_) {} } },
+        { label: t('mic.close') }
+      ]);
+      return;
+    }
     const cur = st.d.lines[st.idx]; if (!cur) return;
     try { stopSpeech(); } catch (_) {} // TTS не должен «наговорить» в микрофон
     const rec = new SR();
@@ -39030,11 +39206,24 @@
     st.listening = true; st.rec = rec;
     const btn = document.getElementById('spk-mic');
     setMicState(btn, 'listening');
+    micPanelShow('listening', t('mic.listening'), null, t('mic.hintSpeak'));
     if (btn) { btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-microphone-lines"></i> ' + t('speak.listening'); }
     const seq = st.seq;
     let got = false;
-    rec.onresult = (e) => {
+    // Сторожевой таймер — движок иногда закрывается молча (ни result, ни error).
+    const spkWatchdog = setTimeout(() => {
+      if (got || _spk !== st || st.seq !== seq) return;
       got = true; st.listening = false;
+      try { rec.abort(); } catch (_) {}
+      micPanelHide(); setMicState(btn, 'idle'); _spkResetMicBtn();
+      micPanelShow('msg', t('mic.timeout'), [
+        { label: t('mic.retry'), primary: true, fn: () => spkListen() },
+        { label: t('mic.saidIt'), fn: () => { try { spkSaidTap(); } catch (_) {} } },
+        { label: t('mic.close') }
+      ]);
+    }, 9000);
+    rec.onresult = (e) => {
+      got = true; st.listening = false; clearTimeout(spkWatchdog); micPanelHide();
       if (_spk !== st || st.seq !== seq) return;
       const alts = Array.from(e.results[0]).map(a => (a.transcript || '').trim());
       const target = normalizeKo(cur.ko);
@@ -39046,18 +39235,45 @@
       _spkGrade(best);
     };
     rec.onerror = (e) => {
-      st.listening = false;
+      if (got) return;
+      got = true; st.listening = false; clearTimeout(spkWatchdog); micPanelHide();
       if (_spk !== st || st.seq !== seq) return;
       setMicState(btn, 'idle'); _spkResetMicBtn();
-      if (e.error === 'not-allowed' || e.error === 'service-not-allowed') { st.mic = false; toast(t('ui.002')); _spkRender(); }
-      else if (e.error === 'no-speech') toast(t('ui.003'));
-      else if (e.error === 'audio-capture') toast(t('ui.004'));
+      const code = e && e.error;
+      const key = micErrorKey(code);
+      // Нет доступа к микрофону или речь распознать нечем (в т.ч. 'network' —
+      // серверы Google недоступны у провайдера): переводим тренажёр в тап-режим,
+      // чтобы занятие можно было продолжить, и объясняем это словами.
+      if (code === 'not-allowed' || code === 'service-not-allowed' || code === 'network' || code === 'language-not-supported') {
+        st.mic = false; _spkRender();
+      }
+      if (!key) return;
+      micPanelShow('msg', t(key), [
+        { label: t('mic.saidIt'), primary: true, fn: () => { try { spkSaidTap(); } catch (_) {} } },
+        { label: t('mic.retry'), fn: () => spkListen() },
+        { label: t('mic.close') }
+      ]);
     };
     rec.onend = () => {
-      st.listening = false;
-      if (!got && _spk === st && st.seq === seq) _spkResetMicBtn();
+      if (got) return;
+      got = true; st.listening = false; clearTimeout(spkWatchdog); micPanelHide();
+      if (_spk === st && st.seq === seq) {
+        _spkResetMicBtn();
+        micPanelShow('msg', t('mic.timeout'), [
+          { label: t('mic.retry'), primary: true, fn: () => spkListen() },
+          { label: t('mic.saidIt'), fn: () => { try { spkSaidTap(); } catch (_) {} } },
+          { label: t('mic.close') }
+        ]);
+      }
     };
-    try { rec.start(); } catch (_) { st.listening = false; _spkResetMicBtn(); }
+    try { rec.start(); }
+    catch (_) {
+      got = true; st.listening = false; clearTimeout(spkWatchdog); micPanelHide(); _spkResetMicBtn();
+      micPanelShow('msg', t('mic.failed'), [
+        { label: t('mic.saidIt'), primary: true, fn: () => { try { spkSaidTap(); } catch (_) {} } },
+        { label: t('mic.close') }
+      ]);
+    }
   }
   function _spkGrade(best) {
     const st = _spk; if (!st || !st.d) return;
