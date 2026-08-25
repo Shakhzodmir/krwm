@@ -31,6 +31,7 @@ Todos.md
 database.rules.json
 database.rules.interim.json
 database.rules.interim2.json
+database.rules.interim3.json
 firebase.json
 .firebaserc
 serverless/
