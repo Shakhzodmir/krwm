@@ -6364,7 +6364,7 @@
   // Версия сборки: держать ВРУЧНУЮ синхронной с ?v= в index.html при каждом деплое
   // (те же 3 места — stylesheet/preload/script). Используется тихим автообновлением
   // ниже — сама загрузка кода по-прежнему идёт через ?v=.
-  const APP_VERSION = '20260825a';
+  const APP_VERSION = '20260825b';
   // ── Тихое автообновление (25.08.2026, вместо попапа «Вышло обновление!») ──
   // Узнав из облака про новую версию (appVersion пишет первый клиент нового деплоя,
   // promptVersion — кнопка «Оповестить» в админке), вкладка НЕ дёргает ученицу:
@@ -10510,12 +10510,12 @@
       vocab: L4_FAMILY,
       homework: {
         tasks: [
-          'Воркбук (скину).',
+          'Скачай и повтори материалы урока — кнопка с PDF внизу 📄',
           'Написать рассказ про свою семью на корейском.',
           'Учёба — это вклад в твоё будущее. Каждый маленький шаг сегодня делает тебя сильнее завтра.'
         ],
         tasks_uz: [
-          'Ishchi daftar (yuboraman).',
+          'Dars materiallarini yuklab olib takrorlang — pastda PDF tugmasi 📄',
           'Koreys tilida oʻz oilang haqida hikoya yoz.',
           'Oʻqish — bu kelajagingga qoʻshgan hissang. Bugungi har bir kichik qadam ertaga seni kuchliroq qiladi.'
         ],
@@ -10604,12 +10604,12 @@
       vocab: [...L5_CLASSROOM, ...L5_PLACE],
       homework: {
         tasks: [
-          'Воркбук (скину).',
+          'Скачай и повтори материалы урока — кнопка с PDF внизу 📄',
           'Написать по 2 предложения на каждую грамматику (있어요/없어요 и 에).',
           'Опиши свой класс или комнату по образцу из чтения.'
         ],
         tasks_uz: [
-          'Ish daftari (yuboraman).',
+          'Dars materiallarini yuklab olib takrorlang — pastda PDF tugmasi 📄',
           'Har bir grammatikaga (있어요/없어요 va 에) 2 tadan gap yozing.',
           'Oʻqish namunasi boʻyicha oʻz sinfingiz yoki xonangizni tasvirlab bering.'
         ],
@@ -10695,12 +10695,12 @@
       vocab: [...L6_HOUSE, ...L6_VERBS],
       homework: {
         tasks: [
-          'Воркбук (скину).',
+          'Скачай и повтори материалы урока — кнопка с PDF внизу 📄',
           'Написать по 2 предложения на каждую грамматику (-아/어요 и 을/를).',
           'Опиши, что делают члены твоей семьи прямо сейчас.'
         ],
         tasks_uz: [
-          'Ishchi daftar (yuboraman).',
+          'Dars materiallarini yuklab olib takrorlang — pastda PDF tugmasi 📄',
           'Har bir grammatikaga (-아/어요 va 을/를) 2 tadan gap yozing.',
           'Oila aʼzolaring hozir nima qilayotganini taʼriflab ber.'
         ],
@@ -10788,12 +10788,12 @@
       vocab: [...L7_SCHOOL, ...L7_NEIGHBORHOOD],
       homework: {
         tasks: [
-          'Воркбук (скину).',
+          'Скачай и повтори материалы урока — кнопка с PDF внизу 📄',
           'Написать по 2 предложения на каждую грамматику (에-куда и 도).',
           'Рассказать, куда идут разные люди в твоей семье.'
         ],
         tasks_uz: [
-          'Ishchi daftar (yuboraman).',
+          'Dars materiallarini yuklab olib takrorlang — pastda PDF tugmasi 📄',
           'Har bir grammatikaga (에-qayerga va 도) 2 tadan gap yozing.',
           'Oilangizdagi turli odamlar qayerga borishini gapirib bering.'
         ],
@@ -10870,12 +10870,12 @@
       vocab: [...L8_PLACES, ...L8_ACTIVITIES],
       homework: {
         tasks: [
-          'Воркбук (скину).',
+          'Скачай и повтори материалы урока — кнопка с PDF внизу 📄',
           'Написать по 2 предложения на каждую грамматику (안 и 에서).',
           'Расскажи, что ты делаешь в школе, дома и в парке (используй 에서).'
         ],
         tasks_uz: [
-          'Ish daftari (yuboraman).',
+          'Dars materiallarini yuklab olib takrorlang — pastda PDF tugmasi 📄',
           'Har bir grammatikaga (안 va 에서) 2 tadan gap yozing.',
           'Maktabda, uyda va bogʻda nima qilishingizni aytib bering (에서 dan foydalaning).'
         ],
@@ -10956,12 +10956,12 @@
       vocab: [...L9_NUMBERS_1, ...L9_NUMBERS_2, ...L9_EXTRA],
       homework: {
         tasks: [
-          'Воркбук (скину).',
+          'Скачай и повтори материалы урока — кнопка с PDF внизу 📄',
           'Написать по 2 предложения на каждую грамматику (하고 и -고).',
           'Запиши свой класс, этаж и возраст по-корейски.'
         ],
         tasks_uz: [
-          'Ish daftari (yuboraman).',
+          'Dars materiallarini yuklab olib takrorlang — pastda PDF tugmasi 📄',
           'Har bir grammatikaga (하고 va -고) 2 tadan gap yozing.',
           'Sinfingiz, qavatingiz va yoshingizni koreyscha yozing.'
         ],
@@ -11036,12 +11036,12 @@
       vocab: [...L10_MONTHS, ...L10_DAYS, ...L10_TIMES],
       homework: {
         tasks: [
-          'Воркбук (скину).',
+          'Скачай и повтори материалы урока — кнопка с PDF внизу 📄',
           'Написать по 2 предложения на каждую грамматику (에-когда и -(으)세요).',
           'Напиши приглашение на свой день рождения по образцу из чтения.'
         ],
         tasks_uz: [
-          'Ish daftari (yuboraman).',
+          'Dars materiallarini yuklab olib takrorlang — pastda PDF tugmasi 📄',
           'Har bir grammatikaga (에-qachon va -(으)세요) 2 tadan gap yozing.',
           'Oʻqish namunasi boʻyicha oʻz tugʻilgan kuningizga taklifnoma yozing.'
         ],
@@ -11129,12 +11129,12 @@
       vocab: [...L11_PLACES, ...L11_THINGS, ...L11_VERBS],
       homework: {
         tasks: [
-          'Воркбук (скину).',
+          'Скачай и повтори материалы урока — кнопка с PDF внизу 📄',
           'Написать по 2 предложения на каждую грамматику (하고 같이 и -(으)ㄹ 거예요).',
           'Расскажи, что ты будешь делать в выходные и с кем.'
         ],
         tasks_uz: [
-          'Ish daftari (yuboraman).',
+          'Dars materiallarini yuklab olib takrorlang — pastda PDF tugmasi 📄',
           'Har bir grammatikaga (하고 같이 va -(으)ㄹ 거예요) 2 tadan gap yozing.',
           'Dam olish kunlari nima qilishingni va kim bilan qilishingni aytib ber.'
         ],
@@ -11213,12 +11213,12 @@
       vocab: [...L12_SEASONS, ...L12_WEATHER, ...L12_ANIMALS],
       homework: {
         tasks: [
-          'Воркбук (скину).',
+          'Скачай и повтори материалы урока — кнопка с PDF внизу 📄',
           'Написать по 2 предложения на каждую из 4 грамматик (ㅂ-неправ., -아/어서, -고 싶다, -았/었어요).',
           'Расскажи про любимый сезон (почему именно он) и про последние выходные (что делал).'
         ],
         tasks_uz: [
-          'Ishchi daftar (yuboraman).',
+          'Dars materiallarini yuklab olib takrorlang — pastda PDF tugmasi 📄',
           '4 ta grammatikaning (ㅂ-notoʻgʻri, -아/어서, -고 싶다, -았/었어요) har biriga 2 tadan gap yozing.',
           'Sevimli fasling haqida (nega aynan u) va oʻtgan dam olish kunlari haqida (nima qilganing) gapirib ber.'
         ],
@@ -11374,12 +11374,12 @@
       vocab: [...L13_KITCHEN, ...L13_LIVING],
       homework: {
         tasks: [
-          'Воркбук (скину).',
+          'Скачай и повтори материалы урока — кнопка с PDF внизу 📄',
           'Написать по 2 предложения на каждую грамматику (-고 있다 и 못).',
           'Опиши, что делает твоя семья на кухне или в гостиной прямо сейчас.'
         ],
         tasks_uz: [
-          'Ishchi daftar (yuboraman).',
+          'Dars materiallarini yuklab olib takrorlang — pastda PDF tugmasi 📄',
           'Har bir grammatikaga (-고 있다 va 못) 2 tadan gap yoz.',
           'Oilang hozir oshxonada yoki mehmonxonada nima qilayotganini tasvirlab yoz.'
         ],
@@ -11474,12 +11474,12 @@
       vocab: [...L14_TALENT, ...L14_SPORT],
       homework: {
         tasks: [
-          'Воркбук (скину).',
+          'Скачай и повтори материалы урока — кнопка с PDF внизу 📄',
           'Написать по 2 предложения на каждую грамматику (-아/어 неформ. и -지만).',
           'Расскажи про свой талант: что умеешь хорошо, а что — не очень.'
         ],
         tasks_uz: [
-          'Ish kitobi (yuboraman).',
+          'Dars materiallarini yuklab olib takrorlang — pastda PDF tugmasi 📄',
           'Har bir grammatikaga (-아/어 norasmiy va -지만) 2 tadan gap yozing.',
           'Iqtidoringiz haqida gapiring: nimani yaxshi uddalaysiz, nimani unchalik emas.'
         ],
@@ -11577,12 +11577,12 @@
       vocab: [...L15_FOOD, ...L15_TASTE],
       homework: {
         tasks: [
-          'Воркбук (скину).',
+          'Скачай и повтори материалы урока — кнопка с PDF внизу 📄',
           'Написать по 2 предложения на каждую грамматику (-지 않다 и -자).',
           'Расскажи: какое блюдо любишь, где ел, с кем и как было на вкус.'
         ],
         tasks_uz: [
-          'Vorkbuk (yuboraman).',
+          'Dars materiallarini yuklab olib takrorlang — pastda PDF tugmasi 📄',
           'Har bir grammatikaga (-지 않다 va -자) 2 tadan gap yoz.',
           'Soʻzlab ber: qaysi taomni yoqtirasan, qayerda yeding, kim bilan va taʻmi qanday edi.'
         ],
