@@ -5488,6 +5488,9 @@
       const pub = { ...profile };
       try { pub.gender = userGender() || null; } catch (_) {}
       _db.ref('usersPublic/' + uid).update(pub).catch(() => {});
+      // Имя/уровень/регистрация — значимое изменение справочника: двигаем версию,
+      // чтобы у остальных кэш обновился, а не ждал часа (см. loadUsersDirectory).
+      bumpDirVersion();
     } catch (e) {
       console.warn('pushUserToCloud failed:', e);
     }
@@ -5540,6 +5543,7 @@
     try {
       if (k === 'avatar' || k === 'cover') {
         _db.ref(`usersPublic/${uid}/${k}`).set(isDataUrl(v) ? null : (v || null)).catch(() => {});
+        bumpDirVersion();   // новое фото видно всем сразу, а не через час
       } else if (k === 'bio') {
         _db.ref(`usersPublic/${uid}/bio`).set(v || null).catch(() => {});
       } else if (k === 'stats') {
@@ -6486,7 +6490,7 @@
   // Версия сборки: держать ВРУЧНУЮ синхронной с ?v= в index.html при каждом деплое
   // (те же 3 места — stylesheet/preload/script). Используется тихим автообновлением
   // ниже — сама загрузка кода по-прежнему идёт через ?v=.
-  const APP_VERSION = '20260826a';
+  const APP_VERSION = '20260826b';
   // ── Тихое автообновление (25.08.2026, вместо попапа «Вышло обновление!») ──
   // Узнав из облака про новую версию (appVersion пишет первый клиент нового деплоя,
   // promptVersion — кнопка «Оповестить» в админке), вкладка НЕ дёргает ученицу:
@@ -6639,11 +6643,23 @@
   }
 
   let _dirReadyFlag = null; // null — ещё не спрашивали у облака
+  let _dirVersionSeen = null; // версия справочника, под которую собран текущий кэш
   // Справочник учеников не меняется поминутно (имя/фото/уровень), а живой
   // онлайн-статус в чате идёт отдельным heartbeat-путём — поэтому в пределах TTL
   // отдаём его прямо из localStorage БЕЗ единого обращения к сети: ученик может
   // открывать «Общение» весь день, а справочник скачается с сервера один раз.
-  const DIR_CACHE_TTL_MS = 10 * 60 * 1000;
+  // Справочник весит сотни килобайт (26.08.2026 — 355 777 байт на 1229 учениц) и
+  // растёт с каждой регистрацией, поэтому кэш держим ЧАС, а не 10 минут. Чтобы час
+  // не превратился в «не вижу новую подругу», после истечения TTL спрашиваем не сам
+  // справочник, а его версию `shared/config/dirVersion` (десятки байт): совпала —
+  // просто продлеваем кэш, изменилась — качаем заново. Версию двигают только
+  // значимые правки (имя, фото, уровень, регистрация), а НЕ heartbeat и не XP:
+  // иначе версия менялась бы ежесекундно и гейт потерял бы смысл.
+  const DIR_CACHE_TTL_MS = 60 * 60 * 1000;
+  function bumpDirVersion() {
+    if (typeof _db === 'undefined') return;
+    try { _db.ref('shared/config/dirVersion').set(Date.now()).catch(() => {}); } catch (_) {}
+  }
   async function loadUsersDirectory() {
     if (typeof _db === 'undefined') return {};
     try {
@@ -6655,10 +6671,24 @@
       // Полные профили админ-панели качают сами по требованию с TTL
       // (loadAdminUsers/loadAdminStats).
       const cached = Store.get('usersDirCacheV1', null);
-      if (cached && cached.data && (Date.now() - (cached.at || 0)) < DIR_CACHE_TTL_MS) {
-        _dirReadyFlag = !!cached.dirReady;
-        _usersDirCache = cached.data;
-        return _usersDirCache;
+      if (cached && cached.data) {
+        if ((Date.now() - (cached.at || 0)) < DIR_CACHE_TTL_MS) {
+          _dirReadyFlag = !!cached.dirReady;
+          _usersDirCache = cached.data;
+          return _usersDirCache;
+        }
+        // TTL истёк — спрашиваем ВЕРСИЮ, а не весь справочник.
+        try {
+          const vSnap = await _db.ref('shared/config/dirVersion').once('value');
+          const ver = vSnap.val();
+          if (ver && cached.ver === ver) {
+            _dirReadyFlag = !!cached.dirReady;
+            _usersDirCache = cached.data;
+            Store.set('usersDirCacheV1', Object.assign({}, cached, { at: Date.now() }));
+            return _usersDirCache;   // ничего не изменилось — 355 КБ не качаем
+          }
+          _dirVersionSeen = ver || null;
+        } catch (_) { /* версия не прочиталась — просто качаем справочник */ }
       }
       if (_dirReadyFlag === null) {
         const f = await _db.ref('shared/config/dirReady').once('value');
@@ -6672,7 +6702,14 @@
           const val = snap.val();
           if (val && Object.keys(val).length) {
             _usersDirCache = val;
-            Store.set('usersDirCacheV1', { at: Date.now(), dirReady: true, data: val });
+            // Версию читаем один раз здесь же — с ней следующая проверка обойдётся
+            // в десятки байт вместо трёхсот килобайт.
+            let ver = _dirVersionSeen;
+            if (!ver) {
+              try { ver = (await _db.ref('shared/config/dirVersion').once('value')).val() || null; } catch (_) { ver = null; }
+            }
+            _dirVersionSeen = ver;
+            Store.set('usersDirCacheV1', { at: Date.now(), dirReady: true, ver: ver, data: val });
             return _usersDirCache;
           }
         } catch (_) { /* справочник не прочитался — ниже старый путь */ }
@@ -7670,7 +7707,11 @@
     const slot = document.getElementById('friends-chat-section');
     if (!slot) return;
     const seq = ++_renderFriendsSeq;
-    if (!_usersDirCache) await loadUsersDirectory();
+    // Справочник (355 КБ!) грузим ТОЛЬКО когда список реально на экране. Раньше он
+    // скачивался при каждом старте у КАЖДОЙ вошедшей ученицы — даже у той, которая
+    // за всю сессию ни разу не открыла «Общение»: слушатель друзей срабатывает
+    // сразу после входа и дёргает этот рендер.
+    if (!_usersDirCache && _chatListVisible()) await loadUsersDirectory();
     if (isAdmin()) { renderAdminChatList(fromBgRefresh); return; }
     const friends = _friendsCache || {};
     const groups = _groupsCache || {};
@@ -7862,7 +7903,10 @@
     _lbFriendRows = friendRows;
 
     // — Глобальный: все ученики из общего справочника (без админов) —
-    if (!_usersDirCache) { try { await loadUsersDirectory(); } catch (_) {} }
+    // Тот же гейт, что и у списка чатов: рейтинг живёт на экране «Общение», и
+    // тянуть ради него 355 КБ, когда экран не открыт, незачем (иначе он обходил
+    // бы экономию, ради которой всё и делалось).
+    if (!_usersDirCache && _chatListVisible()) { try { await loadUsersDirectory(); } catch (_) {} }
     const dir = _usersDirCache || {};
     const globalRows = [];
     Object.entries(dir).forEach(([uid, u]) => {
@@ -8090,6 +8134,7 @@
         // Чат-лист читает тонкий usersPublic — без зеркала чип уровня откатывался бы
         // к старому после протухания кэша (ученица обновит своё зеркало только при входе).
         _db.ref('usersPublic/' + uid + '/level').set(id || null).catch(() => {});
+        bumpDirVersion();   // уровень виден в чат-листе — обновляем справочник у всех
         if (_usersDirCache && _usersDirCache[uid]) _usersDirCache[uid].level = id || '';
         toast(t('lvl.changed'), 'var(--sage)');
         renderAdminChatList();
