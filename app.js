@@ -6486,7 +6486,7 @@
   // Версия сборки: держать ВРУЧНУЮ синхронной с ?v= в index.html при каждом деплое
   // (те же 3 места — stylesheet/preload/script). Используется тихим автообновлением
   // ниже — сама загрузка кода по-прежнему идёт через ?v=.
-  const APP_VERSION = '20260825c';
+  const APP_VERSION = '20260826a';
   // ── Тихое автообновление (25.08.2026, вместо попапа «Вышло обновление!») ──
   // Узнав из облака про новую версию (appVersion пишет первый клиент нового деплоя,
   // promptVersion — кнопка «Оповестить» в админке), вкладка НЕ дёргает ученицу:
@@ -7203,10 +7203,29 @@
   // ── Chat list metadata: last message preview + server-side ordering ──
   // key = friend uid (DM) or group id; value = {lastMessage, lastAt, lastFrom, lastFromName}
   let _chatMetaCache = {};
+  // Меты чатов для превью в списке. САМОЕ ДОРОГОЕ ЧТЕНИЕ ПРИЛОЖЕНИЯ, поэтому
+  // общий чат читаем ПОФИЛЬДНО: в его meta лежат members и read на ВСЕХ учениц
+  // (сотни записей, десятки КБ), а списку нужны только четыре строчки превью.
+  // Личные чаты и группы читаем узлом целиком — там мета маленькая, а members
+  // нужен для подписи «N участников».
+  const _CHAT_PREVIEW_FIELDS = ['lastMessage', 'lastAt', 'lastFrom', 'lastFromName'];
   async function loadChatMetas(items) {
     if (typeof _db === 'undefined') return;
     await Promise.all(items.map(async it => {
       try {
+        if (it.chatId === COMMUNITY_GID) {
+          const vals = await Promise.all(_CHAT_PREVIEW_FIELDS.map(f =>
+            _db.ref(`chats/${it.chatId}/meta/${f}`).once('value')
+              .then(s => s.val()).catch(() => null)
+          ));
+          _chatMetaCache[it.key] = Object.assign({}, _chatMetaCache[it.key] || {}, {
+            lastMessage: vals[0] || '',
+            lastAt: vals[1] || 0,
+            lastFrom: vals[2] || '',
+            lastFromName: vals[3] || ''
+          });
+          return;
+        }
         const snap = await _db.ref(`chats/${it.chatId}/meta`).once('value');
         const meta = snap.val() || {};
         _chatMetaCache[it.key] = {
@@ -7221,6 +7240,25 @@
         };
       } catch (_) {}
     }));
+  }
+  // Список чатов виден только на экране «Общение» (или когда открыт сам чат).
+  // Раньше любое входящее сообщение перезапускало перекачку мет ВСЕХ чатов даже
+  // тогда, когда ученица играет в игру и списка на экране нет.
+  function _chatListVisible() {
+    try {
+      if (document.getElementById('chat-page')) return true;
+      return !!document.getElementById('screen-social')?.classList.contains('active');
+    } catch (_) { return true; }
+  }
+  // Фоновое обновление мет — с дебаунсом: серия сообщений подряд раньше означала
+  // столько же перекачек, теперь одна.
+  let _metaRefreshTimer = null;
+  function scheduleMetaRefresh(items, after) {
+    if (_metaRefreshTimer) clearTimeout(_metaRefreshTimer);
+    _metaRefreshTimer = setTimeout(() => {
+      _metaRefreshTimer = null;
+      loadChatMetas(items).then(() => { try { after && after(); } catch (_) {} });
+    }, 1200);
   }
   // Telegram-style time label in the chat list: HH:MM today, weekday this week, DD.MM later.
   function chatListTimeLabel(ts) {
@@ -7642,7 +7680,9 @@
     // Меты чатов (последнее сообщение + время). Cache-first: при повторном заходе
     // рисуем МГНОВЕННО из кэша, а свежие меты тянем фоном и тихо перерисовываем
     // только при реальных изменениях. Первый заход за сессию — ждём сеть (иначе пусто).
-    if (me && me !== 'guest' && !fromBgRefresh) {
+    // Сеть трогаем ТОЛЬКО когда список реально на экране: раньше каждое входящее
+    // сообщение тянуло меты всех чатов, даже если ученица в это время играет.
+    if (me && me !== 'guest' && !fromBgRefresh && _chatListVisible()) {
       const items = [
         { key: COMMUNITY_GID, chatId: COMMUNITY_GID },
         ...Object.keys(friends).map(uid => ({ key: uid, chatId: chatIdFor(me, uid) })),
@@ -7652,7 +7692,7 @@
         await loadChatMetas(items);
       } else {
         const sigBefore = _chatMetaSig(items.map(i => i.key));
-        loadChatMetas(items).then(() => {
+        scheduleMetaRefresh(items, () => {
           if (seq !== _renderFriendsSeq) return;               // уже начался новый рендер
           if (_curScreen !== 'social') return;                 // ушли с экрана
           if (document.getElementById('chat-page')) return;    // открыта переписка
@@ -7795,13 +7835,29 @@
     let friendRows = null;
     if (fids.length) {
       friendRows = [myRow];
-      await Promise.all(fids.map(async fid => {
-        try {
-          const snap = await _db.ref('users/' + fid + '/stats').once('value');
-          const s = snap.val() || {};
-          friendRows.push({ uid: fid, name: (friends[fid] && friends[fid].name) || 'Друг', week: _weekXpFrom(s.xpByDay), all: (+s.xp || 0) });
-        } catch (_) {}
-      }));
+      // Стата для рейтинга берётся из УЖЕ ЗАГРУЖЕННОГО справочника usersPublic:
+      // там стата-лайт с xpByDay за 14 дней — ровно то, что нужно недельному
+      // рейтингу. Раньше на каждого друга читался полный users/<uid>/stats
+      // (вся история xpByDay, список выученных слов, рекорды) — килобайты на
+      // человека при каждом открытии «Общения». Сети теперь не требуется вовсе;
+      // если друга в справочнике нет (редкость) — дочитываем его точечно.
+      const dirNow = _usersDirCache || {};
+      const missing = [];
+      fids.forEach(fid => {
+        const u = dirNow[fid];
+        if (!u) { missing.push(fid); return; }
+        const s = u.stats || {};
+        friendRows.push({ uid: fid, name: (friends[fid] && friends[fid].name) || u.name || 'Друг', week: _weekXpFrom(s.xpByDay), all: (+s.xp || 0) });
+      });
+      if (missing.length) {
+        await Promise.all(missing.map(async fid => {
+          try {
+            const snap = await _db.ref('usersPublic/' + fid + '/stats').once('value');
+            const s = snap.val() || {};
+            friendRows.push({ uid: fid, name: (friends[fid] && friends[fid].name) || 'Друг', week: _weekXpFrom(s.xpByDay), all: (+s.xp || 0) });
+          } catch (_) {}
+        }));
+      }
     }
     _lbFriendRows = friendRows;
 
@@ -7914,7 +7970,9 @@
     // Fresh previews — cache-first: повторный заход рисуется мгновенно из кэша,
     // свежие меты (по одному запросу на ученицу — дорого) тянутся фоном.
     const studentUids = Object.keys(dir).filter(uid => !(dir[uid] && dir[uid].isAdmin) && uid !== me);
-    if (me && me !== 'guest' && !fromBgRefresh) {
+    // У Мади в списке ВСЕ ученицы, поэтому перекачка мет здесь особенно дорогая:
+    // ходим в сеть только когда список открыт, и не чаще раза в 1,2 секунды.
+    if (me && me !== 'guest' && !fromBgRefresh && _chatListVisible()) {
       const items = [
         { key: COMMUNITY_GID, chatId: COMMUNITY_GID },
         ...studentUids.map(uid => ({ key: uid, chatId: chatIdFor(me, uid) })),
@@ -7924,7 +7982,7 @@
         await loadChatMetas(items);
       } else {
         const sigBefore = _chatMetaSig(items.map(i => i.key));
-        loadChatMetas(items).then(() => {
+        scheduleMetaRefresh(items, () => {
           if (seq !== _renderFriendsSeq) return;
           if (_curScreen !== 'social') return;
           if (document.getElementById('chat-page')) return;
