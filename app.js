@@ -6490,7 +6490,7 @@
   // Версия сборки: держать ВРУЧНУЮ синхронной с ?v= в index.html при каждом деплое
   // (те же 3 места — stylesheet/preload/script). Используется тихим автообновлением
   // ниже — сама загрузка кода по-прежнему идёт через ?v=.
-  const APP_VERSION = '20260826b';
+  const APP_VERSION = '20260828a';
   // ── Тихое автообновление (25.08.2026, вместо попапа «Вышло обновление!») ──
   // Узнав из облака про новую версию (appVersion пишет первый клиент нового деплоя,
   // promptVersion — кнопка «Оповестить» в админке), вкладка НЕ дёргает ученицу:
@@ -9049,25 +9049,77 @@
   function attachChatListener(chatId, otherUid) {
     detachChatListener();
     if (typeof _db === 'undefined') return;
+    // ПОСООБЩЕНИЕВАЯ подписка вместо снимка всего окна. Раньше висел on('value')
+    // на limitToLast(200): каждое НОВОЕ сообщение заставляло сервер прислать все
+    // 200 сообщений заново — в общем чате это ~48 КБ на каждую реплику, каждому,
+    // у кого открыт чат. Теперь при открытии приходит окно один раз, а дальше —
+    // только сама реплика (~240 байт). Правки (реакции, «изменено») ловит
+    // child_changed, удаление — child_removed, поэтому поведение не меняется.
     const mref = _db.ref(`chats/${chatId}/messages`).limitToLast(200);
-    const mh = snap => {
-      _lastChatMsgs = snap.val() || {};
-      renderChatMessages(_lastChatMsgs);
-      // New messages arrived while the chat is open → mark them read (clears unread, sets ✓✓).
-      if (otherUid) markChatRead(otherUid, chatId);
+    _lastChatMsgs = {};
+    let paintTimer = null;
+    let initialDone = false;
+    const repaint = () => {
+      if (paintTimer) return;                       // склеиваем всплеск событий в один рендер
+      paintTimer = setTimeout(() => {
+        paintTimer = null;
+        renderChatMessages(_lastChatMsgs);
+      }, 60);
     };
-    mref.on('value', mh);
-    // Read receipts: re-render ticks when the other side's read pointer moves.
-    const rref = _db.ref(`chats/${chatId}/meta/read`);
-    const rh = snap => { _chatReadMeta = snap.val() || {}; renderChatMessages(_lastChatMsgs); };
-    rref.on('value', rh);
+    // Отметку «прочитано» ставим ОДИН раз после первичной загрузки и потом на
+    // каждое входящее — иначе при открытии чата ушло бы 200 записей подряд.
+    let readTimer = null;
+    const markReadSoon = () => {
+      if (!otherUid || readTimer) return;
+      readTimer = setTimeout(() => { readTimer = null; try { markChatRead(otherUid, chatId); } catch (_) {} }, 400);
+    };
+    const onAdd = snap => {
+      _lastChatMsgs[snap.key] = snap.val();
+      repaint();
+      if (initialDone) markReadSoon();
+    };
+    const onChange = snap => { _lastChatMsgs[snap.key] = snap.val(); repaint(); };
+    const onRemove = snap => { delete _lastChatMsgs[snap.key]; repaint(); };
+    mref.on('child_added', onAdd);
+    mref.on('child_changed', onChange);
+    mref.on('child_removed', onRemove);
+    // Конец первичной пачки: value приходит после всех child_added, но ЕГО
+    // полезная нагрузка уже в кэше клиента — лишнего трафика не создаёт.
+    const firstDone = () => { initialDone = true; repaint(); markReadSoon(); };
+    mref.once('value').then(firstDone).catch(firstDone);
+
+    // Отметки прочтения. В личке нужна РОВНО одна цифра — указатель собеседника,
+    // а не вся карта. В общем чате карта read весит 22,7 КБ и меняется каждый раз,
+    // когда любая из учениц открывает чат, — подписываться на неё разорительно и
+    // бессмысленно (галочка «кто-то прочитал» там ни о чём не говорит).
+    let rref = null, rh = null;
+    if (otherUid && !_chatIsGroup) {
+      rref = _db.ref(`chats/${chatId}/meta/read/${otherUid}`);
+      rh = snap => { _chatReadMeta = { [otherUid]: snap.val() || 0 }; renderChatMessages(_lastChatMsgs); };
+      rref.on('value', rh);
+    } else if (_chatIsGroup && chatId !== COMMUNITY_GID) {
+      rref = _db.ref(`chats/${chatId}/meta/read`);       // обычные группы маленькие
+      rh = snap => { _chatReadMeta = snap.val() || {}; renderChatMessages(_lastChatMsgs); };
+      rref.on('value', rh);
+    } else {
+      _chatReadMeta = {};
+    }
     // Typing indicator: repaint the header when the other side starts/stops typing.
     const tref = _db.ref(`chats/${chatId}/meta/typing`);
     const th = snap => { _chatTyping = snap.val() || {}; paintChatHeaderStatus(); };
     tref.on('value', th);
     // Tick so a stale "печатает…" fades on its own even without a new event.
     const typingTick = setInterval(paintChatHeaderStatus, 2500);
-    _chatListenerOff = () => { mref.off('value', mh); rref.off('value', rh); tref.off('value', th); clearInterval(typingTick); };
+    _chatListenerOff = () => {
+      mref.off('child_added', onAdd);
+      mref.off('child_changed', onChange);
+      mref.off('child_removed', onRemove);
+      if (rref && rh) rref.off('value', rh);
+      tref.off('value', th);
+      clearInterval(typingTick);
+      if (paintTimer) clearTimeout(paintTimer);
+      if (readTimer) clearTimeout(readTimer);
+    };
   }
 
   // Detect a 1–3 emoji-only message so it can render big & bubble-less (jumbo), like Telegram.
