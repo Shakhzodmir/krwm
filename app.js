@@ -6490,7 +6490,7 @@
   // Версия сборки: держать ВРУЧНУЮ синхронной с ?v= в index.html при каждом деплое
   // (те же 3 места — stylesheet/preload/script). Используется тихим автообновлением
   // ниже — сама загрузка кода по-прежнему идёт через ?v=.
-  const APP_VERSION = '20260828a';
+  const APP_VERSION = '20260830a';
   // ── Тихое автообновление (25.08.2026, вместо попапа «Вышло обновление!») ──
   // Узнав из облака про новую версию (appVersion пишет первый клиент нового деплоя,
   // promptVersion — кнопка «Оповестить» в админке), вкладка НЕ дёргает ученицу:
@@ -31072,7 +31072,12 @@
     bank1.slice(0, 8).forEach((q, i) => {
       qs.push({ skill: i < 4 ? 'grammar' : 'reading', passage: q.passage, image: q.image, instr: q.instr, options: q.options, answer: q.answer, mode: 'text' });
     });
-    bank1.filter(q => q.passage && q.passage.length < 90).slice(8, 12).forEach(q => {
+    // Слушательные берём из ОСТАВШИХСЯ вопросов (после первых восьми) и только с
+    // короткой репликой. Раньше фильтр стоял ДО среза — `filter(...).slice(8, 12)`:
+    // если коротких реплик набиралось меньше девяти, срез выходил ПУСТЫМ и вопросов
+    // на слух не было вовсе. Отсюда жалоба ученицы 30.08.2026 «звук в тесте не
+    // работает»: кнопки прослушивания просто не появлялось.
+    bank1.slice(8).filter(q => q.passage && q.passage.length < 90).slice(0, 4).forEach(q => {
       qs.push({ skill: 'listening', passage: q.passage, instr: q.instr, options: q.options, answer: q.answer, mode: 'listen' });
     });
     return qs;
@@ -31099,7 +31104,7 @@
       // вопрос решается всегда; кнопка «Прослушать» — необязательная озвучка сверху.
       bodyHtml = `
         <div style="text-align:center; margin-bottom:10px;">
-          <button type="button" class="btn btn-rose" onclick="playSyllable(${JSON.stringify(q.passage)})"><i class="fa-solid fa-volume-up"></i> ${t('leveltest.listenBtn')}</button>
+          <button type="button" class="btn btn-rose" onclick="playSyllable('${jsStr(q.passage)}')"><i class="fa-solid fa-volume-up"></i> ${t('leveltest.listenBtn')}</button>
         </div>
         ${passageHtml}`;
     } else {
@@ -42647,7 +42652,7 @@
     if (!stats.seasonalVisited || typeof stats.seasonalVisited !== 'object') stats.seasonalVisited = {};
     if (!stats.seasonalVisited[ev.id]) { stats.seasonalVisited[ev.id] = true; UStore.set('stats', stats); }
     const rows = ev.words.map(([ko, ru, emoji]) => `
-      <div onclick="playSyllable(${JSON.stringify(ko)})" class="card card-press" style="padding:12px; text-align:center; cursor:pointer; position:relative;">
+      <div onclick="playSyllable('${jsStr(ko)}')" class="card card-press" style="padding:12px; text-align:center; cursor:pointer; position:relative;">
         ${lessonSaveHeart(ko, ru, '', emoji, 'season', 'lsave-corner')}
         <div style="font-size:26px;">${emoji}</div>
         <div class="ko" style="font-size:16px; font-weight:700; color:var(--berry); margin-top:4px;">${escHtml(ko)}</div>
