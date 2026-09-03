@@ -7199,10 +7199,14 @@
 .home-art-card:hover { border-color: var(--coral); }
 .home-art-ico { font-size: 22px; flex: 0 0 auto; line-height: 1; }
 .home-art-tx { display: flex; flex-direction: column; min-width: 0; flex: 1; }
-.home-art-title { font-weight: 700; font-size: 13.5px; color: var(--berry); line-height: 1.3; }
-.home-art-sub { font-size: 11.5px; color: var(--soft); margin-top: 2px; }
+.home-art-title { font-weight: 700; font-size: 13.5px; color: var(--berry); line-height: 1.3; overflow-wrap: anywhere; }
+.home-art-sub { font-size: 11.5px; color: var(--soft); margin-top: 2px; overflow-wrap: anywhere; }
 .home-art-arrow { color: var(--coral); font-size: 11px; flex: 0 0 auto; }
 body.theme-dark .home-art-card { background: var(--paper); }
-@media (min-width: 640px) {
+/* Три колонки — только с 768px: именно там .app-shell вырастает до 720px.
+   На 640–767px оболочка ещё 440/540px, колонка выходила 126/159px и заголовки
+   вылезали за карточку (сам документ при этом не расширялся — .app-shell
+   обрезает overflow, поэтому замер ширины страницы дефект не ловил). */
+@media (min-width: 768px) {
   .home-art-grid { grid-template-columns: 1fr 1fr 1fr; }
 }

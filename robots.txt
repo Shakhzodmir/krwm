@@ -1,31 +1,106 @@
 # Korean with Madie — koreanmadie.study
+#
+# ВАЖНО про формат: краулер подчиняется ТОЛЬКО ОДНОЙ группе — самой конкретной,
+# где нашёл своё имя. Группа для GPTBot не наследует Disallow из группы «*».
+# Поэтому запреты продублированы в КАЖДОЙ группе: иначе именной бот получал бы
+# доступ к платным банкам TOPIK, экзаменационному аудио и рабочим материалам.
+
 User-agent: *
 Allow: /
 Disallow: /delete-account.html
 Disallow: /firebase-messaging-sw.js
 Disallow: /assets/topik/
+Disallow: /assets/topik1/
+Disallow: /assets/topik2/
 Disallow: /assets/ref/
+Disallow: /assets/materials/
+Disallow: /assets/photos/
+Disallow: /*?go=
 
-# AI-краулеры — явно разрешаем: сайт хочет быть найденным ассистентами
+# ── AI-краулеры: сайт хочет быть найденным ассистентами, но платный контент закрыт ──
+
 User-agent: GPTBot
 Allow: /
+Disallow: /delete-account.html
+Disallow: /firebase-messaging-sw.js
+Disallow: /assets/topik/
+Disallow: /assets/topik1/
+Disallow: /assets/topik2/
+Disallow: /assets/ref/
+Disallow: /assets/materials/
+Disallow: /assets/photos/
+Disallow: /*?go=
 
 User-agent: OAI-SearchBot
 Allow: /
+Disallow: /delete-account.html
+Disallow: /firebase-messaging-sw.js
+Disallow: /assets/topik/
+Disallow: /assets/topik1/
+Disallow: /assets/topik2/
+Disallow: /assets/ref/
+Disallow: /assets/materials/
+Disallow: /assets/photos/
+Disallow: /*?go=
 
 User-agent: ClaudeBot
 Allow: /
+Disallow: /delete-account.html
+Disallow: /firebase-messaging-sw.js
+Disallow: /assets/topik/
+Disallow: /assets/topik1/
+Disallow: /assets/topik2/
+Disallow: /assets/ref/
+Disallow: /assets/materials/
+Disallow: /assets/photos/
+Disallow: /*?go=
 
 User-agent: Claude-SearchBot
 Allow: /
+Disallow: /delete-account.html
+Disallow: /firebase-messaging-sw.js
+Disallow: /assets/topik/
+Disallow: /assets/topik1/
+Disallow: /assets/topik2/
+Disallow: /assets/ref/
+Disallow: /assets/materials/
+Disallow: /assets/photos/
+Disallow: /*?go=
 
 User-agent: PerplexityBot
 Allow: /
+Disallow: /delete-account.html
+Disallow: /firebase-messaging-sw.js
+Disallow: /assets/topik/
+Disallow: /assets/topik1/
+Disallow: /assets/topik2/
+Disallow: /assets/ref/
+Disallow: /assets/materials/
+Disallow: /assets/photos/
+Disallow: /*?go=
 
 User-agent: Google-Extended
 Allow: /
+Disallow: /delete-account.html
+Disallow: /firebase-messaging-sw.js
+Disallow: /assets/topik/
+Disallow: /assets/topik1/
+Disallow: /assets/topik2/
+Disallow: /assets/ref/
+Disallow: /assets/materials/
+Disallow: /assets/photos/
+Disallow: /*?go=
 
 User-agent: Bingbot
 Allow: /
+Disallow: /delete-account.html
+Disallow: /firebase-messaging-sw.js
+Disallow: /assets/topik/
+Disallow: /assets/topik1/
+Disallow: /assets/topik2/
+Disallow: /assets/ref/
+Disallow: /assets/materials/
+Disallow: /assets/photos/
+Disallow: /*?go=
 
 Sitemap: https://koreanmadie.study/sitemap.xml
