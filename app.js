@@ -153,6 +153,19 @@
     'set.plan.sub':     { ru: 'Сейчас: {plan} — посмотреть или сменить', en: 'Current: {plan} — view or change', uz: 'Hozir: {plan} — koʻrish yoki almashtirish' },
     'set.intro':        { ru: 'Знакомство с Madie', en: 'Meet Madie', uz: 'Madie bilan tanishuv' },
     'set.intro.sub':    { ru: 'Посмотреть интро и пройти квиз заново', en: 'Watch the intro and retake the quiz', uz: 'Introni koʻrish va testni qayta yechish' },
+    // Публичные статьи сайта (/learn-korean/, /topik/, /study-in-korea/) — страницы на русском
+    'set.articles':     { ru: 'Статьи о Корее', en: 'Articles about Korea', uz: 'Koreya haqida maqolalar' },
+    'set.articles.sub': { ru: 'открываются на сайте, на русском', en: 'open on the website, in Russian', uz: 'saytda ochiladi, rus tilida' },
+    'home.articles':    { ru: 'Статьи о Корее', en: 'Articles about Korea', uz: 'Koreya haqida maqolalar' },
+    'home.articles.meta': { ru: 'читать на сайте', en: 'read on the website', uz: 'saytda oʻqish' },
+    'art.learn':        { ru: 'Как выучить корейский с нуля', en: 'How to learn Korean from scratch', uz: 'Koreys tilini noldan qanday oʻrganish' },
+    'art.learn.short':  { ru: 'Корейский с нуля', en: 'Korean from zero', uz: 'Koreys tili noldan' },
+    'art.learn.sub':    { ru: 'план на первые 3 месяца', en: 'a plan for the first 3 months', uz: 'dastlabki 3 oy rejasi' },
+    'art.topik':        { ru: 'TOPIK: уровни, баллы, как сдать', en: 'TOPIK: levels, scores, how to pass', uz: 'TOPIK: darajalar, ballar, qanday topshirish' },
+    'art.topik.sub':    { ru: 'даты 2026 и день экзамена', en: '2026 dates and exam day', uz: '2026 sanalari va imtihon kuni' },
+    'art.study':        { ru: 'Учёба в Корее', en: 'Studying in Korea', uz: 'Koreyada oʻqish' },
+    'art.study.sub':    { ru: 'вузы, визы D-4 и D-2, стипендии', en: 'universities, D-4 and D-2 visas, scholarships', uz: 'OTMlar, D-4 va D-2 vizalar, stipendiyalar' },
+    'art.open':         { ru: 'Полный разбор на сайте', en: 'Full guide on the website', uz: 'Saytda toʻliq tahlil' },
     'set.goal':         { ru: 'Цель дня', en: 'Daily goal', uz: 'Kunlik maqsad' },
     'set.goal.sub':     { ru: 'Сколько XP в день хочешь набирать', en: 'How much XP you want per day', uz: 'Kuniga qancha XP toʻplamoqchisiz' },
     'set.notif':        { ru: 'Уведомления', en: 'Notifications', uz: 'Bildirishnomalar' },
@@ -6174,7 +6187,7 @@
   // Значение — i18n-ключ подписи раздела для модалки ('' = без подписи).
   const GUEST_LOCKED_SCREENS = {
     games: 'nav.games', social: 'nav.social', words: '', topik: 'home.topik',
-    textbook: '', selfstudy: '', topikdeep: 'home.topik', reading: '', studykr: '', hangul: '',
+    textbook: '', selfstudy: '', topikdeep: 'home.topik', reading: '', studykr: 'profile.studyKr', hangul: '',
     dict: '', lessonwords: ''
   };
   function isGuestish() { const u = Store.get('user'); return !u || !!u.guest; }
@@ -6490,7 +6503,7 @@
   // Версия сборки: держать ВРУЧНУЮ синхронной с ?v= в index.html при каждом деплое
   // (те же 3 места — stylesheet/preload/script). Используется тихим автообновлением
   // ниже — сама загрузка кода по-прежнему идёт через ?v=.
-  const APP_VERSION = '20260830a';
+  const APP_VERSION = '20260902a';
   // ── Тихое автообновление (25.08.2026, вместо попапа «Вышло обновление!») ──
   // Узнав из облака про новую версию (appVersion пишет первый клиент нового деплоя,
   // promptVersion — кнопка «Оповестить» в админке), вкладка НЕ дёргает ученицу:
@@ -9693,6 +9706,16 @@
       ...((Store.get('user') && !Store.get('user').isAdmin) ? [
         row('💎', t('set.plan'), t('set.plan.sub', { plan: `${PLANS[myPlanId()].emoji} ${PLANS[myPlanId()].name}` }), chev, "document.getElementById('settings-modal')?.remove(); openPlanPage()")
       ] : []),
+      // Публичные статьи сайта — обычные страницы вне приложения, открываем в новой
+      // вкладке (как печатную версию учебника), чтобы не выгружать PWA.
+      `<div class="theme-picker">
+        <div class="theme-picker-title">📚 ${t('set.articles')} <span style="font-weight:500; color:var(--hush); font-size:10.5px;">— ${t('set.articles.sub')}</span></div>
+        <div class="gender-pick-row" style="flex-wrap:wrap;">
+          <a class="gender-opt" style="display:block; text-align:center; text-decoration:none;" href="/learn-korean/" target="_blank" rel="noopener">🌱 ${t('art.learn.short')}</a>
+          <a class="gender-opt" style="display:block; text-align:center; text-decoration:none;" href="/topik/" target="_blank" rel="noopener">📝 TOPIK</a>
+          <a class="gender-opt" style="display:block; text-align:center; text-decoration:none;" href="/study-in-korea/" target="_blank" rel="noopener">🎓 ${t('art.study')}</a>
+        </div>
+      </div>`,
       row('🌸', t('set.intro'), t('set.intro.sub'), chev, 'startOnboardingTour()'),
       row('🧭', t('set.tour'), t('set.tour.sub'), chev, 'startAppTour()'),
       row('🎯', t('set.goal'), t('set.goal.sub'), chev, 'openDailyGoalSettings()'),
@@ -26960,7 +26983,8 @@
       <div id="marathon-card-slot"></div>
       <div onclick="startLevelTest()" style="text-align:center; margin-top:16px; font-size:12.5px; color:var(--coral); font-weight:700; cursor:pointer;">
         🧪 ${t('leveltest.entryTopik')}
-      </div>`;
+      </div>
+      <a href="/topik/" target="_blank" rel="noopener" style="display:block; text-align:center; margin-top:10px; font-size:12.5px; color:var(--coral); font-weight:700;">📖 ${t('art.open')}: ${t('art.topik')} →</a>`;
     try { renderMarathonCard(); } catch (_) {}
   }
   function topikLevelTabs() {
@@ -30120,6 +30144,7 @@
       <div class="rd-intro">
         <div class="rd-intro-ko ko">한국 유학 준비 🎓</div>
         <p class="rd-intro-txt">${skUi('Практические материалы для тех, кто едет учиться в Корею: вузы, визы, стипендии, языковые курсы и жильё.', 'Koreyaga oʻqishga ketayotganlar uchun amaliy materiallar: OTMlar, vizalar, stipendiyalar, til kurslari va turar joy.')}</p>
+        <a href="/study-in-korea/" target="_blank" rel="noopener" style="display:inline-block; margin-top:8px; font-size:12.5px; color:var(--coral); font-weight:700;">📖 ${skUi('Полный разбор на сайте: пути, документы, визы, цены', 'Saytda toʻliq tahlil: yoʻllar, hujjatlar, vizalar, narxlar')} →</a>
       </div>
       <div class="kc-list">
         <button type="button" class="kc-card" onclick="openSkInterview()">
@@ -40636,7 +40661,8 @@
     '4. Каждое корейское слово или фразу оформляй так: 한국어 [транскрипция кириллицей] — перевод.',
     '5. Если просят слова, карточки или мини-урок — в КОНЦЕ ответа выдай 3–5 строк строго в формате:',
     'CARD: 단어 | транскрипция кириллицей | перевод',
-    '6. Не используй markdown-заголовки и таблицы. Можно **выделение**.'
+    '6. Не используй markdown-заголовки и таблицы. Можно **выделение**.',
+    '7. Если вопрос касается того, чему учит приложение (хангыль, слова, грамматика, произношение, TOPIK, поступление/визы/вузы в Корее) — сначала дай ПОЛНЫЙ полезный ответ, и только в самом конце одной короткой строкой подскажи подходящий раздел приложения: «Уроки» (хангыль, первые слова, простые предложения), «Игры» и K-Pop Fill (практика слов), «TOPIK» (тренажёры и архив реальных экзаменов), «Учёба в Корее» (собеседование в вуз, рейтинг вузов, визы). Не больше одной подсказки за ответ, не в каждом ответе, без рекламных интонаций. На вопросы о культуре, еде, истории раздел не предлагай.'
   ].join('\n');
   let _aiMsgs = [], _aiLogHtml = [], _aiBusy = false;
   function openAiTutor() {
@@ -43042,6 +43068,23 @@
     // оттуда «Регистрация» (→ знакомство с Мади) или «Продолжить как гость».
     try { switchScreen('profile'); } catch (_) {}
   }
+  // ── Deep-link с публичных страниц (/learn-korean/, /topik/, /study-in-korea/):
+  // /?go=lessons открывает нужный экран сразу после старта. Белый список — чтобы
+  // чужой параметр не дёргал произвольные экраны; закрытые гостям разделы
+  // switchScreen сам встретит гейтом регистрации. Параметр вычищаем из URL, чтобы
+  // перезагрузка не прыгала снова; остальные параметры (OAuth code= и т.п.) не трогаем.
+  // Стоит ПОСЛЕ boot-роутинга выше (иначе экран входа новичка перекрыл бы deep-link).
+  try {
+    const _goParams = new URLSearchParams(location.search);
+    const _go = _goParams.get('go');
+    const _GO_SCREENS = ['home', 'lessons', 'hangul', 'topik', 'studykr', 'games', 'textbook'];
+    if (_go && _GO_SCREENS.includes(_go)) {
+      _goParams.delete('go');
+      const _rest = _goParams.toString();
+      history.replaceState(null, '', location.pathname + (_rest ? '?' + _rest : '') + location.hash);
+      switchScreen(_go);
+    }
+  } catch (_) {}
   // Init Firebase sync first so UStore writes propagate to cloud
   initFirebaseSync();
   // Subscribe to feed-wide likes & comments (shared across users)

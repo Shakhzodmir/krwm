@@ -25,8 +25,19 @@
 <meta property="og:site_name" content="Korean with Madie">
 <meta property="og:title" content="Korean with Madie 🌸 — корейский с нуля">
 <meta property="og:description" content="Уроки хангыля, мини-игры, K-Pop и реальные экзамены ТОПИК I с разбором на русском. С первого шага к красоте Кореи.">
-<meta property="og:image" content="assets/pwa/icon-512.png">
+<meta property="og:url" content="https://koreanmadie.study/">
+<meta property="og:image" content="https://koreanmadie.study/assets/pwa/icon-512.png">
 <meta name="twitter:card" content="summary">
+<link rel="canonical" href="https://koreanmadie.study/">
+<!-- Schema.org: кто мы для поисковиков и AI-ассистентов. Тематические страницы
+     (/learn-korean/, /topik/, /study-in-korea/) ссылаются на этот же @id организации. -->
+<script type="application/ld+json">
+{"@context":"https://schema.org","@graph":[
+ {"@type":"EducationalOrganization","@id":"https://koreanmadie.study/#org","name":"Korean with Madie","alternateName":"Корейский с Мади","url":"https://koreanmadie.study/","logo":"https://koreanmadie.study/assets/pwa/icon-512.png","description":"Онлайн-платформа для изучения корейского языка русскоязычными: уроки хангыля, мини-игры, K-Pop, подготовка к TOPIK I и II, материалы об учёбе в Корее.","inLanguage":"ru"},
+ {"@type":"WebSite","@id":"https://koreanmadie.study/#website","url":"https://koreanmadie.study/","name":"Korean with Madie","inLanguage":"ru","publisher":{"@id":"https://koreanmadie.study/#org"}},
+ {"@type":"WebApplication","name":"Korean with Madie","url":"https://koreanmadie.study/","applicationCategory":"EducationalApplication","operatingSystem":"Web, Android","inLanguage":"ru","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}
+]}
+</script>
 <!-- Ранние подключения: убираем DNS/TLS-задержку для CDN и базы (быстрее первый кадр) -->
 <link rel="preconnect" href="https://www.gstatic.com" crossorigin>
 <link rel="preconnect" href="https://koreanmadie-default-rtdb.asia-southeast1.firebasedatabase.app" crossorigin>
@@ -47,11 +58,11 @@
      вводят анимации из styles.css, поэтому без «мигания»; логотип не трогаем (fanUnfurl). -->
 <style>#intro{position:fixed;inset:0;z-index:999;display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:hidden;cursor:pointer;background:radial-gradient(120% 90% at 50% 35%,#FFFCF8 0%,#FFF4F0 38%,#FBE8EA 78%,#F2D5DA 100%)}#intro>.intro-tagline,#intro>.intro-subline,#intro>.intro-cta{opacity:0}</style>
 
-<link rel="stylesheet" href="styles.css?v=20260830a">
+<link rel="stylesheet" href="styles.css?v=20260902a">
 
 <!-- Предзагрузка тяжёлого JS: скачивание стартует сразу, параллельно с CSS/шрифтами -->
 <link rel="preload" href="assets/textbook/textbook-data.js?v=20260629a" as="script">
-<link rel="preload" href="app.js?v=20260830a" as="script">
+<link rel="preload" href="app.js?v=20260902a" as="script">
 </head>
 
 <body>
@@ -222,6 +233,44 @@
 
     <!-- Custom videos from admin -->
     <div id="custom-videos" style="padding: 0 20px 8px;"></div>
+
+    <!-- Статьи о Корее: публичные страницы сайта (/learn-korean/, /topik/, /study-in-korea/).
+         Это обычные страницы вне приложения — открываем в новой вкладке. -->
+    <div style="padding: 0 20px 16px;">
+      <div class="section-head">
+        <div class="left">
+          <div class="rule"></div>
+          <span class="title" data-i18n="home.articles">Статьи о Корее</span>
+        </div>
+        <span class="meta" data-i18n="home.articles.meta">читать на сайте</span>
+      </div>
+      <div class="home-art-grid">
+        <a class="home-art-card" href="/learn-korean/" target="_blank" rel="noopener">
+          <span class="home-art-ico" aria-hidden="true">🌱</span>
+          <span class="home-art-tx">
+            <span class="home-art-title" data-i18n="art.learn">Как выучить корейский с нуля</span>
+            <span class="home-art-sub" data-i18n="art.learn.sub">план на первые 3 месяца</span>
+          </span>
+          <i class="fa-solid fa-chevron-right home-art-arrow" aria-hidden="true"></i>
+        </a>
+        <a class="home-art-card" href="/topik/" target="_blank" rel="noopener">
+          <span class="home-art-ico" aria-hidden="true">📝</span>
+          <span class="home-art-tx">
+            <span class="home-art-title" data-i18n="art.topik">TOPIK: уровни, баллы, как сдать</span>
+            <span class="home-art-sub" data-i18n="art.topik.sub">даты 2026 и день экзамена</span>
+          </span>
+          <i class="fa-solid fa-chevron-right home-art-arrow" aria-hidden="true"></i>
+        </a>
+        <a class="home-art-card" href="/study-in-korea/" target="_blank" rel="noopener">
+          <span class="home-art-ico" aria-hidden="true">🎓</span>
+          <span class="home-art-tx">
+            <span class="home-art-title" data-i18n="art.study">Учёба в Корее</span>
+            <span class="home-art-sub" data-i18n="art.study.sub">вузы, визы D-4 и D-2, стипендии</span>
+          </span>
+          <i class="fa-solid fa-chevron-right home-art-arrow" aria-hidden="true"></i>
+        </a>
+      </div>
+    </div>
 
     <!-- Feed -->
     <div style="padding: 0 20px;">
@@ -1190,7 +1239,7 @@
 
 <!-- ─────────────── DATA + LOGIC ─────────────── -->
 <script src="assets/textbook/textbook-data.js?v=20260629a"></script>
-<script src="app.js?v=20260830a"></script>
+<script src="app.js?v=20260902a"></script>
 
 </body>
 </html>

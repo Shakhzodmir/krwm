@@ -1,0 +1,31 @@
+# Korean with Madie — koreanmadie.study
+User-agent: *
+Allow: /
+Disallow: /delete-account.html
+Disallow: /firebase-messaging-sw.js
+Disallow: /assets/topik/
+Disallow: /assets/ref/
+
+# AI-краулеры — явно разрешаем: сайт хочет быть найденным ассистентами
+User-agent: GPTBot
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Claude-SearchBot
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+Sitemap: https://koreanmadie.study/sitemap.xml
