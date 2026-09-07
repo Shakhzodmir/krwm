@@ -1,5 +1,9 @@
 # Korean with Madie — koreanmadie.study
 #
+# Параметр ?go= НЕ закрываем: именно на /?go=lessons ведут кнопки с тематических
+# страниц. Дубли главной с параметром снимает canonical в index.html, а Disallow
+# запрещал бы краулеру и ассистенту пройти по нашей же основной ссылке.
+#
 # ВАЖНО про формат: краулер подчиняется ТОЛЬКО ОДНОЙ группе — самой конкретной,
 # где нашёл своё имя. Группа для GPTBot не наследует Disallow из группы «*».
 # Поэтому запреты продублированы в КАЖДОЙ группе: иначе именной бот получал бы
@@ -15,7 +19,6 @@ Disallow: /assets/topik2/
 Disallow: /assets/ref/
 Disallow: /assets/materials/
 Disallow: /assets/photos/
-Disallow: /*?go=
 
 # ── AI-краулеры: сайт хочет быть найденным ассистентами, но платный контент закрыт ──
 
@@ -29,7 +32,6 @@ Disallow: /assets/topik2/
 Disallow: /assets/ref/
 Disallow: /assets/materials/
 Disallow: /assets/photos/
-Disallow: /*?go=
 
 User-agent: OAI-SearchBot
 Allow: /
@@ -41,7 +43,6 @@ Disallow: /assets/topik2/
 Disallow: /assets/ref/
 Disallow: /assets/materials/
 Disallow: /assets/photos/
-Disallow: /*?go=
 
 User-agent: ClaudeBot
 Allow: /
@@ -53,7 +54,6 @@ Disallow: /assets/topik2/
 Disallow: /assets/ref/
 Disallow: /assets/materials/
 Disallow: /assets/photos/
-Disallow: /*?go=
 
 User-agent: Claude-SearchBot
 Allow: /
@@ -65,7 +65,6 @@ Disallow: /assets/topik2/
 Disallow: /assets/ref/
 Disallow: /assets/materials/
 Disallow: /assets/photos/
-Disallow: /*?go=
 
 User-agent: PerplexityBot
 Allow: /
@@ -77,7 +76,6 @@ Disallow: /assets/topik2/
 Disallow: /assets/ref/
 Disallow: /assets/materials/
 Disallow: /assets/photos/
-Disallow: /*?go=
 
 User-agent: Google-Extended
 Allow: /
@@ -89,7 +87,6 @@ Disallow: /assets/topik2/
 Disallow: /assets/ref/
 Disallow: /assets/materials/
 Disallow: /assets/photos/
-Disallow: /*?go=
 
 User-agent: Bingbot
 Allow: /
@@ -101,6 +98,5 @@ Disallow: /assets/topik2/
 Disallow: /assets/ref/
 Disallow: /assets/materials/
 Disallow: /assets/photos/
-Disallow: /*?go=
 
 Sitemap: https://koreanmadie.study/sitemap.xml

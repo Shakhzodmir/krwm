@@ -33,7 +33,11 @@ main { max-width: 720px; margin: 0 auto; padding: 0 16px 56px; min-width: 0; }
 .lp-header { max-width: 720px; margin: 0 auto; padding: 18px 16px 8px; display: flex; flex-wrap: wrap; gap: 10px 16px; align-items: center; justify-content: space-between; }
 .lp-logo { display: inline-flex; align-items: center; gap: 8px; font-weight: 700; color: var(--berry); font-size: 17px; }
 .lp-logo img { width: 30px; height: 30px; border-radius: 9px; }
-.lp-nav { display: flex; flex-wrap: wrap; gap: 6px; }
+/* Тем стало восемь, и переносом они съедали три строки первого экрана — посетитель
+   из поиска видел меню вместо ответа на свой вопрос. На узких экранах прокручиваем
+   в одну строку (как ленту вкладок), с 640px возвращаем обычный перенос. */
+.lp-nav { display: flex; gap: 6px; flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; -webkit-overflow-scrolling: touch; max-width: 100%; }
+.lp-nav::-webkit-scrollbar { display: none; }
 .lp-nav a { font-size: 13px; padding: 6px 11px; border-radius: 999px; background: var(--blush); color: var(--berry); border: 1px solid var(--line); transition: background .2s ease-out; white-space: nowrap; }
 .lp-nav a:hover, .lp-nav a[aria-current="page"] { background: var(--petal); }
 
@@ -99,6 +103,7 @@ strong { color: var(--berry); }
 @media (min-width: 640px) {
   .lp-related { grid-template-columns: 1fr 1fr; }
   h2 { font-size: 24px; }
+  .lp-nav { flex-wrap: wrap; overflow-x: visible; }
 }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
