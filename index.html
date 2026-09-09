@@ -58,11 +58,11 @@
      вводят анимации из styles.css, поэтому без «мигания»; логотип не трогаем (fanUnfurl). -->
 <style>#intro{position:fixed;inset:0;z-index:999;display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:hidden;cursor:pointer;background:radial-gradient(120% 90% at 50% 35%,#FFFCF8 0%,#FFF4F0 38%,#FBE8EA 78%,#F2D5DA 100%)}#intro>.intro-tagline,#intro>.intro-subline,#intro>.intro-cta{opacity:0}</style>
 
-<link rel="stylesheet" href="styles.css?v=20260902a">
+<link rel="stylesheet" href="styles.css?v=20260907a">
 
 <!-- Предзагрузка тяжёлого JS: скачивание стартует сразу, параллельно с CSS/шрифтами -->
 <link rel="preload" href="assets/textbook/textbook-data.js?v=20260629a" as="script">
-<link rel="preload" href="app.js?v=20260902a" as="script">
+<link rel="preload" href="app.js?v=20260907a" as="script">
 </head>
 
 <body>
@@ -830,7 +830,7 @@
             <div style="font-size:10px; color:var(--soft); letter-spacing:.15em;" data-i18n="auth.or">ИЛИ</div>
             <div style="flex:1; height:1px; background:var(--line);"></div>
           </div>
-          <button onclick="loginUser('Гостья 🌸')" class="btn btn-ghost btn-block" data-i18n="auth.guest">Продолжить как гость</button>
+          <button onclick="loginUser('Гостья 🌸')" class="btn btn-ghost btn-block" data-i18n="auth.guestCta">Продолжить как гость</button>
           <div style="font-size:10px; color:var(--hush); text-align:center; margin-top:8px; line-height:1.5;" data-i18n="auth.guestNote">При регистрации весь прогресс гостя (XP, стрик, словарик) переедет в аккаунт автоматически 🌸</div>
         </div>
       </div>
@@ -1239,7 +1239,7 @@
 
 <!-- ─────────────── DATA + LOGIC ─────────────── -->
 <script src="assets/textbook/textbook-data.js?v=20260629a"></script>
-<script src="app.js?v=20260902a"></script>
+<script src="app.js?v=20260907a"></script>
 
 </body>
 </html>

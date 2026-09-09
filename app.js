@@ -137,6 +137,7 @@
     'set.calm':         { ru: 'Спокойный режим', en: 'Calm mode', uz: 'Tinch rejim' },
     'set.calm.sub':     { ru: 'Меньше анимаций и движения', en: 'Fewer animations and motion', uz: 'Kamroq animatsiya va harakat' },
     'set.dark':         { ru: 'Тёмная тема', en: 'Dark theme', uz: 'Tungi mavzu' },
+    'store.quota':      { ru: 'Память браузера переполнена — часть настроек может не сохраниться', en: 'Browser storage is full — some settings may not be saved', uz: 'Brauzer xotirasi toʻlgan — baʼzi sozlamalar saqlanmasligi mumkin' },
     'set.dark.sub':     { ru: 'Мягкая тёмная — акцент в цвет темы', en: 'Soft dark — accent follows your theme', uz: 'Yumshoq tungi — aksent mavzu rangida' },
     'set.darkAuto':     { ru: 'Авто-тёмная ночью', en: 'Auto dark at night', uz: 'Kechasi avto-tungi' },
     'set.darkAuto.sub': { ru: 'С 20:00 до 08:00 тёмная тема включается сама', en: 'Dark theme turns on by itself 20:00–08:00', uz: '20:00–08:00 da tungi mavzu oʻzi yoqiladi' },
@@ -1093,7 +1094,10 @@
     'auth.terms.post':   { ru: 'и политику обработки данных', en: 'and the data processing policy', uz: 'va maʼlumotlarni qayta ishlash siyosatini' },
     'auth.registerBtn':  { ru: 'Создать аккаунт ✨', en: 'Create account ✨', uz: 'Akkaunt yaratish ✨' },
     'auth.or':           { ru: 'ИЛИ', en: 'OR', uz: 'YOKI' },
-    'auth.guest':        { ru: 'Продолжить как гость', en: 'Continue as guest', uz: 'Mehmon sifatida davom etish' },
+    // Ключ КНОПКИ входа гостем. Раньше назывался auth.guest и перекрывал
+    // одноимённый ключ выше («Гость» — ИМЯ гостя), из-за чего в профиле и в
+    // постах «Общения» ученица подписывалась как «Продолжить как гость».
+    'auth.guestCta':     { ru: 'Продолжить как гость', en: 'Continue as guest', uz: 'Mehmon sifatida davom etish' },
     'auth.guestNote':    { ru: 'При регистрации весь прогресс гостя (XP, стрик, словарик) переедет в аккаунт автоматически 🌸', en: 'When you register, all guest progress (XP, streak, dictionary) transfers to your account automatically 🌸', uz: 'Roʻyxatdan oʻtganda mehmon progressi (XP, strik, lugʻat) avtomatik akkauntga koʻchadi 🌸' },
 
     // ── Профиль · контент ──
@@ -5391,9 +5395,27 @@
   }
 
   // ── Storage ──
+  // Кэши, которыми можно пожертвовать при переполнении localStorage (QuotaExceeded):
+  // восстанавливаются из сети. Раньше Store.set молча глотал ошибку записи —
+  // ученица выбирала тему, а она «не сохранялась» (спека 2026-09-07).
+  const EVICTABLE_KEYS = ['usersDirCacheV1', 'chatLastAt'];
+  let _quotaWarned = false;
   const Store = {
     get(k, d=null) { try { const v = localStorage.getItem('madie_'+k); return v == null ? d : JSON.parse(v); } catch { return d; } },
-    set(k, v) { try { localStorage.setItem('madie_'+k, JSON.stringify(v)); } catch (_) {} },
+    set(k, v) {
+      let raw; try { raw = JSON.stringify(v); } catch (_) { return; }
+      try { localStorage.setItem('madie_'+k, raw); return; } catch (_) {}
+      // Не влезло: чистим кэши и пробуем ещё раз
+      try { EVICTABLE_KEYS.forEach(ek => localStorage.removeItem('madie_'+ek)); } catch (_) {}
+      try { localStorage.setItem('madie_'+k, raw); }
+      catch (e) {
+        console.warn('Store.set: localStorage переполнен, не сохранено:', k, e && e.name);
+        if (!_quotaWarned) {
+          _quotaWarned = true;
+          try { if (typeof toast === 'function' && typeof t === 'function') toast(t('store.quota'), 'var(--bad-ink)'); } catch (_) {}
+        }
+      }
+    },
     del(k) { try { localStorage.removeItem('madie_'+k); } catch (_) {} }
   };
 
@@ -6503,7 +6525,7 @@
   // Версия сборки: держать ВРУЧНУЮ синхронной с ?v= в index.html при каждом деплое
   // (те же 3 места — stylesheet/preload/script). Используется тихим автообновлением
   // ниже — сама загрузка кода по-прежнему идёт через ?v=.
-  const APP_VERSION = '20260902a';
+  const APP_VERSION = '20260907a';
   // ── Тихое автообновление (25.08.2026, вместо попапа «Вышло обновление!») ──
   // Узнав из облака про новую версию (appVersion пишет первый клиент нового деплоя,
   // promptVersion — кнопка «Оповестить» в админке), вкладка НЕ дёргает ученицу:
@@ -7786,7 +7808,7 @@
       ? `<div class="${staggerCls}" style="display:grid;gap:8px;">${communityRowHtml()}${convos.map(c => c.kind === 'group' ? groupRowHtml(c.key, groups[c.key]) : friendRowHtml(c.key, friends[c.key])).join('')}</div>`
       : `<div style="display:grid;gap:8px;margin-bottom:10px;">${communityRowHtml()}</div>
          <div class="card" style="text-align:center; padding:26px 18px 22px; background:linear-gradient(160deg, var(--card), var(--paper));">
-           <img src="assets/bear3.png" alt="" style="width:92px; margin:0 auto 4px; display:block; filter:drop-shadow(0 8px 14px rgba(92,42,51,.18));" onerror="this.style.display='none'">
+           <img src="assets/bear3.png" alt="" style="width:92px; margin:0 auto 4px; display:block; filter:drop-shadow(0 8px 14px rgba(var(--shade-rgb),.18));" onerror="this.style.display='none'">
            <div class="display" style="font-size:18px; color:var(--berry);">${t('ui.084')}</div>
            <div style="font-size:12px; color:var(--soft); margin-top:6px; line-height:1.55; max-width:260px; margin-left:auto; margin-right:auto;">
              ${t('ui.t007')}
@@ -9592,11 +9614,18 @@
   function toggleSetting(key) {
     const s = getSettings();
     s[key] = !s[key];
+    // Ручной выбор тёмной темы главнее «авто ночью»: иначе выключенная вручную
+    // ночью тёмная тема «не выключалась» — авто-режим держал её включённой.
+    if (key === 'darkTheme' && s.darkAuto) s.darkAuto = false;
     UStore.set('settings', s);
     applySettings();
     // Плавно: переключаем класс на месте, без перерисовки всей карточки
     const sw = document.querySelector(`#settings-card [data-setting="${key}"] .switch`);
     if (sw) sw.classList.toggle('on', s[key]); else renderSettingsCard();
+    if (key === 'darkTheme') {
+      const sa = document.querySelector('#settings-card [data-setting="darkAuto"] .switch');
+      if (sa) sa.classList.toggle('on', !!s.darkAuto);
+    }
     if (key === 'sound') toast(s.sound ? t('settings.soundOnToast') : t('settings.soundOffToast'), 'var(--berry)');
   }
   function openSettingsModal() {
@@ -34229,7 +34258,7 @@
             const isCur = r === cur;
             return `
               <div style="display:flex; gap:12px; align-items:center; padding:12px; border-radius:14px;
-                background:${isCur ? 'linear-gradient(135deg, var(--blush), var(--rose))' : reached ? 'var(--paper)' : 'rgba(92,42,51,.04)'};
+                background:${isCur ? 'linear-gradient(135deg, var(--blush), var(--rose))' : reached ? 'var(--paper)' : 'rgba(var(--ink-rgb),.04)'};
                 border:1px solid ${isCur ? 'var(--coral)' : 'var(--line)'};
                 opacity:${reached ? 1 : 0.55};">
                 <div style="font-size:28px;">${r.emoji}</div>
@@ -37412,8 +37441,22 @@
       if ((user.level === undefined || user.level === '') && _prev.level) user.level = _prev.level;
     }
     Store.set('user', user);
+    // Первый вход в аккаунт на этом устройстве: своих настроек ещё нет — наследуем
+    // выбор гостя (тема, тёмный режим, звук). Существующий выбор аккаунта не трогаем.
+    // Раньше настройки гостя переезжали только при регистрации, и при обычном входе
+    // тема «слетала» (спека 2026-09-07).
+    if (!user.guest) {
+      try {
+        if (UStore.get('settings', null) == null) {
+          const gs = Store.get('u_guest_settings', null);
+          if (gs && typeof gs === 'object') UStore.set('settings', gs);
+        }
+      } catch (_) {}
+    }
     // Reload all per-user state from this user's namespace
     loadUserData();
+    // Тема и тёмный режим — из настроек ЭТОГО аккаунта, сразу, без перезагрузки
+    try { applySettings(); } catch (_) {}
     const un = document.getElementById('user-name');
     const pn = document.getElementById('profile-name');
     if (un) un.textContent = user.name;
@@ -37808,6 +37851,8 @@
     Store.del('user');
     // Reload data for guest namespace
     loadUserData();
+    // Тема гостя — сразу, чтобы экран не оставался в теме вышедшего аккаунта
+    try { applySettings(); } catch (_) {}
     const un = document.getElementById('user-name');
     const pn = document.getElementById('profile-name');
     if (un) un.textContent = t('auth.friend');
@@ -41844,6 +41889,7 @@
   function obEnableDark() {
     const s = getSettings();
     s.darkTheme = !s.darkTheme;
+    if (s.darkAuto) s.darkAuto = false; // ручной выбор главнее «авто ночью»
     UStore.set('settings', s);
     applySettings();
     toast(s.darkTheme ? t('ob.darkOnToast') : t('ob.lightToast'), 'var(--berry)');
