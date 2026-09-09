@@ -166,6 +166,16 @@
     'art.topik.sub':    { ru: 'даты 2026 и день экзамена', en: '2026 dates and exam day', uz: '2026 sanalari va imtihon kuni' },
     'art.study':        { ru: 'Учёба в Корее', en: 'Studying in Korea', uz: 'Koreyada oʻqish' },
     'art.study.sub':    { ru: 'вузы, визы D-4 и D-2, стипендии', en: 'universities, D-4 and D-2 visas, scholarships', uz: 'OTMlar, D-4 va D-2 vizalar, stipendiyalar' },
+    'art.visa':         { ru: 'Виза в Корею', en: 'Visa to Korea', uz: 'Koreyaga viza' },
+    'art.visa.sub':     { ru: 'какая нужна: K-ETA, D-4, D-2, ARC', en: 'which one you need: K-ETA, D-4, D-2, ARC', uz: 'qaysi kerak: K-ETA, D-4, D-2, ARC' },
+    'art.culture':      { ru: 'Культура Кореи', en: 'Korean culture', uz: 'Koreya madaniyati' },
+    'art.culture.sub':  { ru: 'праздники, застолье, обращения', en: 'holidays, table manners, forms of address', uz: 'bayramlar, dasturxon, murojaat shakllari' },
+    'art.kpop':         { ru: 'K-pop: понимать песни', en: 'K-pop: understanding lyrics', uz: 'K-pop: qoʻshiqlarni tushunish' },
+    'art.kpop.sub':     { ru: 'частотные слова и разбор строчек', en: 'frequent words and line-by-line breakdown', uz: 'koʻp uchraydigan soʻzlar va satrlar tahlili' },
+    'art.songs':        { ru: 'Корейский по песням', en: 'Korean through songs', uz: 'Qoʻshiqlar orqali koreys tili' },
+    'art.songs.sub':    { ru: 'пошаговый метод и его границы', en: 'a step-by-step method and its limits', uz: 'bosqichma-bosqich usul va uning chegaralari' },
+    'art.dramas':       { ru: 'Фразы из дорам', en: 'Phrases from K-dramas', uz: 'Dramalardagi iboralar' },
+    'art.dramas.sub':   { ru: 'что слышно в каждой серии и где 반말', en: 'what you hear in every episode and where 반말 is', uz: 'har seriyada eshitiladigan iboralar va 반말 qayerda' },
     'art.open':         { ru: 'Полный разбор на сайте', en: 'Full guide on the website', uz: 'Saytda toʻliq tahlil' },
     'set.goal':         { ru: 'Цель дня', en: 'Daily goal', uz: 'Kunlik maqsad' },
     'set.goal.sub':     { ru: 'Сколько XP в день хочешь набирать', en: 'How much XP you want per day', uz: 'Kuniga qancha XP toʻplamoqchisiz' },
@@ -264,8 +274,11 @@
     'lessons.reading':       { ru: 'Чтение · 말하기', en: 'Reading · 말하기', uz: 'Oʻqish · 말하기' },
     'lessons.reading.sub':   { ru: 'тексты KO-RU · разбор слов · читать вслух за диктором', en: 'KO-RU texts · word breakdown · read aloud after the speaker', uz: 'KO-RU matnlar · soʻz tahlili · diktor ortidan oʻqish' },
     'lessons.moduleLessons': { ru: 'УРОКИ МОДУЛЯ', en: 'MODULE LESSONS', uz: 'MODUL DARSLARI' },
-    'lessons.moreSoon':      { ru: 'Дальше — больше модулей', en: 'More modules ahead', uz: 'Yana modullar boʻladi' },
-    'lessons.moreSoon.sub':  { ru: 'Мади готовит продолжение курса 🌸', en: 'Madie is preparing the next part of the course 🌸', uz: 'Madie kurs davomini tayyorlamoqda 🌸' },
+    // Текст парный с index.html: там та же фраза лежит статически для краулеров и
+    // AI-ассистентов, которые не выполняют JS. Меняешь здесь — меняй и там, иначе
+    // разметка и словарь разойдутся. Числа: 8 модулей, 99 уроков (15 + 12×7).
+    'lessons.moreSoon':      { ru: 'Весь курс — 8 модулей, 99 уроков', en: 'The full course — 8 modules, 99 lessons', uz: 'Toʻliq kurs — 8 modul, 99 dars' },
+    'lessons.moreSoon.sub':  { ru: 'От хангыля до уровня 6급: следующий модуль открывается, когда пройден предыдущий 🌸', en: 'From Hangul to level 6급: the next module opens once you finish the previous one 🌸', uz: 'Hanguldan 6급 darajasigacha: keyingi modul avvalgisi tugagach ochiladi 🌸' },
     'lessons.proverb':       { ru: 'Дорога в тысячу ли начинается с одного шага', en: 'A journey of a thousand li begins with a single step', uz: 'Ming chaqirimlik yoʻl bir qadamdan boshlanadi' },
     'lessons.count':         { ru: '{done} из {total} уроков', en: '{done} of {total} lessons', uz: '{total} darsdan {done} tasi' },
     'lessons.lockMsg':       { ru: 'Сначала пройди Модуль {n} 🌸', en: 'Finish Module {n} first 🌸', uz: 'Avval {n}-modulni tugating 🌸' },
@@ -6525,7 +6538,7 @@
   // Версия сборки: держать ВРУЧНУЮ синхронной с ?v= в index.html при каждом деплое
   // (те же 3 места — stylesheet/preload/script). Используется тихим автообновлением
   // ниже — сама загрузка кода по-прежнему идёт через ?v=.
-  const APP_VERSION = '20260907a';
+  const APP_VERSION = '20260909a';
   // ── Тихое автообновление (25.08.2026, вместо попапа «Вышло обновление!») ──
   // Узнав из облака про новую версию (appVersion пишет первый клиент нового деплоя,
   // promptVersion — кнопка «Оповестить» в админке), вкладка НЕ дёргает ученицу:

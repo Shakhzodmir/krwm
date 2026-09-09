@@ -35,7 +35,7 @@
 {"@context":"https://schema.org","@graph":[
  {"@type":"EducationalOrganization","@id":"https://koreanmadie.study/#org","name":"Korean with Madie","alternateName":"Корейский с Мади","url":"https://koreanmadie.study/","logo":"https://koreanmadie.study/assets/pwa/icon-512.png","description":"Онлайн-платформа для изучения корейского языка русскоязычными: уроки хангыля, мини-игры, K-Pop, подготовка к TOPIK I и II, материалы об учёбе в Корее.","inLanguage":"ru"},
  {"@type":"WebSite","@id":"https://koreanmadie.study/#website","url":"https://koreanmadie.study/","name":"Korean with Madie","inLanguage":"ru","publisher":{"@id":"https://koreanmadie.study/#org"}},
- {"@type":"WebApplication","name":"Korean with Madie","url":"https://koreanmadie.study/","applicationCategory":"EducationalApplication","operatingSystem":"Web, Android","inLanguage":"ru","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}
+ {"@type":"WebApplication","@id":"https://koreanmadie.study/#app","name":"Korean with Madie","url":"https://koreanmadie.study/","applicationCategory":"EducationalApplication","operatingSystem":"Web, Android","inLanguage":"ru","isPartOf":{"@id":"https://koreanmadie.study/#website"},"publisher":{"@id":"https://koreanmadie.study/#org"},"description":"Приложение для изучения корейского языка русскоязычными: 8 модулей и 99 уроков от хангыля до 6급, конструктор слогов Hangul Lab, 16 мини-игр, подготовка к TOPIK I и TOPIK II с разбором на русском.","offers":[{"@type":"Offer","name":"Базовый","price":"0","priceCurrency":"USD","description":"Уроки хангыля и первые слова, мини-игры, Hangul Lab, личный словарик"},{"@type":"Offer","name":"Master","price":"10","priceCurrency":"USD","description":"Тренажёры TOPIK I и II, архив реальных экзаменов с аудио, K-Pop Fill, домашние задания с проверкой"},{"@type":"Offer","name":"Pro AI","price":"18","priceCurrency":"USD","description":"Всё из Master плюс ИИ-репетитор и ИИ-проверка письма"}]}
 ]}
 </script>
 <!-- Ранние подключения: убираем DNS/TLS-задержку для CDN и базы (быстрее первый кадр) -->
@@ -58,11 +58,11 @@
      вводят анимации из styles.css, поэтому без «мигания»; логотип не трогаем (fanUnfurl). -->
 <style>#intro{position:fixed;inset:0;z-index:999;display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:hidden;cursor:pointer;background:radial-gradient(120% 90% at 50% 35%,#FFFCF8 0%,#FFF4F0 38%,#FBE8EA 78%,#F2D5DA 100%)}#intro>.intro-tagline,#intro>.intro-subline,#intro>.intro-cta{opacity:0}</style>
 
-<link rel="stylesheet" href="styles.css?v=20260907a">
+<link rel="stylesheet" href="styles.css?v=20260909a">
 
 <!-- Предзагрузка тяжёлого JS: скачивание стартует сразу, параллельно с CSS/шрифтами -->
 <link rel="preload" href="assets/textbook/textbook-data.js?v=20260629a" as="script">
-<link rel="preload" href="app.js?v=20260907a" as="script">
+<link rel="preload" href="app.js?v=20260909a" as="script">
 </head>
 
 <body>
@@ -169,6 +169,21 @@
       </div>
     </div>
 
+    <!-- Что это за сайт. Блок нужен и человеку, впервые открывшему приложение, и
+         поисковикам с AI-ассистентами: они не выполняют JS и до этого видели на
+         главной только подписи кнопок — ни одного предложения о том, чем сайт
+         занимается, и ни одного заголовка h1 на активном экране. Стоит РАНЬШЕ всех
+         остальных h1 (первый из них — на экране игр), поэтому именно он читается
+         как заголовок страницы. Числа сверены с кодом: LESSON_MODULES = 8 модулей,
+         уроков 99 (LESSON_CATALOG 15 + семь каталогов по 12), карточек игр 16. -->
+    <div style="padding: 0 20px 14px;">
+      <section class="card card-padded" aria-labelledby="site-intro-title">
+        <h1 id="site-intro-title" class="display" style="font-size:19px; line-height:1.3; color:var(--berry); margin:0 0 8px;">Korean with Madie — корейский язык с нуля, на русском</h1>
+        <p style="margin:0 0 8px; font-size:13.5px; line-height:1.55; color:var(--text2);">Онлайн-приложение для изучения корейского языка русскоязычными. Внутри: <strong>8 модулей и 99 уроков</strong> — от хангыля до уровня <span class="ko">6급</span>, конструктор слогов <span class="ko">한글</span> Lab с озвучкой, 16 мини-игр, личный словарик, подготовка к TOPIK I и TOPIK II с разбором заданий на русском и материалы об учёбе в Корее.</p>
+        <p style="margin:0; font-size:13.5px; line-height:1.55; color:var(--text2);">Начать можно бесплатно: уроки открыты сразу, без регистрации. Игры, Hangul Lab и словарик — после бесплатной регистрации, она нужна, чтобы сохранять прогресс.</p>
+      </section>
+    </div>
+
     <!-- Мишка-гид Комдори (dynamic) -->
     <div id="bear-guide-slot" style="padding: 0 20px 14px;"></div>
 
@@ -269,6 +284,46 @@
           </span>
           <i class="fa-solid fa-chevron-right home-art-arrow" aria-hidden="true"></i>
         </a>
+        <a class="home-art-card" href="/korean-visa/" target="_blank" rel="noopener">
+          <span class="home-art-ico" aria-hidden="true">🛂</span>
+          <span class="home-art-tx">
+            <span class="home-art-title" data-i18n="art.visa">Виза в Корею</span>
+            <span class="home-art-sub" data-i18n="art.visa.sub">какая нужна: K-ETA, D-4, D-2, ARC</span>
+          </span>
+          <i class="fa-solid fa-chevron-right home-art-arrow" aria-hidden="true"></i>
+        </a>
+        <a class="home-art-card" href="/korean-culture/" target="_blank" rel="noopener">
+          <span class="home-art-ico" aria-hidden="true">🎎</span>
+          <span class="home-art-tx">
+            <span class="home-art-title" data-i18n="art.culture">Культура Кореи</span>
+            <span class="home-art-sub" data-i18n="art.culture.sub">праздники, застолье, обращения</span>
+          </span>
+          <i class="fa-solid fa-chevron-right home-art-arrow" aria-hidden="true"></i>
+        </a>
+        <a class="home-art-card" href="/kpop/" target="_blank" rel="noopener">
+          <span class="home-art-ico" aria-hidden="true">🎤</span>
+          <span class="home-art-tx">
+            <span class="home-art-title" data-i18n="art.kpop">K-pop: понимать песни</span>
+            <span class="home-art-sub" data-i18n="art.kpop.sub">частотные слова и разбор строчек</span>
+          </span>
+          <i class="fa-solid fa-chevron-right home-art-arrow" aria-hidden="true"></i>
+        </a>
+        <a class="home-art-card" href="/korean-through-kpop/" target="_blank" rel="noopener">
+          <span class="home-art-ico" aria-hidden="true">🎧</span>
+          <span class="home-art-tx">
+            <span class="home-art-title" data-i18n="art.songs">Корейский по песням</span>
+            <span class="home-art-sub" data-i18n="art.songs.sub">пошаговый метод и его границы</span>
+          </span>
+          <i class="fa-solid fa-chevron-right home-art-arrow" aria-hidden="true"></i>
+        </a>
+        <a class="home-art-card" href="/korean-from-dramas/" target="_blank" rel="noopener">
+          <span class="home-art-ico" aria-hidden="true">🎬</span>
+          <span class="home-art-tx">
+            <span class="home-art-title" data-i18n="art.dramas">Фразы из дорам</span>
+            <span class="home-art-sub" data-i18n="art.dramas.sub">что слышно в каждой серии и где 반말</span>
+          </span>
+          <i class="fa-solid fa-chevron-right home-art-arrow" aria-hidden="true"></i>
+        </a>
       </div>
     </div>
 
@@ -305,7 +360,11 @@
     </header>
 
     <div style="padding: 18px 20px 8px;">
-      <div id="module-subheader" style="font-size:11px; color:var(--soft); margin-bottom:7px;">0 из 10 уроков</div>
+      <!-- Текст-заглушка до старта JS: его перезаписывает renderLessonPath живыми числами
+           (app.js, t('lessons.count')). Важно, что здесь стоит: краулеры и AI-ассистенты
+           JS не выполняют и читают именно эту строку. Раньше тут было «0 из 10 уроков»,
+           и наружу торчало, будто в курсе десять уроков и ни один не пройден. -->
+      <div id="module-subheader" style="font-size:11px; color:var(--soft); margin-bottom:7px;">15 уроков в модуле</div>
       <div class="progress"><i id="module-progress-bar" style="width:0%"></i></div>
     </div>
 
@@ -384,7 +443,7 @@
             <div id="module-header-sub" style="font-size:10.5px; color: var(--soft); margin-top:2px;">Хангыль · базовый курс</div>
           </div>
         </div>
-        <span id="module-header-count" class="chip chip-sage" style="flex-shrink:0;">✓ 0/10</span>
+        <span id="module-header-count" class="chip chip-sage" style="flex-shrink:0;">15 уроков</span>
       </div>
     </div>
 
@@ -397,8 +456,8 @@
         <div style="display:flex; align-items:center; gap:12px;">
           <span style="font-size:18px;" aria-hidden="true">🌸</span>
           <div>
-            <div style="font-weight:600; font-size:13.5px; color:var(--soft);" data-i18n="lessons.moreSoon">Дальше — больше модулей</div>
-            <div style="font-size:11px; color: var(--soft);" data-i18n="lessons.moreSoon.sub">Мади готовит продолжение курса 🌸</div>
+            <div style="font-weight:600; font-size:13.5px; color:var(--soft);" data-i18n="lessons.moreSoon">Весь курс — 8 модулей, 99 уроков</div>
+            <div style="font-size:11px; color: var(--soft);" data-i18n="lessons.moreSoon.sub">От хангыля до уровня 6급: следующий модуль открывается, когда пройден предыдущий 🌸</div>
           </div>
         </div>
         <i class="fa-solid fa-seedling" style="color:var(--hush);" aria-hidden="true"></i>
@@ -1239,7 +1298,7 @@
 
 <!-- ─────────────── DATA + LOGIC ─────────────── -->
 <script src="assets/textbook/textbook-data.js?v=20260629a"></script>
-<script src="app.js?v=20260907a"></script>
+<script src="app.js?v=20260909a"></script>
 
 </body>
 </html>
