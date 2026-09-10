@@ -158,7 +158,9 @@
     'set.articles':     { ru: 'Статьи о Корее', en: 'Articles about Korea', uz: 'Koreya haqida maqolalar' },
     'set.articles.sub': { ru: 'открываются на сайте, на русском', en: 'open on the website, in Russian', uz: 'saytda ochiladi, rus tilida' },
     'home.articles':    { ru: 'Статьи о Корее', en: 'Articles about Korea', uz: 'Koreya haqida maqolalar' },
-    'home.articles.meta': { ru: 'читать на сайте', en: 'read on the website', uz: 'saytda oʻqish' },
+    'home.articles.meta': { ru: 'все статьи →', en: 'all articles →', uz: 'barcha maqolalar →' },
+    'art.blog':         { ru: 'Блог: разборы и материалы', en: 'Blog: guides and breakdowns', uz: 'Blog: tahlil va materiallar' },
+    'art.blog.sub':     { ru: 'хангыль, числа, разговорник, частицы, работа', en: 'Hangul, numbers, phrasebook, particles, work', uz: 'Hangul, sonlar, soʻzlashgich, yuklamalar, ish' },
     'art.learn':        { ru: 'Как выучить корейский с нуля', en: 'How to learn Korean from scratch', uz: 'Koreys tilini noldan qanday oʻrganish' },
     'art.learn.short':  { ru: 'Корейский с нуля', en: 'Korean from zero', uz: 'Koreys tili noldan' },
     'art.learn.sub':    { ru: 'план на первые 3 месяца', en: 'a plan for the first 3 months', uz: 'dastlabki 3 oy rejasi' },
@@ -6538,7 +6540,7 @@
   // Версия сборки: держать ВРУЧНУЮ синхронной с ?v= в index.html при каждом деплое
   // (те же 3 места — stylesheet/preload/script). Используется тихим автообновлением
   // ниже — сама загрузка кода по-прежнему идёт через ?v=.
-  const APP_VERSION = '20260909a';
+  const APP_VERSION = '20260910a';
   // ── Тихое автообновление (25.08.2026, вместо попапа «Вышло обновление!») ──
   // Узнав из облака про новую версию (appVersion пишет первый клиент нового деплоя,
   // promptVersion — кнопка «Оповестить» в админке), вкладка НЕ дёргает ученицу:

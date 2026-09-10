@@ -58,11 +58,11 @@
      вводят анимации из styles.css, поэтому без «мигания»; логотип не трогаем (fanUnfurl). -->
 <style>#intro{position:fixed;inset:0;z-index:999;display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:hidden;cursor:pointer;background:radial-gradient(120% 90% at 50% 35%,#FFFCF8 0%,#FFF4F0 38%,#FBE8EA 78%,#F2D5DA 100%)}#intro>.intro-tagline,#intro>.intro-subline,#intro>.intro-cta{opacity:0}</style>
 
-<link rel="stylesheet" href="styles.css?v=20260909a">
+<link rel="stylesheet" href="styles.css?v=20260910a">
 
 <!-- Предзагрузка тяжёлого JS: скачивание стартует сразу, параллельно с CSS/шрифтами -->
 <link rel="preload" href="assets/textbook/textbook-data.js?v=20260629a" as="script">
-<link rel="preload" href="app.js?v=20260909a" as="script">
+<link rel="preload" href="app.js?v=20260910a" as="script">
 </head>
 
 <body>
@@ -257,9 +257,17 @@
           <div class="rule"></div>
           <span class="title" data-i18n="home.articles">Статьи о Корее</span>
         </div>
-        <span class="meta" data-i18n="home.articles.meta">читать на сайте</span>
+        <a class="meta" href="/blog/" target="_blank" rel="noopener" style="color:var(--coral); font-weight:700;" data-i18n="home.articles.meta">все статьи →</a>
       </div>
       <div class="home-art-grid">
+        <a class="home-art-card" href="/blog/" target="_blank" rel="noopener">
+          <span class="home-art-ico" aria-hidden="true">📚</span>
+          <span class="home-art-tx">
+            <span class="home-art-title" data-i18n="art.blog">Блог: разборы и материалы</span>
+            <span class="home-art-sub" data-i18n="art.blog.sub">хангыль, числа, разговорник, частицы, работа</span>
+          </span>
+          <i class="fa-solid fa-chevron-right home-art-arrow" aria-hidden="true"></i>
+        </a>
         <a class="home-art-card" href="/learn-korean/" target="_blank" rel="noopener">
           <span class="home-art-ico" aria-hidden="true">🌱</span>
           <span class="home-art-tx">
@@ -1298,7 +1306,7 @@
 
 <!-- ─────────────── DATA + LOGIC ─────────────── -->
 <script src="assets/textbook/textbook-data.js?v=20260629a"></script>
-<script src="app.js?v=20260909a"></script>
+<script src="app.js?v=20260910a"></script>
 
 </body>
 </html>
