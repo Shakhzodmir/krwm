@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630" role="img" aria-label="Три речевых облачка со знаками хангыля — разговор на корейском">
+  <!-- Обложка разговорника. Три реплики: вопрос, ответ и благодарность. В облачках —
+       базовые знаки хангыля (круг, вертикаль с штрихом, угол), нарисованные линиями,
+       поэтому картинка не зависит от корейского шрифта у читателя. -->
+  <defs>
+    <linearGradient id="ph-bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#FFFCF8"/>
+      <stop offset="0.5" stop-color="#FFF4F0"/>
+      <stop offset="1" stop-color="#FBE7EC"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#ph-bg)"/>
+
+  <!-- Реплика 1: вопрос, слева -->
+  <g transform="translate(110 96)">
+    <path d="M28 0 H322 a28 28 0 0 1 28 28 V150 a28 28 0 0 1 -28 28 H96 l-38 44 v-44 H28 a28 28 0 0 1 -28 -28 V28 a28 28 0 0 1 28 -28 z"
+          fill="#FFFFFF" opacity="0.8"/>
+    <path d="M28 0 H322 a28 28 0 0 1 28 28 V150 a28 28 0 0 1 -28 28 H96 l-38 44 v-44 H28 a28 28 0 0 1 -28 -28 V28 a28 28 0 0 1 28 -28 z"
+          fill="none" stroke="#F2D5DA" stroke-width="3"/>
+    <g stroke="#BC4B5E" stroke-width="15" stroke-linecap="round" fill="none">
+      <circle cx="96" cy="90" r="34"/>
+      <path d="M186 40 L186 142"/>
+      <path d="M186 92 L238 92"/>
+      <path d="M274 44 L274 118 L318 118"/>
+    </g>
+  </g>
+
+  <!-- Реплика 2: ответ, справа, другой тон -->
+  <g transform="translate(700 250)">
+    <path d="M28 0 H352 a28 28 0 0 1 28 28 V150 a28 28 0 0 1 -28 28 H300 l38 44 l-92 -44 H28 a28 28 0 0 1 -28 -28 V28 a28 28 0 0 1 28 -28 z"
+          fill="#5C2A33" opacity="0.92"/>
+    <g stroke="#FFF4F0" stroke-width="15" stroke-linecap="round" fill="none">
+      <path d="M74 44 L74 132"/>
+      <path d="M74 60 L128 60"/>
+      <circle cx="212" cy="88" r="32"/>
+      <path d="M296 44 L296 132"/>
+      <path d="M296 88 L348 88"/>
+    </g>
+  </g>
+
+  <!-- Реплика 3: короткая благодарность, снизу слева -->
+  <g transform="translate(190 420)">
+    <path d="M24 0 H236 a24 24 0 0 1 24 24 V116 a24 24 0 0 1 -24 24 H84 l-34 38 v-38 H24 a24 24 0 0 1 -24 -24 V24 a24 24 0 0 1 24 -24 z"
+          fill="#FFFFFF" opacity="0.8"/>
+    <path d="M24 0 H236 a24 24 0 0 1 24 24 V116 a24 24 0 0 1 -24 24 H84 l-34 38 v-38 H24 a24 24 0 0 1 -24 -24 V24 a24 24 0 0 1 24 -24 z"
+          fill="none" stroke="#F2D5DA" stroke-width="3"/>
+    <g stroke="#BC4B5E" stroke-width="13" stroke-linecap="round" fill="none">
+      <path d="M62 42 L62 108"/>
+      <path d="M62 72 L108 72"/>
+      <circle cx="176" cy="76" r="28"/>
+    </g>
+  </g>
+
+  <!-- Золотая точка: реплика, которая началась -->
+  <circle cx="640" cy="140" r="9" fill="#C9A55C"/>
+</svg>

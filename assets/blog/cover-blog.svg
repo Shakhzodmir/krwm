@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630" role="img" aria-label="Строительные элементы хангыля: круг, вертикаль, горизонталь, угол и квадрат">
+  <!-- Обложка индекса блога. Хангыль собирается из считанного числа простых форм —
+       круга, линий, угла и квадрата. Здесь они разложены как набор деталей: это и есть
+       общий знаменатель всех статей блога. -->
+  <defs>
+    <linearGradient id="bl-bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#FFFCF8"/>
+      <stop offset="0.5" stop-color="#FFF4F0"/>
+      <stop offset="1" stop-color="#FBE7EC"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bl-bg)"/>
+
+  <!-- Верхний ряд: круг, вертикаль со штрихом, угол -->
+  <g stroke="#BC4B5E" stroke-width="18" stroke-linecap="round" fill="none">
+    <circle cx="196" cy="196" r="62"/>
+    <g transform="translate(396 128)">
+      <path d="M42 0 L42 138"/>
+      <path d="M42 68 L110 68"/>
+    </g>
+    <g transform="translate(636 132)">
+      <path d="M20 0 L20 128 L124 128"/>
+    </g>
+  </g>
+  <!-- квадрат ㅁ -->
+  <g transform="translate(884 132)">
+    <rect x="0" y="0" width="132" height="132" rx="14" fill="none" stroke="#BC4B5E" stroke-width="18"/>
+  </g>
+
+  <!-- Нижний ряд: те же формы, собранные в два слоговых блока -->
+  <g transform="translate(212 350)">
+    <rect x="0" y="0" width="300" height="216" rx="30" fill="#FFFFFF" opacity="0.78"/>
+    <rect x="0" y="0" width="300" height="216" rx="30" fill="none" stroke="#F2D5DA" stroke-width="4"/>
+    <g stroke="#5C2A33" stroke-width="17" stroke-linecap="round" fill="none">
+      <path d="M76 42 L76 60"/>
+      <path d="M48 78 L104 78"/>
+      <circle cx="76" cy="112" r="22"/>
+      <path d="M188 40 L188 142"/>
+      <path d="M188 92 L232 92"/>
+      <path d="M64 172 L64 184 L214 184"/>
+    </g>
+  </g>
+
+  <g transform="translate(600 350)">
+    <rect x="0" y="0" width="300" height="216" rx="30" fill="#5C2A33"/>
+    <g stroke="#FFF4F0" stroke-width="17" stroke-linecap="round" fill="none">
+      <rect x="62" y="44" width="88" height="72" rx="10" stroke="#FFF4F0" stroke-width="17" fill="none"/>
+      <path d="M214 40 L214 144"/>
+      <path d="M214 92 L258 92"/>
+      <path d="M62 168 L62 182 L232 182"/>
+    </g>
+  </g>
+
+  <!-- Золотые связки: детали превращаются в слоги -->
+  <g stroke="#C9A55C" stroke-width="3" stroke-dasharray="2 12" stroke-linecap="round" fill="none" opacity="0.9">
+    <path d="M196 272 C 196 316, 260 322, 300 344"/>
+    <path d="M456 274 C 456 320, 420 326, 404 344"/>
+    <path d="M950 276 C 950 320, 780 320, 726 344"/>
+  </g>
+
+  <circle cx="1020" cy="470" r="9" fill="#C9A55C"/>
+</svg>
