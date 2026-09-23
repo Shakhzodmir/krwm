@@ -58,11 +58,11 @@
      вводят анимации из styles.css, поэтому без «мигания»; логотип не трогаем (fanUnfurl). -->
 <style>#intro{position:fixed;inset:0;z-index:999;display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:hidden;cursor:pointer;background:radial-gradient(120% 90% at 50% 35%,#FFFCF8 0%,#FFF4F0 38%,#FBE8EA 78%,#F2D5DA 100%)}#intro>.intro-tagline,#intro>.intro-subline,#intro>.intro-cta{opacity:0}</style>
 
-<link rel="stylesheet" href="styles.css?v=20260924a">
+<link rel="stylesheet" href="styles.css?v=20260924b">
 
 <!-- Предзагрузка тяжёлого JS: скачивание стартует сразу, параллельно с CSS/шрифтами -->
-<link rel="preload" href="assets/textbook/textbook-data.js?v=20260629a" as="script">
-<link rel="preload" href="app.js?v=20260924a" as="script">
+<link rel="preload" href="assets/textbook/textbook-data.js?v=20260924b" as="script">
+<link rel="preload" href="app.js?v=20260924b" as="script">
 </head>
 
 <body>
@@ -423,11 +423,11 @@
         </span>
         <i class="fa-solid fa-chevron-right topik-entry-arrow" aria-hidden="true"></i>
       </button>
-      <button type="button" onclick="openTextbook()" class="topik-entry be-book" aria-label="Учебник — корейский с нуля">
+      <button type="button" onclick="openTextbook()" class="topik-entry be-book" aria-label="Учебник — корейский с нуля" data-i18n-aria="lessons.book">
         <span class="topik-entry-badge be-badge">교과서 📖</span>
         <span class="topik-entry-text">
-          <span class="topik-entry-title">Учебник · корейский с нуля</span>
-          <span class="topik-entry-sub">буквы · падчим · правописание · упражнения 🌸</span>
+          <span class="topik-entry-title" data-i18n="lessons.book">Учебник · корейский с нуля</span>
+          <span class="topik-entry-sub" data-i18n="lessons.book.sub">буквы · падчим · правописание · упражнения 🌸</span>
         </span>
         <i class="fa-solid fa-chevron-right topik-entry-arrow" aria-hidden="true"></i>
       </button>
@@ -1305,8 +1305,8 @@
 </script>
 
 <!-- ─────────────── DATA + LOGIC ─────────────── -->
-<script src="assets/textbook/textbook-data.js?v=20260629a"></script>
-<script src="app.js?v=20260924a"></script>
+<script src="assets/textbook/textbook-data.js?v=20260924b"></script>
+<script src="app.js?v=20260924b"></script>
 
 </body>
 </html>
