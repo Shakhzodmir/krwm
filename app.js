@@ -3466,12 +3466,18 @@
       return;
     }
     itemsSlot.innerHTML = filtered.map(w => {
-      const koEsc = String(w.ko).replace(/'/g, "\\'");
+      // myWords синхронизируется из облака (users/<uid>/myWords, открыт на запись) и
+      // рендерится БЕЗ клика при каждом снапшоте: ko в onclick — только jsStr (раньше
+      // экранировалась лишь ', и " закрывала атрибут), emoji — escHtml, тип — только
+      // из белого списка WORD_TYPE_META (stored-XSS, 09.2026).
+      const koEsc = jsStr(w.ko);
       const sel = _wordsSelected.has(w.ko);
-      const tp = wordTypeOf(w); const tm = WORD_TYPE_META[tp] || WORD_TYPE_META.word;
+      const tp0 = wordTypeOf(w);
+      const tp = Object.prototype.hasOwnProperty.call(WORD_TYPE_META, tp0) ? tp0 : 'word';
+      const tm = WORD_TYPE_META[tp];
       return `<div class="word-row ${sel ? 'selected' : ''}">
         <label class="word-check" aria-label="${t('ui.017')}"><input type="checkbox" ${sel ? 'checked' : ''} onchange="toggleWordSelect('${koEsc}', this.checked)"></label>
-        <span style="font-size:18px; flex-shrink:0;">${w.emoji || '🌸'}</span>
+        <span style="font-size:18px; flex-shrink:0;">${escHtml(w.emoji || '🌸')}</span>
         <div style="flex:1; min-width:0; cursor:pointer;" onclick="playSyllable('${koEsc}', this)">
           <div class="ko" style="font-size:16px; font-weight:700; color:var(--berry); line-height:1.2;">${escHtml(w.ko)}</div>
           ${w.ru || w.translit ? `<div style="font-size:11px; color:var(--soft); margin-top:1px;">${w.translit ? `[${escHtml(w.translit)}] · ` : ''}${escHtml(w.ru || '')}</div>` : ''}
@@ -5181,10 +5187,10 @@
       if (url) {
         if (isHomeAvatar) {
           // Override CSS bear fallback with user photo via inline image
-          el.style.backgroundImage = `url(${url})`;
+          el.style.backgroundImage = `${cssUrl(url)}`;
           el.style.backgroundColor = '';
         } else {
-          el.style.background = `url(${url}) center/cover no-repeat`;
+          el.style.background = `${cssUrl(url)} center/cover no-repeat`;
           el.textContent = '';
         }
         el.classList.add('photo-zoom');
@@ -5282,14 +5288,14 @@
           UStore.set('cover', finalUrl);                       // локально + авто-синк (обычные юзеры)
           if (isAdmin()) pushProfilePublicField('cover', finalUrl); // у админа авто-синк отключён
           const prev = document.getElementById('ep-cover-preview');
-          if (prev) { prev.style.background = `url(${finalUrl}) center/cover no-repeat`; prev.classList.add('has-photo'); }
+          if (prev) { prev.style.background = `${cssUrl(finalUrl)} center/cover no-repeat`; prev.classList.add('has-photo'); }
           toast(t('ep.coverUpdated'), 'var(--sage)');
         };
         const acc = Store.get('user');
         const uid = firebaseUserId();
         if (acc && !acc.guest && uid && uid !== 'guest' && typeof _storage !== 'undefined') {
           const prev = document.getElementById('ep-cover-preview');
-          if (prev) { prev.style.background = `url(${url}) center/cover no-repeat`; prev.classList.add('has-photo'); }
+          if (prev) { prev.style.background = `${cssUrl(url)} center/cover no-repeat`; prev.classList.add('has-photo'); }
           uploadDataUrlToStorage(url, `covers/${uid}.jpg`, CACHE_MUTABLE)
             .then(finish)
             .catch(() => finish(url)); // Storage недоступен — храним base64, как раньше
@@ -5656,6 +5662,7 @@
     _ustoreOverridden = true;
     const orig = UStore.set.bind(UStore);
     UStore.set = function(k, v) {
+      if (k === 'stats' && !_statsLoaded) return; // дефолты до загрузки не пишем ни локально, ни в облако
       orig(k, v);
       if (!_skipCloudPush && USTORE_SYNC_KEYS.includes(k)) {
         pushUserField(k, v);
@@ -5725,7 +5732,7 @@
           applyAvatar(val);
         } else if (k === 'cover') {
           const prev = document.getElementById('ep-cover-preview');
-          if (prev) { prev.style.background = `url(${val}) center/cover no-repeat`; prev.classList.add('has-photo'); }
+          if (prev) { prev.style.background = `${cssUrl(val)} center/cover no-repeat`; prev.classList.add('has-photo'); }
         }
       }).catch(() => {});
     });
@@ -6540,7 +6547,7 @@
   // Версия сборки: держать ВРУЧНУЮ синхронной с ?v= в index.html при каждом деплое
   // (те же 3 места — stylesheet/preload/script). Используется тихим автообновлением
   // ниже — сама загрузка кода по-прежнему идёт через ?v=.
-  const APP_VERSION = '20260910a';
+  const APP_VERSION = '20260924a';
   // ── Тихое автообновление (25.08.2026, вместо попапа «Вышло обновление!») ──
   // Узнав из облака про новую версию (appVersion пишет первый клиент нового деплоя,
   // promptVersion — кнопка «Оповестить» в админке), вкладка НЕ дёргает ученицу:
@@ -6681,12 +6688,42 @@
     const s = String(url == null ? '' : url).trim();
     return /^(https?:\/\/|data:image\/|blob:)/i.test(s) ? s : '';
   }
+  // ── Адреса медиа из БД и общего контента (аватар, обложка, фото, видео, аудио) ──
+  // Stored-XSS 09.2026: avatar вида https://x/a.jpg"><img onerror=…> подставлялся в
+  // style="background:url(…)" без экранирования, кавычка закрывала атрибут, и чужой
+  // код выполнялся у Мади и у любой ученицы, открывшей профиль или список. Писать
+  // avatar может кто угодно (правила interim-3), поэтому защита — на выводе.
+  // mediaUrl — отбрасывает опасные схемы; относительные пути assets/… пропускает
+  // (в отличие от safeImgUrl — картинки экзаменов и гида лежат относительными путями).
+  function mediaUrl(u) {
+    const s = String(u == null ? '' : u).trim();
+    if (!s) return '';
+    if (/^(javascript|vbscript|file):/i.test(s)) return '';
+    if (/^data:/i.test(s) && !/^data:(image|audio|video)\//i.test(s)) return '';
+    return s;
+  }
+  // Для HTML-атрибута: src="${srcAttr(x)}", data-photo-src="${srcAttr(x)}"
+  function srcAttr(u) { return escHtml(mediaUrl(u)); }
+  // CSS-значение: url("…") с экранированием для CSS-строки. Для присвоения в
+  // el.style.background = `${cssUrl(x)} center/cover`. Пустой/опасный адрес → none.
+  function cssUrl(u) {
+    const s = mediaUrl(u);
+    if (!s) return 'none';
+    return 'url("' + s.replace(/\\/g, '\\\\').replace(/"/g, '\\"').replace(/[\r\n\f]/g, '') + '")';
+  }
+  // То же для подстановки В ШАБЛОН разметки: style="background:${cssUrlAttr(x)} …"
+  function cssUrlAttr(u) { return escHtml(cssUrl(u)); }
   // Safe to drop inside a single-quoted JS string that itself lives inside a
   // double-quoted HTML attribute (e.g. onclick="fn('…')"). Escapes the JS-string
   // delimiter, backslashes, the attribute delimiter and line breaks.
+  // & экранируется ДО кавычек: иначе значение с HTML-сущностью (имя
+  // «&#39;),код,(&#39;») браузер раскодировал бы в кавычку ещё до разбора JS —
+  // и код выполнялся бы по клику (XSS через имя, 09.2026). Все вызовы стоят внутри
+  // on*="…", где браузер сам раскодирует &amp; обратно — значения не меняются.
   function jsStr(s) {
     return String(s == null ? '' : s)
       .replace(/\\/g, '\\\\')
+      .replace(/&/g, '&amp;')
       .replace(/'/g, "\\'")
       .replace(/"/g, '&quot;')
       .replace(/[\r\n]+/g, ' ');
@@ -7146,7 +7183,7 @@
             const nm = (friends[uid] && friends[uid].name) || t('grp.defFriend');
             const dir = (_usersDirCache && _usersDirCache[uid]) || {};
             const av = dir.avatar
-              ? `<div class="chat-row-av" style="width:34px;height:34px;background:url(${dir.avatar}) center/cover no-repeat;"></div>`
+              ? `<div class="chat-row-av" style="width:34px;height:34px;background:${cssUrlAttr(dir.avatar)} center/cover no-repeat;"></div>`
               : `<div class="chat-row-av chat-row-av-initial" style="width:34px;height:34px;font-size:13px;">${escHtml(nm.charAt(0).toUpperCase())}</div>`;
             return `
               <label class="group-pick-row">
@@ -7170,7 +7207,7 @@
     try {
       _groupPhoto = await compressImageFile(file, 256, 0.8);
       const btn = document.getElementById('group-photo-btn');
-      if (btn) { btn.style.background = `url(${_groupPhoto}) center/cover no-repeat`; btn.innerHTML = ''; }
+      if (btn) { btn.style.background = `${cssUrl(_groupPhoto)} center/cover no-repeat`; btn.innerHTML = ''; }
     } catch (_) { toast(t('grp.photoFail')); }
   }
   async function createGroupChat() {
@@ -7437,7 +7474,7 @@
       if (isGroup) openGroupChat(uid, name); else openChat(uid, name);
     };
     const av = avatar
-      ? `<div class="chat-popup-av" style="background:url(${avatar}) center/cover no-repeat;"></div>`
+      ? `<div class="chat-popup-av" style="background:${cssUrlAttr(avatar)} center/cover no-repeat;"></div>`
       : `<div class="chat-popup-av">${isGroup ? '<i class="fa-solid fa-user-group" style="font-size:13px;"></i>' : escHtml((name || '?').charAt(0).toUpperCase())}</div>`;
     el.innerHTML = `${av}
       <div class="chat-popup-body">
@@ -7602,7 +7639,7 @@
     const online = dir.lastSeen && (Date.now() - dir.lastSeen) < ONLINE_WINDOW_MS;
     const meta = _chatMetaCache[uid] || {};
     const avatarInner = dir.avatar
-      ? `<div class="photo-zoom chat-row-av" style="background:url(${dir.avatar}) center/cover no-repeat;"></div>`
+      ? `<div class="photo-zoom chat-row-av" style="background:${cssUrlAttr(dir.avatar)} center/cover no-repeat;"></div>`
       : `<div class="chat-row-av chat-row-av-initial">${escHtml(name.charAt(0).toUpperCase())}</div>`;
     const avatar = `<div class="friend-avatar-wrap">${avatarInner}${online ? `<span class="friend-online-dot" title="${t('chat.online')}"></span>` : ''}</div>`;
     // Telegram-style preview: "Ты: …" for my own last message, plain text otherwise.
@@ -7649,7 +7686,7 @@
     const timeLabel = chatListTimeLabel(meta.lastAt);
     const photo = meta.photo || (info && info.photo);
     const avInner = photo
-      ? `<div class="chat-row-av" style="background:url(${photo}) center/cover no-repeat;"></div>`
+      ? `<div class="chat-row-av" style="background:${cssUrlAttr(photo)} center/cover no-repeat;"></div>`
       : `<div class="chat-row-av chat-group-av"><i class="fa-solid fa-user-group"></i></div>`;
     const pinned = isChatPinned(gid);
     return `
@@ -8133,14 +8170,15 @@
   function adminChatRowHtml(u) {
     const name = escHtml(u.name || t('friend.noName'));
     const unread = unreadCountFor(u.uid);
-    const xp = (u.stats && u.stats.xp) || 0;
+    // stats чужого профиля пишет кто угодно — выводим только как число (XSS через «xp»)
+    const xp = Number(u.stats && u.stats.xp) || 0;
     const lvl = getLevel(xp);
     const rank = getRank(lvl);
     const initial = escHtml((u.name || '?').charAt(0).toUpperCase());
     const online = u.lastSeen && (Date.now() - u.lastSeen) < ONLINE_WINDOW_MS;
     const meta = _chatMetaCache[u.uid] || {};
     const avatarInner = u.avatar
-      ? `<div class="photo-zoom chat-row-av" style="background:url(${u.avatar}) center/cover no-repeat;"></div>`
+      ? `<div class="photo-zoom chat-row-av" style="background:${cssUrlAttr(u.avatar)} center/cover no-repeat;"></div>`
       : `<div class="chat-row-av chat-row-av-initial">${initial}</div>`;
     const avatar = `<div class="friend-avatar-wrap">${avatarInner}${online ? `<span class="friend-online-dot" title="${t('chat.online')}"></span>` : ''}</div>`;
     let preview;
@@ -8148,15 +8186,15 @@
       const mine = meta.lastFrom === myUid();
       preview = `${mine ? `<span class="chat-row-me">${t('chat.you')}</span> ` : ''}${escHtml(meta.lastMessage)}`;
     } else {
-      preview = `${escHtml(u.email || '')} · 🔥 ${(u.stats && u.stats.streak) || 0} · ${xp} XP`;
+      preview = `${escHtml(u.email || '')} · 🔥 ${Number(u.stats && u.stats.streak) || 0} · ${xp} XP`;
     }
     const timeLabel = chatListTimeLabel(meta.lastAt);
     const pinned = isChatPinned(u.uid);
     // Чип уровня корейского — тап открывает пикер для этой ученицы (не открывая чат)
     const lvlObj = levelById(u.level || '');
-    const lvlChip = `<button onclick="event.stopPropagation(); adminPickStudentLevel('${escHtml(u.uid)}','${u.level || ''}')" class="ko" title="${escAttr(t('lvl.change'))}" style="flex-shrink:0; font-size:9.5px; font-weight:700; padding:2px 8px; border-radius:999px; border:1px solid var(--line-strong); background:var(--paper); color:var(--coral); cursor:pointer; font-family:inherit;">${lvlObj ? escHtml(lvlObj.code) : '<i class="fa-solid fa-graduation-cap" style="font-size:9px;"></i>'}</button>`;
+    const lvlChip = `<button onclick="event.stopPropagation(); adminPickStudentLevel('${jsStr(u.uid)}','${jsStr(u.level || '')}')" class="ko" title="${escAttr(t('lvl.change'))}" style="flex-shrink:0; font-size:9.5px; font-weight:700; padding:2px 8px; border-radius:999px; border:1px solid var(--line-strong); background:var(--paper); color:var(--coral); cursor:pointer; font-family:inherit;">${lvlObj ? escHtml(lvlObj.code) : '<i class="fa-solid fa-graduation-cap" style="font-size:9px;"></i>'}</button>`;
     return `
-      <div class="card card-press chat-list-row${pinned ? ' chat-pinned' : ''}" onclick="openChat('${escHtml(u.uid)}','${name.replace(/'/g,"&#39;")}')">
+      <div class="card card-press chat-list-row${pinned ? ' chat-pinned' : ''}" onclick="openChat('${jsStr(u.uid)}','${jsStr(u.name || t('friend.noName'))}')">
         ${avatar}
         <div class="chat-row-main">
           <div class="chat-row-top">
@@ -8221,7 +8259,7 @@
     const rowHtml = (r, i) => {
       const lvl = getLevel(r.all);
       const av = r.avatar
-        ? `<div style="width:34px;height:34px;border-radius:50%;background:url(${r.avatar}) center/cover no-repeat;flex-shrink:0;border:2px solid var(--rose);"></div>`
+        ? `<div style="width:34px;height:34px;border-radius:50%;background:${cssUrlAttr(r.avatar)} center/cover no-repeat;flex-shrink:0;border:2px solid var(--rose);"></div>`
         : `<div style="width:34px;height:34px;border-radius:50%;background:var(--paper);flex-shrink:0;border:2px solid var(--rose);display:flex;align-items:center;justify-content:center;font-size:13px;color:var(--coral);font-weight:700;">${escHtml((r.name || '?').charAt(0).toUpperCase())}</div>`;
       return `
         <div style="display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:12px;background:${i < 3 ? 'rgba(201,165,92,.08)' : 'transparent'};">
@@ -8298,7 +8336,7 @@
       const isSending = _sendingFriendReq.has(u.uid);
       const initial = escHtml((u.name || '?').charAt(0).toUpperCase());
       const avatar = u.avatar
-        ? `<div class="photo-zoom" style="width:38px;height:38px;border-radius:50%;background:url(${u.avatar}) center/cover no-repeat;flex-shrink:0;border:1.5px solid var(--rose);"></div>`
+        ? `<div class="photo-zoom" style="width:38px;height:38px;border-radius:50%;background:${cssUrlAttr(u.avatar)} center/cover no-repeat;flex-shrink:0;border:1.5px solid var(--rose);"></div>`
         : `<div style="width:38px;height:38px;border-radius:50%;background:var(--paper);flex-shrink:0;border:1.5px solid var(--rose);display:flex;align-items:center;justify-content:center;font-size:14px;color:var(--coral);font-weight:700;">${initial}</div>`;
       let actionHtml;
       if (isFriend) {
@@ -8312,7 +8350,7 @@
       } else if (isSending) {
         actionHtml = `<button disabled class="btn btn-primary" style="padding:6px 10px;font-size:11px;flex-shrink:0;opacity:.55;cursor:wait;">${t('friend.sending')}</button>`;
       } else {
-        actionHtml = `<button onclick="sendFriendRequest('${escHtml(u.uid)}','${escHtml(u.name||'').replace(/'/g,'&#39;')}')" class="btn btn-primary" style="padding:6px 10px;font-size:11px;flex-shrink:0;">${t('friend.add')}</button>`;
+        actionHtml = `<button onclick="sendFriendRequest('${jsStr(u.uid)}','${jsStr(u.name||'')}')" class="btn btn-primary" style="padding:6px 10px;font-size:11px;flex-shrink:0;">${t('friend.add')}</button>`;
       }
       return `
         <div style="display:flex;align-items:center;gap:10px;padding:8px 4px;">
@@ -8383,7 +8421,7 @@
     const av = document.getElementById('chat-buddy-avatar');
     if (!av) return;
     if (avatar) {
-      av.style.background = `url(${avatar}) center/cover no-repeat`;
+      av.style.background = `${cssUrl(avatar)} center/cover no-repeat`;
       av.textContent = '';
       av.classList.add('photo-zoom');
       av.dataset.photoSrc = avatar;
@@ -8477,13 +8515,13 @@
     const initialLastSeen = cached.lastSeen || 0;
     _chatBuddyLastSeen = initialLastSeen;
     const avatarStyle = (initialAvatar && !isGroup)
-      ? `background:url(${initialAvatar}) center/cover no-repeat;`
+      ? `background:${cssUrlAttr(initialAvatar)} center/cover no-repeat;`
       : '';
     const avatarContent = isGroup
       ? '<i class="fa-solid fa-user-group" style="font-size:13px;"></i>'
       : (initialAvatar ? '' : escHtml((title || '?').charAt(0).toUpperCase()));
     const avatarClass = 'chat-buddy-avatar' + ((initialAvatar && !isGroup) ? ' photo-zoom' : '') + (isGroup ? ' chat-group-av' : '');
-    const avatarData = (initialAvatar && !isGroup) ? `data-photo-src="${initialAvatar}"` : '';
+    const avatarData = (initialAvatar && !isGroup) ? `data-photo-src="${srcAttr(initialAvatar)}"` : '';
     const statusInitial = isGroup ? '<span>' + t('ui.103') + '</span>' : chatStatusHtml(initialLastSeen);
     m.innerHTML = `
       <div class="chat-sheet">
@@ -8600,7 +8638,7 @@
       // Фото группы в шапку (если задано)
       if (meta.photo) {
         const av = document.getElementById('chat-buddy-avatar');
-        if (av) { av.style.background = `url(${meta.photo}) center/cover no-repeat`; av.innerHTML = ''; av.classList.remove('chat-group-av'); }
+        if (av) { av.style.background = `${cssUrl(meta.photo)} center/cover no-repeat`; av.innerHTML = ''; av.classList.remove('chat-group-av'); }
       }
       paintChatHeaderStatus();
     } catch (_) {}
@@ -8614,7 +8652,7 @@
     const meta = _chatGroupMeta || {};
     const photo = meta.photo;
     const headAv = photo
-      ? `<div class="chat-row-av" style="width:64px;height:64px;background:url(${photo}) center/cover no-repeat;margin:0 auto;"></div>`
+      ? `<div class="chat-row-av" style="width:64px;height:64px;background:${cssUrlAttr(photo)} center/cover no-repeat;margin:0 auto;"></div>`
       : `<div class="chat-row-av chat-group-av" style="width:64px;height:64px;font-size:24px;margin:0 auto;"><i class="fa-solid fa-user-group"></i></div>`;
     const sheet = document.createElement('div');
     sheet.className = 'modal-bg';
@@ -8663,7 +8701,7 @@
         <div style="display:grid;gap:6px;max-height:300px;overflow-y:auto;">
           ${candidates.map(uid => {
             const nm = (pool[uid] && pool[uid].name) || (_usersDirCache && _usersDirCache[uid] && _usersDirCache[uid].name) || t('grp.defMember');
-            return `<button type="button" class="cw-lobby-card" style="padding:9px 12px;" onclick="addGroupMember('${escHtml(gid)}','${escHtml(uid)}','${escHtml(nm).replace(/'/g,'&#39;')}')">
+            return `<button type="button" class="cw-lobby-card" style="padding:9px 12px;" onclick="addGroupMember('${jsStr(gid)}','${jsStr(uid)}','${jsStr(nm)}')">
               <div class="chat-row-av chat-row-av-initial" style="width:34px;height:34px;font-size:13px;">${escHtml(nm.charAt(0).toUpperCase())}</div>
               <span style="flex:1;font-size:13px;font-weight:600;color:var(--berry);text-align:left;">${escHtml(nm)}</span>
               <i class="fa-solid fa-plus" style="color:var(--coral);font-size:12px;"></i>
@@ -8739,9 +8777,9 @@
   function _userProfileHtml(o) {
     const name = escHtml(o.name || t('nav.profile'));
     const initial = escHtml((o.name || '?').charAt(0).toUpperCase());
-    const coverStyle = o.cover ? `background-image:url(${o.cover});` : '';
+    const coverStyle = o.cover ? `background-image:${cssUrlAttr(o.cover)};` : '';
     const avInner = o.avatar
-      ? `<div class="up-avatar-img photo-zoom" data-photo-src="${o.avatar}" style="background:url(${o.avatar}) center/cover no-repeat;"></div>`
+      ? `<div class="up-avatar-img photo-zoom" data-photo-src="${srcAttr(o.avatar)}" style="background:${cssUrlAttr(o.avatar)} center/cover no-repeat;"></div>`
       : `<div class="up-avatar-initial">${initial}</div>`;
     const online = o.lastSeen && (Date.now() - o.lastSeen) < ONLINE_WINDOW_MS;
     const status = o.isMe ? t('up.itsYou')
@@ -9034,7 +9072,7 @@
       const dir = (_usersDirCache && _usersDirCache[uid]) || {};
       const name = dir.name || 'Друг';
       const av = dir.avatar
-        ? `<span class="fwd-av" style="background:url(${dir.avatar}) center/cover no-repeat;"></span>`
+        ? `<span class="fwd-av" style="background:${cssUrlAttr(dir.avatar)} center/cover no-repeat;"></span>`
         : `<span class="fwd-av">${escHtml(name.charAt(0).toUpperCase())}</span>`;
       rows.push(`<button class="fwd-row" onclick="doForward('${escHtml(uid)}', false)">${av}<span class="fwd-name">${escHtml(name)}</span></button>`);
     });
@@ -9935,9 +9973,18 @@
     return `user_${(u.name || '').toLowerCase()}`;
   }
   function uKey(name) { return `u_${currentUserId()}_${name}`; }
+  // Предохранитель прогресса: пока loadUserData() ни разу не загрузил стату из
+  // localStorage, в памяти лежат ДЕФОЛТЫ (xp 0, стрик 0) — сохранять их нельзя,
+  // иначе они затрут настоящий прогресс (так /?go=home обнулял гостей, 09.2026).
+  // var, а не let: объявление поднимается, и ранний вызов не упадёт в TDZ, а
+  // просто увидит undefined → запись пропускается.
+  var _statsLoaded = false;
   const UStore = {
     get(k, d=null) { return Store.get(uKey(k), d); },
-    set(k, v) { Store.set(uKey(k), v); },
+    set(k, v) {
+      if (k === 'stats' && !_statsLoaded) { console.warn('UStore: стата ещё не загружена — запись пропущена'); return; }
+      Store.set(uKey(k), v);
+    },
     del(k) { Store.del(uKey(k)); }
   };
 
@@ -10008,6 +10055,7 @@
     const saved = UStore.get('stats') || {};
     Object.keys(stats).forEach(k => delete stats[k]);
     Object.assign(stats, defaultStats(), saved);
+    _statsLoaded = true; // настоящая стата в памяти — с этого момента её можно сохранять
     if (!stats.firstOpenTs) { stats.firstOpenTs = Date.now(); UStore.set('stats', stats); }
     if (!Array.isArray(stats.wordsLearned)) stats.wordsLearned = [];
     if (!stats.gamePlays || typeof stats.gamePlays !== 'object') stats.gamePlays = {};
@@ -27256,7 +27304,7 @@
           </div>
           ${task.korInstr ? `<div class="ko" style="font-size:12.5px; font-weight:700; color:var(--berry); margin-bottom:6px;">${task.korInstr}</div>` : ''}
           ${task.instr ? `<div style="font-size:12.5px; color:var(--text2); margin-bottom:8px;">${task.instr}</div>` : ''}
-          ${task.image ? `<img src="${task.image}" alt="${t('ui.175',{n: task.n})}" style="width:100%; border-radius:12px; border:1px solid var(--line); margin-bottom:10px; background:#fff;">` : ''}
+          ${task.image ? `<img src="${srcAttr(task.image)}" alt="${t('ui.175',{n: task.n})}" style="width:100%; border-radius:12px; border:1px solid var(--line); margin-bottom:10px; background:#fff;">` : ''}
           ${task.passage ? `<div class="exam-passage ko" style="margin-bottom:10px; white-space:pre-wrap;">${task.passage}</div>` : ''}
           ${body}
         </div>`;
@@ -30875,7 +30923,7 @@
     const title = isBlitz ? t('topik.blitz.title') : t('topik.drill.title');
     const sub = isBlitz ? `${t('topik.lvl')} ${q.lvl} · ${q.typeTitle}` : q.typeTitle;
     const passage = q.passage ? `<div class="exam-passage ko">${examPassageHtml(q.passage)}</div>` : '';
-    const image = q.image ? `<img class="exam-qimg" src="${q.image}" alt="">` : '';
+    const image = q.image ? `<img class="exam-qimg" src="${srcAttr(q.image)}" alt="">` : '';
     const opts = q.options.map((opt, i) => {
       const n = i + 1;
       let cls = 'topik-drill-opt';
@@ -30988,7 +31036,7 @@
     const q = st.qs[st.idx];
     const answered = st.answered;
     const passage = q.passage ? `<div class="exam-passage ko">${examPassageHtml(q.passage)}</div>` : '';
-    const image = q.image ? `<img class="exam-qimg" src="${q.image}" alt="">` : '';
+    const image = q.image ? `<img class="exam-qimg" src="${srcAttr(q.image)}" alt="">` : '';
     const opts = q.options.map((opt, i) => {
       const n = i + 1;
       let cls = 'topik-drill-opt';
@@ -31179,7 +31227,7 @@
     } else {
       bodyHtml = (q.ko ? `<div class="ko" style="font-size:28px; font-weight:700; color:var(--berry); text-align:center; margin:10px 0;">${escHtml(q.ko)}</div>` : '')
         + passageHtml
-        + (q.image ? `<img class="exam-qimg" src="${q.image}" alt="">` : '');
+        + (q.image ? `<img class="exam-qimg" src="${srcAttr(q.image)}" alt="">` : '');
     }
     const opts = q.options.map((opt, i) => {
       const n = i + 1;
@@ -31348,7 +31396,7 @@
     const st = _examState;
     const audioHtml = (st.mode === 'listening' && st.audio) ? `
       <div class="exam-audio">
-        <audio id="exam-audio-el" preload="metadata" src="${st.audio}"></audio>
+        <audio id="exam-audio-el" preload="metadata" src="${srcAttr(st.audio)}"></audio>
         <div class="aplayer">
           <div class="aplayer-ctrls">
             <button type="button" class="aplayer-skip" onclick="examAudioSeek(-10)" aria-label="${t('ui.197')}"><i class="fa-solid fa-rotate-left"></i><span>10</span></button>
@@ -31459,7 +31507,7 @@
     const q = st.questions[st.idx];
     const chosen = st.answers[q.n];
     const passage = q.passage ? `<div class="exam-passage ko">${examPassageHtml(q.passage)}</div>` : '';
-    const image = q.image ? `<img class="exam-qimg" src="${q.image}" alt="${t('ui.204')}">` : '';
+    const image = q.image ? `<img class="exam-qimg" src="${srcAttr(q.image)}" alt="${t('ui.204')}">` : '';
     const listenBtn = q.script ? `<button type="button" class="exam-listen-btn" onclick="speakExamScript(this)"><i class="fa-solid fa-headphones"></i> ${t('ui.205')}</button>` : '';
     const opts = q.options.map((o, i) => {
       const num = i + 1;
@@ -32325,7 +32373,7 @@
     if (prev) prev.innerHTML = '<div style="font-size:13px; color:var(--soft);">' + t('ui.242') + '</div>';
     try {
       _composerPhoto = await compressImageFile(file, 1000, 0.72);
-      if (prev) { prev.classList.add('has-photo'); prev.innerHTML = `<img src="${_composerPhoto}" alt="">`; }
+      if (prev) { prev.classList.add('has-photo'); prev.innerHTML = `<img src="${srcAttr(_composerPhoto)}" alt="">`; }
     } catch (_) {
       _composerPhoto = null;
       if (prev) prev.innerHTML = '<div style="font-size:40px;">📷</div><div style="font-size:13px; color:var(--coral); margin-top:6px;">' + t('ui.044') + '</div>';
@@ -32413,7 +32461,7 @@
       const thumb = `https://img.youtube.com/vi/${yid}/hqdefault.jpg`;
       inner = `
         <div class="video-player-slot" style="position:relative; aspect-ratio:16/9; background:#000; border-radius:14px; overflow:hidden; cursor:pointer;" onclick="playCustomVideo('youtube','${yid}', this)">
-          <img src="${thumb}" style="width:100%; height:100%; object-fit:cover;" alt="">
+          <img src="${srcAttr(thumb)}" style="width:100%; height:100%; object-fit:cover;" alt="">
           <div style="position:absolute; inset:0; background:linear-gradient(180deg, transparent 50%, rgba(0,0,0,.55)); display:flex; align-items:center; justify-content:center;">
             <div style="width:54px; height:54px; border-radius:50%; background:var(--grad-coral); color:white; display:flex; align-items:center; justify-content:center; box-shadow: var(--shadow-lg); font-size:18px;"><i class="fa-solid fa-play"></i></div>
           </div>
@@ -32431,7 +32479,7 @@
     } else if (isFile) {
       const safeUrl = String(url).replace(/['"]/g, '');
       inner = `<div style="aspect-ratio:16/9; background:#000; border-radius:14px; overflow:hidden;">
-        <video src="${url}" controls preload="metadata" playsinline style="width:100%; height:100%; object-fit:contain; background:#000; display:block;"></video>
+        <video src="${srcAttr(url)}" controls preload="metadata" playsinline style="width:100%; height:100%; object-fit:contain; background:#000; display:block;"></video>
       </div>`;
       lightboxAttr = `onclick="event.stopPropagation(); openMediaLightbox('video', '${safeUrl}')"`;
     } else {
@@ -34468,7 +34516,7 @@
     let media;
     if (yid) {
       media = `<div class="video-player-slot" style="position:relative; aspect-ratio:16/9; background:#000;" onclick="playCustomVideo('youtube','${yid}', this)">
-        <img src="${thumb}" style="width:100%; height:100%; object-fit:cover;" alt="">
+        <img src="${srcAttr(thumb)}" style="width:100%; height:100%; object-fit:cover;" alt="">
         <div style="position:absolute; inset:0; background:linear-gradient(180deg, transparent 50%, rgba(0,0,0,.6)); display:flex; align-items:center; justify-content:center; cursor:pointer;">
           <div style="width:54px; height:54px; border-radius:50%; background:var(--grad-coral); color:white; display:flex; align-items:center; justify-content:center; box-shadow: var(--shadow-lg); font-size:18px;"><i class="fa-solid fa-play"></i></div>
         </div>
@@ -34482,7 +34530,7 @@
       </div>`;
     } else if (isFile) {
       media = `<div style="aspect-ratio:16/9; background:#000;">
-        <video src="${url}" controls preload="metadata" style="width:100%; height:100%; object-fit:contain; background:#000; display:block;"></video>
+        <video src="${srcAttr(url)}" controls preload="metadata" style="width:100%; height:100%; object-fit:contain; background:#000; display:block;"></video>
       </div>`;
     } else {
       media = `<div class="placeholder-img" style="height:120px; border-radius:0;">${t('ui.279')}</div>`;
@@ -34534,7 +34582,7 @@
     } else if (kind === 'gdrive') {
       slotEl.innerHTML = `<iframe width="100%" height="100%" src="https://drive.google.com/file/d/${src}/preview" frameborder="0" allow="autoplay" allowfullscreen style="border:0;"></iframe>`;
     } else {
-      slotEl.innerHTML = `<video src="${src}" controls autoplay style="width:100%; height:100%; object-fit:contain; background:#000;"></video>`;
+      slotEl.innerHTML = `<video src="${srcAttr(src)}" controls autoplay style="width:100%; height:100%; object-fit:contain; background:#000;"></video>`;
     }
     slotEl.onclick = null;
   }
@@ -35600,7 +35648,7 @@
           <input type="file" accept="image/*" onchange="adminPickFeedImage(event)" style="display:none;">
         </label>
         <div id="afp-image-preview" style="display:${editing?.image ? 'block' : 'none'}; text-align:center;">
-          ${editing?.image ? `<img src="${editing.image}" style="max-width:100%; max-height:180px; border-radius:12px; border:1px solid var(--line);">` : ''}
+          ${editing?.image ? `<img src="${srcAttr(editing.image)}" style="max-width:100%; max-height:180px; border-radius:12px; border:1px solid var(--line);">` : ''}
         </div>
         <input id="afp-video" class="input" placeholder="${t('ui.360')}" value="${escAttrSafe(editing?.video)}">
         <label class="btn btn-ghost btn-block" style="cursor:pointer; display:inline-flex; align-items:center; justify-content:center; gap:8px;">
@@ -35661,7 +35709,7 @@
       if (input) input.value = url;
       if (preview) {
         preview.style.display = 'block';
-        preview.innerHTML = `<img src="${url}" style="max-width:100%; max-height:180px; border-radius:12px; border:1px solid var(--line);">`;
+        preview.innerHTML = `<img src="${srcAttr(url)}" style="max-width:100%; max-height:180px; border-radius:12px; border:1px solid var(--line);">`;
       }
       if (label) label.textContent = t('ui.366');
       toast('Фото готово 🌸', 'var(--sage)');
@@ -35897,7 +35945,7 @@
       const ai = ACCESS_INFO[acc];
       const initial = (u.name || '?').charAt(0).toUpperCase();
       const avatar = u.avatar
-        ? `<div class="photo-zoom" style="width:46px; height:46px; border-radius:50%; background:url(${u.avatar}) center/cover no-repeat; flex-shrink:0; border:2px solid var(--rose);"></div>`
+        ? `<div class="photo-zoom" style="width:46px; height:46px; border-radius:50%; background:${cssUrlAttr(u.avatar)} center/cover no-repeat; flex-shrink:0; border:2px solid var(--rose);"></div>`
         : `<div style="width:46px; height:46px; border-radius:50%; background:var(--paper); flex-shrink:0; border:2px solid var(--rose); display:flex; align-items:center; justify-content:center; font-size:18px; color:var(--coral); font-weight:700;">${escAttrSafe(initial)}</div>`;
       const persLine = [meta.country, meta.age ? t('ui.r051',{age: meta.age}) : '', meta.gender]
         .filter(Boolean).map(escAttrSafe).join(' · ');
@@ -35976,7 +36024,7 @@
     const acc = accessOf(u);
     const initial = (u.name || '?').charAt(0).toUpperCase();
     const avatar = u.avatar
-      ? `<div class="photo-zoom" style="width:84px; height:84px; border-radius:50%; background:url(${u.avatar}) center/cover no-repeat; border:3px solid var(--rose); box-shadow: var(--shadow-md);"></div>`
+      ? `<div class="photo-zoom" style="width:84px; height:84px; border-radius:50%; background:${cssUrlAttr(u.avatar)} center/cover no-repeat; border:3px solid var(--rose); box-shadow: var(--shadow-md);"></div>`
       : `<div style="width:84px; height:84px; border-radius:50%; background:var(--paper); border:3px solid var(--rose); display:flex; align-items:center; justify-content:center; font-size:30px; color:var(--coral); font-weight:700; box-shadow: var(--shadow-md);">${escAttrSafe(initial)}</div>`;
     const accBtn = (key) => {
       const ai = ACCESS_INFO[key];
@@ -37041,7 +37089,7 @@
           <button onclick="jrnNoteEdit('${id}')" title="${t('ui.316')}" style="background:none; border:none; cursor:pointer; font-size:13px; color:var(--coral); padding:4px;"><i class="fa-solid fa-pen-to-square"></i></button>
           <button onclick="jrnNoteDel('${id}')" title="${t('ui.018')}" style="background:none; border:none; cursor:pointer; font-size:14px; color:var(--bad-ink); padding:4px;">✕</button>
         </div>
-        ${n.ink ? `<img src="${n.ink}" alt="" style="display:block; width:100%; max-height:220px; object-fit:contain; background:var(--paper); border-radius:12px; margin-top:8px;">` : ''}
+        ${n.ink ? `<img src="${srcAttr(n.ink)}" alt="" style="display:block; width:100%; max-height:220px; object-fit:contain; background:var(--paper); border-radius:12px; margin-top:8px;">` : ''}
         ${n.text ? `<div style="font-size:13px; color:var(--ink); line-height:1.6; margin-top:8px; white-space:pre-wrap;">${escHtml(n.text)}</div>` : ''}
       </div>`).join('');
     return `
@@ -37790,12 +37838,12 @@
       const savedAv = UStore.get('avatar') || localStorage.getItem('madie_avatar');
       if (savedAv) {
         const av = document.getElementById('ep-avatar-preview');
-        if (av) { av.style.background = `url(${savedAv}) center/cover no-repeat`; av.textContent = ''; }
+        if (av) { av.style.background = `${cssUrl(savedAv)} center/cover no-repeat`; av.textContent = ''; }
       }
       const savedCover = UStore.get('cover');
       if (savedCover) {
         const cv = document.getElementById('ep-cover-preview');
-        if (cv) { cv.style.background = `url(${savedCover}) center/cover no-repeat`; cv.classList.add('has-photo'); }
+        if (cv) { cv.style.background = `${cssUrl(savedCover)} center/cover no-repeat`; cv.classList.add('has-photo'); }
       }
       const savedBio = UStore.get('bio') || '';
       const bioEl = document.getElementById('ep-bio');
@@ -38407,19 +38455,22 @@
   function renderKpop() {
     if (kpopRound >= kpopTotal) { gameModal(gameFinish(kpopScore, kpopTotal, 'K-Pop Fill', 'kpop', 'startKpop')); return; }
     const q = kpopPool[kpopRound];
-    const lineHtml = q.line.replace('___', `<span style="display:inline-block; min-width:80px; border-bottom:2px dashed var(--gold); padding:0 8px; color:var(--gold); font-weight:700;">?</span>`);
-    const audioText = q.line.replace('___', q.blank).replace(/'/g, "\\'");
+    // Строки песен приходят и из customKpop (общий узел shared/*) — всё экранируем:
+    // текст — escHtml, аргументы onclick — jsStr (stored-XSS 09.2026; заодно кавычка
+    // вроде I'm больше не делает кнопки ответа мёртвыми).
+    const lineHtml = escHtml(q.line).replace('___', `<span style="display:inline-block; min-width:80px; border-bottom:2px dashed var(--gold); padding:0 8px; color:var(--gold); font-weight:700;">?</span>`);
+    const audioText = jsStr(q.line.replace('___', q.blank));
     gameModal(`
-      ${gameHeader('🎵 K-POP FILL', `${q.artist} — ${q.song}`, kpopRound, kpopTotal)}
+      ${gameHeader('🎵 K-POP FILL', `${escHtml(q.artist)} — ${escHtml(q.song)}`, kpopRound, kpopTotal)}
       <div style="background: var(--grad-berry); color:white; border-radius:18px; padding:18px 16px; text-align:center; margin-bottom:18px;">
         <div style="font-size:9px; letter-spacing:.2em; color: var(--gold);">${t('ui.505')}</div>
         <div class="ko" style="font-size:18px; font-weight:600; margin-top:10px; line-height:1.45;">${lineHtml}</div>
-        <div style="font-size:11.5px; color: rgba(255,255,255,.72); margin-top:8px; font-style:italic;">${q.translation}</div>
+        <div style="font-size:11.5px; color: rgba(255,255,255,.72); margin-top:8px; font-style:italic;">${escHtml(q.translation)}</div>
         <button onclick="playSyllable('${audioText}', this)" class="btn" style="background:rgba(255,255,255,.15); color:white; margin-top:12px; padding:8px 14px; font-size:11px;"><i class="fa-solid fa-volume-up"></i> ${t('ui.222')}</button>
       </div>
       <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
         ${q.options.map(opt => `
-          <button onclick="pickKpop(this, '${opt}', '${q.blank}')" class="btn btn-ghost ko" style="padding:14px 10px; font-size:16px; font-weight:700; height:auto; flex-direction:column; gap:2px;">${opt}</button>
+          <button onclick="pickKpop(this, '${jsStr(opt)}', '${jsStr(q.blank)}')" class="btn btn-ghost ko" style="padding:14px 10px; font-size:16px; font-weight:700; height:auto; flex-direction:column; gap:2px;">${escHtml(opt)}</button>
         `).join('')}
       </div>
       <div style="text-align:center; font-size:11px; color:var(--soft); margin-top:14px;">${t('ui.506')}</div>
@@ -38435,7 +38486,7 @@
       el.classList.add('quiz-correct-pop');
       kpopScore++;
       addXp(15);
-      toast(`정답! ${correct} ✨`, 'var(--sage)');
+      toast(`정답! ${escHtml(correct)} ✨`, 'var(--sage)');
       setTimeout(() => { kpopRound++; renderKpop(); }, 1000);
     } else {
       el.style.background = 'var(--bad-bg)';
@@ -41923,7 +41974,7 @@
         <div class="ob-body">
           <div class="ob-art">
             <div class="ob-circle"></div>
-            <img src="${s.img}" alt="" onerror="this.style.display='none'">
+            <img src="${srcAttr(s.img)}" alt="" onerror="this.style.display='none'">
             <span class="ob-emoji" style="top:6px; left:2px;">${s.emojis[0]}</span>
             <span class="ob-emoji" style="top:30px; right:-4px;">${s.emojis[1]}</span>
             <span class="ob-emoji" style="bottom:14px; right:10px;">${s.emojis[2]}</span>
@@ -42858,17 +42909,23 @@
     const info = nextMarathonInfo();
     if (!info) { slot.innerHTML = ''; return; }
     const lvlLabel = info.lvl === 2 ? 'TOPIK II' : 'TOPIK I';
-    let body, clickable = false;
+    let body, clickable = false, done = false;
     if (_marathonMyResultCache && _marathonMyResultCache.month === info.month) {
-      body = t('marathon.card.done', { score: _marathonMyResultCache.score });
+      body = t('marathon.card.done', { score: _marathonMyResultCache.score }); done = true;
     } else if (info.daysUntil === 0) {
       body = t('marathon.card.today'); clickable = true;
     } else {
       body = t('marathon.card.countdown', { n: info.daysUntil });
     }
-    const action = clickable ? `startTopikExam(${info.examNo},'reading'${info.lvl === 2 ? ',2' : ''})` : `toast(${JSON.stringify(t('marathon.notYet'))})`;
+    // Было toast(${JSON.stringify(…)}): двойные кавычки JSON обрывали onclick="…",
+    // и карточка была мёртвой во все дни, кроме дня марафона (класс багов
+    // html-attr-json-stringify). Строка в JS-атрибуте — только через jsStr.
+    // После прохождения марафона карточка некликабельна: тост «начнётся в свой день»
+    // рядом с «Готово! Твой результат» только сбивал бы с толку.
+    const action = clickable ? `startTopikExam(${info.examNo},'reading'${info.lvl === 2 ? ',2' : ''})`
+      : (done ? '' : `toast('${jsStr(t('marathon.notYet'))}')`);
     slot.innerHTML = `
-      <div onclick="${action}" class="topik-exam-card" style="cursor:pointer; margin-top:14px; background:linear-gradient(135deg, var(--gold-ink), var(--coral));">
+      <div ${action ? `onclick="${action}"` : ''} class="topik-exam-card" style="${action ? 'cursor:pointer; ' : ''}margin-top:14px; background:linear-gradient(135deg, var(--gold-ink), var(--coral));">
         <span class="topik-exam-ico">📅</span>
         <div class="topik-exam-tx">
           <div class="topik-exam-t">${t('marathon.card.title')} · ${lvlLabel}</div>
@@ -42888,7 +42945,7 @@
     try { questRow = renderWeekQuestRow(); } catch (e) { console.warn('[quests]', e); }
     slot.innerHTML = `
       <div class="bear-guide">
-        <img class="bear-guide-img" src="${s.img}" alt="" onerror="this.style.visibility='hidden'">
+        <img class="bear-guide-img" src="${srcAttr(s.img)}" alt="" onerror="this.style.visibility='hidden'">
         <button type="button" class="bear-bubble" onclick="${s.action}" aria-label="${escHtml(s.title)}">
           <span class="bear-guide-eyebrow">${t('guide.name')}</span>
           <span class="bear-guide-title">${s.title}</span>
@@ -43129,23 +43186,6 @@
     // оттуда «Регистрация» (→ знакомство с Мади) или «Продолжить как гость».
     try { switchScreen('profile'); } catch (_) {}
   }
-  // ── Deep-link с публичных страниц (/learn-korean/, /topik/, /study-in-korea/):
-  // /?go=lessons открывает нужный экран сразу после старта. Белый список — чтобы
-  // чужой параметр не дёргал произвольные экраны; закрытые гостям разделы
-  // switchScreen сам встретит гейтом регистрации. Параметр вычищаем из URL, чтобы
-  // перезагрузка не прыгала снова; остальные параметры (OAuth code= и т.п.) не трогаем.
-  // Стоит ПОСЛЕ boot-роутинга выше (иначе экран входа новичка перекрыл бы deep-link).
-  try {
-    const _goParams = new URLSearchParams(location.search);
-    const _go = _goParams.get('go');
-    const _GO_SCREENS = ['home', 'lessons', 'hangul', 'topik', 'studykr', 'games', 'textbook'];
-    if (_go && _GO_SCREENS.includes(_go)) {
-      _goParams.delete('go');
-      const _rest = _goParams.toString();
-      history.replaceState(null, '', location.pathname + (_rest ? '?' + _rest : '') + location.hash);
-      switchScreen(_go);
-    }
-  } catch (_) {}
   // Init Firebase sync first so UStore writes propagate to cloud
   initFirebaseSync();
   // Subscribe to feed-wide likes & comments (shared across users)
@@ -43157,6 +43197,26 @@
   // Subscribe to cloud updates for this user
   attachUserListeners();
   attachFriendsListeners();
+  // ── Deep-link с публичных страниц (/learn-korean/, /topik/, /study-in-korea/):
+  // /?go=lessons открывает нужный экран сразу после старта. Белый список — чтобы
+  // чужой параметр не дёргал произвольные экраны; закрытые гостям разделы
+  // switchScreen сам встретит гейтом регистрации. Параметр вычищаем из URL, чтобы
+  // перезагрузка не прыгала снова; остальные параметры (OAuth code= и т.п.) не трогаем.
+  // Стоит ПОСЛЕ boot-роутинга выше (иначе экран входа новичка перекрыл бы deep-link)
+  // и ПОСЛЕ loadUserData(): раньше /?go=home открывал Главную до загрузки прогресса,
+  // её счётчик цели дня сохранял ПУСТУЮ стату поверх настоящей — у гостей XP, стрик
+  // и слова обнулялись безвозвратно (кнопка календаря на /korean-culture/, 07–24.09.2026).
+  try {
+    const _goParams = new URLSearchParams(location.search);
+    const _go = _goParams.get('go');
+    const _GO_SCREENS = ['home', 'lessons', 'hangul', 'topik', 'studykr', 'games', 'textbook'];
+    if (_go && _GO_SCREENS.includes(_go)) {
+      _goParams.delete('go');
+      const _rest = _goParams.toString();
+      history.replaceState(null, '', location.pathname + (_rest ? '?' + _rest : '') + location.hash);
+      switchScreen(_go);
+    }
+  } catch (_) {}
   // Supabase OAuth (Kakao): подхватить сессию после возврата с провайдера
   try { initSupabaseSession(); } catch (_) {}
   // У Мади: собрать/освежить тонкий справочник usersPublic и увезти base64-медиа
