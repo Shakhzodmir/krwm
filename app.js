@@ -889,7 +889,7 @@
     'inv.card.sub':    { ru: 'Обеим — неделя Master и +200 XP', en: 'A week of Master and +200 XP for both of you', uz: 'Ikkalangizga ham bir hafta Master va +200 XP' },
     'inv.card.sub.n':  { ru: 'Уже пригласила: {n}', en: 'Already invited: {n}', uz: 'Allaqachon taklif qilingan: {n}' },
     'inv.card.cta':    { ru: 'Позвать →', en: 'Invite →', uz: 'Taklif qilish →' },
-    'plan.giftDays':   { ru: 'Master ещё {n} дн.', en: 'Master for {n} more days', uz: 'Master yana {n} kun' },
+    'plan.giftDays':   { ru: '{name} ещё {n} дн.', en: '{name} for {n} more days', uz: '{name} yana {n} kun' },
     // Обратный отсчёт своего тарифа вверху профиля (ru собирается в коде — согласование
     // глагола «остался/осталось»; для en/uz берётся этот ключ)
     'plan.leftTop':    { ru: 'осталось {n} {unit}', en: '{n} {unit} left', uz: '{n} {unit} qoldi' },
@@ -1004,6 +1004,24 @@
     'lvl.pickTitle': { ru: 'Выбери свой уровень', en: 'Choose your level', uz: 'Darajangizni tanlang' },
     'lvl.changed':   { ru: 'Уровень обновлён 🌸', en: 'Level updated 🌸', uz: 'Daraja yangilandi 🌸' },
     'lvl.notSet':    { ru: 'не указан', en: 'not set', uz: 'koʻrsatilmagan' },
+    // ── Страна ученицы → цены в местной валюте (27.09.2026) ──
+    'country.pick':    { ru: 'Страна', en: 'Country', uz: 'Davlat' },
+    'country.pickSub': { ru: 'цены покажем в твоей валюте', en: 'we’ll show prices in your currency', uz: 'narxlarni valyutangizda koʻrsatamiz' },
+    'country.UZ':      { ru: 'Узбекистан', en: 'Uzbekistan', uz: 'Oʻzbekiston' },
+    'country.KZ':      { ru: 'Казахстан', en: 'Kazakhstan', uz: 'Qozogʻiston' },
+    'country.KG':      { ru: 'Кыргызстан', en: 'Kyrgyzstan', uz: 'Qirgʻiziston' },
+    'country.TJ':      { ru: 'Таджикистан', en: 'Tajikistan', uz: 'Tojikiston' },
+    'country.RU':      { ru: 'Россия', en: 'Russia', uz: 'Rossiya' },
+    'country.GL':      { ru: 'Другая страна', en: 'Other country', uz: 'Boshqa davlat' },
+    'country.saved':   { ru: 'Страна: {name} — цены теперь в валюте: {cur}', en: 'Country: {name} — prices are now in {cur}', uz: 'Davlat: {name} — narxlar endi {cur} valyutasida' },
+    'plan.reqCountryGuess': { ru: 'Страна не выбрана, цены для: {name}', en: 'Country not chosen, prices for: {name}', uz: 'Davlat tanlanmagan, narxlar: {name}' },
+    'adm.country.lbl':  { ru: 'Валюта цен', en: 'Price currency', uz: 'Narx valyutasi' },
+    'adm.country.none': { ru: 'страна не выбрана — цены по часовому поясу или языку', en: 'country not chosen — prices by time zone or language', uz: 'davlat tanlanmagan — narxlar vaqt mintaqasi yoki til boʻyicha' },
+    'adm.country.tzDiff': { ru: 'часовой пояс: {country}', en: 'time zone: {country}', uz: 'vaqt mintaqasi: {country}' },
+    'country.notSet':  { ru: 'выбери страну', en: 'choose your country', uz: 'davlatni tanlang' },
+    'plan.pricesFor':  { ru: 'Цены для: {country}', en: 'Prices for: {country}', uz: 'Narxlar: {country}' },
+    'plan.changeCountry': { ru: 'сменить', en: 'change', uz: 'oʻzgartirish' },
+    'plan.reqCountry': { ru: 'Страна: {name}', en: 'Country: {name}', uz: 'Davlat: {name}' },
     'lvl.beginner':  { ru: 'Начальный', en: 'Beginner', uz: 'Boshlangʻich' },
     'lvl.inter':     { ru: 'Средний', en: 'Intermediate', uz: 'Oʻrta' },
     'lvl.advanced':  { ru: 'Продвинутый', en: 'Advanced', uz: 'Yuqori' },
@@ -2072,22 +2090,22 @@
     "ui.r012": { ru: "интервальное повторение", en: "spaced repetition", uz: "intervalli takrorlash" },
     "ui.r013": { ru: "осталось: {n}", en: "left: {n}", uz: "qoldi: {n}" },
     "ui.r014": { ru: "Твой доступ временно заморожен. Напиши Мади, когда будешь {ready} продолжить — всё сохранится: XP, стрик и прогресс 🌸", en: "Your access is temporarily frozen. Message Madie when you're ready to continue — everything is saved: XP, streak and progress 🌸", uz: "Kirishingiz vaqtincha muzlatilgan. Davom etishga tayyor boʻlganingizda Madiga yozing — hammasi saqlanadi: XP, strik va progress 🌸" },
-    "ui.r015": { ru: "в год · выгода {save} $", en: "per year · save {save} $", uz: "yiliga · {save} $ tejaysiz" },
-    "ui.r016": { ru: "первый месяц {price} $", en: "first month {price} $", uz: "birinchi oy {price} $" },
+    "ui.r015": { ru: "в год · выгода {save}", en: "per year · save {save}", uz: "yiliga · {save} tejaysiz" },
+    "ui.r016": { ru: "первый месяц {price}", en: "first month {price}", uz: "birinchi oy {price}" },
     "ui.r017": { ru: "активен", en: "active", uz: "faol" },
     "ui.r018": { ru: "Тариф", en: "Plan", uz: "Tarif" },
     "ui.r019": { ru: "Подключить {name}", en: "Get {name}", uz: "{name}ni ulash" },
-    "ui.r020": { ru: "Первый месяц −50% — всего {price} $", en: "First month −50% — only {price} $", uz: "Birinchi oy −50% — atigi {price} $" },
-    "ui.r021": { ru: "Годовая со скидкой: {price} $ вместо {full} $", en: "Yearly discount: {price} $ instead of {full} $", uz: "Yillik chegirma: {full} $ oʻrniga {price} $" },
-    "ui.r022": { ru: "помесячно ({price} $/мес, первый месяц {first} $)", en: "monthly ({price} $/mo, first month {first} $)", uz: "oylik ({price} $/oy, birinchi oy {first} $)" },
-    "ui.r023": { ru: "годовая ({price} $/год)", en: "yearly ({price} $/yr)", uz: "yillik ({price} $/yil)" },
-    "ui.r015q": { ru: "{price} $ за 3 мес · выгода {save} $", en: "{price} $ for 3 mo · save {save} $", uz: "3 oyga {price} $ · {save} $ tejaysiz" },
-    "ui.r022q": { ru: "на 3 месяца ({price} $)", en: "for 3 months ({price} $)", uz: "3 oyga ({price} $)" },
+    "ui.r020": { ru: "Первый месяц −50% — всего {price}", en: "First month −50% — only {price}", uz: "Birinchi oy −50% — atigi {price}" },
+    "ui.r021": { ru: "Годовая со скидкой: {price} вместо {full}", en: "Yearly discount: {price} instead of {full}", uz: "Yillik chegirma: {full} oʻrniga {price}" },
+    "ui.r022": { ru: "помесячно ({price}/мес, первый месяц {first})", en: "monthly ({price}/mo, first month {first})", uz: "oylik ({price}/oy, birinchi oy {first})" },
+    "ui.r023": { ru: "годовая ({price}/год)", en: "yearly ({price}/yr)", uz: "yillik ({price}/yil)" },
+    "ui.r015q": { ru: "{price} за 3 мес · выгода {save}", en: "{price} for 3 mo · save {save}", uz: "3 oyga {price} · {save} tejaysiz" },
+    "ui.r022q": { ru: "на 3 месяца ({price})", en: "for 3 months ({price})", uz: "3 oyga ({price})" },
     "plan.q":      { ru: "3 месяца", en: "3 months", uz: "3 oy" },
     "plan.perYear": { ru: "/год", en: "/yr", uz: "/yil" },
     "plan.perQ":    { ru: "/3 мес", en: "/3 mo", uz: "/3 oy" },
-    "plan.mEqSub":  { ru: "≈ {m} $ в месяц · выгода {save} $", en: "≈ {m} $ per month · save {save} $", uz: "≈ oyiga {m} $ · {save} $ tejaysiz" },
-    "plan.qPromo": { ru: "На 3 месяца: {price} $ — до экзамена в самый раз (выгода {save} $)", en: "3 months: {price} $ — just right before the exam (save {save} $)", uz: "3 oyga: {price} $ — imtihongacha ayni muddao ({save} $ tejaysiz)" },
+    "plan.mEqSub":  { ru: "≈ {m} в месяц · выгода {save}", en: "≈ {m} per month · save {save}", uz: "≈ oyiga {m} · {save} tejaysiz" },
+    "plan.qPromo": { ru: "На 3 месяца: {price} — до экзамена в самый раз (выгода {save})", en: "3 months: {price} — just right before the exam (save {save})", uz: "3 oyga: {price} — imtihongacha ayni muddao ({save} tejaysiz)" },
     "trial.granted": { ru: "🎁 Тебе открыт Master на 7 дней — попробуй все фичи!", en: "🎁 You've got 7 days of Master — try all the features!", uz: "🎁 Sizga 7 kunlik Master ochildi — barcha imkoniyatlarni sinab koʻring!" },
     // Пробная неделя Master (welcome-trial): попап при регистрации + баннер в окне тарифов
     "trial.modalTitle": { ru: "Тебе открыт Master на неделю 🌸", en: "Master unlocked for a week 🌸", uz: "Bir haftaga Master ochildi 🌸" },
@@ -2117,6 +2135,17 @@
     "adm.plan.dateCleared": { ru: "Тариф сделан бессрочным", en: "Plan set to no expiry", uz: "Tarif muddatsiz qilindi" },
     "adm.plan.needPaid": { ru: "Срок можно задать только платному тарифу", en: "Expiry applies to paid plans only", uz: "Muddat faqat pullik tarifga qoʻyiladi" },
     "adm.plan.needDate": { ru: "Выбери дату", en: "Pick a date", uz: "Sana tanlang" },
+    "adm.plan.wait":     { ru: "Секунду — загружаю данные ученицы…", en: "One moment — loading the student's data…", uz: "Bir soniya — oʻquvchi maʼlumotlari yuklanmoqda…" },
+    "adm.plan.extendLbl":{ ru: "Продлить оплаченный срок", en: "Extend the paid period", uz: "Toʻlangan muddatni uzaytirish" },
+    "adm.plan.m1":       { ru: "+1 мес", en: "+1 mo", uz: "+1 oy" },
+    "adm.plan.m3":       { ru: "+3 мес", en: "+3 mo", uz: "+3 oy" },
+    "adm.plan.y1":       { ru: "+1 год", en: "+1 yr", uz: "+1 yil" },
+    "adm.plan.extendAsk":{ ru: "Продлить {plan} для «{name}» до {date}?", en: "Extend {plan} for “{name}” until {date}?", uz: "«{name}» uchun {plan} tarifini {date} gacha uzaytiraylikmi?" },
+    "adm.plan.extended": { ru: "Продлено до {date} 🌸", en: "Extended until {date} 🌸", uz: "{date} gacha uzaytirildi 🌸" },
+    "adm.plan.unlimited":{ ru: "Тариф бессрочный — продлевать не нужно", en: "This plan has no end date — nothing to extend", uz: "Tarif muddatsiz — uzaytirish shart emas" },
+    "plan.perMonthOnly": { ru: "помесячно ({price}/мес)", en: "monthly ({price}/mo)", uz: "oylik ({price}/oy)" },
+    "plan.renewBtn": { ru: "Продлить {name}", en: "Renew {name}", uz: "{name} tarifini uzaytirish" },
+    "plan.renewReq": { ru: "Хочу продлить тариф {emoji} {name} — {period} 🌸", en: "I'd like to renew the {emoji} {name} plan — {period} 🌸", uz: "{emoji} {name} tarifini uzaytirmoqchiman — {period} 🌸" },
     "ui.r024": { ru: "Хочу подключить тариф {emoji} {name} — {period} 🌸", en: "I'd like to get the {emoji} {name} plan — {period} 🌸", uz: "{emoji} {name} tarifini ulamoqchiman — {period} 🌸" },
     "ui.r025": { ru: "— в тарифе {name}", en: "— in the {name} plan", uz: "— {name} tarifida" },
     "ui.r026": { ru: "Эта функция", en: "This feature", uz: "Bu funksiya" },
@@ -2237,6 +2266,8 @@
     "ui.t004": { ru: "Сменить →", en: "Change →", uz: "Almashtirish →" },
     "ui.t005": { ru: "Улучшить ✨", en: "Upgrade ✨", uz: "Yaxshilash ✨" },
     "ui.t006": { ru: "от", en: "from", uz: "dan" },
+    // «от 8 $/мес» → «от {price}»: в узбекском «dan» стоит ПОСЛЕ суммы («89 000 soʻm dan»)
+    "plan.fromPrice": { ru: "от {price}", en: "from {price}", uz: "oyiga {price}dan" },
     "ui.t007": { ru: "Добавь одногруппников или учителя — сможете переписываться, делиться прогрессом и поддерживать стрик вместе 🌸", en: "Add classmates or your teacher — you can chat, share progress and keep your streak going together 🌸", uz: "Guruhdoshlaringizni yoki oʻqituvchingizni qoʻshing — yozishib turishingiz, taraqqiyotni ulashishingiz va striklarni birga ushlab turishingiz mumkin 🌸" },
     "ui.t008": { ru: "ЧАТЫ", en: "CHATS", uz: "CHATLAR" },
     "ui.t009": { ru: "Добавь друзей, чтобы соревноваться лично 🌸", en: "Add friends to compete head-to-head 🌸", uz: "Yuzma-yuz bellashish uchun doʻstlar qoʻshing 🌸" },
@@ -2489,7 +2520,7 @@
     if (name === 'games') { syncBestScoreCards(); initGameFavorites(); decorateGameOfDayCard(); renderHardcoreToggle(); }
     if (name === 'home') { _guideTipSeed++; _safeRenderGroup([renderBearGuide, renderCustomVideos, renderCustomFeedPosts, renderHeroLesson, renderDailyGoal, renderSrsWidget, renderSeasonBanner, renderGameOfDayPlaque, renderTopikQuestionCard, renderContinue]); }
     if (name === 'lessons') { _safeRenderGroup([renderModuleSwitcher, renderCustomLessons, renderLessonPath, renderWritingEntry]); }
-    if (name === 'profile') { _safeRenderGroup([syncAchievementsStrip, renderWeeklyXpChart, renderHomeworkList, renderSavedWords, renderPlanCard, renderMyLevelChip, refreshProfileEmail, _syncGuestCard]); }
+    if (name === 'profile') { _safeRenderGroup([syncAchievementsStrip, renderWeeklyXpChart, renderHomeworkList, renderSavedWords, renderPlanCard, renderMyLevelChip, renderMyCountryChip, refreshProfileEmail, _syncGuestCard]); }
     if (name === 'social') renderFriendsAndChat();
     if (name === 'words') renderSavedWords();
     if (name === 'lessonwords') renderLessonWords();
@@ -5686,6 +5717,7 @@
     _userListeners.forEach(off => { try { off(); } catch (_) {} });
     _userListeners = [];
     _cloudLoadedKeys = new Set();   // новая личность/переподключение → снова ждём снапшот
+    _planLoaded = false; // тариф новой личности ещё не загружен (её отложенные подарки ждут в её UStore)
   }
   // Cloud-sync gating for the profile. While the first snapshot is in flight we
   // show a skeleton instead of a misleading "new user / 0 achievements" state,
@@ -5757,6 +5789,29 @@
     // Уровень: облако — источник истины (новое устройство / очищенный localStorage).
     // Подтягиваем ОДИН раз и только если локально не задан, чтобы НЕ перетереть
     // свежий выбор (setMyLevel пушит в облако с задержкой 600ms).
+    // Страна: облако — источник истины, все устройства ученицы видят смену сразу.
+    // В облаке пусто → туда уходит выбор этого устройства или гостя до входа.
+    const ctyRef = _db.ref('users/' + uid + '/country');
+    const ctyHandler = snap => {
+      const cur = Store.get('user');
+      if (!cur || cur.guest || cur.isAdmin || firebaseUserId() !== uid) return; // сменили аккаунт, пока шёл ответ
+      const cc = countryCode(snap.val());
+      let changed = false;
+      if (cc) {
+        if (cur.country !== cc) { cur.country = cc; changed = true; }
+      } else {
+        const local = countryCode(cur.country) || countryCode(Store.get('guestCountry'));
+        if (local) { if (cur.country !== local) { cur.country = local; changed = true; } _writeCountryToCloud(local); }
+      }
+      if (changed) {
+        Store.set('user', cur);
+        try { renderMyCountryChip(); } catch (_) {}
+        try { renderPlanCard(); } catch (_) {}
+        if (document.getElementById('plan-page')) { try { _renderPlanPage(); } catch (_) {} }
+      }
+    };
+    ctyRef.on('value', ctyHandler);
+    _userListeners.push(() => ctyRef.off('value', ctyHandler));
     _db.ref('users/' + uid + '/level').once('value').then(snap => {
       const cloudLvl = snap.val();
       const cur = Store.get('user');
@@ -5993,6 +6048,13 @@
     const planHandler = snap => {
       const v = snap.val();
       if (v && PLANS[v.id]) { _skipCloudPush = true; try { UStore.set('plan', v); } finally { _skipCloudPush = false; } }
+      // Облачный тариф известен (в т.ч. «его нет» у новой ученицы) — теперь можно
+      // выдавать отложенные подарки и забирать награды за приглашения.
+      if (!_planLoaded) {
+        _planLoaded = true;
+        try { _flushPendingGifts(); } catch (_) {}
+        try { processReferralRewards(); } catch (_) {}
+      }
       renderPlanCard();
       // Мади задала срок из админки и он уже прошёл → показать попап окончания.
       try { checkPlanExpiry(); } catch (_) {}
@@ -6093,6 +6155,178 @@
     }
   };
   const PLAN_ORDER = { free: 0, master: 1, proai: 2 };
+
+  // ── Страна ученицы и цены в местной валюте (27.09.2026) ──
+  // Страна хранится как user.country (синхронизируется в users/ и usersPublic/, как
+  // level); у гостя — Store 'guestCountry'; если не выбрана — догадка по часовому поясу.
+  // НЕ в settings (не синхронизируется) и НЕ в users/<uid>/meta (анкету Мади
+  // перезаписывает целиком, и там уже есть её свободное поле meta.country).
+  const COUNTRIES = [
+    { code: 'UZ', cur: 'UZS' },
+    { code: 'KZ', cur: 'KZT' },
+    { code: 'KG', cur: 'KGS' },
+    { code: 'TJ', cur: 'TJS' },
+    { code: 'RU', cur: 'RUB' },
+    { code: 'GL', cur: 'USD' },
+  ];
+  // Без прототипа: код страны приходит из открытой на запись БД, и значение вроде
+  // 'constructor' иначе прошло бы проверку COUNTRY_BY_CODE[x] и уронило экран тарифов.
+  const COUNTRY_BY_CODE = Object.assign(Object.create(null), Object.fromEntries(COUNTRIES.map(c => [c.code, c])));
+  // Канонический код страны или ''. Значение часто приходит из открытой на запись БД:
+  // массив ['UZ'] проходит проверку COUNTRY_BY_CODE[x] (ключ приводится к 'UZ'),
+  // а потом падает на строковых методах — поэтому сначала typeof.
+  function countryCode(x) { return (typeof x === 'string' && COUNTRY_BY_CODE[x]) ? x : ''; }
+  // Флаг картинкой (assets/flags), а не эмодзи: Windows эмодзи-флаги не рисует и
+  // показывал буквы «UZ», «RU». alt пустой — рядом всегда стоит название страны.
+  function flagImg(code) {
+    return `<img class="cflag" src="assets/flags/${(countryCode(code) || 'GL').toLowerCase()}.svg" alt="" width="20" height="15" decoding="async">`;
+  }
+  // Флаг + название одним неразрывным куском: иначе в узком месте (тост, сноска,
+  // карточка у Мади) флаг оставался в конце строки, а название уезжало на следующую.
+  function flagLabel(code) { return `<span class="cflag-lbl">${flagImg(code)} ${countryName(code)}</span>`; }
+  // ЦЕНЫ. Меняются только здесь. m — месяц, first — первый месяц (−50%), q — 3 месяца
+  // (qm — помесячно), y — год (ym — помесячно). Курс на 27.09.2026: 1 $ = 84,27 ₽ =
+  // 11 826 сум = 443 ₸ = 87,5 сом = 9,23 сомони. Для УЗ/КГ/ТДЖ — ниже прямого курса
+  // (местные цены на онлайн-курсы). Периоды — те же пропорции, что в долларах.
+  const PLAN_PRICES = {
+    GL: { master: { m: 10,     first: 5,     q: 27,     qm: 9,      y: 99,      ym: 8 },
+          proai:  { m: 18,     first: 9,     q: 51,     qm: 17,     y: 199,     ym: 16 } },
+    RU: { master: { m: 790,    first: 395,   q: 2130,   qm: 710,    y: 7790,    ym: 649 },
+          proai:  { m: 1490,   first: 745,   q: 3990,   qm: 1330,   y: 14790,   ym: 1233 } },
+    UZ: { master: { m: 89000,  first: 44500, q: 240000, qm: 80000,  y: 880000,  ym: 73000 },
+          proai:  { m: 159000, first: 79500, q: 429000, qm: 143000, y: 1570000, ym: 131000 } },
+    KZ: { master: { m: 3990,   first: 1995,  q: 10790,  qm: 3600,   y: 39490,   ym: 3291 },
+          proai:  { m: 6990,   first: 3495,  q: 18890,  qm: 6300,   y: 69190,   ym: 5766 } },
+    KG: { master: { m: 690,    first: 345,   q: 1860,   qm: 620,    y: 6830,    ym: 569 },
+          proai:  { m: 1190,   first: 595,   q: 3210,   qm: 1070,   y: 11780,   ym: 982 } },
+    TJ: { master: { m: 79,     first: 39,    q: 213,    qm: 71,     y: 779,     ym: 65 },
+          proai:  { m: 139,    first: 69,    q: 375,    qm: 125,    y: 1379,    ym: 115 } },
+  };
+  // Подпись валюты по языку интерфейса (символ там, где он общепринят)
+  const CUR_LABEL = {
+    RUB: { ru: '₽', en: '₽', uz: '₽' }, KZT: { ru: '₸', en: '₸', uz: '₸' }, USD: { ru: '$', en: '$', uz: '$' },
+    UZS: { ru: 'сум', en: 'UZS', uz: 'soʻm' }, KGS: { ru: 'сом', en: 'KGS', uz: 'som' }, TJS: { ru: 'сомони', en: 'TJS', uz: 'somoni' },
+  };
+  function curLabel(cur) { const m = CUR_LABEL[cur] || CUR_LABEL.USD; return m[APP_LANG] || m.ru; }
+  // «89 000 сум», «790 ₽», «10 $» — неразрывные пробелы, чтобы сумма не рвалась
+  function fmtMoney(n, cur) {
+    const num = Math.round(Number(n) || 0).toLocaleString('ru-RU').replace(/[\s ]/g, ' ');
+    return num + ' ' + curLabel(cur);
+  }
+  // Часовой пояс → страна (без запросов в сеть). Россия — все её пояса.
+  const _TZ_COUNTRY = {
+    'Asia/Tashkent': 'UZ', 'Asia/Samarkand': 'UZ',
+    'Asia/Almaty': 'KZ', 'Asia/Qostanay': 'KZ', 'Asia/Aqtobe': 'KZ', 'Asia/Aqtau': 'KZ', 'Asia/Atyrau': 'KZ', 'Asia/Oral': 'KZ', 'Asia/Qyzylorda': 'KZ',
+    'Asia/Bishkek': 'KG', 'Asia/Dushanbe': 'TJ',
+  };
+  const _TZ_RU = ['Europe/Moscow', 'Europe/Kaliningrad', 'Europe/Samara', 'Europe/Volgograd', 'Europe/Saratov', 'Europe/Ulyanovsk', 'Europe/Astrakhan', 'Europe/Kirov', 'Europe/Simferopol',
+    'Asia/Yekaterinburg', 'Asia/Omsk', 'Asia/Novosibirsk', 'Asia/Barnaul', 'Asia/Tomsk', 'Asia/Novokuznetsk', 'Asia/Krasnoyarsk', 'Asia/Irkutsk', 'Asia/Chita',
+    'Asia/Yakutsk', 'Asia/Khandyga', 'Asia/Vladivostok', 'Asia/Ust-Nera', 'Asia/Magadan', 'Asia/Sakhalin', 'Asia/Srednekolymsk', 'Asia/Kamchatka', 'Asia/Anadyr'];
+  // Страна строго по часовому поясу телефона или '' (пояс не из наших стран)
+  function _tzCountryOnly() {
+    let tz = '';
+    try { tz = Intl.DateTimeFormat().resolvedOptions().timeZone || ''; } catch (_) {}
+    if (_TZ_COUNTRY[tz]) return _TZ_COUNTRY[tz];
+    if (_TZ_RU.includes(tz)) return 'RU';
+    return '';
+  }
+  // Догадка для цен, пока страна не выбрана: пояс, иначе язык интерфейса (uz → UZ)
+  function guessCountryByTZ() {
+    return _tzCountryOnly() || ((typeof APP_LANG !== 'undefined' && APP_LANG === 'uz') ? 'UZ' : 'GL');
+  }
+  // Страну выбрала сама ученица (а не угадали по часовому поясу)?
+  function chosenCountry() {
+    const u = Store.get('user');
+    return countryCode((u && !u.guest) ? u.country : Store.get('guestCountry'));
+  }
+  function myCountry() { return chosenCountry() || guessCountryByTZ(); }
+  function countryName(code) { return t('country.' + (countryCode(code) || 'GL')); }
+  // ЕДИНСТВЕННЫЙ путь записи страны в облако (users/ и usersPublic/). Общий профиль её
+  // не несёт: его пушит каждое начисление XP, и устаревшая страна с одного устройства
+  // затирала выбор, сделанный на другом. tzCountry — догадка по часовому поясу: Мади
+  // видит в карточке, если выбранная страна с ней не совпадает (цены разные).
+  function _writeCountryToCloud(code) {
+    if (typeof _db === 'undefined' || !COUNTRY_BY_CODE[code]) return;
+    const u = Store.get('user');
+    if (!u || u.guest || u.isAdmin) return;
+    const uid = firebaseUserId();
+    if (!uid || uid === 'guest') return;
+    // Только настоящий пояс: догадка по языку давала ложное «⚠️ часовой пояс: Узбекистан»
+    // ученице с узбекским интерфейсом из Кореи. null стирает старое неверное значение.
+    _db.ref('users/' + uid).update({ country: code, tzCountry: _tzCountryOnly() || null }).catch(e => console.warn('country → users', e));
+    _db.ref('usersPublic/' + uid).update({ country: code }).catch(() => {});
+  }
+  function setMyCountry(code) {
+    if (!countryCode(code)) return;
+    const u = Store.get('user');
+    if (u && !u.guest) {
+      u.country = code;
+      Store.set('user', u);
+      _writeCountryToCloud(code);
+    } else {
+      Store.set('guestCountry', code);
+    }
+    try { renderPlanCard(); } catch (_) {}
+    try { renderMyCountryChip(); } catch (_) {}
+    if (document.getElementById('plan-page')) { try { _renderPlanPage(); } catch (_) {} }
+    toast(t('country.saved', { name: flagLabel(code), cur: curLabel(COUNTRY_BY_CODE[code].cur) }), 'var(--sage)');
+  }
+  // Цены тарифа для страны (по умолчанию — моей) + производные «выгоды»
+  function planPrices(planId, country) {
+    const c = countryCode(country) || myCountry();
+    const row = (PLAN_PRICES[c] || PLAN_PRICES.GL)[planId];
+    if (!row) return null;
+    return { ...row, cur: COUNTRY_BY_CODE[c].cur, saveQ: row.m * 3 - row.q, saveY: row.m * 12 - row.y, fullY: row.m * 12 };
+  }
+  // Выбор страны в форме регистрации (по образцу pickRegLevel)
+  function pickRegCountry(btn) {
+    const row = document.getElementById('rg-country-row');
+    if (row) row.querySelectorAll('.lvl-chip').forEach(b => { const sel = (b === btn); b.classList.toggle('on', sel); b.setAttribute('aria-pressed', String(sel)); });
+    const inp = document.getElementById('rg-country');
+    if (inp) inp.value = (btn && btn.dataset.country) || '';
+  }
+  // При показе формы регистрации — предвыбрать страну (выбранную гостем или догадку)
+  function initRegCountry() {
+    const inp = document.getElementById('rg-country');
+    const row = document.getElementById('rg-country-row');
+    if (!inp || !row) return;
+    const code = inp.value || myCountry();
+    const btn = row.querySelector(`.lvl-chip[data-country="${code}"]`);
+    if (btn) pickRegCountry(btn);
+  }
+  // Модалка выбора страны (профиль, экран тарифов)
+  function openCountryPicker() {
+    document.getElementById('country-picker')?.remove();
+    const cur = myCountry();
+    const m = document.createElement('div');
+    m.className = 'modal-bg modal-center';
+    m.id = 'country-picker';
+    m.style.zIndex = '1200'; // выше экрана тарифов (.plan-page z-index:300)
+    m.onclick = e => { if (e.target === m) m.remove(); };
+    m.setAttribute('role', 'dialog'); m.setAttribute('aria-modal', 'true'); m.setAttribute('aria-label', t('country.pick'));
+    const onKey = e => { if (e.key === 'Escape') { m.remove(); document.removeEventListener('keydown', onKey); } };
+    document.addEventListener('keydown', onKey);
+    m.innerHTML = `
+      <div class="modal-card" style="max-width:380px;">
+        <div class="display" style="font-size:19px; color:var(--berry);">🌍 ${t('country.pick')}</div>
+        <div style="font-size:12px; color:var(--soft); margin-top:4px;">${t('country.pickSub')}</div>
+        <div style="display:flex; flex-wrap:wrap; gap:8px; margin-top:14px;">
+          ${COUNTRIES.map(c => `<button type="button" class="lvl-chip ${c.code === cur ? 'on' : ''}" aria-pressed="${c.code === cur}" onclick="setMyCountry('${c.code}'); document.getElementById('country-picker')?.remove();">${flagLabel(c.code)}</button>`).join('')}
+        </div>
+      </div>`;
+    document.body.appendChild(m);
+  }
+  // Чип страны в профиле (рядом с уровнем); без выбора — подсвечен «выбери страну»
+  function renderMyCountryChip() {
+    const slot = document.getElementById('profile-country-slot');
+    if (!slot) return;
+    const u = Store.get('user');
+    if (!u || u.guest || u.isAdmin) { slot.innerHTML = ''; return; }
+    const chosen = chosenCountry();
+    const flag = flagImg(chosen || 'GL');
+    slot.innerHTML = `<button type="button" onclick="openCountryPicker()" class="lvl-chip ${chosen ? 'on' : ''}" style="${chosen ? '' : 'border-style:dashed;'}">
+      ${flag} ${t('country.pick')}: ${chosen ? countryName(chosen) : t('country.notSet')} <i class="fa-solid fa-pen" style="font-size:9px; margin-left:4px;" aria-hidden="true"></i></button>`;
+  }
   function myPlanObj() {
     const p = UStore.get('plan', null);
     return (p && PLANS[p.id]) ? p : { id: 'free', period: 'monthly' };
@@ -6106,18 +6340,44 @@
     if (p.until && p.until < Date.now()) return 'free';
     return p.id;
   }
-  // ФАЗА B1: подарок дней Master за рефералку. Продлевает until (не понижает уже
-  // купленный платный тариф без срока — там дарить нечего, он и так лучше/равен).
+  // Пришёл ли первый облачный снапшот users/<uid>/plan (ставит planHandler).
+  // var — объявление поднимается, ранний вызов не упадёт в TDZ.
+  var _planLoaded = false;
+  // Подарки, отложенные до загрузки облачного тарифа, лежат в UStore 'pendingGifts'
+  // (неймспейс ученицы): переживают закрытие вкладки и смену аккаунта.
+  // ФАЗА B1: подарок дней Master (триал, рефералка). Правила (09.2026):
+  // - считаем от ОБЛАЧНОГО тарифа: пока он не пришёл, локальная копия может быть
+  //   пустой (новое устройство) — подарок записал бы {master, +7 дн} поверх
+  //   оплаченного Pro AI в облаке. Такие подарки ждут в UStore 'pendingGifts'.
+  //   Исключение — welcome-trial: аккаунт создан секунду назад, в облаке пусто;
+  // - бессрочный платный тариф не трогаем (дарить нечего);
+  // - действующий тариф со сроком только продлеваем: Pro AI не понижаем до Master,
+  //   since и by (welcome-trial / admin) сохраняем, источник подарка — в lastGift;
+  // - истёкший тариф не воскрешаем: новый Master с since = сейчас.
   function grantMasterDays(days, by) {
+    if (!_planLoaded && by !== 'welcome-trial') {
+      const q = UStore.get('pendingGifts', []) || [];
+      q.push([days, by]); UStore.set('pendingGifts', q);
+      return true;
+    }
     const cur = myPlanObj();
     const now = Date.now();
-    if (cur.id !== 'free' && !cur.until) return false; // настоящая оплаченная подписка
-    const base = (cur.until && cur.until > now) ? cur.until : now;
-    const plan = { id: 'master', period: cur.period || 'monthly', since: cur.id === 'master' ? cur.since : now, until: base + days * 86400000, updatedAt: now, by: by || 'gift' };
+    const active = cur.id !== 'free' && (!cur.until || cur.until > now);
+    if (active && !cur.until) return false; // настоящая бессрочная подписка
+    const add = days * 86400000;
+    const plan = active
+      ? { ...cur, until: cur.until + add, updatedAt: now, lastGift: by || 'gift' }
+      : { id: 'master', period: cur.period || 'monthly', since: now, until: now + add, updatedAt: now, by: by || 'gift' };
     UStore.set('plan', plan);
     pushUserField('plan', plan);
     renderPlanCard();
     return true;
+  }
+  function _flushPendingGifts() {
+    const q = UStore.get('pendingGifts', []) || [];
+    if (!Array.isArray(q) || !q.length) return;
+    UStore.del('pendingGifts');
+    q.forEach(([d, b]) => { try { grantMasterDays(d, b); } catch (_) {} });
   }
   function planAtLeast(want) { return PLAN_ORDER[myPlanId()] >= PLAN_ORDER[want]; }
   // Фактический тариф ЛЮБОГО пользователя (для админки): учитывает срок until —
@@ -6171,7 +6431,7 @@
   // Показывается ОДИН раз на каждое значение until (флаг planExpiryNotified),
   // чтобы не всплывать при каждом открытии. Кнопка «Продлить» ведёт на тарифы,
   // откуда уходит заявка Мади (оплаты в клиенте нет).
-  function showPlanExpiredModal(planName, isTrial) {
+  function showPlanExpiredModal(planName, isTrial, planId) {
     document.getElementById('plan-expired-modal')?.remove();
     const m = document.createElement('div');
     m.className = 'modal-bg modal-center';
@@ -6182,7 +6442,7 @@
         <div class="trial-modal-gift">⏳</div>
         <div class="display" style="font-size:20px; color:var(--berry); margin-top:8px;">${isTrial ? t('planexp.trialTitle') : t('planexp.title', { name: planName })}</div>
         <div style="font-size:13px; color:var(--soft); margin-top:10px; line-height:1.65;">${t('planexp.body')}</div>
-        <button onclick="this.closest('.modal-bg').remove(); openPlanPage('master');" class="btn btn-primary btn-block" style="margin-top:16px;">${t('planexp.renew')}</button>
+        <button onclick="this.closest('.modal-bg').remove(); openPlanPage('${jsStr(PLANS[planId] && planId !== 'free' ? planId : 'master')}');" class="btn btn-primary btn-block" style="margin-top:16px;">${t('planexp.renew')}</button>
         <button onclick="this.closest('.modal-bg').remove()" class="btn btn-ghost btn-block" style="margin-top:8px;">${t('planexp.later')}</button>
       </div>`;
     document.body.appendChild(m);
@@ -6199,7 +6459,7 @@
       if (UStore.get('planExpiryNotified') === p.until) return; // уже сообщали про этот срок
       UStore.set('planExpiryNotified', p.until);
       const isTrial = p.by === 'welcome-trial';
-      showPlanExpiredModal(PLANS[p.id] ? PLANS[p.id].name : 'Master', isTrial);
+      showPlanExpiredModal(PLANS[p.id] ? PLANS[p.id].name : 'Master', isTrial, p.id); // «Продлить» ведёт на ИСТЁКШИЙ тариф, а не всегда на Master
     } catch (_) {}
   }
   // Соц-слой ленты (посты учеников, лайки, комментарии) — только платным тарифам
@@ -6219,18 +6479,21 @@
     pushUserField('plan', plan);
     renderPlanCard();
   }
-  function planPriceLine(p, period) {
-    if (p.id === 'free') return '<span class="plan-price">0 $</span><span class="plan-price-sub">' + t('ui.046') + '</span>';
+  function planPriceLine(p, period, paidCur) {
+    // Цены — в валюте страны ученицы (planPrices/fmtMoney), не в захардкоженных $.
+    // paidCur — карточка уже оплаченного тарифа: «первый месяц −50%» ей не обещаем
+    const pr = planPrices(p.id);
+    if (p.id === 'free' || !pr) return '<span class="plan-price">' + fmtMoney(0, COUNTRY_BY_CODE[myCountry()].cur) + '</span><span class="plan-price-sub">' + t('ui.046') + '</span>';
     // При годовом/квартальном периоде главная цифра — цена СРАЗУ ЗА ПЕРИОД
     // («99 $/год»), а помесячный эквивалент уходит в подпись: цена «8 $/мес»
     // при выбранном «Годовой» путала (казалось, что это и есть платёж).
     if (period === 'yearly') {
-      return `<span class="plan-price">${p.priceY} $<i>${t('plan.perYear')}</i></span><span class="plan-price-sub">${t('plan.mEqSub',{m: p.priceYM, save: p.priceM * 12 - p.priceY})}</span>`;
+      return `<span class="plan-price">${fmtMoney(pr.y, pr.cur)}<wbr><i>${t('plan.perYear')}</i></span><span class="plan-price-sub">${t('plan.mEqSub',{m: fmtMoney(pr.ym, pr.cur), save: fmtMoney(pr.saveY, pr.cur)})}</span>`;
     }
     if (period === 'quarterly') {
-      return `<span class="plan-price">${p.priceQ} $<i>${t('plan.perQ')}</i></span><span class="plan-price-sub">${t('plan.mEqSub',{m: p.priceQM, save: p.priceM * 3 - p.priceQ})}</span>`;
+      return `<span class="plan-price">${fmtMoney(pr.q, pr.cur)}<wbr><i>${t('plan.perQ')}</i></span><span class="plan-price-sub">${t('plan.mEqSub',{m: fmtMoney(pr.qm, pr.cur), save: fmtMoney(pr.saveQ, pr.cur)})}</span>`;
     }
-    return `<span class="plan-price">${p.priceM} $<i>${t('ui.047')}</i></span><span class="plan-price-sub">${t('ui.r016',{price: p.firstM})} · −50%</span>`;
+    return `<span class="plan-price">${fmtMoney(pr.m, pr.cur)}<wbr><i>${t('ui.047')}</i></span>` + (paidCur ? '' : `<span class="plan-price-sub">${t('ui.r016',{price: fmtMoney(pr.first, pr.cur)})} · −50%</span>`);
   }
 
   // ── Гостевой гейт: без аккаунта открыты Главная (с виджетами), Уроки модуля и Профиль ──
@@ -6305,7 +6568,7 @@
     const po = myPlanObj();
     const giftDaysLeft = (!isFree && po.until) ? Math.max(0, Math.ceil((po.until - Date.now()) / 86400000)) : 0;
     const daysLeft = giftDaysLeft; // срок тарифа (пробный/платный с датой) для отсчёта вверху
-    const giftChip = giftDaysLeft > 0 ? `<span class="chip chip-gold" style="font-size:9.5px; flex-shrink:0; white-space:nowrap;">🎁 ${t('plan.giftDays', { n: giftDaysLeft })}</span>` : '';
+    const giftChip = giftDaysLeft > 0 ? `<span class="chip chip-gold" style="font-size:9.5px; flex-shrink:1; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${po.by === 'admin' ? '⏳' : '🎁'} ${t('plan.giftDays', { n: giftDaysLeft, name: cur.name })}</span>` : '';
     slot.innerHTML = `
       <div onclick="openPlanPage()" class="card card-press card-padded plan-profile-card ${isFree ? '' : 'plan-profile-paid'}" style="cursor:pointer; display:flex; align-items:center; gap:13px;">
         <div class="plan-profile-ico">${cur.emoji}</div>
@@ -6413,8 +6676,17 @@
       const isCur = p.id === curId;
       const featured = p.id === 'proai'; // акцент на Pro AI — наш флагман
       const hl = highlight === p.id;
+      // оплаченный тариф (его выдала Мади): скидки новичка на этой карточке не показываем
+      const paidCur = isCur && p.id !== 'free' && myPlanObj().by === 'admin';
       let cta;
-      if (isCur) {
+      if (paidCur && myPlanObj().until) {
+        // Оплаченный тариф с датой окончания: раньше тут была неактивная
+        // «✓ Твой тариф», и оставить заявку на продление было нечем.
+        cta = `<button onclick="selectPlan('${p.id}', true)" class="btn ${featured ? 'btn-primary' : 'btn-rose'} btn-block">${p.emoji} ${t('plan.renewBtn',{name: p.name})}</button>`;
+      } else if (isCur && p.id !== 'free' && myPlanObj().until) {
+        // пробная неделя / подарок: ещё не оплачено — обычная заявка «Подключить»
+        cta = `<button onclick="selectPlan('${p.id}')" class="btn ${featured ? 'btn-primary' : 'btn-rose'} btn-block">${p.emoji} ${t('ui.r019',{name: p.name})}</button>`;
+      } else if (isCur) {
         cta = `<button class="btn btn-ghost btn-block" disabled style="opacity:.7;">${t('ui.048')}</button>`;
       } else if (p.id === 'free') {
         cta = `<button onclick="selectPlan('free')" class="btn btn-ghost btn-block">${t('ui.049')}</button>`;
@@ -6427,19 +6699,18 @@
       return `
         <div class="plan-card ${featured ? 'plan-featured' : ''} ${isCur ? 'plan-current' : ''} ${hl ? 'plan-highlight' : ''}">
           ${ribbon}
-          ${isCur ? '<div class="plan-current-badge">' + t('ui.052') + '</div>' : ''}
           ${mascot}
           <div class="plan-head">
             <span class="plan-emoji">${p.emoji}</span>
             <div>
-              <div class="plan-name">${p.name}</div>
+              <div class="plan-name">${p.name}${isCur ? ' <span class="plan-current-badge">' + t('ui.052') + '</span>' : ''}</div>
               <div class="plan-tagline">${p.tagline}</div>
             </div>
           </div>
-          <div class="plan-price-row">${planPriceLine(p, _planPeriod)}</div>
-          ${p.id !== 'free' && _planPeriod === 'monthly' ? `<div class="plan-promo">🎁 ${t('ui.r020',{price: p.firstM})}</div>` : ''}
-          ${p.id !== 'free' && _planPeriod === 'quarterly' ? `<div class="plan-promo">🎁 ${t('plan.qPromo',{price: p.priceQ, save: p.priceM * 3 - p.priceQ})}</div>` : ''}
-          ${p.id !== 'free' && _planPeriod === 'yearly' ? `<div class="plan-promo">🎁 ${t('ui.r021',{price: p.priceY, full: p.priceM * 12})}</div>` : ''}
+          <div class="plan-price-row">${planPriceLine(p, _planPeriod, paidCur)}</div>
+          ${p.id !== 'free' && !paidCur && _planPeriod === 'monthly' ? `<div class="plan-promo">🎁 ${t('ui.r020',{price: fmtMoney(planPrices(p.id).first, planPrices(p.id).cur)})}</div>` : ''}
+          ${p.id !== 'free' && !paidCur && _planPeriod === 'quarterly' ? `<div class="plan-promo">🎁 ${t('plan.qPromo',{price: fmtMoney(planPrices(p.id).q, planPrices(p.id).cur), save: fmtMoney(planPrices(p.id).saveQ, planPrices(p.id).cur)})}</div>` : ''}
+          ${p.id !== 'free' && !paidCur && _planPeriod === 'yearly' ? `<div class="plan-promo">🎁 ${t('ui.r021',{price: fmtMoney(planPrices(p.id).y, planPrices(p.id).cur), full: fmtMoney(planPrices(p.id).fullY, planPrices(p.id).cur)})}</div>` : ''}
           <ul class="plan-features">
             ${p.features.map(f => `<li><i class="fa-solid fa-check"></i><span>${f}</span></li>`).join('')}
           </ul>
@@ -6469,6 +6740,7 @@
       <div class="plan-cards">
         ${planCard(PLANS.free)}${planCard(PLANS.master)}${planCard(PLANS.proai)}
       </div>
+      <div class="plan-footnote">${t('plan.pricesFor', { country: flagLabel(myCountry()) })} · <button type="button" onclick="openCountryPicker()" style="background:none; border:0; padding:0; font:inherit; color:var(--coral); font-weight:600; text-decoration:underline; cursor:pointer;">${t('plan.changeCountry')}</button></div>
       <div class="plan-footnote">${t('ui.058')}</div>`;
   }
 
@@ -6494,7 +6766,7 @@
   }
 
   // Выбор тарифа: free — сразу; платный — заявка Мади в чат (без оплат в клиенте)
-  async function selectPlan(id) {
+  async function selectPlan(id, renew) {
     if (id === 'free') {
       if (!confirm(t('ui.059'))) return;
       setMyPlan('free', 'monthly', 'self');
@@ -6505,9 +6777,13 @@
     const u = Store.get('user');
     if (!u || u.guest) { toast(t('ui.061')); return; }
     const p = PLANS[id];
-    const periodLabel = _planPeriod === 'yearly' ? t('ui.r023',{price: p.priceY})
-      : _planPeriod === 'quarterly' ? t('ui.r022q',{price: p.priceQ})
-      : t('ui.r022',{price: p.priceM, first: p.firstM});
+    // Цена в валюте ученицы — её же видит Мади в заявке, вместе со страной
+    const pr = planPrices(id);
+    const periodLabel = _planPeriod === 'yearly' ? t('ui.r023',{price: fmtMoney(pr.y, pr.cur)})
+      : _planPeriod === 'quarterly' ? t('ui.r022q',{price: fmtMoney(pr.q, pr.cur)})
+      : renew ? t('plan.perMonthOnly',{price: fmtMoney(pr.m, pr.cur)})
+      : t('ui.r022',{price: fmtMoney(pr.m, pr.cur), first: fmtMoney(pr.first, pr.cur)});
+    const cc = COUNTRY_BY_CODE[myCountry()];
     // Подтверждение у ученика перед отправкой заявки
     if (!confirm(t('ui.062',{emoji: p.emoji, name: p.name, period: periodLabel}))) return;
     try {
@@ -6516,7 +6792,7 @@
       if (!adminEntry) { toast(t('ui.063')); return; }
       const [adminUid, adminInfo] = adminEntry;
       await sendChatMessage(adminUid, adminInfo.name || 'Мади',
-        t('ui.r024',{emoji: p.emoji, name: p.name, period: periodLabel}));
+        t(renew ? 'plan.renewReq' : 'ui.r024',{emoji: p.emoji, name: p.name, period: periodLabel}) + ' · ' + t(chosenCountry() ? 'plan.reqCountry' : 'plan.reqCountryGuess', { name: countryName(cc.code) }));
       closePlanPage();
       switchScreen('social');
       openChat(adminUid, adminInfo.name || 'Мади');
@@ -6544,7 +6820,7 @@
         <div style="font-size:12.5px; color:var(--soft); margin-top:8px; line-height:1.6;">
           ${t('ui.r029',{name: p.name, tagline: p.tagline.toLowerCase()})} ${want === 'proai' ? t('ui.r028') : t('ui.r027')}
         </div>
-        <div class="plan-upsell-price">${t('ui.t006')} ${_planPeriod === 'yearly' ? p.priceYM : _planPeriod === 'quarterly' ? p.priceQM : p.firstM} $<i>${t('ui.047')}</i></div>
+        <div class="plan-upsell-price">${(() => { const pr = planPrices(p.id); return t('plan.fromPrice', { price: fmtMoney(_planPeriod === 'yearly' ? pr.ym : _planPeriod === 'quarterly' ? pr.qm : pr.first, pr.cur) }); })()}${APP_LANG === 'uz' ? '' : `<i>${t('ui.047')}</i>`}</div>
         <button onclick="this.closest('.modal-bg').remove(); openPlanPage('${want}')" class="btn btn-primary btn-block" style="margin-top:6px;">${t('ui.065')}</button>
         <button onclick="this.closest('.modal-bg').remove()" class="btn btn-ghost btn-block" style="margin-top:8px;">${t('ui.066')}</button>
       </div>`;
@@ -6554,7 +6830,7 @@
   // Версия сборки: держать ВРУЧНУЮ синхронной с ?v= в index.html при каждом деплое
   // (те же 3 места — stylesheet/preload/script). Используется тихим автообновлением
   // ниже — сама загрузка кода по-прежнему идёт через ?v=.
-  const APP_VERSION = '20260924b';
+  const APP_VERSION = '20260928a';
   // ── Тихое автообновление (25.08.2026, вместо попапа «Вышло обновление!») ──
   // Узнав из облака про новую версию (appVersion пишет первый клиент нового деплоя,
   // promptVersion — кнопка «Оповестить» в админке), вкладка НЕ дёргает ученицу:
@@ -9581,6 +9857,10 @@
   // пригласивший получает свои XP, когда его клиент видит письмо type='referral'
   function processReferralRewards() {
     if (typeof _db === 'undefined') return;
+    // Письмо о награде НЕ трогаем, пока не пришёл облачный тариф: иначе оно было бы
+    // удалено, а подарок — посчитан от пустой локальной копии (или потерян при
+    // закрытии вкладки). planHandler вызовет нас снова сразу после загрузки.
+    if (!_planLoaded) return;
     const me = (typeof firebaseUserId === 'function' ? firebaseUserId() : '') || '';
     if (!me || me === 'guest') return;
     Object.entries(_inboxCache || {}).forEach(([key, v]) => {
@@ -9760,6 +10040,13 @@
         <div class="theme-picker-title">🌐 ${t('set.lang')} <span style="font-weight:500; color:var(--hush); font-size:10.5px;">— ${t('set.lang.sub')}</span></div>
         <div class="gender-pick-row" style="flex-wrap:wrap;">
           ${I18N_LANGS.map(lng => `<button type="button" class="gender-opt ${APP_LANG === lng ? 'active' : ''}" onclick="setAppLang('${lng}')">${I18N_LANG_NAMES[lng]}</button>`).join('')}
+        </div>
+      </div>`,
+      // Страна → цены в местной валюте. Не выбрана — рамка «обязательно» (как у пола)
+      (Store.get('user') || {}).isAdmin ? '' : `<div class="gender-pick" ${chosenCountry() ? '' : 'data-required="1"'}>
+        <div class="gender-pick-title">🌍 ${t('country.pick')} <span style="font-weight:500; color:var(--hush); font-size:10.5px;">— ${t('country.pickSub')}</span></div>
+        <div class="gender-pick-row country-row">
+          ${COUNTRIES.map(cn => `<button type="button" class="gender-opt country-opt ${chosenCountry() === cn.code ? 'active' : ''}" aria-pressed="${chosenCountry() === cn.code}" onclick="setMyCountry('${cn.code}'); renderSettingsCard();">${flagImg(cn.code)}<span>${countryName(cn.code)}</span></button>`).join('')}
         </div>
       </div>`,
       row('🔊', t('set.sound'), t('set.sound.sub'), sw(s.sound), "toggleSetting('sound')", 'sound'),
@@ -29500,7 +29787,7 @@
       </div>
       <div class="rd-block-h">📖 ${skUi('Текст', 'Matn')} · <span class="ko">${txt.titleKo}</span></div>
       <div class="rd-fulltext ko">${txt.sentences.map((s, i) => `<span class="rd-fs" id="rd-fs-${i}" role="button" tabindex="0" onclick="rdSpeakOne(${i}, this)">${s.ko}</span>`).join(' ')}</div>
-      ${_rdState.showRu ? `<div class="rd-block-h">${skUi('🇷🇺 Перевод', '🇺🇿 Tarjima')}</div><div class="rd-fullru">${txt.sentences.map(s => skLoc(s, 'ru')).join(' ')}</div>` : ''}
+      ${_rdState.showRu ? `<div class="rd-block-h">${skUi(flagImg('RU') + ' Перевод', flagImg('UZ') + ' Tarjima')}</div><div class="rd-fullru">${txt.sentences.map(s => skLoc(s, 'ru')).join(' ')}</div>` : ''}
       <div class="rd-block-h">🔍 ${skUi('Разбор · слова и грамматика', 'Tahlil · soʻz va grammatika')}</div>
       <div class="rd-breakdown">
         ${txt.sentences.map((s, i) => `
@@ -34849,7 +35136,7 @@
     list.forEach(u => { const a = accessOf(u); accCounts[a] = (accCounts[a] || 0) + 1; });
 
     const planCounts = { free: 0, master: 0, proai: 0 };
-    list.forEach(u => { const id = (u.plan && PLANS[u.plan.id]) ? u.plan.id : 'free'; planCounts[id] = (planCounts[id] || 0) + 1; });
+    list.forEach(u => { const id = effectivePlanId(u); planCounts[id] = (planCounts[id] || 0) + 1; });
 
     const lvlCounts = {}; let lvlNone = 0;
     list.forEach(u => { const id = u.level || ''; if (!id) { lvlNone++; return; } lvlCounts[id] = (lvlCounts[id] || 0) + 1; });
@@ -36087,22 +36374,32 @@
         <!-- Тариф -->
         <div style="margin-top:16px;">
           <div style="font-size:10px; letter-spacing:.16em; color:var(--coral); font-weight:700;">${t('ui.383')}</div>
+          <!-- Страна ученицы → в какой валюте она видела цены (выставлять счёт так же) -->
+          <div style="font-size:11px; color:var(--soft); margin-top:6px;">💱 ${t('adm.country.lbl')}: ${countryCode(u.country) ? `${flagLabel(u.country)} · ${curLabel(COUNTRY_BY_CODE[countryCode(u.country)].cur)}${countryCode(u.tzCountry) && u.tzCountry !== u.country ? ` · ⚠️ ${t('adm.country.tzDiff', { country: flagLabel(u.tzCountry) })}` : ''}` : t('adm.country.none')}</div>
           <div style="display:flex; gap:6px; margin-top:8px;">
             ${['free','master','proai'].map(pid => {
               const p = PLANS[pid];
               // Подсветка по ФАКТИЧЕСКОМУ тарифу (истёкший платный = Базовый)
               const on = effPid === pid;
-              return `<button onclick="adminSetPlan('${escAttrSafe(uid)}','${pid}')" class="btn ${on ? 'btn-primary' : 'btn-ghost'}" style="flex:1; padding:9px 4px; font-size:11px; ${on ? '' : 'opacity:.85;'}">${p.emoji} ${p.name}</button>`;
+              return `<button onclick="adminSetPlan('${jsStr(uid)}','${pid}')" class="btn ${on ? 'btn-primary' : 'btn-ghost'}" style="flex:1; padding:9px 4px; font-size:11px; ${on ? '' : 'opacity:.85;'}">${p.emoji} ${p.name}</button>`;
             }).join('')}
           </div>
+          <!-- Продление оплаченного срока одной кнопкой (от конца текущего срока) -->
+          ${rawPlan.id !== 'free' && untilTs ? `
+          <div style="margin-top:8px;">
+            <div style="font-size:9.5px; letter-spacing:.14em; color:var(--coral); font-weight:700;">➕ ${t('adm.plan.extendLbl')}</div>
+            <div style="display:flex; gap:6px; margin-top:6px;">
+              ${[[1, 'adm.plan.m1'], [3, 'adm.plan.m3'], [12, 'adm.plan.y1']].map(([mo, key]) => `<button onclick="adminExtendPlan('${jsStr(uid)}', ${mo})" class="btn btn-ghost" style="flex:1; padding:8px 4px; font-size:11px;">${t(key)}</button>`).join('')}
+            </div>
+          </div>` : ''}
           <!-- Срок действия платного тарифа: дата → авто-откат на Базовый + попап ученице -->
           <div style="margin-top:10px; background:var(--paper); border-radius:12px; padding:10px;">
             <div style="font-size:9.5px; letter-spacing:.14em; color:var(--coral); font-weight:700;">⏳ ${t('adm.plan.untilLbl')}</div>
             <div style="display:flex; gap:6px; margin-top:7px; align-items:center;">
               <input id="sd-plan-until" type="date" class="input" value="${untilInputVal}" style="font-size:12.5px; flex:1; min-width:0;">
-              <button onclick="adminSetPlanDate('${escAttrSafe(uid)}')" class="btn btn-primary" style="font-size:11.5px; padding:9px 12px; flex-shrink:0;">${t('adm.plan.setDate')}</button>
+              <button onclick="adminSetPlanDate('${jsStr(uid)}')" class="btn btn-primary" style="font-size:11.5px; padding:9px 12px; flex-shrink:0;">${t('adm.plan.setDate')}</button>
             </div>
-            <button onclick="adminClearPlanDate('${escAttrSafe(uid)}')" class="btn btn-ghost btn-block" style="font-size:11px; padding:7px; margin-top:6px;">♾️ ${t('adm.plan.forever')}</button>
+            <button onclick="adminClearPlanDate('${jsStr(uid)}')" class="btn btn-ghost btn-block" style="font-size:11px; padding:7px; margin-top:6px;">♾️ ${t('adm.plan.forever')}</button>
             <div style="font-size:10.5px; color:var(--soft); margin-top:6px; line-height:1.5;">${planStatusLine}</div>
           </div>
           <div style="font-size:10.5px; color:var(--soft); margin-top:6px; line-height:1.5;">${t('ui.s020')}${u.plan?.updatedAt ? ' ' + t('ui.s018',{date: new Date(u.plan.updatedAt).toLocaleDateString('ru-RU')}) : ''}</div>
@@ -36195,22 +36492,35 @@
     if (typeof _db === 'undefined') { toast(t('ui.q003')); return; }
     if (!PLANS[id]) return;
     const stu = _adminUsersCache[uid] || {};
-    const curPlan = (stu.plan && PLANS[stu.plan.id]) ? stu.plan.id : 'free';
-    if (curPlan === id) { toast(t('ui.q004')); return; }
+    // Облегчённый режим: у ученицы из справочника нет поля plan, пока карточка не
+    // дочитала полный профиль — решать о тарифе по пустому объекту нельзя.
+    if (_adminUsersLite && !stu._full) { toast(t('adm.plan.wait')); return; }
+    await _adminFreshPlan(uid);
+    const prev = (stu.plan && PLANS[stu.plan.id]) ? stu.plan : {};
+    const now = Date.now();
+    // Сравниваем ФАКТИЧЕСКИЙ тариф, а не сырой id (09.2026): у истёкшей пробной
+    // недели в облаке {id:'master', until:<прошло>}, и кнопка «Master» отвечала
+    // «уже активен», хотя у ученицы Базовый — Мади не могла подключить оплату.
+    // «Уже активен» — только ОПЛАЧЕННЫЙ действующий тариф (выдан Мади или бессрочный).
+    // Пробная неделя и подарок того же id — не оплата: их можно перевести в оплаченный.
+    const eff = effectivePlanId(stu);
+    const rawId = prev.id || 'free';
+    const paidActive = id !== 'free' && eff === id && (prev.by === 'admin' || !prev.until);
+    if (paidActive || (id === 'free' && rawId === 'free')) { toast(t('ui.q004')); return; }
     // Подтверждение у админа перед сменой тарифа ученика
     if (!confirm(t('ui.q005', {name: stu.name || 'ученика', plan: `${PLANS[id].emoji} ${PLANS[id].name}`}))) return;
     try {
-      const prev = (_adminUsersCache[uid] && _adminUsersCache[uid].plan) || {};
       const plan = {
         id,
         period: prev.period || 'monthly',
-        since: prev.id === id ? (prev.since || Date.now()) : Date.now(),
-        updatedAt: Date.now(),
+        since: eff === id ? (prev.since || now) : now,
+        updatedAt: now,
         by: 'admin'
       };
-      // Срок действия (until) переносим только на платный тариф; при сбросе на
-      // Базовый убираем — иначе «просроченность» повисла бы на бесплатном.
-      if (id !== 'free' && prev.until) plan.until = prev.until;
+      // Срок переносим, только если он ЕЩЁ ИДЁТ и уже был оплачен Мади. Срок пробной
+      // недели или подарка не наследуем: оплаченный тариф закончился бы вместе с
+      // триалом, а истёкший until выдавал тариф сразу просроченным.
+      if (id !== 'free' && prev.until && prev.until > now && prev.by === 'admin') plan.until = prev.until;
       await _db.ref(`users/${uid}/plan`).set(plan);
       if (_adminUsersCache[uid]) _adminUsersCache[uid].plan = plan;
       toast(t('ui.q006', {plan: `${PLANS[id].emoji} ${PLANS[id].name}`}), 'var(--sage)');
@@ -36221,10 +36531,68 @@
   // Срок действия тарифа: дата из #sd-plan-until → users/<uid>/plan.until.
   // По истечении myPlanId() у ученицы вернёт 'free' (авто-откат на Базовый),
   // а её клиент покажет попап окончания (checkPlanExpiry).
+  // Свежий тариф ученицы прямо из базы перед решением Мади: кэш списка живёт до 5 минут,
+  // и запись по нему стёрла бы подарок, выданный за это время, или изменение с другого
+  // устройства Мади. Нет связи за 4 с — работаем по кэшу, как раньше.
+  async function _adminFreshPlan(uid) {
+    const stu = _adminUsersCache[uid];
+    try {
+      const snap = await Promise.race([
+        _db.ref(`users/${uid}/plan`).once('value'),
+        new Promise((_, rej) => setTimeout(() => rej(new Error('timeout')), 4000)),
+      ]);
+      const v = snap && typeof snap.val === 'function' ? snap.val() : null;
+      if (stu) stu.plan = (v && PLANS[v.id]) ? v : undefined;
+    } catch (_) { /* офлайн — остаётся кэш */ }
+    return stu ? stu.plan : undefined;
+  }
+  // +N календарных месяцев к метке времени (31.01 + 1 мес = 28/29.02, а не 03.03).
+  function _addMonths(ts, n) {
+    const d = new Date(ts); const day = d.getDate();
+    d.setMonth(d.getMonth() + n);
+    if (d.getDate() < day) d.setDate(0);
+    return d.getTime();
+  }
+  // «+1 мес / +3 мес / +1 год»: продление оплаченного срока одной кнопкой. Срок
+  // отсчитывается от конца текущего (или от сегодня, если истёк) — оплаченные дни
+  // не теряются. Тариф помечается by:'admin' — оплачен Мади.
+  async function adminExtendPlan(uid, months) {
+    if (!ensureAdminAccess()) return;
+    if (typeof _db === 'undefined') { toast(t('ui.q003')); return; }
+    const stu = _adminUsersCache[uid] || {};
+    if (_adminUsersLite && !stu._full) { toast(t('adm.plan.wait')); return; }
+    await _adminFreshPlan(uid);
+    const cur = (stu.plan && PLANS[stu.plan.id]) ? stu.plan : null;
+    if (!cur || cur.id === 'free') { toast(t('adm.plan.needPaid')); return; }
+    const now = Date.now();
+    if (!cur.until) { toast(t('adm.plan.unlimited')); return; }
+    const base = cur.until > now ? cur.until : now;
+    const endDay = new Date(_addMonths(base, months)); endDay.setHours(23, 59, 59, 999);
+    const until = endDay.getTime();
+    const dateStr = endDay.toLocaleDateString('ru-RU');
+    const p = PLANS[cur.id];
+    if (!confirm(t('adm.plan.extendAsk', { plan: `${p.emoji} ${p.name}`, name: stu.name || '—', date: dateStr }))) return;
+    try {
+      const plan = {
+        ...cur,
+        until,
+        period: months >= 12 ? 'yearly' : months >= 3 ? 'quarterly' : 'monthly',
+        since: cur.until > now ? (cur.since || now) : now,
+        updatedAt: now,
+        by: 'admin'
+      };
+      await _db.ref(`users/${uid}/plan`).set(plan);
+      if (_adminUsersCache[uid]) _adminUsersCache[uid].plan = plan;
+      toast(t('adm.plan.extended', { date: dateStr }), 'var(--sage)');
+      showStudentDetail(uid);
+      filterAdminUsers();
+    } catch (e) { console.warn(e); toast(t('ui.q007')); }
+  }
   async function adminSetPlanDate(uid) {
     if (!ensureAdminAccess()) return;
     if (typeof _db === 'undefined') { toast(t('ui.q003')); return; }
     const stu = _adminUsersCache[uid] || {};
+    if (_adminUsersLite && !stu._full) { toast(t('adm.plan.wait')); return; }
     const cur = (stu.plan && PLANS[stu.plan.id]) ? stu.plan : null;
     if (!cur || cur.id === 'free') { toast(t('adm.plan.needPaid')); return; }
     const val = (document.getElementById('sd-plan-until')?.value || '').trim();
@@ -36247,6 +36615,7 @@
     if (!ensureAdminAccess()) return;
     if (typeof _db === 'undefined') { toast(t('ui.q003')); return; }
     const stu = _adminUsersCache[uid] || {};
+    if (_adminUsersLite && !stu._full) { toast(t('adm.plan.wait')); return; }
     const cur = (stu.plan && PLANS[stu.plan.id]) ? stu.plan : null;
     if (!cur || cur.id === 'free') { toast(t('adm.plan.needPaid')); return; }
     if (!cur.until) { toast(t('adm.plan.dateCleared')); return; }
@@ -37466,6 +37835,7 @@
     } else {
       lf.style.display = 'none'; rf.style.display = 'flex';
       rt.classList.add('auth-tab-active'); lt.classList.remove('auth-tab-active');
+      try { initRegCountry(); } catch (_) {}
       // Первое нажатие «Регистрация» → знакомство с Madie, после него — сюда же, на форму.
       // Свой флаг obRegSeen: старые версии ставили onboardDone всем гостям автоматически.
       if (!Store.get('user') && !Store.get('obRegSeen') && !document.getElementById('onboard')) {
@@ -37509,6 +37879,7 @@
     if (_prev && !user.guest && !user.isAdmin && !_prev.guest && !_prev.isAdmin
         && _prev.email && user.email && _prev.email === user.email) {
       if ((user.level === undefined || user.level === '') && _prev.level) user.level = _prev.level;
+      if (!user.country && _prev.country) user.country = _prev.country;
     }
     Store.set('user', user);
     // Первый вход в аккаунт на этом устройстве: своих настроек ещё нет — наследуем
@@ -37542,6 +37913,7 @@
     const sonbaeBadge = document.getElementById('profile-sonbae-badge');
     if (sonbaeBadge) sonbaeBadge.style.display = stats.sonbaeAwarded ? 'inline-flex' : 'none';
     try { renderMyLevelChip(); } catch (_) {}
+    try { renderMyCountryChip(); } catch (_) {}
     setProfileAdminMode(!!user.isAdmin);
     recordDayEntered();
     attachUserListeners();
@@ -37690,12 +38062,14 @@
     const termsCb = document.getElementById('rg-terms');
     if (termsCb && !termsCb.checked) { toast(t('ui.476')); return; }
     const level = (document.getElementById('rg-level')?.value || '');
+    const rgC = (document.getElementById('rg-country')?.value || '');
+    const country = countryCode(rgC) || myCountry();
     _authBusy = true;
     try {
       const cred = await _auth.createUserWithEmailAndPassword(email, pass);
       try { await cred.user.updateProfile({ displayName: name }); } catch (_) {}
       migrateGuestProgress({ name, email: cred.user.email }); // прогресс гостя → в новый аккаунт
-      setActiveUser({ name, email: cred.user.email, uid: cred.user.uid, level });
+      setActiveUser({ name, email: cred.user.email, uid: cred.user.uid, level, country });
       toast(t('ui.477',{name: name}), 'var(--sage)');
       try { applyPendingReferral(cred.user.uid, name); } catch (_) {}
       // Завершение регистрации → тур Комдори после закрытия тарифов (см. closePlanPage).

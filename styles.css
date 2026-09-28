@@ -1700,8 +1700,10 @@
     box-shadow: 0 6px 16px -4px rgba(var(--accent-rgb),.6);
   }
   .plan-ribbon-soft { background: var(--blush); color: var(--coral); box-shadow: none; border: 1px solid var(--rose); }
+  /* В строке с названием, а не в углу: в углу плашка наезжала на название
+     в узких колонках, на ленту «Популярный» и на мишку у Pro AI */
   .plan-current-badge {
-    position: absolute; top: 12px; right: 12px;
+    display: inline-block; vertical-align: 3px; margin-left: 4px; white-space: nowrap;
     font-size: 9px; font-weight: 800; letter-spacing: .04em;
     background: rgba(132,196,116,.18); color: var(--ok-ink);
     border: 1px solid rgba(132,196,116,.45);
@@ -1738,6 +1740,17 @@
     font-size: 30px; font-weight: 800; color: var(--berry);
     font-variant-numeric: tabular-nums;
     line-height: 1;
+    /* Суммы в местной валюте бывают длинными («1 570 000 сум/год»): шрифт
+       ужимается по ширине экрана, а сумма переносится целиком, не распирая карточку */
+    font-size: clamp(22px, 7vw, 30px);
+    overflow-wrap: normal; /* сумма склеена неразрывными пробелами; переносится только «/год» (<wbr>) */
+  }
+  .plan-price i { white-space: nowrap; }
+  .plan-card { min-width: 0; }
+  /* 768–1023px: тарифы в три узкие колонки (~195px текста) — 7vw давал бы 30px,
+     и «1 570 000 сум» не помещалось */
+  @media (min-width: 768px) and (max-width: 1023px) {
+    .plan-price { font-size: 22px; }
   }
   .plan-price i { font-style: normal; font-size: 14px; font-weight: 700; color: var(--soft); }
   .plan-price-sub { font-size: 11px; color: var(--soft); }
@@ -1755,6 +1768,7 @@
     margin: 14px 0 16px; padding: 0;
     display: grid; gap: 9px;
     flex: 1;
+    align-content: start; /* в высокой карточке пункты не разъезжаются по высоте, кнопка остаётся внизу */
   }
   .plan-features li {
     display: flex; align-items: flex-start; gap: 9px;
@@ -2692,6 +2706,7 @@
     padding: 12px 20px; border-radius: 999px;
     font-size: 13px; font-weight: 500;
     z-index: 600;
+    width: max-content; /* иначе ширина считается от места справа от left:50% — половина экрана */
     max-width: min(92vw, 420px); white-space: normal;
     text-align: center; line-height: 1.4;
     word-break: break-word; overflow-wrap: anywhere;
@@ -2907,6 +2922,23 @@
     box-shadow: 0 4px 12px -4px rgba(var(--accent-rgb),.5);
   }
   body.calm-motion .lvl-chip { transition: none; }
+  /* Флаг страны (assets/flags, 4:3). Тонкая рамка — чтобы белые полосы флагов
+     (Россия, Узбекистан, Таджикистан) не сливались с белым чипом */
+  .cflag {
+    display: inline-block; width: 20px; height: 15px; flex-shrink: 0;
+    vertical-align: -3px; border-radius: 3px; object-fit: cover;
+    box-shadow: 0 0 0 1px rgba(var(--shade-rgb), .2);
+  }
+  body.theme-dark .cflag { box-shadow: 0 0 0 1px rgba(255,255,255,.24); }
+  .cflag-lbl { white-space: nowrap; }
+  /* Настройки → страна: флаг над названием у всех кнопок одинаково (в строку длинные
+     названия переносились по-разному, и ряд выглядел вразнобой) */
+  .gender-pick-row.country-row { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+  .gender-opt.country-opt {
+    display: flex; flex-direction: column; align-items: center; justify-content: flex-start;
+    gap: 5px; line-height: 1.2; min-width: 0;
+  }
+  .country-opt .cflag { width: 24px; height: 18px; }
 
   /* Календарь праздников: крупнее тап + понятная реакция на праздничных днях (#9) */
   .cal-day { min-height: 42px; }
