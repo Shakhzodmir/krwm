@@ -39,10 +39,12 @@ self.addEventListener('fetch', e => {
   if (req.method !== 'GET') return;
   const url = new URL(req.url);
   if (url.origin !== self.location.origin) return;             // CDN/Firebase — мимо
-  if (/\.(mp3|m4a|mp4|pdf)$/i.test(url.pathname)) {
+  if (/\.(mp3|m4a|mp4|pdf|apk)$/i.test(url.pathname)) {
     // Экзаменационные аудио TOPIK огромные (десятки МБ) и разовые — не кэшируем,
     // забили бы Cache Storage без пользы. Фоновая музыка для занятий (assets/music/)
     // маленькая (~3МБ/трек) и крутится в цикле весь сеанс — её кэшируем как картинки.
+    // APK (app/KoreanWithMadie.apk) — всегда из сети: ссылка постоянная, и из кэша
+    // ученица скачала бы старую версию приложения после обновления.
     if (!/\/assets\/music\//i.test(url.pathname)) return;
   } else {
     var isCode = /\/(index\.html)?$|\.(js|css|json)$/i.test(url.pathname);
