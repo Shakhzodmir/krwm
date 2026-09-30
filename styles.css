@@ -3171,26 +3171,26 @@
   .section-head .meta  { font-size: 11px; color: var(--coral); font-weight: 500; font-style: italic; }
 
   /* ───── AUTH TABS ───── */
-  /* Брендовые кнопки входа: Kakao (жёлтая) и Apple (чёрная, пока отключена).
-     Объёмные, как остальные duo-кнопки: «губа» снизу + нажатие. */
-  .auth-kakao {
-    background: #FEE500 !important; color: #191919 !important;
-    border: 2px solid #E0C900 !important;
+  /* Кнопка «Войти через Google» — цвета по гайдлайну Google (светлая: белая с серой
+     рамкой, тёмная: #131314 с рамкой #8E918F). Объёмная, как остальные duo-кнопки. */
+  .auth-google {
+    background: #FFFFFF !important; color: #1F1F1F !important;
+    border: 2px solid #DADCE0 !important;
     font-weight: 700;
-    box-shadow: 0 var(--duo-lip, 4px) 0 #C9B400 !important;
+    box-shadow: 0 var(--duo-lip, 4px) 0 #C4C7CC !important;
     transition: filter var(--t-base) var(--ease-out), transform .12s ease-out, box-shadow .12s ease-out;
   }
-  .auth-kakao:hover { filter: brightness(.97); }
-  .auth-kakao:active { transform: translateY(3px); box-shadow: 0 0 0 #C9B400 !important; }
-  .auth-apple {
-    background: #111114 !important; color: #FFFFFF !important;
-    border: 2px solid #000000 !important;
-    font-weight: 700;
-    box-shadow: 0 var(--duo-lip, 4px) 0 #000000 !important;
+  .auth-google:hover { filter: brightness(.98); }
+  .auth-google:active { transform: translateY(3px); box-shadow: 0 0 0 #C4C7CC !important; }
+  .auth-google[aria-busy="true"] { opacity: .7; pointer-events: none; }
+  body.theme-dark .auth-google { background: #131314 !important; color: #E3E3E3 !important; border-color: #8E918F !important; box-shadow: 0 var(--duo-lip, 4px) 0 #5F6368 !important; }
+  body.theme-dark .auth-google:active { box-shadow: 0 0 0 #5F6368 !important; }
+  .auth-google-note { font-size: 10.5px; color: var(--soft); text-align: center; line-height: 1.55; }
+  .auth-google-terms, .auth-google-hint {
+    font: inherit; background: none; border: 0; padding: 0; cursor: pointer;
+    color: var(--coral); text-decoration: underline; text-underline-offset: 2px;
   }
-  .auth-apple[disabled] { opacity: .55; cursor: not-allowed; }
-  body.theme-dark .auth-apple { background: #F2F5FA !important; color: #111114 !important; border-color: #C7CEDD !important; box-shadow: 0 var(--duo-lip, 4px) 0 #9AA3B5 !important; }
-  body.theme-dark .auth-apple span { background: rgba(0,0,0,.12) !important; }
+  .auth-google-hint { display: block; margin: 2px auto 0; font-size: 11.5px; font-weight: 600; text-align: center; line-height: 1.5; }
 
   .auth-tabs {
     display: flex; gap: 4px; padding: 4px;

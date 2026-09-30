@@ -1104,10 +1104,18 @@
     'auth.title':        { ru: 'Войди в дневник', en: 'Sign in to your journal', uz: 'Kundalikka kiring' },
     'auth.sub':          { ru: 'чтобы сохранять прогресс и стрик', en: 'to save your progress and streak', uz: 'progress va strikni saqlash uchun' },
     'auth.email':        { ru: 'Войти через Email', en: 'Sign in with Email', uz: 'Email orqali kirish' },
-    'auth.kakao':        { ru: 'Войти через Kakao', en: 'Sign in with Kakao', uz: 'Kakao orqali kirish' },
-    'auth.apple':        { ru: 'Войти через Apple', en: 'Sign in with Apple', uz: 'Apple orqali kirish' },
-    'auth.soon':         { ru: 'СКОРО', en: 'SOON', uz: 'TEZ ORADA' },
-    'auth.appleTitle':   { ru: 'Подключим позже', en: 'Coming later', uz: 'Keyinroq qoʻshamiz' },
+    'auth.google':       { ru: 'Войти через Google', en: 'Continue with Google', uz: 'Google orqali kirish' },
+    'auth.google.old':   { ru: 'Уже есть аккаунт? Входи как раньше — через Email.', en: 'Already have an account? Sign in as before — with Email.', uz: 'Akkauntingiz bormi? Avvalgidek — Email orqali kiring.' },
+    'auth.google.terms': { ru: 'Входя через Google, ты принимаешь условия использования', en: 'By continuing with Google, you accept the terms of use', uz: 'Google orqali kirib, foydalanish shartlarini qabul qilasiz' },
+    'auth.google.pwHint': { ru: 'Входила через Google? Нажми сюда — войдём через Google', en: 'Signed in with Google before? Tap here to continue with Google', uz: 'Google orqali kirganmidingiz? Shu yerni bosing — Google orqali kiramiz' },
+    'auth.google.fail':  { ru: 'Не получилось войти через Google 😔 Попробуй ещё раз', en: 'Couldn’t sign in with Google 😔 Please try again', uz: 'Google orqali kirib boʻlmadi 😔 Yana urinib koʻring' },
+    'auth.google.popupBlocked': { ru: 'Браузер заблокировал окно входа. Разреши всплывающие окна для сайта и нажми ещё раз', en: 'The browser blocked the sign-in window. Allow pop-ups for this site and try again', uz: 'Brauzer kirish oynasini blokladi. Sayt uchun qalqib chiquvchi oynalarga ruxsat bering va qayta bosing' },
+    'auth.google.admin': { ru: 'Для админки входи через Email, как обычно 🌸', en: 'For the admin panel, sign in with Email as usual 🌸', uz: 'Admin panel uchun odatdagidek Email orqali kiring 🌸' },
+    'auth.google.inAppTitle': { ru: 'Открой сайт в браузере', en: 'Open the site in your browser', uz: 'Saytni brauzerda oching' },
+    'auth.google.inAppText': { ru: 'Google не разрешает входить из встроенных браузеров (Instagram, Facebook и других приложений). Открой koreanmadie.study в Chrome или Safari — или войди через Email.', en: 'Google doesn’t allow signing in from in-app browsers (Instagram, Facebook and other apps). Open koreanmadie.study in Chrome or Safari — or sign in with Email.', uz: 'Google ilova ichidagi brauzerlardan (Instagram, Facebook va boshqalar) kirishga ruxsat bermaydi. koreanmadie.study saytini Chrome yoki Safari’da oching — yoki Email orqali kiring.' },
+    'auth.google.copyLink': { ru: 'Скопировать ссылку', en: 'Copy link', uz: 'Havolani nusxalash' },
+    'auth.google.copied': { ru: 'Ссылка скопирована — вставь её в Chrome или Safari 🌸', en: 'Link copied — paste it into Chrome or Safari 🌸', uz: 'Havola nusxalandi — uni Chrome yoki Safari’ga qoʻying 🌸' },
+    'auth.google.ok':    { ru: 'Понятно', en: 'Got it', uz: 'Tushunarli' },
     'auth.sessionLost':  { ru: 'Сессия входа обновилась — зайди в Профиль и войди заново, чтобы всё синхронизировалось 🌸', en: 'Your sign-in session expired — open Profile and sign in again to keep everything synced 🌸', uz: 'Kirish sessiyasi eskirdi — Profilga kirib, qaytadan tizimga kiring, hammasi sinxron boʻlsin 🌸' },
     'adm.authMismatch':  { ru: 'Пароль облачного аккаунта не совпадает — синхронизация админки может не работать. Напиши разработчику.', en: 'Cloud account password mismatch — admin sync may not work. Contact the developer.', uz: 'Bulut akkaunt paroli mos kelmadi — admin sinxronizatsiyasi ishlamasligi mumkin. Dasturchiga yozing.' },
     'adm.authOffline':   { ru: 'Не получилось подтвердить вход на сервере — синхронизация админки может не работать. Проверь интернет и войди ещё раз.', en: 'Could not confirm sign-in with the server — admin sync may not work. Check your connection and sign in again.', uz: 'Serverda kirishni tasdiqlab boʻlmadi — admin sinxronizatsiyasi ishlamasligi mumkin. Internetni tekshirib, qayta kiring.' },
@@ -2266,7 +2274,7 @@
     "ui.t004": { ru: "Сменить →", en: "Change →", uz: "Almashtirish →" },
     "ui.t005": { ru: "Улучшить ✨", en: "Upgrade ✨", uz: "Yaxshilash ✨" },
     "ui.t006": { ru: "от", en: "from", uz: "dan" },
-    // «от 8 $/мес» → «от {price}»: в узбекском «dan» стоит ПОСЛЕ суммы («89 000 soʻm dan»)
+    // «от 8 $/мес» → «от {price}»: в узбекском «dan» стоит ПОСЛЕ суммы («118 000 soʻm dan»)
     "plan.fromPrice": { ru: "от {price}", en: "from {price}", uz: "oyiga {price}dan" },
     "ui.t007": { ru: "Добавь одногруппников или учителя — сможете переписываться, делиться прогрессом и поддерживать стрик вместе 🌸", en: "Add classmates or your teacher — you can chat, share progress and keep your streak going together 🌸", uz: "Guruhdoshlaringizni yoki oʻqituvchingizni qoʻshing — yozishib turishingiz, taraqqiyotni ulashishingiz va striklarni birga ushlab turishingiz mumkin 🌸" },
     "ui.t008": { ru: "ЧАТЫ", en: "CHATS", uz: "CHATLAR" },
@@ -6185,22 +6193,24 @@
   // карточка у Мади) флаг оставался в конце строки, а название уезжало на следующую.
   function flagLabel(code) { return `<span class="cflag-lbl">${flagImg(code)} ${countryName(code)}</span>`; }
   // ЦЕНЫ. Меняются только здесь. m — месяц, first — первый месяц (−50%), q — 3 месяца
-  // (qm — помесячно), y — год (ym — помесячно). Курс на 27.09.2026: 1 $ = 84,27 ₽ =
-  // 11 826 сум = 443 ₸ = 87,5 сом = 9,23 сомони. Для УЗ/КГ/ТДЖ — ниже прямого курса
-  // (местные цены на онлайн-курсы). Периоды — те же пропорции, что в долларах.
+  // (qm — помесячно), y — год (ym — помесячно). Долларовые цены пересчитаны ровно по
+  // официальному курсу центробанков на 30.09.2026 (cbu.uz, cbr.ru, nationalbank.kz,
+  // nbkr.kg, nbt.tj): 1 $ = 11 821,18 сум = 84,4283 ₽ = 439,37 ₸ = 87,4483 сом =
+  // 9,235 сомони; округление — сум до 1 000, ₽/₸/сом до 10, сомони до 1 (отклонение
+  // от курса ≤ 0,5 %). Курсы плывут — сверять раз в 1–2 месяца.
   const PLAN_PRICES = {
     GL: { master: { m: 10,     first: 5,     q: 27,     qm: 9,      y: 99,      ym: 8 },
           proai:  { m: 18,     first: 9,     q: 51,     qm: 17,     y: 199,     ym: 16 } },
-    RU: { master: { m: 790,    first: 395,   q: 2130,   qm: 710,    y: 7790,    ym: 649 },
-          proai:  { m: 1490,   first: 745,   q: 3990,   qm: 1330,   y: 14790,   ym: 1233 } },
-    UZ: { master: { m: 89000,  first: 44500, q: 240000, qm: 80000,  y: 880000,  ym: 73000 },
-          proai:  { m: 159000, first: 79500, q: 429000, qm: 143000, y: 1570000, ym: 131000 } },
-    KZ: { master: { m: 3990,   first: 1995,  q: 10790,  qm: 3600,   y: 39490,   ym: 3291 },
-          proai:  { m: 6990,   first: 3495,  q: 18890,  qm: 6300,   y: 69190,   ym: 5766 } },
-    KG: { master: { m: 690,    first: 345,   q: 1860,   qm: 620,    y: 6830,    ym: 569 },
-          proai:  { m: 1190,   first: 595,   q: 3210,   qm: 1070,   y: 11780,   ym: 982 } },
-    TJ: { master: { m: 79,     first: 39,    q: 213,    qm: 71,     y: 779,     ym: 65 },
-          proai:  { m: 139,    first: 69,    q: 375,    qm: 125,    y: 1379,    ym: 115 } },
+    RU: { master: { m: 840,    first: 420,   q: 2280,   qm: 760,    y: 8360,    ym: 697 },
+          proai:  { m: 1520,   first: 760,   q: 4310,   qm: 1437,   y: 16800,   ym: 1400 } },
+    UZ: { master: { m: 118000, first: 59000, q: 319000, qm: 106000, y: 1170000, ym: 98000 },
+          proai:  { m: 213000, first: 106500, q: 603000, qm: 201000, y: 2352000, ym: 196000 } },
+    KZ: { master: { m: 4390,   first: 2195,  q: 11860,  qm: 3953,   y: 43500,   ym: 3625 },
+          proai:  { m: 7910,   first: 3955,  q: 22410,  qm: 7470,   y: 87430,   ym: 7286 } },
+    KG: { master: { m: 870,    first: 435,   q: 2360,   qm: 787,    y: 8660,    ym: 722 },
+          proai:  { m: 1570,   first: 785,   q: 4460,   qm: 1487,   y: 17400,   ym: 1450 } },
+    TJ: { master: { m: 92,     first: 46,    q: 249,    qm: 83,     y: 914,     ym: 76 },
+          proai:  { m: 166,    first: 83,    q: 471,    qm: 157,    y: 1838,    ym: 153 } },
   };
   // Подпись валюты по языку интерфейса (символ там, где он общепринят)
   const CUR_LABEL = {
@@ -6208,7 +6218,7 @@
     UZS: { ru: 'сум', en: 'UZS', uz: 'soʻm' }, KGS: { ru: 'сом', en: 'KGS', uz: 'som' }, TJS: { ru: 'сомони', en: 'TJS', uz: 'somoni' },
   };
   function curLabel(cur) { const m = CUR_LABEL[cur] || CUR_LABEL.USD; return m[APP_LANG] || m.ru; }
-  // «89 000 сум», «790 ₽», «10 $» — неразрывные пробелы, чтобы сумма не рвалась
+  // «118 000 сум», «840 ₽», «10 $» — неразрывные пробелы, чтобы сумма не рвалась
   function fmtMoney(n, cur) {
     const num = Math.round(Number(n) || 0).toLocaleString('ru-RU').replace(/[\s ]/g, ' ');
     return num + ' ' + curLabel(cur);
@@ -6830,7 +6840,7 @@
   // Версия сборки: держать ВРУЧНУЮ синхронной с ?v= в index.html при каждом деплое
   // (те же 3 места — stylesheet/preload/script). Используется тихим автообновлением
   // ниже — сама загрузка кода по-прежнему идёт через ?v=.
-  const APP_VERSION = '20260928a';
+  const APP_VERSION = '20260930a';
   // ── Тихое автообновление (25.08.2026, вместо попапа «Вышло обновление!») ──
   // Узнав из облака про новую версию (appVersion пишет первый клиент нового деплоя,
   // promptVersion — кнопка «Оповестить» в админке), вкладка НЕ дёргает ученицу:
@@ -37732,6 +37742,134 @@
     if (show) setTimeout(() => document.getElementById('li-name')?.focus(), 80);
   }
 
+  // ── Вход через Google (Firebase Auth, всплывающее окно) ──
+  // Ключ аккаунта у нас — почта (user_<email>), поэтому ученица, которая
+  // регистрировалась с тем же Gmail, попадает в свой прогресс, а новенькая
+  // получает обычный старт (реферал, тур, триал — _welcomeNewAccount).
+  var _googleAuthPending = false; // пока идёт вход — onAuthStateChanged не вмешивается
+  // Наш APK (WebView с мостом KMTTS): Google запрещает вход во встроенном браузере
+  // (403 disallowed_useragent), поэтому там кнопки нет — до обновления приложения.
+  function _googleUnavailableHere() { return !!window.KMTTS; }
+  function hideGoogleInApp() {
+    if (!_googleUnavailableHere()) return;
+    const w = document.getElementById('auth-google-wrap');
+    if (w) w.style.display = 'none';
+  }
+  // Встроенные браузеры чужих приложений (Instagram, Facebook, TikTok, Android WebView…)
+  function _isInAppBrowser() {
+    return /FBAN|FBAV|FB_IAB|Instagram|Line\/|KAKAOTALK|Snapchat|TikTok|musical_ly|BytedanceWebview|; wv\)/i.test(navigator.userAgent || '');
+  }
+  function _showGoogleInAppHint() {
+    document.getElementById('google-inapp')?.remove();
+    const m = document.createElement('div');
+    m.className = 'modal-bg modal-center';
+    m.id = 'google-inapp';
+    m.setAttribute('role', 'dialog');
+    m.setAttribute('aria-modal', 'true');
+    m.onclick = e => { if (e.target === m) m.remove(); };
+    m.innerHTML = `
+      <div class="modal-card" style="max-width:360px; text-align:center;">
+        <div style="font-size:34px;" aria-hidden="true">🌐</div>
+        <div class="display" style="font-size:19px; color:var(--berry); margin-top:4px;">${t('auth.google.inAppTitle')}</div>
+        <div style="font-size:12.5px; color:var(--soft); margin-top:8px; line-height:1.6;">${t('auth.google.inAppText')}</div>
+        <div style="margin-top:12px; font-weight:700; color:var(--berry); user-select:all; -webkit-user-select:all;">${escHtml(location.host)}</div>
+        <button type="button" class="btn btn-primary btn-block" style="margin-top:14px;" onclick="copyGoogleSiteLink()">${t('auth.google.copyLink')}</button>
+        <button type="button" class="btn btn-ghost btn-block" style="margin-top:8px;" onclick="this.closest('.modal-bg').remove()">${t('auth.google.ok')}</button>
+      </div>`;
+    document.body.appendChild(m);
+  }
+  function copyGoogleSiteLink() {
+    const url = location.origin + '/';
+    const done = () => toast(t('auth.google.copied'), 'var(--sage)');
+    const legacy = () => {
+      // Встроенные браузеры без Clipboard API: старый способ через скрытое поле
+      try {
+        const ta = document.createElement('textarea');
+        ta.value = url; ta.setAttribute('readonly', '');
+        ta.style.position = 'fixed'; ta.style.opacity = '0';
+        document.body.appendChild(ta); ta.select();
+        const ok = document.execCommand('copy');
+        ta.remove();
+        if (ok) done();
+      } catch (_) {}
+    };
+    try {
+      if (navigator.clipboard && navigator.clipboard.writeText) { navigator.clipboard.writeText(url).then(done, legacy); return; }
+    } catch (_) {}
+    legacy();
+  }
+  // Имя ученицы в нашей базе (users/<ключ>/name) или '' — нет профиля / нет ответа за 4 с
+  async function _cloudProfileName(key) {
+    if (typeof _db === 'undefined') return '';
+    try {
+      const snap = await Promise.race([
+        _db.ref('users/' + key + '/name').once('value'),
+        new Promise(r => setTimeout(() => r(null), 4000))
+      ]);
+      const v = snap && snap.val ? snap.val() : null;
+      return (typeof v === 'string' && v.trim()) ? v.trim() : '';
+    } catch (_) { return ''; }
+  }
+  async function loginWithGoogle() {
+    if (_authBusy || _googleAuthPending) return;
+    if (_googleUnavailableHere() || _isInAppBrowser()) { _showGoogleInAppHint(); return; }
+    const btn = document.querySelector('#auth-google-wrap .auth-google');
+    const local = Store.get('user');
+    const wasGuest = !!(local && local.guest);
+    const provider = new firebase.auth.GoogleAuthProvider();
+    provider.setCustomParameters({ prompt: 'select_account' }); // общий телефон — выбрать свой аккаунт
+    _googleAuthPending = true;
+    _authBusy = true;
+    if (btn) btn.setAttribute('aria-busy', 'true');
+    try {
+      let cred;
+      try {
+        cred = await _auth.signInWithPopup(provider);
+      } catch (e) {
+        const c = (e && e.code) || '';
+        if (c === 'auth/popup-closed-by-user' || c === 'auth/cancelled-popup-request' || c === 'auth/user-cancelled') return;
+        if (c === 'auth/popup-blocked') { toast(t('auth.google.popupBlocked')); return; }
+        if (c === 'auth/network-request-failed') { toast(t('ui.470')); return; }
+        if (c === 'auth/operation-not-supported-in-this-environment' || c === 'auth/web-storage-unsupported') { _showGoogleInAppHint(); return; }
+        console.warn('google login:', c || e);
+        toast(t('auth.google.fail'));
+        return;
+      }
+      const fbUser = cred && cred.user;
+      const email = ((fbUser && fbUser.email) || '').toLowerCase();
+      if (!email) {
+        try { await _auth.signOut(); } catch (_) {}
+        toast(t('auth.google.fail'));
+        return;
+      }
+      // Админка — только через обычный вход: её ключ admin_<email>, а не user_<email>
+      if (getAdminsList().some(a => (a.email || '').toLowerCase() === email)) {
+        try { await _auth.signOut(); } catch (_) {}
+        toast(t('auth.google.admin'), 'var(--berry)');
+        return;
+      }
+      // Имя существующей ученицы — из нашей базы (в Google оно может быть другим).
+      // Есть профиль в базе → это вход в старый аккаунт, даже если Firebase-аккаунт новый.
+      const key = ('user_' + email).replace(/[.#$\[\]\/]/g, '_');
+      const cloudName = await _cloudProfileName(key);
+      const isNew = !cloudName && !!(cred.additionalUserInfo && cred.additionalUserInfo.isNewUser);
+      const name = cloudName || ((fbUser.displayName || '').trim()) || email.split('@')[0];
+      if (isNew && wasGuest) migrateGuestProgress({ name, email }); // прогресс гостя → в новый аккаунт
+      setActiveUser({ name, email, uid: fbUser.uid });
+      // Имя в тосте экранируем: оно из базы, открытой на запись, а toast — innerHTML
+      if (isNew) {
+        toast(t('ui.477', { name: escHtml(name) }), 'var(--sage)');
+        _welcomeNewAccount(fbUser.uid, name);
+      } else {
+        toast(t('ui.466', { name: escHtml(name) }), 'var(--sage)');
+      }
+    } finally {
+      _googleAuthPending = false;
+      _authBusy = false;
+      if (btn) btn.removeAttribute('aria-busy');
+    }
+  }
+
   // ── Supabase OAuth (Kakao; Apple подключим позже) ──
   // Anon-ключ ПУБЛИЧНЫЙ по дизайну Supabase — в клиенте ему быть можно.
   // Как включить: создать проект на supabase.com → Settings → API → вставить
@@ -38026,6 +38164,8 @@
     }
     // 2. Firebase Auth login (email + password)
     if (!name.includes('@')) { toast(t('ui.465')); return; }
+    const gHint = document.getElementById('li-google-hint');
+    if (gHint) gHint.style.display = 'none';
     _authBusy = true;
     try {
       const cred = await _auth.signInWithEmailAndPassword(name, pass);
@@ -38035,8 +38175,12 @@
     } catch (e) {
       console.warn('login error:', e);
       const code = e.code || '';
-      if (code === 'auth/user-not-found' || code === 'auth/invalid-credential' || code === 'auth/wrong-password') {
+      if (code === 'auth/user-not-found' || code === 'auth/invalid-credential' ||
+          code === 'auth/wrong-password' || code === 'auth/invalid-login-credentials') {
         toast(t('ui.467'));
+        // Gmail-ученица, хоть раз входившая через Google, теряет пароль (Firebase снимает
+        // его с неподтверждённой почты) — подсказываем войти через Google
+        if (gHint && /@(gmail|googlemail)\.com$/i.test(name) && !_googleUnavailableHere()) gHint.style.display = 'block';
       } else if (code === 'auth/invalid-email') {
         toast(t('ui.468'));
       } else if (code === 'auth/too-many-requests') {
@@ -38049,6 +38193,27 @@
     } finally {
       _authBusy = false;
     }
+  }
+  // Новый аккаунт (регистрация по почте или первый вход через Google): реферал,
+  // тур Комдори и welcome-триал — одинаково для обоих способов.
+  function _welcomeNewAccount(authUid, name) {
+    try { applyPendingReferral(authUid, name); } catch (_) {}
+    // Завершение регистрации → тур Комдори после закрытия тарифов (см. closePlanPage).
+    Store.set('tourPending', 1);
+    // Welcome-триал: 7 дней Master новичку (один раз на аккаунт). Порядок СТРОГО
+    // последовательный, чтобы попапы не налезали друг на друга и на тур:
+    //   попап «ты получила Master на неделю» → «ОК» → экран тарифов → назад → тур.
+    // Раньше попап и тарифы шли по разным таймерам (700/1200 мс) и сталкивались.
+    try {
+      if (!UStore.get('trialGranted') && myPlanObj().id === 'free') {
+        UStore.set('trialGranted', 1);
+        grantMasterDays(7, 'welcome-trial');
+        _trialModalShownSession = true;
+        setTimeout(() => { try { showTrialInfoModal('plan'); } catch (_) { try { openPlanPage(); } catch (__) {} } }, 650);
+      } else {
+        setTimeout(() => { try { openPlanPage(); } catch (_) {} }, 700);
+      }
+    } catch (_) { setTimeout(() => { try { openPlanPage(); } catch (_) {} }, 700); }
   }
   async function registerUser() {
     if (_authBusy) return;
@@ -38071,23 +38236,7 @@
       migrateGuestProgress({ name, email: cred.user.email }); // прогресс гостя → в новый аккаунт
       setActiveUser({ name, email: cred.user.email, uid: cred.user.uid, level, country });
       toast(t('ui.477',{name: name}), 'var(--sage)');
-      try { applyPendingReferral(cred.user.uid, name); } catch (_) {}
-      // Завершение регистрации → тур Комдори после закрытия тарифов (см. closePlanPage).
-      Store.set('tourPending', 1);
-      // Welcome-триал: 7 дней Master новичку (один раз на аккаунт). Порядок СТРОГО
-      // последовательный, чтобы попапы не налезали друг на друга и на тур:
-      //   попап «ты получила Master на неделю» → «ОК» → экран тарифов → назад → тур.
-      // Раньше попап и тарифы шли по разным таймерам (700/1200 мс) и сталкивались.
-      try {
-        if (!UStore.get('trialGranted') && myPlanObj().id === 'free') {
-          UStore.set('trialGranted', 1);
-          grantMasterDays(7, 'welcome-trial');
-          _trialModalShownSession = true;
-          setTimeout(() => { try { showTrialInfoModal('plan'); } catch (_) { try { openPlanPage(); } catch (__) {} } }, 650);
-        } else {
-          setTimeout(() => { try { openPlanPage(); } catch (_) {} }, 700);
-        }
-      } catch (_) { setTimeout(() => { try { openPlanPage(); } catch (_) {} }, 700); }
+      _welcomeNewAccount(cred.user.uid, name);
     } catch (e) {
       console.warn('register error:', e);
       const code = e.code || '';
@@ -43600,6 +43749,8 @@
   } catch (_) {}
   // Supabase OAuth (Kakao): подхватить сессию после возврата с провайдера
   try { initSupabaseSession(); } catch (_) {}
+  // В нашем APK кнопки «Войти через Google» нет: Google не пускает вход во встроенном браузере
+  try { hideGoogleInApp(); } catch (_) {}
   // У Мади: собрать/освежить тонкий справочник usersPublic и увезти base64-медиа
   // (профили, лента) в Storage — после запуска приложения, чтобы не тормозить старт.
   setTimeout(async () => {
@@ -43651,6 +43802,9 @@
 
   // ── Firebase Auth: keep local session in sync with auth state ──
   _auth.onAuthStateChanged(fbUser => {
+    // Идёт вход через Google: итог (новый/старый аккаунт, запрет для админки) решает
+    // loginWithGoogle — иначе слушатель успел бы открыть аккаунт раньше проверок.
+    if (_googleAuthPending) return;
     const local = Store.get('user');
     // Админ: локальный сеанс не трогаем, но с правил interim-2 чтения БД требуют
     // auth — без Firebase-сессии админке нужен перелогин (создаст/обновит сессию).
