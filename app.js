@@ -5709,6 +5709,15 @@
     const orig = UStore.set.bind(UStore);
     UStore.set = function(k, v) {
       if (k === 'stats' && !_statsLoaded) return; // дефолты до загрузки не пишем ни локально, ни в облако
+      // Личные настройки: изменение синкаемого поля (тема, пол…) — метка времени + в облако
+      if (k === 'settings' && !_skipCloudPush && v && typeof v === 'object' &&
+          !_prefsSame(UStore.get('settings', null), v)) {
+        v = { ...v, prefsTs: Date.now() };
+        delete v.prefsInh;
+        orig(k, v);
+        _pushPrefs(v);
+        return;
+      }
       orig(k, v);
       if (!_skipCloudPush && USTORE_SYNC_KEYS.includes(k)) {
         pushUserField(k, v);
@@ -5726,6 +5735,7 @@
     _userListeners = [];
     _cloudLoadedKeys = new Set();   // новая личность/переподключение → снова ждём снапшот
     _planLoaded = false; // тариф новой личности ещё не загружен (её отложенные подарки ждут в её UStore)
+    _prefsLoaded = false; // и её личные настройки тоже
   }
   // Cloud-sync gating for the profile. While the first snapshot is in flight we
   // show a skeleton instead of a misleading "new user / 0 achievements" state,
@@ -5820,6 +5830,35 @@
     };
     ctyRef.on('value', ctyHandler);
     _userListeners.push(() => ctyRef.off('value', ctyHandler));
+    // Личные настройки (тема, тёмный режим, пол…) — см. PREFS_SYNC_FIELDS
+    const prefsRef = _db.ref('users/' + uid + '/prefs');
+    const prefsHandler = snap => {
+      const cur = Store.get('user');
+      if (!cur || cur.guest || cur.isAdmin || firebaseUserId() !== uid) return;
+      const first = !_prefsLoaded;
+      _prefsLoaded = true;
+      const cloud = _sanitizeCloudPrefs(snap.val());
+      const local = UStore.get('settings', null);
+      const localTs = +(local && local.prefsTs) || 0;
+      if (!cloud) {
+        if (first && local) _pushPrefs(local); // облако пустое → туда уходит выбор этого устройства
+        return;
+      }
+      // Новое устройство / настройки гостя — берём облако; иначе побеждает свежее изменение
+      const fresh = !local || !!local.prefsInh;
+      if (fresh || (!cloud.seed && cloud.updatedAt > localTs)) {
+        const merged = { ...(local || {}), ...cloud, prefsTs: cloud.seed ? 0 : cloud.updatedAt };
+        delete merged.updatedAt; delete merged.seed; delete merged.prefsInh;
+        const was = _skipCloudPush;
+        _skipCloudPush = true;
+        try { UStore.set('settings', merged); } finally { _skipCloudPush = was; }
+        _refreshAfterPrefs();
+      } else if (localTs > 0 && (cloud.seed || localTs > cloud.updatedAt)) {
+        _pushPrefs(local); // здесь выбор свежее облачного
+      }
+    };
+    prefsRef.on('value', prefsHandler);
+    _userListeners.push(() => prefsRef.off('value', prefsHandler));
     _db.ref('users/' + uid + '/level').once('value').then(snap => {
       const cloudLvl = snap.val();
       const cur = Store.get('user');
@@ -6840,7 +6879,7 @@
   // Версия сборки: держать ВРУЧНУЮ синхронной с ?v= в index.html при каждом деплое
   // (те же 3 места — stylesheet/preload/script). Используется тихим автообновлением
   // ниже — сама загрузка кода по-прежнему идёт через ?v=.
-  const APP_VERSION = '20260930a';
+  const APP_VERSION = '20260930b';
   // ── Тихое автообновление (25.08.2026, вместо попапа «Вышло обновление!») ──
   // Узнав из облака про новую версию (appVersion пишет первый клиент нового деплоя,
   // promptVersion — кнопка «Оповестить» в админке), вкладка НЕ дёргает ученицу:
@@ -9928,6 +9967,49 @@
   }
   // Для конкретного пользователя (ученика в админке): пол берём из meta.gender 'Ж'/'М'.
   function gwFor(metaGender, f, m) { return metaGender === 'М' ? m : f; }
+  // ── Облачная синхронизация личных настроек (users/<uid>/prefs) ──
+  // Тема, тёмный режим, пол и т.п. раньше жили только в этом браузере: новый телефон,
+  // другой браузер или APK — и тема слетала, пол спрашивали заново. Движок озвучки и
+  // фоновые звуки НЕ синкаем: они подбираются под конкретное устройство и сеть.
+  // Побеждает самое свежее изменение (локальный prefsTs ↔ облачный updatedAt).
+  // seed — облако заполнило устройство без метки (выбор сделан до этой версии):
+  // такое значение не перетирает выбор, который уже есть на другом устройстве.
+  const PREFS_SYNC_FIELDS = ['colorTheme', 'darkTheme', 'darkAuto', 'gender', 'petals', 'calmMotion', 'sound', 'slowVoice'];
+  var _prefsLoaded = false; // пришёл ли первый облачный снапшот prefs этой личности
+  function _prefsSubset(s) {
+    const full = { ...SETTINGS_DEFAULTS, ...(s || {}) };
+    const o = {};
+    PREFS_SYNC_FIELDS.forEach(k => { o[k] = full[k]; });
+    return o;
+  }
+  function _prefsSame(a, b) {
+    const x = _prefsSubset(a), y = _prefsSubset(b);
+    return PREFS_SYNC_FIELDS.every(k => x[k] === y[k]);
+  }
+  // Облако открыто на запись — берём только известные поля с правильными типами
+  function _sanitizeCloudPrefs(v) {
+    if (!v || typeof v !== 'object' || Array.isArray(v)) return null;
+    const o = {};
+    if (COLOR_THEMES.some(th => th.key === v.colorTheme)) o.colorTheme = v.colorTheme;
+    ['darkTheme', 'darkAuto', 'petals', 'calmMotion', 'sound', 'slowVoice'].forEach(k => { if (typeof v[k] === 'boolean') o[k] = v[k]; });
+    if (v.gender === 'f' || v.gender === 'm' || v.gender === '') o.gender = v.gender;
+    o.updatedAt = (typeof v.updatedAt === 'number' && isFinite(v.updatedAt) && v.updatedAt > 0) ? v.updatedAt : 0;
+    o.seed = v.seed === true;
+    return o;
+  }
+  function _pushPrefs(s) {
+    if (!_prefsLoaded || !s) return; // до первого снапшота облака не пишем — сверит prefsHandler
+    const ts = +s.prefsTs || 0;
+    pushUserField('prefs', { ..._prefsSubset(s), updatedAt: ts || Date.now(), seed: !ts });
+  }
+  // Настройки пришли из облака — применить тему и перерисовать обращения по роду
+  function _refreshAfterPrefs() {
+    try { applySettings(); } catch (_) {}
+    try { if (document.getElementById('settings-card')) renderSettingsCard(); } catch (_) {}
+    try { syncStats(); } catch (_) {}
+    try { syncAchievementsStrip(); } catch (_) {}
+    try { renderMyLevelChip(); } catch (_) {}
+  }
   // ── Цветовые темы (свотчи в Настройках; CSS-классы ct-* в styles.css) ──
   const COLOR_THEMES = [
     { key: 'madie',   name: 'Madie',     a: '#D9687A', b: '#FBE8EA' },
@@ -38028,7 +38110,13 @@
       try {
         if (UStore.get('settings', null) == null) {
           const gs = Store.get('u_guest_settings', null);
-          if (gs && typeof gs === 'object') UStore.set('settings', gs);
+          if (gs && typeof gs === 'object') {
+            // Унаследованное от гостя «слабее» облака: если у аккаунта уже есть
+            // настройки в облаке — победят они (см. prefsHandler), поэтому без метки
+            const was = _skipCloudPush;
+            _skipCloudPush = true;
+            try { UStore.set('settings', { ...gs, prefsTs: 0, prefsInh: true }); } finally { _skipCloudPush = was; }
+          }
         }
       } catch (_) {}
     }
