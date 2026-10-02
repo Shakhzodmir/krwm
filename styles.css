@@ -1868,6 +1868,14 @@
   .chat-popup-body { flex: 1; min-width: 0; }
   .chat-popup-name { font-weight: 700; color: var(--berry); font-size: 13.5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .chat-popup-text { font-size: 12px; color: var(--soft); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; margin-top: 1px; }
+  .chat-popup:focus-visible { outline: 2px solid var(--coral); outline-offset: 2px; }
+  /* Баннеры уведомлений в открытом приложении: заявка в друзья с кнопками,
+     «заявка принята», праздник, тариф — тот же .chat-popup, текст в 2 строки */
+  .chat-popup.km-pop-actions { flex-wrap: wrap; row-gap: 10px; }
+  .chat-popup.km-pop-actions .chat-popup-body { flex: 1 1 calc(100% - 52px); }
+  .km-pop-btns { display: flex; gap: 8px; width: 100%; padding-left: 52px; box-sizing: border-box; }
+  .km-pop-btns .btn { flex: 1 1 0; min-width: 0; min-height: 36px; padding: 8px 10px; font-size: 12px; }
+  .chat-popup.km-pop-2l .chat-popup-text { white-space: normal; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; line-height: 1.35; }
 
   .chat-input-row {
     display: flex;
@@ -5813,6 +5821,14 @@
   .switch::after { content: ''; position: absolute; top: 3px; left: 3px; width: 20px; height: 20px; border-radius: 50%; background: white; box-shadow: 0 1px 4px rgba(var(--shade-rgb),.25); transition: transform .55s cubic-bezier(.4, 1.2, .4, 1); will-change: transform; }
   .switch.on { background-color: var(--coral); box-shadow: 0 4px 12px -4px rgba(var(--accent-rgb),.55), inset 0 1px 0 rgba(255,255,255,.25); }
   .switch.on::after { transform: translateX(18px); }
+  /* Настройки → Уведомления: «что присылать» — подпункты под строкой статуса */
+  a.settings-row { text-decoration: none; color: inherit; box-sizing: border-box; }
+  .notif-kinds { margin-left: 17px; padding-left: 11px; border-left: 2px solid rgba(var(--accent-rgb), .22); border-bottom: 1px solid var(--line); }
+  .notif-kinds-title { font-size: 11px; font-weight: 700; color: var(--soft); letter-spacing: .02em; margin: 10px 4px 0; }
+  .notif-kinds .settings-row { padding: 10px 4px; gap: 10px; }
+  .notif-kinds .settings-row:last-of-type { border-bottom: none; }
+  .notif-kinds .settings-ico { width: 28px; height: 28px; border-radius: 9px; font-size: 14px; }
+  .notif-note { font-size: 10.5px; color: var(--soft); line-height: 1.45; padding: 0 4px 10px; }
 
   /* ───── ОНБОРДИНГ ───── */
   #onboard {
@@ -7274,4 +7290,352 @@ body.theme-dark .home-art-card { background: var(--paper); }
    обрезает overflow, поэтому замер ширины страницы дефект не ловил). */
 @media (min-width: 768px) {
   .home-art-grid { grid-template-columns: 1fr 1fr 1fr; }
+}
+
+/* ═══════════ Уведомления: колокольчик, попап рассылки Мади, вкладка «Рассылка» (30.09.2026) ═══════════
+   Только токены темы (тёмная и цветовые темы перекрашивают сами). Анимации 200–260 мс ease-out;
+   «Спокойный режим» и prefers-reduced-motion их гасят. */
+@keyframes kmSoftUp { from { opacity: 0; transform: translateY(14px) scale(.985); } to { opacity: 1; transform: none; } }
+@keyframes kmFadeOut { to { opacity: 0; } }
+@keyframes kmBadgeIn { from { opacity: 0; transform: scale(.6); } to { opacity: 1; transform: none; } }
+
+/* ── Колокольчик слева от шестерёнки ── */
+.km-hdr-actions { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+/* Вид — как у шестерёнки (объёмная duo-кнопка), чтобы пара выглядела одним блоком */
+.km-bell-btn {
+  background: var(--duo-blush);
+  border: 2px solid var(--duo-rose);
+  box-shadow: 0 3px 0 var(--duo-rose);
+  color: var(--duo-coral);
+  border-radius: 13px;
+  transition: transform .1s ease-out, box-shadow .1s ease-out, background .2s ease-out;
+}
+.km-bell-btn:hover { transform: none; background: var(--duo-rose); color: #fff; }
+.km-bell-btn:active { transform: translateY(3px); box-shadow: 0 0 0 var(--duo-rose); }
+.km-bell-badge {
+  position: absolute; top: -8px; right: -8px; z-index: 1;
+  min-width: 19px; height: 19px; padding: 0 5px; box-sizing: border-box;
+  border-radius: 999px; background: var(--bad-ink); color: #fff;
+  font-size: 10.5px; font-weight: 800; line-height: 19px; text-align: center;
+  font-variant-numeric: tabular-nums;
+  box-shadow: 0 0 0 2px var(--card);
+  pointer-events: none;
+  animation: kmBadgeIn .22s var(--ease-out) both;
+}
+.km-bell-badge[hidden] { display: none; }
+body.theme-dark .km-bell-badge { background: var(--dk-fill-deep); color: #F2F5FA; }
+body.theme-dark .km-bell-btn:hover { color: #F2F5FA; }
+/* Иконка на --duo-blush: --duo-coral давал 2,2–2,8:1 во всех тёмных темах (WCAG 1.4.11 требует
+   ≥3:1). --dk-ink — светлый акцент КАЖДОЙ цветовой темы (5,3–6,6:1). Шестерёнка — так же, пара
+   «колокольчик + шестерёнка» остаётся одним блоком; наведение — светлый #F2F5FA (не чисто белый). */
+body.theme-dark .km-bell-btn,
+body.theme-dark .chat-back-btn:has(.fa-gear) { color: var(--dk-ink); }
+body.theme-dark .chat-back-btn:has(.fa-gear):hover { color: #F2F5FA; }
+/* Главная: рядом со счётчиками теперь и колокольчик. Решает реальная ширина блока бренда вместе
+   с логотипом (контейнерный запрос; логотип 40 px + зазор 10 px):
+   • в одну строку «Korean with Madie» (Inter 800, 16 px) нужно 143 px текста → блок от 197 px;
+     уже — заголовок, как на узких телефонах (≤420 px), в две строки «Korean with / Madie», а
+     подпись «с первого шага» прячем: на 430–720 px вместо обрывка «Korean with Ma…»;
+   • на две строки нужно 84 px («with Madie») → блок от 134 px, с запасом 137 px; уже — прячем
+     и заголовок (остаётся логотип), вместо обрывка «Kor…». */
+.topbar-brand { container-type: inline-size; }
+@container (max-width: 197px) {
+  .topbar-brand .topbar-title { white-space: normal; text-overflow: clip; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+  .topbar-brand .topbar-sub { display: none; }
+}
+@container (max-width: 137px) {
+  .topbar-brand > div:last-child { display: none; }
+}
+/* Остальные шапки: колокольчик забрал 44px у заголовка. На узких телефонах весь масштаб
+   заголовков шапки чуть меньше (единый для всех экранов), чтобы «Модуль 1 · Хангыль»,
+   «Подготовка к ТОПИК», «Выбирай и играй 🌸» помещались целиком на 375 и 360 px. */
+@media (max-width: 400px) { .topbar .display { font-size: 17px !important; } }
+@media (max-width: 365px) { .topbar .display { font-size: 16px !important; } }
+/* Ниже 720 px приложение не шире 440 px (.app-shell): чипы шапки уступают место колокольчику.
+   Их данные есть на самом экране: процент модуля — полоса и «N из M», уровень и ранг — карточка
+   «Уровень» в профиле (оттуда же и с XP на Главной открывается список рангов), формула — сам
+   конструктор Хангыль-лаба. Скрипт меняет у них только текст — правило ему не мешает.
+   Ранг — до 768 px: на 720–767 px приложение 540 px, и длинное имя с бейджем 선배 рядом с чипом
+   ранга, колокольчиком и шестерёнкой обрезалось (на проде помещалось целиком). */
+@media (max-width: 719.98px) {
+  #module-pct-chip, #games-level, #profile-rank-chip, #hangul-formula { display: none !important; }
+}
+@media (max-width: 767.98px) {
+  #profile-rank-chip { display: none !important; }
+}
+/* Надпись над заголовком шапки — всегда в одну строку (многоточие, если не влезает): иначе на узких
+   телефонах она переносилась на 2 строки и шапка этого экрана становилась выше соседних.
+   Текстовому блоку шапки разрешаем сжиматься (min-width:0) — иначе самое длинное слово надписи
+   (letter-spacing .22em) выталкивало его под правую группу кнопок. */
+.topbar > div:first-child > div:not(.topbar-mark) { min-width: 0; }
+.topbar .page-eyebrow { display: inline-block; max-width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; vertical-align: top; }
+.topbar .page-eyebrow::before { display: inline-block; vertical-align: middle; margin-right: 8px; }
+/* Рядом с колокольчиком самым длинным надписям («자습 · самостоятельно», «КОНСТРУКТОР СЛОГОВ»)
+   на узких телефонах не хватало 6–22 px: разрядка плотнее, ниже 375 px — без чёрточки, ниже 340 px —
+   ещё и шрифт мельче (11 px в duo-слое задан с !important) и заголовок 15 px */
+@media (max-width: 399.98px) {
+  .topbar .page-eyebrow { letter-spacing: .18em; }
+}
+@media (max-width: 374.98px) {
+  .topbar .page-eyebrow { letter-spacing: .14em; }
+  .topbar .page-eyebrow::before { display: none; }
+}
+@media (max-width: 339.98px) {
+  .topbar .page-eyebrow { letter-spacing: .08em; font-size: 10px !important; }
+  .topbar .display { font-size: 15px !important; }
+}
+/* Главная на 360 px: огонёк 100+, заморозка и 5-значный XP — счётчикам ещё компактнее,
+   иначе логотип наезжал на огонёк */
+@media (max-width: 370px) {
+  .topbar-brand + div { gap: 4px !important; }
+  .topbar .stat-pill { padding: 6px 7px !important; }
+}
+/* 320–359 px (iPhone SE 1, обложка Galaxy Fold): рядом с колокольчиком и шестерёнкой логотип
+   закрывал огонёк уже при серии 15 и заморозке. Счётчики ещё плотнее, а ниже 340 px значок 🧊
+   уходит — число заморозок есть в окне «Цель дня» (карточка цели на Главной, настройки). */
+@media (max-width: 359.98px) {
+  .topbar-brand + div { gap: 3px !important; }
+  .topbar .stat-pill { padding: 6px 5px !important; gap: 3px; }
+}
+@media (max-width: 339.98px) {
+  #freeze-pill { display: none !important; }
+}
+/* 421–719 px приложение не шире 440 px (.app-shell) — счётчики Главной такие же компактные, как на
+   телефонах ≤420 px: иначе при заморозках и 5-значном XP рядом с колокольчиком логотипу оставалось
+   меньше 30 px, а новичку не хватало места на «Korean with Madie» */
+@media (min-width: 420.02px) and (max-width: 719.98px) {
+  .topbar-brand + div { gap: 6px !important; }
+  .topbar .stat-pill { padding: 6px 9px !important; font-size: 12.5px !important; gap: 4px; }
+}
+/* Страховка для любой ширины: не влез логотип — прячем его, а не кладём поверх счётчиков */
+@container (max-width: 31.98px) {
+  .topbar-brand .topbar-mark { display: none; }
+}
+
+/* ── Панель колокольчика ── */
+.bell-card {
+  max-width: 420px; max-height: 84vh; padding: 18px 14px 10px;
+  display: flex; flex-direction: column;
+  animation: kmSoftUp .26s var(--ease-out) both;
+}
+.bell-head { display: flex; align-items: center; gap: 10px; margin: 0 4px 8px; flex-shrink: 0; }
+.bell-head-ico {
+  width: 36px; height: 36px; border-radius: 12px; flex-shrink: 0;
+  background: var(--blush); color: var(--coral);
+  display: flex; align-items: center; justify-content: center; font-size: 16px;
+}
+.bell-head-tx { flex: 1; min-width: 0; }
+.bell-head-title { font-size: 20px; line-height: 1.15; color: var(--berry); }
+.bell-head-sub { font-size: 11px; color: var(--soft); margin-top: 1px; }
+.bell-x {
+  width: 40px; height: 40px; flex-shrink: 0; border: none; border-radius: 12px;
+  background: none; color: var(--soft); font-size: 26px; line-height: 1; cursor: pointer;
+  font-family: inherit; transition: background .2s ease-out;
+}
+.bell-x:hover { background: var(--veil); }
+.bell-list { overflow-y: auto; min-height: 0; display: grid; gap: 4px; padding: 2px; -webkit-overflow-scrolling: touch; }
+.bell-item {
+  display: flex; align-items: flex-start; gap: 12px; width: 100%; box-sizing: border-box;
+  padding: 10px 8px; border: none; border-radius: 14px; background: none;
+  text-align: left; font-family: inherit; color: inherit; cursor: pointer;
+  transition: background .2s ease-out;
+}
+.bell-item:hover { background: var(--veil); }
+.bell-item.is-new { background: rgba(var(--accent-rgb), .07); }
+.bell-ico {
+  width: 40px; height: 40px; border-radius: 50%; flex-shrink: 0;
+  background: var(--blush); display: flex; align-items: center; justify-content: center; font-size: 18px;
+}
+.bell-main { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.bell-title {
+  font-weight: 700; font-size: 13.5px; line-height: 1.3; color: var(--berry); overflow-wrap: anywhere;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+}
+.bell-body {
+  font-size: 12.5px; line-height: 1.4; color: var(--soft); overflow-wrap: anywhere; white-space: pre-line;
+  display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;
+}
+.bell-time { display: flex; align-items: center; gap: 6px; margin-top: 2px; font-size: 11px; color: var(--hush); }
+.bell-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--coral); flex-shrink: 0; }
+.bell-sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.bell-thumb { width: 52px; height: 52px; border-radius: 12px; object-fit: cover; flex-shrink: 0; border: 1px solid var(--line); }
+.bell-empty { text-align: center; padding: 26px 14px 22px; }
+.bell-empty-ico { font-size: 34px; line-height: 1; }
+.bell-empty-t { font-weight: 700; font-size: 15px; color: var(--berry); margin-top: 8px; }
+.bell-empty-s { font-size: 12.5px; line-height: 1.5; color: var(--soft); margin-top: 4px; }
+.bell-settings {
+  align-self: center; margin-top: 6px; min-height: 44px; padding: 10px 14px;
+  border: none; background: none; border-radius: 12px; cursor: pointer; font-family: inherit;
+  font-size: 12.5px; font-weight: 700; color: var(--coral);
+  display: inline-flex; align-items: center; gap: 6px; transition: background .2s ease-out;
+}
+.bell-settings:hover { background: var(--veil); }
+body.theme-dark .bell-item.is-new { background: rgba(var(--accent-rgb), .12); }
+body.theme-dark .bell-settings, body.theme-dark .bell-head-ico { color: var(--plum); }
+
+/* ── Попап рассылки (и его копии в предпросмотре у Мади) ── */
+.bc-pop-card {
+  max-width: 400px; text-align: center; padding: 18px 18px 20px;
+  animation: kmSoftUp .26s var(--ease-out) both;
+}
+.bc-pop-bg.bc-out { animation: kmFadeOut .2s ease-out forwards; }
+.bc-pop-imgbtn {
+  display: block; width: 100%; padding: 0; margin: 0 0 14px; border: none;
+  border-radius: 16px; overflow: hidden; background: var(--blush); cursor: zoom-in;
+  container-type: inline-size;
+}
+/* Фото — во всю ширину карточки, без полос по бокам: высокое обрезается по центру (cover) не выше
+   квадрата и 42% экрана, целиком — по нажатию. cqw = ширина самой кнопки, поэтому у Мади в
+   мини-предпросмотре обрезка та же, что увидит ученица. Первая строка — для браузеров без cqw */
+.bc-pop-img {
+  display: block; width: 100%; height: auto; object-fit: cover;
+  max-height: min(42vh, 360px); max-height: min(100cqw, 42vh, 360px);
+}
+/* ≥1024 px общее .modal-card { max-width: 480px !important } растягивало попап, и фото шириной 438 px
+   упиралось в предел высоты: квадрат терял до четверти, 9:16 становился полосой. Карточка не шире
+   предела фото + поля 2×18 + рамка 2×3 — квадратные и горизонтальные фото видны целиком */
+@media (min-width: 1024px) {
+  .modal-card.bc-pop-card { max-width: min(400px, calc(42vh + 42px)) !important; }
+}
+/* Фото ещё грузится — держим квадратное место (итоговый размер любого вертикального или квадратного
+   фото), иначе карточка вырастала на глазах и «Понятно» уезжало из-под пальца. Горизонтальное после
+   загрузки плавно ужимается, битое — плавно схлопывается (kmShowBroadcastPopup) */
+.bc-pop-imgbtn.bc-img-wait {
+  aspect-ratio: 1 / 1; max-height: min(42vh, 360px);
+  background: linear-gradient(110deg, var(--blush) 25%, var(--card) 50%, var(--blush) 75%);
+  background-size: 220% 100%; animation: achSkeleton 1.1s ease-in-out infinite;
+}
+.bc-pop-imgbtn.bc-img-anim { transition: height .25s var(--ease-out), margin-bottom .25s var(--ease-out); }
+body.calm-motion .bc-pop-imgbtn.bc-img-wait { animation: none; }
+body.calm-motion .bc-pop-imgbtn.bc-img-anim { transition: none; }
+.bc-pop-eyebrow { font-size: 10.5px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; color: var(--coral); }
+.bc-pop-title { font-size: 21px; line-height: 1.22; color: var(--berry); margin-top: 6px; overflow-wrap: anywhere; text-wrap: balance; }
+.bc-pop-text { font-size: 14px; line-height: 1.6; color: var(--soft); margin-top: 10px; white-space: pre-wrap; overflow-wrap: anywhere; text-wrap: pretty; }
+.bc-pop-ok { margin-top: 18px; min-height: 48px; font-size: 15px; }
+body.theme-dark .bc-pop-eyebrow { color: var(--plum); }
+/* Тёмная: без чисто белого текста на кнопках (как у золотых кнопок — #F2F5FA) */
+body.theme-dark .bc-pop-card .btn-primary,
+body.theme-dark .bc-adm .btn-primary { color: #F2F5FA !important; }
+body.theme-dark .bc-adm .lvl-chip.on { color: #F2F5FA; }
+body.calm-motion .bc-pop-card, body.calm-motion .bell-card, body.calm-motion .km-bell-badge,
+body.calm-motion .bc-pop-bg.bc-out { animation: none; }
+
+/* ── Админка → «📣 Рассылка» ── */
+.bc-adm { display: grid; gap: 14px; }
+.bc-note {
+  background: linear-gradient(135deg, var(--blush), var(--petal)); border-radius: 14px;
+  padding: 10px 12px; font-size: 11.5px; line-height: 1.5; color: var(--berry);
+}
+.bc-cols { display: grid; grid-template-columns: minmax(0, 1fr); gap: 14px; align-items: start; }
+.bc-col { display: grid; gap: 14px; min-width: 0; }
+.bc-box { padding: 14px; display: grid; gap: 8px; min-width: 0; }
+.bc-label {
+  display: flex; align-items: baseline; justify-content: space-between; gap: 8px;
+  font-size: 12.5px; font-weight: 700; color: var(--berry); margin-top: 4px;
+}
+.bc-count { font-size: 11px; font-weight: 700; color: var(--hush); font-variant-numeric: tabular-nums; }
+.bc-count.over { color: var(--bad-ink); }
+.bc-textarea { resize: vertical; min-height: 128px; line-height: 1.5; font-family: inherit; }
+.bc-hint { font-size: 11.5px; line-height: 1.45; color: var(--soft); }
+.bc-hint:empty { display: none; }
+.bc-hint.bc-err { color: var(--bad-ink); font-weight: 600; }
+.bc-hint.bc-ok { color: var(--ok-ink); font-weight: 600; }
+.bc-photo { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.bc-photo-thumb { width: 64px; height: 64px; border-radius: 12px; object-fit: cover; border: 1px solid var(--line); flex-shrink: 0; }
+.bc-photo-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+.bc-photo-pick, .bc-photo-rm { position: relative; overflow: hidden; min-height: 42px; padding: 8px 14px; font-size: 12.5px; cursor: pointer; }
+/* Настоящий input поверх кнопки: и тап, и фокус с клавиатуры работают */
+.bc-file { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; font-size: 0; }
+.bc-photo-pick:focus-within { outline: 2px solid var(--coral); outline-offset: 2px; }
+.bc-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.bc-chips .lvl-chip { min-height: 38px; }
+/* Выбранный чип — сплошной акцент: белый текст на светлом краю градиента давал < 4.5:1 */
+.bc-chips .lvl-chip.on { background: var(--coral); }
+body.theme-dark .bc-chips .lvl-chip.on { background: var(--dk-fill-deep); }
+/* Страны — подвыбор «По стране»: своя подложка, чтобы два выбранных чипа не слипались в одну группу */
+.bc-countries { margin-top: 2px; padding: 10px; border-radius: 16px; background: var(--veil); border: 1px dashed var(--line-strong); }
+.bc-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 6px; }
+.bc-btns .btn { min-height: 48px; padding: 10px 12px; font-size: 14px; }
+.bc-btns .btn:disabled { opacity: .6; cursor: progress; }
+.bc-status { font-size: 12.5px; line-height: 1.5; border-radius: 12px; padding: 10px 12px; }
+.bc-status:empty { display: none; }
+.bc-status.bc-ok { background: rgba(132,196,116,.16); color: var(--ok-deep); }
+.bc-status.bc-err { background: var(--bad-bg); color: var(--bad-ink); }
+.bc-status.bc-info { background: var(--veil); color: var(--soft); }
+.bc-link {
+  display: inline-flex; align-items: center; gap: 6px; vertical-align: middle;
+  background: none; border: none; padding: 6px 0; min-height: 32px; cursor: pointer; font-family: inherit;
+  font-size: 12px; font-weight: 700; color: var(--coral); transition: opacity .2s ease-out;
+}
+.bc-link:hover { opacity: .8; }
+body.theme-dark .bc-link { color: var(--plum); }
+.bc-prev-cap { font-size: 10.5px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: var(--hush); margin-top: 6px; }
+.bc-prev .bc-link { justify-self: start; }
+/* Мини-попап: та же карточка, что увидит ученица, без модалки */
+.bc-pop-mini {
+  max-width: 100%; animation: none; padding: 14px 14px 16px;
+  background: var(--card); border: 2px solid var(--duo-blush); border-radius: 20px;
+  box-shadow: 0 4px 0 var(--duo-blush);
+}
+.bc-pop-mini .bc-pop-title { font-size: 18px; }
+.bc-pop-mini .bc-pop-text { font-size: 13px; }
+.bc-pop-mini .bc-pop-ok { min-height: 42px; font-size: 14px; pointer-events: none; }
+.bc-pop-mini .bc-pop-imgbtn { pointer-events: none; }
+.bc-pop-mini.is-empty .bc-pop-title, .bc-pop-mini.is-empty .bc-pop-text { opacity: .55; }
+body.theme-dark .bc-pop-mini { background: var(--paper); }
+/* Макет телефона с уведомлением (как нарисует Android/Chrome) */
+.bc-phone {
+  border-radius: 22px; padding: 10px 10px 14px; max-width: 340px; width: 100%; box-sizing: border-box;
+  background: linear-gradient(160deg, #F7CDD2 0%, #F2E3C6 100%);
+  border: 1px solid var(--line);
+}
+.bc-phone-status { display: flex; justify-content: space-between; align-items: center; padding: 0 6px 8px; font-size: 11px; font-weight: 700; color: #3A1F25; }
+.bc-phone-sig { display: inline-flex; gap: 5px; font-size: 10px; }
+.bc-notif {
+  background: rgba(255,255,255,.94); border-radius: 16px; padding: 10px 12px 12px;
+  box-shadow: 0 4px 14px -6px rgba(42,26,30,.35); color: #1F1B1C;
+}
+.bc-notif-head { display: flex; align-items: center; gap: 6px; font-size: 11px; color: #5A5557; }
+.bc-notif-ico { width: 18px; height: 18px; border-radius: 5px; flex-shrink: 0; }
+.bc-notif-app { font-weight: 700; color: #3B3638; }
+.bc-notif-time { white-space: nowrap; }
+.bc-notif-title { font-weight: 700; font-size: 13.5px; line-height: 1.3; margin-top: 7px; overflow-wrap: anywhere; color: #1F1B1C; }
+.bc-notif-text {
+  font-size: 12.5px; line-height: 1.4; margin-top: 2px; color: #3B3638; overflow-wrap: anywhere; white-space: pre-line;
+  display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden;
+}
+.bc-notif-img { display: block; width: 100%; height: 140px; object-fit: cover; border-radius: 12px; margin-top: 10px; }
+.bc-notif.is-empty .bc-notif-title, .bc-notif.is-empty .bc-notif-text { opacity: .6; }
+body.theme-dark .bc-phone { background: linear-gradient(160deg, #2C1A1E 0%, #16171A 100%); }
+body.theme-dark .bc-phone-status { color: #E7EBF4; }
+body.theme-dark .bc-notif { background: #2A2C31; color: #E7EBF4; box-shadow: 0 4px 14px -6px rgba(0,0,0,.6); }
+body.theme-dark .bc-notif-head { color: #B9BECB; }
+body.theme-dark .bc-notif-app, body.theme-dark .bc-notif-title { color: #E7EBF4; }
+body.theme-dark .bc-notif-text { color: #CDD2DD; }
+/* История рассылок */
+.bc-hist { display: grid; gap: 8px; }
+.bc-hist-item { display: flex; align-items: center; gap: 10px; padding: 10px 12px; min-width: 0; }
+.bc-hist-thumb, .bc-hist-ico { width: 48px; height: 48px; border-radius: 12px; flex-shrink: 0; }
+.bc-hist-thumb { object-fit: cover; border: 1px solid var(--line); }
+.bc-hist-ico { background: var(--blush); display: flex; align-items: center; justify-content: center; font-size: 20px; }
+.bc-hist-main { flex: 1; min-width: 0; }
+.bc-hist-title {
+  font-weight: 700; font-size: 13.5px; line-height: 1.3; color: var(--berry); overflow-wrap: anywhere;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+}
+.bc-hist-meta { font-size: 11px; line-height: 1.45; color: var(--soft); margin-top: 2px; overflow-wrap: anywhere; }
+.bc-hist-stats { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
+.bc-stat { font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 999px; background: var(--blush); color: var(--berry); font-variant-numeric: tabular-nums; }
+.bc-stat-bad { background: var(--bad-bg); color: var(--bad-ink); }
+.bc-hist-show { flex-shrink: 0; min-height: 40px; min-width: 40px; padding: 8px 12px; font-size: 12px; gap: 6px; }
+/* Телефон: «Показать» — только глазом (подпись в aria-label), место — заголовку и статистике */
+@media (max-width: 480px) {
+  .bc-hist-show { padding: 8px; }
+  .bc-hist-show-tx { display: none; }
+}
+.bc-hist-empty { text-align: center; padding: 18px 12px; font-size: 12.5px; color: var(--soft); }
+/* Планшет и шире: предпросмотр справа и «прилипает», пока Мади печатает */
+@media (min-width: 768px) {
+  .bc-cols { grid-template-columns: minmax(0, 1fr) minmax(260px, 310px); }
+  .bc-prev { position: sticky; top: 84px; }
 }

@@ -183,11 +183,129 @@
     'set.goal.sub':     { ru: 'Сколько XP в день хочешь набирать', en: 'How much XP you want per day', uz: 'Kuniga qancha XP toʻplamoqchisiz' },
     'set.notif':        { ru: 'Уведомления', en: 'Notifications', uz: 'Bildirishnomalar' },
     'set.notif.unsup':  { ru: 'недоступны в этом браузере', en: 'not available in this browser', uz: 'bu brauzerda mavjud emas' },
-    'set.notif.on':     { ru: 'включены · придут новые сообщения и стрик', en: 'on · new messages and streak', uz: 'yoqilgan · yangi xabar va strik keladi' },
+    'set.notif.on':     { ru: 'включены на этом устройстве', en: 'on for this device', uz: 'bu qurilmada yoqilgan' },
     'set.notif.denied': { ru: 'заблокированы — разреши в настройках браузера', en: 'blocked — allow in browser settings', uz: 'bloklangan — brauzer sozlamalarida ruxsat bering' },
     'set.notif.off':    { ru: 'выключены · нажми, чтобы включить', en: 'off · tap to enable', uz: 'oʻchirilgan · yoqish uchun bosing' },
     'set.notif.onChip': { ru: 'ВКЛ ✓', en: 'ON ✓', uz: 'YOQ ✓' },
     'set.notif.block':  { ru: 'БЛОК', en: 'BLOCK', uz: 'BLOK' },
+    // Уведомления (пуши 30.09.2026): статус устройства, APK, что присылать
+    'set.notif.deniedApp': { ru: 'выключены в настройках телефона — нажми, чтобы открыть', en: 'turned off in phone settings — tap to open them', uz: 'telefon sozlamalarida oʻchirilgan — ochish uchun bosing' },
+    'set.notif.unsupIos':  { ru: 'на iPhone: добавь сайт на экран «Домой» и открой оттуда', en: 'on iPhone: add the site to your Home Screen and open it from there', uz: 'iPhone’da: saytni «Home» ekraniga qoʻshing va u yerdan oching' },
+    'set.notif.noGms':     { ru: 'недоступны на этом телефоне: нет сервисов Google', en: 'not available on this phone: no Google services', uz: 'bu telefonda mavjud emas: Google xizmatlari yoʻq' },
+    'set.notif.guest':     { ru: 'появятся после входа в аккаунт', en: 'available after you log in', uz: 'akkauntga kirgandan keyin paydo boʻladi' },
+    'set.notif.update':    { ru: 'Обнови приложение, чтобы получать уведомления', en: 'Update the app to get notifications', uz: 'Bildirishnomalarni olish uchun ilovani yangilang' },
+    'set.notif.appSoon':   { ru: 'в приложении появятся со следующим обновлением', en: 'coming to the app with the next update', uz: 'ilovada keyingi yangilanish bilan paydo boʻladi' },
+    'set.notif.kinds':     { ru: 'Что присылать', en: 'What to send', uz: 'Nimalar yuborilsin' },
+    'set.notif.streak':    { ru: 'Напоминания о стрике', en: 'Streak reminders', uz: 'Strik eslatmalari' },
+    'set.notif.streak.sub': { ru: 'в 20:00, если огонёк под угрозой', en: 'at 8 pm if your streak is at risk', uz: 'soat 20:00 da, agar strik xavf ostida boʻlsa' },
+    'set.notif.holiday':   { ru: 'Праздники Кореи', en: 'Korean holidays', uz: 'Koreya bayramlari' },
+    'set.notif.holiday.sub': { ru: 'в 12:00 — Соллаль, Чхусок, День хангыля и другие', en: 'at noon — Seollal, Chuseok, Hangul Day and more', uz: 'soat 12:00 da — Seollal, Chuseok, Hangul kuni va boshqalar' },
+    'set.notif.community': { ru: 'Общий чат (Мади и ответы)', en: 'Community chat (Madie and replies)', uz: 'Umumiy chat (Madie va javoblar)' },
+    'set.notif.community.sub': { ru: 'сообщения Мади и ответы на твои сообщения', en: 'Madie’s messages and replies to yours', uz: 'Madie xabarlari va sizning xabarlaringizga javoblar' },
+    'set.notif.always':    { ru: 'Сообщения в личке и группах, заявки в друзья, тариф и новости от Мади приходят всегда.', en: 'Direct and group messages, friend requests, plan updates and news from Madie always come through.', uz: 'Shaxsiy va guruh xabarlari, doʻstlik soʻrovlari, tarif va Madie yangiliklari har doim keladi.' },
+    'notif.enableFail':    { ru: 'Не получилось включить уведомления — проверь интернет и попробуй ещё раз', en: 'Couldn’t turn on notifications — check your connection and try again', uz: 'Bildirishnomalarni yoqib boʻlmadi — internetni tekshirib, qayta urinib koʻring' },
+    'notif.newMsg':        { ru: 'новое сообщение 💬', en: 'new message 💬', uz: 'yangi xabar 💬' },
+    'notif.frReqTitle':    { ru: '🤝 Заявка в друзья', en: '🤝 Friend request', uz: '🤝 Doʻstlik soʻrovi' },
+    'notif.frReqBody':     { ru: '{name} хочет добавить тебя в друзья', en: '{name} wants to add you as a friend', uz: '{name} sizni doʻst sifatida qoʻshmoqchi' },
+    'notif.decline':       { ru: 'Отклонить', en: 'Decline', uz: 'Rad etish' },
+    'notif.frOkTitle':     { ru: '🎉 Заявка принята', en: '🎉 Request accepted', uz: '🎉 Soʻrov qabul qilindi' },
+    'notif.frOkBody':      { ru: 'Вы с {name} теперь друзья — напиши привет 👋', en: 'You and {name} are friends now — say hi 👋', uz: 'Endi {name} bilan doʻstsiz — salom yozing 👋' },
+    'notif.frGone':        { ru: 'Этой заявки уже нет — возможно, её отменили', en: 'This request is no longer there — it may have been cancelled', uz: 'Bu soʻrov endi yoʻq — ehtimol, bekor qilingan' },
+    'notif.frOther':       { ru: 'Это уведомление для другого аккаунта', en: 'This notification is for another account', uz: 'Bu bildirishnoma boshqa akkaunt uchun' },
+    'notif.frDeclined':    { ru: 'Заявка отклонена', en: 'Request declined', uz: 'Soʻrov rad etildi' },
+    'notif.groupGone':     { ru: 'Этого чата у тебя больше нет', en: 'You’re no longer in this chat', uz: 'Siz endi bu chatda emassiz' },
+    'notif.ctaSubApp':     { ru: 'Чтобы видеть новые сообщения, даже когда приложение закрыто.', en: 'To see new messages even when the app is closed.', uz: 'Ilova yopiq boʻlganda ham yangi xabarlarni koʻrish uchun.' },
+    'notif.ctaDeniedApp':  { ru: '🔕 Уведомления выключены в настройках телефона. Нажми, чтобы включить.', en: '🔕 Notifications are off in phone settings. Tap to turn them on.', uz: '🔕 Bildirishnomalar telefon sozlamalarida oʻchirilgan. Yoqish uchun bosing.' },
+    // Рассылка Мади (попап при входе) и колокольчик уведомлений (30.09.2026)
+    'bc.pop.eyebrow':      { ru: '📣 Новость от Мади', en: '📣 News from Madie', uz: '📣 Madie yangiligi' },
+    'bc.pop.photo':        { ru: 'Открыть фото целиком', en: 'Open the full photo', uz: 'Rasmni toʻliq ochish' },
+    'bc.pop.gone':         { ru: 'Эта новость уже неактуальна — рассылки живут 7 дней', en: 'This news has expired — broadcasts last 7 days', uz: 'Bu yangilik muddati tugagan — xabarlar 7 kun saqlanadi' },
+    'bc.pop.testGone':     { ru: 'Этой рассылки нет в базе — это был «Тест себе» или ей больше 7 дней. Попап видно в предпросмотре вкладки «Рассылка»', en: 'This broadcast isn’t stored — it was a test or is older than 7 days. See the pop-up in the Broadcast tab preview', uz: 'Bu xabar bazada yoʻq — bu sinov edi yoki 7 kundan eski. Oynani «Ommaviy xabar» boʻlimidagi oldindan koʻrishda koʻring' },
+    'bell.title':          { ru: 'Уведомления', en: 'Notifications', uz: 'Bildirishnomalar' },
+    'bell.sub':            { ru: 'за последние 7 дней', en: 'for the last 7 days', uz: 'soʻnggi 7 kun' },
+    'bell.ariaN':          { ru: 'Уведомления: новых — {n}', en: 'Notifications: {n} new', uz: 'Bildirishnomalar: {n} ta yangi' },
+    'bell.empty':          { ru: 'Пока тихо 🌸', en: 'All quiet for now 🌸', uz: 'Hozircha jimjit 🌸' },
+    'bell.emptySub':       { ru: 'Здесь появятся заявки в друзья, напоминания и новости от Мади.', en: 'Friend requests, reminders and news from Madie will show up here.', uz: 'Bu yerda doʻstlik soʻrovlari, eslatmalar va Madie yangiliklari paydo boʻladi.' },
+    'bell.emptyGuest':     { ru: 'Здесь появятся новости от Мади. Войди в аккаунт — и сюда будут приходить заявки в друзья и напоминания.', en: 'News from Madie will show up here. Log in to also get friend requests and reminders.', uz: 'Bu yerda Madie yangiliklari paydo boʻladi. Akkauntga kiring — doʻstlik soʻrovlari va eslatmalar ham shu yerga keladi.' },
+    'bell.new':            { ru: 'новое', en: 'new', uz: 'yangi' },
+    'bell.settings':       { ru: 'Настроить уведомления', en: 'Notification settings', uz: 'Bildirishnoma sozlamalari' },
+    'bc.adm.tab':          { ru: '📣 Рассылка', en: '📣 Broadcast', uz: '📣 Ommaviy xabar' },
+    'bc.adm.card':         { ru: 'Рассылка', en: 'Broadcast', uz: 'Ommaviy xabar' },
+    'bc.adm.cardSub':      { ru: 'пуш + попап', en: 'push + pop-up', uz: 'push + oyna' },
+    'bc.adm.intro':        { ru: 'Придёт пушем на телефоны и покажется попапом при входе — каждой ученице один раз. Через 7 дней рассылка исчезнет сама.', en: 'Goes out as a push to phones and shows as a pop-up when students open the app — once per student. It disappears by itself after 7 days.', uz: 'Telefonlarga push boʻlib keladi va ilovaga kirganda oyna boʻlib chiqadi — har bir oʻquvchiga bir marta. 7 kundan keyin oʻzi yoʻqoladi.' },
+    'bc.adm.title':        { ru: 'Тема', en: 'Subject', uz: 'Mavzu' },
+    'bc.adm.titlePh':      { ru: 'Например: Эфир сегодня в 19:00 🌸', en: 'e.g. Live lesson today at 7 pm 🌸', uz: 'Masalan: Bugun soat 19:00 da efir 🌸' },
+    'bc.adm.text':         { ru: 'Текст', en: 'Text', uz: 'Matn' },
+    'bc.adm.textPh':       { ru: 'Что хочешь сказать ученицам?', en: 'What would you like to tell your students?', uz: 'Oʻquvchilarga nima demoqchisiz?' },
+    'bc.adm.photo':        { ru: 'Фото — по желанию', en: 'Photo — optional', uz: 'Rasm — ixtiyoriy' },
+    'bc.adm.photoPick':    { ru: 'Выбрать фото', en: 'Choose a photo', uz: 'Rasm tanlash' },
+    'bc.adm.photoChange':  { ru: 'Заменить', en: 'Replace', uz: 'Almashtirish' },
+    'bc.adm.photoRemove':  { ru: 'Убрать', en: 'Remove', uz: 'Olib tashlash' },
+    'bc.adm.photoBusy':    { ru: 'Сжимаю и загружаю фото…', en: 'Compressing and uploading the photo…', uz: 'Rasm siqilmoqda va yuklanmoqda…' },
+    'bc.adm.photoOk':      { ru: 'Фото загружено ✓', en: 'Photo uploaded ✓', uz: 'Rasm yuklandi ✓' },
+    'bc.adm.photoErr':     { ru: 'Фото не загрузилось. Загрузи заново или убери его — до этого рассылка не уйдёт', en: 'The photo didn’t upload. Upload it again or remove it — until then the broadcast won’t go out', uz: 'Rasm yuklanmadi. Qayta yuklang yoki olib tashlang — shundan keyin xabar yuboriladi' },
+    'bc.adm.photoBad':     { ru: 'Не получилось открыть файл — выбери фото JPG или PNG', en: 'Couldn’t open the file — choose a JPG or PNG photo', uz: 'Faylni ochib boʻlmadi — JPG yoki PNG rasm tanlang' },
+    'bc.adm.photoBig':     { ru: 'Фото слишком тяжёлое даже после сжатия — выбери другое', en: 'The photo is too heavy even after compression — choose another one', uz: 'Rasm siqilgandan keyin ham juda katta — boshqasini tanlang' },
+    'bc.adm.photoTip':     { ru: 'Лучше всего — квадратное или горизонтальное фото. Высокое в попапе обрежется по центру примерно до квадрата, целиком откроется по нажатию', en: 'Square or landscape photos look best. A tall photo is cropped to roughly a centred square in the pop-up; tapping it opens the full photo', uz: 'Kvadrat yoki gorizontal rasm eng chiroyli koʻrinadi. Baland rasm oynada markazidan taxminan kvadrat qilib qirqiladi, bosilganda toʻliq ochiladi' },
+    'bc.adm.aud':          { ru: 'Кому', en: 'Recipients', uz: 'Kimga' },
+    'bc.adm.audAll':       { ru: 'Всем', en: 'Everyone', uz: 'Hammaga' },
+    'bc.adm.audPaid':      { ru: 'Оплатившим', en: 'Paid students', uz: 'Toʻlov qilganlarga' },
+    'bc.adm.audCountry':   { ru: 'По стране', en: 'By country', uz: 'Davlat boʻyicha' },
+    'bc.adm.audPaidNote':  { ru: 'Тариф подключила Мади, и срок не истёк. Пробная неделя не считается.', en: 'The plan was activated by Madie and hasn’t expired. The trial week doesn’t count.', uz: 'Tarifni Madie ulagan va muddati tugamagan. Sinov haftasi hisobga olinmaydi.' },
+    'bc.adm.est':          { ru: 'Попап увидят ≈{n} учениц · пуш придёт на ≈{d} устр.', en: 'Pop-up: ≈{n} students · push: ≈{d} devices', uz: 'Oyna: ≈{n} oʻquvchi · push: ≈{d} qurilma' },
+    'bc.adm.estLite':      { ru: 'Попап увидят ≈{n} учениц (устройства — по полному списку)', en: 'Pop-up: ≈{n} students (devices need the full list)', uz: 'Oyna: ≈{n} oʻquvchi (qurilmalar toʻliq roʻyxatdan)' },
+    'bc.adm.estPaidLite':  { ru: 'Оплативших посчитаю по полному списку учениц', en: 'Paid students are counted from the full student list', uz: 'Toʻlov qilganlarni toʻliq roʻyxatdan hisoblayman' },
+    'bc.adm.estNone':      { ru: 'Сколько получат — посчитаю по списку учениц', en: 'I’ll count the recipients from the student list', uz: 'Qabul qiluvchilarni oʻquvchilar roʻyxatidan hisoblayman' },
+    'bc.adm.estLoad':      { ru: 'Посчитать', en: 'Count', uz: 'Hisoblash' },
+    'bc.adm.estLoading':   { ru: 'Считаю…', en: 'Counting…', uz: 'Hisoblanmoqda…' },
+    'bc.adm.estFail':      { ru: 'Не получилось загрузить список учениц', en: 'Couldn’t load the student list', uz: 'Oʻquvchilar roʻyxatini yuklab boʻlmadi' },
+    'bc.adm.preview':      { ru: 'Предпросмотр', en: 'Preview', uz: 'Oldindan koʻrish' },
+    'bc.adm.prevPop':      { ru: 'Попап в приложении', en: 'Pop-up in the app', uz: 'Ilovadagi oyna' },
+    'bc.adm.prevPush':     { ru: 'Уведомление на телефоне', en: 'Phone notification', uz: 'Telefondagi bildirishnoma' },
+    'bc.adm.prevOpen':     { ru: 'Открыть попап целиком', en: 'Open the full pop-up', uz: 'Oynani toʻliq ochish' },
+    'bc.adm.prevTitle':    { ru: 'Тема рассылки', en: 'Broadcast subject', uz: 'Xabar mavzusi' },
+    'bc.adm.prevText':     { ru: 'Текст рассылки', en: 'Broadcast text', uz: 'Xabar matni' },
+    'bc.adm.now':          { ru: 'сейчас', en: 'now', uz: 'hozir' },
+    'bc.adm.pin':          { ru: 'PIN рассылки', en: 'Broadcast PIN', uz: 'Xabar PIN-kodi' },
+    'bc.adm.pinPh':        { ru: 'Знаешь только ты', en: 'Only you know it', uz: 'Uni faqat siz bilasiz' },
+    'bc.adm.pinNote':      { ru: 'PIN нигде не сохраняется. После 5 ошибок отправка закроется на час.', en: 'The PIN is never saved. After 5 wrong tries sending is locked for an hour.', uz: 'PIN hech qayerda saqlanmaydi. 5 ta xatodan keyin yuborish bir soatga yopiladi.' },
+    'bc.adm.test':         { ru: 'Тест себе', en: 'Test to me', uz: 'Oʻzimga sinov' },
+    'bc.adm.send':         { ru: 'Отправить', en: 'Send', uz: 'Yuborish' },
+    'bc.adm.sending':      { ru: 'Отправляю…', en: 'Sending…', uz: 'Yuborilmoqda…' },
+    'bc.adm.needTitle':    { ru: 'Напиши тему', en: 'Write a subject', uz: 'Mavzuni yozing' },
+    'bc.adm.longTitle':    { ru: 'Тема длиннее 80 символов — сократи', en: 'The subject is over 80 characters — shorten it', uz: 'Mavzu 80 belgidan uzun — qisqartiring' },
+    'bc.adm.needText':     { ru: 'Напиши текст', en: 'Write the text', uz: 'Matnni yozing' },
+    'bc.adm.longText':     { ru: 'Текст длиннее 600 символов — сократи', en: 'The text is over 600 characters — shorten it', uz: 'Matn 600 belgidan uzun — qisqartiring' },
+    'bc.adm.needCountry':  { ru: 'Выбери страну', en: 'Choose a country', uz: 'Davlatni tanlang' },
+    'bc.adm.needPin':      { ru: 'Введи PIN рассылки', en: 'Enter the broadcast PIN', uz: 'Xabar PIN-kodini kiriting' },
+    'bc.adm.waitPhoto':    { ru: 'Подожди — фото ещё загружается', en: 'Wait — the photo is still uploading', uz: 'Kuting — rasm hali yuklanmoqda' },
+    'bc.adm.confirm':      { ru: 'Отправить рассылку «{title}»?\n\nКому: {aud}\n{est}\n\nОтменить отправку будет нельзя.', en: 'Send the broadcast “{title}”?\n\nTo: {aud}\n{est}\n\nIt can’t be undone.', uz: '«{title}» xabarini yuborasizmi?\n\nKimga: {aud}\n{est}\n\nYuborilgandan keyin bekor qilib boʻlmaydi.' },
+    'bc.adm.confirmEst':   { ru: 'Попап увидят ≈{n} учениц, пуш придёт на ≈{d} устройств.', en: 'Pop-up: ≈{n} students, push: ≈{d} devices.', uz: 'Oyna: ≈{n} oʻquvchi, push: ≈{d} qurilma.' },
+    'bc.adm.confirmEstLite': { ru: 'Попап увидят ≈{n} учениц.', en: 'Pop-up: ≈{n} students.', uz: 'Oyna: ≈{n} oʻquvchi.' },
+    'bc.adm.confirmNoEst': { ru: 'Точное число получателей посчитает сервер.', en: 'The server will count the exact number of recipients.', uz: 'Aniq qabul qiluvchilar sonini server hisoblaydi.' },
+    'bc.adm.errSession':   { ru: 'Сервер не видит твой вход в админку. Выйди из аккаунта, войди заново как Мади и повтори', en: 'The server doesn’t see your admin login. Log out, log in again as Madie and retry', uz: 'Server admin sifatida kirganingizni koʻrmayapti. Akkauntdan chiqing, Madie sifatida qayta kiring va takrorlang' },
+    'bc.adm.errAuth':      { ru: 'Сервер не подтвердил вход админа. Выйди и войди в админку заново', en: 'The server didn’t confirm the admin login. Log out and log in to the admin panel again', uz: 'Server admin kirishini tasdiqlamadi. Chiqib, admin panelga qayta kiring' },
+    'bc.adm.errPin':       { ru: 'Неверный PIN. После 5 ошибок отправка закроется на час', en: 'Wrong PIN. After 5 wrong tries sending is locked for an hour', uz: 'PIN notoʻgʻri. 5 ta xatodan keyin yuborish bir soatga yopiladi' },
+    'bc.adm.errRate':      { ru: 'Слишком много неверных PIN — отправка закрыта на час', en: 'Too many wrong PINs — sending is locked for an hour', uz: 'Notoʻgʻri PIN juda koʻp — yuborish bir soatga yopildi' },
+    'bc.adm.errBad':       { ru: 'Сервер не принял рассылку: проверь тему, текст и фото', en: 'The server rejected the broadcast: check the subject, text and photo', uz: 'Server xabarni qabul qilmadi: mavzu, matn va rasmni tekshiring' },
+    'bc.adm.errServer':    { ru: 'Сбой на сервере. Повтори через минуту — рассылка не задвоится', en: 'Server error. Retry in a minute — the broadcast won’t be sent twice', uz: 'Serverda nosozlik. Bir daqiqadan keyin takrorlang — xabar ikki marta ketmaydi' },
+    'bc.adm.errNet':       { ru: 'Нет связи с сервером. Проверь интернет и повтори — рассылка не задвоится', en: 'No connection to the server. Check the internet and retry — the broadcast won’t be sent twice', uz: 'Server bilan aloqa yoʻq. Internetni tekshirib, takrorlang — xabar ikki marta ketmaydi' },
+    'bc.adm.okTest':       { ru: 'Тест ушёл на твои устройства: {d} (доставлено: {s})', en: 'The test went to your devices: {d} (delivered: {s})', uz: 'Sinov qurilmalaringizga yuborildi: {d} (yetkazildi: {s})' },
+    'bc.adm.okTestNone':   { ru: 'Тест не ушёл: у тебя нет устройств с включёнными уведомлениями. Включи их в Настройках на телефоне и повтори', en: 'The test didn’t go out: you have no devices with notifications on. Turn them on in Settings on your phone and retry', uz: 'Sinov yuborilmadi: bildirishnomalari yoqilgan qurilmangiz yoʻq. Telefonda Sozlamalardan yoqing va takrorlang' },
+    'bc.adm.okSent':       { ru: 'Рассылка отправлена ✓ Пуш: {u} учениц, {d} устройств (доставлено {s}, ошибок {f}). Попап увидят при входе в течение 7 дней', en: 'Broadcast sent ✓ Push: {u} students, {d} devices (delivered {s}, failed {f}). The pop-up shows on login for 7 days', uz: 'Xabar yuborildi ✓ Push: {u} oʻquvchi, {d} qurilma (yetkazildi {s}, xato {f}). Oyna 7 kun davomida kirishda chiqadi' },
+    'bc.adm.okDup':        { ru: 'Эта рассылка уже отправлена ✓', en: 'This broadcast has already been sent ✓', uz: 'Bu xabar allaqachon yuborilgan ✓' },
+    'bc.adm.dupPending':   { ru: 'Рассылка сохранена — попап ученицы увидят, но сервер не подтвердил отправку пушей. Через 2–3 минуты проверь «{h}»: если статистики так и нет — пуши не ушли', en: 'The broadcast is saved — students will see the pop-up, but the server didn’t confirm the push delivery. Check “{h}” in 2–3 minutes: if there are still no stats, the pushes didn’t go out', uz: 'Xabar saqlandi — oʻquvchilar oynani koʻradi, lekin server push yuborilganini tasdiqlamadi. 2–3 daqiqadan keyin «{h}» boʻlimini tekshiring: statistika hali ham boʻlmasa — push yuborilmagan' },
+    'bc.adm.okShort':      { ru: 'Рассылка отправлена ✓', en: 'Broadcast sent ✓', uz: 'Xabar yuborildi ✓' },
+    'bc.adm.history':      { ru: 'Рассылки за 7 дней', en: 'Broadcasts of the last 7 days', uz: 'Soʻnggi 7 kundagi xabarlar' },
+    'bc.adm.histEmpty':    { ru: 'За неделю рассылок не было', en: 'No broadcasts this week', uz: 'Bu hafta xabar yuborilmagan' },
+    'bc.adm.histErr':      { ru: 'Не получилось загрузить рассылки', en: 'Couldn’t load the broadcasts', uz: 'Xabarlarni yuklab boʻlmadi' },
+    'bc.adm.histUntil':    { ru: 'до {date}', en: 'until {date}', uz: '{date} gacha' },
+    'bc.adm.histNoStats':  { ru: 'статистика ещё считается', en: 'stats are still coming', uz: 'statistika hali hisoblanmoqda' },
+    'bc.adm.stUsers':      { ru: 'учениц с уведомлениями', en: 'students with notifications', uz: 'bildirishnomali oʻquvchilar' },
+    'bc.adm.stTokens':     { ru: 'устройств', en: 'devices', uz: 'qurilmalar' },
+    'bc.adm.stSent':       { ru: 'доставлено', en: 'delivered', uz: 'yetkazildi' },
+    'bc.adm.stFailed':     { ru: 'ошибок', en: 'failed', uz: 'xatolar' },
+    'bc.adm.show':         { ru: 'Показать', en: 'Show', uz: 'Koʻrsatish' },
     'set.feedback':     { ru: 'Написать нам', en: 'Contact us', uz: 'Bizga yozing' },
     'set.feedback.sub': { ru: 'Идеи, ошибки, пожелания — читает Мади', en: 'Ideas, bugs, wishes — Madie reads them', uz: 'Gʻoyalar, xatolar, istaklar — Madie oʻqiydi' },
     'set.terms':        { ru: 'Условия использования', en: 'Terms of use', uz: 'Foydalanish shartlari' },
@@ -2300,7 +2418,7 @@
     "ix.invite":       { ru: "💌 Пригласить друга · +200 XP обоим", en: "💌 Invite a friend · +200 XP for both", uz: "💌 Doʻstni taklif qiling · ikkalangizga +200 XP" },
     "ix.selfEyebrow":  { ru: "자습 · самостоятельно", en: "자습 · on your own", uz: "자습 · mustaqil" },
     "ix.selfTitle":    { ru: "Самообучение", en: "Self-study", uz: "Mustaqil taʼlim" },
-    "ix.deepEyebrow":  { ru: "심화 · углублённо", en: "심화 · advanced", uz: "심화 · chuqurlashtirilgan" },
+    "ix.deepEyebrow":  { ru: "심화 · углублённо", en: "심화 · advanced", uz: "심화 · chuqur" },
     "ix.readingTitle": { ru: "Чтение", en: "Reading", uz: "Oʻqish" },
     "ix.studyTitle":   { ru: "Учёба в Корее", en: "Study in Korea", uz: "Koreyada taʼlim" },
     "ix.adminEyebrow": { ru: "АДМИН-ПАНЕЛЬ", en: "ADMIN PANEL", uz: "ADMIN-PANEL" },
@@ -2392,6 +2510,10 @@
     try { renderCultureBanner(); } catch (e) {}
     // Перерисовать динамику текущего экрана в новом языке
     try { if (typeof _curScreen !== 'undefined' && typeof switchScreen === 'function') switchScreen(_curScreen, true); } catch (e) {}
+    // Пуши приходят на языке интерфейса: язык лежит в токенах устройства и в users/<uid>/notif
+    try { kmPushLangChanged(); } catch (e) {}
+    // Подписи колокольчиков (applyStaticI18n их не знает)
+    try { kmBellRefresh(); } catch (e) {}
   }
 
   // ── Уровень корейского у ученика (выбирается при регистрации, виден/меняется в профиле и админке) ──
@@ -2526,7 +2648,11 @@
     document.querySelectorAll(`.nav-item[data-screen="${name}"]`).forEach(n => n.classList.add('active'));
     if (name === 'hangul' && !document.getElementById('consonants-grid').children.length) initHangulLab();
     if (name === 'games') { syncBestScoreCards(); initGameFavorites(); decorateGameOfDayCard(); renderHardcoreToggle(); }
-    if (name === 'home') { _guideTipSeed++; _safeRenderGroup([renderBearGuide, renderCustomVideos, renderCustomFeedPosts, renderHeroLesson, renderDailyGoal, renderSrsWidget, renderSeasonBanner, renderGameOfDayPlaque, renderTopikQuestionCard, renderContinue]); }
+    if (name === 'home') {
+      _guideTipSeed++; _safeRenderGroup([renderBearGuide, renderCustomVideos, renderCustomFeedPosts, renderHeroLesson, renderDailyGoal, renderSrsWidget, renderSeasonBanner, renderGameOfDayPlaque, renderTopikQuestionCard, renderContinue]);
+      // Экскурсия, отложенная переходом по уведомлению поверх тарифов (_kmCloseCovering)
+      if (_kmTourDeferred) _kmTourResume();
+    }
     if (name === 'lessons') { _safeRenderGroup([renderModuleSwitcher, renderCustomLessons, renderLessonPath, renderWritingEntry]); }
     if (name === 'profile') { _safeRenderGroup([syncAchievementsStrip, renderWeeklyXpChart, renderHomeworkList, renderSavedWords, renderPlanCard, renderMyLevelChip, renderMyCountryChip, refreshProfileEmail, _syncGuestCard]); }
     if (name === 'social') renderFriendsAndChat();
@@ -5826,6 +5952,8 @@
         try { renderMyCountryChip(); } catch (_) {}
         try { renderPlanCard(); } catch (_) {}
         if (document.getElementById('plan-page')) { try { _renderPlanPage(); } catch (_) {} }
+        try { kmNotifSync(); } catch (_) {} // страна → users/<uid>/notif.c (рассылка «по стране»)
+        try { kmBcRecheck(); } catch (_) {} // рассылка «по стране» могла подойти
       }
     };
     ctyRef.on('value', ctyHandler);
@@ -6103,6 +6231,8 @@
         try { processReferralRewards(); } catch (_) {}
       }
       renderPlanCard();
+      // Рассылка «оплатившим» ждала облачный тариф — теперь можно решить (попап, колокольчик)
+      try { kmBcRecheck(); } catch (_) {}
       // Мади задала срок из админки и он уже прошёл → показать попап окончания.
       try { checkPlanExpiry(); } catch (_) {}
       // Апгрейд/даунгрейд меняет доступ к соц-ленте — перерисуем её (платному
@@ -6312,12 +6442,14 @@
       u.country = code;
       Store.set('user', u);
       _writeCountryToCloud(code);
+      try { kmNotifSync(); } catch (_) {} // страна нужна серверу для рассылки «по стране»
     } else {
       Store.set('guestCountry', code);
     }
     try { renderPlanCard(); } catch (_) {}
     try { renderMyCountryChip(); } catch (_) {}
     if (document.getElementById('plan-page')) { try { _renderPlanPage(); } catch (_) {} }
+    try { kmBcRecheck(); } catch (_) {} // рассылка «по стране» (и у гостя) могла подойти
     toast(t('country.saved', { name: flagLabel(code), cur: curLabel(COUNTRY_BY_CODE[code].cur) }), 'var(--sage)');
   }
   // Цены тарифа для страны (по умолчанию — моей) + производные «выгоды»
@@ -6879,7 +7011,7 @@
   // Версия сборки: держать ВРУЧНУЮ синхронной с ?v= в index.html при каждом деплое
   // (те же 3 места — stylesheet/preload/script). Используется тихим автообновлением
   // ниже — сама загрузка кода по-прежнему идёт через ?v=.
-  const APP_VERSION = '20260930b';
+  const APP_VERSION = '20261002a';
   // ── Тихое автообновление (25.08.2026, вместо попапа «Вышло обновление!») ──
   // Узнав из облака про новую версию (appVersion пишет первый клиент нового деплоя,
   // promptVersion — кнопка «Оповестить» в админке), вкладка НЕ дёргает ученицу:
@@ -7343,6 +7475,8 @@
 
   async function acceptFriendRequest(reqKey, fromUid, fromName) {
     const me = myUid();
+    // Гость: запись ушла бы в users/guest/… и в друзья к отправителю попал бы «guest»
+    if (!me || me === 'guest' || typeof _db === 'undefined' || !reqKey || !fromUid || fromUid === me) return;
     const now = Date.now();
     const updates = {};
     updates[`users/${me}/friends/${fromUid}`] = { name: fromName, since: now };
@@ -7350,6 +7484,13 @@
     updates[`users/${me}/inbox/${reqKey}`] = null;
     // Clean up the sender's outgoing record now that we're friends
     updates[`users/${fromUid}/outgoing/${me}`] = null;
+    // «Заявка принята» — письмо отправителю (сервер шлёт по нему пуш friend_ok, новый
+    // клиент показывает баннер и удаляет письмо, старые клиенты неизвестный type игнорируют).
+    // Админам не пишем: у них заявок нет (авто-приём), и пуши Мади — только письма.
+    if (!isAdmin() && !String(fromUid).startsWith('admin_')) {
+      const ackKey = _db.ref(`users/${fromUid}/inbox`).push().key;
+      if (ackKey) updates[`users/${fromUid}/inbox/${ackKey}`] = { type: 'friend_accepted', from: me, fromName: myName(), at: now };
+    }
     try {
       await _db.ref().update(updates);
       toast(t('social.nowFriends'), 'var(--sage)');
@@ -7358,6 +7499,7 @@
 
   async function declineFriendRequest(reqKey, fromUid) {
     const me = myUid();
+    if (!me || me === 'guest' || typeof _db === 'undefined' || !reqKey) return;
     const updates = {};
     updates[`users/${me}/inbox/${reqKey}`] = null;
     if (fromUid) updates[`users/${fromUid}/outgoing/${me}`] = null;
@@ -7794,29 +7936,74 @@
     }
   }
   function _popupId(uid) { return 'chat-popup-' + String(uid).replace(/[^a-zA-Z0-9_-]/g, '_'); }
-  function showChatPopup(uid, name, avatar, text, isGroup) {
-    document.getElementById(_popupId(uid))?.remove();
-    const el = document.createElement('div');
-    el.className = 'chat-popup';
-    el.id = _popupId(uid);
-    el.setAttribute('role', 'button');
-    el.onclick = () => {
-      el.remove();
-      try { switchScreen('social'); } catch (_) {}
-      if (isGroup) openGroupChat(uid, name); else openChat(uid, name);
-    };
+  // Верхний баннер (.chat-popup) в открытом приложении: новое сообщение, заявка в друзья,
+  // «заявка принята», праздник, тариф… Один id — один баннер: повторный показ (пуш и
+  // живой слушатель базы приходят почти одновременно) обновляет его на месте, без мигания.
+  // o: {id, avatarHtml, title, text, onTap, actions:[{label, primary, run}], ms, twoLines}
+  // title/text — недоверенные строки (имена, тексты из базы и пуша): только через escHtml.
+  function _kmPopup(o) {
+    let el = document.getElementById(o.id);
+    const fresh = !el;
+    if (el) { clearTimeout(el._t); clearTimeout(el._t2); el.classList.remove('out'); }
+    else {
+      el = document.createElement('div');
+      el.className = 'chat-popup';
+      el.id = o.id;
+      el.tabIndex = 0;
+    }
+    const hasActions = !!(o.actions && o.actions.length);
+    // С кнопками внутри баннер — группа (кнопка в кнопке недоступна скринридеру)
+    el.setAttribute('role', hasActions ? 'group' : 'button');
+    if (hasActions) el.setAttribute('aria-label', String(o.title || '').slice(0, 120)); else el.removeAttribute('aria-label');
+    el.classList.toggle('km-pop-actions', hasActions);
+    el.classList.toggle('km-pop-2l', !!o.twoLines);
+    el.innerHTML = `${o.avatarHtml || '<div class="chat-popup-av">🌸</div>'}
+      <div class="chat-popup-body">
+        <div class="chat-popup-name">${escHtml(o.title || '')}</div>
+        <div class="chat-popup-text" id="${o.id}-t">${escHtml(o.text || '')}</div>
+      </div>
+      ${hasActions ? '' : '<i class="fa-solid fa-chevron-right" style="color:var(--soft);font-size:12px;flex-shrink:0;"></i>'}`;
+    const hide = () => { clearTimeout(el._t); clearTimeout(el._t2); el.remove(); };
+    if (hasActions) {
+      // Кнопки — через addEventListener: имя и ключи заявки в onclick-строку не попадают
+      const row = document.createElement('div');
+      row.className = 'km-pop-btns';
+      o.actions.forEach(a => {
+        const b = document.createElement('button');
+        b.type = 'button';
+        b.className = 'btn ' + (a.primary ? 'btn-primary' : 'btn-ghost');
+        b.textContent = a.label;
+        b.addEventListener('click', ev => { ev.stopPropagation(); hide(); try { a.run(); } catch (e) { console.warn('[popup]', e); } });
+        row.appendChild(b);
+      });
+      el.appendChild(row);
+    }
+    el.onclick = () => { hide(); if (o.onTap) { try { o.onTap(); } catch (e) { console.warn('[popup]', e); } } };
+    el.onkeydown = e => { if (e.target === el && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); el.onclick(); } };
+    if (fresh) {
+      document.body.appendChild(el);
+      requestAnimationFrame(() => el.classList.add('in'));
+    } else el.classList.add('in');
+    el._t = setTimeout(() => {
+      el.classList.remove('in'); el.classList.add('out');
+      el._t2 = setTimeout(() => el.remove(), 320);
+    }, o.ms || 4400);
+    return el;
+  }
+  // onTap — куда вести по тапу (пуш знает точную ссылку); без него — как раньше, в чат.
+  function showChatPopup(uid, name, avatar, text, isGroup, onTap) {
     const av = avatar
       ? `<div class="chat-popup-av" style="background:${cssUrlAttr(avatar)} center/cover no-repeat;"></div>`
       : `<div class="chat-popup-av">${isGroup ? '<i class="fa-solid fa-user-group" style="font-size:13px;"></i>' : escHtml((name || '?').charAt(0).toUpperCase())}</div>`;
-    el.innerHTML = `${av}
-      <div class="chat-popup-body">
-        <div class="chat-popup-name">${escHtml(name)}</div>
-        <div class="chat-popup-text" id="${_popupId(uid)}-t">${text ? escHtml(text.length > 64 ? text.slice(0, 64) + '…' : text) : 'новое сообщение 💬'}</div>
-      </div>
-      <i class="fa-solid fa-chevron-right" style="color:var(--soft);font-size:12px;flex-shrink:0;"></i>`;
-    document.body.appendChild(el);
-    requestAnimationFrame(() => el.classList.add('in'));
-    el._t = setTimeout(() => { el.classList.remove('in'); el.classList.add('out'); setTimeout(() => el.remove(), 320); }, 4400);
+    const body = text ? (text.length > 64 ? text.slice(0, 64) + '…' : text) : t('notif.newMsg');
+    _kmPopup({
+      id: _popupId(uid), avatarHtml: av, title: name, text: body,
+      onTap: onTap || (() => {
+        try { switchScreen('social'); } catch (_) {}
+        if (isGroup) { if (uid === COMMUNITY_GID) openCommunityChat(); else openGroupChat(uid, name); }
+        else openChat(uid, name);
+      })
+    });
   }
   function updateChatPopupText(uid, text) {
     const t = document.getElementById(_popupId(uid) + '-t');
@@ -7831,6 +8018,7 @@
     _friendsListenerOffs.forEach(off => { try { off(); } catch(_){} });
     _friendsListenerOffs = [];
     _friendsLoaded = false; _groupsLoaded = false;
+    _kmInboxKnown = null; // новая личность — её первый снапшот inbox не «новые заявки»
     if (_unreadCleanupTimer) { clearTimeout(_unreadCleanupTimer); _unreadCleanupTimer = null; }
   }
 
@@ -7847,7 +8035,7 @@
     };
     wire(`users/${me}/friends`,  val => { _friendsCache  = val; _friendsLoaded = true; renderFriendsAndChat(); updateChatBadges(); scheduleUnreadCleanup(); if (document.getElementById('add-friend-modal')) filterAddFriend(); });
     wire(`users/${me}/groups`,   val => { _groupsCache   = val; _groupsLoaded = true; renderFriendsAndChat(); updateChatBadges(); scheduleUnreadCleanup(); });
-    wire(`users/${me}/inbox`,    val => { _inboxCache    = val; if (isAdmin()) adminAutoAcceptRequests(val); renderFriendsAndChat(); updateChatBadges(); processReferralRewards(); });
+    wire(`users/${me}/inbox`,    val => { _inboxCache    = val; if (isAdmin()) adminAutoAcceptRequests(val); renderFriendsAndChat(); updateChatBadges(); processReferralRewards(); try { kmInboxNotices(val); } catch (e) { console.warn('[inbox]', e); } });
     wire(`users/${me}/outgoing`, val => { _outgoingCache = val; if (document.getElementById('add-friend-modal')) filterAddFriend(); });
     wire(`users/${me}/unreadFrom`, val => { handleUnreadFromUpdate(val); });
     // Живой лёгкий слушатель сообщества: только meta/lastAt (одно число, НЕ members и
@@ -7907,6 +8095,37 @@
       updates[`users/${me}/inbox/${reqKey}`] = null;        // убрать заявку из инбокса админа
     });
     _db.ref().update(updates).then(() => {}, () => {}).then(() => { _adminAcceptingReqs = false; });
+  }
+  // Письма inbox для уведомлений в открытом приложении (живой слушатель базы — работает
+  // и без разрешения на пуши):
+  //  • friend_accepted — «Заявка принята»: баннер (самое свежее письмо) и удаление писем;
+  //  • friend_request, появившаяся ПОСЛЕ первого снапшота, — баннер «Принять/Отклонить»
+  //    (тот же id, что у баннера из пуша: пришли оба — баннер один).
+  var _kmInboxKnown = null;            // заявки первого снапшота этой личности (null — снапшота ещё не было)
+  var _kmInboxDone = new Set();        // обработанные friend_accepted (удаление ещё в пути)
+  function kmInboxNotices(inbox) {
+    const me = myUid();
+    if (!me || me === 'guest' || typeof _db === 'undefined') return;
+    const entries = Object.entries(inbox || {}).filter(([, v]) => v && typeof v === 'object');
+    const acc = entries.filter(([k, v]) => v.type === 'friend_accepted' && !_kmInboxDone.has(k));
+    if (acc.length) {
+      const upd = {};
+      acc.forEach(([k]) => { _kmInboxDone.add(k); upd[`users/${me}/inbox/${k}`] = null; });
+      try { const r = _db.ref().update(upd); if (r && typeof r.catch === 'function') r.catch(() => {}); } catch (_) {}
+      if (!isAdmin()) {
+        const newest = acc.reduce((a, b) => ((+b[1].at || 0) > (+a[1].at || 0) ? b : a))[1];
+        const from = typeof newest.from === 'string' ? newest.from : '';
+        const name = typeof newest.fromName === 'string' ? newest.fromName.trim() : '';
+        _kmAfterIntro(() => { if (myUid() === me) kmFriendOkBanner(from, name); });
+      }
+    }
+    const reqs = entries.filter(([, v]) => v.type === 'friend_request');
+    if (_kmInboxKnown === null) { _kmInboxKnown = new Set(reqs.map(([k]) => k)); return; }
+    reqs.forEach(([k, v]) => {
+      if (_kmInboxKnown.has(k)) return;
+      _kmInboxKnown.add(k);
+      kmFriendReqBanner({ rk: k, from: typeof v.from === 'string' ? v.from : '', name: typeof v.fromName === 'string' ? v.fromName : '' });
+    });
   }
   // Осиротевшие счётчики (дружбу удалили — чата в списке нет, открыть и
   // «прочитать» его нельзя) подчищаем из БД, иначе они копятся навсегда.
@@ -7985,7 +8204,7 @@
     const timeLabel = chatListTimeLabel(meta.lastAt);
     const pinned = isChatPinned(uid);
     return `
-      <div class="card card-press chat-list-row${pinned ? ' chat-pinned' : ''}" data-chat-name="${escAttr(rawName.toLowerCase())}" onclick="openChat('${escHtml(uid)}','${name.replace(/'/g,"&#39;")}')">
+      <div class="card card-press chat-list-row${pinned ? ' chat-pinned' : ''}" data-chat-name="${escAttr(rawName.toLowerCase())}" onclick="openChat('${jsStr(uid)}','${jsStr(rawName)}')">
         ${avatar}
         <div class="chat-row-main">
           <div class="chat-row-top">
@@ -7995,7 +8214,7 @@
           <div class="chat-row-bottom">
             <span class="chat-row-preview">${preview}</span>
             ${unread > 0 ? `<span class="chat-unread-badge">${unread > 99 ? '99+' : unread}</span>` : ''}
-            <button class="chat-pin-btn" onclick="event.stopPropagation(); toggleChatPin('${escHtml(uid)}')" aria-label="${pinned ? t('chat.unpin') : t('chat.pin')}" title="${pinned ? t('chat.unpin') : t('chat.pin')}"><i class="fa-solid fa-thumbtack"></i></button>
+            <button class="chat-pin-btn" onclick="event.stopPropagation(); toggleChatPin('${jsStr(uid)}')" aria-label="${pinned ? t('chat.unpin') : t('chat.pin')}" title="${pinned ? t('chat.unpin') : t('chat.pin')}"><i class="fa-solid fa-thumbtack"></i></button>
           </div>
         </div>
       </div>`;
@@ -8022,7 +8241,7 @@
       : `<div class="chat-row-av chat-group-av"><i class="fa-solid fa-user-group"></i></div>`;
     const pinned = isChatPinned(gid);
     return `
-      <div class="card card-press chat-list-row${pinned ? ' chat-pinned' : ''}" data-chat-name="${escAttr(rawTitle.toLowerCase())}" onclick="openGroupChat('${escHtml(gid)}','${title.replace(/'/g,"&#39;")}')">
+      <div class="card card-press chat-list-row${pinned ? ' chat-pinned' : ''}" data-chat-name="${escAttr(rawTitle.toLowerCase())}" onclick="openGroupChat('${jsStr(gid)}','${jsStr(rawTitle)}')">
         <div class="chat-av-wrap">${avInner}<span class="chat-group-tag" title="${t('ui.082')}"><i class="fa-solid fa-user-group"></i></span></div>
         <div class="chat-row-main">
           <div class="chat-row-top">
@@ -8032,15 +8251,18 @@
           <div class="chat-row-bottom">
             <span class="chat-row-preview">${preview}</span>
             ${unread > 0 ? `<span class="chat-unread-badge">${unread > 99 ? '99+' : unread}</span>` : ''}
-            <button class="chat-pin-btn" onclick="event.stopPropagation(); toggleChatPin('${escHtml(gid)}')" aria-label="${pinned ? t('chat.unpin') : t('chat.pin')}" title="${pinned ? t('chat.unpin') : t('chat.pin')}"><i class="fa-solid fa-thumbtack"></i></button>
+            <button class="chat-pin-btn" onclick="event.stopPropagation(); toggleChatPin('${jsStr(gid)}')" aria-label="${pinned ? t('chat.unpin') : t('chat.pin')}" title="${pinned ? t('chat.unpin') : t('chat.pin')}"><i class="fa-solid fa-thumbtack"></i></button>
           </div>
         </div>
       </div>`;
   }
 
   function requestRowHtml(reqKey, req) {
-    const name = escHtml(req.fromName || t('friend.noName'));
-    const fromUid = escHtml(req.from);
+    // Имя и uid пишет отправитель (база открыта) — в onclick только через jsStr:
+    // escHtml там не защищает, браузер раскодирует &#39; обратно в кавычку (XSS).
+    const rawName = (typeof req.fromName === 'string' && req.fromName) || t('friend.noName');
+    const name = escHtml(rawName);
+    const fromUid = typeof req.from === 'string' ? req.from : '';
     return `
       <div class="card card-padded" style="display:flex;align-items:center;gap:10px;background:var(--grad-cream);">
         <div style="width:38px;height:38px;border-radius:50%;background:var(--blush);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;">✉️</div>
@@ -8049,8 +8271,8 @@
           <div style="font-size:10.5px;color:var(--soft);">${t('ui.083')}</div>
         </div>
         <div style="display:flex;gap:6px;flex-shrink:0;">
-          <button onclick="acceptFriendRequest('${escHtml(reqKey)}','${fromUid}','${name.replace(/'/g,"&#39;")}')" class="btn btn-primary" style="padding:7px 12px;font-size:11px;">${t('ui.r033')}</button>
-          <button onclick="declineFriendRequest('${escHtml(reqKey)}','${fromUid}')" class="btn btn-ghost" style="padding:7px 10px;font-size:11px;">×</button>
+          <button onclick="acceptFriendRequest('${jsStr(reqKey)}','${jsStr(fromUid)}','${jsStr(rawName)}')" class="btn btn-primary" style="padding:7px 12px;font-size:11px;">${t('ui.r033')}</button>
+          <button onclick="declineFriendRequest('${jsStr(reqKey)}','${jsStr(fromUid)}')" class="btn btn-ghost" style="padding:7px 10px;font-size:11px;">×</button>
         </div>
       </div>`;
   }
@@ -8180,7 +8402,7 @@
     const requests = Object.entries(inbox).filter(([k, v]) => v && v.type === 'friend_request');
 
     const requestsHtml = requests.length
-      ? `<div style="font-size:10px;letter-spacing:.18em;color:var(--coral);font-weight:700;margin:4px 4px 8px;">${t('ui.r034')} · ${requests.length}</div>
+      ? `<div id="friend-requests" style="font-size:10px;letter-spacing:.18em;color:var(--coral);font-weight:700;margin:4px 4px 8px;scroll-margin-top:80px;">${t('ui.r034')} · ${requests.length}</div>
          <div style="display:grid;gap:8px;margin-bottom:14px;">${requests.map(([k,r]) => requestRowHtml(k, r)).join('')}</div>`
       : '';
 
@@ -8405,11 +8627,15 @@
   }
 
   function pushPermissionCtaHtml() {
-    if (!_messaging || !('Notification' in window)) return '';
-    if (!_VAPID_KEY || _VAPID_KEY.startsWith('REPLACE_')) return '';
-    if (Notification.permission === 'granted') return '';
-    if (Notification.permission === 'denied') {
-      return `<div style="background:rgba(var(--rose-rgb),.12);border:1px dashed rgba(var(--rose-rgb),.5);border-radius:14px;padding:10px 12px;margin-bottom:12px;font-size:11.5px;color:var(--bad-ink);text-align:center;">
+    // Веб-пуш (Notification) или нативный в APK 1.2.0 (KMPUSH); где пушей нет — плашки нет
+    const perm = kmPushPermission();
+    if (perm === 'granted' || perm === 'unsupported') return '';
+    const apk = _kmApkPush();
+    if (perm === 'denied') {
+      // В APK выключенное можно включить в настройках телефона — плашка ведёт туда
+      return apk
+        ? `<button type="button" onclick="askPushPermission()" style="display:block;width:100%;font-family:inherit;cursor:pointer;background:rgba(var(--rose-rgb),.12);border:1px dashed rgba(var(--rose-rgb),.5);border-radius:14px;padding:10px 12px;margin-bottom:12px;font-size:11.5px;color:var(--bad-ink);text-align:center;">${t('notif.ctaDeniedApp')}</button>`
+        : `<div style="background:rgba(var(--rose-rgb),.12);border:1px dashed rgba(var(--rose-rgb),.5);border-radius:14px;padding:10px 12px;margin-bottom:12px;font-size:11.5px;color:var(--bad-ink);text-align:center;">
         ${t('ui.t010')}
       </div>`;
     }
@@ -8417,7 +8643,7 @@
       <div style="font-size:22px;">🔔</div>
       <div style="flex:1;min-width:0;">
         <div style="font-weight:600;color:var(--berry);font-size:12.5px;">${t('ui.095')}</div>
-        <div style="font-size:10.5px;color:var(--soft);margin-top:1px;">${t('ui.096')}</div>
+        <div style="font-size:10.5px;color:var(--soft);margin-top:1px;">${apk ? t('notif.ctaSubApp') : t('ui.096')}</div>
       </div>
       <button onclick="askPushPermission()" class="btn btn-primary" style="padding:7px 12px;font-size:11px;flex-shrink:0;">${t('ui.097')}</button>
     </div>`;
@@ -8537,7 +8763,7 @@
             <span class="chat-row-preview">${preview}</span>
             ${unread > 0 ? `<span class="chat-unread-badge">${unread > 99 ? '99+' : unread}</span>` : ''}
             ${lvlChip}
-            <button class="chat-pin-btn" onclick="event.stopPropagation(); toggleChatPin('${escHtml(u.uid)}')" aria-label="${pinned ? t('chat.unpin') : t('chat.pin')}" title="${pinned ? t('chat.unpin') : t('chat.pin')}"><i class="fa-solid fa-thumbtack"></i></button>
+            <button class="chat-pin-btn" onclick="event.stopPropagation(); toggleChatPin('${jsStr(u.uid)}')" aria-label="${pinned ? t('chat.unpin') : t('chat.pin')}" title="${pinned ? t('chat.unpin') : t('chat.pin')}"><i class="fa-solid fa-thumbtack"></i></button>
           </div>
         </div>
       </div>`;
@@ -8677,7 +8903,7 @@
         actionHtml = `
           <div style="display:flex;gap:5px;flex-shrink:0;align-items:center;">
             <span class="chip" style="font-size:10px;background:rgba(201,165,92,.18);color:var(--gold-ink);border:1px solid rgba(201,165,92,.5);">${t('friend.pending')}</span>
-            <button onclick="cancelFriendRequest('${escHtml(u.uid)}')" class="btn btn-ghost" style="padding:5px 9px;font-size:10.5px;border-color:rgba(var(--rose-rgb),.5);color:var(--bad-ink);">${t('friend.cancel')}</button>
+            <button onclick="cancelFriendRequest('${jsStr(u.uid)}')" class="btn btn-ghost" style="padding:5px 9px;font-size:10.5px;border-color:rgba(var(--rose-rgb),.5);color:var(--bad-ink);">${t('friend.cancel')}</button>
           </div>`;
       } else if (isSending) {
         actionHtml = `<button disabled class="btn btn-primary" style="padding:6px 10px;font-size:11px;flex-shrink:0;opacity:.55;cursor:wait;">${t('friend.sending')}</button>`;
@@ -8826,6 +9052,7 @@
     _chatSeenKeys = null; _chatPrevReactions = {}; _chatTyping = {}; _chatLastRenderedSig = null; // reset FX so history doesn't animate
     bumpChatActivity(key); // opening a chat surfaces it to the top of the list
     document.getElementById(_popupId(key))?.remove(); // clear any pending banner for this chat
+    _kmClearChatNotifs(chatId); // и его уведомления в шторке (веб и APK)
     // Remove existing if any
     document.getElementById('chat-page')?.remove();
     document.getElementById('chat-backdrop')?.remove();
@@ -8998,7 +9225,7 @@
         </div>
         <div style="display:flex;justify-content:space-between;align-items:center;margin:0 2px 8px;">
           <span style="font-size:10px;letter-spacing:.18em;color:var(--soft);">${t('ui.t011')} · ${names.length}</span>
-          <button class="chip chip-coral" style="font-size:10px;padding:4px 10px;cursor:pointer;border:none;" onclick="openAddGroupMember('${escHtml(gid)}')"><i class="fa-solid fa-user-plus" style="font-size:9px;"></i> ${t('ui.090')}</button>
+          <button class="chip chip-coral" style="font-size:10px;padding:4px 10px;cursor:pointer;border:none;" onclick="openAddGroupMember('${jsStr(gid)}')"><i class="fa-solid fa-user-plus" style="font-size:9px;"></i> ${t('ui.090')}</button>
         </div>
         <div style="display:grid;gap:6px;max-height:240px;overflow-y:auto;">
           ${names.map(([uid, nm]) => `
@@ -9007,7 +9234,7 @@
               <span style="flex:1;font-size:13px;font-weight:600;color:var(--berry);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${escHtml(nm)}${uid === me ? ' <span style="font-size:10px;color:var(--coral);">· это ты</span>' : (uid === meta.owner ? ' <span style="font-size:10px;color:var(--gold-ink);">· создатель</span>' : '')}</span>
             </div>`).join('')}
         </div>
-        <button class="btn btn-ghost btn-block" style="margin-top:14px; color:var(--bad-ink); border-color:rgba(179,58,74,.25);" onclick="leaveGroupChat('${escHtml(gid)}'); this.closest('.modal-bg').remove();"><i class="fa-solid fa-right-from-bracket"></i> ${t('ui.113')}</button>
+        <button class="btn btn-ghost btn-block" style="margin-top:14px; color:var(--bad-ink); border-color:rgba(179,58,74,.25);" onclick="leaveGroupChat('${jsStr(gid)}'); this.closest('.modal-bg').remove();"><i class="fa-solid fa-right-from-bracket"></i> ${t('ui.113')}</button>
       </div>`;
     document.body.appendChild(sheet);
   }
@@ -9101,6 +9328,8 @@
     // Снимаем фокус, чтобы строка чата не оставалась с залипшей рамкой-обводкой
     try { document.activeElement?.blur(); } catch (_) {}
     renderFriendsAndChat(); // refresh previews/ordering after the conversation
+    // Экскурсия, отложенная переходом по уведомлению поверх тарифов, — после выхода из чата
+    if (_kmTourDeferred) _kmTourResume();
   }
 
   // ════════════════ ПРОФИЛЬ ЧЕЛОВЕКА (стиль Telegram Premium) ════════════════
@@ -9353,13 +9582,13 @@
     sheet.innerHTML = `
       <div class="modal-sheet" style="border-radius:24px 24px 0 0; padding:16px 16px calc(20px + env(safe-area-inset-bottom,0px));">
         <div class="msg-react-row">
-          ${CHAT_REACTIONS.map(em => `<button class="msg-react-btn ${myReact === em ? 'active' : ''}" onclick="reactMessage('${mid}','${em}'); this.closest('.modal-bg').remove();">${em}</button>`).join('')}
+          ${CHAT_REACTIONS.map(em => `<button class="msg-react-btn ${myReact === em ? 'active' : ''}" onclick="reactMessage('${jsStr(mid)}','${em}'); this.closest('.modal-bg').remove();">${em}</button>`).join('')}
         </div>
         <div class="msg-menu-quote"><b>${escHtml(m.fromName || '')}</b><br>${escHtml((m.text || '').slice(0, 140))}</div>
-        <button class="btn btn-ghost btn-block" style="margin-top:10px;" onclick="startReply('${mid}'); this.closest('.modal-bg').remove();"><i class="fa-solid fa-reply"></i> ${t('ui.122')}</button>
-        <button class="btn btn-ghost btn-block" style="margin-top:8px;" onclick="copyChatMessage('${mid}'); this.closest('.modal-bg').remove();"><i class="fa-solid fa-copy"></i> ${t('chat.copy')}</button>
-        <button class="btn btn-ghost btn-block" style="margin-top:8px;" onclick="forwardChatMessage('${mid}'); this.closest('.modal-bg').remove();"><i class="fa-solid fa-share"></i> ${t('chat.forward')}</button>
-        ${mine ? `<button class="btn btn-ghost btn-block" style="margin-top:8px; color:var(--bad-ink); border-color:rgba(179,58,74,.25);" onclick="deleteChatMessage('${mid}'); this.closest('.modal-bg').remove();"><i class="fa-solid fa-trash"></i> ${t('ui.018')}</button>` : ''}
+        <button class="btn btn-ghost btn-block" style="margin-top:10px;" onclick="startReply('${jsStr(mid)}'); this.closest('.modal-bg').remove();"><i class="fa-solid fa-reply"></i> ${t('ui.122')}</button>
+        <button class="btn btn-ghost btn-block" style="margin-top:8px;" onclick="copyChatMessage('${jsStr(mid)}'); this.closest('.modal-bg').remove();"><i class="fa-solid fa-copy"></i> ${t('chat.copy')}</button>
+        <button class="btn btn-ghost btn-block" style="margin-top:8px;" onclick="forwardChatMessage('${jsStr(mid)}'); this.closest('.modal-bg').remove();"><i class="fa-solid fa-share"></i> ${t('chat.forward')}</button>
+        ${mine ? `<button class="btn btn-ghost btn-block" style="margin-top:8px; color:var(--bad-ink); border-color:rgba(179,58,74,.25);" onclick="deleteChatMessage('${jsStr(mid)}'); this.closest('.modal-bg').remove();"><i class="fa-solid fa-trash"></i> ${t('ui.018')}</button>` : ''}
       </div>`;
     document.body.appendChild(sheet);
   }
@@ -9406,7 +9635,7 @@
       const av = dir.avatar
         ? `<span class="fwd-av" style="background:${cssUrlAttr(dir.avatar)} center/cover no-repeat;"></span>`
         : `<span class="fwd-av">${escHtml(name.charAt(0).toUpperCase())}</span>`;
-      rows.push(`<button class="fwd-row" onclick="doForward('${escHtml(uid)}', false)">${av}<span class="fwd-name">${escHtml(name)}</span></button>`);
+      rows.push(`<button class="fwd-row" onclick="doForward('${jsStr(uid)}', false)">${av}<span class="fwd-name">${escHtml(name)}</span></button>`);
     });
     const sheet = document.createElement('div');
     sheet.className = 'modal-bg';
@@ -9730,30 +9959,158 @@
     inp.focus();
   }
 
-  // ─────────────────────────── PUSH NOTIFICATIONS (FCM) ───────────────────────────
-  // Foreground (site open): show in-app toast + sound; the OS banner is suppressed
-  //   for the chat that's currently open so the user isn't spammed about their
-  //   own active conversation.
-  // Background (site minimized / closed): firebase-messaging-sw.js handles it and
-  //   the browser/OS draws the banner.
+  // ─────────────────────────── УВЕДОМЛЕНИЯ: ПУШИ, РОУТЕР ССЫЛОК, APK-МОСТ ───────────────────────────
+  // Контракт — docs/notifications/CONTRACT.md (§5 ссылки, §6 SW, §7 сайт). Коротко:
+  //  • сервер шлёт веб-токенам webpush.notification (уведомление рисует сам SDK в SW),
+  //    Android-токенам APK 1.2.0 — data-only (рисует натив, мост KMPUSH);
+  //  • любой клик/тап — SW, натив, баннер, колокольчик — приходит сюда ССЫЛКОЙ /?go=…
+  //    и исполняется одним роутером kmRoute с guard'ами;
+  //  • в открытом приложении системное уведомление не показывается: пуш приходит в
+  //    onMessage (веб) / __kmPushForeground (APK), и мы рисуем лёгкий баннер сами;
+  //  • токен устройства числится только за ТЕКУЩИМ аккаунтом: при выходе и смене аккаунта
+  //    снимаем его у прежнего — иначе на общем телефоне приходили бы пуши прежней ученицы.
   let _pushInitDone = false;
   let _pushUnsubFg = null;
-  let _pushCurrentToken = null;
+  let _pushCurrentToken = null;        // веб-токен FCM этого браузера
+  let _pushTokenUid = '';              // uid, под которым он записан в users/<uid>/fcmTokens
+  let _kmAndroidToken = '';            // токен APK 1.2.0 (приходит из натива)
+  let _kmAndroidTokenUid = '';         // uid, под которым он записан в users/<uid>/fcmAndroid
+  let _kmTokChain = Promise.resolve(); // записи токенов — строго по очереди
+  let _kmPermAsked = false;            // запрос разрешения в APK начат из нашего интерфейса
+
+  function kmTz() {
+    try { const z = Intl.DateTimeFormat().resolvedOptions().timeZone || ''; return (typeof z === 'string' && z.length <= 64) ? z : ''; } catch (_) { return ''; }
+  }
+  // Токен FCM — ключ базы: без символов .#$[]/ и в пределах 768 байт ключа RTDB
+  function _kmValidToken(tk) { return typeof tk === 'string' && /^[A-Za-z0-9_:-]{20,700}$/.test(tk); }
+  // uid / ключ заявки из ссылки или пуша (недоверенное): только то, что допустимо в пути базы
+  function _kmSafeKey(s) { return typeof s === 'string' && s.length > 0 && s.length <= 200 && !/[.#$\[\]\/\u0000-\u001f\u007f]/.test(s); }
+  function _kmStr(v) { return typeof v === 'string' ? v : ''; }
+
+  // ── Где мы: APK 1.2.0+ (мост KMPUSH), APK 1.1.0 (KMTTS без KMPUSH — пушей нет), браузер ──
+  function _kmApkPush() { return !!(window.KMPUSH && typeof window.KMPUSH.permission === 'function'); }
+  function _kmApkOld() { return !!window.KMTTS && !window.KMPUSH; }
+  // APK с уведомлениями (1.2.0+) уже лежит в app/KoreanWithMadie.apk? Пока нет — ссылка «Обнови
+  // приложение» скачала бы тот же 1.1.0 (замкнутый круг), поэтому в APK 1.1.0 честно пишем «появятся
+  // со следующим обновлением». Переключить на true ТЕМ ЖЕ коммитом, что кладёт 1.2.0 в
+  // app/KoreanWithMadie.apk (и поднять версию во всех 4 местах).
+  const KM_APK_PUSH_OUT = false;
+  function _kmApkPerm() {
+    try {
+      const s = String(window.KMPUSH.permission() || '');
+      return ['granted', 'default', 'denied', 'unsupported'].indexOf(s) >= 0 ? s : 'unsupported';
+    } catch (_) { return 'unsupported'; }
+  }
+  function _kmApkInfo() {
+    try { const o = JSON.parse(window.KMPUSH.info() || '{}'); return (o && typeof o === 'object') ? o : {}; } catch (_) { return {}; }
+  }
+  // Веб-пуш — только в браузере/PWA. В APK (любой версии) WebView пуш-сервиса не имеет:
+  // там уведомления нативные (KMPUSH), и второй, веб-токен дал бы дубли.
+  function _kmWebPushOk() { return !window.KMTTS && !!_messaging && ('Notification' in window) && !!_VAPID_KEY && !_VAPID_KEY.startsWith('REPLACE_'); }
+  function _kmIsIos() {
+    const ua = navigator.userAgent || '';
+    return /iPad|iPhone|iPod/.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+  }
+  function _kmIsStandalone() {
+    try { return !!((window.matchMedia && matchMedia('(display-mode: standalone)').matches) || navigator.standalone === true); } catch (_) { return false; }
+  }
+  // Разрешение на уведомления ЭТОГО устройства: granted | default | denied | unsupported
+  function kmPushPermission() {
+    if (_kmApkPush()) return _kmApkPerm();
+    if (!_kmWebPushOk()) return 'unsupported';
+    try { const p = Notification.permission; return (p === 'granted' || p === 'denied') ? p : 'default'; } catch (_) { return 'unsupported'; }
+  }
+
+  // ── Токены устройства в базе ──
+  // Запись {t, p?, l, tz, v}: пишем, только если её нет, она старше 3 дней или сменились
+  // язык/пояс (контракт §7) — обычный старт стоит один маленький read без записи.
+  async function _kmSaveTokenRecord(node, uid, token, rec) {
+    if (typeof _db === 'undefined' || !uid || uid === 'guest' || !_kmValidToken(token)) return false;
+    const ref = _db.ref(`users/${uid}/${node}/${token}`);
+    let cur = null;
+    try { const s = await ref.once('value'); cur = (s && typeof s.val === 'function') ? s.val() : null; } catch (_) {}
+    if (firebaseUserId() !== uid) return false;             // пока читали, сменилась личность
+    const fresh = !!cur && typeof cur === 'object'
+      && Math.abs(Date.now() - (+cur.t || 0)) < 3 * 86400000
+      && cur.l === rec.l && cur.tz === rec.tz && (rec.p === undefined || cur.p === rec.p);
+    // Токен снова записан этому аккаунту — отложенное снятие той же записи больше не нужно
+    if (fresh) { _kmDropForget(node, uid, token); return true; }
+    try { await ref.set({ t: Date.now(), ...rec }); _kmDropForget(node, uid, token); return true; }
+    catch (e) { console.warn('[push] token save', e); return false; }
+  }
+  // ── Снятие записи токена: постоянная очередь (localStorage 'pushDropPending') ──
+  // remove() без сети встаёт в очередь SDK В ПАМЯТИ и пропадает вместе со страницей (вышла из
+  // аккаунта в метро и закрыла приложение) — запись осталась бы за прежней ученицей, и её пуши
+  // (личка, заявки, тариф) приходили бы на этот телефон/браузер и следующей ученице. Поэтому
+  // задание пишем на диск ДО remove() и вычёркиваем только после подтверждения сервера;
+  // недоделанные повторяем при старте (kmPushDropReplay). Запись того же токена тому же аккаунту
+  // (вошла обратно) задание отменяет: SDK шлёт записи по порядку, снятие раньше новой записи.
+  const KM_DROP_KEY = 'pushDropPending';
+  const KM_DROP_NODES = ['fcmTokens', 'fcmAndroid'];
+  function _kmDropList() {
+    const v = Store.get(KM_DROP_KEY, []);
+    const now = Date.now();
+    return (Array.isArray(v) ? v : []).filter(e => e && typeof e === 'object' && KM_DROP_NODES.indexOf(e.node) >= 0
+      && _kmSafeKey(e.uid) && e.uid !== 'guest' && _kmValidToken(e.tk)
+      && !(Number(e.at) < now - 60 * 86400000));          // за 2 месяца токен и так давно мёртв
+  }
+  function _kmDropStore(list) {
+    if (list.length) Store.set(KM_DROP_KEY, list.slice(-30)); else Store.del(KM_DROP_KEY);
+  }
+  // Вычеркнуть задание. n — метка конкретного задания: если после него то же снятие поставили
+  // ещё раз (вышла → вошла → снова вышла), подтверждение старого новое не вычёркивает.
+  function _kmDropForget(node, uid, tk, n) {
+    const list = _kmDropList();
+    const rest = list.filter(e => !(e.node === node && e.uid === uid && e.tk === tk && (n === undefined || e.n === n)));
+    if (rest.length !== list.length) _kmDropStore(rest);
+  }
+  function _kmDropRun(e) {
+    let p;
+    try { p = _db.ref(`users/${e.uid}/${e.node}/${e.tk}`).remove(); } catch (_) { return Promise.resolve(false); }
+    return Promise.resolve(p).then(() => { _kmDropForget(e.node, e.uid, e.tk, e.n); return true; }, err => {
+      // Сервер отказал правилами — повтор ничего не даст (иначе копилось бы при каждом старте)
+      if (/permission/i.test(String(err && (err.code || err.message)))) _kmDropForget(e.node, e.uid, e.tk, e.n);
+      return false;
+    });
+  }
+  function _kmDropTokenRecord(node, uid, token) {
+    if (typeof _db === 'undefined' || !uid || uid === 'guest' || !_kmValidToken(token) || KM_DROP_NODES.indexOf(node) < 0 || !_kmSafeKey(uid)) return Promise.resolve(false);
+    const e = { node, uid, tk: token, at: Date.now(), n: Math.random().toString(36).slice(2, 10) };
+    _kmDropStore(_kmDropList().filter(x => !(x.node === node && x.uid === uid && x.tk === token)).concat([e]));
+    return _kmDropRun(e);
+  }
+  // Старт: повторить снятия, которые сервер в прошлые запуски не подтвердил (один раз за запуск)
+  let _kmDropReplayed = false;
+  function kmPushDropReplay() {
+    if (_kmDropReplayed || typeof _db === 'undefined') return;
+    _kmDropReplayed = true;
+    const list = _kmDropList();
+    _kmDropStore(list);                                   // мусор и задания старше 2 месяцев — долой
+    list.forEach(e => { _kmDropRun(e); });
+  }
+  function _kmQueueToken(job) {
+    const run = _kmTokChain.then(job);
+    _kmTokChain = run.catch(() => false);
+    return _kmTokChain;
+  }
+  function _kmSaveWebToken() {
+    const tk = _pushCurrentToken;
+    if (!tk || !isLoggedInForChat()) return Promise.resolve(false);
+    const uid = firebaseUserId();
+    if (!uid || uid === 'guest') return Promise.resolve(false);
+    // Браузер перешёл к другому аккаунту — у прежнего токен снимаем
+    if (_pushTokenUid && _pushTokenUid !== uid) _kmDropTokenRecord('fcmTokens', _pushTokenUid, tk);
+    _pushTokenUid = uid;
+    return _kmQueueToken(() => _kmSaveTokenRecord('fcmTokens', uid, tk, { p: 'web', l: APP_LANG, tz: kmTz(), v: String(APP_VERSION) }));
+  }
 
   async function initPushNotifications() {
+    kmPushDropReplay();                   // снятия записей токенов, не подтверждённые в прошлый раз
     if (_pushInitDone) return;
-    if (!_messaging) return; // unsupported browser (e.g. Safari on older iOS, file://)
-    if (!('Notification' in window)) return;
-    if (!isLoggedInForChat()) return;
-    if (!_VAPID_KEY || _VAPID_KEY.startsWith('REPLACE_')) {
-      console.warn('[push] VAPID key not configured — skipping push setup');
-      return;
-    }
+    if (!_kmWebPushOk()) return;          // браузер без пушей (iOS-вкладка, WebView APK), file://
+    if (!isLoggedInForChat()) return;     // гостю токены не пишем
     _pushInitDone = true;
-
-    // Register the service worker explicitly. Default `firebase-messaging-sw.js`
-    // at site root is picked up automatically, but doing it manually lets us
-    // pass it to getToken and avoid race conditions on slow connections.
+    // SW регистрируем явно и отдаём в getToken — без гонки на медленной сети
     let swReg;
     try {
       swReg = await navigator.serviceWorker.register('/firebase-messaging-sw.js');
@@ -9761,104 +10118,1856 @@
       console.warn('[push] SW register failed', e);
       return;
     }
-
-    // Don't auto-prompt — wait until the user explicitly asks (see askPushPermission)
+    // Разрешение сами не спрашиваем — только по кнопке (askPushPermission)
     if (Notification.permission !== 'granted') return;
     await registerFcmToken(swReg);
     attachForegroundMessageHandler();
   }
 
+  // Кнопка «Уведомления» в Настройках и плашка на «Общении»
   async function askPushPermission() {
-    if (!_messaging) { toast(t('ui.129')); return; }
-    if (!('Notification' in window)) { toast(t('ui.130')); return; }
-    if (!_VAPID_KEY || _VAPID_KEY.startsWith('REPLACE_')) {
-      toast(t('ui.131'));
+    // APK 1.1.0: пушей в нём нет (моста KMPUSH нет ни у кого) — нужна новая версия приложения.
+    // Пока она не выложена (KM_APK_PUSH_OUT), не скачиваем тот же 1.1.0 по кругу, а объясняем.
+    if (_kmApkOld()) {
+      if (KM_APK_PUSH_OUT) location.href = '/app/KoreanWithMadie.apk';
+      else toast(t('set.notif') + ': ' + t('set.notif.appSoon'));
       return;
     }
-    if (Notification.permission === 'granted') {
+    if (!isLoggedInForChat()) {           // пуши приходят только аккаунтам
+      document.getElementById('settings-modal')?.remove();
+      requireAccount(t('set.notif'));
+      return;
+    }
+    if (_kmApkPush()) {
+      const st = _kmApkPerm();
+      if (st === 'unsupported') { toast(t('set.notif.noGms')); return; }
+      _kmPermAsked = true;
+      try {
+        // Включено — в системных настройках можно настроить каналы; отказано навсегда —
+        // система диалог больше не покажет, путь только через настройки.
+        if (st === 'granted' || st === 'denied') window.KMPUSH.openSettings();
+        else window.KMPUSH.request();       // ответ придёт в __kmPushPerm
+      } catch (_) {}
+      return;
+    }
+    if (!_messaging) { toast(t('ui.129')); return; }
+    if (!('Notification' in window)) { toast((_kmIsIos() && !_kmIsStandalone()) ? t('set.notif.unsupIos') : t('ui.130')); return; }
+    if (!_VAPID_KEY || _VAPID_KEY.startsWith('REPLACE_')) { toast(t('ui.131')); return; }
+    if (Notification.permission === 'denied') { toast(t('ui.132')); return; }
+    if (Notification.permission !== 'granted') {
+      let res = 'default';
+      try { res = await Notification.requestPermission(); } catch (_) {}
+      if (res !== 'granted') { toast(t('ui.133')); _kmRefreshPushUi(); return; }
+    } else if (_pushCurrentToken && _pushTokenUid === firebaseUserId()) {
       toast(t('push.alreadyOn'), 'var(--sage)');
       return;
     }
-    if (Notification.permission === 'denied') {
-      toast(t('ui.132'));
-      return;
-    }
-    const res = await Notification.requestPermission();
-    if (res !== 'granted') {
-      toast(t('ui.133'));
-      return;
-    }
+    const ok = await _kmWebEnable();
+    toast(ok ? t('push.enabled') : t('notif.enableFail'), ok ? 'var(--sage)' : 'var(--berry)');
+    _kmRefreshPushUi();                   // «Уведомления» сразу показывают «ВКЛ ✓», плашка на «Общении» уходит
+  }
+  async function _kmWebEnable() {
     let swReg;
-    try {
-      swReg = await navigator.serviceWorker.register('/firebase-messaging-sw.js');
-    } catch (e) { console.warn('[push] SW register failed', e); return; }
-    await registerFcmToken(swReg);
+    try { swReg = await navigator.serviceWorker.register('/firebase-messaging-sw.js'); }
+    catch (e) { console.warn('[push] SW register failed', e); return false; }
+    _pushInitDone = true;
+    const ok = await registerFcmToken(swReg);
     attachForegroundMessageHandler();
-    toast(t('push.enabled'), 'var(--sage)');
-    renderSettingsCard(); // строка «Уведомления» сразу показывает «ВКЛ ✓»
+    return ok;
+  }
+  function _kmRefreshPushUi() {
+    try { _kmPermSeen = isLoggedInForChat() ? kmPushPermission() : ''; } catch (_) {}   // смену уже обработали здесь
+    try { if (document.getElementById('settings-card')) renderSettingsCard(); } catch (_) {}
+    try { if (document.getElementById('screen-social')?.classList.contains('active')) renderFriendsAndChat(); } catch (_) {}
   }
 
   async function registerFcmToken(swReg) {
+    let token = '';
     try {
-      const token = await _messaging.getToken({
-        vapidKey: _VAPID_KEY,
-        serviceWorkerRegistration: swReg
-      });
-      if (!token) { console.warn('[push] empty token'); return; }
-      _pushCurrentToken = token;
-      const uid = firebaseUserId();
-      if (!uid || uid === 'guest') return;
-      // Save under users/{uid}/fcmTokens/{token} = lastUpdatedAt — the Cloud
-      // Function reads this list to deliver pushes. Storing as a sub-key (not
-      // a value) lets us prune invalid tokens individually.
-      await _db.ref(`users/${uid}/fcmTokens/${token}`).set(Date.now());
+      token = await _messaging.getToken({ vapidKey: _VAPID_KEY, serviceWorkerRegistration: swReg });
     } catch (e) {
       console.warn('[push] getToken failed', e);
+      return false;
     }
+    if (!_kmValidToken(token)) { console.warn('[push] empty token'); return false; }
+    // SDK обновил токен — прежний больше не живой, запись о нём снимаем
+    if (_pushCurrentToken && _pushCurrentToken !== token && _pushTokenUid) _kmDropTokenRecord('fcmTokens', _pushTokenUid, _pushCurrentToken);
+    _pushCurrentToken = token;
+    return _kmSaveWebToken();
   }
 
   function attachForegroundMessageHandler() {
     if (!_messaging || _pushUnsubFg) return;
-    _pushUnsubFg = _messaging.onMessage(payload => {
-      const data = payload.data || {};
-      const noti = payload.notification || {};
-      const title = noti.title || data.fromName || t('chat.newMsg');
-      const body  = noti.body  || '';
-      // Suppress if the chat with that sender is already open
-      const fromUid = data.from || '';
-      const chatId  = data.chatId || '';
-      if (chatId && _chatCurrentId === chatId) {
-        // Same chat is open — message will appear in real time anyway
+    try {
+      _pushUnsubFg = _messaging.onMessage(payload => {
+        try { kmHandleForegroundPush((payload && payload.data) || {}, (payload && payload.notification) || {}); }
+        catch (e) { console.warn('[push] foreground', e); }
+      });
+    } catch (e) { console.warn('[push] onMessage', e); }
+  }
+
+  // Выход из аккаунта (вызывается ДО смены личности): устройство перестаёт получать её пуши
+  function kmPushForgetDevice() {
+    // Снятие записей — через постоянную очередь: без сети оно доделается при следующем запуске,
+    // даже если приложение закроют раньше, чем появится связь (метка apkPushSaved ниже стирается)
+    if (_pushCurrentToken && _pushTokenUid) _kmDropTokenRecord('fcmTokens', _pushTokenUid, _pushCurrentToken);
+    if (_kmAndroidToken && _kmAndroidTokenUid) _kmDropTokenRecord('fcmAndroid', _kmAndroidTokenUid, _kmAndroidToken);
+    _kmApkMark('');
+    _pushTokenUid = ''; _kmAndroidTokenUid = '';
+    if (_pushUnsubFg) { try { _pushUnsubFg(); } catch (_) {} _pushUnsubFg = null; }
+    _pushInitDone = false;
+    // Сам токен браузера тоже отзываем: даже если удаление записи выше не дошло до
+    // сервера (офлайн), пуши прежнего аккаунта сюда больше не придут. Следующий вход
+    // получит новый токен.
+    if (_messaging && _pushCurrentToken) {
+      _pushCurrentToken = null;
+      try { const r = _messaging.deleteToken(); if (r && typeof r.catch === 'function') r.catch(() => {}); } catch (_) {}
+    }
+    if (_kmApkPush()) { try { window.KMPUSH.reset(); } catch (_) {} _kmAndroidToken = ''; }
+    _kmNotifUid = ''; _kmNotifCloud = undefined;
+  }
+  // Сменилась личность (вход, другой аккаунт, гость): токены — только у новой, её notif читаем заново
+  function kmPushOnIdentity() {
+    const uid = isLoggedInForChat() ? firebaseUserId() : '';
+    if (_pushCurrentToken && _pushTokenUid && _pushTokenUid !== uid) { _kmDropTokenRecord('fcmTokens', _pushTokenUid, _pushCurrentToken); _pushTokenUid = ''; }
+    if (_kmAndroidToken && _kmAndroidTokenUid && _kmAndroidTokenUid !== uid) { _kmDropTokenRecord('fcmAndroid', _kmAndroidTokenUid, _kmAndroidToken); _kmAndroidTokenUid = ''; _kmApkMark(''); }
+    _kmNotifUid = ''; _kmNotifCloud = undefined;
+    if (uid) { _kmSaveAndroidToken(); kmNotifSyncSoon(); }
+  }
+  // Язык интерфейса сменился — пуши должны приходить на новом
+  function kmPushLangChanged() {
+    if (!isLoggedInForChat()) return;
+    if (_pushCurrentToken) _kmSaveWebToken();
+    _kmSaveAndroidToken();
+    kmNotifSync();
+  }
+
+  // ── users/<uid>/notif = {l, tz, c, off:{streak, holiday, community}, t} ──
+  // Выключатели — настройка АККАУНТА (одна на все устройства), локально лежат в UStore
+  // 'notifOff' с меткой ts. Облако пишем только при изменении; первое чтение личности
+  // принимает выключатели из облака, если они свежее локальных (другое устройство).
+  const KM_NOTIF_KINDS = ['streak', 'holiday', 'community'];
+  let _kmNotifCloud = undefined;       // undefined — облако этой личности ещё не читали; null — пусто
+  let _kmNotifUid = '';
+  let _kmNotifChain = Promise.resolve();
+  let _kmNotifTimer = null;
+  function kmNotifOff() {
+    const v = UStore.get('notifOff', null);
+    const o = { streak: false, holiday: false, community: false, ts: 0 };
+    if (v && typeof v === 'object') { KM_NOTIF_KINDS.forEach(k => { o[k] = v[k] === true; }); o.ts = +v.ts || 0; }
+    return o;
+  }
+  function _kmNotifSanitize(v) {
+    if (!v || typeof v !== 'object' || Array.isArray(v)) return null;
+    const src = (v.off && typeof v.off === 'object') ? v.off : {};
+    const off = {};
+    KM_NOTIF_KINDS.forEach(k => { off[k] = src[k] === true; });
+    return {
+      l: I18N_LANGS.indexOf(v.l) >= 0 ? v.l : '',
+      tz: (typeof v.tz === 'string' && v.tz.length <= 64) ? v.tz : '',
+      c: countryCode(v.c),
+      off,
+      t: (typeof v.t === 'number' && isFinite(v.t)) ? v.t : 0
+    };
+  }
+  function _kmNotifWant() {
+    const o = kmNotifOff();
+    return { l: APP_LANG, tz: kmTz(), c: chosenCountry() || '', off: { streak: o.streak, holiday: o.holiday, community: o.community } };
+  }
+  function _kmNotifSame(a, b) {
+    return !!(a && b) && a.l === b.l && a.tz === b.tz && a.c === b.c
+      && KM_NOTIF_KINDS.every(k => !!(a.off && a.off[k]) === !!(b.off && b.off[k]));
+  }
+  function kmNotifSync() {
+    _kmNotifChain = _kmNotifChain.then(_kmNotifSyncNow, _kmNotifSyncNow);
+    return _kmNotifChain;
+  }
+  // Старт/вход: даём прийти снапшотам страны и настроек, чтобы не писать дважды
+  function kmNotifSyncSoon() {
+    if (_kmNotifTimer) clearTimeout(_kmNotifTimer);
+    _kmNotifTimer = setTimeout(() => { _kmNotifTimer = null; kmNotifSync(); }, 3000);
+  }
+  async function _kmNotifSyncNow() {
+    try {
+      if (typeof _db === 'undefined' || !isLoggedInForChat()) return;
+      const uid = firebaseUserId();
+      if (!uid || uid === 'guest') return;
+      if (_kmNotifUid !== uid) { _kmNotifUid = uid; _kmNotifCloud = undefined; }
+      if (_kmNotifCloud === undefined) {
+        let v = null;
+        try { const s = await _db.ref(`users/${uid}/notif`).once('value'); v = (s && typeof s.val === 'function') ? s.val() : null; }
+        catch (_) { return; }
+        if (firebaseUserId() !== uid) return;
+        _kmNotifCloud = _kmNotifSanitize(v);
+        const loc = kmNotifOff();
+        if (_kmNotifCloud && _kmNotifCloud.t >= loc.ts) {
+          const differs = KM_NOTIF_KINDS.some(k => loc[k] !== _kmNotifCloud.off[k]);
+          if (differs || !loc.ts) UStore.set('notifOff', { ..._kmNotifCloud.off, ts: _kmNotifCloud.t });
+          if (differs) { try { if (document.getElementById('settings-card')) renderSettingsCard(); } catch (_) {} }
+        }
+      }
+      const want = _kmNotifWant();
+      if (_kmNotifSame(want, _kmNotifCloud)) return;
+      const rec = { ...want, t: Date.now() };
+      _kmNotifCloud = rec;                 // оптимистично: запись встаёт в очередь SDK и уйдёт при связи
+      const r = _db.ref(`users/${uid}/notif`).set(rec);
+      if (r && typeof r.catch === 'function') r.catch(e => { console.warn('[notif] write', e); if (_kmNotifCloud === rec) _kmNotifCloud = undefined; });
+    } catch (e) { console.warn('[notif] sync', e); }
+  }
+  // Переключатели «что присылать» в Настройках
+  function toggleNotifPref(kind) {
+    if (KM_NOTIF_KINDS.indexOf(kind) < 0 || !isLoggedInForChat()) return;
+    const o = kmNotifOff();
+    o[kind] = !o[kind];
+    o.ts = Date.now();
+    UStore.set('notifOff', o);
+    const row = document.querySelector(`#settings-card [data-setting="notif-${kind}"]`);
+    const sw = row && row.querySelector('.switch');
+    if (sw) { sw.classList.toggle('on', !o[kind]); row.setAttribute('aria-checked', String(!o[kind])); }
+    else { try { renderSettingsCard(); } catch (_) {} }
+    kmNotifSync();
+  }
+
+  // ── Настройки → «Уведомления»: статус устройства + что присылать ──
+  function _kmNotifSettingsHtml(row, sw) {
+    const u = Store.get('user');
+    const logged = !!(u && !u.guest);
+    const chev = `<i class="fa-solid fa-chevron-right" style="color:var(--coral); font-size:11px;"></i>`;
+    let head;
+    if (_kmApkOld() && !KM_APK_PUSH_OUT) {
+      // APK 1.1.0, а новая версия ещё не выложена: ссылка скачала бы тот же 1.1.0 — без ссылки
+      head = row('🔔', t('set.notif'), t('set.notif.appSoon'), '', 'askPushPermission()');
+    } else if (_kmApkOld()) {
+      // APK 1.1.0: в WebView пушей нет — нужна новая версия приложения
+      head = `
+      <a class="settings-row" href="/app/KoreanWithMadie.apk" rel="noopener">
+        <span class="settings-ico">🔔</span>
+        <span class="settings-tx">
+          <span class="settings-title" style="display:block;">${t('set.notif')}</span>
+          <span class="settings-sub" style="display:block;">${t('set.notif.update')}</span>
+        </span>
+        <i class="fa-solid fa-download" style="color:var(--coral); font-size:12px;"></i>
+      </a>`;
+    } else if (!logged) {
+      head = row('🔔', t('set.notif'), t('set.notif.guest'), chev, 'askPushPermission()');
+    } else {
+      const apk = _kmApkPush();
+      const perm = kmPushPermission();
+      const sub = perm === 'granted' ? t('set.notif.on')
+        : perm === 'denied' ? t(apk ? 'set.notif.deniedApp' : 'set.notif.denied')
+        : perm === 'unsupported' ? (apk ? t('set.notif.noGms') : ((_kmIsIos() && !_kmIsStandalone()) ? t('set.notif.unsupIos') : t('set.notif.unsup')))
+        : t('set.notif.off');
+      const right = perm === 'granted'
+        ? `<span class="chip chip-sage" style="font-size:9px; padding:3px 9px;">${t('set.notif.onChip')}</span>`
+        : perm === 'denied'
+          ? `<span class="chip chip-coral" style="font-size:9px; padding:3px 9px;">${t('set.notif.block')}</span>`
+          : perm === 'unsupported' ? '' : chev;
+      head = row('🔔', t('set.notif'), sub, right, 'askPushPermission()');
+    }
+    // Что присылать — аккаунту-ученице (Мади приходят только письма, гостю — ничего)
+    if (!logged || u.isAdmin) return head;
+    const off = kmNotifOff();
+    const tg = (kind, ico, title, sub) => `
+        <button type="button" class="settings-row" data-setting="notif-${kind}" role="switch" aria-checked="${!off[kind]}" onclick="toggleNotifPref('${kind}')">
+          <span class="settings-ico">${ico}</span>
+          <span class="settings-tx">
+            <span class="settings-title" style="display:block;">${title}</span>
+            <span class="settings-sub" style="display:block;">${sub}</span>
+          </span>
+          ${sw(!off[kind])}
+        </button>`;
+    return head + `
+      <div class="notif-kinds">
+        <div class="notif-kinds-title">${t('set.notif.kinds')}</div>
+        ${tg('streak', '🔥', t('set.notif.streak'), t('set.notif.streak.sub'))}
+        ${tg('holiday', '🎌', t('set.notif.holiday'), t('set.notif.holiday.sub'))}
+        ${tg('community', '🌐', t('set.notif.community'), t('set.notif.community.sub'))}
+        <div class="notif-note">${t('set.notif.always')}</div>
+      </div>`;
+  }
+
+  // ── Пуш в открытом приложении (веб: onMessage, APK: __kmPushForeground) ──
+  // Системное уведомление в этот момент не показывается — рисуем баннер сами.
+  function kmHandleForegroundPush(data, noti) {
+    data = (data && typeof data === 'object') ? data : {};
+    noti = (noti && typeof noti === 'object') ? noti : {};
+    if (!isLoggedInForChat()) return;                     // гостю пуши не адресованы
+    const me = myUid();
+    const to = _kmStr(data.to);
+    if (to && to !== me) return;                          // пуш прежнему аккаунту этого устройства
+    const chatId = _kmStr(data.chatId);
+    let type = _kmStr(data.type);
+    if (!type && chatId) type = chatId === COMMUNITY_GID ? 'community' : (chatId.startsWith('g_') ? 'group' : 'dm');
+    // Про огонёк напоминать незачем — она уже в приложении
+    if (type === 'streak') return;
+    // Ученицам рассылку показывает её попап (слушатель broadcasts/). Админу broadcast приходит
+    // только как «Тест себе» (сервер исключает админов из настоящей рассылки), записи в базе нет —
+    // показываем баннер: тап (/?go=bc&id=…) откроет черновик этой вкладки во весь попап.
+    if (type === 'broadcast' && !isAdmin()) return;
+    const title = _kmStr(data.title) || _kmStr(noti.title);
+    const body = _kmStr(data.body) || _kmStr(noti.body);
+    const link = _kmStr(data.link) || _kmLinkFromData(data);
+    const fromUid = _kmStr(data.fromUid) || _kmStr(data.from);
+    if (type === 'dm' || type === 'group' || type === 'community' || type === 'hw_checked') {
+      if (chatId && _chatCurrentId === chatId && document.getElementById('chat-page')) return; // этот чат открыт
+      const isGroup = type === 'group' || type === 'community';
+      const key = isGroup ? (chatId || COMMUNITY_GID) : (fromUid || chatId);
+      if (!_kmSafeKey(key)) return;
+      const dir = (!isGroup && _usersDirCache && _usersDirCache[fromUid]) || {};
+      const name = title || _kmStr(data.fromName) || _kmStr(dir.name) || t('chat.newMsg');
+      showChatPopup(key, name, _kmStr(dir.avatar), body, isGroup, link ? () => kmRoute(link, 'ui') : null);
+      return;
+    }
+    if (type === 'friend_req') {
+      kmFriendReqBanner({ rk: _kmStr(data.reqKey), from: fromUid, name: _kmStr(data.fromName), title, body });
+      return;
+    }
+    if (type === 'friend_ok') { kmFriendOkBanner(fromUid, _kmStr(data.fromName), title, body, link); return; }
+    if (!title && !body) return;
+    const ico = { broadcast: '📣', holiday: '🎌', plan_on: '🌸', plan_soon: '⏳', plan_end: '⌛', access_on: '🔓', referral: '🎁', feedback: '💌' }[type] || '🔔';
+    _kmPopup({
+      id: _popupId('km-' + (_kmStr(data.tag) || type || 'n')),
+      avatarHtml: `<div class="chat-popup-av">${ico}</div>`,
+      title: title || body, text: title ? body : '',
+      onTap: link ? () => kmRoute(link, 'ui') : null,
+      ms: 6000, twoLines: true
+    });
+  }
+  // Список заявок и так на экране — баннер не нужен
+  function _kmSocialListVisible() {
+    return !!document.getElementById('screen-social')?.classList.contains('active') && !document.getElementById('chat-page');
+  }
+  // Баннер «Заявка в друзья» с кнопками «Принять»/«Отклонить» (тот же путь, что у пуша:
+  // ссылка /?go=friends&act=… → роутер с проверками).
+  function kmFriendReqBanner(o) {
+    if (!isLoggedInForChat() || isAdmin()) return;        // у Мади заявки принимаются сами
+    if (!_kmSafeKey(o.rk) || !_kmSafeKey(o.from)) return;
+    if (_kmSocialListVisible()) return;
+    const me = myUid();
+    const name = (o.name || '').slice(0, 60) || t('friend.noName');
+    const act = a => '/?' + new URLSearchParams({ go: 'friends', act: a, rk: o.rk, u: o.from, to: me }).toString();
+    _kmPopup({
+      id: _popupId('fr-' + o.rk),
+      avatarHtml: `<div class="chat-popup-av">${escHtml(name.charAt(0).toUpperCase())}</div>`,
+      title: o.title || t('notif.frReqTitle'),
+      text: o.body || t('notif.frReqBody', { name }),
+      onTap: () => kmRoute('/?go=friends', 'ui'),
+      actions: [
+        { label: t('ui.r033'), primary: true, run: () => kmRoute(act('accept'), 'ui') },
+        { label: t('notif.decline'), run: () => kmRoute(act('decline'), 'ui') }
+      ],
+      ms: 9000, twoLines: true
+    });
+  }
+  // Баннер «Заявка принята» → переписка с новой подругой
+  function kmFriendOkBanner(from, name, title, body, link) {
+    if (!isLoggedInForChat() || isAdmin()) return;
+    const me = myUid();
+    const nm = (name || '').slice(0, 60) || t('friend.noName');
+    const lk = link || (_kmSafeKey(from)
+      ? '/?' + new URLSearchParams({ go: 'chat', c: chatIdFor(me, from), u: from, n: nm }).toString()
+      : '/?go=friends');
+    _kmPopup({
+      id: _popupId('fok-' + (from || 'x')),
+      avatarHtml: '<div class="chat-popup-av">🎉</div>',
+      title: title || t('notif.frOkTitle'),
+      text: body || t('notif.frOkBody', { name: nm }),
+      onTap: () => kmRoute(lk, 'ui'),
+      ms: 6500, twoLines: true
+    });
+  }
+  // Пока на экране заставка или знакомство (z-index выше баннера) — подождать
+  function _kmAfterIntro(fn, tries) {
+    tries = tries || 0;
+    if ((document.getElementById('intro') || document.getElementById('onboard')) && tries < 30) {
+      setTimeout(() => _kmAfterIntro(fn, tries + 1), 400);
+      return;
+    }
+    try { fn(); } catch (e) { console.warn('[notif]', e); }
+  }
+
+  // ── Единый роутер ссылок уведомлений: /?go=<route>&… (контракт §5) ──
+  // Источники: адрес при старте ('url'), клик в SW ('sw', 'sdk', 'sw-old'), тап в APK ('apk'),
+  // баннер/колокольчик ('ui'). Одинаковая ссылка из пуша в течение 10 с исполняется один
+  // раз: SDK после openWindow присылает тот же клик ещё и сообщением (через 3 с). Тап в
+  // интерфейсе — всегда явное действие, его не глушим.
+  const KM_GO_SCREENS = ['home', 'lessons', 'hangul', 'topik', 'studykr', 'games', 'textbook'];
+  const KM_ROUTE_PARAMS = ['go', 'c', 'u', 'n', 'g', 'id', 'tab', 'act', 'rk', 'to'];
+  let _kmRouteReady = false;
+  let _kmRouteQueue = [];
+  const _kmRouteSeen = new Map();
+  function _kmParseLink(link) {
+    if (typeof link !== 'string' || !link || link.length > 2000) return null;
+    let u;
+    try { u = new URL(link, location.origin); } catch (_) { return null; }
+    if (u.protocol !== 'https:' && u.protocol !== 'http:') return null;
+    return u.searchParams.get('go') ? u.searchParams : null;
+  }
+  function _kmRouteKey(p) { return KM_ROUTE_PARAMS.map(k => k + '=' + (p.get(k) || '')).join('&'); }
+  function kmRoute(link, src) {
+    const p = _kmParseLink(link);
+    if (!p) return false;
+    const key = _kmRouteKey(p);
+    const now = Date.now();
+    _kmRouteSeen.forEach((ts, k) => { if (now - ts > 10000) _kmRouteSeen.delete(k); });
+    if (src !== 'ui' && _kmRouteSeen.has(key)) return true;   // тот же клик второй раз
+    if (!_kmRouteReady) {                                    // приложение ещё стартует
+      if (!_kmRouteQueue.some(q => q.key === key)) _kmRouteQueue.push({ key, link, src });
+      return true;
+    }
+    _kmRouteSeen.set(key, now);
+    Promise.resolve().then(() => _kmRouteRun(p)).catch(e => console.warn('[route]', e));
+    return true;
+  }
+  // Старт приложения: параметры ссылки уведомления убираем из адреса СРАЗУ — перезагрузка не
+  // должна повторять действие («Принять заявку»); остальные (OAuth code= и т.п.) не трогаем.
+  // Стоит ПОСЛЕ loadUserData()/слушателей: раньше /?go=home открывал Главную до загрузки
+  // прогресса и её счётчик цели дня затирал настоящую стату пустой (07–24.09.2026).
+  function kmRouteStart() {
+    let link = '';
+    try {
+      const sp = new URLSearchParams(location.search);
+      if (sp.get('go')) {
+        const mine = new URLSearchParams();
+        KM_ROUTE_PARAMS.forEach(k => { if (sp.has(k)) { mine.set(k, sp.get(k)); sp.delete(k); } });
+        link = '/?' + mine.toString();
+        const rest = sp.toString();
+        history.replaceState(null, '', location.pathname + (rest ? '?' + rest : '') + location.hash);
+      }
+    } catch (_) {}
+    _kmRouteReady = true;
+    if (link) kmRoute(link, 'url');
+    const q = _kmRouteQueue;
+    _kmRouteQueue = [];
+    q.forEach(it => kmRoute(it.link, it.src));
+  }
+  // Закрыть то, что накрыло бы цель ссылки (тарифы z 300 выше чата, модалка настроек)
+  function _kmCloseCovering(go) {
+    document.getElementById('settings-modal')?.remove();
+    const pp = document.getElementById('plan-page');
+    if (pp && go !== 'plan') {
+      pp.remove();   // без closePlanPage: экскурсия не должна стартовать поверх цели ссылки
+      if (!document.getElementById('chat-page')) document.body.classList.remove('chat-open');
+      // Тарифы после регистрации ждали закрытия, чтобы начать экскурсию (tourPending). Их убрала
+      // ссылка уведомления — флаг снимаем (иначе он залип бы навсегда), а экскурсию откладываем
+      // до выхода из чата или на Главную (_kmTourResume).
+      if (Store.get('tourPending')) { Store.del('tourPending'); _kmTourDeferred = !Store.get('tourDone'); }
+    }
+  }
+  // Отложенная экскурсия Комдори (см. _kmCloseCovering). Зовут closeChat() и switchScreen('home').
+  // Начинаем, только когда экран свободен: чат или тарифы снова открыты — ждём следующего выхода;
+  // открыто окно (попап рассылки, календарь…) или вкладка свёрнута — проверяем раз в 1,5 с.
+  let _kmTourDeferred = false;
+  let _kmTourTimer = null;
+  function _kmTourResume(delay) {
+    if (!_kmTourDeferred) return;
+    if (_kmTourTimer) clearTimeout(_kmTourTimer);
+    _kmTourTimer = setTimeout(() => {
+      _kmTourTimer = null;
+      try {
+        if (!_kmTourDeferred) return;
+        if (Store.get('tourDone') || document.getElementById('app-tour')) { _kmTourDeferred = false; return; }
+        if (document.getElementById('chat-page') || document.getElementById('plan-page')) return;
+        const busy = document.hidden || document.querySelector('.modal-bg, .game-page')
+          || ['intro', 'onboard', 'access-gate', 'lesson-modal', 'lesson-complete-page', 'topik-exam-overlay', 'user-profile-page', 'writing-practice-page'].some(id => document.getElementById(id));
+        if (busy) { _kmTourResume(1500); return; }
+        _kmTourDeferred = false;
+        startAppTour();
+      } catch (e) { console.warn('[tour] resume', e); }
+    }, delay == null ? 350 : delay);
+  }
+  const KM_GO_ROUTES = ['chat', 'group', 'community', 'friends', 'plan', 'calendar', 'bc', 'admin'];
+  // Нужный чат уже открыт — не закрываем и не открываем заново (мигание, сброс прокрутки)
+  function _kmChatIsOpen(chatId) { return !!chatId && _chatCurrentId === chatId && !!document.getElementById('chat-page'); }
+  async function _kmRouteRun(p) {
+    const go = p.get('go');
+    const s = k => String(p.get(k) || '').slice(0, 300);
+    if (!KM_GO_SCREENS.includes(go) && !KM_GO_ROUTES.includes(go)) return;   // чужой параметр
+    if (go === 'admin' && !isAdmin()) return;                                 // кабинет — только Мади
+    if (go === 'plan' && isAdmin()) return;
+    _kmCloseCovering(go);
+    if (KM_GO_SCREENS.includes(go)) { switchScreen(go); return; }   // закрытые гостям экраны встретит гейт
+    switch (go) {
+      case 'chat': return _kmRouteChat(s('u'), s('c'), s('n'));
+      case 'group': return _kmRouteGroup(s('g'), s('n'));
+      case 'community':
+        if (_kmChatIsOpen(COMMUNITY_GID)) return;
+        switchScreen('social');                                          // гость → гейт регистрации
+        if (isLoggedInForChat()) openCommunityChat();
+        return;
+      case 'friends': return _kmRouteFriends(s('act'), s('rk'), s('u'), s('to'));
+      case 'plan': openPlanPage(); return;
+      case 'calendar': showCalendar(); return;
+      case 'bc': {
+        // Попап рассылки (из broadcasts/<id>, если не истекла) — kmOpenBroadcast(id)
+        const id = s('id');
+        if (_kmSafeKey(id) && typeof kmOpenBroadcast === 'function') kmOpenBroadcast(id);
         return;
       }
-      // In-app banner (same component as the realtime popup, deduped by sender uid)
+      case 'admin': {
+        const tab = s('tab');
+        showAdminPanel((tab === 'hub' || Object.prototype.hasOwnProperty.call(ADMIN_TAB_LABELS, tab)) ? tab : 'hub');
+        return;
+      }
+    }
+  }
+  function _kmRouteChat(u, c, n) {
+    const me = isLoggedInForChat() ? myUid() : '';
+    if (me && _kmSafeKey(u) && _kmChatIsOpen(chatIdFor(me, u)) && (!c || c === chatIdFor(me, u))) return;
+    switchScreen('social');                                  // гость → гейт регистрации
+    if (!me) return;
+    if (!_kmSafeKey(u) || u === me) return;
+    const chatId = chatIdFor(me, u);
+    if (c && c !== chatId) return;                           // ссылка другого аккаунта этого устройства
+    const fr = (_friendsCache && _friendsCache[u]) || {};
+    const dir = (_usersDirCache && _usersDirCache[u]) || {};
+    const name = _kmStr(fr.name) || _kmStr(dir.name) || n || t('friend.noName');
+    openChat(u, name.slice(0, 80));
+  }
+  async function _kmRouteGroup(g, n) {
+    if (_kmChatIsOpen(g)) return;
+    switchScreen('social');
+    if (!isLoggedInForChat()) return;
+    if (g === COMMUNITY_GID) { openCommunityChat(); return; }
+    if (!/^g_[A-Za-z0-9_-]{1,80}$/.test(g)) return;
+    const me = myUid();
+    let info = _groupsCache && _groupsCache[g];
+    if (!info && typeof _db !== 'undefined') {                // кэш групп ещё не пришёл — спросим точечно
+      try { const snap = await _db.ref(`users/${me}/groups/${g}`).once('value'); info = (snap && typeof snap.val === 'function') ? snap.val() : null; } catch (_) {}
+      if (myUid() !== me) return;
+    }
+    if (!info) { toast(t('notif.groupGone')); return; }        // вышла из группы / пуш другому аккаунту
+    openGroupChat(g, _kmStr(info.title) || n || t('grp.defTitle'));
+  }
+  // «Общение» → заявки. С act=accept|decline — действие прямо из уведомления, но только если:
+  // адресат — текущий аккаунт (to), не гость, а в МОЁМ inbox есть эта заявка (type и from
+  // совпадают). Имя берём из базы, не из ссылки. Иначе просто показываем список заявок.
+  async function _kmRouteFriends(act, rk, u, to) {
+    switchScreen('social');
+    if (!isLoggedInForChat()) return;
+    if ((act !== 'accept' && act !== 'decline') || !_kmSafeKey(rk) || !_kmSafeKey(u)) { _kmScrollToRequests(); return; }
+    const me = myUid();
+    if (to !== me) { toast(t('notif.frOther')); _kmScrollToRequests(); return; }
+    if (isAdmin() || typeof _db === 'undefined') { _kmScrollToRequests(); return; }
+    let rec = null;
+    try { const snap = await _db.ref(`users/${me}/inbox/${rk}`).once('value'); rec = (snap && typeof snap.val === 'function') ? snap.val() : null; } catch (_) {}
+    if (myUid() !== me) return;
+    if (!rec || typeof rec !== 'object' || rec.type !== 'friend_request' || rec.from !== u) {
+      toast(t('notif.frGone')); _kmScrollToRequests(); return;
+    }
+    if (act === 'accept') {
+      await acceptFriendRequest(rk, u, (_kmStr(rec.fromName).trim().slice(0, 60)) || t('friend.noName'));
+    } else {
+      await declineFriendRequest(rk, u);
+      toast(t('notif.frDeclined'));
+    }
+  }
+  function _kmScrollToRequests(tries) {
+    tries = tries || 0;
+    const el = document.getElementById('friend-requests');
+    if (el && el.offsetParent) { try { el.scrollIntoView({ block: 'center', behavior: 'smooth' }); } catch (_) {} return; }
+    if (tries < 12) setTimeout(() => _kmScrollToRequests(tries + 1), 250);
+  }
+  // Ссылка из data старых форматов (без link): старый SW, APK-уведомление старого сервера
+  function _kmLinkFromData(d) {
+    if (!d || typeof d !== 'object') return '';
+    const q = o => '/?' + new URLSearchParams(o).toString();
+    if (_kmStr(d.link)) return _kmStr(d.link);
+    const chatId = _kmStr(d.chatId), from = _kmStr(d.fromUid) || _kmStr(d.from);
+    if (chatId === COMMUNITY_GID) return q({ go: 'community' });
+    if (chatId.startsWith('g_')) return q({ go: 'group', g: chatId, n: _kmStr(d.title) });
+    if (chatId && from) return q({ go: 'chat', c: chatId, u: from, n: _kmStr(d.fromName) });
+    if (_kmStr(d.type) === 'friend_req') return q({ go: 'friends' });
+    return '';
+  }
+
+  // ── Клик по уведомлению → сообщение от Service Worker ──
+  //  • km-push-open — наш SW (кнопки «Принять/Отклонить», data-only уведомления);
+  //  • notification-clicked — SDK сам обработал клик по своему уведомлению (fcmOptions.link);
+  //  • fcm-notification-click — старый SW до обновления (data.link / chatId / fromUid / from).
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.addEventListener('message', ev => {
+      const m = ev.data;
+      if (!m || typeof m !== 'object') return;
       try {
-        if (fromUid) showChatPopup(fromUid, title, (data.fromAvatar || ''), body);
-        else toast(`💬 ${title}: ${body.length > 60 ? body.slice(0, 60) + '…' : body}`, 'var(--berry)');
-      } catch (_) {}
-      // Some browsers also fire the SW notification while the page is foregrounded;
-      // others don't. We render it ourselves so behavior is consistent.
-      try {
-        if (Notification.permission === 'granted' && document.hidden) {
-          new Notification(title, {
-            body, icon: '/assets/logo-app.png', tag: chatId ? `chat-${chatId}` : undefined
-          });
+        if (m.kind === 'km-push-open') { kmRoute(_kmStr(m.link), 'sw'); return; }
+        if (m.isFirebaseMessaging && m.messageType === 'notification-clicked') {
+          const d = (m.data && typeof m.data === 'object') ? m.data : {};
+          kmRoute(_kmStr(m.fcmOptions && m.fcmOptions.link) || _kmLinkFromData(d), 'sdk');
+          return;
         }
-      } catch (_) {}
+        if (m.kind === 'fcm-notification-click' && m.data && typeof m.data === 'object') kmRoute(_kmLinkFromData(m.data), 'sw-old');
+      } catch (e) { console.warn('[push] sw message', e); }
     });
   }
 
-  // Listen for SW → page messages: "open chat X" when user taps the notification
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.addEventListener('message', ev => {
-      const m = ev.data || {};
-      if (m.kind === 'fcm-notification-click' && m.data && m.data.from) {
-        const fromUid = m.data.from;
-        const fromName = m.data.fromName || 'Друг';
-        try { switchScreen('profile'); } catch (_) {}
-        try { openChat(fromUid, fromName); } catch (_) {}
+  // ── Мост APK 1.2.0 (KMPUSH): колбэки натива ──
+  // Натив присылает токен при старте и при его смене, но первый вызов может прийти ДО того,
+  // как известна ученица, — поэтому токен храним и пишем, когда есть аккаунт.
+  function _kmApkMark(v) { try { if (v) Store.set('apkPushSaved', v); else Store.del('apkPushSaved'); } catch (_) {} }
+  function _kmApkMarkGet() {
+    const v = Store.get('apkPushSaved', '');
+    const i = typeof v === 'string' ? v.indexOf('|') : -1;
+    return i > 0 ? { uid: v.slice(0, i), tk: v.slice(i + 1) } : null;
+  }
+  // Записали токен, а уведомления на телефоне выключены — снимаем запись (пуши впустую)
+  function _kmDropAndroidIfSaved() {
+    const m = _kmApkMarkGet();
+    if (m) _kmDropTokenRecord('fcmAndroid', m.uid, m.tk);
+    _kmApkMark('');
+    _kmAndroidTokenUid = '';
+  }
+  function _kmSaveAndroidToken() {
+    if (!_kmApkPush() || !isLoggedInForChat()) return;
+    // После выхода (KMPUSH.reset) новый токен натив отдаёт не сразу — спросим сами
+    if (!_kmAndroidToken) { try { const tk = window.KMPUSH.token(); if (_kmValidToken(tk)) _kmAndroidToken = tk; } catch (_) {} }
+    if (!_kmAndroidToken) return;
+    if (_kmApkPerm() !== 'granted') { _kmDropAndroidIfSaved(); return; }
+    const uid = firebaseUserId();
+    if (!uid || uid === 'guest') return;
+    const tk = _kmAndroidToken;
+    if (_kmAndroidTokenUid && _kmAndroidTokenUid !== uid) _kmDropTokenRecord('fcmAndroid', _kmAndroidTokenUid, tk);
+    _kmAndroidTokenUid = uid;
+    const ver = String(_kmApkInfo().app || '1.2.0').slice(0, 20);
+    _kmQueueToken(() => _kmSaveTokenRecord('fcmAndroid', uid, tk, { l: APP_LANG, tz: kmTz(), v: ver })
+      .then(ok => { if (ok && _kmAndroidToken === tk && _kmAndroidTokenUid === uid) _kmApkMark(uid + '|' + tk); return ok; }));
+  }
+  window.__kmPushToken = function (token) {
+    try {
+      if (!_kmValidToken(token)) return;
+      if (_kmAndroidToken && _kmAndroidToken !== token && _kmAndroidTokenUid) _kmDropTokenRecord('fcmAndroid', _kmAndroidTokenUid, _kmAndroidToken);
+      _kmAndroidToken = token;
+      _kmSaveAndroidToken();
+    } catch (e) { console.warn('[push] apk token', e); }
+  };
+  window.__kmPushPerm = function (state) {
+    try {
+      if (state === 'granted') {
+        try { const tk = window.KMPUSH && window.KMPUSH.token(); if (_kmValidToken(tk)) _kmAndroidToken = tk; } catch (_) {}
+        _kmSaveAndroidToken();
+        if (_kmPermAsked) toast(t('push.enabled'), 'var(--sage)');
+      } else {
+        _kmDropAndroidIfSaved();
+      }
+      _kmPermAsked = false;
+      _kmRefreshPushUi();
+    } catch (e) { console.warn('[push] apk perm', e); }
+  };
+  window.__kmPushOpen = function (o) {
+    try {
+      if (!o || typeof o !== 'object') return;
+      const d = (o.data && typeof o.data === 'object') ? o.data : {};
+      if (o.action === 'friend_accept' || o.action === 'friend_decline') {
+        kmRoute('/?' + new URLSearchParams({
+          go: 'friends', act: o.action === 'friend_accept' ? 'accept' : 'decline',
+          rk: _kmStr(d.reqKey), u: _kmStr(d.fromUid), to: _kmStr(d.to)
+        }).toString(), 'apk');
+        return;
+      }
+      const link = _kmLinkFromData(d);
+      if (link) kmRoute(link, 'apk');
+    } catch (e) { console.warn('[push] apk open', e); }
+  };
+  window.__kmPushForeground = function (data) {
+    try { kmHandleForegroundPush(data, {}); } catch (e) { console.warn('[push] apk foreground', e); }
+  };
+  // Вернулись в приложение: разрешение могли поменять в настройках телефона/браузера, а не у
+  // нас. Реагируем только на смену состояния (без чтений базы на каждый возврат).
+  let _kmPermSeen = '';
+  function kmPushOnResume() {
+    if (!isLoggedInForChat()) return;
+    const st = kmPushPermission();
+    if (st === _kmPermSeen) return;
+    const was = _kmPermSeen;
+    _kmPermSeen = st;
+    if (!was) return;                                   // первый замер — только запомнить
+    if (_kmApkPush()) {
+      if (st === 'granted') _kmSaveAndroidToken(); else _kmDropAndroidIfSaved();
+    } else if (st === 'granted' && !(_pushCurrentToken && _pushTokenUid === firebaseUserId())) {
+      _pushInitDone = false;
+      initPushNotifications();                          // разрешили в настройках сайта — регистрируем токен
+    }
+    _kmRefreshPushUi();
+  }
+  // Старт в APK 1.2.0: забрать токен, сказать нативу «готов» — он отдаст отложенный тап по пушу
+  function kmPushNativeInit() {
+    // Сначала — снятия записей токенов, которые сервер в прошлый раз не подтвердил (выход без
+    // сети): и в APK, и в браузере, и у гостя. Раньше любых новых записей токенов.
+    try { kmPushDropReplay(); } catch (e) { console.warn('[push] drop replay', e); }
+    if (!_kmApkPush()) return;
+    try { const tk = window.KMPUSH.token(); if (_kmValidToken(tk)) _kmAndroidToken = tk; } catch (_) {}
+    // Токен сменился, пока приложение было закрыто, или аккаунт уже другой — старую запись снимаем
+    const m = _kmApkMarkGet();
+    if (m && (m.tk !== _kmAndroidToken || !isLoggedInForChat() || m.uid !== firebaseUserId())) {
+      _kmDropTokenRecord('fcmAndroid', m.uid, m.tk);
+      _kmApkMark('');
+    }
+    _kmSaveAndroidToken();
+    try { window.KMPUSH.ready(); } catch (_) {}
+  }
+  // Открыт чат — убрать его уведомления из шторки (веб: tag chat-<id>, APK: chat:<id>)
+  function _kmClearChatNotifs(chatId) {
+    if (!chatId) return;
+    try { if (_kmApkPush() && typeof window.KMPUSH.clear === 'function') window.KMPUSH.clear('chat:' + chatId); } catch (_) {}
+    try {
+      if ('serviceWorker' in navigator && typeof navigator.serviceWorker.getRegistration === 'function') {
+        navigator.serviceWorker.getRegistration().then(reg => {
+          if (!reg || typeof reg.getNotifications !== 'function') return;
+          return reg.getNotifications({ tag: 'chat-' + chatId }).then(list => { (list || []).forEach(n => { try { n.close(); } catch (_) {} }); });
+        }).catch(() => {});
+      }
+    } catch (_) {}
+  }
+
+  // ─────────────────────────── РАССЫЛКА МАДИ · ПОПАП · КОЛОКОЛЬЧИК ───────────────────────────
+  // Контракт — docs/notifications/CONTRACT.md §2 (broadcasts, bell, bellReadAt, bcSeen) и §7.
+  //  • broadcasts/<bcId> пишет ТОЛЬКО серверная sendBroadcast (правило .write:false), читают
+  //    все (.read:true): попап видят и Kakao-ученицы, и гости без Firebase-сессии;
+  //  • попап: слушатель broadcasts orderByKey().limitToLast(3) → свежая (exp > now), ещё не
+  //    показанная (bcSeen — в облаке у аккаунта, в localStorage у гостя) и подходящая по aud
+  //    рассылка всплывает, когда нет заставки, знакомства, тура, другой модалки, урока/игры и
+  //    экрана доступа. Флаг «показано» ставим ДО показа: ESC, сбой или вторая вкладка не
+  //    покажут её второй раз;
+  //  • колокольчик: users/<uid>/bell (сервер пишет уже на языке ученицы) + рассылки за 7 дней;
+  //    открыла панель → users/<uid>/bellReadAt; записи старше 7 дней чистит клиент;
+  //  • всё из базы недоверенное (запись открыта, interim-3): текст — escHtml, картинки —
+  //    только https нашего Storage, переходы — только kmRoute (белый список маршрутов).
+  const KM_BC_URL = 'https://europe-west1-koreanmadie.cloudfunctions.net/sendBroadcast';
+  const KM_BC_TTL = 7 * 86400000;
+  const KM_BC_ID_RE = /^[A-Za-z0-9_-]{8,40}$/;             // bcId — как проверяет сервер
+  const KM_BELL_KEY_RE = /^[A-Za-z0-9_-]{1,64}$/;
+  // Картинка колокольчика — только файл НАШЕГО бакета (чужой хост = пиксель-трекер: IP учениц)
+  const KM_STORAGE_IMG_RE = /^https:\/\/firebasestorage\.googleapis\.com\/v0\/b\/koreanmadie\.firebasestorage\.app\/o\/[A-Za-z0-9._~%!*'()-]+(\?[A-Za-z0-9=&._~%-]*)?$/;
+  // Фото рассылки — строго broadcasts/<имя> (так же проверяет сервер)
+  const KM_BC_IMG_RE = /^https:\/\/firebasestorage\.googleapis\.com\/v0\/b\/koreanmadie\.firebasestorage\.app\/o\/broadcasts%2F[A-Za-z0-9._-]{1,120}(\?[A-Za-z0-9=&._~%-]*)?$/;
+  // Сжатое фото рассылки в предпросмотре у Мади (живёт только в памяти вкладки)
+  const KM_LOCAL_JPEG_RE = /^data:image\/jpeg;base64,[A-Za-z0-9+/=]+$/;
+  const KM_BELL_ICO = { friend_req: '🤝', friend_ok: '🎉', holiday: '🎌', streak: '🔥', plan_on: '🌸', plan_soon: '⏳', plan_end: '⌛', access_on: '🔓', referral: '🎁', feedback: '💌', broadcast: '📣' };
+
+  // ── Текст: графемы и очистка — те же, что у сервера (functions/lib/util.js) ──
+  // Иначе счётчик «80/80» у Мади разошёлся бы с проверкой сервера (эмодзи = 1 символ).
+  const _kmSeg = (typeof Intl !== 'undefined' && typeof Intl.Segmenter === 'function') ? new Intl.Segmenter(undefined, { granularity: 'grapheme' }) : null;
+  function _bcGraphemes(s) {
+    s = String(s == null ? '' : s);
+    try { return _kmSeg ? Array.from(_kmSeg.segment(s), x => x.segment) : Array.from(s); } catch (_) { return Array.from(s); }
+  }
+  function _bcLen(s) { return _bcGraphemes(s).length; }
+  function _bcClip(s, max) {
+    const g = _bcGraphemes(s);
+    return g.length <= max ? String(s == null ? '' : s) : g.slice(0, Math.max(1, max - 1)).join('').trimEnd() + '…';
+  }
+  const _BC_CTRL_RE = /[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F\u200E\u200F\u202A-\u202E\u2066-\u2069]/g;
+  function _bcClean(v, multiline) {
+    let s = String(v == null ? '' : v);
+    if (typeof s.toWellFormed === 'function') s = s.toWellFormed();
+    s = s.replace(_BC_CTRL_RE, '');
+    if (multiline) s = s.replace(/\r\n?/g, '\n').replace(/\t/g, ' ').replace(/[ \u00A0]+\n/g, '\n').replace(/\n{3,}/g, '\n\n');
+    else s = s.replace(/\s*[\r\n\t]+\s*/g, ' ');
+    return s.replace(/[ \u00A0]{2,}/g, ' ').trim();
+  }
+  // Ключ в формате push() Firebase: 8 символов времени + 12 случайных. По таким ключам
+  // orderByKey = хронология (limitToLast(3) — три последние рассылки).
+  const _KM_PUSH_CHARS = '-0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz';
+  function _kmPushKeyPrefix(ms) {
+    let n = Math.max(0, Math.floor(Number(ms) || 0)), s = '';
+    for (let i = 0; i < 8; i++) { s = _KM_PUSH_CHARS.charAt(n % 64) + s; n = Math.floor(n / 64); }
+    return s;
+  }
+  function _kmPushId() {
+    let s = _kmPushKeyPrefix(_kmNow());
+    for (let i = 0; i < 12; i++) s += _KM_PUSH_CHARS.charAt(Math.floor(Math.random() * 64));
+    return s;
+  }
+  // Время сервера: часы телефона бывают сбиты на дни (ручная дата) — тогда рассылка казалась бы
+  // истёкшей или «вечной», а колокольчик считал бы записи старыми. Поправку отдаёт сам SDK
+  // Firebase (.info/serverTimeOffset, без запроса в сеть сверх соединения).
+  let _kmSrvOffset = 0;
+  let _kmSrvOffsetKnown = false;     // SDK уже сообщил поправку (до этого _kmNow = часы телефона)
+  function _kmNow() { return Date.now() + _kmSrvOffset; }
+  function _bcLocale() { return APP_LANG === 'en' ? 'en-GB' : (APP_LANG === 'uz' ? 'uz-Latn' : 'ru-RU'); }
+  function _bcFmtDay(ts) { try { return new Date(ts).toLocaleDateString(_bcLocale(), { day: 'numeric', month: 'long' }); } catch (_) { return ''; } }
+  function _bcFmtDateTime(ts) { try { return new Date(ts).toLocaleString(_bcLocale(), { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }); } catch (_) { return ''; } }
+
+  // ── Рассылки из базы ──
+  let _bcLive = {};          // id → рассылка из живого слушателя (3 последние)
+  let _bcMore = {};          // id → рассылка, дочитанная точечно (ссылка, история, колокольчик)
+  let _bcLiveOn = false;
+  let _bcMoreAt = 0;
+  function _bcImgOk(u) { return typeof u === 'string' && u.length <= 1000 && KM_BC_IMG_RE.test(u); }
+  // Запись broadcasts/<id> → {id, title, text, img, ts, exp, aud, stats} или null.
+  // Пишет её только сервер, но правила могут быть ещё не задеплоены — проверяем всё.
+  function _bcSanitize(id, v) {
+    if (typeof id !== 'string' || !KM_BC_ID_RE.test(id) || !v || typeof v !== 'object' || Array.isArray(v)) return null;
+    const title = typeof v.title === 'string' ? _bcClip(_bcClean(v.title), 120) : '';
+    const text = typeof v.text === 'string' ? _bcClip(_bcClean(v.text, true), 1000) : '';
+    const ts = Number(v.ts), exp = Number(v.exp);
+    if (!title || !isFinite(ts) || !isFinite(exp) || ts <= 0) return null;
+    const a = (v.aud && typeof v.aud === 'object' && !Array.isArray(v.aud)) ? v.aud : null;
+    let aud = null;                                   // непонятная аудитория — ученицам не показываем
+    if (a && (a.type === 'all' || a.type === 'paid')) aud = { type: a.type };
+    else if (a && a.type === 'country' && typeof a.c === 'string' && /^[A-Z]{2}$/.test(a.c)) aud = { type: 'country', c: a.c };
+    const st = (v.stats && typeof v.stats === 'object' && !Array.isArray(v.stats)) ? v.stats : null;
+    const num = x => { const n = Math.floor(Number(x)); return isFinite(n) && n >= 0 ? n : 0; };
+    return {
+      id, title, text, ts, exp, aud,
+      img: _bcImgOk(v.img) ? v.img : '',
+      stats: st ? { users: num(st.users), tokens: num(st.tokens), sent: num(st.sent), failed: num(st.failed) } : null
+    };
+  }
+  // Оплатившая = тариф подключила Мади (by:'admin'), платный и срок не истёк — как на сервере
+  function _bcPaidNow() {
+    const p = myPlanObj();
+    return !!p && p.by === 'admin' && (p.id === 'master' || p.id === 'proai') && (!p.until || Number(p.until) > _kmNow());
+  }
+  function _bcAudOk(b) {
+    if (!b) return false;
+    if (isAdmin()) return true;                      // Мади видит все свои рассылки
+    const a = b.aud;
+    if (!a) return false;
+    if (a.type === 'all') return true;
+    // Облачный тариф ещё не пришёл — не решаем (planHandler перепроверит)
+    if (a.type === 'paid') return isLoggedInForChat() && _planLoaded === true && _bcPaidNow();
+    if (a.type === 'country') return !!a.c && a.c === chosenCountry();
+    return false;
+  }
+  function kmBcInit() {
+    if (_bcLiveOn || typeof _db === 'undefined') return;
+    _bcLiveOn = true;
+    try {
+      _db.ref('.info/serverTimeOffset').on('value', snap => {
+        const n = Number(snap && typeof snap.val === 'function' ? snap.val() : 0);
+        _kmSrvOffset = (isFinite(n) && Math.abs(n) < 365 * 86400000) ? n : 0;
+        const first = !_kmSrvOffsetKnown;
+        _kmSrvOffsetKnown = true;
+        // Записи колокольчика «из будущего», отложенные до поправки, — решить сейчас (см. _bellEntry)
+        if (first && _bellLastVal) { try { _bellOnSnap(_bellLastVal); } catch (e) { console.warn('[bell]', e); } }
+      });
+    } catch (_) {}
+    try {
+      _db.ref('broadcasts').orderByKey().limitToLast(3).on('value', snap => {
+        const val = (snap && typeof snap.val === 'function') ? snap.val() : null;
+        const map = {};
+        Object.keys((val && typeof val === 'object') ? val : {}).forEach(id => { const b = _bcSanitize(id, val[id]); if (b) map[id] = b; });
+        _bcLive = map;
+        kmBellRefresh();
+        _bcKick();
+      }, err => console.warn('[bc] listen', err && (err.code || err.message)));
+    } catch (e) { console.warn('[bc] init', e); }
+  }
+  // Панель колокольчика: живой слушатель держит 3 последние рассылки; если их ровно 3 и
+  // самая старая моложе 7 дней — за неделю могло быть больше, дочитываем (раз в 10 мин)
+  function _bcFetchMore() {
+    if (typeof _db === 'undefined' || Date.now() - _bcMoreAt < 10 * 60000) return;
+    const live = Object.keys(_bcLive).map(id => _bcLive[id]);
+    if (live.length < 3 || Math.min(...live.map(b => b.ts)) < _kmNow() - KM_BC_TTL) return;
+    _bcMoreAt = Date.now();
+    try {
+      _db.ref('broadcasts').orderByKey().limitToLast(10).once('value').then(snap => {
+        const val = (snap && typeof snap.val === 'function') ? snap.val() : null;
+        Object.keys((val && typeof val === 'object') ? val : {}).forEach(id => { const b = _bcSanitize(id, val[id]); if (b) _bcMore[id] = b; });
+        kmBellRefresh();
+      }).catch(() => {});
+    } catch (_) {}
+  }
+
+  // ── «Показано»: users/<uid>/bcSeen у аккаунта (один раз на все устройства), у гостя — localStorage ──
+  let _bcSeenCloud = '';
+  let _bcSeenLoaded = false;
+  function _bcKeyOr(v) { return (typeof v === 'string' && KM_BC_ID_RE.test(v)) ? v : ''; }
+  // id последней показанной рассылки; null — облако этой ученицы ещё не ответило
+  function _bcSeenId() {
+    const u = Store.get('user');
+    if (!u || u.isAdmin) return '';
+    if (u.guest) return _bcKeyOr(Store.get('guestBcSeen', ''));
+    if (!_bcSeenLoaded) return null;
+    const a = _bcKeyOr(_bcSeenCloud), b = _bcKeyOr(UStore.get('bcSeen', ''));
+    return a > b ? a : b;
+  }
+  function _bcMarkSeen(id) {
+    id = String(id || '');
+    if (!KM_BC_ID_RE.test(id)) return;
+    const u = Store.get('user');
+    if (!u || u.isAdmin) return;
+    if (u.guest) { if (id > _bcKeyOr(Store.get('guestBcSeen', ''))) Store.set('guestBcSeen', id); return; }
+    const loc = _bcKeyOr(UStore.get('bcSeen', ''));
+    if (id > loc) UStore.set('bcSeen', id);
+    // Облако ещё не прочитано — допишем, когда придёт его значение (иначе затёрли бы более новое)
+    if (!_bcSeenLoaded || (_bcSeenCloud && id <= _bcSeenCloud)) return;
+    _bcSeenCloud = id;
+    const uid = firebaseUserId();
+    if (typeof _db === 'undefined' || !uid || uid === 'guest') return;
+    try { const r = _db.ref(`users/${uid}/bcSeen`).set(id); if (r && typeof r.catch === 'function') r.catch(e => console.warn('[bc] seen', e)); } catch (_) {}
+  }
+  function _bcOnSeenSnap(uid, val) {
+    const cloud = _bcKeyOr(val);
+    const first = !_bcSeenLoaded;
+    _bcSeenCloud = cloud;
+    _bcSeenLoaded = true;
+    // Это устройство показало более новую, а облако о ней не знает (было офлайн) — дописываем
+    const loc = _bcKeyOr(UStore.get('bcSeen', ''));
+    if (first && loc > cloud && typeof _db !== 'undefined') {
+      _bcSeenCloud = loc;
+      try { const r = _db.ref(`users/${uid}/bcSeen`).set(loc); if (r && typeof r.catch === 'function') r.catch(() => {}); } catch (_) {}
+    }
+    kmBellRefresh();
+    _bcKick();
+  }
+
+  // ── Очередь попапа: ждём, пока экран свободен ──
+  let _bcTimer = null;
+  let _kmWelcomeAt = 0;            // только что зарегистрировалась (_welcomeNewAccount): попап триала/тарифы вот-вот появятся
+  function _bcKick(delay) {
+    if (_bcTimer) clearTimeout(_bcTimer);
+    _bcTimer = setTimeout(_bcTick, delay == null ? 300 : delay);
+  }
+  // План/страна/личность сменились — аудитория могла подойти
+  function kmBcRecheck() { kmBellRefresh(); _bcKick(); }
+  function _bcCandidate() {
+    const u = Store.get('user');
+    // Первый вход (экран входа), админ — без автопопапа
+    if (!u || u.isAdmin || typeof _db === 'undefined') return null;
+    const seen = _bcSeenId();
+    if (seen === null) return null;
+    const now = _kmNow();
+    const ids = Object.keys(_bcLive).sort().reverse();   // новые первыми (ключи push() хронологичны)
+    for (const id of ids) {
+      if (seen && id <= seen) break;                    // эта и все старше уже показаны
+      const b = _bcLive[id];
+      if (!(b.exp > now) || !(b.ts > now - KM_BC_TTL)) continue;
+      if (_bcAudOk(b)) return b;
+    }
+    return null;
+  }
+  // Экран занят: заставка, знакомство, тур, другая модалка, урок/игра/экзамен, экран доступа
+  function _bcBlocked() {
+    if (document.hidden) return true;
+    if (document.getElementById('access-gate')) return true;
+    if (document.getElementById('intro') || document.getElementById('onboard') || document.getElementById('app-tour')) return true;
+    // Отложенная экскурсия держит попап, только пока цепочка «регистрация → триал → тарифы»
+    // реально на экране (сам попап триала — .modal-bg ниже). Залипший флаг (закрыла приложение
+    // на тарифах, ушла с них по уведомлению) больше не глушит рассылки навсегда.
+    if (Store.get('tourPending') && (document.getElementById('plan-page') || Date.now() - _kmWelcomeAt < 3000)) return true;
+    if (document.querySelector('.modal-bg')) return true;
+    if (document.getElementById('lesson-modal') || document.getElementById('lesson-complete-page') || document.getElementById('topik-exam-overlay') || document.querySelector('.game-page')) return true;
+    return false;
+  }
+  function _bcTick() {
+    _bcTimer = null;
+    let b = null;
+    try { b = _bcCandidate(); } catch (e) { console.warn('[bc] pick', e); return; }
+    if (!b) return;
+    if (_bcBlocked()) { _bcKick(document.getElementById('access-gate') ? 5000 : 1500); return; }
+    _bcMarkSeen(b.id);            // ДО показа
+    kmShowBroadcastPopup(b);
+    _bcKick(1500);                // вдруг есть ещё одна (подождёт, пока эту закроют)
+  }
+
+  // ── Карточка попапа (ученицы, предпросмотр Мади) ──
+  // o: {titleId, img (сжатое фото предпросмотра), preview}
+  function _bcCardHtml(b, o) {
+    o = o || {};
+    const local = (typeof o.img === 'string' && KM_LOCAL_JPEG_RE.test(o.img)) ? o.img : '';
+    const img = safeImgUrl(local || (_bcImgOk(b.img) ? b.img : ''));
+    const date = b.ts ? _bcFmtDay(b.ts) : '';
+    const inert = o.preview ? ' tabindex="-1"' : '';
+    return `
+      ${img ? `<button type="button" class="bc-pop-imgbtn"${inert} aria-label="${escHtml(t('bc.pop.photo'))}"><img class="bc-pop-img" src="${srcAttr(img)}" alt="" decoding="async"></button>` : ''}
+      <div class="bc-pop-eyebrow">${escHtml(t('bc.pop.eyebrow'))}${date ? ' · ' + escHtml(date) : ''}</div>
+      <div class="display bc-pop-title"${o.titleId ? ` id="${o.titleId}"` : ''}>${escHtml(b.title)}</div>
+      ${b.text ? `<div class="bc-pop-text">${escHtml(b.text)}</div>` : ''}
+      <button type="button" class="btn btn-primary btn-block bc-pop-ok"${inert}>${escHtml(t('ui.286'))}</button>`;
+  }
+  // Попап рассылки. Тап по фону НЕ закрывает (как попап пробной недели): важное не смахнуть
+  // случайно; закрывают «Понятно ✓» и Esc. z 1200 — над экраном тарифов (.plan-page z 300).
+  function kmShowBroadcastPopup(b, opts) {
+    opts = opts || {};
+    if (!b || typeof b !== 'object') return null;
+    document.getElementById('bc-popup')?.remove();
+    const m = document.createElement('div');
+    m.className = 'modal-bg modal-center bc-pop-bg';
+    m.id = 'bc-popup';
+    if (typeof b.id === 'string' && KM_BC_ID_RE.test(b.id)) m.setAttribute('data-bc-id', b.id);
+    m.style.zIndex = '1200';
+    m.setAttribute('role', 'dialog');
+    m.setAttribute('aria-modal', 'true');
+    m.setAttribute('aria-labelledby', 'bc-pop-title');
+    m.innerHTML = `<div class="modal-card bc-pop-card">${_bcCardHtml(b, { titleId: 'bc-pop-title', img: opts.img })}</div>`;
+    const close = () => {
+      if (m._closing) return;
+      m._closing = true;
+      m.classList.add('bc-out');
+      setTimeout(() => { m.remove(); _bcKick(600); }, 200);
+    };
+    m.querySelector('.bc-pop-ok')?.addEventListener('click', close);
+    const imgBtn = m.querySelector('.bc-pop-imgbtn');
+    if (imgBtn) {
+      const im = imgBtn.querySelector('img');
+      // Пока фото грузится, под ним квадратное место (.bc-img-wait): карточка не растёт на глазах и
+      // «Понятно» не уезжает из-под пальца. Пришло горизонтальное — место плавно ужимается до него;
+      // битое — плавно схлопывается и убирается (без дыры)
+      const settle = (broken) => {
+        const h0 = parseFloat(getComputedStyle(imgBtn).height) || 0;
+        imgBtn.classList.remove('bc-img-wait');
+        const h1 = broken ? 0 : (parseFloat(getComputedStyle(imgBtn).height) || 0);
+        const done = () => {
+          if (broken) { imgBtn.remove(); return; }
+          imgBtn.classList.remove('bc-img-anim');
+          imgBtn.style.height = '';
+        };
+        if (!imgBtn.isConnected || Math.abs(h1 - h0) < 1) { done(); return; }
+        imgBtn.style.height = h0 + 'px';
+        void imgBtn.offsetHeight;
+        imgBtn.classList.add('bc-img-anim');
+        imgBtn.style.height = h1 + 'px';
+        if (broken) imgBtn.style.marginBottom = '0px';
+        setTimeout(done, 280);
+      };
+      if (im && !(im.complete && im.naturalWidth)) {
+        imgBtn.classList.add('bc-img-wait');
+        im.addEventListener('load', () => settle(false), { once: true });
+      }
+      if (im) im.addEventListener('error', () => settle(true), { once: true });
+      imgBtn.addEventListener('click', () => {
+        const src = im && im.getAttribute('src');
+        if (!src) return;
+        try { openMediaLightbox('image', src); } catch (_) { return; }
+        // Лайтбокс (z 900) иначе открылся бы ПОД попапом
+        const lb = document.body.lastElementChild;
+        if (lb && lb !== m && lb.classList.contains('modal-bg')) lb.style.zIndex = '1300';
+      });
+    }
+    document.body.appendChild(m);
+    try { m.querySelector('.bc-pop-ok').focus({ preventScroll: true }); } catch (_) {}
+    return m;
+  }
+  // Открыть рассылку по id: ссылка /?go=bc&id= (тап по пушу, SW, APK) и колокольчик
+  async function kmOpenBroadcast(id, src) {
+    id = String(id || '');
+    if (!KM_BC_ID_RE.test(id)) return false;
+    let b = _bcLive[id] || _bcMore[id] || null;
+    if (!b && typeof _db !== 'undefined') {
+      try {
+        const s = await _db.ref('broadcasts/' + id).once('value');
+        b = _bcSanitize(id, (s && typeof s.val === 'function') ? s.val() : null);
+        if (b) _bcMore[id] = b;
+      } catch (_) {}
+    }
+    // «Тест себе» у Мади: в базе рассылки нет (тест ничего не пишет) — тап по тестовому пушу
+    // показывает черновик этой вкладки, а на другом устройстве — объясняет, что это был тест
+    if (!b && isAdmin()) {
+      const d = _bcDraftGet();
+      if (d.bcId === id) { _kmAfterIntro(() => adminBcPreviewFull()); return true; }
+      _kmAfterIntro(() => toast(t('bc.pop.testGone')));
+      return false;
+    }
+    if (!b || !(b.exp > _kmNow())) { _kmAfterIntro(() => toast(t('bc.pop.gone'))); return false; }
+    _kmAfterIntro(() => {
+      if (document.getElementById('access-gate')) return;   // экран доступа закрывает всё — не показываем и не тратим
+      document.getElementById('bell-panel')?.remove();
+      _bcMarkSeen(id);
+      const cur = document.getElementById('bc-popup');
+      if (cur && cur.getAttribute('data-bc-id') === id) return;   // очередь уже показала её (без мигания)
+      kmShowBroadcastPopup(b);
+    });
+    return true;
+  }
+
+  // ── Колокольчик ──
+  let _bellUid = null;             // чей узел слушаем ('' — гость/нет входа, null — ещё не подключали)
+  let _bellOffs = [];
+  let _bellItems = {};             // key → {key, type, title, body, link, ts, img}
+  let _bellLastVal = null;         // последний снимок узла bell (разобрать заново, когда придёт поправка времени)
+  let _bellReadCloud = 0;
+  let _bellBacklogDone = false;
+  let _bellPanelReadBefore = 0;    // «прочитано до» на момент открытия панели (подсветка новых)
+  // Сервер начинает заголовок с эмодзи («🎌 Сегодня в Корее…», «🔥 12 дней подряд!») — его
+  // и берём в кружок-иконку, а из заголовка убираем, чтобы не было «🎌 🎌». RegExp строим в
+  // try: \p{…} в старом движке — ошибка разбора, а без неё просто остаётся иконка по типу.
+  let _kmEmojiRe = null;
+  try { _kmEmojiRe = new RegExp('^\\p{Extended_Pictographic}', 'u'); } catch (_) {}
+  function _bellLeadEmoji(title) {
+    if (!_kmEmojiRe) return null;
+    const g = _bcGraphemes(title);
+    if (g.length < 2 || !_kmEmojiRe.test(g[0])) return null;
+    const rest = g.slice(1).join('').trim();
+    return rest ? { ico: g[0], title: rest } : null;
+  }
+  // Запись users/<uid>/bell/<key> → элемент списка, null (мусор: удалить) или false (пока не
+  // решаем: не показываем и не удаляем). now — время СЕРВЕРА (_kmNow). Сервер пишет ts = своё
+  // время, поэтому запись «из будущего» больше чем на сутки — мусор (запись узла открыта): её
+  // удаляем — иначе время прижималось бы к «сейчас» при каждом снимке и перезапуске, запись
+  // вечно была бы «новой» и никогда не старела бы до чистки 7 дней. Секундный перекос (часы
+  // сервера и SDK) прижимаем к «сейчас». Пока SDK не сообщил поправку серверного времени, часы
+  // телефона могут быть сбиты на дни — такую запись откладываем (false), а решаем, когда поправка
+  // придёт (kmBcInit повторит разбор последнего снимка).
+  function _bellEntry(k, v, now) {
+    if (typeof k !== 'string' || !KM_BELL_KEY_RE.test(k) || !v || typeof v !== 'object' || Array.isArray(v)) return null;
+    let ts = Number(v.ts);
+    if (!isFinite(ts) || ts <= 0) return null;
+    if (ts > now + 86400000) return _kmSrvOffsetKnown ? null : false;
+    if (ts > now) ts = now;
+    let title = typeof v.title === 'string' ? _bcClip(_bcClean(v.title), 140) : '';
+    const body = typeof v.body === 'string' ? _bcClip(_bcClean(v.body, true), 300) : '';
+    if (!title && !body) return null;
+    const type = (typeof v.type === 'string' && /^[a-z_]{1,24}$/.test(v.type)) ? v.type : 'system';
+    const link = (typeof v.link === 'string' && v.link.length <= 1000) ? v.link : '';
+    const img = (typeof v.img === 'string' && v.img.length <= 1000 && KM_STORAGE_IMG_RE.test(v.img)) ? v.img : '';
+    let ico = '';
+    const lead = _bellLeadEmoji(title);
+    if (lead) { ico = lead.ico; title = lead.title; }
+    return { key: k, type, ico, title: title || body, body: title ? body : '', link, ts, img };
+  }
+  // Сменилась личность (старт, вход, выход): слушатели колокольчика и bcSeen — у новой
+  function kmBellOnIdentity() {
+    const u = Store.get('user');
+    const uid = (u && !u.guest && typeof _db !== 'undefined') ? firebaseUserId() : '';
+    if (uid === _bellUid) { kmBcRecheck(); return; }
+    _bellOffs.forEach(off => { try { off(); } catch (_) {} });
+    _bellOffs = [];
+    _bellUid = uid;
+    _bellItems = {}; _bellLastVal = null; _bellReadCloud = 0; _bellBacklogDone = false;
+    _bcSeenCloud = ''; _bcSeenLoaded = false;
+    if (uid && uid !== 'guest') {
+      const wire = (ref, cb) => {
+        const h = snap => {
+          if (_bellUid !== uid) return;
+          try { cb((snap && typeof snap.val === 'function') ? snap.val() : null); } catch (e) { console.warn('[bell]', e); }
+        };
+        try { ref.on('value', h, err => console.warn('[bell] listen', err && (err.code || err.message))); _bellOffs.push(() => ref.off('value', h)); }
+        catch (e) { console.warn('[bell] wire', e); }
+      };
+      wire(_db.ref(`users/${uid}/bell`).orderByKey().limitToLast(50), val => _bellOnSnap(val));
+      wire(_db.ref(`users/${uid}/bellReadAt`), val => {
+        const n = Number(val);
+        _bellReadCloud = (isFinite(n) && n > 0) ? Math.min(n, _kmNow() + 60000) : 0;
+        kmBellRefresh();
+      });
+      if (!(u && u.isAdmin)) wire(_db.ref(`users/${uid}/bcSeen`), val => _bcOnSeenSnap(uid, val));
+    }
+    kmBcRecheck();
+  }
+  function _bellOnSnap(val) {
+    _bellLastVal = (val && typeof val === 'object') ? val : null;
+    const now = _kmNow();
+    const items = {};
+    const junk = [];
+    const keys = (val && typeof val === 'object') ? Object.keys(val) : [];
+    keys.forEach(k => {
+      const it = _bellEntry(k, val[k], now);
+      if (it === false) return;                              // «из будущего» до поправки времени — ждём
+      if (!it || it.ts < now - KM_BC_TTL) junk.push(k); else items[k] = it;
+    });
+    _bellItems = items;
+    if (junk.length) _bellRemove(junk);                      // старше 7 дней и мусор — чистим
+    if (keys.length >= 50 && !_bellBacklogDone) _bellBacklog();
+    kmBellRefresh();
+  }
+  function _bellRemove(keys) {
+    const uid = _bellUid;
+    if (!uid || typeof _db === 'undefined' || !keys.length) return;
+    const upd = {};
+    keys.slice(0, 200).forEach(k => { upd[`users/${uid}/bell/${k}`] = null; });
+    try { const r = _db.ref().update(upd); if (r && typeof r.catch === 'function') r.catch(e => console.warn('[bell] clean', e)); } catch (_) {}
+  }
+  // Живой снимок — 50 последних. Если их 50, старые могли остаться за краем: берём
+  // одним запросом ключи старше недели (push-ключ начинается со времени — индекс не нужен)
+  function _bellBacklog() {
+    _bellBacklogDone = true;
+    const uid = _bellUid;
+    if (!uid || typeof _db === 'undefined') return;
+    try {
+      _db.ref(`users/${uid}/bell`).orderByKey().endAt(_kmPushKeyPrefix(_kmNow() - KM_BC_TTL)).limitToFirst(200).once('value').then(snap => {
+        if (_bellUid !== uid) return;
+        const val = (snap && typeof snap.val === 'function') ? snap.val() : null;
+        const now = _kmNow();
+        _bellRemove(Object.keys((val && typeof val === 'object') ? val : {}).filter(k => { const it = _bellEntry(k, val[k], now); return it === null || (!!it && it.ts < now - KM_BC_TTL); }));
+      }).catch(() => {});
+    } catch (_) {}
+  }
+  function _bellReadAt() {
+    const u = Store.get('user');
+    if (!u || u.guest) { const g = Number(Store.get('guestBellReadAt', 0)); return isFinite(g) ? g : 0; }
+    const loc = Number(UStore.get('bellReadAt', 0));
+    return Math.max(isFinite(loc) ? loc : 0, _bellReadCloud || 0);
+  }
+  function _bellMarkRead() {
+    const now = _kmNow();
+    const u = Store.get('user');
+    if (!u || u.guest) { Store.set('guestBellReadAt', now); kmBellRefresh(); return; }
+    UStore.set('bellReadAt', now);
+    _bellReadCloud = now;
+    const uid = firebaseUserId();
+    if (typeof _db !== 'undefined' && uid && uid !== 'guest') {
+      try { const r = _db.ref(`users/${uid}/bellReadAt`).set(now); if (r && typeof r.catch === 'function') r.catch(() => {}); } catch (_) {}
+    }
+    kmBellRefresh();
+  }
+  // Список панели: записи колокольчика + подходящие мне рассылки за 7 дней, новые сверху
+  function _bellList() {
+    const now = _kmNow();
+    const out = [];
+    Object.keys(_bellItems).forEach(k => { const it = _bellItems[k]; if (it.ts >= now - KM_BC_TTL) out.push(it); });
+    const all = Object.assign({}, _bcMore, _bcLive);
+    Object.keys(all).forEach(id => {
+      const b = all[id];
+      if (!(b.exp > now) || b.ts < now - KM_BC_TTL || !_bcAudOk(b)) return;
+      out.push({ key: 'bc:' + id, type: 'broadcast', title: b.title, body: _bcClip(b.text, 200), link: '/?go=bc&id=' + id, ts: b.ts, img: b.img, bcId: id });
+    });
+    out.sort((a, b) => (b.ts - a.ts) || (a.key < b.key ? 1 : -1));
+    return out.slice(0, 60);
+  }
+  // Новое: пришло после «прочитано»; рассылка — ещё и не показана попапом (у Мади — свои, не новые)
+  function _bellIsNew(it, readAt, seen, admin) {
+    if (!(it.ts > readAt)) return false;
+    if (it.type === 'broadcast' && it.bcId) return !admin && !(seen && it.bcId <= seen);
+    return true;
+  }
+  function _bellUnread() {
+    const readAt = _bellReadAt(), seen = _bcSeenId() || '', admin = isAdmin();
+    return _bellList().filter(it => _bellIsNew(it, readAt, seen, admin)).length;
+  }
+  // Бейдж на всех колокольчиках + перерисовка открытой панели
+  function kmBellRefresh() {
+    let n = 0;
+    try { n = _bellUnread(); } catch (e) { console.warn('[bell] count', e); }
+    const label = n ? t('bell.ariaN', { n }) : t('bell.title');
+    document.querySelectorAll('.km-bell-btn').forEach(b => {
+      const badge = b.querySelector('.km-bell-badge');
+      if (badge) { badge.textContent = n > 9 ? '9+' : String(n); badge.hidden = !n; }
+      b.classList.toggle('has-unread', n > 0);
+      b.setAttribute('aria-label', label);
+      b.setAttribute('title', t('bell.title'));
+    });
+    if (document.getElementById('bell-panel')) _bellRenderList();
+  }
+  // Кнопка слева от КАЖДОЙ шестерёнки. Шестерёнка остаётся у правого края: где она прямой
+  // ребёнок шапки (justify-content: space-between), обе кнопки уходят в одну правую группу.
+  function kmBellMount() {
+    document.querySelectorAll('button[onclick="openSettingsModal()"]').forEach(gear => {
+      const prev = gear.previousElementSibling;
+      if (prev && prev.classList.contains('km-bell-btn')) return;
+      const par = gear.parentElement;
+      if (!par) return;
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'chat-back-btn km-bell-btn';
+      b.innerHTML = '<i class="fa-solid fa-bell" aria-hidden="true"></i><span class="km-bell-badge" aria-hidden="true" hidden></span>';
+      b.addEventListener('click', () => openBellPanel());
+      if (par.tagName === 'HEADER') {
+        const wrap = document.createElement('div');
+        wrap.className = 'km-hdr-actions';
+        par.insertBefore(wrap, gear);
+        wrap.appendChild(b);
+        wrap.appendChild(gear);
+      } else {
+        par.insertBefore(b, gear);
       }
     });
+    kmBellRefresh();
+  }
+  function openBellPanel() {
+    document.getElementById('bell-panel')?.remove();
+    _bellPanelReadBefore = _bellReadAt();
+    const opener = document.activeElement;       // закрыли крестиком/фоном/Esc — фокус обратно на колокольчик
+    const m = document.createElement('div');
+    m.className = 'modal-bg modal-center';
+    m.id = 'bell-panel';
+    m.setAttribute('role', 'dialog');
+    m.setAttribute('aria-modal', 'true');
+    m.setAttribute('aria-labelledby', 'bell-title');
+    m.onclick = e => { if (e.target === m) m.remove(); };
+    m.innerHTML = `
+      <div class="modal-card bell-card">
+        <div class="bell-head">
+          <span class="bell-head-ico" aria-hidden="true"><i class="fa-solid fa-bell"></i></span>
+          <div class="bell-head-tx">
+            <div class="display bell-head-title" id="bell-title">${escHtml(t('bell.title'))}</div>
+            <div class="bell-head-sub">${escHtml(t('bell.sub'))}</div>
+          </div>
+          <button type="button" class="bell-x" aria-label="${escHtml(t('ui.023'))}">×</button>
+        </div>
+        <div class="bell-list" id="bell-list"></div>
+        <button type="button" class="bell-settings"><i class="fa-solid fa-gear" aria-hidden="true"></i> ${escHtml(t('bell.settings'))}</button>
+      </div>`;
+    m.querySelector('.bell-x').addEventListener('click', () => m.remove());
+    m.querySelector('.bell-settings').addEventListener('click', () => {
+      m._nav = true;
+      m.remove();
+      try { openSettingsModal(); } catch (_) { return; }
+      setTimeout(() => {
+        const k = document.querySelector('#settings-card .notif-kinds');
+        const row = (k && k.previousElementSibling) || k;
+        if (row) { try { row.scrollIntoView({ block: 'center' }); } catch (_) {} }
+      }, 60);
+    });
+    document.body.appendChild(m);
+    _bellRenderList();
+    _bellMarkRead();
+    _bcFetchMore();
+    // Пришло что-то, пока панель была открыта, — она это видела: при закрытии тоже «прочитано»
+    try {
+      const obs = new MutationObserver(() => {
+        if (m.isConnected) return;
+        obs.disconnect();
+        try { if (_bellUnread() > 0) _bellMarkRead(); } catch (_) {}
+        if (!m._nav && opener && opener.isConnected && typeof opener.focus === 'function' && (!document.activeElement || document.activeElement === document.body)) {
+          try { opener.focus({ preventScroll: true }); } catch (_) {}
+        }
+      });
+      obs.observe(document.body, { childList: true });
+    } catch (_) {}
+    try { m.querySelector('.bell-x').focus({ preventScroll: true }); } catch (_) {}
+  }
+  function _bellRenderList() {
+    const box = document.getElementById('bell-list');
+    if (!box) return;
+    const items = _bellList();
+    if (!items.length) {
+      box.innerHTML = `
+        <div class="bell-empty">
+          <div class="bell-empty-ico" aria-hidden="true">🌸</div>
+          <div class="bell-empty-t">${escHtml(t('bell.empty'))}</div>
+          <div class="bell-empty-s">${escHtml(isGuestish() ? t('bell.emptyGuest') : t('bell.emptySub'))}</div>
+        </div>`;
+      return;
+    }
+    const readAt = _bellPanelReadBefore, seen = _bcSeenId() || '', admin = isAdmin();
+    box.innerHTML = items.map((it, i) => {
+      const fresh = _bellIsNew(it, readAt, seen, admin);
+      return `
+        <button type="button" class="bell-item${fresh ? ' is-new' : ''}" data-i="${i}">
+          <span class="bell-ico" aria-hidden="true">${escHtml(it.ico || KM_BELL_ICO[it.type] || '🔔')}</span>
+          <span class="bell-main">
+            <span class="bell-title">${escHtml(it.title)}</span>
+            ${it.body ? `<span class="bell-body">${escHtml(it.body)}</span>` : ''}
+            <span class="bell-time">${fresh ? `<span class="bell-dot" aria-hidden="true"></span><span class="bell-sr">${escHtml(t('bell.new'))}, </span>` : ''}${escHtml(relativeTime(it.ts))}</span>
+          </span>
+          ${it.img ? `<img class="bell-thumb" src="${srcAttr(it.img)}" alt="" loading="lazy" decoding="async">` : ''}
+        </button>`;
+    }).join('');
+    box.querySelectorAll('.bell-item').forEach(el => {
+      el.addEventListener('click', () => {
+        const it = items[+el.getAttribute('data-i')];
+        if (!it) return;
+        const panel = document.getElementById('bell-panel');
+        if (panel) { panel._nav = true; panel.remove(); }
+        // Всё — через роутер (белый список маршрутов); рассылка — /?go=bc&id=… → её попап
+        if (it.link) kmRoute(it.link, 'ui');
+      });
+    });
+    box.querySelectorAll('.bell-thumb').forEach(im => im.addEventListener('error', () => im.remove()));
+  }
+
+  // ── Админка → «📣 Рассылка» ──
+  // Черновик (тема, текст, фото-URL, аудитория, bcId) — в sessionStorage вкладки: любая
+  // перерисовка вкладки (switchScreen('admin'), смена языка) его не теряет. PIN не
+  // сохраняется нигде — только поле ввода. bcId создаётся один раз на черновик: фото
+  // лежит в Storage broadcasts/<bcId>.jpg, а повторная отправка того же черновика (сбой
+  // сети, двойной тап) сервер не задвоит — broadcasts/<bcId> пишется транзакцией.
+  const KM_BC_DRAFT_KEY = 'km_bc_draft';
+  let _bcDraftMem = null;
+  let _bcLocalImg = '';            // сжатое фото (data:) — только предпросмотр, никуда не пишется
+  let _bcUpload = { st: 'idle', msg: '' };   // idle | busy | ok | err
+  let _bcUploadSeq = 0;
+  let _bcSending = false;
+  let _bcAdmStatus = null;         // {kind:'ok'|'err'|'info', msg} — переживает перерисовку
+  let _bcPrevTimer = null;
+  let _bcEstLoading = false;
+  function _bcDraftNorm(d) {
+    d = (d && typeof d === 'object') ? d : {};
+    const a = (d.aud && typeof d.aud === 'object') ? d.aud : {};
+    return {
+      bcId: (typeof d.bcId === 'string' && KM_BC_ID_RE.test(d.bcId)) ? d.bcId : '',
+      title: typeof d.title === 'string' ? d.title.slice(0, 400) : '',
+      text: typeof d.text === 'string' ? d.text.slice(0, 3000) : '',
+      img: _bcImgOk(d.img) ? d.img : '',
+      aud: { type: ['all', 'paid', 'country'].includes(a.type) ? a.type : 'all', c: countryCode(a.c) }
+    };
+  }
+  function _bcDraftGet() {
+    if (_bcDraftMem) return _bcDraftMem;
+    let d = null;
+    try { d = JSON.parse(sessionStorage.getItem(KM_BC_DRAFT_KEY) || 'null'); } catch (_) {}
+    _bcDraftMem = _bcDraftNorm(d);
+    return _bcDraftMem;
+  }
+  function _bcDraftSave() { try { sessionStorage.setItem(KM_BC_DRAFT_KEY, JSON.stringify(_bcDraftGet())); } catch (_) {} }
+  function _bcDraftClear() {
+    _bcDraftMem = null;
+    try { sessionStorage.removeItem(KM_BC_DRAFT_KEY); } catch (_) {}
+    _bcUploadSeq++;
+    _bcLocalImg = '';
+    _bcUpload = { st: 'idle', msg: '' };
+  }
+  // Ключ рассылки: push() без значения ничего не пишет — только выдаёт ключ (работает офлайн)
+  function _bcNewId() {
+    try {
+      if (typeof _db !== 'undefined') { const k = _db.ref('broadcasts').push().key; if (typeof k === 'string' && KM_BC_ID_RE.test(k)) return k; }
+    } catch (_) {}
+    return _kmPushId();
+  }
+  function _bcEnsureId() {
+    const d = _bcDraftGet();
+    if (!d.bcId) { d.bcId = _bcNewId(); _bcDraftSave(); }
+    return d.bcId;
+  }
+  function renderAdminBroadcast() {
+    const d = _bcDraftGet();
+    setTimeout(_bcAdmAfterRender, 0);
+    return `
+      <div class="bc-adm">
+        <div class="bc-note">${escHtml(t('bc.adm.intro'))}</div>
+        <div class="bc-cols">
+          <div class="bc-col">
+            <section class="card bc-box">
+              <label class="bc-label" for="bc-title"><span>${escHtml(t('bc.adm.title'))}</span><span class="bc-count" id="bc-title-n"></span></label>
+              <input id="bc-title" class="input" type="text" maxlength="200" autocomplete="off" placeholder="${escHtml(t('bc.adm.titlePh'))}" value="${escHtml(d.title)}" oninput="adminBcInput()">
+              <label class="bc-label" for="bc-text"><span>${escHtml(t('bc.adm.text'))}</span><span class="bc-count" id="bc-text-n"></span></label>
+              <textarea id="bc-text" class="input bc-textarea" rows="6" maxlength="1500" placeholder="${escHtml(t('bc.adm.textPh'))}" oninput="adminBcInput()">${escHtml(d.text)}</textarea>
+              <div class="bc-label"><span>${escHtml(t('bc.adm.photo'))}</span></div>
+              <div id="bc-photo"></div>
+              <div class="bc-label" id="bc-lbl-aud"><span>${escHtml(t('bc.adm.aud'))}</span></div>
+              <div id="bc-aud"></div>
+              <div id="bc-est" class="bc-hint"></div>
+            </section>
+            <section class="card bc-box">
+              <label class="bc-label" for="bc-pin"><span>${escHtml(t('bc.adm.pin'))}</span></label>
+              <input id="bc-pin" class="input" type="password" maxlength="64" autocomplete="one-time-code" autocapitalize="off" spellcheck="false" placeholder="${escHtml(t('bc.adm.pinPh'))}">
+              <div class="bc-hint">${escHtml(t('bc.adm.pinNote'))}</div>
+              <div class="bc-btns">
+                <button type="button" id="bc-test-btn" class="btn btn-ghost" onclick="adminBcSend(true)"><i class="fa-solid fa-flask" aria-hidden="true"></i> ${escHtml(t('bc.adm.test'))}</button>
+                <button type="button" id="bc-send-btn" class="btn btn-primary" onclick="adminBcSend(false)"><i class="fa-solid fa-paper-plane" aria-hidden="true"></i> ${escHtml(t('bc.adm.send'))}</button>
+              </div>
+              <div id="bc-status" class="bc-status" role="status" aria-live="polite"></div>
+            </section>
+          </div>
+          <div class="bc-col">
+            <section class="card bc-box bc-prev">
+              <div class="bc-label"><span>${escHtml(t('bc.adm.preview'))}</span></div>
+              <div class="bc-prev-cap">${escHtml(t('bc.adm.prevPush'))}</div>
+              <div id="bc-prev-push" aria-hidden="true"></div>
+              <div class="bc-prev-cap">${escHtml(t('bc.adm.prevPop'))}</div>
+              <div id="bc-prev-pop" class="bc-prev-pop" aria-hidden="true"></div>
+              <button type="button" class="bc-link" onclick="adminBcPreviewFull()"><i class="fa-solid fa-expand" aria-hidden="true"></i> ${escHtml(t('bc.adm.prevOpen'))}</button>
+            </section>
+          </div>
+        </div>
+        <div class="section-head" style="margin-top:20px;"><div class="left"><div class="rule"></div><span class="title">${escHtml(t('bc.adm.history'))}</span></div></div>
+        <div id="bc-history" class="bc-hist"><div class="bc-hist-empty">${escHtml(t('bc.adm.estLoading'))}</div></div>
+      </div>`;
+  }
+  function _bcAdmAfterRender() {
+    if (!document.getElementById('bc-title')) return;
+    _bcAdmCounters();
+    _bcAdmRenderPhoto();
+    _bcAdmRenderAud();
+    _bcAdmEstimate();
+    _bcAdmPreview();
+    _bcAdmRenderStatus();
+    _bcLoadHistory();
+  }
+  function adminBcInput() {
+    const d = _bcDraftGet();
+    const ti = document.getElementById('bc-title'), tx = document.getElementById('bc-text');
+    if (ti) d.title = String(ti.value || '').slice(0, 400);
+    if (tx) d.text = String(tx.value || '').slice(0, 3000);
+    _bcDraftSave();
+    _bcAdmCounters();
+    if (_bcPrevTimer) clearTimeout(_bcPrevTimer);
+    _bcPrevTimer = setTimeout(() => { _bcPrevTimer = null; _bcAdmPreview(); }, 120);
+  }
+  function _bcAdmCounters() {
+    const d = _bcDraftGet();
+    const put = (id, n, max) => {
+      const el = document.getElementById(id);
+      if (!el) return;
+      el.textContent = n + '/' + max;
+      el.classList.toggle('over', n > max);
+    };
+    put('bc-title-n', _bcLen(_bcClean(d.title)), 80);
+    put('bc-text-n', _bcLen(_bcClean(d.text, true)), 600);
+  }
+  function _bcAdmRenderPhoto() {
+    const box = document.getElementById('bc-photo');
+    if (!box) return;
+    const d = _bcDraftGet();
+    const src = _bcLocalImg || d.img;
+    const st = _bcUpload.st;
+    const removable = !!src || st === 'busy' || st === 'err';
+    box.innerHTML = `
+      <div class="bc-photo">
+        ${src ? `<img class="bc-photo-thumb" src="${srcAttr(src)}" alt="">` : ''}
+        <div class="bc-photo-actions">
+          <label class="btn btn-ghost bc-photo-pick">
+            <i class="fa-solid fa-image" aria-hidden="true"></i> <span>${escHtml(src ? t('bc.adm.photoChange') : t('bc.adm.photoPick'))}</span>
+            <input type="file" accept="image/*" class="bc-file" onchange="adminBcPickPhoto(event)">
+          </label>
+          ${removable ? `<button type="button" class="btn btn-ghost bc-photo-rm" onclick="adminBcRemovePhoto()"><i class="fa-solid fa-xmark" aria-hidden="true"></i> ${escHtml(t('bc.adm.photoRemove'))}</button>` : ''}
+        </div>
+      </div>
+      <div id="bc-photo-status" class="bc-hint${st === 'err' ? ' bc-err' : st === 'ok' ? ' bc-ok' : ''}" role="status" aria-live="polite">${escHtml(_bcUpload.msg || '')}</div>
+      <div class="bc-hint">${escHtml(t('bc.adm.photoTip'))}</div>`;
+  }
+  function _bcSetUpload(st, msg) {
+    _bcUpload = { st, msg: msg || '' };
+    _bcAdmRenderPhoto();
+    _bcAdmPreview();
+  }
+  // Сжатие до ≤300 КБ: сначала качество, потом размер (у Android лимит картинки в пуше ~1 МБ)
+  const KM_BC_IMG_MAX = 300 * 1024;
+  function _bcDataUrlBytes(u) {
+    const s = String(u || '');
+    const i = s.indexOf(',');
+    if (i < 0) return Infinity;
+    const b64 = s.length - i - 1;
+    return Math.floor(b64 * 3 / 4) - (s.endsWith('==') ? 2 : s.endsWith('=') ? 1 : 0);
+  }
+  async function _bcCompress(file) {
+    const steps = [[1280, 0.78], [1280, 0.68], [1080, 0.64], [960, 0.6], [800, 0.58], [720, 0.52], [600, 0.48]];
+    for (const [dim, q] of steps) {
+      const url = await compressImageFile(file, dim, q);
+      if (_bcDataUrlBytes(url) <= KM_BC_IMG_MAX) return url;
+    }
+    return '';
+  }
+  // Фото → сжатие → Storage broadcasts/<bcId>.jpg. БЕЗ base64-фолбэка: не загрузилось —
+  // рассылка не уйдёт, пока фото не загрузят заново или не уберут (base64 в broadcasts
+  // качал бы каждый клиент при каждом старте — взрыв трафика RTDB, 07.2026).
+  async function adminBcPickPhoto(ev) {
+    const input = ev && ev.target;
+    const file = input && input.files && input.files[0];
+    try { if (input) input.value = ''; } catch (_) {}
+    if (!file || !ensureAdminAccess()) return;
+    const seq = ++_bcUploadSeq;
+    const d = _bcDraftGet();
+    d.img = '';
+    _bcDraftSave();
+    _bcLocalImg = '';
+    if (!/^image\//i.test(String(file.type || ''))) { _bcSetUpload('err', t('bc.adm.photoBad')); return; }
+    _bcSetUpload('busy', t('bc.adm.photoBusy'));
+    let dataUrl = '';
+    try { dataUrl = await _bcCompress(file); }
+    catch (e) { if (seq === _bcUploadSeq) _bcSetUpload('err', t('bc.adm.photoBad')); return; }
+    if (seq !== _bcUploadSeq) return;                         // выбрали другое фото или убрали
+    if (!dataUrl || !KM_LOCAL_JPEG_RE.test(dataUrl)) { _bcSetUpload('err', t('bc.adm.photoBig')); return; }
+    _bcLocalImg = dataUrl;
+    _bcSetUpload('busy', t('bc.adm.photoBusy'));
+    const id = _bcEnsureId();
+    let url = '';
+    try {
+      if (typeof _storage === 'undefined' || !_storage) throw new Error('storage unavailable');
+      url = await uploadDataUrlToStorage(dataUrl, `broadcasts/${id}.jpg`);
+    } catch (e) { console.warn('[bc] upload', e); url = ''; }
+    if (seq !== _bcUploadSeq) return;
+    if (!_bcImgOk(url)) { _bcSetUpload('err', t('bc.adm.photoErr')); return; }
+    const dd = _bcDraftGet();
+    dd.img = url;
+    _bcDraftSave();
+    _bcSetUpload('ok', t('bc.adm.photoOk'));
+  }
+  // Убрать фото (и отменить незаконченную загрузку). Файл в Storage без рассылки сервер
+  // удалит сам через 8 дней (сирота в broadcasts/).
+  function adminBcRemovePhoto() {
+    _bcUploadSeq++;
+    const d = _bcDraftGet();
+    d.img = '';
+    _bcDraftSave();
+    _bcLocalImg = '';
+    _bcSetUpload('idle', '');
+  }
+  function _bcAdmRenderAud() {
+    const box = document.getElementById('bc-aud');
+    if (!box) return;
+    const a = _bcDraftGet().aud;
+    const chip = (type, label) => `<button type="button" class="lvl-chip ${a.type === type ? 'on' : ''}" role="radio" aria-checked="${a.type === type}" onclick="adminBcAud('${type}')">${escHtml(label)}</button>`;
+    box.innerHTML = `
+      <div class="bc-chips" role="radiogroup" aria-labelledby="bc-lbl-aud">
+        ${chip('all', '👥 ' + t('bc.adm.audAll'))}${chip('paid', '💳 ' + t('bc.adm.audPaid'))}${chip('country', '🌍 ' + t('bc.adm.audCountry'))}
+      </div>
+      ${a.type === 'country' ? `
+      <div class="bc-chips bc-countries" role="radiogroup" aria-label="${escHtml(t('bc.adm.needCountry'))}">
+        ${COUNTRIES.map(c => `<button type="button" class="lvl-chip ${a.c === c.code ? 'on' : ''}" role="radio" aria-checked="${a.c === c.code}" onclick="adminBcCountry('${c.code}')">${flagLabel(c.code)}</button>`).join('')}
+      </div>` : ''}
+      ${a.type === 'paid' ? `<div class="bc-hint">${escHtml(t('bc.adm.audPaidNote'))}</div>` : ''}`;
+  }
+  function adminBcAud(type) {
+    if (!['all', 'paid', 'country'].includes(type)) return;
+    const d = _bcDraftGet();
+    d.aud = { type, c: type === 'country' ? d.aud.c : '' };
+    _bcDraftSave();
+    _bcAdmRenderAud();
+    _bcAdmEstimate();
+  }
+  function adminBcCountry(code) {
+    if (!countryCode(code)) return;
+    const d = _bcDraftGet();
+    d.aud = { type: 'country', c: code };
+    _bcDraftSave();
+    _bcAdmRenderAud();
+    _bcAdmEstimate();
+  }
+  function _bcAudText(a) {
+    if (!a) return '—';
+    if (a.type === 'paid') return t('bc.adm.audPaid');
+    if (a.type === 'country') return countryCode(a.c) ? countryName(a.c) : String(a.c || '');
+    return t('bc.adm.audAll');
+  }
+  function _bcAudHtml(a) {
+    if (a && a.type === 'country' && countryCode(a.c)) return flagLabel(a.c);
+    return escHtml(_bcAudText(a));
+  }
+  // Оценка получателей по уже загруженному списку учениц (_adminUsersCache) — без чтений
+  function _bcCountTokens(o) { return (o && typeof o === 'object' && !Array.isArray(o)) ? Math.min(20, Object.keys(o).length) : 0; }
+  function _bcEstimate(a) {
+    const cache = (typeof _adminUsersCache !== 'undefined' && _adminUsersCache && typeof _adminUsersCache === 'object') ? _adminUsersCache : {};
+    const list = Object.keys(cache).filter(uid => !String(uid).startsWith('admin_') && cache[uid] && typeof cache[uid] === 'object' && !cache[uid].isAdmin);
+    if (!list.length) return null;
+    const lite = !!_adminUsersLite;                  // справочник usersPublic: ни тарифа, ни токенов
+    if (a.type === 'paid' && lite) return { paidUnknown: true };
+    const now = _kmNow();
+    let students = 0, devices = 0;
+    list.forEach(uid => {
+      const u = cache[uid];
+      if (a.type === 'country' && countryCode(u.country) !== a.c) return;
+      if (a.type === 'paid') {
+        const p = u.plan;
+        if (!(p && typeof p === 'object' && p.by === 'admin' && (p.id === 'master' || p.id === 'proai') && (!p.until || Number(p.until) > now))) return;
+      }
+      students++;
+      if (!lite) devices += _bcCountTokens(u.fcmTokens) + _bcCountTokens(u.fcmAndroid);
+    });
+    return { students, devices, lite };
+  }
+  function _bcAdmEstimate() {
+    const el = document.getElementById('bc-est');
+    if (!el) return;
+    const a = _bcDraftGet().aud;
+    if (a.type === 'country' && !a.c) { el.textContent = ''; return; }
+    if (_bcEstLoading) { el.textContent = t('bc.adm.estLoading'); return; }
+    const e = _bcEstimate(a);
+    const load = `<button type="button" class="bc-link" onclick="adminBcLoadEstimate()"><i class="fa-solid fa-calculator" aria-hidden="true"></i> ${escHtml(t('bc.adm.estLoad'))}</button>`;
+    if (!e) { el.innerHTML = `${escHtml(t('bc.adm.estNone'))} ${load}`; return; }
+    if (e.paidUnknown) { el.innerHTML = `${escHtml(t('bc.adm.estPaidLite'))} ${load}`; return; }
+    el.textContent = e.lite ? t('bc.adm.estLite', { n: e.students }) : t('bc.adm.est', { n: e.students, d: e.devices });
+  }
+  // «Посчитать»: тот же полный список учениц, что грузит «Ученики» (тяжёлое чтение — только по кнопке)
+  async function adminBcLoadEstimate() {
+    if (_bcEstLoading || !ensureAdminAccess() || typeof _db === 'undefined') return;
+    _bcEstLoading = true;
+    _bcAdmEstimate();
+    let ok = false;
+    try {
+      const snap = await _db.ref('users').once('value');
+      _adminUsersCache = ((snap && typeof snap.val === 'function') ? snap.val() : null) || {};
+      _adminUsersCacheAt = Date.now();
+      _adminUsersLite = false;
+      ok = true;
+    } catch (e) {
+      console.warn('[bc] users', e);
+      try { ok = await _adminUsersFallback(); } catch (_) { ok = false; }
+    }
+    _bcEstLoading = false;
+    if (!ok) { const el = document.getElementById('bc-est'); if (el) el.textContent = t('bc.adm.estFail'); return; }
+    _bcAdmEstimate();
+  }
+  // Макет уведомления на телефоне (как его нарисует Android/Chrome: иконка, заголовок, текст ≤200, картинка)
+  function _bcPhoneHtml(title, text, img, empty) {
+    const pic = (typeof img === 'string' && (KM_LOCAL_JPEG_RE.test(img) || _bcImgOk(img))) ? img : '';
+    return `
+      <div class="bc-phone">
+        <div class="bc-phone-status"><span>9:41</span><span class="bc-phone-sig"><i class="fa-solid fa-signal"></i><i class="fa-solid fa-wifi"></i><i class="fa-solid fa-battery-three-quarters"></i></span></div>
+        <div class="bc-notif${empty ? ' is-empty' : ''}">
+          <div class="bc-notif-head"><img class="bc-notif-ico" src="assets/pwa/icon-192.png" alt=""><span class="bc-notif-app">Korean with Madie</span><span class="bc-notif-time">· ${escHtml(t('bc.adm.now'))}</span></div>
+          <div class="bc-notif-title">${escHtml(title)}</div>
+          <div class="bc-notif-text">${escHtml(text)}</div>
+          ${pic ? `<img class="bc-notif-img" src="${srcAttr(pic)}" alt="">` : ''}
+        </div>
+      </div>`;
+  }
+  function _bcDraftAsBc() {
+    const d = _bcDraftGet();
+    const title = _bcClean(d.title), text = _bcClean(d.text, true);
+    return { id: d.bcId || 'draft', title: title || t('bc.adm.prevTitle'), text: text || t('bc.adm.prevText'), img: d.img, ts: 0, exp: 0, aud: null, empty: !title };
+  }
+  function _bcAdmPreview() {
+    const pop = document.getElementById('bc-prev-pop'), push = document.getElementById('bc-prev-push');
+    if (!pop && !push) return;
+    const b = _bcDraftAsBc();
+    if (pop) pop.innerHTML = `<div class="bc-pop-card bc-pop-mini${b.empty ? ' is-empty' : ''}">${_bcCardHtml(b, { img: _bcLocalImg, preview: true })}</div>`;
+    if (push) push.innerHTML = _bcPhoneHtml(_bcClip(b.title, 80), _bcClip(b.text, 200), _bcLocalImg || b.img, b.empty);
+  }
+  // Попап целиком — ровно как у ученицы (флаг «показано» не трогаем)
+  function adminBcPreviewFull() {
+    const b = _bcDraftAsBc();
+    b.ts = Date.now();
+    kmShowBroadcastPopup(b, { img: _bcLocalImg });
+  }
+  function _bcSetStatus(kind, msg) {
+    _bcAdmStatus = msg ? { kind, msg } : null;
+    _bcAdmRenderStatus();
+    if (msg) { try { document.getElementById('bc-status')?.scrollIntoView({ block: 'nearest', behavior: 'smooth' }); } catch (_) {} }
+  }
+  function _bcAdmRenderStatus() {
+    const el = document.getElementById('bc-status');
+    if (!el) return;
+    const s = _bcAdmStatus;
+    el.className = 'bc-status' + (s ? ' bc-' + s.kind : '');
+    el.textContent = s ? s.msg : '';
+  }
+  function _bcBusyUi(on) {
+    ['bc-test-btn', 'bc-send-btn'].forEach(id => {
+      const b = document.getElementById(id);
+      if (b) { b.disabled = !!on; b.setAttribute('aria-busy', on ? 'true' : 'false'); }
+    });
+    if (on) _bcSetStatus('info', t('bc.adm.sending'));
+  }
+  function _bcValidate() {
+    const d = _bcDraftGet();
+    const title = _bcClean(d.title), text = _bcClean(d.text, true);
+    if (!title) return { err: t('bc.adm.needTitle'), focus: 'bc-title' };
+    if (_bcLen(title) > 80) return { err: t('bc.adm.longTitle'), focus: 'bc-title' };
+    if (!text) return { err: t('bc.adm.needText'), focus: 'bc-text' };
+    if (_bcLen(text) > 600) return { err: t('bc.adm.longText'), focus: 'bc-text' };
+    const a = d.aud;
+    if (a.type === 'country' && !countryCode(a.c)) return { err: t('bc.adm.needCountry') };
+    if (_bcUpload.st === 'busy') return { err: t('bc.adm.waitPhoto') };
+    if (_bcUpload.st === 'err') return { err: t('bc.adm.photoErr') };
+    const img = d.img || '';
+    if (img && !_bcImgOk(img)) return { err: t('bc.adm.photoErr') };
+    const pin = String((document.getElementById('bc-pin') || {}).value || '').trim();
+    if (!pin) return { err: t('bc.adm.needPin'), focus: 'bc-pin' };
+    return { title, text, img, pin, aud: a.type === 'country' ? { type: 'country', c: a.c } : { type: a.type } };
+  }
+  function _bcConfirmText(v) {
+    const e = _bcEstimate(v.aud);
+    const est = (!e || e.paidUnknown) ? t('bc.adm.confirmNoEst')
+      : (e.lite ? t('bc.adm.confirmEstLite', { n: e.students }) : t('bc.adm.confirmEst', { n: e.students, d: e.devices }));
+    return t('bc.adm.confirm', { title: _bcClip(v.title, 60), aud: _bcAudText(v.aud), est });
+  }
+  function _bcFbUser() { try { return (typeof _auth !== 'undefined' && _auth && _auth.currentUser) || null; } catch (_) { return null; } }
+  // «Тест себе» (test:true — только на устройства Мади, в базу ничего) и «Отправить»
+  async function adminBcSend(test) {
+    test = test === true;
+    if (_bcSending || !ensureAdminAccess()) return;
+    const v = _bcValidate();
+    if (v.err) {
+      _bcSetStatus('err', v.err);
+      if (v.focus) { try { document.getElementById(v.focus)?.focus(); } catch (_) {} }
+      return;
+    }
+    if (!test && !confirm(_bcConfirmText(v))) return;
+    const fbUser = _bcFbUser();
+    if (!fbUser || typeof fbUser.getIdToken !== 'function') { _bcSetStatus('err', t('bc.adm.errSession')); return; }
+    const bcId = _bcEnsureId();
+    _bcSending = true;
+    _bcBusyUi(true);
+    let res = null, status = 0, fail = '';
+    try {
+      let idToken = '';
+      try { idToken = await fbUser.getIdToken(); }
+      catch (e) { fail = /network/i.test(String(e && (e.code || e.message))) ? 'net' : 'session'; }
+      if (!fail && (typeof idToken !== 'string' || !idToken)) fail = 'session';
+      if (!fail) {
+        const ctl = (typeof AbortController === 'function') ? new AbortController() : null;
+        const timer = ctl ? setTimeout(() => { try { ctl.abort(); } catch (_) {} }, 90000) : null;
+        try {
+          const r = await fetch(KM_BC_URL, {
+            method: 'POST',
+            headers: { 'Authorization': 'Bearer ' + idToken, 'Content-Type': 'application/json' },
+            body: JSON.stringify({ pin: v.pin, bcId, title: v.title, text: v.text, img: v.img, aud: v.aud, test }),
+            signal: ctl ? ctl.signal : undefined
+          });
+          status = Number(r && r.status) || 0;
+          try { res = await r.json(); } catch (_) { res = null; }
+        } catch (e) { fail = 'net'; }
+        finally { if (timer) clearTimeout(timer); }
+      }
+    } finally {
+      _bcSending = false;
+      _bcBusyUi(false);
+    }
+    _bcHandleResult(test, fail, status, res);
+  }
+  function _bcHandleResult(test, fail, status, res) {
+    const n = x => Math.max(0, Math.floor(Number(x) || 0));
+    if (!fail && res && typeof res === 'object' && res.ok === true) {
+      if (test) {
+        const dev = n(res.tokens);
+        _bcSetStatus(dev ? 'ok' : 'err', dev ? t('bc.adm.okTest', { d: dev, s: n(res.sent) }) : t('bc.adm.okTestNone'));
+        return;
+      }
+      if (res.dup && res.pending === true) {
+        // Запись рассылки с этим bcId есть (попап ученицы увидят), но прошлая попытка не подтвердила
+        // отправку пушей (ещё идёт или оборвалась на сервере) — не «уже отправлена ✓». Черновик и bcId
+        // не трогаем: повтор «Отправить» с тем же bcId не задвоит ни попап, ни пуши.
+        _bcSetStatus('info', t('bc.adm.dupPending', { h: t('bc.adm.history') }));
+        _bcLoadHistory().catch(e => console.warn('[bc] history', e));   // список освежаем: там видно, дошли ли пуши
+        return;
+      }
+      const msg = res.dup ? t('bc.adm.okDup') : t('bc.adm.okSent', { u: n(res.users), d: n(res.tokens), s: n(res.sent), f: n(res.failed) });
+      _bcDraftClear();                                      // следующая рассылка — новый черновик и новый bcId
+      _bcAdmStatus = { kind: 'ok', msg };
+      toast(res.dup ? t('bc.adm.okDup') : t('bc.adm.okShort'), 'var(--sage)');
+      if (adminCurrentTab === 'broadcast' && document.getElementById('bc-title')) renderProfileAdminPanel('broadcast');
+      return;
+    }
+    let key;
+    if (fail === 'session') key = 'bc.adm.errSession';
+    else if (fail === 'net') key = 'bc.adm.errNet';
+    else {
+      const err = (res && typeof res === 'object' && typeof res.error === 'string') ? res.error : '';
+      if (err === 'auth') key = 'bc.adm.errAuth';
+      else if (err === 'pin') key = 'bc.adm.errPin';
+      else if (err === 'rate') key = 'bc.adm.errRate';
+      else if (err === 'bad') key = 'bc.adm.errBad';
+      else if (err === 'server' || status >= 500) key = 'bc.adm.errServer';
+      else if (status === 401 || status === 403) key = 'bc.adm.errAuth';
+      else if (status === 429) key = 'bc.adm.errRate';
+      else if (status === 400) key = 'bc.adm.errBad';
+      else key = 'bc.adm.errNet';
+    }
+    _bcSetStatus('err', t(key));
+    if (key === 'bc.adm.errPin') { const p = document.getElementById('bc-pin'); if (p) { try { p.focus(); p.select(); } catch (_) {} } }
+  }
+  // Рассылки за 7 дней со статистикой (stats пишет сервер после отправки)
+  async function _bcLoadHistory() {
+    const box = document.getElementById('bc-history');
+    if (!box) return;
+    const fail = () => { const el = document.getElementById('bc-history'); if (el) el.innerHTML = `<div class="bc-hist-empty">${escHtml(t('bc.adm.histErr'))}</div>`; };
+    if (typeof _db === 'undefined') { fail(); return; }
+    let val = null;
+    try {
+      const s = await _db.ref('broadcasts').orderByKey().limitToLast(30).once('value');
+      val = (s && typeof s.val === 'function') ? s.val() : null;
+    } catch (e) { console.warn('[bc] history', e); fail(); return; }
+    const el = document.getElementById('bc-history');
+    if (!el) return;
+    const now = _kmNow();
+    const list = Object.keys((val && typeof val === 'object') ? val : {})
+      .map(id => _bcSanitize(id, val[id]))
+      .filter(b => b && b.ts >= now - KM_BC_TTL)
+      .sort((a, b) => b.ts - a.ts);
+    list.forEach(b => { _bcMore[b.id] = b; });
+    if (!list.length) { el.innerHTML = `<div class="bc-hist-empty">${escHtml(t('bc.adm.histEmpty'))}</div>`; return; }
+    el.innerHTML = list.map((b, i) => {
+      const st = b.stats;
+      const stats = st
+        ? `<span class="bc-stat" title="${escHtml(t('bc.adm.stUsers'))}">👥 ${st.users}</span><span class="bc-stat" title="${escHtml(t('bc.adm.stTokens'))}">📱 ${st.tokens}</span><span class="bc-stat" title="${escHtml(t('bc.adm.stSent'))}">✅ ${st.sent}</span>${st.failed ? `<span class="bc-stat bc-stat-bad" title="${escHtml(t('bc.adm.stFailed'))}">⚠️ ${st.failed}</span>` : ''}`
+        : `<span class="bc-stat">${escHtml(t('bc.adm.histNoStats'))}</span>`;
+      return `
+        <div class="card bc-hist-item">
+          ${b.img ? `<img class="bc-hist-thumb" src="${srcAttr(b.img)}" alt="" loading="lazy" decoding="async">` : `<span class="bc-hist-ico" aria-hidden="true">📣</span>`}
+          <div class="bc-hist-main">
+            <div class="bc-hist-title">${escHtml(b.title)}</div>
+            <div class="bc-hist-meta">${escHtml(_bcFmtDateTime(b.ts))} · ${_bcAudHtml(b.aud)} · ${escHtml(t('bc.adm.histUntil', { date: _bcFmtDay(b.exp) }))}</div>
+            <div class="bc-hist-stats">${stats}</div>
+          </div>
+          <button type="button" class="btn btn-ghost bc-hist-show" data-bc-i="${i}" aria-label="${escHtml(t('bc.adm.show'))}" title="${escHtml(t('bc.adm.show'))}"><i class="fa-solid fa-eye" aria-hidden="true"></i><span class="bc-hist-show-tx">${escHtml(t('bc.adm.show'))}</span></button>
+        </div>`;
+    }).join('');
+    el.querySelectorAll('[data-bc-i]').forEach(btn => btn.addEventListener('click', () => { const b = list[+btn.getAttribute('data-bc-i')]; if (b) kmShowBroadcastPopup(b); }));
+    el.querySelectorAll('.bc-hist-thumb').forEach(im => im.addEventListener('error', () => im.remove()));
+    kmBellRefresh();
   }
 
   // ─────────────────────────── РЕФЕРАЛКА ───────────────────────────
@@ -10106,16 +12215,6 @@
     const slot = document.getElementById('settings-card');
     if (!slot) return;
     const s = getSettings();
-    const pushPerm = !('Notification' in window) ? 'unsupported' : Notification.permission;
-    const pushState = pushPerm === 'unsupported' ? t('set.notif.unsup')
-      : pushPerm === 'granted' ? t('set.notif.on')
-      : pushPerm === 'denied' ? t('set.notif.denied')
-      : t('set.notif.off');
-    const pushRight = pushPerm === 'granted'
-      ? `<span class="chip chip-sage" style="font-size:9px; padding:3px 9px;">${t('set.notif.onChip')}</span>`
-      : pushPerm === 'denied'
-        ? `<span class="chip chip-coral" style="font-size:9px; padding:3px 9px;">${t('set.notif.block')}</span>`
-        : `<i class="fa-solid fa-chevron-right" style="color:var(--coral); font-size:11px;"></i>`;
     const row = (ico, title, sub, right, onclick, key) => `
       <button type="button" class="settings-row" ${key ? `data-setting="${key}"` : ''} onclick="${onclick}">
         <span class="settings-ico">${ico}</span>
@@ -10187,7 +12286,8 @@
       row('🌸', t('set.intro'), t('set.intro.sub'), chev, 'startOnboardingTour()'),
       row('🧭', t('set.tour'), t('set.tour.sub'), chev, 'startAppTour()'),
       row('🎯', t('set.goal'), t('set.goal.sub'), chev, 'openDailyGoalSettings()'),
-      row('🔔', t('set.notif'), pushState, pushRight, 'askPushPermission()'),
+      // Уведомления: статус этого устройства (веб / APK) + что присылать (настройка аккаунта)
+      _kmNotifSettingsHtml(row, sw),
       row('💌', t('set.feedback'), t('set.feedback.sub'), chev, 'openFeedbackModal()'),
       row('📜', t('set.terms'), t('set.terms.sub'), chev, 'showTermsModal()'),
       ...(Store.get('user') ? [
@@ -35038,7 +37138,8 @@
   // Админ-панель: хаб с разделами (Школа / Контент) на экране «Админ».
   // Хаб → раздел → назад. Ничего не свалено в одну простыню вкладок.
   let adminCurrentTab = 'hub';
-  const ADMIN_TAB_LABELS = { flashcards:'📚 Слова', kpop:'🎵 K-Pop', video:'🎬 Видео', lesson:'📖 Уроки', feed:'📰 Лента', topik:'🎓 ТОПИК', users:'👥 Ученики', journal:'📅 Журнал', inbox:'💌 Письма', stats:'📊 Аналитика' };
+  // broadcast — геттер: подпись на языке интерфейса (объект живёт с загрузки скрипта, строка застыла бы)
+  const ADMIN_TAB_LABELS = { flashcards:'📚 Слова', kpop:'🎵 K-Pop', video:'🎬 Видео', lesson:'📖 Уроки', feed:'📰 Лента', topik:'🎓 ТОПИК', users:'👥 Ученики', journal:'📅 Журнал', inbox:'💌 Письма', stats:'📊 Аналитика', get broadcast() { return t('bc.adm.tab'); } };
   function renderAdminHub() {
     const unread = _feedbackCache ? Object.values(_feedbackCache).filter(f => f && !f.done).length : 0;
     const card = (tab, ico, title, sub, badge) => `
@@ -35055,6 +37156,7 @@
         ${card('users', '👥', 'Ученики', 'анкеты · оплата')}
         ${card('inbox', '💌', 'Письма', 'от учениц', unread || '')}
         ${card('stats', '📊', 'Аналитика', 'статистика школы')}
+        ${card('broadcast', '📣', escHtml(t('bc.adm.card')), escHtml(t('bc.adm.cardSub')))}
       </div>
       <div class="section-head" style="margin-top:20px;"><div class="left"><div class="rule"></div><span class="title">${t('ui.290')}</span></div><span class="meta">${t('ui.291')}</span></div>
       <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:10px;">
@@ -35599,6 +37701,7 @@
       else if (tab === 'journal') body = renderAdminJournal();
       else if (tab === 'inbox') body = renderAdminInbox();
       else if (tab === 'stats') body = renderAdminStats();
+      else if (tab === 'broadcast') body = renderAdminBroadcast();
       slot.innerHTML = `
         <div style="display:flex; align-items:center; gap:10px; margin-bottom:14px;">
           <button onclick="renderProfileAdminPanel('hub')" class="chat-back-btn" aria-label="${t('ui.308')}" title="${t('ui.308')}"><i class="fa-solid fa-arrow-left"></i></button>
@@ -38148,9 +40251,13 @@
     pushUserToCloud();
     // Re-render feed social bars so "liked by me" reflects the new identity
     refreshFeedSocial();
-    // Push notifications: re-init for the new user (gets fresh FCM token + saves under their uid)
+    // Пуши: токен устройства снимаем у прежнего аккаунта (другой вход на том же телефоне),
+    // APK-токен и users/<uid>/notif — у нового; веб-токен запишет initPushNotifications
+    try { kmPushOnIdentity(); } catch (e) { console.warn('[push] identity', e); }
     _pushInitDone = false;
     initPushNotifications();
+    // Колокольчик и «рассылку уже видела» — от новой личности
+    try { kmBellOnIdentity(); } catch (e) { console.warn('[bell] identity', e); }
   }
   // Toggle the profile screen between student layout and admin shortcuts.
   // Сам кабинет живёт на отдельном экране «Админ» (screen-admin) — рядом с Профилем.
@@ -38288,6 +40395,7 @@
     try { applyPendingReferral(authUid, name); } catch (_) {}
     // Завершение регистрации → тур Комдори после закрытия тарифов (см. closePlanPage).
     Store.set('tourPending', 1);
+    _kmWelcomeAt = Date.now();   // до попапа триала 650–700 мс — попап рассылки в этот зазор не лезет (_bcBlocked)
     // Welcome-триал: 7 дней Master новичку (один раз на аккаунт). Порядок СТРОГО
     // последовательный, чтобы попапы не налезали друг на друга и на тур:
     //   попап «ты получила Master на неделю» → «ОК» → экран тарифов → назад → тур.
@@ -38522,6 +40630,9 @@
     })();
   }
   function logoutUser() {
+    // Пуши прежнего аккаунта сюда больше не идут: токены снимаем ДО смены личности
+    // (uid ещё её), onMessage отписываем, в APK сбрасываем токен натива.
+    try { kmPushForgetDevice(); } catch (e) { console.warn('[push] logout', e); }
     try { _auth.signOut(); } catch (_) {}
     try { if (_sbClient && (Store.get('user') || {}).provider === 'kakao') _sbClient.auth.signOut(); } catch (_) {}
     detachUserListeners();
@@ -38544,6 +40655,8 @@
     if (content) content.style.display = 'none';
     setProfileAdminMode(false);
     refreshFeedSocial();
+    // Колокольчик прежнего аккаунта больше не слушаем (гостю — только рассылки)
+    try { kmBellOnIdentity(); } catch (e) { console.warn('[bell] identity', e); }
     // После выхода — на страницу входа (экран профиля показывает форму логина)
     try { switchScreen('profile'); } catch (_) {}
     toast(t('auth.loggedOut'));
@@ -43694,6 +45807,8 @@
     if (!i || i.classList.contains('dismissing')) return;
     i.classList.add('dismissing');
     setTimeout(() => i.remove(), 700);
+    // Рассылка Мади ждала заставку — показать сразу, как она уйдёт (а не на следующей проверке очереди)
+    setTimeout(() => { try { _bcKick(60); } catch (_) {} }, 760);
     // Знакомство здесь не запускаем: новичок после заставки видит экран входа
     // (boot-роутинг), знакомство открывает первое нажатие «Регистрация» (showAuthTab),
     // мишка-гид или Настройки.
@@ -43764,6 +45879,11 @@
   });
 
   // ── Init ──
+  // Экскурсия после регистрации ждёт закрытия тарифов (tourPending). При запуске тарифов на экране
+  // нет — флаг остался от прошлого раза (закрыла приложение прямо на тарифах): снимаем, иначе он
+  // глушил бы попап рассылки, окно «возвращение» и месячный отчёт. Экскурсию Комдори по-прежнему
+  // предложат совет мишки и кнопка 🧭 (tourDone не выставлен).
+  try { if (Store.get('tourPending') && !document.getElementById('plan-page')) Store.del('tourPending'); } catch (_) {}
   buildHeroSegments();
   buildWaveform();
   buildStreakCal();
@@ -43815,26 +45935,25 @@
   // Subscribe to cloud updates for this user
   attachUserListeners();
   attachFriendsListeners();
-  // ── Deep-link с публичных страниц (/learn-korean/, /topik/, /study-in-korea/):
-  // /?go=lessons открывает нужный экран сразу после старта. Белый список — чтобы
-  // чужой параметр не дёргал произвольные экраны; закрытые гостям разделы
-  // switchScreen сам встретит гейтом регистрации. Параметр вычищаем из URL, чтобы
-  // перезагрузка не прыгала снова; остальные параметры (OAuth code= и т.п.) не трогаем.
-  // Стоит ПОСЛЕ boot-роутинга выше (иначе экран входа новичка перекрыл бы deep-link)
-  // и ПОСЛЕ loadUserData(): раньше /?go=home открывал Главную до загрузки прогресса,
-  // её счётчик цели дня сохранял ПУСТУЮ стату поверх настоящей — у гостей XP, стрик
-  // и слова обнулялись безвозвратно (кнопка календаря на /korean-culture/, 07–24.09.2026).
-  try {
-    const _goParams = new URLSearchParams(location.search);
-    const _go = _goParams.get('go');
-    const _GO_SCREENS = ['home', 'lessons', 'hangul', 'topik', 'studykr', 'games', 'textbook'];
-    if (_go && _GO_SCREENS.includes(_go)) {
-      _goParams.delete('go');
-      const _rest = _goParams.toString();
-      history.replaceState(null, '', location.pathname + (_rest ? '?' + _rest : '') + location.hash);
-      switchScreen(_go);
-    }
-  } catch (_) {}
+  // ── Deep-link: /?go=… с публичных страниц (/learn-korean/, /topik/, /study-in-korea/)
+  // и из уведомлений (чат, группа, заявки, тариф, календарь…) — один роутер kmRoute.
+  // Белый список маршрутов — чтобы чужой параметр не дёргал произвольные экраны; закрытые
+  // гостям разделы switchScreen сам встретит гейтом регистрации. Параметры вычищаем из URL,
+  // чтобы перезагрузка не повторяла переход и действие; остальные (OAuth code= и т.п.) не
+  // трогаем. Стоит ПОСЛЕ boot-роутинга выше (иначе экран входа новичка перекрыл бы
+  // deep-link) и ПОСЛЕ loadUserData(): раньше /?go=home открывал Главную до загрузки
+  // прогресса, её счётчик цели дня сохранял ПУСТУЮ стату поверх настоящей — у гостей XP,
+  // стрик и слова обнулялись безвозвратно (кнопка календаря на /korean-culture/, 07–24.09.2026).
+  // До этой строки клики по уведомлениям (сообщения SW, тапы в APK) ждут в очереди.
+  try { kmRouteStart(); } catch (e) { console.warn('[route] start', e); }
+  // APK 1.2.0: токен натива → users/<uid>/fcmAndroid, KMPUSH.ready() → отложенный тап по пушу
+  try { kmPushNativeInit(); } catch (e) { console.warn('[push] native init', e); }
+  // Язык, пояс, страна и выключатели уведомлений → users/<uid>/notif (только если изменились)
+  try { kmNotifSyncSoon(); } catch (_) {}
+  // Колокольчик слева от каждой шестерёнки, рассылки Мади (попап при входе, колокольчик)
+  try { kmBellMount(); } catch (e) { console.warn('[bell] mount', e); }
+  try { kmBcInit(); } catch (e) { console.warn('[bc] init', e); }
+  try { kmBellOnIdentity(); } catch (e) { console.warn('[bell] identity', e); }
   // Supabase OAuth (Kakao): подхватить сессию после возврата с провайдера
   try { initSupabaseSession(); } catch (_) {}
   // В нашем APK кнопки «Войти через Google» нет: Google не пускает вход во встроенном браузере
@@ -43879,9 +45998,16 @@
   bumpLastSeen();
   setInterval(() => { if (!document.hidden) bumpLastSeen(); }, 45000);
   document.addEventListener('visibilitychange', () => {
-    if (document.hidden) flushUserFieldPushes(); // leaving → save any pending changes now
-    else bumpLastSeen();
+    if (document.hidden) { flushUserFieldPushes(); return; } // leaving → save any pending changes now
+    bumpLastSeen();
+    // Вкладка/APK, открытые со вчера и развёрнутые сегодня без перезагрузки, тоже засчитывают
+    // день (функция идемпотентна) — иначе рвался огонёк и врало бы вечернее напоминание о стрике.
+    try { recordDayEntered(); } catch (e) { console.warn('[streak] visible', e); }
+    try { kmPushOnResume(); } catch (e) { console.warn('[push] resume', e); }
+    // Рассылка, пришедшая, пока вкладка была свёрнута, — показать сейчас (очередь попапа)
+    try { _bcKick(400); } catch (_) {}
   });
+  try { kmPushOnResume(); } catch (_) {}   // первый замер разрешения на уведомления
   // pagehide covers actual tab close / navigation away (more reliable than beforeunload on mobile).
   window.addEventListener('pagehide', flushUserFieldPushes);
   // Connection state: reassure the user and flush any queued writes on reconnect.
