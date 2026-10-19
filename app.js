@@ -1307,6 +1307,97 @@
     'kd.youSay':   { ru: 'ТВОЯ РЕПЛИКА', en: 'YOUR LINE', uz: 'SIZNING JAVOBINGIZ' },
     'kd.sayNext':  { ru: 'Сказать и продолжить', en: 'Say it and continue', uz: 'Ayting va davom eting' },
     'kd.hangup':   { ru: 'Положить трубку', en: 'Hang up', uz: 'Tugatish' },
+    // ── Разговор с Комдори: вход и экран настройки (talk.*) ──
+    'talk.title':           { ru: 'Разговор с Комдори', en: 'Talk with Komdori', uz: 'Komdori bilan suhbat' },
+    'talk.setup.sub':       { ru: 'голосом, по-корейски', en: 'by voice, in Korean', uz: 'ovoz bilan, koreyscha' },
+    'talk.setup.q':         { ru: 'Каким будет Комдори?', en: 'What will Komdori be like?', uz: 'Komdori qanday boʻlsin?' },
+    'talk.mood.strict':     { ru: '😤 Строгий', en: '😤 Strict', uz: '😤 Talabchan' },
+    'talk.mood.normal':     { ru: '🙂 Обычный', en: '🙂 Normal', uz: '🙂 Oddiy' },
+    'talk.mood.kind':       { ru: '🤗 Добрый', en: '🤗 Kind', uz: '🤗 Mehribon' },
+    'talk.mood.strict.lbl': { ru: 'Строгий', en: 'Strict', uz: 'Talabchan' },
+    'talk.mood.normal.lbl': { ru: 'Обычный', en: 'Normal', uz: 'Oddiy' },
+    'talk.mood.kind.lbl':   { ru: 'Добрый', en: 'Kind', uz: 'Mehribon' },
+    'talk.mood.strict.short': { ru: 'строгий', en: 'strict', uz: 'talabchan' },
+    'talk.mood.normal.short': { ru: 'обычный', en: 'normal', uz: 'oddiy' },
+    'talk.mood.kind.short':   { ru: 'добрый', en: 'kind', uz: 'mehribon' },
+    'talk.mood.strict.desc': { ru: 'Только по-корейски, поправляет каждую ошибку и говорит быстрее. Застряла — скажи на своём языке, он всё равно вытащит из тебя корейский 💪', en: 'Korean only, corrects every mistake and speaks faster. Stuck? Say it in your language — he’ll still pull the Korean out of you 💪', uz: 'Faqat koreyscha, har bir xatoni tuzatadi va tezroq gapiradi. Qiynalsangiz — oʻz tilingizda ayting, u baribir sizdan koreyschani chiqarib oladi 💪' },
+    'talk.mood.normal.desc': { ru: 'Говорит в обычном темпе, поправляет главные ошибки и иногда подсказывает.', en: 'Speaks at a normal pace, fixes the main mistakes and gives a hint now and then.', uz: 'Odatiy tezlikda gapiradi, asosiy xatolarni tuzatadi va baʼzan maslahat beradi.' },
+    'talk.mood.kind.desc':   { ru: 'Говорит медленнее и проще, подсказывает на твоём языке и хвалит за каждую попытку 🌸', en: 'Speaks slower and simpler, gives hints in your language and praises every try 🌸', uz: 'Sekinroq va soddaroq gapiradi, oʻz tilingizda maslahat beradi va har bir urinish uchun maqtaydi 🌸' },
+    'talk.setup.casual':    { ru: 'Как с подругой (반말)', en: 'Like a friend (반말)', uz: 'Dugonadek (반말)' },
+    'talk.setup.casualSub': { ru: 'Неформально и со сленгом — без грубостей', en: 'Casual speech and slang — nothing rude', uz: 'Norasmiy va slang bilan — qoʻpolliksiz' },
+    'talk.setup.topic':     { ru: 'Тема', en: 'Topic', uz: 'Mavzu' },
+    'talk.topic.free':      { ru: 'Свободный разговор', en: 'Free conversation', uz: 'Erkin suhbat' },
+    'talk.topic.shop':      { ru: 'Кафе, магазин, такси', en: 'Café, shop, taxi', uz: 'Kafe, doʻkon, taksi' },
+    'talk.topic.meet':      { ru: 'Знакомство', en: 'Getting to know', uz: 'Tanishuv' },
+    'talk.topic.interview': { ru: 'Собеседование в вуз', en: 'University interview', uz: 'Universitetga suhbat' },
+    'talk.topic.free.short':      { ru: 'свободный', en: 'free talk', uz: 'erkin suhbat' },
+    'talk.topic.shop.short':      { ru: 'кафе и магазин', en: 'café & shop', uz: 'kafe va doʻkon' },
+    'talk.topic.meet.short':      { ru: 'знакомство', en: 'getting to know', uz: 'tanishuv' },
+    'talk.topic.interview.short': { ru: 'собеседование', en: 'interview', uz: 'universitet suhbati' },
+    'talk.setup.mic':       { ru: 'Микрофон', en: 'Microphone', uz: 'Mikrofon' },
+    'talk.mode.free':       { ru: 'Свободный', en: 'Hands-free', uz: 'Erkin' },
+    'talk.mode.hold':       { ru: 'Зажми и говори', en: 'Hold to talk', uz: 'Bosib turib gapiring' },
+    'talk.mode.free.hint':  { ru: 'Комдори сам слушает после своей реплики', en: 'Komdori listens on his own after each line', uz: 'Komdori oʻz gapidan keyin oʻzi tinglaydi' },
+    'talk.mode.hold.hint':  { ru: 'Держи кнопку, пока говоришь, — отпусти, и Комдори ответит', en: 'Hold the button while you speak — let go and Komdori answers', uz: 'Gapirayotganda tugmani bosib turing — qoʻyib yuborsangiz, Komdori javob beradi' },
+    'talk.mode.iosHint':    { ru: 'Здесь пишем ⌨️ — чтобы говорить голосом, открой сайт в Safari', en: 'Here we type ⌨️ — to talk by voice, open the site in Safari', uz: 'Bu yerda yozamiz ⌨️ — ovoz bilan gaplashish uchun saytni Safari brauzerida oching' },
+    'talk.mode.noneHint':   { ru: 'Распознавание речи здесь недоступно — будем переписываться ⌨️', en: 'Speech recognition isn’t available here — we’ll type ⌨️', uz: 'Bu yerda nutqni tanish ishlamaydi — yozishamiz ⌨️' },
+    'talk.setup.cc':        { ru: 'Субтитры и перевод', en: 'Subtitles and translation', uz: 'Subtitr va tarjima' },
+    'talk.setup.call':      { ru: 'Позвонить Комдори', en: 'Call Komdori', uz: 'Komdoriga qoʻngʻiroq qilish' },
+    'talk.setup.left':      { ru: 'Осталось сегодня: {n}', en: 'Left today: {n}', uz: 'Bugun qoldi: {n}' },
+    'talk.min':             { ru: '{n} мин', en: '{n} min', uz: '{n} daq' },
+    'talk.tier.pro':        { ru: 'Pro AI', en: 'Pro AI', uz: 'Pro AI' },
+    'talk.tier.trial':      { ru: 'Пробник', en: 'Trial', uz: 'Sinov' },
+    'talk.tier.admin':      { ru: 'Без лимита', en: 'No limit', uz: 'Cheklovsiz' },
+    'talk.setup.loading':   { ru: 'Считаю минуты…', en: 'Counting minutes…', uz: 'Daqiqalarni hisoblayapman…' },
+    'talk.setup.noMinutes': { ru: 'На сегодня всё — приходи завтра 🌙', en: 'That’s all for today — come back tomorrow 🌙', uz: 'Bugunga shu — ertaga keling 🌙' },
+    'talk.setup.blockBudget': { ru: 'Комдори отдыхает до завтра 😴', en: 'Komdori is resting until tomorrow 😴', uz: 'Komdori ertagacha dam olyapti 😴' },
+    'talk.setup.blockIp':   { ru: 'На сегодня хватит — приходи завтра 🌙', en: 'Enough for today — come back tomorrow 🌙', uz: 'Bugunga yetarli — ertaga keling 🌙' },
+    'talk.setup.upsell':    { ru: 'Pro AI — 30 минут в день', en: 'Pro AI — 30 minutes a day', uz: 'Pro AI — kuniga 30 daqiqa' },
+    'talk.setup.soundOff':  { ru: 'Звук выключен. Включи звук или говори текстом', en: 'Sound is off. Turn it on or switch to text', uz: 'Ovoz oʻchirilgan. Ovozni yoqing yoki matn bilan gaplashing' },
+    'talk.setup.soundOn':   { ru: 'Включить звук', en: 'Turn on sound', uz: 'Ovozni yoqish' },
+    'talk.setup.textMode':  { ru: 'Текстовый режим', en: 'Text mode', uz: 'Matn rejimi' },
+    'talk.setup.textOn':    { ru: 'Текстовый режим: Комдори пишет, субтитры включены', en: 'Text mode: Komdori writes, subtitles are on', uz: 'Matn rejimi: Komdori yozadi, subtitrlar yoqilgan' },
+    'talk.setup.noTts':     { ru: 'Озвучка здесь недоступна — Комдори будет писать, субтитры включены', en: 'Voice isn’t available here — Komdori will write, subtitles are on', uz: 'Bu yerda ovoz ishlamaydi — Komdori yozadi, subtitrlar yoqilgan' },
+    // ── /talk: экран настройки ──
+    // ── Разговор с Комдори: звонок (talk.call.*, talk.st.*, talk.mic.*, talk.kb.*, talk.btn.*) ──
+    'talk.call.online':     { ru: 'на связи', en: 'online', uz: 'aloqada' },
+    'talk.call.endAria':    { ru: 'Завершить звонок', en: 'End the call', uz: 'Qoʻngʻiroqni tugatish' },
+    'talk.call.timerAria':  { ru: 'Осталось времени на сегодня', en: 'Time left today', uz: 'Bugun qolgan vaqt' },
+    'talk.call.replayAria': { ru: 'Послушать ещё раз', en: 'Listen again', uz: 'Yana tinglash' },
+    'talk.call.kbAria':     { ru: 'Написать вместо голоса', en: 'Type instead of speaking', uz: 'Ovoz oʻrniga yozish' },
+    'talk.call.repeatAria': { ru: 'Повторить реплику Комдори', en: 'Repeat Komdori’s line', uz: 'Komdori gapini takrorlash' },
+    'talk.call.hangupAria': { ru: 'Завершить разговор', en: 'End the conversation', uz: 'Suhbatni tugatish' },
+    'talk.call.nativeAria': { ru: 'Сказать на своём языке', en: 'Say it in your own language', uz: 'Oʻz tilingizda aytish' },
+    'talk.call.native':     { ru: 'На своём языке', en: 'In my language', uz: 'Oʻz tilimda' },
+    'talk.call.heard':      { ru: 'услышал так:', en: 'heard it as:', uz: 'shunday eshitdim:' },
+    'talk.call.better':     { ru: 'Лучше:', en: 'Better:', uz: 'Yaxshisi:' },
+    'talk.st.speaking':     { ru: 'Комдори говорит…', en: 'Komdori is speaking…', uz: 'Komdori gapiryapti…' },
+    'talk.st.listening':    { ru: 'Слушаю…', en: 'Listening…', uz: 'Tinglayapman…' },
+    'talk.st.native':       { ru: 'Слушаю на твоём языке…', en: 'Listening in your language…', uz: 'Oʻz tilingizda tinglayapman…' },
+    'talk.st.recognizing':  { ru: 'Распознаю…', en: 'Recognizing…', uz: 'Taniyapman…' },
+    'talk.st.thinking':     { ru: 'Думаю…', en: 'Thinking…', uz: 'Oʻylayapman…' },
+    'talk.st.again':        { ru: 'Не расслышал — повтори', en: 'Didn’t catch that — say it again', uz: 'Eshitmadim — takrorlang' },
+    'talk.st.holdShort':    { ru: 'Держи кнопку, пока говоришь', en: 'Hold the button while you speak', uz: 'Gapirayotganda tugmani bosib turing' },
+    'talk.st.yourHold':     { ru: 'Твоя очередь — зажми кнопку и говори', en: 'Your turn — hold the button and speak', uz: 'Navbat sizda — tugmani bosib turib gapiring' },
+    'talk.st.yourTap':      { ru: 'Твоя очередь — нажми и говори', en: 'Your turn — tap and speak', uz: 'Navbat sizda — bosing va gapiring' },
+    'talk.st.yourType':     { ru: 'Твоя очередь — напиши ответ', en: 'Your turn — type your answer', uz: 'Navbat sizda — javobingizni yozing' },
+    'talk.st.offline':      { ru: 'Нет сети — продолжим, когда она вернётся', en: 'No connection — we’ll continue when it’s back', uz: 'Tarmoq yoʻq — qaytganda davom etamiz' },
+    'talk.st.aiFail':       { ru: 'Комдори задумался… ещё раз?', en: 'Komdori got lost in thought… try again?', uz: 'Komdori oʻylanib qoldi… yana urinamizmi?' },
+    'talk.st.paused':       { ru: 'Пауза', en: 'Paused', uz: 'Pauza' },
+    'talk.st.ttsOff':       { ru: 'Озвучка не работает — Комдори будет писать', en: 'Voice isn’t working — Komdori will write', uz: 'Ovoz ishlamayapti — Komdori yozadi' },
+    'talk.err.ai':          { ru: 'Комдори не отвечает — подведём итог', en: 'Komdori isn’t answering — let’s wrap up', uz: 'Komdori javob bermayapti — yakunlaymiz' },
+    'talk.mic.tap':         { ru: 'Нажми и говори', en: 'Tap and speak', uz: 'Bosing va gapiring' },
+    'talk.mic.holdOn':      { ru: 'Говори… отпусти, когда закончишь', en: 'Speak… let go when you’re done', uz: 'Gapiring… tugagach qoʻyib yuboring' },
+    'talk.mic.done':        { ru: 'Я закончила', en: 'I’m done', uz: 'Tugatdim' },
+    'talk.btn.retry':       { ru: 'Ещё раз', en: 'Try again', uz: 'Yana urinish' },
+    'talk.btn.end':         { ru: 'Завершить', en: 'End', uz: 'Tugatish' },
+    'talk.kb.ph':           { ru: 'Напиши по-корейски…', en: 'Type in Korean…', uz: 'Koreyscha yozing…' },
+    'talk.kb.native':       { ru: 'Напиши по-русски…', en: 'Type in English…', uz: 'Oʻzbekcha yozing…' },
+    'talk.kb.denied':       { ru: 'Разреши микрофон в настройках — а пока пишем ⌨️', en: 'Allow the microphone in settings — for now we type ⌨️', uz: 'Sozlamalarda mikrofonga ruxsat bering — hozircha yozamiz ⌨️' },
+    'talk.kb.unavailable':  { ru: 'Распознавание здесь недоступно — пишем ⌨️', en: 'Speech recognition isn’t available here — we type ⌨️', uz: 'Bu yerda nutqni tanish ishlamaydi — yozamiz ⌨️' },
+    'talk.kb.network':      { ru: 'Распознавание речи не отвечает — пишем ⌨️', en: 'Speech recognition isn’t responding — we type ⌨️', uz: 'Nutqni tanish javob bermayapti — yozamiz ⌨️' },
+    'talk.kb.silent':       { ru: 'Не получается расслышать — давай пока писать ⌨️', en: 'I can’t hear you well — let’s type for now ⌨️', uz: 'Eshita olmayapman — hozircha yozamiz ⌨️' },
+    // ── /talk: звонок ──
     'kd.done':     { ru: 'Ты справилась со звонком! Комдори гордится тобой 🐻💛', en: 'You handled the call! Komdori is proud of you 🐻💛', uz: 'Qoʻngʻiroqni uddaladingiz! Komdori sizdan faxrlanadi 🐻💛' },
     'set.country.none':   { ru: 'не выбрана — укажи', en: 'not set — choose', uz: 'tanlanmagan — tanlang' },
     'set.notif.kindsSub': { ru: 'включено {n} из 3', en: '{n} of 3 on', uz: '{n} / 3 yoqilgan' },
@@ -3144,6 +3235,7 @@
     setBtnPlaying(currentBtn, false);
     currentUtter = null;
     currentBtn   = null;
+    try { _talkOnStopSpeech(); } catch (_) {}   // «Разговор с Комдори»: активная talkSpeak завершается сразу ('stopped')
   }
 
   function playSyllable(text, btn) {
@@ -33306,6 +33398,1141 @@
     } catch (_) { return false; }
   }
   // ── «Разговор с Комдори»: конец ядра (D3–D5); мордочка, экраны и машина состояний (E1–E6) — ниже ──
+  // ───────────── «Разговор с Комдори» · мордочка Комдори (SVG) ─────────────
+  // Одна SVG на все состояния: брови, рот и щёчки по характеру, моргание, рот при речи,
+  // уши при слушании, три точки «думаю». Движение — только CSS (styles.css, блок .kd-face);
+  // JS лишь ставит data-атрибуты на корень SVG. Мордочка декоративная (aria-hidden):
+  // состояние звонка ученица слышит/читает в плашке статуса.
+  let _kdFaceSeq = 0;                 // у каждой мордочки свой id градиента (на странице их бывает две)
+  const KD_FACE_MOODS = ['strict', 'normal', 'kind', 'happy'];   // happy — радость на экране итога
+  function kdFaceSvg() {
+    const gid = 'kdg' + (++_kdFaceSeq);
+    const brow = (d, w) => `<path d="${d}" fill="none" stroke="#4A2F26" stroke-width="${w}" stroke-linecap="round"/>`;
+    return `<svg class="kd-face" viewBox="0 0 200 190" data-mood="normal" data-talking="0" data-listening="0" data-thinking="0" aria-hidden="true" focusable="false">
+      <defs><radialGradient id="${gid}" cx="45%" cy="35%" r="75%"><stop offset="0" stop-color="#F3E1C3"/><stop offset="1" stop-color="#DDBE92"/></radialGradient></defs>
+      <path d="M42 178 Q100 150 158 178 L158 190 L42 190 Z" fill="#26324F"/>
+      <path d="M70 168 L100 182 L130 168" fill="none" stroke="#F5F2EA" stroke-width="3"/>
+      <g class="kd-ear kd-ear-l"><circle cx="46" cy="48" r="27" fill="#E2C59C"/><circle cx="46" cy="50" r="14" fill="#CFA97A"/></g>
+      <g class="kd-ear kd-ear-r"><circle cx="154" cy="48" r="27" fill="#E2C59C"/><circle cx="154" cy="50" r="14" fill="#CFA97A"/></g>
+      <ellipse cx="100" cy="100" rx="76" ry="70" fill="url(#${gid})"/>
+      <g class="kd-cheeks"><ellipse cx="58" cy="124" rx="13" ry="8" fill="#F2A6AE"/><ellipse cx="142" cy="124" rx="13" ry="8" fill="#F2A6AE"/></g>
+      <g class="kd-brows kd-brows-strict">${brow('M58 74 L84 82', 6)}${brow('M142 74 L116 82', 6)}</g>
+      <g class="kd-brows kd-brows-normal">${brow('M60 78 Q72 72 84 77', 5)}${brow('M116 77 Q128 72 140 78', 5)}</g>
+      <g class="kd-brows kd-brows-kind">${brow('M60 76 Q72 66 84 74', 5)}${brow('M116 74 Q128 66 140 76', 5)}</g>
+      <g class="kd-eye"><g class="kd-blink"><ellipse cx="72" cy="94" rx="7.5" ry="8" fill="#2B1D1A"/><circle cx="74.5" cy="91" r="2.2" fill="#FFFFFF"/></g></g>
+      <g class="kd-eye"><g class="kd-blink"><ellipse cx="128" cy="94" rx="7.5" ry="8" fill="#2B1D1A"/><circle cx="130.5" cy="91" r="2.2" fill="#FFFFFF"/></g></g>
+      <ellipse cx="100" cy="128" rx="35" ry="26" fill="#F7EAD5"/>
+      <path d="M91 114 Q100 109 109 114 Q106 123 100 124 Q94 123 91 114 Z" fill="#5B3A2E"/>
+      <g class="kd-mouth kd-mouth-flat"><path d="M100 124 L100 131 M89 136 Q100 132 111 136" fill="none" stroke="#5B3A2E" stroke-width="3" stroke-linecap="round"/></g>
+      <g class="kd-mouth kd-mouth-closed"><path d="M100 124 L100 131 M88 132 Q94 138 100 131 Q106 138 112 132" fill="none" stroke="#5B3A2E" stroke-width="3" stroke-linecap="round"/></g>
+      <g class="kd-mouth kd-mouth-smile"><path d="M100 124 L100 129" stroke="#5B3A2E" stroke-width="3" stroke-linecap="round"/><path d="M86 131 Q100 150 114 131 Q100 138 86 131 Z" fill="#4A2A24"/><path d="M93 139 Q100 136 107 139 Q104 144 100 144 Q96 144 93 139 Z" fill="#E88A96"/></g>
+      <g class="kd-mouth kd-mouth-talk"><path d="M100 124 L100 129" stroke="#5B3A2E" stroke-width="3" stroke-linecap="round"/><g class="kd-jaw"><path d="M88 132 Q100 128 112 132 Q110 148 100 149 Q90 148 88 132 Z" fill="#4A2A24"/><path d="M93 143 Q100 139 107 143 Q104 148 100 148 Q96 148 93 143 Z" fill="#E88A96"/></g></g>
+      <g class="kd-dots"><circle class="kd-dot" cx="82" cy="14" r="5.5"/><circle class="kd-dot" cx="100" cy="14" r="5.5"/><circle class="kd-dot" cx="118" cy="14" r="5.5"/></g>
+    </svg>`;
+  }
+  // state: { mood, talking, listening, thinking } — меняются только переданные поля.
+  // root — сама svg.kd-face или любой её контейнер.
+  function kdFaceSet(root, state) {
+    if (!root || !state) return;
+    const svg = (root.classList && root.classList.contains('kd-face')) ? root : (root.querySelector ? root.querySelector('svg.kd-face') : null);
+    if (!svg) return;
+    if (state.mood !== undefined && KD_FACE_MOODS.indexOf(state.mood) >= 0) svg.setAttribute('data-mood', state.mood);
+    ['talking', 'listening', 'thinking'].forEach(k => {
+      if (state[k] !== undefined) svg.setAttribute('data-' + k, state[k] ? '1' : '0');
+    });
+  }
+  // ── /Мордочка Комдори ──
+  // ───────────── «Разговор с Комдори» · вход и экран настройки (#talk-page) ─────────────
+  // Полноэкранная страница (как .ai-tutor-page, z-index 300): модалки .modal-bg (z 200) легли бы
+  // ПОД неё, поэтому апселл — openPlanPage('proai'), а не requirePlan. Состояние страницы — один
+  // объект _talk (его же ведёт машина состояний звонка): на экране настройки phase = 'setup' и в нём
+  // выбор ученицы (характер, «как с подругой», тема, режим микрофона, субтитры) + норма минут (usage).
+  // Выбор живёт в UStore 'talkPrefs'.
+  let _talk = null;
+  const _TALK_UI_MOODS = ['strict', 'normal', 'kind'];
+  const _TALK_UI_TOPICS = ['free', 'shop', 'meet', 'interview'];
+  const _TALK_UI_EMOJI = { free: '💬', shop: '☕', meet: '🤝', interview: '🎓' };
+  let _talkOpening = false;   // флаг беты ещё читается — второй тап по карточке ничего не делает
+  let _talkPageSeq = 0;       // номер открытия страницы: поздний talkUsageLoad сверяет его
+  // Где мы: iPhone «с экрана Домой» (распознавания нет совсем) / нет распознавания /
+  // APK (конец фразы ловит нативный детектор) / обычный браузер
+  function _talkPlatformMic() {
+    if (_kmIsIos() && _kmIsStandalone()) return 'ios-standalone';
+    if (micUnavailableReason()) return 'none';
+    if (window.KMSTT) return 'apk';
+    return 'web';
+  }
+  function _talkDefaultMicMode() { return _talkPlatformMic() === 'apk' ? 'free' : 'hold'; }
+  // Режим, с которым реально пойдёт звонок: без распознавания — клавиатура
+  function _talkEffectiveMicMode(c) {
+    const pf = _talkPlatformMic();
+    return (pf === 'ios-standalone' || pf === 'none') ? 'keyboard' : c.micPick;
+  }
+  // Озвучить хоть чем-то: прокси (натуральный голос) или голос устройства
+  function _talkTtsAvailable() { return !!ttsProxyUrl() || ('speechSynthesis' in window); }
+  function _talkPrefsLoad() {
+    let p = null;
+    try { p = UStore.get('talkPrefs', null); } catch (_) { p = null; }
+    p = (p && typeof p === 'object') ? p : {};
+    return {
+      mood: _TALK_UI_MOODS.indexOf(p.mood) >= 0 ? p.mood : 'normal',
+      casual: p.casual === true,
+      topic: _TALK_UI_TOPICS.indexOf(p.topic) >= 0 ? p.topic : 'free',
+      micPick: (p.micMode === 'free' || p.micMode === 'hold') ? p.micMode : _talkDefaultMicMode(),
+      cc: p.cc !== false
+    };
+  }
+  function _talkPrefsSave() {
+    const c = _talk; if (!c) return;
+    try { UStore.set('talkPrefs', { mood: c.mood, casual: !!c.casual, topic: c.topic, micMode: c.micPick, cc: !!c.cc }); } catch (_) {}
+  }
+  // 429 talk_ip / 503 talk_budget: до 00:00 UTC кнопка звонка неактивна (сутки — todayIsoDate)
+  function _talkBlockSet(code) {
+    if (code !== 'talk_ip' && code !== 'talk_budget') return;
+    try { UStore.set('talkBlock', { day: todayIsoDate(), code: code }); } catch (_) {}
+  }
+  function _talkBlockGet() {
+    try {
+      const b = UStore.get('talkBlock', null);
+      if (b && b.day === todayIsoDate() && (b.code === 'talk_ip' || b.code === 'talk_budget')) return b.code;
+    } catch (_) {}
+    return '';
+  }
+  // Остаток на сегодня по данным talkUsageLoad: { ready, unlimited, leftSec, tier: pro|trial|admin, block }
+  function _talkSetupLeft() {
+    const c = _talk;
+    const u = c && c.usage;
+    const block = _talkBlockGet();
+    if (!u) return { ready: false, unlimited: false, leftSec: 0, tier: 'trial', block };
+    if (u.unlimited) return { ready: true, unlimited: true, leftSec: Infinity, tier: 'admin', block };
+    const quota = Math.max(0, Number(u.quotaSec) || 0);
+    const used = Math.max(0, Number(u.usedSec) || 0);
+    return { ready: true, unlimited: false, leftSec: Math.max(0, quota - used), tier: quota >= TALK.quotaSec.pro ? 'pro' : 'trial', block };
+  }
+  function _talkSetupCanCall() {
+    const L = _talkSetupLeft();
+    return L.ready && !L.block && (L.unlimited || L.leftSec > 0);
+  }
+  // Вход с карточки «Игры»: аккаунт → флаг беты (выкл → старый звонок) → страница → остаток минут
+  async function talkOpen() {
+    if (!requireAccount(t('talk.title'))) return;
+    if (_talkOpening || document.getElementById('talk-page')) return;
+    _talkOpening = true;
+    let on = false;
+    try { on = !!(await talkFlagEnabled()); } catch (_) { on = false; }
+    finally { _talkOpening = false; }
+    if (!on) { openKomdoriCall(); return; }
+    if (document.getElementById('talk-page')) return;
+    const page = document.createElement('div');
+    page.className = 'talk-page';
+    page.id = 'talk-page';
+    page.innerHTML = '<div class="talk-shell" id="talk-shell"></div>';
+    document.body.appendChild(page);
+    document.body.classList.add('chat-open');            // полноэкранный режим: прячем нижнюю навигацию
+    const seq = ++_talkPageSeq;
+    _talk = Object.assign({
+      callId: 0, turnSeq: 0, phase: 'setup', pageSeq: seq, usage: null, textMode: !_talkTtsAvailable(), micMode: '',
+      history: [], fixes: [], words: [], xpTurns: 0, usedSec: 0
+    }, _talkPrefsLoad());
+    _talkRenderSetup();
+    let usage = null;
+    try { usage = await talkUsageLoad(); } catch (_) { usage = null; }
+    if (!_talk || _talk.pageSeq !== seq || !document.getElementById('talk-page')) return;
+    // talkUsageLoad сам ждёт облачный тариф и облачный счётчик; если он всё же упал — считаем
+    // по локальному тарифу: настоящий потолок денег всё равно на сервере
+    _talk.usage = (usage && typeof usage === 'object') ? usage
+      : { usedSec: 0, quotaSec: planAtLeast('proai') ? TALK.quotaSec.pro : TALK.quotaSec.trial, unlimited: isAdmin() };
+    if (_talk.phase === 'setup') _talkSyncSetup();
+  }
+  function _talkRenderSetup() {
+    const c = _talk;
+    const shell = document.getElementById('talk-shell');
+    if (!c || !shell) return;
+    const pf = _talkPlatformMic();
+    const micBlock = (pf === 'ios-standalone' || pf === 'none')
+      ? `<p class="talk-hint talk-hint-kb">${t(pf === 'ios-standalone' ? 'talk.mode.iosHint' : 'talk.mode.noneHint')}</p>`
+      : `<div class="talk-seg" role="radiogroup" aria-label="${escHtml(t('talk.setup.mic'))}">
+          <button type="button" role="radio" class="talk-seg-opt" data-talk="mic" data-mode="free"><i class="fa-solid fa-microphone" aria-hidden="true"></i> ${t('talk.mode.free')}</button>
+          <button type="button" role="radio" class="talk-seg-opt" data-talk="mic" data-mode="hold"><i class="fa-solid fa-hand" aria-hidden="true"></i> ${t('talk.mode.hold')}</button>
+        </div>
+        <p class="talk-hint" id="talk-mic-hint"></p>`;
+    shell.innerHTML = `
+      <header class="talk-head">
+        <div class="talk-head-inner">
+          <button type="button" class="chat-back-btn" data-talk="close" aria-label="${escHtml(t('ui.053'))}"><i class="fa-solid fa-arrow-left" aria-hidden="true"></i></button>
+          <div class="talk-head-title">
+            <div class="talk-head-t">${t('talk.title')}</div>
+            <div class="talk-head-s">${t('talk.setup.sub')}</div>
+          </div>
+          <span class="talk-chip" id="talk-min-chip"><i class="fa-regular fa-clock" aria-hidden="true"></i> <span id="talk-min-chip-tx">…</span></span>
+        </div>
+      </header>
+      <div class="talk-body">
+        <div class="talk-body-inner">
+          <div class="talk-face-wrap talk-face-setup" id="talk-setup-face">${kdFaceSvg()}</div>
+          <h2 class="talk-q" id="talk-mood-q">${t('talk.setup.q')}</h2>
+          <div class="talk-mood-name" id="talk-mood-name" aria-hidden="true"></div>
+          <div class="talk-slider" id="talk-mood-slider" role="slider" tabindex="0" aria-labelledby="talk-mood-q" aria-valuemin="0" aria-valuemax="2" aria-valuenow="1" aria-valuetext="">
+            <div class="talk-track"></div>
+            <span class="talk-stop" style="left:0%"></span><span class="talk-stop" style="left:50%"></span><span class="talk-stop" style="left:100%"></span>
+            <span class="talk-thumb" id="talk-thumb"></span>
+          </div>
+          <div class="talk-ends">${_TALK_UI_MOODS.map(m => `<button type="button" class="talk-end-lbl" data-talk="mood" data-mood="${m}">${t('talk.mood.' + m + '.lbl')}</button>`).join('')}</div>
+          <p class="talk-desc" id="talk-mood-desc"></p>
+          <button type="button" class="talk-row" id="talk-casual" role="switch" aria-checked="false" data-talk="casual">
+            <span class="talk-row-tx"><span class="talk-row-t">${t('talk.setup.casual')}</span><span class="talk-row-s">${t('talk.setup.casualSub')}</span></span>
+            <span class="switch" aria-hidden="true"></span>
+          </button>
+          <div class="talk-sec" id="talk-topic-h">${t('talk.setup.topic')}</div>
+          <div class="talk-topics" role="radiogroup" aria-labelledby="talk-topic-h">
+            ${_TALK_UI_TOPICS.map(id => `<button type="button" role="radio" class="talk-topic" data-talk="topic" data-topic="${id}"><span class="talk-topic-e" aria-hidden="true">${_TALK_UI_EMOJI[id]}</span><span class="talk-topic-t">${t('talk.topic.' + id)}</span></button>`).join('')}
+          </div>
+          <div class="talk-sec">${t('talk.setup.mic')}</div>
+          ${micBlock}
+          <button type="button" class="talk-row" id="talk-cc-row" role="switch" aria-checked="true" data-talk="cc">
+            <span class="talk-row-tx"><span class="talk-row-t"><i class="fa-solid fa-closed-captioning talk-row-ico" aria-hidden="true"></i> ${t('talk.setup.cc')}</span></span>
+            <span class="switch" aria-hidden="true"></span>
+          </button>
+          <div class="talk-sound" id="talk-sound" hidden></div>
+        </div>
+      </div>
+      <div class="talk-foot">
+        <div class="talk-foot-inner">
+          <div class="talk-left" id="talk-left" aria-live="polite"></div>
+          <button type="button" class="btn btn-primary btn-block talk-call" id="talk-call-btn" data-talk="call" disabled><i class="fa-solid fa-phone" aria-hidden="true"></i> ${t('talk.setup.call')}</button>
+          <button type="button" class="talk-upsell" id="talk-upsell" data-talk="plan" hidden>✨ ${t('talk.setup.upsell')}</button>
+        </div>
+      </div>`;
+    shell.onclick = _talkSetupClick;
+    const slider = document.getElementById('talk-mood-slider');
+    slider.addEventListener('keydown', _talkSliderKey);
+    slider.addEventListener('pointerdown', _talkSliderPointer);
+    slider.addEventListener('pointermove', (e) => { if (slider.hasPointerCapture && slider.hasPointerCapture(e.pointerId)) _talkSliderPointer(e); });
+    _talkSyncSetup();
+  }
+  function _talkSetupClick(e) {
+    const el = e.target.closest('[data-talk]');
+    const c = _talk;
+    if (!el || !c || c.phase !== 'setup' || !e.currentTarget.contains(el)) return;
+    const a = el.dataset.talk;
+    if (a === 'close') { talkClose(); return; }
+    if (a === 'mood') { _talkSetMood(el.dataset.mood); return; }
+    if (a === 'casual') { c.casual = !c.casual; _talkPrefsSave(); _talkSyncSetup(); return; }
+    if (a === 'topic') { if (_TALK_UI_TOPICS.indexOf(el.dataset.topic) >= 0) { c.topic = el.dataset.topic; _talkPrefsSave(); _talkSyncSetup(); } return; }
+    if (a === 'mic') { if (el.dataset.mode === 'free' || el.dataset.mode === 'hold') { c.micPick = el.dataset.mode; _talkPrefsSave(); _talkSyncSetup(); } return; }
+    if (a === 'cc') { if (!c.textMode) { c.cc = !c.cc; _talkPrefsSave(); _talkSyncSetup(); } return; }
+    if (a === 'sound-on') {
+      const st = getSettings(); st.sound = true; UStore.set('settings', st); applySettings();
+      c.textMode = !_talkTtsAvailable();
+      toast(t('settings.soundOnToast'), 'var(--berry)');
+      _talkSyncSetup(); return;
+    }
+    if (a === 'text-mode') { c.textMode = true; _talkSyncSetup(); return; }
+    if (a === 'plan') { openPlanPage('proai'); return; }
+    if (a === 'call') { if (_talkSetupCanCall()) talkCallStart(); }
+  }
+  function _talkSetMood(m) {
+    const c = _talk;
+    if (!c || c.phase !== 'setup' || _TALK_UI_MOODS.indexOf(m) < 0 || c.mood === m) return;
+    c.mood = m;
+    _talkPrefsSave();
+    _talkSyncSetup();
+  }
+  // Ползунок характера: ←/→ (и ↑/↓, Home/End), тап/протяжка по дорожке
+  function _talkSliderKey(e) {
+    const c = _talk; if (!c || c.phase !== 'setup') return;
+    let i = _TALK_UI_MOODS.indexOf(c.mood);
+    if (e.key === 'ArrowLeft' || e.key === 'ArrowDown') i--;
+    else if (e.key === 'ArrowRight' || e.key === 'ArrowUp') i++;
+    else if (e.key === 'Home') i = 0;
+    else if (e.key === 'End') i = _TALK_UI_MOODS.length - 1;
+    else return;
+    e.preventDefault();
+    _talkSetMood(_TALK_UI_MOODS[Math.max(0, Math.min(_TALK_UI_MOODS.length - 1, i))]);
+  }
+  function _talkSliderPointer(e) {
+    const el = e.currentTarget;
+    if (e.type === 'pointerdown') { try { el.setPointerCapture(e.pointerId); } catch (_) {} try { el.focus({ preventScroll: true }); } catch (_) {} }
+    const r = el.getBoundingClientRect();
+    if (!r.width) return;
+    const x = Math.max(0, Math.min(1, (e.clientX - r.left) / r.width));
+    _talkSetMood(_TALK_UI_MOODS[Math.round(x * (_TALK_UI_MOODS.length - 1))]);
+  }
+  // Перерисовать состояние экрана настройки (без перестройки разметки: фокус и анимации живы)
+  function _talkSyncSetup() {
+    const c = _talk; if (!c) return;
+    const $ = (id) => document.getElementById(id);
+    const i = _TALK_UI_MOODS.indexOf(c.mood);
+    kdFaceSet($('talk-setup-face'), { mood: c.mood });
+    const name = $('talk-mood-name'); if (name) name.textContent = t('talk.mood.' + c.mood);
+    const desc = $('talk-mood-desc'); if (desc) desc.textContent = t('talk.mood.' + c.mood + '.desc');
+    const slider = $('talk-mood-slider');
+    if (slider) { slider.setAttribute('aria-valuenow', String(i)); slider.setAttribute('aria-valuetext', t('talk.mood.' + c.mood + '.lbl')); }
+    const thumb = $('talk-thumb'); if (thumb) thumb.style.left = (i * 50) + '%';
+    document.querySelectorAll('#talk-shell .talk-end-lbl').forEach(b => b.classList.toggle('on', b.dataset.mood === c.mood));
+    const cas = $('talk-casual');
+    if (cas) { cas.setAttribute('aria-checked', String(!!c.casual)); cas.querySelector('.switch').classList.toggle('on', !!c.casual); }
+    document.querySelectorAll('#talk-shell .talk-topic').forEach(b => { const on = b.dataset.topic === c.topic; b.classList.toggle('on', on); b.setAttribute('aria-checked', String(on)); });
+    document.querySelectorAll('#talk-shell .talk-seg-opt').forEach(b => { const on = b.dataset.mode === c.micPick; b.classList.toggle('on', on); b.setAttribute('aria-checked', String(on)); });
+    const hint = $('talk-mic-hint'); if (hint) hint.textContent = t(c.micPick === 'free' ? 'talk.mode.free.hint' : 'talk.mode.hold.hint');
+    const ccRow = $('talk-cc-row');
+    if (ccRow) {
+      const on = c.textMode ? true : !!c.cc;
+      ccRow.setAttribute('aria-checked', String(on));
+      ccRow.setAttribute('aria-disabled', String(!!c.textMode));
+      ccRow.querySelector('.switch').classList.toggle('on', on);
+    }
+    // Звук выключен в настройках → «Включи звук или говори текстом»; озвучки нет вовсе → текстовый режим сам
+    const snd = $('talk-sound');
+    if (snd) {
+      const off = getSettings().sound === false;
+      if (!_talkTtsAvailable()) {
+        snd.hidden = false;
+        snd.innerHTML = `<p class="talk-sound-t">🔇 ${t('talk.setup.noTts')}</p>`;
+      } else if (off) {
+        snd.hidden = false;
+        snd.innerHTML = `<p class="talk-sound-t">🔇 ${t(c.textMode ? 'talk.setup.textOn' : 'talk.setup.soundOff')}</p>
+          <div class="talk-sound-btns">
+            <button type="button" class="btn btn-ghost talk-sound-btn" data-talk="sound-on"><i class="fa-solid fa-volume-high" aria-hidden="true"></i> ${t('talk.setup.soundOn')}</button>
+            ${c.textMode ? '' : `<button type="button" class="btn btn-ghost talk-sound-btn" data-talk="text-mode"><i class="fa-regular fa-keyboard" aria-hidden="true"></i> ${t('talk.setup.textMode')}</button>`}
+          </div>`;
+      } else {
+        snd.hidden = true; snd.innerHTML = '';
+      }
+    }
+    _talkSyncSetupUsage();
+  }
+  // Чип и строка «Осталось сегодня», кнопка звонка, ссылка на Pro AI
+  function _talkSyncSetupUsage() {
+    const $ = (id) => document.getElementById(id);
+    const L = _talkSetupLeft();
+    const chip = $('talk-min-chip'), chipTx = $('talk-min-chip-tx'), left = $('talk-left'), btn = $('talk-call-btn'), up = $('talk-upsell');
+    if (!chip || !left || !btn) return;
+    const mins = (sec) => t('talk.min', { n: Math.ceil(sec / 60) });
+    chip.classList.toggle('pro', L.ready && (L.tier === 'pro' || L.tier === 'admin'));
+    if (!L.ready) {
+      chipTx.textContent = '…';
+      left.textContent = t('talk.setup.loading');
+    } else if (L.block) {
+      chipTx.textContent = L.unlimited ? '∞' : mins(L.leftSec);
+      left.textContent = t(L.block === 'talk_budget' ? 'talk.setup.blockBudget' : 'talk.setup.blockIp');
+    } else if (L.unlimited) {
+      chipTx.textContent = '∞';
+      left.textContent = t('talk.tier.admin');
+    } else if (L.leftSec <= 0) {
+      chipTx.textContent = mins(0);
+      left.textContent = t('talk.setup.noMinutes');
+    } else {
+      chipTx.textContent = mins(L.leftSec);
+      left.innerHTML = `${t('talk.setup.left', { n: `<b>${escHtml(mins(L.leftSec))}</b>` })} · ${escHtml(t(L.tier === 'pro' ? 'talk.tier.pro' : 'talk.tier.trial'))}`;
+    }
+    btn.disabled = !_talkSetupCanCall();
+    btn.setAttribute('aria-busy', String(!L.ready));
+    if (up) up.hidden = !(L.ready && L.tier === 'trial');
+  }
+  // Закрыть страницу (с экрана настройки, итога или «назад» в звонке): идущий звонок — гасим
+  function talkClose() {
+    const c = _talk;
+    if (c && c.phase !== 'setup' && c.phase !== 'ended') { try { _talkTeardown(c); } catch (_) {} }
+    document.getElementById('talk-page')?.remove();
+    _talk = null;
+    if (!document.getElementById('chat-page') && !document.getElementById('plan-page') && !document.getElementById('ai-tutor-modal')) {
+      document.body.classList.remove('chat-open');
+    }
+  }
+  // ── /Разговор с Комдори: экран настройки ──
+  // ───────────── «Разговор с Комдори» · звонок: машина состояний и озвучка ─────────────
+  // _talk.phase: setup | komdori (говорит; до первого звука — «Думаю…») | listening (очередь ученицы:
+  // микрофон включён или ждём нажатия/текста) | recognizing (отпустила — ждём финал) |
+  // thinking (ждём ИИ) | paused (сеть, «Комдори задумался»; пауза вкладки/«назад» — хуки E6) | ended.
+  // callId — новый на каждый звонок, turnSeq — на каждую реплику ученицы и на каждую паузу;
+  // speakSeq / listenSeq / askSeq — на каждую озвучку / сессию микрофона / запрос к ИИ. Любой
+  // асинхронный результат (ИИ, распознавание, озвучка, таймер) сверяет callId + turnSeq + свой номер
+  // и молча выходит при несовпадении (паттерн st.seq тренажёра «Разговор»). Реплика ученицы,
+  // ждущая ответа, лежит в _talk.pending: ответ принимается один раз и только для неё.
+  let _talkCallSeq = 0;
+  var _talkSpeakRec = null;   // активная talkSpeak; var — stopSpeech() зовёт хук и до этой строки
+  // Сторожа озвучки: до первого звука 9 с (два прокси по 4 с), после — max(4 с, 120 мс × длина) + 3 с.
+  // Объект, а не числа: тесты укорачивают сторожа, не дожидаясь 9 секунд.
+  const TALK_SPEAK_WD = { preStartMs: 9000, minMs: 4000, perCharMs: 120, tailMs: 3000 };
+  // thinkTickMs — ожидание ИИ дольше 3 с с минут не списывается; bargeMs — пауза между остановкой
+  // озвучки и микрофоном (хвост звука не попадает в распознавание); holdShortMs — «тап» вместо удержания
+  const TALK_CALL = { thinkTickMs: 3000, maxUserChars: 300, bargeMs: 150, holdShortMs: 600 };
+  const TALK_FAREWELL = {
+    jon: { ko: '오늘은 여기까지! 내일 또 만나요~', tr: 'онырын ёгиккаджи! нэиль тто маннаё~', ru: { ru: 'На сегодня всё! Увидимся завтра~', en: 'That’s all for today! See you tomorrow~', uz: 'Bugunga shu! Ertaga yana koʻrishamiz~' } },
+    ban: { ko: '오늘은 여기까지! 내일 또 만나~', tr: 'онырын ёгиккаджи! нэиль тто манна~', ru: { ru: 'На сегодня всё! Увидимся завтра~', en: 'That’s all for today! See you tomorrow~', uz: 'Bugunga shu! Ertaga yana koʻrishamiz~' } }
+  };
+  const _TALK_NATIVE_SR = { ru: 'ru-RU', en: 'en-US', uz: 'uz-UZ' };
+  // ── Токены асинхронных операций ──
+  function _talkTok(kind) {
+    const c = _talk;
+    return { c: c, id: c.callId, ts: c.turnSeq, kind: kind || '', n: kind ? ++c[kind + 'Seq'] : 0 };
+  }
+  function _talkAlive(tok) {
+    const c = _talk;
+    return !!c && c === tok.c && c.callId === tok.id && c.turnSeq === tok.ts && c.phase !== 'setup' && c.phase !== 'ended'
+      && (!tok.kind || c[tok.kind + 'Seq'] === tok.n);
+  }
+  // ── Озвучка звонка ──
+  // В TTS — только непустой ko, ≤ 200 символов с обрезкой по границе предложения: прокси отвечают
+  // 400/413 на пустой и длинный текст, а два таких «сбоя» включают голос устройства всему приложению.
+  function _talkTtsText(text) {
+    let s = String(text == null ? '' : text).replace(/\s+/g, ' ').trim();
+    if (s.length > 200) {
+      const cut = s.slice(0, 200);
+      const m = cut.match(/^[\s\S]*[.!?~]/);
+      s = (m && m[0].length >= 20 ? m[0] : cut).trim();
+    }
+    return s;
+  }
+  function _talkCanSpeak() {
+    if (_talk && _talk.textMode) return false;
+    if (getSettings().sound === false) return false;      // сам _koSpeakOne при выключенном звуке всё равно говорит
+    return _talkTtsAvailable();
+  }
+  // Хук из stopSpeech(): любая остановка озвучки в звонке сразу завершает активную talkSpeak
+  // ('stopped') — сам _koSpeakOne после остановки cb не вызывает, ждать его нельзя.
+  function _talkOnStopSpeech() {
+    const r = _talkSpeakRec;
+    if (r && !r.done) r.stop();
+  }
+  // Рот Комдори — только с момента реального звука и только пока он «говорит» в звонке
+  function _talkSetTalking(on) {
+    const c = _talk;
+    if (!c || c.talking === on) return;
+    if (on && c.phase !== 'komdori') return;
+    c.talking = on;
+    _talkSync();
+  }
+  // talkSpeak(text, { slow, onStart }) → 'done' | 'stopped' | 'failed' | 'timeout'. Промис
+  // завершается ВСЕГДА: по cb, по onFail, по любой stopSpeech() или по сторожу.
+  function talkSpeak(text, opts) {
+    opts = opts || {};
+    const ko = _talkTtsText(text);
+    return new Promise(resolve => {
+      if (!ko || !_talkCanSpeak()) { resolve('failed'); return; }
+      try { stopSpeech(); } catch (_) {}                   // прежняя озвучка (и её talkSpeak → 'stopped')
+      const rec = { done: false, started: false, t1: 0, t2: 0, stop: null };
+      const finish = (res) => {
+        if (rec.done) return;
+        rec.done = true;
+        clearTimeout(rec.t1); clearTimeout(rec.t2);
+        if (_talkSpeakRec === rec) _talkSpeakRec = null;
+        if (res === 'timeout') { try { stopSpeech(); } catch (_) {} }   // сторож: глушим то, что молчит/висит
+        _talkSetTalking(false);
+        resolve(res);
+      };
+      rec.stop = () => finish('stopped');
+      _talkSpeakRec = rec;
+      rec.t1 = setTimeout(() => { if (!rec.started) finish('timeout'); }, TALK_SPEAK_WD.preStartMs);
+      try {
+        _koSpeakOne(ko, {
+          slow: !!opts.slow, pitch: 1.05, voice: TTS_VOICE_F,
+          onStart: () => {
+            if (rec.done || rec.started) return;
+            rec.started = true;
+            clearTimeout(rec.t1);
+            rec.t2 = setTimeout(() => finish('timeout'), Math.max(TALK_SPEAK_WD.minMs, TALK_SPEAK_WD.perCharMs * ko.length) + TALK_SPEAK_WD.tailMs);
+            _talkSetTalking(true);
+            if (typeof opts.onStart === 'function') { try { opts.onStart(); } catch (_) {} }
+          },
+          onFail: () => finish('failed')
+        }, () => finish('done'));
+      } catch (_) { finish('failed'); }
+    });
+  }
+  // ── Старт звонка (кнопка «Позвонить» и «Ещё разговор» на итоге) ──
+  function talkCallStart() {
+    const c = _talk;
+    if (!c || !document.getElementById('talk-shell')) return;
+    if (c.phase !== 'setup' && c.phase !== 'ended') return;   // звонок уже идёт: второй тап «📞» — ничего
+    if (!_talkSetupCanCall()) return;
+    const byMood = (TALK_OPENERS[c.topic] || {})[c.mood] || {};
+    const opener = byMood[c.casual ? 'ban' : 'jon'];
+    if (!opener || !opener.ko) return;
+    const u = c.usage;
+    const textMode = !!c.textMode || getSettings().sound === false || !_talkTtsAvailable();
+    Object.assign(c, {
+      callId: 'c' + (++_talkCallSeq) + '_' + Date.now().toString(36), turnSeq: 0, phase: 'komdori', phaseAt: Date.now(),
+      micMode: _talkEffectiveMicMode(c), textMode: textMode, ccBefore: textMode ? c.cc : undefined, cc: textMode ? true : !!c.cc, textAuto: false,
+      history: [], fixes: [], words: [], xpTurns: 0, usedSec: 0, turns: 0,
+      day: todayIsoDate(), daySec: 0, unlimited: !!u.unlimited, quotaSec: u.unlimited ? Infinity : Math.max(0, Number(u.quotaSec) || 0), baseUsedSec: Math.max(0, Number(u.usedSec) || 0),
+      speakSeq: 0, listenSeq: 0, askSeq: 0, listen: null, micActive: false, holding: false, holdAt: 0, holdMs: 0,
+      talking: false, sayAfter: 'turn', sayReason: 'ai_end', lastKo: '', lastUserText: '', liveEl: null, bubbles: [],
+      pending: null, aiFails: 0, silentFails: 0, ttsFails: 0, autoRetried: false, hint: '',
+      kbOpen: false, kbAuto: false, kbHint: '', nativeNext: false, nativeBad: [],
+      pauseReason: '', pausedFrom: '', replayOnResume: false, timeUp: false, farewell: false,
+      endReason: '', tickTimer: 0, bargeTimer: 0, sinceFlush: 0, onOnline: null, onOffline: null
+    });
+    _talkRenderCall();
+    c.onOffline = () => { if (_talk === c) _talkPause('offline'); };
+    c.onOnline = () => { if (_talk === c && c.phase === 'paused' && c.pauseReason === 'offline') _talkContinue(); };
+    window.addEventListener('offline', c.onOffline);
+    window.addEventListener('online', c.onOnline);
+    c.tickTimer = setInterval(_talkTick, 1000);
+    // Первая реплика — заготовка (без ИИ): звучит сразу, первый запрос к ИИ — после ответа ученицы
+    const line = { ko: opener.ko, tr: opener.tr || '', ru: (opener.ru && (opener.ru[APP_LANG] || opener.ru.ru)) || '' };
+    c.history.push({ role: 'assistant', ko: opener.ko });
+    _talkAddKomdori(line);
+    _talkSay(opener.ko, { after: 'turn' });
+  }
+  // ── Комдори говорит ──
+  function _talkSay(ko, opt) {
+    const c = _talk; if (!c || c.phase === 'ended' || c.phase === 'setup') return;
+    opt = opt || {};
+    if (!opt.replay) c.lastKo = ko;
+    c.sayAfter = opt.after || 'turn';
+    c.sayReason = opt.reason || 'ai_end';
+    c.talking = false;
+    _talkPhase('komdori');
+    const tok = _talkTok('speak');
+    let sawSound = false;
+    talkSpeak(ko, { slow: c.mood === 'kind', onStart: () => { sawSound = true; } }).then(res => {
+      if (!_talkAlive(tok) || c.phase !== 'komdori') return;
+      c.talking = false;
+      if (!sawSound && (res === 'failed' || res === 'timeout') && !c.textMode) { if (++c.ttsFails >= 2) _talkTextMode(); }
+      else if (res === 'done') c.ttsFails = 0;
+      if (c.sayAfter === 'end') { talkCallEnd(c.sayReason); return; }
+      if (c.timeUp) { _talkFarewell(); return; }
+      talkStudentTurn();
+    });
+  }
+  // Озвучка не работает (2 сбоя подряд) → текстовый режим до конца звонка, субтитры принудительно
+  function _talkTextMode() {
+    const c = _talk; if (!c || c.textMode) return;
+    c.textMode = true; c.textAuto = true;
+    if (c.ccBefore === undefined) c.ccBefore = c.cc;
+    c.cc = true;
+    toast(t('talk.st.ttsOff'), 'var(--berry)');
+    _talkSync();
+  }
+  // ── Очередь ученицы ──
+  function talkStudentTurn() {
+    const c = _talk; if (!c || c.phase === 'ended' || c.phase === 'setup') return;
+    _talkListenCancel();
+    c.micActive = false; c.talking = false; c.autoRetried = false; c.hint = '';
+    _talkPhase('listening');
+    if (c.micMode === 'keyboard') { _talkFocusInput(); return; }
+    if (c.micMode === 'free' && !c.kbOpen) _talkListenStart({ auto: true });
+  }
+  function _talkNativeLang() {
+    const c = _talk;
+    const list = [_TALK_NATIVE_SR[APP_LANG] || 'ru-RU', 'ru-RU'].filter((l, i, a) => a.indexOf(l) === i);
+    const ok = list.filter(l => !(c && c.nativeBad.indexOf(l) >= 0));
+    return ok.length ? ok[0] : '';
+  }
+  function _talkListenCancel() {
+    const c = _talk; if (!c || !c.listen) return;
+    const h = c.listen;
+    c.listen = null; c.listenSeq++; c.micActive = false;
+    try { h.cancel(); } catch (_) {}
+  }
+  function _talkListenStart(o) {
+    const c = _talk;
+    if (!c || c.phase === 'ended' || c.phase === 'setup' || c.phase === 'paused' || c.micMode === 'keyboard' || c.listen) return;
+    o = o || {};
+    const native = !!(o.native || c.nativeNext);
+    const lang = native ? _talkNativeLang() : 'ko-KR';
+    if (native && !lang) { _talkOpenKeyboard(true); return; }   // ни языка интерфейса, ни ru-RU нет — пишем
+    const tok = _talkTok('listen');
+    const meta = { native: native, lang: lang, auto: !!o.auto };
+    c.micActive = true; c.hint = '';
+    _talkPhase('listening');
+    let h = null;
+    try {
+      h = talkListen({
+        lang: lang, mode: c.micMode === 'hold' ? 'hold' : 'free',
+        onInterim: (txt) => { if (_talkAlive(tok)) _talkLive(txt); }
+      });
+    } catch (_) { h = null; }
+    if (!h || !h.promise) { _talkListenResult(tok, { error: 'unavailable' }, meta); return; }
+    c.listen = h;
+    if (c.micMode === 'hold' && !c.holding) { _talkPhase('recognizing'); try { h.release(); } catch (_) {} }   // отпустила, пока слушание запускалось
+    h.promise.then(
+      res => _talkListenResult(tok, res || { error: 'no-speech' }, meta),
+      () => _talkListenResult(tok, { error: 'no-speech' }, meta)
+    );
+  }
+  function _talkListenResult(tok, res, meta) {
+    const c = _talk;
+    if (!_talkAlive(tok) || (c.phase !== 'listening' && c.phase !== 'recognizing')) return;
+    c.listen = null; c.micActive = false;
+    _talkLive('');
+    const text = (res && typeof res.text === 'string') ? res.text.replace(/\s+/g, ' ').trim() : '';
+    if (text) { _talkUserTurn(text, { voice: true, native: meta.native }); return; }
+    const err = (res && res.error) || 'no-speech';
+    if (err === 'network' && navigator.onLine === false) { _talkPause('offline'); return; }   // это сеть, а не микрофон
+    if (meta.native && err === 'unavailable') {
+      // Движок не знает язык интерфейса (uz-UZ на iOS/APK) → ru-RU; нет и его → клавиатура
+      if (meta.lang && c.nativeBad.indexOf(meta.lang) < 0) c.nativeBad.push(meta.lang);
+      if (_talkNativeLang()) { _talkListenStart({ native: true }); return; }
+      _talkOpenKeyboard(true); return;
+    }
+    if (err === 'not-allowed') { _talkKeyboardOnly('denied'); return; }
+    if (err === 'unavailable') { _talkKeyboardOnly('unavailable'); return; }
+    if (err === 'network') { _talkKeyboardOnly('network'); return; }
+    // no-speech / timeout: «Не расслышал — повтори», реплика не тратится
+    if (c.micMode === 'hold' && c.holdMs > 0 && c.holdMs < TALK_CALL.holdShortMs) { c.hint = 'hold'; _talkPhase('listening'); return; }
+    if (meta.auto && !c.autoRetried) { c.autoRetried = true; _talkListenStart({ auto: true, native: meta.native }); return; }   // «Свободный»: одно автоповторное слушание
+    if (++c.silentFails >= 2) { _talkKeyboardOnly('silent'); return; }           // две тихие неудачи за звонок → клавиатура
+    c.hint = 'again';
+    _talkPhase('listening');
+  }
+  // Распознавания нет / не разрешено / не слышит → клавиатура до конца звонка, микрофон скрыт
+  function _talkKeyboardOnly(why) {
+    const c = _talk; if (!c || c.phase === 'ended' || c.phase === 'setup') return;
+    _talkListenCancel();
+    c.micMode = 'keyboard'; c.kbHint = why; c.kbOpen = true; c.hint = '';
+    _talkPhase('listening');
+    _talkFocusInput();
+  }
+  // auto — клавиатуру открыли мы (нечем распознать язык интерфейса): после этой реплики закрываем
+  function _talkOpenKeyboard(auto) {
+    const c = _talk; if (!c) return;
+    if (auto && !c.kbOpen) c.kbAuto = true;
+    c.kbOpen = true;
+    _talkSync();
+    _talkFocusInput();
+  }
+  function _talkFocusInput() {
+    _talkSync();
+    const inp = document.getElementById('talk-input');
+    if (inp && !inp.disabled) { try { inp.focus({ preventScroll: true }); } catch (_) {} }
+  }
+  // ── Микрофон: «Зажми и говори» (удержание), «Свободный» (тап: начать / «я закончила» / перебить) ──
+  function _talkMicDown(e) {
+    const c = _talk; if (!c || c.micMode !== 'hold') return;
+    if (e && e.button != null && e.button !== 0) return;
+    if (c.phase !== 'listening' && c.phase !== 'komdori') return;
+    if (c.listen || c.holding) return;
+    c.holding = true; c.holdAt = Date.now(); c.holdMs = 0;
+    const mic = document.getElementById('talk-mic');
+    if (mic && e && e.pointerId != null) { try { mic.setPointerCapture(e.pointerId); } catch (_) {} }
+    if (c.phase === 'komdori') { _talkBargeIn(() => { if (c.holding) _talkListenStart({}); else { c.hint = 'hold'; _talkPhase('listening'); } }); return; }
+    _talkListenStart({});
+  }
+  function _talkMicUp() {
+    const c = _talk; if (!c || !c.holding) return;
+    c.holding = false; c.holdMs = Date.now() - c.holdAt;
+    if (c.listen) { _talkPhase('recognizing'); try { c.listen.release(); } catch (_) {} }
+  }
+  function _talkMicTap() {
+    const c = _talk; if (!c || c.micMode !== 'free') return;
+    if (c.phase === 'komdori') { _talkBargeIn(() => _talkListenStart({})); return; }
+    if (c.phase !== 'listening') return;
+    if (c.listen) { _talkPhase('recognizing'); try { c.listen.release(); } catch (_) {} return; }
+    _talkListenStart({});
+  }
+  // Ученица перебивает Комдори: озвучка останавливается сразу, микрофон — через bargeMs
+  function _talkBargeIn(then) {
+    const c = _talk; if (!c || c.phase !== 'komdori') return;
+    c.speakSeq++;                              // продолжение прерванной talkSpeak — уже чужое
+    c.talking = false;
+    try { stopSpeech(); } catch (_) {}
+    if (c.sayAfter === 'end') { talkCallEnd(c.sayReason); return; }   // Комдори прощался — разговор окончен
+    if (c.timeUp) { _talkFarewell(); return; }
+    _talkPhase('listening');
+    clearTimeout(c.bargeTimer);
+    const tok = _talkTok();
+    c.bargeTimer = setTimeout(() => { if (_talkAlive(tok) && c.phase === 'listening' && !c.listen) then(); }, TALK_CALL.bargeMs);
+  }
+  // ── Реплика ученицы → ИИ ──
+  function _talkUserTurn(text, meta) {
+    const c = _talk;
+    if (!c || c.phase === 'ended' || c.phase === 'setup' || c.phase === 'paused' || c.pending) return;
+    meta = meta || {};
+    const line = String(text).replace(/\s+/g, ' ').trim().slice(0, TALK_CALL.maxUserChars);
+    if (!line) return;
+    const native = !!meta.native;
+    c.turnSeq++;
+    const counts = !!talkTurnCounts(line, c.lastUserText, native);
+    c.lastUserText = line;
+    c.turns++;
+    c.nativeNext = false; c.hint = '';
+    if (c.kbAuto) { c.kbAuto = false; c.kbOpen = false; }
+    c.history.push({ role: 'user', text: line });
+    const turn = { counts: counts, xpGiven: false, windowDiv: 1, tooLongRetried: false, el: _talkAddMe(line, !!meta.voice, native) };
+    c.pending = turn;
+    _talkAsk(turn);
+  }
+  function _talkAsk(turn) {
+    const c = _talk;
+    if (!c || c.pending !== turn || c.phase === 'ended' || c.phase === 'setup') return;
+    if (navigator.onLine === false) { _talkPause('offline'); return; }
+    _talkPhase('thinking');
+    const tok = _talkTok('ask');
+    let hist = c.history;
+    if (turn.windowDiv > 1) hist = hist.slice(-Math.max(1, Math.floor(hist.length / turn.windowDiv)));   // 400 too_long: окно вдвое
+    let msgs;
+    try { msgs = talkRequestMessages(hist); } catch (_) { msgs = null; }
+    if (!Array.isArray(msgs) || !msgs.length) { _talkAiFailed(); return; }
+    aiCallChat(msgs, {
+      kind: 'talk',
+      talk: Object.assign({}, talkLevelParams(), { topic: c.topic, mood: c.mood, casual: c.casual, uiLang: APP_LANG }),
+      timeoutMs: { primary: 18000, reserve: 26000 },
+      reserveOn5xx: true
+    }).then(r => { if (_talkAlive(tok) && c.pending === turn) _talkReply(turn, r); }, e => { if (_talkAlive(tok) && c.pending === turn) _talkAskError(turn, e); });
+  }
+  // Код ошибки воркера: e.code (его кладёт _aiPostOne) или "code" из текста ответа
+  function _talkErrCode(e) {
+    if (e && typeof e.code === 'string' && /^[a-z_]{2,32}$/.test(e.code)) return e.code;
+    const m = String((e && e.message) || '').match(/"code"\s*:\s*"([a-z_]{2,32})"/);
+    return m ? m[1] : '';
+  }
+  function _talkAskError(turn, e) {
+    const st = (e && e.httpStatus) || 0;
+    const code = _talkErrCode(e);
+    if (!st && navigator.onLine === false) { _talkPause('offline'); return; }          // сеть пропала — не неудача ИИ
+    if (st === 429 && code === 'talk_ip') { _talkBlockSet('talk_ip'); talkCallEnd('talk_ip'); return; }
+    if (st === 503 && code === 'talk_budget') { _talkBlockSet('talk_budget'); talkCallEnd('talk_budget'); return; }
+    if (st === 400 && code === 'too_long' && !turn.tooLongRetried) {
+      turn.tooLongRetried = true; turn.windowDiv = 2;                                   // окно вдвое + один повтор (не неудача ИИ)
+      _talkAsk(turn); return;
+    }
+    _talkAiFailed();
+  }
+  // «Комдори задумался… ещё раз?» (минуты на паузе); 2 неудачи подряд → итог
+  function _talkAiFailed() {
+    const c = _talk; if (!c || c.phase === 'ended' || c.phase === 'setup') return;
+    if (++c.aiFails >= 2) { talkCallEnd('ai_fail'); return; }
+    _talkPause('ai', 'thinking');
+  }
+  function _talkReply(turn, r) {
+    const c = _talk;
+    const parsed = (r && typeof r.text === 'string') ? talkParse(r.text) : null;
+    if (!parsed || !parsed.ok || !parsed.reply || !parsed.reply.ko) { _talkAiFailed(); return; }
+    const reply = parsed.reply;
+    const safety = !!(r && r.provider === 'safety');      // заготовка «давай вернёмся к теме»: без XP
+    c.aiFails = 0;
+    c.pending = null;
+    const fix = (!safety && reply.fix && reply.fix.good) ? reply.fix : null;
+    if (fix) {
+      _talkAddFix(turn, fix);
+      const key = (fix.bad || '') + '→' + fix.good;
+      if (!c.fixes.some(f => ((f.bad || '') + '→' + f.good) === key)) c.fixes.push({ bad: fix.bad || '', good: fix.good, why: fix.why || '' });
+    }
+    if (!safety && Array.isArray(reply.words)) {
+      reply.words.forEach(w => { if (talkWordOk(w) && !c.words.some(x => x.ko === w.ko)) c.words.push({ ko: w.ko, tr: w.tr || '', ru: w.ru || '' }); });
+    }
+    if (turn.counts && !safety && !turn.xpGiven && (c.xpTurns + 1) * TALK.xp.perTurn <= TALK.xp.max) {
+      turn.xpGiven = true; c.xpTurns++;
+      try { talkXpAdd(TALK.xp.perTurn); } catch (_) {}
+    }
+    c.history.push({ role: 'assistant', ko: reply.ko, good: fix ? fix.good : '' });
+    _talkAddKomdori({ ko: reply.ko, tr: reply.tr || '', ru: reply.ru || '' });
+    _talkSay(reply.ko, { after: reply.end ? 'end' : 'turn', reason: 'ai_end' });
+  }
+  // Повтор после «Комдори задумался…»: тот же запрос ещё раз (его зовёт и хук «Продолжим» из E6)
+  function talkRetryAsk() {
+    const c = _talk; if (!c || c.phase === 'ended' || c.phase === 'setup') return;
+    if (c.phase === 'paused') { c.pauseReason = ''; c.pausedFrom = ''; }
+    if (c.pending) { _talkAsk(c.pending); return; }
+    talkStudentTurn();
+  }
+  // ── Время вышло: Комдори договаривает, прощается заготовкой, итог ──
+  function _talkTimeUp() {
+    const c = _talk; if (!c || c.timeUp || c.phase === 'ended' || c.phase === 'setup') return;
+    c.timeUp = true;
+    if (c.phase === 'komdori') return;                     // договорит — _talkSay сам позовёт прощание
+    _talkFarewell();
+  }
+  function _talkFarewell() {
+    const c = _talk; if (!c || c.phase === 'ended' || c.phase === 'setup' || c.farewell) return;
+    c.farewell = true;
+    _talkListenCancel();
+    c.askSeq++; c.pending = null; c.pauseReason = ''; c.pausedFrom = '';      // летящий ответ ИИ уже не нужен
+    const f = TALK_FAREWELL[c.casual ? 'ban' : 'jon'];
+    _talkAddKomdori({ ko: f.ko, tr: f.tr, ru: f.ru[APP_LANG] || f.ru.ru });
+    _talkSay(f.ko, { after: 'end', reason: 'time' });
+  }
+  // ── Минуты: идут в komdori/listening/recognizing и первые 3 с ожидания ИИ; не идут на паузе и в скрытой вкладке ──
+  function _talkQuotaNow() {
+    if (isAdmin()) return Infinity;
+    return planAtLeast('proai') ? TALK.quotaSec.pro : TALK.quotaSec.trial;
+  }
+  function _talkTick() {
+    const c = _talk;
+    if (!c || c.phase === 'setup' || c.phase === 'ended' || c.timeUp || document.hidden) return;
+    const counting = c.phase === 'komdori' || c.phase === 'listening' || c.phase === 'recognizing'
+      || (c.phase === 'thinking' && Date.now() - c.phaseAt <= TALK_CALL.thinkTickMs);
+    if (!counting) return;
+    const day = todayIsoDate();
+    if (c.day !== day) { c.day = day; c.baseUsedSec = 0; c.daySec = 0; }   // полночь UTC: дальше — в новую дату
+    c.usedSec++; c.daySec++;
+    try { talkUsageTick(1); } catch (_) {}
+    if (++c.sinceFlush >= TALK.usageFlushSec) { c.sinceFlush = 0; try { talkUsageFlush(); } catch (_) {} }
+    const q = _talkQuotaNow();
+    if (q > c.quotaSec) { c.quotaSec = q; c.unlimited = q === Infinity; }   // повышение тарифа — сразу; понижение — со следующего звонка
+    _talkSyncTimer();
+    if (!c.unlimited && c.baseUsedSec + c.daySec >= c.quotaSec) _talkTimeUp();
+  }
+  // ── Пауза звонка: 'offline' (вернётся сеть — продолжим сами) и 'ai' («Комдори задумался…», кнопка «Ещё раз»).
+  //    Пока пауза — микрофон и озвучка выключены, минуты стоят, поздние ответы отброшены (turnSeq). Пауза
+  //    вкладки/«назад»/перехода по уведомлению — хуки E6 (talkPause) — ложится на ту же фазу 'paused'. ──
+  function _talkPause(reason, from) {
+    const c = _talk; if (!c || c.phase === 'ended' || c.phase === 'setup') return;
+    if (c.phase === 'paused') {
+      if (reason === 'offline' && c.pauseReason === 'ai') { c.pauseReason = 'offline'; _talkSync(); }
+      return;
+    }
+    const was = from || c.phase;
+    _talkListenCancel();
+    c.holding = false;
+    clearTimeout(c.bargeTimer);
+    if (was === 'komdori') { c.speakSeq++; c.replayOnResume = c.sayAfter !== 'end'; }
+    try { stopSpeech(); } catch (_) {}
+    c.askSeq++; c.turnSeq++;
+    c.talking = false;
+    c.pausedFrom = was; c.pauseReason = reason;
+    _talkPhase('paused');
+    try { talkUsageFlush(); } catch (_) {}
+  }
+  function _talkContinue() {
+    const c = _talk; if (!c || c.phase !== 'paused') return;
+    if (c.pauseReason === 'offline' && navigator.onLine === false) return;
+    const from = c.pausedFrom;
+    c.pauseReason = ''; c.pausedFrom = '';
+    if (c.pending) { _talkAsk(c.pending); return; }          // реплика без ответа — ещё раз (один запрос на возврат)
+    if (c.timeUp) { _talkFarewell(); return; }
+    if (from === 'komdori' && c.sayAfter === 'end') { talkCallEnd(c.sayReason); return; }
+    if (c.replayOnResume && c.lastKo) { c.replayOnResume = false; _talkSay(c.lastKo, { after: 'turn', replay: true }); return; }
+    talkStudentTurn();
+  }
+  // ── Кнопки звонка ──
+  function talkNative() {
+    const c = _talk; if (!c || (c.phase !== 'listening' && c.phase !== 'komdori')) return;
+    c.nativeNext = true;
+    if (c.micMode === 'keyboard' || c.kbOpen) {
+      if (c.phase === 'komdori') { c.speakSeq++; c.talking = false; try { stopSpeech(); } catch (_) {} _talkPhase('listening'); }
+      _talkOpenKeyboard(); return;
+    }
+    if (c.micMode === 'hold') {        // «Зажми»: следующее удержание — на языке интерфейса
+      if (c.phase === 'komdori') { _talkBargeIn(() => _talkSync()); return; }
+      _talkListenCancel(); _talkSync(); return;
+    }
+    const go = () => { _talkListenCancel(); _talkListenStart({ native: true }); };
+    if (c.phase === 'komdori') { _talkBargeIn(go); return; }
+    go();
+  }
+  function talkToggleKeyboard() {
+    const c = _talk; if (!c || c.phase === 'ended' || c.phase === 'setup' || c.micMode === 'keyboard') return;
+    c.kbOpen = !c.kbOpen; c.kbAuto = false;
+    if (c.kbOpen) { _talkListenCancel(); if (c.phase === 'listening') _talkPhase('listening'); _talkFocusInput(); }
+    else { c.nativeNext = false; _talkSync(); if (c.phase === 'listening' && c.micMode === 'free') _talkListenStart({ auto: true }); }
+  }
+  function talkSendText() {
+    const c = _talk; if (!c) return;
+    const inp = document.getElementById('talk-input'); if (!inp) return;
+    const text = String(inp.value || '').replace(/\s+/g, ' ').trim().slice(0, TALK_CALL.maxUserChars);
+    if (!text || (c.phase !== 'listening' && c.phase !== 'komdori')) return;
+    if (c.phase === 'komdori') {
+      c.speakSeq++; c.talking = false; try { stopSpeech(); } catch (_) {}
+      if (c.sayAfter === 'end') { talkCallEnd(c.sayReason); return; }
+    }
+    _talkListenCancel();
+    clearTimeout(c.bargeTimer);
+    inp.value = '';
+    _talkUserTurn(text, { voice: false, native: c.nativeNext });
+  }
+  // 🔊 у реплики Комдори и 🔁: сначала гасим микрофон, потом talkSpeak; машина ждёт конца повтора
+  function talkReplay(idx) {
+    const c = _talk; if (!c) return;
+    const b = c.bubbles[idx]; if (!b || !b.ko) return;
+    if (c.phase === 'ended') { talkSpeak(b.ko, { slow: c.mood === 'kind' }); return; }
+    if (c.phase !== 'listening' && c.phase !== 'komdori') return;
+    _talkListenCancel();
+    c.holding = false;
+    clearTimeout(c.bargeTimer);
+    _talkSay(b.ko, { after: c.phase === 'komdori' ? c.sayAfter : 'turn', reason: c.sayReason, replay: true });
+  }
+  function talkRepeatLast() {
+    const c = _talk; if (!c || !c.lastKo) return;
+    const idx = c.bubbles.map(b => b.ko).lastIndexOf(c.lastKo);
+    if (idx >= 0) talkReplay(idx);
+  }
+  function talkToggleCc() {
+    const c = _talk; if (!c || c.textMode) return;
+    c.cc = !c.cc;
+    _talkPrefsSave();
+    _talkSync();
+  }
+  function talkHangup() { talkCallEnd('hangup'); }
+  // «Назад» в шапке звонка. Подтверждение «Завершить звонок?» с историей/Esc — хуки E6 (talkConfirmEnd);
+  // здесь: звонка нет — закрыть страницу, звонок идёт — завершить.
+  function talkBack() {
+    const c = _talk;
+    if (!c || c.phase === 'setup' || c.phase === 'ended') { talkClose(); return; }
+    talkCallEnd('back');
+  }
+  // ── Конец звонка (один на звонок): всё гасим, остаток минут — в норму, дальше итог (E5) ──
+  function _talkTeardown(c) {
+    clearInterval(c.tickTimer); clearTimeout(c.bargeTimer);
+    c.speakSeq++; c.askSeq++; c.turnSeq++;
+    const h = c.listen;
+    c.listen = null; c.listenSeq++; c.micActive = false; c.holding = false; c.talking = false;
+    if (h) { try { h.cancel(); } catch (_) {} }
+    try { stopSpeech(); } catch (_) {}
+    if (c.onOnline) window.removeEventListener('online', c.onOnline);
+    if (c.onOffline) window.removeEventListener('offline', c.onOffline);
+    c.onOnline = c.onOffline = null;
+    try { talkUsageFlush(); } catch (_) {}
+  }
+  // reason: 'hangup' | 'back' | 'time' | 'ai_fail' | 'ai_end' | 'talk_ip' | 'talk_budget'
+  function talkCallEnd(reason) {
+    const c = _talk; if (!c || c.phase === 'setup' || c.phase === 'ended') return;
+    c.endReason = String(reason || 'hangup');
+    _talkTeardown(c);
+    c.phase = 'ended'; c.phaseAt = Date.now(); c.pending = null;
+    if (c.ccBefore !== undefined) { c.cc = c.ccBefore; c.ccBefore = undefined; }     // принудительные субтитры — только на звонок
+    if (c.textAuto) { c.textMode = false; c.textAuto = false; }
+    const left = Math.max(0, c.baseUsedSec + c.daySec);
+    c.usage = Object.assign({}, c.usage || {}, { usedSec: left });                   // норма на «Ещё разговор» и экран настройки
+    const msg = { talk_ip: 'talk.setup.blockIp', talk_budget: 'talk.setup.blockBudget', ai_fail: 'talk.err.ai' }[c.endReason];
+    if (msg) toast(t(msg), 'var(--berry)');
+    // Итог звонка рисует E5 (talkSummaryShow); пока его нет — возвращаем экран настройки с новым остатком
+    if (typeof talkSummaryShow === 'function') talkSummaryShow();
+    else _talkBackToSetup();
+  }
+  function _talkBackToSetup() {
+    const c = _talk; if (!c) return;
+    c.phase = 'setup';
+    _talkRenderSetup();
+  }
+  // ── Отрисовка звонка ──
+  function _talkPhase(p) {
+    const c = _talk; if (!c) return;
+    if (c.phase !== p) { c.phase = p; c.phaseAt = Date.now(); }
+    _talkSync();
+  }
+  function _talkRenderCall() {
+    const c = _talk;
+    const shell = document.getElementById('talk-shell');
+    if (!c || !shell) return;
+    shell.innerHTML = `
+      <header class="talk-head">
+        <div class="talk-head-inner">
+          <button type="button" class="chat-back-btn" data-talk="back" aria-label="${escHtml(t('talk.call.endAria'))}"><i class="fa-solid fa-arrow-left" aria-hidden="true"></i></button>
+          <div class="talk-head-title">
+            <div class="talk-head-t">곰도리 · ${escHtml(t('talk.mood.' + c.mood + '.short'))}</div>
+            <div class="talk-head-s"><span class="talk-dot" aria-hidden="true"></span><span class="talk-head-s-tx">${escHtml(t('talk.call.online'))} · ${_TALK_UI_EMOJI[c.topic]} ${escHtml(t('talk.topic.' + c.topic + '.short'))}</span></div>
+          </div>
+          <span class="talk-chip" id="talk-timer" role="timer" aria-label="${escHtml(t('talk.call.timerAria'))}"><i class="fa-regular fa-clock" aria-hidden="true"></i> <span id="talk-timer-tx">--:--</span></span>
+          <button type="button" class="talk-cc" id="talk-cc" data-talk="cc" aria-pressed="true" aria-label="${escHtml(t('talk.setup.cc'))}">CC</button>
+        </div>
+      </header>
+      <div class="talk-stage">
+        <div class="talk-face-wrap talk-face-call" id="talk-call-face">${kdFaceSvg()}</div>
+        <div class="talk-status" id="talk-status" role="status"><span class="talk-wave" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span><span id="talk-status-tx"></span></div>
+      </div>
+      <div class="talk-log" id="talk-log" aria-live="polite" aria-relevant="additions"></div>
+      <div class="talk-notice" id="talk-notice" hidden>
+        <p class="talk-notice-t" id="talk-notice-t"></p>
+        <div class="talk-notice-btns">
+          <button type="button" class="btn btn-primary" id="talk-notice-go" data-talk="retry"></button>
+          <button type="button" class="btn btn-ghost" data-talk="hangup">${t('talk.btn.end')}</button>
+        </div>
+      </div>
+      <div class="talk-ctrl" id="talk-ctrl">
+        <p class="talk-kb-hint" id="talk-kb-hint" hidden></p>
+        <form class="talk-kbd" id="talk-kbd" hidden>
+          <input id="talk-input" class="ai-input-field talk-input" maxlength="${TALK_CALL.maxUserChars}" autocomplete="off" enterkeyhint="send" aria-label="${escHtml(t('talk.call.kbAria'))}">
+          <button type="submit" class="ai-send-fab" id="talk-send" aria-label="${escHtml(t('ui.111'))}"><i class="fa-solid fa-paper-plane" aria-hidden="true"></i></button>
+        </form>
+        <button type="button" class="talk-mic" id="talk-mic"><i class="fa-solid fa-microphone" aria-hidden="true"></i><span id="talk-mic-tx"></span></button>
+        <div class="talk-tools">
+          <button type="button" class="talk-tool" id="talk-native" data-talk="native" aria-label="${escHtml(t('talk.call.nativeAria'))}"><span aria-hidden="true">🆘</span> ${t('talk.call.native')}</button>
+          <button type="button" class="talk-tool" id="talk-kb" data-talk="kb" aria-label="${escHtml(t('talk.call.kbAria'))}" aria-pressed="false"><i class="fa-regular fa-keyboard" aria-hidden="true"></i></button>
+          <button type="button" class="talk-tool" id="talk-again" data-talk="repeat" aria-label="${escHtml(t('talk.call.repeatAria'))}"><i class="fa-solid fa-rotate-left" aria-hidden="true"></i></button>
+          <button type="button" class="talk-tool talk-tool-end" id="talk-end" data-talk="hangup" aria-label="${escHtml(t('talk.call.hangupAria'))}"><i class="fa-solid fa-phone-slash" aria-hidden="true"></i></button>
+        </div>
+      </div>`;
+    shell.onclick = _talkCallClick;
+    const mic = document.getElementById('talk-mic');
+    mic.addEventListener('pointerdown', _talkMicDown);
+    ['pointerup', 'pointercancel', 'lostpointercapture'].forEach(ev => mic.addEventListener(ev, _talkMicUp));
+    mic.addEventListener('click', _talkMicTap);
+    mic.addEventListener('contextmenu', (e) => e.preventDefault());
+    mic.addEventListener('keydown', (e) => {
+      if ((e.key === ' ' || e.key === 'Enter') && _talk && _talk.micMode === 'hold') { e.preventDefault(); if (!e.repeat) _talkMicDown(null); }
+    });
+    mic.addEventListener('keyup', (e) => {
+      if ((e.key === ' ' || e.key === 'Enter') && _talk && _talk.micMode === 'hold') { e.preventDefault(); _talkMicUp(); }
+    });
+    document.getElementById('talk-kbd').addEventListener('submit', (e) => { e.preventDefault(); talkSendText(); });
+    _talkSync();
+    _talkSyncTimer();
+    if (c.micMode === 'keyboard') _talkFocusInput();
+    else { try { mic.focus({ preventScroll: true }); } catch (_) {} }
+  }
+  function _talkCallClick(e) {
+    const el = e.target.closest('[data-talk]');
+    if (!el || !e.currentTarget.contains(el) || el.disabled) return;
+    const a = el.dataset.talk;
+    if (a === 'back') talkBack();
+    else if (a === 'cc') talkToggleCc();
+    else if (a === 'native') talkNative();
+    else if (a === 'kb') talkToggleKeyboard();
+    else if (a === 'repeat') talkRepeatLast();
+    else if (a === 'hangup') talkHangup();
+    else if (a === 'replay') talkReplay(Number(el.dataset.idx));
+    else if (a === 'retry') { if (_talk && _talk.pauseReason === 'ai') talkRetryAsk(); else _talkContinue(); }
+  }
+  function _talkLogAppend(el) {
+    const c = _talk, log = document.getElementById('talk-log');
+    if (!log) return;
+    if (c && c.liveEl && c.liveEl.parentNode === log) log.insertBefore(el, c.liveEl); else log.appendChild(el);
+    log.scrollTop = log.scrollHeight;
+  }
+  // Текст ИИ и ученицы — только textContent (никакого innerHTML с чужим текстом)
+  function _talkAddKomdori(line) {
+    const c = _talk; if (!c) return -1;
+    const idx = c.bubbles.length;
+    c.bubbles.push({ ko: line.ko });
+    const b = document.createElement('div');
+    b.className = 'talk-b talk-b-k';
+    const play = document.createElement('button');
+    play.type = 'button'; play.className = 'talk-play';
+    play.dataset.talk = 'replay'; play.dataset.idx = String(idx);
+    play.setAttribute('aria-label', t('talk.call.replayAria'));
+    play.innerHTML = '<i class="fa-solid fa-volume-high" aria-hidden="true"></i>';
+    const ko = document.createElement('div');
+    ko.className = 'ko talk-ko'; ko.lang = 'ko'; ko.textContent = line.ko;
+    b.append(play, ko);
+    if (line.tr) { const tr = document.createElement('div'); tr.className = 'talk-tr'; tr.textContent = '[' + line.tr + ']'; b.append(tr); }
+    if (line.ru) { const ru = document.createElement('div'); ru.className = 'talk-ru'; ru.textContent = line.ru; b.append(ru); }
+    _talkLogAppend(b);
+    return idx;
+  }
+  function _talkAddMe(text, voice, native) {
+    const b = document.createElement('div');
+    b.className = 'talk-b talk-b-me';
+    if (voice) {
+      const h = document.createElement('div');
+      h.className = 'talk-heard';
+      h.innerHTML = '<i class="fa-solid fa-microphone" aria-hidden="true"></i> ';
+      h.append(document.createTextNode(t('talk.call.heard')));
+      b.append(h);
+    }
+    const tx = document.createElement('div');
+    tx.className = 'talk-me-tx';
+    if (!native) tx.lang = 'ko';
+    tx.textContent = text;
+    b.append(tx);
+    _talkLogAppend(b);
+    return b;
+  }
+  function _talkAddFix(turn, fix) {
+    const el = document.createElement('div');
+    el.className = 'talk-fix';
+    el.append(document.createTextNode('💡 ' + t('talk.call.better') + ' '));
+    const g = document.createElement('b');
+    g.className = 'ko'; g.lang = 'ko'; g.textContent = fix.good;
+    el.append(g);
+    if (fix.why) el.append(document.createTextNode(' — ' + fix.why));
+    if (turn.el && turn.el.isConnected) turn.el.after(el); else _talkLogAppend(el);
+  }
+  // Живой текст распознавания (браузер; в APK его нет) — «призрачный» пузырь ученицы
+  function _talkLive(txt) {
+    const c = _talk, log = document.getElementById('talk-log');
+    if (!c || !log) return;
+    const s = String(txt || '').replace(/\s+/g, ' ').trim().slice(0, TALK_CALL.maxUserChars);
+    if (!s) { if (c.liveEl) { c.liveEl.remove(); c.liveEl = null; } return; }
+    if (!c.liveEl || !c.liveEl.isConnected) {
+      c.liveEl = document.createElement('div');
+      c.liveEl.className = 'talk-b talk-b-me talk-live';
+      c.liveEl.lang = 'ko';
+      log.appendChild(c.liveEl);
+    }
+    c.liveEl.textContent = s;
+    log.scrollTop = log.scrollHeight;
+  }
+  function _talkSyncTimer() {
+    const c = _talk, tx = document.getElementById('talk-timer-tx');
+    if (!c || !tx || c.phase === 'setup') return;
+    const sec = c.unlimited ? c.usedSec : Math.max(0, c.quotaSec - c.baseUsedSec - c.daySec);
+    tx.textContent = Math.floor(sec / 60) + ':' + String(Math.floor(sec % 60)).padStart(2, '0');
+    const chip = document.getElementById('talk-timer');
+    if (chip) chip.classList.toggle('paused', c.phase === 'paused' || c.phase === 'thinking');
+  }
+  // Привести экран звонка к состоянию _talk (разметку не перестраиваем: удержание микрофона не рвётся)
+  function _talkSync() {
+    const c = _talk; if (!c || c.phase === 'setup') return;
+    const $ = (id) => document.getElementById(id);
+    if (!$('talk-status')) return;
+    const ph = c.phase;
+    kdFaceSet($('talk-call-face'), {
+      mood: c.mood,
+      talking: ph === 'komdori' && c.talking,
+      listening: ph === 'listening' && c.micActive,
+      thinking: ph === 'thinking' || ph === 'recognizing' || (ph === 'komdori' && !c.talking)
+    });
+    let st = '';
+    if (ph === 'komdori') st = t(c.talking ? 'talk.st.speaking' : 'talk.st.thinking');
+    else if (ph === 'listening') {
+      if (c.micActive) st = t(c.nativeNext ? 'talk.st.native' : 'talk.st.listening');
+      else if (c.hint === 'again') st = t('talk.st.again');
+      else if (c.hint === 'hold') st = t('talk.st.holdShort');
+      else if (c.nativeNext) st = t('talk.st.native');
+      else st = t(c.micMode === 'keyboard' || c.kbOpen ? 'talk.st.yourType' : (c.micMode === 'hold' ? 'talk.st.yourHold' : 'talk.st.yourTap'));
+    }
+    else if (ph === 'recognizing') st = t('talk.st.recognizing');
+    else if (ph === 'thinking') st = t('talk.st.thinking');
+    else if (ph === 'paused') st = t({ offline: 'talk.st.offline', ai: 'talk.st.aiFail' }[c.pauseReason] || 'talk.st.paused');
+    const stx = $('talk-status-tx'); if (stx) stx.textContent = st;
+    const status = $('talk-status');
+    if (status) {
+      status.classList.toggle('wave', (ph === 'komdori' && c.talking) || (ph === 'listening' && c.micActive));
+      status.classList.toggle('warn', ph === 'paused' || c.hint === 'again');
+    }
+    const log = $('talk-log'); if (log) log.classList.toggle('talk-nocc', !c.cc);
+    const cc = $('talk-cc');
+    if (cc) { cc.classList.toggle('on', c.cc); cc.setAttribute('aria-pressed', String(c.cc)); cc.setAttribute('aria-disabled', String(c.textMode)); }
+    // Своя плашка — только для пауз сети и «Комдори задумался»; остальные паузы рисует E6 (карточка «Продолжим?»)
+    const mine = ph === 'paused' && (c.pauseReason === 'offline' || c.pauseReason === 'ai');
+    const notice = $('talk-notice');
+    if (notice) {
+      notice.hidden = !mine;
+      if (mine) {
+        $('talk-notice-t').textContent = st;
+        const go = $('talk-notice-go');
+        go.hidden = c.pauseReason === 'offline';
+        go.textContent = t('talk.btn.retry');
+      }
+    }
+    const ctrl = $('talk-ctrl'); if (ctrl) ctrl.hidden = mine || ph === 'ended';
+    const yourTurn = ph === 'listening' || ph === 'komdori';
+    const mic = $('talk-mic');
+    if (mic) {
+      mic.hidden = c.micMode === 'keyboard';
+      mic.disabled = !yourTurn;
+      mic.classList.toggle('on', ph === 'listening' && c.micActive);
+      mic.classList.toggle('hold', c.micMode === 'hold');
+      let lbl;
+      if (ph === 'recognizing') lbl = t('talk.st.recognizing');
+      else if (ph === 'thinking') lbl = t('talk.st.thinking');
+      else if (c.micMode === 'hold') lbl = t(ph === 'listening' && c.micActive ? 'talk.mic.holdOn' : 'talk.mode.hold');
+      else lbl = t(ph === 'listening' && c.micActive ? 'talk.mic.done' : 'talk.mic.tap');
+      const mtx = $('talk-mic-tx'); if (mtx) mtx.textContent = lbl;
+    }
+    const kbHint = $('talk-kb-hint');
+    if (kbHint) {
+      const k = c.micMode === 'keyboard' ? (c.kbHint || (_talkPlatformMic() === 'ios-standalone' ? 'ios' : 'unavailable')) : '';
+      kbHint.hidden = !k;
+      kbHint.textContent = k ? t(k === 'ios' ? 'talk.mode.iosHint' : 'talk.kb.' + k) : '';
+    }
+    const kbd = $('talk-kbd');
+    if (kbd) {
+      kbd.hidden = !(c.micMode === 'keyboard' || c.kbOpen);
+      const inp = $('talk-input');
+      if (inp) { inp.placeholder = t(c.nativeNext ? 'talk.kb.native' : 'talk.kb.ph'); inp.lang = c.nativeNext ? APP_LANG : 'ko'; inp.disabled = !yourTurn; }
+      const send = $('talk-send'); if (send) send.disabled = !yourTurn;
+    }
+    const nat = $('talk-native'); if (nat) { nat.disabled = !yourTurn; nat.classList.toggle('on', c.nativeNext); nat.setAttribute('aria-pressed', String(!!c.nativeNext)); }
+    const kb = $('talk-kb'); if (kb) { kb.hidden = c.micMode === 'keyboard'; kb.setAttribute('aria-pressed', String(!!c.kbOpen)); kb.disabled = ph === 'ended'; }
+    const again = $('talk-again'); if (again) again.disabled = !yourTurn || !c.lastKo;
+    _talkSyncTimer();
+  }
+  // ── /Разговор с Комдори: звонок ──
 
   const _skState = { view: 'home', uni: null, info: null };
   function openStudyKr() { _skState.view = 'home'; switchScreen('studykr'); }
