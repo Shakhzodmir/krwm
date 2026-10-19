@@ -1308,6 +1308,12 @@
     'kd.sayNext':  { ru: 'Сказать и продолжить', en: 'Say it and continue', uz: 'Ayting va davom eting' },
     'kd.hangup':   { ru: 'Положить трубку', en: 'Hang up', uz: 'Tugatish' },
     'kd.done':     { ru: 'Ты справилась со звонком! Комдори гордится тобой 🐻💛', en: 'You handled the call! Komdori is proud of you 🐻💛', uz: 'Qoʻngʻiroqni uddaladingiz! Komdori sizdan faxrlanadi 🐻💛' },
+    'pod.tip':     { ru: 'Сначала слушай без субтитров, потом включи их в плеере (значок CC). Незнакомое слово — на паузу и в словарик 💛', en: 'Listen first without subtitles, then turn them on in the player (CC). Pause on new words and save them 💛', uz: 'Avval subtitrsiz tinglang, keyin pleyerda yoqing (CC). Notanish soʻzda pauza qilib, lugʻatga saqlang 💛' },
+    'pod.play':    { ru: 'Включить', en: 'Play', uz: 'Ijro etish' },
+    'pod.openYt':  { ru: 'Открыть на YouTube', en: 'Open on YouTube', uz: 'YouTubeʼda ochish' },
+    'pod.lvl.beg': { ru: 'Начинающим', en: 'Beginners', uz: 'Boshlovchilar' },
+    'pod.lvl.mid': { ru: 'A2–B1', en: 'A2–B1', uz: 'A2–B1' },
+    'pod.foot':    { ru: 'Видео принадлежат своим авторам и играют с YouTube — мы их не храним. Если ролик не открывается, нажми «Открыть на YouTube».', en: 'Videos belong to their creators and stream from YouTube — we do not host them. If a video does not load, tap “Open on YouTube”.', uz: 'Videolar mualliflarga tegishli va YouTubeʼdan ijro etiladi — biz ularni saqlamaymiz. Video ochilmasa, «YouTubeʼda ochish» tugmasini bosing.' },
     'profile.studyKr':     { ru: 'Учёба в Корее', en: 'Studying in Korea', uz: 'Koreyada oʻqish' },
     'profile.studyKr.sub': { ru: 'Вузы · визы · стипендии · собеседование 면접', en: 'Universities · visas · scholarships · interview 면접', uz: 'OTMlar · vizalar · stipendiyalar · suhbat 면접' },
     'profile.textbook':     { ru: 'Учебник', en: 'Textbook', uz: 'Darslik' },
@@ -2635,6 +2641,7 @@
     if (document.getElementById('user-profile-page')) closeUserProfile();
     if (document.getElementById('chat-page')) closeChat();
     document.querySelectorAll('.chat-popup').forEach(el => el.remove());
+    if (name !== 'selfstudy') { try { podStopAll(); } catch (_) {} }   // видео подкаста не должно играть на другом экране
     document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
     document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
     const scr = document.getElementById('screen-' + name);
@@ -7011,7 +7018,7 @@
   // Версия сборки: держать ВРУЧНУЮ синхронной с ?v= в index.html при каждом деплое
   // (те же 3 места — stylesheet/preload/script). Используется тихим автообновлением
   // ниже — сама загрузка кода по-прежнему идёт через ?v=.
-  const APP_VERSION = '20261002a';
+  const APP_VERSION = '20261019a';
   // ── Тихое автообновление (25.08.2026, вместо попапа «Вышло обновление!») ──
   // Узнав из облака про новую версию (appVersion пишет первый клиент нового деплоя,
   // promptVersion — кнопка «Оповестить» в админке), вкладка НЕ дёргает ученицу:
@@ -30636,8 +30643,68 @@
     { k:'ss-verbs',   ico:'🧩', t:'Неправильные глаголы', t_uz:'Notoʻgʻri feʼllar', s:'불규칙 · 8 типов + «не путать»', s_uz:'불규칙 · 8 tur + «adashtirmaslik»', groups:SS_IRREGULAR, gameLvl:1 },
     { k:'ss-pron',    ico:'🔤', t:'Произношение', t_uz:'Talaffuz',        s:'받침 · 비음화 · 구개음화', groups:SS_PRON, game:false },
     { k:'ss-phrases', ico:'🗣️', t:'Полезные фразы', t_uz:'Foydali iboralar',      s:'каждый день · кафе · магазин · дорога', s_uz:'har kuni · kafe · doʻkon · yoʻl', groups:SS_PHRASES, gameLvl:0 },
-    { k:'ss-numbers', ico:'🔢', t:'Числа, время, даты', t_uz:'Sonlar, vaqt, sanalar',  s:'Дни · время · деньги · счётные слова', s_uz:'Kunlar · vaqt · pul · sanoq soʻzlari', groups:SS_NUMS, gameLvl:0 }
+    { k:'ss-numbers', ico:'🔢', t:'Числа, время, даты', t_uz:'Sonlar, vaqt, sanalar',  s:'Дни · время · деньги · счётные слова', s_uz:'Kunlar · vaqt · pul · sanoq soʻzlari', groups:SS_NUMS, gameLvl:0 },
+    { k:'ss-podcasts', ico:'🎧', t:'Подкасты', t_uz:'Podkastlar', s:'Медленный корейский · аудирование · YouTube', s_uz:'Sekin koreys tili · tinglab tushunish · YouTube', game:false, custom:'podcasts' }
   ];
+  // ── Подкасты: ролики YouTube других авторов (встраиваем, не храним). ID проверены запросом oEmbed 19.10.2026 —
+  // каждый ролик отдаёт метаданные (встраивание разрешено). Роликов с запретом встраивания (oEmbed 401) здесь нет.
+  const SS_PODCASTS = [
+    { id:'ls4tupCF2Sc', title:'Korean Café Culture · Slow Korean Podcast', by:'Ria Korea 리아 코리아', lvl:'mid', sub:'Кафе-культура в Корее', sub_uz:'Koreyada kafe madaniyati' },
+    { id:'so6Ej6wviQI', title:'Studying Korean Alone? · Slow Korean Podcast', by:'Ria Korea 리아 코리아', lvl:'mid', sub:'Как учить корейский самостоятельно', sub_uz:'Koreys tilini mustaqil oʻrganish' },
+    { id:'JC332gyLcOA', title:'Practice Listening in Slow Korean · Ep.1', by:'Learn Korean with Songs (Bom)', lvl:'beg', sub:'Эпизод 1 · знакомство, медленная речь', sub_uz:'1-epizod · tanishuv, sekin nutq' },
+    { id:'MHO9U-DEqoU', title:'Slow Korean Podcast for Beginners · Inside & Outside', by:'Pronounce Korean', lvl:'beg', sub:'Внутри и снаружи · медленная речь', sub_uz:'Ichkarida va tashqarida · sekin nutq' },
+    { id:'kUmMZOh9zhs', title:'Learn Korean Through Hobbies', by:'Pronounce Korean', lvl:'beg', sub:'Хобби и увлечения', sub_uz:'Xobbi va qiziqishlar' },
+    { id:'Lk_ilvSGZN8', title:'Korean Podcast #3 · Slow & Easy Listening', by:'Spark Korean', lvl:'beg', sub:'Выпуск №3 · медленно и просто, есть PDF', sub_uz:'3-son · sekin va oddiy, PDF bor' },
+    { id:'g-gaBpYodLM', title:'3+ Hours of Korean Listening Practice (50 Dialogues)', by:'Small Talk in Korean', lvl:'beg', sub:'50 диалогов · медленно и в обычном темпе, 3+ часа', sub_uz:'50 ta dialog · sekin va oddiy tezlikda, 3+ soat' },
+    { id:'3LUEdsNeBVM', title:'Slow Korean for Sleep #1', by:'The Real K-Talk', lvl:'beg', sub:'Час спокойного медленного аудирования', sub_uz:'Bir soat sokin, sekin tinglash' }
+  ];
+  let _podOpen = null;
+  function podThumbHtml(i) {
+    const p = SS_PODCASTS[i];
+    return `<button type="button" class="pod-thumb" data-pod="${i}" aria-label="${escHtml(t('pod.play'))}: ${escHtml(p.title)}">
+      <img src="https://i.ytimg.com/vi/${p.id}/hqdefault.jpg" alt="" loading="lazy" decoding="async" onerror="this.style.display='none'">
+      <span class="pod-play" aria-hidden="true"><i class="fa-solid fa-play"></i></span></button>`;
+  }
+  function podBind(root) {
+    root.querySelectorAll('.pod-thumb').forEach(b => b.addEventListener('click', () => podPlay(+b.getAttribute('data-pod'))));
+  }
+  function podStopAll() {
+    if (_podOpen === null) return;
+    const media = document.getElementById('pod-media-' + _podOpen);
+    const i = _podOpen;
+    _podOpen = null;
+    if (media) { media.innerHTML = podThumbHtml(i); podBind(media); }
+  }
+  function podPlay(i) {
+    const p = SS_PODCASTS[i]; if (!p) return;
+    podStopAll();
+    try { stopSpeech(); } catch (_) {}
+    const media = document.getElementById('pod-media-' + i); if (!media) return;
+    _podOpen = i;
+    media.innerHTML = `<iframe src="https://www.youtube-nocookie.com/embed/${p.id}?autoplay=1&rel=0&playsinline=1" title="${escHtml(p.title)}" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe>`;
+  }
+  function renderSsPodcasts(slot, sec) {
+    _podOpen = null;
+    slot.innerHTML = `
+      <button type="button" class="topik-back" onclick="ssHome()"><i class="fa-solid fa-chevron-left"></i> ${t('ui.180')}</button>
+      <div class="topik-sec-head"><h2 class="topik-sec-title">${sec.ico} ${skLoc(sec,'t')}</h2><p class="topik-sec-sub">${skLoc(sec,'s')}</p></div>
+      <div class="pod-tip">${escHtml(t('pod.tip'))}</div>
+      <div class="pod-list">${SS_PODCASTS.map((p, i) => `
+        <article class="pod-card">
+          <div class="pod-media" id="pod-media-${i}">${podThumbHtml(i)}</div>
+          <div class="pod-meta">
+            <div class="pod-title">${escHtml(p.title)}</div>
+            <div class="pod-sub">${escHtml(skLoc(p, 'sub'))}</div>
+            <div class="pod-by">${escHtml(p.by)}</div>
+            <div class="pod-row">
+              <span class="pod-lvl">${escHtml(t('pod.lvl.' + p.lvl))}</span>
+              <a class="pod-yt" href="https://www.youtube.com/watch?v=${p.id}" target="_blank" rel="noopener noreferrer">${escHtml(t('pod.openYt'))}</a>
+            </div>
+          </div>
+        </article>`).join('')}</div>
+      <div class="pod-foot">${escHtml(t('pod.foot'))}</div>`;
+    podBind(slot);
+  }
 
   function ssGroups(sec) {
     let base;
@@ -30687,6 +30754,7 @@
   function renderSsSection(slot, k) {
     const sec = SELFSTUDY.find(s => s.k === k);
     if (!sec) { ssHome(); return; }
+    if (sec.custom === 'podcasts') { renderSsPodcasts(slot, sec); return; }
     const groups = ssGroups(sec);
     const total = groups.reduce((n, g) => n + g.words.length, 0);
     slot.innerHTML = `
@@ -41176,7 +41244,38 @@
     { artist:'SEVENTEEN', song:'Very Nice (아주 NICE)', line:'아주 ___', blank:'나이스', options:['나이스','프리티','해피','스마일'], translation:'Очень ___', blankRu:'найс (классно)' },
     { artist:'(G)I-DLE', song:'Queencard (퀸카)', line:'I’m a ___', blank:'퀸카', options:['퀸카','스타','천사','공주'], translation:'Я — ___', blankRu:'королева (квинка)' },
     { artist:'BLACKPINK', song:'As If It’s Your Last (마지막처럼)', line:'___처럼', blank:'마지막', options:['마지막','처음','어제','내일'], translation:'Как в ___ раз', blankRu:'последний' },
-    { artist:'Zico', song:'Any Song (아무노래)', line:'아무 ___나 일단 틀어', blank:'노래', options:['노래','영화','음식','사진'], translation:'Включи пока любую ___', blankRu:'песню' }
+    { artist:'Zico', song:'Any Song (아무노래)', line:'아무 ___나 일단 틀어', blank:'노래', options:['노래','영화','음식','사진'], translation:'Включи пока любую ___', blankRu:'песню' },
+    // Ниже — собственные предложения со словом из названия песни (не цитаты текстов): повод — трек, слово — из его названия/темы.
+    { artist:'BTS', song:'Spring Day (봄날)', line:'따뜻한 ___이 오면 꽃이 펴요', blank:'봄날', options:['봄날','겨울밤','여름비','가을바람'], translation:'Когда приходит тёплый ___, расцветают цветы', blankRu:'весенний день' },
+    { artist:'BTS', song:'Blood Sweat & Tears (피 땀 눈물)', line:'운동하면 ___이 나요', blank:'땀', options:['땀','눈','꿈','별'], translation:'Когда занимаешься спортом, выступает ___', blankRu:'пот' },
+    { artist:'BTS', song:'Mikrokosmos (소우주)', line:'밤하늘에 ___이 반짝반짝 빛나요', blank:'별', options:['별','꽃','비','눈'], translation:'В ночном небе мерцают ___', blankRu:'звёзды' },
+    { artist:'BTS', song:'Butter (버터)', line:'빵에 ___를 발라 먹어요', blank:'버터', options:['버터','소금','우유','물'], translation:'Я мажу на хлеб ___', blankRu:'масло' },
+    { artist:'BTS', song:'Boy With Luv (작은 것들을 위한 시)', line:'책에서 아름다운 ___를 읽었어요', blank:'시', options:['시','집','길','옷'], translation:'Я прочитала в книге красивое ___', blankRu:'стихотворение' },
+    { artist:'BTS', song:'Fake Love', line:'그 드라마는 ___ 이야기예요', blank:'사랑', options:['사랑','요리','축구','시험'], translation:'Эта дорама — история про ___', blankRu:'любовь' },
+    { artist:'BTS', song:'Yet To Come', line:'꿈을 이루는 ___를 상상해요', blank:'미래', options:['미래','과거','어제','아침'], translation:'Я представляю ___, где мечты сбываются', blankRu:'будущее' },
+    { artist:'BTS', song:'Life Goes On', line:'힘든 날에도 ___은 계속돼요', blank:'삶', options:['삶','꿈','밤','비'], translation:'Даже в трудные дни ___ продолжается', blankRu:'жизнь' },
+    { artist:'Stray Kids', song:'God’s Menu (神메뉴)', line:'식당에서 ___를 보고 음식을 골라요', blank:'메뉴', options:['메뉴','지도','표','책'], translation:'В ресторане смотрю ___ и выбираю еду', blankRu:'меню' },
+    { artist:'Stray Kids', song:'Thunderous (소리꾼)', line:'큰 ___가 들려서 깜짝 놀랐어요', blank:'소리', options:['소리','냄새','빛','맛'], translation:'Я вздрогнула, услышав громкий ___', blankRu:'звук' },
+    { artist:'Stray Kids', song:'Back Door', line:'열쇠로 ___을 열어요', blank:'문', options:['문','발','비','귀'], translation:'Открываю ключом ___', blankRu:'дверь' },
+    { artist:'Stray Kids', song:'S-Class (특)', line:'생일은 나에게 정말 ___한 날이에요', blank:'특별', options:['특별','복잡','조용','위험'], translation:'День рождения для меня по-настоящему ___ день', blankRu:'особенный' },
+    { artist:'Stray Kids', song:'MANIAC', line:'저는 K-pop ___예요. 매일 들어요', blank:'마니아', options:['마니아','선생님','학생','손님'], translation:'Я ___ K-pop. Слушаю каждый день', blankRu:'фанат' },
+    { artist:'Stray Kids', song:'VENOM', line:'뱀은 ___이 있어서 위험해요', blank:'독', options:['독','털','귀','꿈'], translation:'У змеи есть ___, поэтому она опасна', blankRu:'яд' },
+    { artist:'Stray Kids', song:'Case 143', line:'“143”은 “사랑해”를 숫자로 쓴 ___예요', blank:'암호', options:['암호','노래','선물','요리'], translation:'«143» — это «я люблю тебя», записанное цифрами ___', blankRu:'шифр' },
+    { artist:'Stray Kids', song:'Hellevator', line:'높은 건물에서 ___를 타요', blank:'엘리베이터', options:['엘리베이터','자전거','비행기','지하철'], translation:'В высоком здании еду на ___', blankRu:'лифте' },
+    { artist:'Stray Kids', song:'Lose My Breath', line:'계단을 뛰어 올라가서 ___이 차요', blank:'숨', options:['숨','키','발','눈'], translation:'Взбежала по лестнице — перехватило ___', blankRu:'дыхание' },
+    { artist:'Stray Kids', song:'Levanter', line:'오늘은 ___이 많이 불어요', blank:'바람', options:['바람','비','눈','해'], translation:'Сегодня сильно дует ___', blankRu:'ветер' },
+    { artist:'TXT', song:'Crown (어느날 머리에서 뿔이 자랐다)', line:'사슴 머리에는 ___이 있어요', blank:'뿔', options:['뿔','꼬리','날개','수염'], translation:'У оленя на голове ___', blankRu:'рога' },
+    { artist:'aespa', song:'Supernova', line:'___에는 별과 행성이 많아요', blank:'우주', options:['우주','바다','도시','숲'], translation:'В ___ много звёзд и планет', blankRu:'космосе' },
+    { artist:'ITZY', song:'DALLA DALLA (달라달라)', line:'저와 친구는 취향이 전혀 ___요', blank:'달라', options:['달라','같아','좋아','나빠'], translation:'У меня с подругой вкусы совсем ___', blankRu:'разные' },
+    { artist:'SEVENTEEN', song:'God of Music', line:'저는 ___을 들으면서 공부해요', blank:'음악', options:['음악','영화','뉴스','소리'], translation:'Я учусь, слушая ___', blankRu:'музыку' },
+    { artist:'BLACKPINK', song:'Ice Cream', line:'여름에는 시원한 ___을 먹어요', blank:'아이스크림', options:['아이스크림','국','김치','밥'], translation:'Летом ем холодное ___', blankRu:'мороженое' },
+    { artist:'TWICE', song:'Cheer Up', line:'시험 보는 친구에게 “___!”라고 말해요', blank:'힘내', options:['힘내','안녕','고마워','미안해'], translation:'Другу перед экзаменом говорю «___!»', blankRu:'держись' },
+    { artist:'NewJeans', song:'Super Shy', line:'낯을 가려서 처음 만난 사람 앞에서 ___요', blank:'부끄러워', options:['부끄러워','맛있어','시원해','뜨거워'], translation:'Я стесняюсь, поэтому при первой встрече мне ___', blankRu:'неловко' },
+    { artist:'IU', song:'Good Day (좋은 날)', line:'시험을 잘 봐서 오늘은 ___ 날이에요', blank:'좋은', options:['좋은','나쁜','추운','느린'], translation:'Я хорошо сдала экзамен, и сегодня ___ день', blankRu:'хороший' },
+    { artist:'PSY', song:'Gangnam Style (강남스타일)', line:'서울에서 ___은 유명한 지역이에요', blank:'강남', options:['강남','제주','부산','대구'], translation:'В Сеуле ___ — известный район', blankRu:'Каннам' },
+    { artist:'BIGBANG', song:'Haru Haru (하루하루)', line:'___는 24시간이에요', blank:'하루', options:['하루','일주일','한 달','일 년'], translation:'___ — это 24 часа', blankRu:'день (сутки)' },
+    { artist:'Red Velvet', song:'Red Flavor (빨간 맛)', line:'딸기는 ___색이에요', blank:'빨간', options:['빨간','파란','노란','하얀'], translation:'Клубника ___ цвета', blankRu:'красного' },
+    { artist:'Jungkook', song:'Seven', line:'일주일에는 ___ 개의 요일이 있어요', blank:'일곱', options:['일곱','다섯','여섯','여덟'], translation:'В неделе ___ дней', blankRu:'семь' }
   ];
   let kpopScore = 0, kpopRound = 0, kpopTotal = 4, kpopPool = [];
   function startKpop() {
