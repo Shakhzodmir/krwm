@@ -30626,7 +30626,8 @@
     ]}
   ];
   const SELFSTUDY = [
-    { k:'ss-basic',   ico:'🌱', t:'Начальная лексика', t_uz:'Boshlangʻich leksika',    s:'한국어 1-1 · приветствия · семья · класс · дом · места', s_uz:'한국어 1-1 · salomlashish · oila · sinf · uy · joylar', groups:SS_BEGINNER, gameLvl:0 },
+    { k:'ss-podcasts', ico:'🎧', t:'Подкасты', t_uz:'Podkastlar', s:'Медленный корейский · аудирование · YouTube', s_uz:'Sekin koreys tili · tinglab tushunish · YouTube', game:false, custom:'podcasts' },
+    { k:'ss-basic',  ico:'🌱', t:'Начальная лексика', t_uz:'Boshlangʻich leksika',    s:'한국어 1-1 · приветствия · семья · класс · дом · места', s_uz:'한국어 1-1 · salomlashish · oila · sinf · uy · joylar', groups:SS_BEGINNER, gameLvl:0 },
     { k:'ss-basic2',  ico:'🍚', t:'Лексика: быт и темы', t_uz:'Leksika: turmush va mavzular',  s:'한국어 1-2 · еда · погода · время · покупки · транспорт · хобби · встречи · телефон · здоровье · путешествие', s_uz:'한국어 1-2 · ovqat · ob-havo · vaqt · xaridlar · transport · xobbi · uchrashuvlar · telefon · salomatlik · sayohat', groups:SS_BEGINNER2, gameLvl:0 },
     { k:'ss-inter',   ico:'🌿', t:'Лексика: 중급', t_uz:'Leksika: 중급',         s:'한국어 2-1 · инструменты · спорт · одежда/цвета · готовка · школа/предметы · выражения', s_uz:'한국어 2-1 · asboblar · sport · kiyim/ranglar · pazandalik · maktab/fanlar · iboralar', groups:SS_INTER, gameLvl:1 },
     { k:'ss-inter2',  ico:'🍀', t:'Лексика: 중급 · 2', t_uz:'Leksika: 중급 · 2',     s:'한국어 2-2 · внешность · праздники/подарки · здоровье · транспорт/расстояние', s_uz:'한국어 2-2 · tashqi koʻrinish · bayramlar/sovgʻalar · salomatlik · transport/masofa', groups:SS_INTER2, gameLvl:1 },
@@ -30643,8 +30644,7 @@
     { k:'ss-verbs',   ico:'🧩', t:'Неправильные глаголы', t_uz:'Notoʻgʻri feʼllar', s:'불규칙 · 8 типов + «не путать»', s_uz:'불규칙 · 8 tur + «adashtirmaslik»', groups:SS_IRREGULAR, gameLvl:1 },
     { k:'ss-pron',    ico:'🔤', t:'Произношение', t_uz:'Talaffuz',        s:'받침 · 비음화 · 구개음화', groups:SS_PRON, game:false },
     { k:'ss-phrases', ico:'🗣️', t:'Полезные фразы', t_uz:'Foydali iboralar',      s:'каждый день · кафе · магазин · дорога', s_uz:'har kuni · kafe · doʻkon · yoʻl', groups:SS_PHRASES, gameLvl:0 },
-    { k:'ss-numbers', ico:'🔢', t:'Числа, время, даты', t_uz:'Sonlar, vaqt, sanalar',  s:'Дни · время · деньги · счётные слова', s_uz:'Kunlar · vaqt · pul · sanoq soʻzlari', groups:SS_NUMS, gameLvl:0 },
-    { k:'ss-podcasts', ico:'🎧', t:'Подкасты', t_uz:'Podkastlar', s:'Медленный корейский · аудирование · YouTube', s_uz:'Sekin koreys tili · tinglab tushunish · YouTube', game:false, custom:'podcasts' }
+    { k:'ss-numbers', ico:'🔢', t:'Числа, время, даты', t_uz:'Sonlar, vaqt, sanalar',  s:'Дни · время · деньги · счётные слова', s_uz:'Kunlar · vaqt · pul · sanoq soʻzlari', groups:SS_NUMS, gameLvl:0 }
   ];
   // ── Подкасты: ролики YouTube других авторов (встраиваем, не храним). ID проверены запросом oEmbed 19.10.2026 —
   // каждый ролик отдаёт метаданные (встраивание разрешено). Роликов с запретом встраивания (oEmbed 401) здесь нет.
