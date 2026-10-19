@@ -5870,6 +5870,17 @@
   .notif-kinds .settings-row { padding: 10px 4px; gap: 10px; }
   .notif-kinds .settings-row:last-of-type { border-bottom: none; }
   .notif-kinds .settings-ico { width: 28px; height: 28px; border-radius: 9px; font-size: 14px; }
+  /* Складной блок Настроек (Страна, Пол, «Что присылать»): плавно 250 мс, закрытое содержимое недоступно с клавиатуры */
+  .set-fold-head { width: 100%; }
+  .set-fold-chev { color: var(--coral); font-size: 11px; transition: transform .25s ease-out; }
+  .set-fold.open .set-fold-chev { transform: rotate(180deg); }
+  .set-fold-body { display: grid; grid-template-rows: 0fr; visibility: hidden; transition: grid-template-rows .25s ease-out, visibility 0s linear .25s; }
+  .set-fold.open .set-fold-body { grid-template-rows: 1fr; visibility: visible; transition: grid-template-rows .25s ease-out, visibility 0s; }
+  .set-fold-inner { overflow: hidden; min-height: 0; padding: 0 4px; }
+  .set-fold.open .set-fold-inner { padding: 4px 4px 10px; }
+  .gender-pick-sub { font-size: 11px; color: var(--hush); margin: 0 2px 8px; }
+  .set-fold--required .set-fold-head { border: 1.5px dashed var(--coral); border-radius: 14px; }
+  body.calm-motion .set-fold-chev, body.calm-motion .set-fold-body { transition: none; }
   .notif-note { font-size: 10.5px; color: var(--soft); line-height: 1.45; padding: 0 4px 10px; }
 
   /* ───── ОНБОРДИНГ ───── */

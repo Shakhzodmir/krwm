@@ -1308,6 +1308,8 @@
     'kd.sayNext':  { ru: 'Сказать и продолжить', en: 'Say it and continue', uz: 'Ayting va davom eting' },
     'kd.hangup':   { ru: 'Положить трубку', en: 'Hang up', uz: 'Tugatish' },
     'kd.done':     { ru: 'Ты справилась со звонком! Комдори гордится тобой 🐻💛', en: 'You handled the call! Komdori is proud of you 🐻💛', uz: 'Qoʻngʻiroqni uddaladingiz! Komdori sizdan faxrlanadi 🐻💛' },
+    'set.country.none':   { ru: 'не выбрана — укажи', en: 'not set — choose', uz: 'tanlanmagan — tanlang' },
+    'set.notif.kindsSub': { ru: 'включено {n} из 3', en: '{n} of 3 on', uz: '{n} / 3 yoqilgan' },
     'new.chip':    { ru: 'NEW', en: 'NEW', uz: 'YANGI' },
     'pod.tip':     { ru: 'Сначала слушай без субтитров, потом включи их в плеере (значок CC). Незнакомое слово — на паузу и в словарик 💛', en: 'Listen first without subtitles, then turn them on in the player (CC). Pause on new words and save them 💛', uz: 'Avval subtitrsiz tinglang, keyin pleyerda yoqing (CC). Notanish soʻzda pauza qilib, lugʻatga saqlang 💛' },
     'pod.play':    { ru: 'Включить', en: 'Play', uz: 'Ijro etish' },
@@ -5974,7 +5976,16 @@
       const first = !_prefsLoaded;
       _prefsLoaded = true;
       const cloud = _sanitizeCloudPrefs(snap.val());
-      const local = UStore.get('settings', null);
+      let local = UStore.get('settings', null);
+      // Пол выбран в облаке (на другом устройстве), а здесь не задан → берём облачный ДО любого
+      // пуша: иначе устройство с пустым полом перезаписало бы им облачный выбор
+      if (cloud && cloud.gender && local && !(local.gender === 'f' || local.gender === 'm')) {
+        const was0 = _skipCloudPush;
+        _skipCloudPush = true;
+        try { UStore.set('settings', { ...local, gender: cloud.gender }); } finally { _skipCloudPush = was0; }
+        local = UStore.get('settings', null);
+        _refreshAfterPrefs();
+      }
       const localTs = +(local && local.prefsTs) || 0;
       if (!cloud) {
         if (first && local) _pushPrefs(local); // облако пустое → туда уходит выбор этого устройства
@@ -10384,14 +10395,43 @@
           </span>
           ${sw(!off[kind])}
         </button>`;
+    const on = ['streak', 'holiday', 'community'].filter(k => !off[k]).length;
     return head + `
-      <div class="notif-kinds">
-        <div class="notif-kinds-title">${t('set.notif.kinds')}</div>
+      <div class="notif-kinds">` + setFold('notifKinds', '🔕', t('set.notif.kinds'), escHtml(t('set.notif.kindsSub', { n: on })), `
         ${tg('streak', '🔥', t('set.notif.streak'), t('set.notif.streak.sub'))}
         ${tg('holiday', '🎌', t('set.notif.holiday'), t('set.notif.holiday.sub'))}
         ${tg('community', '🌐', t('set.notif.community'), t('set.notif.community.sub'))}
-        <div class="notif-note">${t('set.notif.always')}</div>
+        <div class="notif-note">${t('set.notif.always')}</div>`, false) + `
       </div>`;
+  }
+  // ── Складной блок в Настройках: заголовок со сводкой, подробности по нажатию (плавно) ──
+  // Состояние «раскрыто» держим в памяти (_setOpen): перерисовка карточки его не сбрасывает.
+  const _setOpen = {};
+  function setFold(key, ico, title, summaryHtml, innerHtml, required) {
+    const open = !!_setOpen[key];
+    return `<div class="set-fold${open ? ' open' : ''}${required ? ' set-fold--required' : ''}" data-fold="${key}">
+      <button type="button" class="settings-row set-fold-head" aria-expanded="${open}" onclick="toggleSetFold('${key}')">
+        <span class="settings-ico">${ico}</span>
+        <span class="settings-tx">
+          <span class="settings-title" style="display:block;">${title}</span>
+          <span class="settings-sub" style="display:block;">${summaryHtml}</span>
+        </span>
+        <i class="fa-solid fa-chevron-down set-fold-chev" aria-hidden="true"></i>
+      </button>
+      <div class="set-fold-body"><div class="set-fold-inner">${innerHtml}</div></div>
+    </div>`;
+  }
+  function toggleSetFold(key) {
+    _setOpen[key] = !_setOpen[key];
+    document.querySelectorAll('.set-fold[data-fold="' + key + '"]').forEach(el => {
+      el.classList.toggle('open', !!_setOpen[key]);
+      const h = el.querySelector('.set-fold-head'); if (h) h.setAttribute('aria-expanded', String(!!_setOpen[key]));
+    });
+  }
+  function pickCountryFold(code) {
+    setMyCountry(code);
+    _setOpen.country = false;       // выбрала — блок снова сворачивается, в сводке новая страна
+    renderSettingsCard();
   }
 
   // ── Пуш в открытом приложении (веб: onMessage, APK: __kmPushForeground) ──
@@ -12109,7 +12149,8 @@
     const o = {};
     if (COLOR_THEMES.some(th => th.key === v.colorTheme)) o.colorTheme = v.colorTheme;
     ['darkTheme', 'darkAuto', 'petals', 'calmMotion', 'sound', 'slowVoice'].forEach(k => { if (typeof v[k] === 'boolean') o[k] = v[k]; });
-    if (v.gender === 'f' || v.gender === 'm' || v.gender === '') o.gender = v.gender;
+    // Пустой пол из облака не берём: «не задан» — это отсутствие выбора, а не выбор (см. _pushPrefs)
+    if (v.gender === 'f' || v.gender === 'm') o.gender = v.gender;
     o.updatedAt = (typeof v.updatedAt === 'number' && isFinite(v.updatedAt) && v.updatedAt > 0) ? v.updatedAt : 0;
     o.seed = v.seed === true;
     return o;
@@ -12117,7 +12158,12 @@
   function _pushPrefs(s) {
     if (!_prefsLoaded || !s) return; // до первого снапшота облака не пишем — сверит prefsHandler
     const ts = +s.prefsTs || 0;
-    pushUserField('prefs', { ..._prefsSubset(s), updatedAt: ts || Date.now(), seed: !ts });
+    const sub = _prefsSubset(s);
+    // Пол не задан на этом устройстве — в облако его не пишем: настройки лежат одним документом
+    // (set перезаписывает его целиком), и пустой пол затирал выбранный на другом устройстве
+    // (ученица меняла тему, а «Пол» везде снова просил выбрать)
+    if (sub.gender !== 'f' && sub.gender !== 'm') delete sub.gender;
+    pushUserField('prefs', { ...sub, updatedAt: ts || Date.now(), seed: !ts });
   }
   // Настройки пришли из облака — применить тему и перерисовать обращения по роду
   function _refreshAfterPrefs() {
@@ -12242,12 +12288,13 @@
         </div>
       </div>`,
       // Страна → цены в местной валюте. Не выбрана — рамка «обязательно» (как у пола)
-      (Store.get('user') || {}).isAdmin ? '' : `<div class="gender-pick" ${chosenCountry() ? '' : 'data-required="1"'}>
-        <div class="gender-pick-title">🌍 ${t('country.pick')} <span style="font-weight:500; color:var(--hush); font-size:10.5px;">— ${t('country.pickSub')}</span></div>
+      // Страна → цены в местной валюте: свёрнуто, в сводке — выбранная страна; по нажатию — выбор
+      (Store.get('user') || {}).isAdmin ? '' : setFold('country', '🌍', t('country.pick'),
+        chosenCountry() ? `${flagImg(chosenCountry())} ${escHtml(countryName(chosenCountry()))}` : escHtml(t('set.country.none')),
+        `<div class="gender-pick-sub">${t('country.pickSub')}</div>
         <div class="gender-pick-row country-row">
-          ${COUNTRIES.map(cn => `<button type="button" class="gender-opt country-opt ${chosenCountry() === cn.code ? 'active' : ''}" aria-pressed="${chosenCountry() === cn.code}" onclick="setMyCountry('${cn.code}'); renderSettingsCard();">${flagImg(cn.code)}<span>${countryName(cn.code)}</span></button>`).join('')}
-        </div>
-      </div>`,
+          ${COUNTRIES.map(cn => `<button type="button" class="gender-opt country-opt ${chosenCountry() === cn.code ? 'active' : ''}" aria-pressed="${chosenCountry() === cn.code}" onclick="pickCountryFold('${cn.code}')">${flagImg(cn.code)}<span>${countryName(cn.code)}</span></button>`).join('')}
+        </div>`, !chosenCountry()),
       row('🔊', t('set.sound'), t('set.sound.sub'), sw(s.sound), "toggleSetting('sound')", 'sound'),
       row('🐢', t('set.slow'), t('set.slow.sub'), sw(s.slowVoice), "toggleSetting('slowVoice')", 'slowVoice'),
       `<div class="gender-pick">
@@ -12271,13 +12318,17 @@
             </button>`).join('')}
         </div>
       </div>`,
-      (() => { const gsel = userGender(); return `<div class="gender-pick" ${gsel ? '' : 'data-required="1"'}>
-        <div class="gender-pick-title">🧑 ${t('set.gender')} <span style="font-weight:500; color:var(--hush); font-size:10.5px;">${t('set.gender.note')}${gsel ? '' : t('set.gender.ask')}</span></div>
+      // Пол: пока не выбран — кнопки на виду (нужен для обращений); выбран — свёрнуто, в сводке выбор
+      (() => { const gsel = userGender(); const btns = `
         <div class="gender-pick-row">
           <button type="button" class="gender-opt ${gsel === 'f' ? 'active' : ''}" onclick="setGender('f')">${t('set.gender.f')}</button>
           <button type="button" class="gender-opt ${gsel === 'm' ? 'active' : ''}" onclick="setGender('m')">${t('set.gender.m')}</button>
-        </div>
-      </div>`; })(),
+        </div>`;
+        if (!gsel) return `<div class="gender-pick" data-required="1">
+        <div class="gender-pick-title">🧑 ${t('set.gender')} <span style="font-weight:500; color:var(--hush); font-size:10.5px;">${t('set.gender.note')}${t('set.gender.ask')}</span></div>${btns}
+      </div>`;
+        return setFold('gender', '🧑', t('set.gender'), escHtml(t(gsel === 'm' ? 'set.gender.m' : 'set.gender.f')), `<div class="gender-pick-sub">${t('set.gender.note')}</div>${btns}`, false);
+      })(),
       ...((Store.get('user') && !Store.get('user').isAdmin) ? [
         row('💎', t('set.plan'), t('set.plan.sub', { plan: `${PLANS[myPlanId()].emoji} ${PLANS[myPlanId()].name}` }), chev, "document.getElementById('settings-modal')?.remove(); openPlanPage()")
       ] : []),
