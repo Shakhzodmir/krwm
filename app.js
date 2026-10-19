@@ -2998,16 +2998,34 @@
   }
   function stopAudioPlayback() {
     if (currentAudio) {
-      try { currentAudio.pause(); currentAudio.onended = currentAudio.onerror = null; } catch (_) {}
+      try { currentAudio.pause(); currentAudio.onended = currentAudio.onerror = currentAudio.onplaying = null; } catch (_) {}
       currentAudio = null;
     }
   }
   // Озвучить ОДНУ корейскую строку: естественный голос через прокси, иначе Web Speech.
-  // opts: { slow, pitch, rate, voice }. cb() — когда строка завершилась (или отменена).
+  // opts: { slow, pitch, rate, voice, onStart, onFail }.
+  // cb() — когда строка доиграла; после неудачи — тоже (цепочки диалогов идут дальше, как раньше).
+  // После stopSpeech()/_koGen++ НЕ вызывается ничего — ни cb, ни onStart, ни onFail: кто
+  // остановил, тот и решает, что дальше (так было и раньше — cb при отмене не приходил).
+  // onStart() — ровно один раз, в момент РЕАЛЬНОГО звука: 'playing' у <audio> / onstart у Web
+  // Speech. До него идут до двух запросов к прокси по 4 с — «рот» Комдори не шевелится в тишине.
+  // onFail(reason) — перед cb, если строка не прозвучала: 'audio' (ошибка <audio> посреди строки),
+  // 'web' (Web Speech отказал: not-allowed, synthesis-failed…), 'unavailable' (ни прокси, ни speechSynthesis).
   function _koSpeakOne(text, opts, cb) {
     opts = opts || {};
     const myGen = _koGen;
-    const finish = () => { if (myGen === _koGen) cb && cb(); };
+    let settled = false, startedOnce = false;   // cb/onFail — не больше одного раза за строку
+    const finish = () => { if (settled || myGen !== _koGen) return; settled = true; cb && cb(); };
+    const started = () => {
+      if (startedOnce || settled || myGen !== _koGen) return;
+      startedOnce = true;
+      if (typeof opts.onStart === 'function') { try { opts.onStart(); } catch (_) {} }
+    };
+    const fail = (reason) => {
+      if (settled || myGen !== _koGen) return;
+      if (typeof opts.onFail === 'function') { try { opts.onFail(reason); } catch (_) {} }
+      finish();
+    };
     // Кэшированные фразы играют натуральным мгновенно даже в «липком» режиме;
     // не в кэше + прокси «залип» → сразу встроенный голос, без 4с ожидания.
     const cached = _ttsCache.has(_ttsKey(text, !!opts.slow, opts.voice));
@@ -3019,13 +3037,20 @@
         // на iOS Safari новый new Audio(), запущенный после fetch, play() молча отклоняет.
         const a = _getTtsAudioEl();
         currentAudio = a;
-        a.onended = a.onerror = () => { if (currentAudio === a) currentAudio = null; finish(); };
+        a.onplaying = () => { if (currentAudio === a) started(); };
+        a.onended = () => { if (currentAudio === a) currentAudio = null; a.onplaying = null; finish(); };
+        a.onerror = () => { if (currentAudio === a) currentAudio = null; a.onplaying = null; fail('audio'); };
         a.src = url;
-        a.play().catch(() => _koSpeakOneWeb(text, opts, finish, myGen));
-      }).catch(() => { if (!cached) _ttsMarkFail(); _koSpeakOneWeb(text, opts, finish, myGen); });
+        a.play().catch(() => {
+          if (settled || myGen !== _koGen) return;    // уже упало через onerror или остановлено — второй голос не нужен
+          if (currentAudio === a) currentAudio = null;
+          a.onplaying = a.onended = a.onerror = null;
+          _koSpeakOneWeb(text, opts, finish, myGen, started, fail);
+        });
+      }).catch(() => { if (!cached) _ttsMarkFail(); _koSpeakOneWeb(text, opts, finish, myGen, started, fail); });
       return;
     }
-    _koSpeakOneWeb(text, opts, finish, myGen);
+    _koSpeakOneWeb(text, opts, finish, myGen, started, fail);
   }
   // Фоновая перепроверка при старте (тихо, одна крошечная фраза):
   // 1) «залип» (оба прокси молчали) → пробуем основной, затем резервный; ожил хоть
@@ -3053,14 +3078,18 @@
       });
     });
   }, 3500);
-  function _koSpeakOneWeb(text, opts, finish, myGen) {
+  function _koSpeakOneWeb(text, opts, finish, myGen, started, fail) {
     if (myGen !== _koGen) return;
-    if (!('speechSynthesis' in window)) { finish(); return; }
+    const failNow = (reason) => { if (fail) fail(reason); else finish(); };
+    if (!('speechSynthesis' in window)) { failNow('unavailable'); return; }
     const u = new SpeechSynthesisUtterance(text);
     u.lang  = 'ko-KR';
     u.rate  = opts.slow ? 0.6 : (opts.rate != null ? opts.rate : 0.85);
     u.pitch = opts.pitch != null ? opts.pitch : 1.05;
-    u.onend = u.onerror = () => finish();
+    u.onstart = () => { if (started) started(); };
+    u.onend = () => finish();
+    // 'interrupted'/'canceled' — строку сняли (cancel(), следующая озвучка): это не сбой голоса
+    u.onerror = (e) => { const er = e && e.error; if (er === 'interrupted' || er === 'canceled') finish(); else failNow('web'); };
     _maybeIphoneMuteHint();
     // iOS/Safari: speak() сразу после cancel() движок иногда молча «съедает» либо
     // остаётся залипшим в paused — resume() + микрозадержка обходят обе болячки.
@@ -3069,7 +3098,7 @@
       if (myGen !== _koGen) return;
       currentUtter = u;
       try { window.speechSynthesis.resume(); } catch (_) {}
-      try { window.speechSynthesis.speak(u); } catch (_) { finish(); }
+      try { window.speechSynthesis.speak(u); } catch (_) { failNow('web'); }
     }, 60);
   }
   // На iPhone физический переключатель «бесшумно» глушит Web Speech (медиа-плеер через
@@ -32813,6 +32842,471 @@
   }
   function _kdEndCall() { try { stopSpeech(); } catch (_) {} document.getElementById('komdori-call')?.remove(); _kdCall = null; }
 
+  // ───────────── «Разговор с Комдори» (talk, спека docs/superpowers/specs/2026-10-16-komdori-talk-design.md) ─────────────
+  // Голосовой ролевой разговор на ИИ-каскаде km-ai (kind:'talk': Groq → Claude Haiku 5.5).
+  // Системный промпт, схему ответа и фильтр собирает СЕРВЕР (serverless/shared/talk-core.mjs);
+  // клиент шлёт параметры talk и окно истории в тех же рамках, что проверяет сервер.
+  // Текст ИИ — недоверенный: в DOM только textContent/escHtml, в onclick — jsStr/data-индекс (§10).
+  // Ядро: разбор ответа, окно, засчитывание реплик, слова, уровень, заготовки (D3); минуты и XP (D4);
+  // флаг беты (D5). Мордочка, экраны и машина состояний (Phase E) — после маркера конца ядра.
+  const _TALK_WIN = { maxChars: 8500 - 2500, maxMsgs: 22, maxUser: 300, marker: '(call started)' };   // marker = TALK_START_MARKER ядра
+  const _TALK_KO_OK = /^[가-힣ㄱ-ㅎㅏ-ㅣ0-9\s.,!?~…·:;'"%\-]+$/;   // реплика Комдори: хангыль, цифры, пробелы, пунктуация
+  const _TALK_TR_OK = /^[А-Яа-яЁё0-9\s.,!?~…·:;'"«»\-–—]+$/;       // транскрипция — кириллицей
+  const _TALK_EMOJI = /[\p{Extended_Pictographic}\u{FE0F}\u{200D}\u{20E3}]/gu;
+  const _TALK_FIELD = {   // "ключ":"значение" в оборванном JSON (с экранированием внутри строки)
+    ko: /"ko"\s*:\s*"((?:[^"\\]|\\.)*)"/,
+    tr: /"tr"\s*:\s*"((?:[^"\\]|\\.)*)"/,
+    ru: /"ru"\s*:\s*"((?:[^"\\]|\\.)*)"/
+  };
+  function _talkCut(s, max) {
+    s = String(s);
+    if (s.length <= max) return s;
+    let out = s.slice(0, max);
+    const lastCode = out.charCodeAt(out.length - 1);
+    if (lastCode >= 0xD800 && lastCode <= 0xDBFF) out = out.slice(0, -1);   // не рвём суррогатную пару (эмодзи)
+    return out.trim();
+  }
+  // Строковое поле ответа: без управляющих символов и угловых скобок, пробелы схлопнуты, длина ≤ max
+  function _talkStr(v, max) {
+    const s = (typeof v === 'string') ? v : (typeof v === 'number' ? String(v) : '');
+    return _talkCut(s.replace(/[\x00-\x1F\x7F<>]/g, ' ').replace(/\s+/g, ' ').trim(), max);
+  }
+  // ≤ max символов по границе предложения (озвучка: прокси отвечают 413 на > 300 и 400 на пустое)
+  function _talkCutKo(s, max) {
+    s = String(s || '').replace(/\s+/g, ' ').trim();
+    if (s.length <= max) return s;
+    const head = s.slice(0, max);
+    let cut = -1;
+    for (let i = head.length - 1; i >= 0; i--) { if ('.!?~…'.indexOf(head[i]) >= 0) { cut = i + 1; break; } }
+    if (cut >= Math.floor(max / 3)) return head.slice(0, cut).trim();
+    const sp = head.lastIndexOf(' ');
+    return (sp >= Math.floor(max / 3) ? head.slice(0, sp) : head).trim();
+  }
+  // Корейская реплика: эмодзи вон; латиница/скобки/разметка → только корейские предложения
+  // (_aiKoreanOf); итог ≤ 200 и не меньше minSyl слогов хангыля, иначе ''.
+  function _talkCleanKo(raw, minSyl) {
+    let s = (typeof raw === 'string') ? raw.replace(_TALK_EMOJI, '').replace(/\s+/g, ' ').trim() : '';
+    if (!s) return '';
+    if (!_TALK_KO_OK.test(s)) s = _aiKoreanOf(s.replace(/[*_#`>]+/g, ' '));
+    s = _talkCutKo(s, 200);
+    if (!s || !_TALK_KO_OK.test(s)) return '';
+    return ((s.match(/[가-힣]/g) || []).length >= minSyl) ? s : '';
+  }
+  function _talkCleanTr(v, max) {
+    const s = _talkStr(v, max);
+    return (s && _TALK_TR_OK.test(s) && /[А-Яа-яЁё]/.test(s)) ? s : '';
+  }
+  function _talkField(s, key) {
+    const m = String(s).match(_TALK_FIELD[key]);
+    if (!m) return '';
+    try { return JSON.parse('"' + m[1].replace(/[\x00-\x1F]/g, ' ') + '"'); } catch (_) { return ''; }
+  }
+  // Разбор ответа ИИ (§5.1): JSON по схеме §6 → проверенная реплика; похоже на JSON, но не
+  // разбирается (обрыв по токенам) → ko/tr/ru регуляркой; без признаков JSON → только корейские
+  // предложения. Иначе { ok:false } — «Комдори задумался». Сырой JSON, markdown, латиница и
+  // кириллица никогда не становятся репликой и не озвучиваются.
+  function talkParse(text) {
+    let obj = null;
+    if (text && typeof text === 'object') obj = text;
+    else {
+      let s = (typeof text === 'string') ? text.trim() : '';
+      s = s.replace(/^```[a-zA-Z]*\s*/, '').replace(/\s*```\s*$/, '').trim();
+      if (!s) return { ok: false };
+      if (!/^\{/.test(s) && !/"ko"\s*:/.test(s)) {
+        const ko = _talkCleanKo(_aiKoreanOf(s.replace(/[*_#`>]+/g, ' ')), 2);
+        return ko ? { ok: true, reply: { ko, tr: '', ru: '', fix: null, words: [], end: false } } : { ok: false };
+      }
+      try { obj = JSON.parse(s); } catch (_) {
+        const a = s.indexOf('{'), b = s.lastIndexOf('}');
+        if (a >= 0 && b > a) { try { obj = JSON.parse(s.slice(a, b + 1)); } catch (_) { obj = null; } }
+      }
+      if (!obj || typeof obj !== 'object' || Array.isArray(obj)) {
+        const ko = _talkCleanKo(_talkField(s, 'ko'), 1);
+        if (!ko) return { ok: false };
+        return { ok: true, reply: { ko, tr: _talkCleanTr(_talkField(s, 'tr'), 300), ru: _talkStr(_talkField(s, 'ru'), 400), fix: null, words: [], end: false } };
+      }
+    }
+    if (Array.isArray(obj)) return { ok: false };
+    const ko = _talkCleanKo(obj.ko, 1);
+    if (!ko) return { ok: false };
+    let fix = null;
+    if (obj.fix && typeof obj.fix === 'object' && !Array.isArray(obj.fix)) {
+      const good = _talkCleanKo(obj.fix.good, 1), bad = _talkStr(obj.fix.bad, 200), why = _talkStr(obj.fix.why, 200);
+      const bare = (x) => String(x).replace(/[\s.,!?~…]/g, '');
+      if (good && bad && bare(good) !== bare(bad)) fix = { bad, good, why };
+    }
+    const words = [];
+    (Array.isArray(obj.words) ? obj.words : []).forEach(w => {
+      if (words.length >= 3 || !w || typeof w !== 'object') return;
+      const wko = _talkStr(w.ko, 40);
+      if (!wko || !_TALK_KO_OK.test(wko) || !/[가-힣]/.test(wko)) return;
+      words.push({ ko: wko, tr: _talkCleanTr(w.tr, 60), ru: _talkStr(w.ru, 80) });
+    });
+    return { ok: true, reply: { ko, tr: _talkCleanTr(obj.tr, 300), ru: _talkStr(obj.ru, 400), fix, words, end: obj.end === true } };
+  }
+  // Окно запроса (§6): history [{ role:'assistant', ko, good? } | { role:'user', text }] →
+  // [{ role, content }]. Комдори — компактно {"ko":…,"good":…} (не весь ответ), ученица — текстом
+  // ≤ 300; подряд одной роли склеиваются; последнее — user (префилл → 400 у Claude). Сервер
+  // считает ВСЁ вместе со своим промптом (≤ 2500) и маркером «(call started)» перед первой
+  // репликой Комдори: ≤ 8500 символов и ≤ 23 сообщений с system — режем старые пары, сохраняя
+  // заготовку-приветствие (или начиная с user).
+  function talkRequestMessages(history) {
+    const out = [];
+    (Array.isArray(history) ? history : []).forEach(h => {
+      if (!h || typeof h !== 'object') return;
+      const last = out[out.length - 1];
+      if (h.role === 'assistant') {
+        const ko = _talkCutKo(String(h.ko || ''), 200);
+        if (!ko) return;
+        const good = h.good ? _talkCutKo(String(h.good), 200) : '';
+        if (last && last.role === 'assistant') { last._ko = _talkCutKo(last._ko + ' ' + ko, 200); last._good = good || last._good; }
+        else out.push({ role: 'assistant', _ko: ko, _good: good });
+      } else if (h.role === 'user') {
+        const text = String(h.text == null ? '' : h.text).replace(/\s+/g, ' ').trim();
+        if (!text) return;
+        if (last && last.role === 'user') last.content = _talkCut(last.content + ' ' + text, _TALK_WIN.maxUser);
+        else out.push({ role: 'user', content: _talkCut(text, _TALK_WIN.maxUser) });
+      }
+    });
+    out.forEach(m => {
+      if (m.role !== 'assistant') return;
+      const o = { ko: m._ko };
+      if (m._good) o.good = m._good;
+      m.content = JSON.stringify(o);
+    });
+    while (out.length && out[out.length - 1].role !== 'user') out.pop();
+    if (!out.length) return [];
+    const cost = (arr) => arr.reduce((n, m) => n + m.content.length, 0) + (arr[0].role === 'assistant' ? _TALK_WIN.marker.length : 0);
+    const count = (arr) => arr.length + (arr[0].role === 'assistant' ? 1 : 0);
+    let win = out;
+    while (win.length > 1 && (cost(win) > _TALK_WIN.maxChars || count(win) > _TALK_WIN.maxMsgs)) {
+      if (win[0].role === 'assistant' && win.length >= 4) win = [win[0]].concat(win.slice(3));   // заготовка остаётся, уходит самая старая пара после неё
+      else if (win[0].role === 'assistant') win = win.slice(1);                                 // дальше некуда — без заготовки
+      else win = win.slice(2);                                                                 // первое — user: уходит пара user + Комдори
+    }
+    return win.map(m => ({ role: m.role, content: m.content }));
+  }
+  // Засчитанная реплика (§9): ≥ 2 слогов хангыля, не повтор прошлой реплики ученицы
+  // (без учёта пробелов и пунктуации), не ход «🆘 На своём языке»
+  function talkTurnCounts(text, prevText, isNative) {
+    if (isNative) return false;
+    const s = String(text == null ? '' : text);
+    if ((s.match(/[가-힣]/g) || []).length < 2) return false;
+    const bare = (x) => String(x == null ? '' : x).toLowerCase().replace(/[\s?.!,。、？！'"`~…·]/g, '');
+    return bare(s) !== bare(prevText);
+  }
+  // Слово из ответа ИИ → в словарик (§9): ko проходит _SS_KO_OK (как в играх), ru непустой,
+  // без хангыля и без «→ ↔ |» (класс «вариант с вшитым ответом»), tr — кириллица
+  function talkWordOk(w) {
+    if (!w || typeof w !== 'object') return false;
+    const ko = String(w.ko == null ? '' : w.ko).trim(), ru = String(w.ru == null ? '' : w.ru).trim(), tr = String(w.tr == null ? '' : w.tr).trim();
+    if (!ko || ko.length > 40 || !_SS_KO_OK.test(ko) || !/[가-힣]/.test(ko)) return false;
+    if (!ru || ru.length > 80 || /[가-힣ㄱ-ㅎㅏ-ㅣ]/.test(ru) || /[→↔|]/.test(ru) || !/[A-Za-zА-Яа-яЁёʻʼ]/.test(ru)) return false;
+    if (!tr || tr.length > 60 || !/^[А-Яа-яЁё\s\-'’.,]+$/.test(tr) || !/[А-Яа-яЁё]/.test(tr)) return false;
+    return true;
+  }
+  // Уровень и пройденная грамматика для промпта (§6). Уровень — заявленный при регистрации
+  // (та же шкала, что в играх и «Письме»: TOPIK 1/2 стоят выше 고급 → advanced); не выбран —
+  // по числу пройденных уроков всех модулей. Не getLessonProgress(): он знает только активную
+  // вкладку «Уроков». Грамматика — уроки самого старшего начатого модуля (MODULE_RANK, при
+  // равенстве — по порядку), последние ≤ 8 и ≤ 400 символов: «-고 싶어요 (Хочу и хобби)».
+  function talkLevelParams() {
+    const LV = ['beginner', 'middle', 'advanced'];
+    let rank = userLevelRank();
+    if (rank < 0) {
+      let cap0 = 0, cap1 = 0;   // уроков в модулях ранга 0 (초급) и ранга ≤ 1 (по 중급 включительно)
+      Object.keys(LESSON_MODULES).forEach(mid => {
+        const n = (LESSON_MODULES[mid].lessons || []).length, r = MODULE_RANK[mid] || 0;
+        if (r <= 0) cap0 += n;
+        if (r <= 1) cap1 += n;
+      });
+      const done = totalLessonsCompleted();
+      rank = done >= cap1 ? 2 : (done >= cap0 ? 1 : 0);
+    }
+    const level = LV[Math.max(0, Math.min(2, rank))];
+    let pick = null, pickRank = -1, pickIdx = -1;
+    Object.keys(LESSON_MODULES).forEach((mid, i) => {
+      const pr = UStore.get(_moduleProgressKey(mid)) || {};
+      const done = Array.isArray(pr.completed) ? pr.completed : [];
+      const passed = (LESSON_MODULES[mid].lessons || []).filter(l => l && done.includes(l.id));
+      if (!passed.length) return;
+      const r = MODULE_RANK[mid] || 0;
+      if (r > pickRank || (r === pickRank && i > pickIdx)) { pick = passed; pickRank = r; pickIdx = i; }
+    });
+    const grammar = [];
+    let chars = 0;
+    for (let i = (pick || []).length - 1; i >= 0 && grammar.length < 8; i--) {
+      const ko = String(pick[i].ko || '').trim(), title = String(pick[i].title || '').trim();
+      const item = _talkCut(ko && title ? ko + ' (' + title + ')' : (ko || title), 80);
+      if (!item) continue;
+      const add = item.length + (grammar.length ? 2 : 0);   // «; » между пунктами
+      if (chars + add > 400) break;
+      chars += add;
+      grammar.unshift(item);
+    }
+    return { level, grammar };
+  }
+  // Первая реплика Комдори — заготовка без ИИ (§4.2): тема × характер × регистр (jon — 존댓말,
+  // ban — 반말 «Как с подругой»); озвучка кэшируется. Вопрос — без настоящих личных данных.
+  const TALK_OPENERS = {
+    free: {
+      strict: {
+        jon: { ko: '안녕하세요. 오늘 뭐 했어요?', tr: 'аннёнхасэё. оныль мво хэссоё?', ru: { ru: 'Здравствуйте. Что вы сегодня делали?', en: 'Hello. What did you do today?', uz: 'Assalomu alaykum. Bugun nima qildingiz?' } },
+        ban: { ko: '안녕. 오늘 뭐 했어?', tr: 'аннён. оныль мво хэссо?', ru: { ru: 'Привет. Что ты сегодня делал(а)?', en: 'Hi. What did you do today?', uz: 'Salom. Bugun nima qilding?' } }
+      },
+      normal: {
+        jon: { ko: '안녕하세요! 곰도리예요. 오늘 하루 어땠어요?', tr: 'аннёнхасэё! комдориеё. оныль хару оттэссоё?', ru: { ru: 'Здравствуйте! Я Комдори. Как прошёл ваш день?', en: 'Hello! I’m Komdori. How was your day?', uz: 'Assalomu alaykum! Men Komdoriman. Bugungi kuningiz qanday oʻtdi?' } },
+        ban: { ko: '안녕! 나 곰도리야. 오늘 하루 어땠어?', tr: 'аннён! на комдория. оныль хару оттэссо?', ru: { ru: 'Привет! Я Комдори. Как прошёл твой день?', en: 'Hi! I’m Komdori. How was your day?', uz: 'Salom! Men Komdoriman. Bugungi kuning qanday oʻtdi?' } }
+      },
+      kind: {
+        jon: { ko: '안녕하세요! 곰도리예요. 오늘 기분이 어때요?', tr: 'аннёнхасэё! комдориеё. оныль кибуни оттэё?', ru: { ru: 'Здравствуйте! Я Комдори. Какое у вас сегодня настроение?', en: 'Hello! I’m Komdori. How are you feeling today?', uz: 'Assalomu alaykum! Men Komdoriman. Bugun kayfiyatingiz qanday?' } },
+        ban: { ko: '안녕! 나 곰도리야. 오늘 기분 어때?', tr: 'аннён! на комдория. оныль кибун оттэ?', ru: { ru: 'Привет! Я Комдори. Какое у тебя сегодня настроение?', en: 'Hi! I’m Komdori. How are you feeling today?', uz: 'Salom! Men Komdoriman. Bugun kayfiyating qanday?' } }
+      }
+    },
+    shop: {
+      strict: {
+        jon: { ko: '어서 오세요. 주문하시겠어요?', tr: 'осо осэё. чумунхасигессоё?', ru: { ru: 'Добро пожаловать. Будете заказывать?', en: 'Welcome. Are you ready to order?', uz: 'Xush kelibsiz. Buyurtma berasizmi?' } },
+        ban: { ko: '어서 와. 뭐 마실래?', tr: 'осо ва. мво масиллэ?', ru: { ru: 'Заходи. Что будешь пить?', en: 'Come in. What will you drink?', uz: 'Kel. Nima ichasan?' } }
+      },
+      normal: {
+        jon: { ko: '어서 오세요! 카페 곰도리예요. 뭐 드릴까요?', tr: 'осо осэё! кхапхе комдориеё. мво тырилккаё?', ru: { ru: 'Добро пожаловать! Это кафе «Комдори». Что вам предложить?', en: 'Welcome! This is Café Komdori. What can I get you?', uz: 'Xush kelibsiz! Bu — «Komdori» kafesi. Sizga nima beray?' } },
+        ban: { ko: '어서 와! 여기는 카페 곰도리야. 뭐 줄까?', tr: 'осо ва! ёгинын кхапхе комдория. мво чулкка?', ru: { ru: 'Заходи! Это кафе «Комдори». Что тебе дать?', en: 'Come in! This is Café Komdori. What can I get you?', uz: 'Kel! Bu — «Komdori» kafesi. Senga nima beray?' } }
+      },
+      kind: {
+        jon: { ko: '어서 오세요! 천천히 골라 주세요. 뭐 마시고 싶어요?', tr: 'осо осэё! чхончхонхи колла чусэё. мво масиго сипхоё?', ru: { ru: 'Добро пожаловать! Выбирайте не спеша. Что вы хотите выпить?', en: 'Welcome! Take your time. What would you like to drink?', uz: 'Xush kelibsiz! Shoshilmasdan tanlang. Nima ichmoqchisiz?' } },
+        ban: { ko: '어서 와! 천천히 골라. 뭐 마시고 싶어?', tr: 'осо ва! чхончхонхи колла. мво масиго сипхо?', ru: { ru: 'Заходи! Выбирай не спеша. Что ты хочешь выпить?', en: 'Come in! Take your time. What do you want to drink?', uz: 'Kel! Shoshilmasdan tanla. Nima ichmoqchisan?' } }
+      }
+    },
+    meet: {
+      strict: {
+        jon: { ko: '안녕하세요. 저는 곰도리입니다. 취미가 뭐예요?', tr: 'аннёнхасэё. чонын комдориимнида. чхвимига мвоеё?', ru: { ru: 'Здравствуйте. Я Комдори. Какое у вас хобби?', en: 'Hello. I am Komdori. What is your hobby?', uz: 'Assalomu alaykum. Men Komdoriman. Sevimli mashgʻulotingiz nima?' } },
+        ban: { ko: '안녕. 나는 곰도리야. 취미가 뭐야?', tr: 'аннён. нанын комдория. чхвимига мвоя?', ru: { ru: 'Привет. Я Комдори. Какое у тебя хобби?', en: 'Hi. I’m Komdori. What’s your hobby?', uz: 'Salom. Men Komdoriman. Sevimli mashgʻuloting nima?' } }
+      },
+      normal: {
+        jon: { ko: '만나서 반가워요! 저는 곰도리예요. 취미가 뭐예요?', tr: 'маннасо пангавоё! чонын комдориеё. чхвимига мвоеё?', ru: { ru: 'Рад познакомиться! Я Комдори. Какое у вас хобби?', en: 'Nice to meet you! I’m Komdori. What’s your hobby?', uz: 'Tanishganimdan xursandman! Men Komdoriman. Sevimli mashgʻulotingiz nima?' } },
+        ban: { ko: '만나서 반가워! 나는 곰도리야. 취미가 뭐야?', tr: 'маннасо пангаво! нанын комдория. чхвимига мвоя?', ru: { ru: 'Рад познакомиться! Я Комдори. Какое у тебя хобби?', en: 'Nice to meet you! I’m Komdori. What’s your hobby?', uz: 'Tanishganimdan xursandman! Men Komdoriman. Sevimli mashgʻuloting nima?' } }
+      },
+      kind: {
+        jon: { ko: '안녕하세요! 저는 곰도리예요. 좋아하는 음식이 뭐예요?', tr: 'аннёнхасэё! чонын комдориеё. чоаханын ымсиги мвоеё?', ru: { ru: 'Здравствуйте! Я Комдори. Какая ваша любимая еда?', en: 'Hello! I’m Komdori. What’s your favorite food?', uz: 'Assalomu alaykum! Men Komdoriman. Sevimli taomingiz nima?' } },
+        ban: { ko: '안녕! 나는 곰도리야. 좋아하는 음식이 뭐야?', tr: 'аннён! нанын комдория. чоаханын ымсиги мвоя?', ru: { ru: 'Привет! Я Комдори. Какая твоя любимая еда?', en: 'Hi! I’m Komdori. What’s your favorite food?', uz: 'Salom! Men Komdoriman. Sevimli taoming nima?' } }
+      }
+    },
+    interview: {
+      strict: {
+        jon: { ko: '안녕하십니까. 왜 한국 대학교에 지원했습니까?', tr: 'аннёнхасимникка. вэ хангук тэхаккёэ чивонхэссымникка?', ru: { ru: 'Здравствуйте. Почему вы подали документы в корейский университет?', en: 'Good day. Why did you apply to a Korean university?', uz: 'Assalomu alaykum. Nega Koreya universitetiga hujjat topshirdingiz?' } },
+        ban: { ko: '안녕. 면접 연습 시작하자. 왜 한국 대학교에 지원했어?', tr: 'аннён. мёнджоп ёнсып сиджакаджа. вэ хангук тэхаккёэ чивонхэссо?', ru: { ru: 'Привет. Давай начнём репетицию собеседования. Почему ты подал(а) документы в корейский университет?', en: 'Hi. Let’s start the interview practice. Why did you apply to a Korean university?', uz: 'Salom. Suhbat mashqini boshlaymiz. Nega Koreya universitetiga hujjat topshirding?' } }
+      },
+      normal: {
+        jon: { ko: '안녕하세요! 면접을 시작할게요. 왜 한국에서 공부하고 싶어요?', tr: 'аннёнхасэё! мёнджобыль сиджакальккеё. вэ хангугесо конбухаго сипхоё?', ru: { ru: 'Здравствуйте! Начинаем собеседование. Почему вы хотите учиться в Корее?', en: 'Hello! Let’s begin the interview. Why do you want to study in Korea?', uz: 'Assalomu alaykum! Suhbatni boshlaymiz. Nega Koreyada oʻqimoqchisiz?' } },
+        ban: { ko: '안녕! 면접 연습하자. 왜 한국에서 공부하고 싶어?', tr: 'аннён! мёнджоп ёнсыпхаджа. вэ хангугесо конбухаго сипхо?', ru: { ru: 'Привет! Давай порепетируем собеседование. Почему ты хочешь учиться в Корее?', en: 'Hi! Let’s practice the interview. Why do you want to study in Korea?', uz: 'Salom! Suhbatni mashq qilaylik. Nega Koreyada oʻqimoqchisan?' } }
+      },
+      kind: {
+        jon: { ko: '안녕하세요! 긴장하지 마세요. 한국에서 뭘 공부하고 싶어요?', tr: 'аннёнхасэё! кинджанхаджи масэё. хангугесо мволь конбухаго сипхоё?', ru: { ru: 'Здравствуйте! Не волнуйтесь. Что вы хотите изучать в Корее?', en: 'Hello! Don’t be nervous. What would you like to study in Korea?', uz: 'Assalomu alaykum! Hayajonlanmang. Koreyada nimani oʻrganmoqchisiz?' } },
+        ban: { ko: '안녕! 긴장하지 마. 한국에서 뭘 공부하고 싶어?', tr: 'аннён! кинджанхаджи ма. хангугесо мволь конбухаго сипхо?', ru: { ru: 'Привет! Не волнуйся. Что ты хочешь изучать в Корее?', en: 'Hi! Don’t be nervous. What do you want to study in Korea?', uz: 'Salom! Hayajonlanma. Koreyada nimani oʻrganmoqchisan?' } }
+      }
+    }
+  };
+  // ── Минуты и XP разговора (§7, §9) ──
+  const TALK = { quotaSec: { pro: 1800, trial: 300 }, xp: { perTurn: 3, max: 60 }, usageFlushSec: 15 };
+  // Минуты: облако users/<uid>/talkUsage/<YYYY-MM-DD UTC> = секунды; запись — ServerValue.increment
+  // (два устройства складываются, а не затирают друг друга). Не pushUserField: тот делает .set()
+  // (последний пишущий побеждает) и для админов выключен. Неотправленная дельта — UStore
+  // 'talkUsagePending' {дата: сек}: переживает закрытую вкладку и убитый APK, досылается при
+  // следующем открытии. 'talkUsageSent' {d, s} — сколько это устройство уже отправило за сегодня
+  // (офлайн-оценка, когда облако не прочитать). Дата — todayIsoDate() (UTC, как цель дня).
+  let _talkUsage = null;            // { date, baseSec, sessionSec, frac, unlimited } — счёт этой сессии
+  let _talkUsageDates = [];         // даты, увиденные в облаке при talkUsageLoad (старше вчерашней удаляем)
+  let _talkUsageFlushing = null;    // идущая отправка: пока висит (офлайн), вторая не стартует — иначе двойной счёт
+  function _talkUtcDate(ms) { return new Date(ms).toISOString().slice(0, 10); }
+  function _talkUsagePending() {
+    const p = UStore.get('talkUsagePending', null);
+    return (p && typeof p === 'object' && !Array.isArray(p)) ? p : {};
+  }
+  function _talkWithTimeout(p, ms) {
+    let timer = null;
+    const to = new Promise((_, rej) => { timer = setTimeout(() => rej(Object.assign(new Error('timeout'), { code: 'timeout' })), ms); });
+    return Promise.race([Promise.resolve(p), to]).finally(() => { if (timer) clearTimeout(timer); });
+  }
+  // Облачный тариф: до первого снапшота users/<uid>/plan Pro AI на новом устройстве видится как free
+  function _talkWaitPlan(ms) {
+    return new Promise(res => {
+      if (_planLoaded) { res(true); return; }
+      const t0 = Date.now();
+      const iv = setInterval(() => { if (_planLoaded || Date.now() - t0 >= ms) { clearInterval(iv); res(!!_planLoaded); } }, 100);
+    });
+  }
+  // Сколько использовано сегодня и какая норма. Ждёт облачный тариф (≤ 3,5 с) и один раз читает
+  // users/<uid>/talkUsage (≤ 3,5 с; офлайн — по локальному). Использовано = max(облако, отправлено
+  // этим устройством) + неотправленное. Админ — без лимита и без ожиданий; гость — исключение 'guest'.
+  async function talkUsageLoad() {
+    const u = Store.get('user');
+    if (!u || u.guest) throw Object.assign(new Error('talk: account required'), { code: 'guest' });
+    const today = todayIsoDate();
+    const pendToday = Math.max(0, Number(_talkUsagePending()[today]) || 0);
+    const sentRec = UStore.get('talkUsageSent', null);
+    const sent = (sentRec && sentRec.d === today) ? Math.max(0, Number(sentRec.s) || 0) : 0;
+    if (u.isAdmin) {
+      _talkUsage = { date: today, baseSec: sent + pendToday, sessionSec: 0, frac: 0, unlimited: true };
+      return { usedSec: sent + pendToday, quotaSec: Infinity, unlimited: true };
+    }
+    await _talkWaitPlan(3500);
+    let cloud = 0;
+    if (typeof _db !== 'undefined') {
+      try {
+        const snap = await _talkWithTimeout(_db.ref('users/' + firebaseUserId() + '/talkUsage').once('value'), 3500);
+        const all = snap && typeof snap.val === 'function' ? snap.val() : null;
+        if (all && typeof all === 'object') {
+          cloud = Math.max(0, Number(all[today]) || 0);
+          _talkUsageDates = Object.keys(all).filter(d => /^\d{4}-\d{2}-\d{2}$/.test(d));
+        }
+      } catch (_) {}   // офлайн/таймаут — считаем по локальному
+    }
+    const used = Math.max(cloud, sent) + pendToday;
+    _talkUsage = { date: today, baseSec: used, sessionSec: 0, frac: 0, unlimited: false };
+    return { usedSec: used, quotaSec: planAtLeast('proai') ? TALK.quotaSec.pro : TALK.quotaSec.trial, unlimited: false };
+  }
+  // Секунды разговора (машина состояний — каждую секунду фаз komdori/listening/recognizing).
+  // Дроби копятся. Возвращает, сколько использовано сегодня (UTC); после 00:00 — с нуля в новой дате.
+  function talkUsageTick(sec) {
+    const u = Store.get('user');
+    if (!u || u.guest) return 0;
+    const today = todayIsoDate();
+    if (!_talkUsage || _talkUsage.date !== today) {
+      _talkUsage = { date: today, baseSec: 0, sessionSec: 0, frac: 0, unlimited: _talkUsage ? _talkUsage.unlimited : !!u.isAdmin };
+    }
+    const add = Number(sec);
+    if (add > 0 && isFinite(add)) {
+      _talkUsage.frac += add;
+      const whole = Math.floor(_talkUsage.frac);
+      if (whole > 0) {
+        _talkUsage.frac -= whole;
+        _talkUsage.sessionSec += whole;
+        const p = _talkUsagePending();
+        p[today] = (Number(p[today]) || 0) + whole;
+        UStore.set('talkUsagePending', p);
+      }
+    }
+    return _talkUsage.baseSec + _talkUsage.sessionSec;
+  }
+  // Отправить неотправленные секунды одним multi-path update: increment по каждой дате (сегодня,
+  // вчера) + удаление дат старше вчерашней (храним две). Успех — вычитаем отправленное (тики во
+  // время отправки остаются); отказ — всё ждёт следующей попытки. → true/false.
+  async function talkUsageFlush() {
+    if (_talkUsageFlushing) return _talkUsageFlushing;
+    const u = Store.get('user');
+    if (!u || u.guest) return false;
+    if (u.isAdmin) { UStore.del('talkUsagePending'); return true; }   // лимита нет, синк профиля админа выключен
+    if (typeof _db === 'undefined' || typeof firebase === 'undefined' || !firebase.database || !firebase.database.ServerValue) return false;
+    const uid = firebaseUserId();
+    if (!uid || uid === 'guest') return false;
+    const yest = _talkUtcDate(Date.now() - 86400000);
+    const pending = _talkUsagePending();
+    const batch = {};
+    Object.keys(pending).forEach(d => {
+      const n = Math.floor(Number(pending[d]) || 0);
+      if (n > 0 && /^\d{4}-\d{2}-\d{2}$/.test(d) && d >= yest) batch[d] = n;
+    });
+    const updates = {};
+    Object.keys(batch).forEach(d => { updates['users/' + uid + '/talkUsage/' + d] = firebase.database.ServerValue.increment(batch[d]); });
+    const prune = _talkUsageDates.filter(d => d < yest && !(d in batch));
+    prune.forEach(d => { updates['users/' + uid + '/talkUsage/' + d] = null; });
+    const keepFresh = (p) => {
+      Object.keys(p).forEach(d => { if (!(d >= yest)) delete p[d]; });
+      if (Object.keys(p).length) UStore.set('talkUsagePending', p); else UStore.del('talkUsagePending');
+    };
+    if (!Object.keys(updates).length) { keepFresh(_talkUsagePending()); return true; }
+    _talkUsageFlushing = _db.ref().update(updates).then(() => {
+      const p = _talkUsagePending();
+      Object.keys(batch).forEach(d => { const left = (Number(p[d]) || 0) - batch[d]; if (left > 0) p[d] = left; else delete p[d]; });
+      keepFresh(p);
+      const today = todayIsoDate();
+      if (batch[today]) {
+        const rec = UStore.get('talkUsageSent', null);
+        UStore.set('talkUsageSent', { d: today, s: ((rec && rec.d === today) ? (Number(rec.s) || 0) : 0) + batch[today] });
+      }
+      _talkUsageDates = _talkUsageDates.filter(d => prune.indexOf(d) < 0);
+      return true;
+    }).catch(() => false).finally(() => { _talkUsageFlushing = null; });
+    return _talkUsageFlushing;
+  }
+  // XP за реплики: копится в UStore 'talkXpPending' {callId, xp, carry} и начисляется ОДНИМ addXp —
+  // в итоге (после закрытия страницы: попап «цель дня» иначе ляжет под неё) или при следующем
+  // открытии приложения, если звонок оборвался. xp — текущий звонок (потолок TALK.xp.max), carry —
+  // XP прошлых звонков подряд («📞 Ещё разговор» без закрытия страницы), каждый со своим потолком.
+  // _talk (машина состояний) объявлен ниже, в Phase E; до неё callId — 'call'.
+  function talkXpAdd(n) {
+    const add = Math.floor(Number(n) || 0);
+    if (add <= 0) return 0;
+    const u = Store.get('user');
+    if (!u || u.guest) return 0;
+    const callId = (typeof _talk !== 'undefined' && _talk && _talk.callId) ? String(_talk.callId) : 'call';
+    const p = UStore.get('talkXpPending', null);
+    let cur = (p && typeof p === 'object') ? { callId: String(p.callId || ''), xp: Number(p.xp) || 0, carry: Number(p.carry) || 0 } : { callId, xp: 0, carry: 0 };
+    if (cur.callId !== callId) cur = { callId, xp: 0, carry: cur.carry + cur.xp };
+    cur.xp = Math.min(TALK.xp.max, cur.xp + add);
+    UStore.set('talkXpPending', cur);
+    return cur.xp;
+  }
+  function talkXpFlush() {
+    const p = UStore.get('talkXpPending', null);
+    if (!p || typeof p !== 'object') return 0;
+    if (!_statsLoaded) return 0;      // стата ещё не загружена: addXp не сохранился бы — ждём следующего раза
+    const n = Math.max(0, Math.floor(Number(p.xp) || 0)) + Math.max(0, Math.floor(Number(p.carry) || 0));
+    UStore.del('talkXpPending');      // сначала снимаем, потом начисляем: повторный вызов (двойной тап, гонка) второй раз не даст
+    if (n > 0) addXp(n);
+    return n;
+  }
+  // Звонок оборвался (закрыли вкладку, убили APK, тихое автообновление): при следующем открытии
+  // досылаем минуты и начисляем XP. XP — после облачного снапшота статы: иначе слияние «у кого
+  // больше XP» могло бы проглотить начисление, сделанное до снапшота; офлайн — через 10 с.
+  // Идёт новый звонок — не трогаем: его итог начислит и старое (carry).
+  function _talkOnAppOpen() {
+    const u = Store.get('user');
+    if (!u || u.guest) return;
+    const me = currentUserId();
+    if (Object.keys(_talkUsagePending()).length) {
+      setTimeout(() => { if (currentUserId() === me) talkUsageFlush().catch(() => {}); }, 3000);
+    }
+    if (!UStore.get('talkXpPending', null)) return;
+    const t0 = Date.now();
+    const tryXp = () => {
+      if (currentUserId() !== me) return;
+      if (typeof _talk !== 'undefined' && _talk && _talk.phase && _talk.phase !== 'ended') return;
+      if (u.isAdmin || _cloudLoadedKeys.has('stats') || Date.now() - t0 >= 10000) { try { talkXpFlush(); } catch (_) {} return; }
+      setTimeout(tryXp, 500);
+    };
+    setTimeout(tryXp, 1500);
+  }
+  // ── Флаг беты (§14): appConfig/talk = { enabled: bool, beta: [sha256hex(firebaseUserId())] } ──
+  // enabled = true — новый звонок всем; иначе — только тем, чей хэш uid в beta (узел публичный,
+  // .read: true — поэтому хэши, а не e-mail). Читаем один раз за сессию (≤ 3 с); ошибка, таймаут,
+  // нет узла или нет crypto.subtle → false (карточка ведёт в старый openKomdoriCall). Ошибки не
+  // кэшируются: следующее открытие прочитает снова.
+  let _talkCfg = null;   // успешно прочитанный appConfig/talk ({} — узла нет)
+  async function _talkSha256Hex(s) {
+    const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(String(s)));
+    return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
+  }
+  async function talkFlagEnabled() {
+    try {
+      if (!_talkCfg) {
+        if (typeof _db === 'undefined') return false;
+        const snap = await _talkWithTimeout(_db.ref('appConfig/talk').once('value'), 3000);
+        const v = snap && typeof snap.val === 'function' ? snap.val() : null;
+        _talkCfg = (v && typeof v === 'object') ? v : {};
+      }
+      if (_talkCfg.enabled === true) return true;
+      const raw = _talkCfg.beta;
+      const beta = Array.isArray(raw) ? raw : (raw && typeof raw === 'object' ? Object.values(raw) : []);
+      if (!beta.length) return false;
+      const u = Store.get('user');
+      if (!u || u.guest) return false;
+      const h = await _talkSha256Hex(firebaseUserId());
+      return beta.some(x => String(x).toLowerCase() === h);
+    } catch (_) { return false; }
+  }
+  // ── «Разговор с Комдори»: конец ядра (D3–D5); мордочка, экраны и машина состояний (E1–E6) — ниже ──
+
   const _skState = { view: 'home', uni: null, info: null };
   function openStudyKr() { _skState.view = 'home'; switchScreen('studykr'); }
   function studyKrBack() {
@@ -43611,47 +44105,73 @@
     // ИИ не ждёт 45с таймаута воркера, а сразу идёт через Google.
     return (typeof _ttsPref === 'function') ? _ttsPref() : 'primary';
   }
-  async function _aiPostOne(url, messages) {
+  // Один POST к одному пути ИИ. extraBody — поля тела рядом с messages («Разговор с Комдори»:
+  // { kind:'talk', talk:{…} }); timeoutMs — таймаут этого пути (по умолчанию 45 с). Таймаут
+  // покрывает и чтение тела: оборванный посреди ответа поток тоже не держит «Думаю…» вечно.
+  async function _aiPostOne(url, messages, extraBody, timeoutMs) {
     // Таймаут: зависшее (а не упавшее) соединение к воркеру иначе держало бы «ИИ печатает…»
     // вечно — тот же класс проблемы, что и в _ttsFetchUrl (провайдеры, душащие Cloudflare).
+    const ms = Number(timeoutMs) > 0 ? Number(timeoutMs) : 45000;
     const ctrl = (typeof AbortController === 'function') ? new AbortController() : null;
-    const timer = ctrl ? setTimeout(() => { try { ctrl.abort(); } catch (_) {} }, 45000) : null;
-    let resp;
+    const timer = ctrl ? setTimeout(() => { try { ctrl.abort(); } catch (_) {} }, ms) : null;
     try {
-      resp = await fetch(url, {
+      const resp = await fetch(url, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ messages: messages }),
+        body: JSON.stringify(Object.assign({}, extraBody || {}, { messages: messages })),
         signal: ctrl ? ctrl.signal : undefined
       });
+      if (!resp.ok) {
+        const detail = await resp.text().catch(() => '');
+        const err = new Error(`ai proxy ${resp.status}: ${detail.slice(0, 200)}`);
+        err.httpStatus = resp.status;   // сервер ОТВЕТИЛ — путь живой, каскад не нужен
+        // Код ошибки воркера/функции ({ error, code: 'too_long' | 'talk_ip' | 'talk_budget' | … }) —
+        // по нему разговор выбирает поведение (спека talk §12); у страницы ошибки Cloudflare кода нет.
+        try { const j = JSON.parse(detail); if (j && typeof j.code === 'string') err.code = j.code; } catch (_) {}
+        throw err;
+      }
+      return await resp.json();
     } finally {
       if (timer) clearTimeout(timer);
     }
-    if (!resp.ok) {
-      const detail = await resp.text().catch(() => '');
-      const err = new Error(`ai proxy ${resp.status}: ${detail.slice(0, 200)}`);
-      err.httpStatus = resp.status;   // сервер ОТВЕТИЛ — путь живой, каскад не нужен
-      throw err;
-    }
-    return resp.json();
   }
   // Единая точка вызова ИИ: POST в km-ai (каскад Gemini → Groq → Workers AI на сервере),
   // без входа в аккаунт — ключи провайдеров живут только в секретах воркера.
   // Каскад путей: воркер ↔ мостик Google; на второй путь переходим ТОЛЬКО при сетевой
   // ошибке/таймауте (сигнатура блокировки) — HTTP-ошибка (лимит 429 и т.п.) значит,
   // что путь живой, и повторять тот же запрос через второй путь бессмысленно.
-  async function aiCallChat(payload) {
+  // opts — только у «Разговора с Комдори» (без opts всё как раньше: тело { messages }, 45 с на путь):
+  //   { kind:'talk', talk:{…}, timeoutMs:{ primary, reserve }, reserveOn5xx:true }
+  //   kind/talk — в тело рядом с messages; timeoutMs — свой таймаут воркера (primary) и мостика
+  //   (reserve): 18 с > дедлайна воркера 15 с — живой воркер не примут за заблокированный и
+  //   km_ai_pref зря не переключится; 26 с — функция ждёт воркер до 16 с и ещё до 7 с зовёт Claude.
+  //   reserveOn5xx — на 502/503/504 ВОРКЕРА один раз идём мостиком (функция при упавшем воркере
+  //   зовёт Claude напрямую); 4xx — окончательно. Ответ мостика после 5xx воркера путь не меняет
+  //   (воркер жив); мостик не ответил по сети — бросаем исходную 5xx: её code важнее.
+  async function aiCallChat(payload, opts) {
     const messages = Array.isArray(payload) ? payload : [{ role: 'user', content: String(payload) }];
+    const o = opts || {};
+    const extra = {};
+    if (o.kind) extra.kind = o.kind;
+    if (o.talk) extra.talk = o.talk;
+    const tmo = o.timeoutMs;
+    const timeoutFor = (url) => (typeof tmo === 'number') ? tmo
+      : (tmo && typeof tmo === 'object') ? (url === AI_RESERVE_URL ? tmo.reserve : tmo.primary) : undefined;
     const order = _aiPref() === 'reserve' ? [AI_RESERVE_URL, AI_PROXY_URL] : [AI_PROXY_URL, AI_RESERVE_URL];
-    let lastErr = null;
+    let lastErr = null, err5xx = null;
     for (let i = 0; i < order.length; i++) {
       try {
-        const r = await _aiPostOne(order[i], messages);
-        try { localStorage.setItem(_AI_PREF_KEY, order[i] === AI_RESERVE_URL ? 'reserve' : 'primary'); } catch (_) {}
+        const r = await _aiPostOne(order[i], messages, extra, timeoutFor(order[i]));
+        if (!err5xx) { try { localStorage.setItem(_AI_PREF_KEY, order[i] === AI_RESERVE_URL ? 'reserve' : 'primary'); } catch (_) {} }
         return r;
       } catch (e) {
+        if (err5xx) throw (e && e.httpStatus) ? e : err5xx;
         lastErr = e;
-        if (e && e.httpStatus) throw e;
+        if (e && e.httpStatus) {
+          const retry = !!o.reserveOn5xx && order[i] === AI_PROXY_URL && order[i + 1] === AI_RESERVE_URL && [502, 503, 504].includes(e.httpStatus);
+          if (!retry) throw e;
+          err5xx = e;
+        }
       }
     }
     throw lastErr;
@@ -46097,6 +46617,8 @@
   // Subscribe to cloud updates for this user
   attachUserListeners();
   attachFriendsListeners();
+  // «Разговор с Комдори»: оборванный звонок — дослать минуты и начислить XP (D4)
+  try { _talkOnAppOpen(); } catch (_) {}
   // ── Deep-link: /?go=… с публичных страниц (/learn-korean/, /topik/, /study-in-korea/)
   // и из уведомлений (чат, группа, заявки, тариф, календарь…) — один роутер kmRoute.
   // Белый список маршрутов — чтобы чужой параметр не дёргал произвольные экраны; закрытые
