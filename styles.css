@@ -4114,8 +4114,24 @@
   .topik-menu-card:hover { transform: translateY(-2px); border-color: var(--rose); box-shadow: 0 12px 24px -12px rgba(var(--shade-rgb),.4); }
   .topik-menu-card:active { transform: scale(.98); }
   .topik-menu-ico { font-size: 22px; }
+  .topik-menu-tx { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
   .topik-menu-t { font-weight: 700; font-size: 14px; color: var(--berry); }
   .topik-menu-s { font-size: 10.5px; color: var(--soft); }
+  /* Метка NEW (7 дней после релиза): золотая, тёмный текст — контраст ≥ 4.5 */
+  .km-new { display: inline-block; vertical-align: middle; margin-left: 6px; padding: 2px 7px; border-radius: 999px; background: #F3D58A; color: #4A3200; font-size: 9.5px; font-weight: 800; letter-spacing: .06em; line-height: 1.3; }
+  /* Акцентная карточка раздела: во всю ширину, градиент, крупная иконка */
+  .topik-menu-card--accent {
+    grid-column: 1 / -1; flex-direction: row; align-items: center; gap: 14px; padding: 16px 16px;
+    background: linear-gradient(135deg, #BC4B5E 0%, #8E3F4D 100%); border-color: transparent;
+    box-shadow: 0 12px 24px -12px rgba(142, 63, 77, .65);
+  }
+  .topik-menu-card--accent:hover { border-color: transparent; box-shadow: 0 16px 28px -12px rgba(142, 63, 77, .75); }
+  .topik-menu-card--accent .topik-menu-ico { width: 52px; height: 52px; border-radius: 16px; background: rgba(255, 246, 244, .18); display: flex; align-items: center; justify-content: center; font-size: 28px; flex-shrink: 0; }
+  .topik-menu-card--accent .topik-menu-tx { flex: 1; }
+  .topik-menu-card--accent .topik-menu-t { color: #FFF3F4; font-size: 16px; }
+  .topik-menu-card--accent .topik-menu-s { color: rgba(255, 243, 244, .95); font-size: 11.5px; line-height: 1.4; }
+  .topik-menu-arrow { color: #FFF3F4; font-size: 14px; flex-shrink: 0; }
+  body.theme-dark .topik-menu-card--accent { background: linear-gradient(135deg, #A33A4E 0%, #5C2A33 100%); box-shadow: 0 12px 24px -12px rgba(0, 0, 0, .6); }
 
   .topik-back {
     display: inline-flex; align-items: center; gap: 6px; margin-bottom: 12px;

@@ -1308,6 +1308,7 @@
     'kd.sayNext':  { ru: 'Сказать и продолжить', en: 'Say it and continue', uz: 'Ayting va davom eting' },
     'kd.hangup':   { ru: 'Положить трубку', en: 'Hang up', uz: 'Tugatish' },
     'kd.done':     { ru: 'Ты справилась со звонком! Комдори гордится тобой 🐻💛', en: 'You handled the call! Komdori is proud of you 🐻💛', uz: 'Qoʻngʻiroqni uddaladingiz! Komdori sizdan faxrlanadi 🐻💛' },
+    'new.chip':    { ru: 'NEW', en: 'NEW', uz: 'YANGI' },
     'pod.tip':     { ru: 'Сначала слушай без субтитров, потом включи их в плеере (значок CC). Незнакомое слово — на паузу и в словарик 💛', en: 'Listen first without subtitles, then turn them on in the player (CC). Pause on new words and save them 💛', uz: 'Avval subtitrsiz tinglang, keyin pleyerda yoqing (CC). Notanish soʻzda pauza qilib, lugʻatga saqlang 💛' },
     'pod.play':    { ru: 'Включить', en: 'Play', uz: 'Ijro etish' },
     'pod.openYt':  { ru: 'Открыть на YouTube', en: 'Open on YouTube', uz: 'YouTubeʼda ochish' },
@@ -30626,7 +30627,7 @@
     ]}
   ];
   const SELFSTUDY = [
-    { k:'ss-podcasts', ico:'🎧', t:'Подкасты', t_uz:'Podkastlar', s:'Медленный корейский · аудирование · YouTube', s_uz:'Sekin koreys tili · tinglab tushunish · YouTube', game:false, custom:'podcasts' },
+    { k:'ss-podcasts', ico:'🎧', t:'Подкасты', t_uz:'Podkastlar', s:'Медленный корейский · аудирование · YouTube', s_uz:'Sekin koreys tili · tinglab tushunish · YouTube', game:false, custom:'podcasts', accent:true, newUntil:'2026-10-31' },
     { k:'ss-basic',  ico:'🌱', t:'Начальная лексика', t_uz:'Boshlangʻich leksika',    s:'한국어 1-1 · приветствия · семья · класс · дом · места', s_uz:'한국어 1-1 · salomlashish · oila · sinf · uy · joylar', groups:SS_BEGINNER, gameLvl:0 },
     { k:'ss-basic2',  ico:'🍚', t:'Лексика: быт и темы', t_uz:'Leksika: turmush va mavzular',  s:'한국어 1-2 · еда · погода · время · покупки · транспорт · хобби · встречи · телефон · здоровье · путешествие', s_uz:'한국어 1-2 · ovqat · ob-havo · vaqt · xaridlar · transport · xobbi · uchrashuvlar · telefon · salomatlik · sayohat', groups:SS_BEGINNER2, gameLvl:0 },
     { k:'ss-inter',   ico:'🌿', t:'Лексика: 중급', t_uz:'Leksika: 중급',         s:'한국어 2-1 · инструменты · спорт · одежда/цвета · готовка · школа/предметы · выражения', s_uz:'한국어 2-1 · asboblar · sport · kiyim/ranglar · pazandalik · maktab/fanlar · iboralar', groups:SS_INTER, gameLvl:1 },
@@ -30725,6 +30726,14 @@
         <div class="topik-word"><span class="topik-word-ko ko">${w[0]}</span><span class="topik-word-ru">${w[1]}</span><span class="topik-word-ex ko">${w[2] || ''}</span>${lessonSaveHeart(w[0], w[1] || '', '', '🌸', 'selfstudy', 'topik-word-save')}</div>`).join('')}</div></div>
     </div>`;
   }
+  // Метка NEW на 7 дней: untilIso — 'YYYY-MM-DD' (последний день показа включительно, UTC). Нет даты → без метки.
+  // Даты новинок правим в день релиза: релиз + 7 дней.
+  function kmNewChip(untilIso) {
+    if (!untilIso) return '';
+    const end = Date.parse(untilIso + 'T23:59:59Z');
+    if (!isFinite(end) || Date.now() > end) return '';
+    return ` <span class="km-new">${escHtml(t('new.chip'))}</span>`;
+  }
   function openSelfStudy() { switchScreen('selfstudy'); }
   function ssHome() { _ssSection = null; renderSelfStudy(); requestAnimationFrame(() => _setScroll(_ssMenuScroll)); }
   function openSsSection(k) { _ssMenuScroll = _getScroll(); _ssSection = k; renderSelfStudy(); const sc = document.getElementById('screen-selfstudy'); if (sc) sc.scrollTop = 0; window.scrollTo(0, 0); }
@@ -30744,10 +30753,13 @@
       </div>
       <div class="topik-menu-grid">
         ${SELFSTUDY.map(x => `
-          <button type="button" class="topik-menu-card" onclick="openSsSection('${x.k}')" aria-label="${skLoc(x,'t')}">
+          <button type="button" class="topik-menu-card${x.accent ? ' topik-menu-card--accent' : ''}" onclick="openSsSection('${x.k}')" aria-label="${skLoc(x,'t')}">
             <span class="topik-menu-ico" aria-hidden="true">${x.ico}</span>
-            <span class="topik-menu-t">${skLoc(x,'t')}</span>
-            <span class="topik-menu-s">${skLoc(x,'s')}</span>
+            <span class="topik-menu-tx">
+              <span class="topik-menu-t">${skLoc(x,'t')}${kmNewChip(x.newUntil)}</span>
+              <span class="topik-menu-s">${skLoc(x,'s')}</span>
+            </span>
+            ${x.accent ? '<i class="fa-solid fa-chevron-right topik-menu-arrow" aria-hidden="true"></i>' : ''}
           </button>`).join('')}
       </div>`;
   }
