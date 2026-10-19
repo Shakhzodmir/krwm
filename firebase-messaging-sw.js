@@ -47,11 +47,14 @@ self.addEventListener('fetch', e => {
     // ученица скачала бы старую версию приложения после обновления.
     if (!/\/assets\/music\//i.test(url.pathname)) return;
   } else {
-    var isCode = /\/(index\.html)?$|\.(js|css|json)$/i.test(url.pathname);
+    var isCode = /\/(index\.html)?$|\.(html|js|css|json)$/i.test(url.pathname);
     var versioned = isCode && url.searchParams.has('v');
     if (isCode && !versioned) {
-      // index.html и немаркированный код: без версии в URL мы не знаем, свежий ли
-      // кэш — поэтому всегда идём в сеть, кэш только для офлайна.
+      // Страницы (index.html и все *.html: privacy, delete-account, textbook…) и
+      // немаркированный код: без версии в URL мы не знаем, свежий ли кэш — поэтому
+      // всегда идём в сеть, кэш только для офлайна. (До 16.10.2026 *.html, кроме
+      // index.html, отдавались из кэша навсегда: новая редакция privacy.html не
+      // доходила до тех, кто открывал её раньше.)
       // cache:'no-cache' обязателен: GitHub Pages отдаёт max-age=600, и обычный fetch
       // до 10 минут молча брал СТАРЫЙ index.html из HTTP-кэша браузера («обновляю —
       // ничего не меняется»). С no-cache браузер всегда сверяется с сервером по ETag
