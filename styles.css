@@ -5879,6 +5879,16 @@
   .set-fold-inner { overflow: hidden; min-height: 0; padding: 0 4px; }
   .set-fold.open .set-fold-inner { padding: 4px 4px 10px; }
   .gender-pick-sub { font-size: 11px; color: var(--hush); margin: 0 2px 8px; }
+  /* Статьи о Корее (Настройки): три одинаковые плитки — иконка над подписью, всё по центру */
+  .art-row { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+  .art-link { display: flex; flex-direction: column; align-items: center; justify-content: flex-start; gap: 7px; min-height: 92px; padding: 14px 6px 10px; box-sizing: border-box; border-radius: 16px; border: 1.5px solid var(--line); background: var(--paper); color: var(--berry); text-align: center; text-decoration: none; transition: transform var(--t-fast) var(--ease-out), border-color var(--t-fast) var(--ease-out), background var(--t-fast) var(--ease-out); }
+  .art-link:hover { border-color: var(--coral); background: var(--blush); }
+  .art-link:active { transform: scale(.96); }
+  .art-ico { font-size: 24px; line-height: 1; }
+  .art-t { font-size: 12.5px; font-weight: 700; line-height: 1.25; overflow-wrap: anywhere; hyphens: auto; }
+  body.theme-dark .art-link { background: #1E1E1E; border-color: #3A2A30; color: #F2E6E9; }
+  body.theme-dark .art-link:hover { background: #2A1F23; border-color: #CD6379; }
+  body.calm-motion .art-link { transition: none; }
   .set-fold--required .set-fold-head { border: 1.5px dashed var(--coral); border-radius: 14px; }
   body.calm-motion .set-fold-chev, body.calm-motion .set-fold-body { transition: none; }
   .notif-note { font-size: 10.5px; color: var(--soft); line-height: 1.45; padding: 0 4px 10px; }

@@ -145,3 +145,12 @@ strong { color: var(--berry); }
 @media (prefers-reduced-motion: reduce) {
   .lp-post { transition: none; }
 }
+
+/* Кнопка «Назад» в шапке (вставляет /assets/landing/back.js): внутри приложения возвращает туда, откуда пришли,
+   по прямой ссылке (поиск) ведёт в приложение. Минимум 44 px, тёмная тема — через те же переменные. */
+.lp-backrow { flex: 0 0 100%; }
+.lp-back { display: inline-flex; align-items: center; gap: 6px; min-height: 44px; padding: 0 16px; border-radius: 999px; background: var(--blush); color: var(--berry); border: 1px solid var(--line); font-size: 14px; font-weight: 700; text-decoration: none; transition: background .2s ease-out, transform .2s ease-out; }
+.lp-back:hover { background: var(--petal); color: var(--berry); }
+.lp-back:active { transform: scale(.97); }
+.lp-back:focus-visible { outline: 3px solid var(--coral); outline-offset: 2px; }
+@media (prefers-reduced-motion: reduce) { .lp-back { transition: none; } }

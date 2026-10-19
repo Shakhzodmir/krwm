@@ -156,7 +156,7 @@
     'set.intro.sub':    { ru: 'Посмотреть интро и пройти квиз заново', en: 'Watch the intro and retake the quiz', uz: 'Introni koʻrish va testni qayta yechish' },
     // Публичные статьи сайта (/learn-korean/, /topik/, /study-in-korea/) — страницы на русском
     'set.articles':     { ru: 'Статьи о Корее', en: 'Articles about Korea', uz: 'Koreya haqida maqolalar' },
-    'set.articles.sub': { ru: 'открываются на сайте, на русском', en: 'open on the website, in Russian', uz: 'saytda ochiladi, rus tilida' },
+    'set.articles.sub': { ru: 'на русском', en: 'in Russian', uz: 'rus tilida' },
     'home.articles':    { ru: 'Статьи о Корее', en: 'Articles about Korea', uz: 'Koreya haqida maqolalar' },
     'home.articles.meta': { ru: 'все статьи →', en: 'all articles →', uz: 'barcha maqolalar →' },
     'art.blog':         { ru: 'Блог: разборы и материалы', en: 'Blog: guides and breakdowns', uz: 'Blog: tahlil va materiallar' },
@@ -12332,14 +12332,14 @@
       ...((Store.get('user') && !Store.get('user').isAdmin) ? [
         row('💎', t('set.plan'), t('set.plan.sub', { plan: `${PLANS[myPlanId()].emoji} ${PLANS[myPlanId()].name}` }), chev, "document.getElementById('settings-modal')?.remove(); openPlanPage()")
       ] : []),
-      // Публичные статьи сайта — обычные страницы вне приложения, открываем в новой
-      // вкладке (как печатную версию учебника), чтобы не выгружать PWA.
+      // Публичные статьи сайта — обычные страницы вне приложения. Открываем в ТОМ ЖЕ окне (у установленного
+      // приложения нет вкладок), на самих страницах есть кнопка «Назад» (/assets/landing/back.js).
       `<div class="theme-picker">
         <div class="theme-picker-title">📚 ${t('set.articles')} <span style="font-weight:500; color:var(--hush); font-size:10.5px;">— ${t('set.articles.sub')}</span></div>
-        <div class="gender-pick-row" style="flex-wrap:wrap;">
-          <a class="gender-opt" style="display:block; text-align:center; text-decoration:none;" href="/learn-korean/" target="_blank" rel="noopener">🌱 ${t('art.learn.short')}</a>
-          <a class="gender-opt" style="display:block; text-align:center; text-decoration:none;" href="/topik/" target="_blank" rel="noopener">📝 TOPIK</a>
-          <a class="gender-opt" style="display:block; text-align:center; text-decoration:none;" href="/study-in-korea/" target="_blank" rel="noopener">🎓 ${t('art.study')}</a>
+        <div class="art-row">
+          <a class="art-link" href="/learn-korean/"><span class="art-ico" aria-hidden="true">🌱</span><span class="art-t">${t('art.learn.short')}</span></a>
+          <a class="art-link" href="/topik/"><span class="art-ico" aria-hidden="true">📝</span><span class="art-t">TOPIK</span></a>
+          <a class="art-link" href="/study-in-korea/"><span class="art-ico" aria-hidden="true">🎓</span><span class="art-t">${t('art.study')}</span></a>
         </div>
       </div>`,
       row('🌸', t('set.intro'), t('set.intro.sub'), chev, 'startOnboardingTour()'),
