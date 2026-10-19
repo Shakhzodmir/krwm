@@ -7936,3 +7936,58 @@ body.theme-dark .bc-notif-text { color: #CDD2DD; }
   .bc-cols { grid-template-columns: minmax(0, 1fr) minmax(260px, 310px); }
   .bc-prev { position: sticky; top: 84px; }
 }
+
+/* ═══════════ «Разговор с Комдори»: итог (16.10.2026) ═══════════
+   Мордочка радуется · чипы · «Ошибки» (было → стало) · «Новые слова» с сердечками · остаток минут. */
+.talk-sum { text-align: center; }
+.talk-face-sum { --kd-size: 112px; margin: 0 auto 4px; }
+.talk-sum-t { margin: 6px 0 4px; font-family: 'Fraunces', Georgia, serif; font-weight: 600; font-size: 26px; line-height: 1.15; color: var(--berry); outline: none; overflow-wrap: anywhere; }
+/* заголовок — цель программного фокуса (экранная читалка озвучит итог), кольцо вокруг него не нужно; общее [tabindex]:focus-visible сильнее по специфичности */
+.talk-sum-t[tabindex]:focus, .talk-sum-t[tabindex]:focus-visible { outline: none; }
+.talk-sum-s { margin: 0 0 12px; font-size: 13px; line-height: 1.5; color: var(--soft); }
+.talk-sum-chips { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin-bottom: 14px; }
+.talk-sum-card { text-align: left; margin: 0 0 12px; padding: 12px 14px; border-radius: 18px; background: var(--card); border: 2px solid var(--duo-blush); box-sizing: border-box; animation: kmSoftUp .22s var(--ease-out) both; }
+.talk-sum-card[hidden] { display: none; }
+.talk-sum-h { margin: 0 0 8px; font: 800 11.5px Inter, sans-serif; letter-spacing: .08em; text-transform: uppercase; color: var(--soft); }
+.talk-sum-fix { padding: 8px 0; border-top: 1px solid var(--line); }
+.talk-sum-h + .talk-sum-fix { border-top: none; padding-top: 0; }
+.talk-sum-fix-l { font-size: 15px; line-height: 1.4; overflow-wrap: anywhere; }
+.talk-sum-bad { color: var(--bad-ink); }
+.talk-sum-good { color: var(--ok-ink); font-weight: 700; }
+.talk-sum-why { margin-top: 2px; font-size: 12.5px; line-height: 1.45; color: var(--soft); overflow-wrap: anywhere; }
+.talk-sum-nofix { margin: 0; text-align: center; font-size: 13px; color: var(--soft); }
+.talk-sum-word { display: flex; align-items: center; gap: 4px; padding: 4px 0; border-top: 1px solid var(--line); }
+.talk-sum-h + .talk-sum-word { border-top: none; }
+.talk-sum-word-tx { flex: 1; min-width: 0; font-size: 13px; line-height: 1.4; color: var(--soft); overflow-wrap: anywhere; }
+.talk-sum-word-ko { font-size: 17px; font-weight: 700; color: var(--berry); }
+.talk-sum-word-tr { font-size: 12px; color: var(--hush); }
+.talk-sum-say, .talk-sum-heart { flex-shrink: 0; width: 44px; height: 44px; border: none; border-radius: 12px; background: transparent; color: var(--coral); font-size: 16px; cursor: pointer; transition: background .2s var(--ease-out), color .2s var(--ease-out); }
+.talk-sum-say:hover, .talk-sum-heart:hover { background: var(--blush); }
+.talk-sum-all { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; min-height: 48px; margin: 0 0 12px; border: 2px solid var(--duo-blush); border-radius: 16px; background: var(--card); color: var(--berry); font: 800 14px Inter, sans-serif; cursor: pointer; box-sizing: border-box; transition: border-color .2s var(--ease-out), opacity .2s var(--ease-out); }
+.talk-sum-all[hidden] { display: none; }
+.talk-sum-all:disabled { opacity: .7; cursor: default; }
+.talk-sum-btns { display: grid; grid-template-columns: 1fr 1.4fr; gap: 10px; }
+.talk-sum-btns .btn { min-height: 48px; justify-content: center; }
+@media (min-width: 768px) {
+  .talk-face-sum { --kd-size: 140px; }
+  .talk-sum-t { font-size: 30px; }
+}
+body.theme-dark .talk-sum-card, body.theme-dark .talk-sum-all { background: #1E1E1E; border-color: #3A2A30; }
+body.theme-dark .talk-sum-say:hover, body.theme-dark .talk-sum-heart:hover { background: #2A1F23; }
+body.calm-motion .talk-sum-card { animation: none; }
+@media (prefers-reduced-motion: reduce) { .talk-sum-card { animation: none; } .talk-sum-say, .talk-sum-heart, .talk-sum-all { transition: none; } }
+
+/* ═══════════ «Разговор с Комдори»: карточка «Завершить звонок?» (19.10.2026) ═══════════
+   Лежит внутри #talk-page (z 300), а не .modal-bg (z 200 лёг бы под страницу). */
+#talk-page .talk-card-bg { position: absolute; inset: 0; z-index: 6; display: flex; align-items: center; justify-content: center; padding: 16px; background: rgba(var(--shade-rgb), .45); animation: kmTalkFade .22s var(--ease-out) both; }
+#talk-page .talk-card-bg[hidden] { display: none; }
+#talk-page .talk-card { width: 100%; max-width: 360px; min-width: 0; padding: 22px 18px 16px; text-align: center; background: var(--card); color: var(--berry); border: 1px solid var(--line); border-radius: 22px; box-shadow: var(--shadow-lg); box-sizing: border-box; animation: kmSoftUp .26s var(--ease-out) both; }
+#talk-page .talk-card-ico { font-size: 34px; line-height: 1; }
+#talk-page .talk-card-t { margin-top: 10px; font-family: 'Fraunces', Georgia, serif; font-weight: 600; font-size: 21px; line-height: 1.25; color: var(--berry); overflow-wrap: anywhere; }
+#talk-page .talk-card-s { margin-top: 6px; font-size: 13.5px; line-height: 1.5; color: var(--soft); overflow-wrap: anywhere; }
+#talk-page .talk-card-row { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 10px; margin-top: 18px; }
+#talk-page .talk-card-row .btn { min-width: 0; min-height: 48px; justify-content: center; }
+@keyframes kmTalkFade { from { opacity: 0; } to { opacity: 1; } }
+body.theme-dark #talk-page .talk-card { background: #1E1E1E; border-color: #3A2A30; }
+body.calm-motion #talk-page .talk-card-bg, body.calm-motion #talk-page .talk-card { animation: none; }
+@media (prefers-reduced-motion: reduce) { #talk-page .talk-card-bg, #talk-page .talk-card { animation: none; } }

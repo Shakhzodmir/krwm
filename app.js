@@ -1296,8 +1296,8 @@
     'lw.savedNone':  { ru: 'Все слова уже в словарике 🌸', en: 'All words are already saved 🌸', uz: 'Barcha soʻzlar allaqachon saqlangan 🌸' },
     'lw.noWords':    { ru: 'В этом уроке нет отдельных слов', en: 'This lesson has no separate words', uz: 'Bu darsda alohida soʻzlar yoʻq' },
     'a11y.listen':   { ru: 'Озвучить', en: 'Listen', uz: 'Tinglash' },
-    'kd.entry.t':  { ru: 'Звонок с Комдори', en: 'Call with Komdori', uz: 'Komdori bilan qoʻngʻiroq' },
-    'kd.entry.s':  { ru: 'Поговори с медвежонком по-корейски 🐻', en: 'Talk to the bear cub in Korean 🐻', uz: 'Ayiqcha bilan koreyscha gaplashing 🐻' },
+    'kd.entry.t':  { ru: 'Разговор с Комдори', en: 'Talk with Komdori', uz: 'Komdori bilan suhbat' },
+    'kd.entry.s':  { ru: 'Говори голосом по-корейски — Комдори ответит 🐻', en: 'Speak Korean out loud — Komdori answers 🐻', uz: 'Koreyscha ovozda gapiring — Komdori javob beradi 🐻' },
     'kd.ringTitle':{ ru: 'Комдори звонит! 📞', en: 'Komdori is calling! 📞', uz: 'Komdori qoʻngʻiroq qilyapti! 📞' },
     'kd.ringSub':  { ru: 'Маленький разговор по-корейски. За ошибки не наказываем 🌸', en: 'A little chat in Korean. No penalty for mistakes 🌸', uz: 'Koreyscha kichik suhbat. Xatolar uchun jazolamaymiz 🌸' },
     'kd.answer':   { ru: 'Ответить', en: 'Answer', uz: 'Javob berish' },
@@ -1399,6 +1399,37 @@
     'talk.kb.silent':       { ru: 'Не получается расслышать — давай пока писать ⌨️', en: 'I can’t hear you well — let’s type for now ⌨️', uz: 'Eshita olmayapman — hozircha yozamiz ⌨️' },
     // ── /talk: звонок ──
     'kd.done':     { ru: 'Ты справилась со звонком! Комдори гордится тобой 🐻💛', en: 'You handled the call! Komdori is proud of you 🐻💛', uz: 'Qoʻngʻiroqni uddaladingiz! Komdori sizdan faxrlanadi 🐻💛' },
+    'talk.sum.head':        { ru: 'Итог разговора', en: 'Call summary', uz: 'Suhbat yakuni' },
+    'talk.sum.title':       { ru: 'Отличный разговор! 🎉', en: 'Great conversation! 🎉', uz: 'Ajoyib suhbat! 🎉' },
+    'talk.sum.titleNone':   { ru: 'Разговор не состоялся', en: 'No conversation this time', uz: 'Suhbat boʻlmadi' },
+    'talk.sum.sub':         { ru: 'Комдори гордится тобой 🐻💛', en: 'Komdori is proud of you 🐻💛', uz: 'Komdori sizdan faxrlanadi 🐻💛' },
+    'talk.sum.subNone':     { ru: 'Скажи хотя бы пару слов — Комдори с радостью послушает', en: 'Say at least a few words — Komdori will gladly listen', uz: 'Hech boʻlmasa bir-ikki soʻz ayting — Komdori mamnuniyat bilan tinglaydi' },
+    'talk.sum.subIp':       { ru: 'На сегодня хватит — приходи завтра 🌙', en: 'That’s enough for today — come back tomorrow 🌙', uz: 'Bugunga yetarli — ertaga qaytib keling 🌙' },
+    'talk.sum.subBudget':   { ru: 'Комдори отдыхает до завтра 😴', en: 'Komdori is resting until tomorrow 😴', uz: 'Komdori ertagacha dam oladi 😴' },
+    'talk.sum.subAi':       { ru: 'Комдори задумался и не ответил — попробуй чуть позже', en: 'Komdori got lost in thought and did not answer — try again a bit later', uz: 'Komdori oʻylanib qoldi va javob bermadi — birozdan keyin urinib koʻring' },
+    'talk.sum.mins':        { ru: '{n} мин', en: '{n} min', uz: '{n} daq' },
+    'talk.sum.lessMin':     { ru: '< 1 мин', en: '< 1 min', uz: '< 1 daq' },
+    'talk.sum.turns':       { ru: 'реплик: {n}', en: '{n} lines', uz: '{n} ta gap' },
+    'talk.sum.xp':          { ru: '+{n} XP', en: '+{n} XP', uz: '+{n} XP' },
+    'talk.sum.errors':      { ru: 'Ошибки · {n}', en: 'Mistakes · {n}', uz: 'Xatolar · {n}' },
+    'talk.sum.noErrors':    { ru: 'Ошибок не заметил — так держать! 🌸', en: 'No mistakes spotted — keep it up! 🌸', uz: 'Xato sezmadim — shunday davom eting! 🌸' },
+    'talk.sum.words':       { ru: 'Новые слова · {n}', en: 'New words · {n}', uz: 'Yangi soʻzlar · {n}' },
+    'talk.sum.all':         { ru: 'Все слова в словарик', en: 'Save all words', uz: 'Barcha soʻzlarni lugʻatga' },
+    'talk.sum.allSaved':    { ru: 'Все слова в словарике', en: 'All words saved', uz: 'Barcha soʻzlar lugʻatda' },
+    'talk.sum.addAria':     { ru: 'Добавить в словарик', en: 'Add to my words', uz: 'Lugʻatga qoʻshish' },
+    'talk.sum.removeAria':  { ru: 'Убрать из словарика', en: 'Remove from my words', uz: 'Lugʻatdan olib tashlash' },
+    'talk.sum.savedN':      { ru: 'Добавлено слов: {n} 🌸', en: 'Words added: {n} 🌸', uz: 'Qoʻshilgan soʻzlar: {n} 🌸' },
+    'talk.sum.left':        { ru: 'Осталось сегодня:', en: 'Left today:', uz: 'Bugun qoldi:' },
+    'talk.sum.leftNone':    { ru: 'На сегодня всё — приходи завтра', en: 'That’s all for today — come back tomorrow', uz: 'Bugunga shu — ertaga keling' },
+    'talk.sum.leftInf':     { ru: 'Без ограничения по времени', en: 'No time limit', uz: 'Vaqt cheklovi yoʻq' },
+    'talk.sum.done':        { ru: 'Готово', en: 'Done', uz: 'Tayyor' },
+    'talk.sum.again':       { ru: 'Ещё разговор', en: 'Another call', uz: 'Yana suhbat' },
+    'talk.confirm.t':       { ru: 'Завершить звонок?', en: 'End the call?', uz: 'Qoʻngʻiroqni tugatamizmi?' },
+    'talk.confirm.s':       { ru: 'Итог с ошибками и словами сохранится.', en: 'Your summary with mistakes and words will be saved.', uz: 'Xatolar va soʻzlar bilan yakun saqlanadi.' },
+    'talk.confirm.end':     { ru: 'Завершить', en: 'End', uz: 'Tugatish' },
+    'talk.confirm.stay':    { ru: 'Остаться', en: 'Stay', uz: 'Qolish' },
+    'talk.st.resume':       { ru: 'Пауза — продолжим?', en: 'Paused — shall we continue?', uz: 'Pauza — davom etamizmi?' },
+    'talk.btn.resume':      { ru: 'Продолжить', en: 'Continue', uz: 'Davom etish' },
     'set.country.none':   { ru: 'не выбрана — укажи', en: 'not set — choose', uz: 'tanlanmagan — tanlang' },
     'set.notif.kindsSub': { ru: 'включено {n} из 3', en: '{n} of 3 on', uz: '{n} / 3 yoqilgan' },
     'new.chip':    { ru: 'NEW', en: 'NEW', uz: 'YANGI' },
@@ -7180,6 +7211,7 @@
   function _updTryReload() {
     _updHiddenTimer = null;
     if (!document.hidden || !_updPendingV) return;
+    if (talkCallActive()) { _updArmTimer(); return; }   // идёт (или на паузе) разговор с Комдори — вкладку не перезагружаем
     const now = Date.now();
     if (now - _updLastTry < _UPD_RETRY_GAP) { _updArmTimer(); return; }
     _updLastTry = now;
@@ -10712,6 +10744,7 @@
   }
   // Закрыть то, что накрыло бы цель ссылки (тарифы z 300 выше чата, модалка настроек)
   function _kmCloseCovering(go) {
+    try { talkForceClose(); } catch (_) {}   // «Разговор с Комдори» (z 300) накрыл бы цель ссылки: звонок гасится, страница закрывается
     document.getElementById('settings-modal')?.remove();
     const pp = document.getElementById('plan-page');
     if (pp && go !== 'plan') {
@@ -10738,7 +10771,7 @@
         if (Store.get('tourDone') || document.getElementById('app-tour')) { _kmTourDeferred = false; return; }
         if (document.getElementById('chat-page') || document.getElementById('plan-page')) return;
         const busy = document.hidden || document.querySelector('.modal-bg, .game-page')
-          || ['intro', 'onboard', 'access-gate', 'lesson-modal', 'lesson-complete-page', 'topik-exam-overlay', 'user-profile-page', 'writing-practice-page'].some(id => document.getElementById(id));
+          || ['intro', 'onboard', 'access-gate', 'lesson-modal', 'lesson-complete-page', 'topik-exam-overlay', 'user-profile-page', 'writing-practice-page', 'talk-page'].some(id => document.getElementById(id));
         if (busy) { _kmTourResume(1500); return; }
         _kmTourDeferred = false;
         startAppTour();
@@ -11217,6 +11250,7 @@
     // на тарифах, ушла с них по уведомлению) больше не глушит рассылки навсегда.
     if (Store.get('tourPending') && (document.getElementById('plan-page') || Date.now() - _kmWelcomeAt < 3000)) return true;
     if (document.querySelector('.modal-bg')) return true;
+    if (document.getElementById('talk-page')) return true;   // «Разговор с Комдори» (z 300): попап рассылки не всплывает посреди звонка
     if (document.getElementById('lesson-modal') || document.getElementById('lesson-complete-page') || document.getElementById('topik-exam-overlay') || document.querySelector('.game-page')) return true;
     return false;
   }
@@ -33515,13 +33549,13 @@
   }
   // Вход с карточки «Игры»: аккаунт → флаг беты (выкл → старый звонок) → страница → остаток минут
   async function talkOpen() {
-    if (!requireAccount(t('talk.title'))) return;
     if (_talkOpening || document.getElementById('talk-page')) return;
     _talkOpening = true;
     let on = false;
     try { on = !!(await talkFlagEnabled()); } catch (_) { on = false; }
     finally { _talkOpening = false; }
-    if (!on) { openKomdoriCall(); return; }
+    if (!on) { openKomdoriCall(); return; }                 // бета выключена: старый звонок, в том числе гостю
+    if (!requireAccount(t('talk.title'))) return;           // бета включена: нужен аккаунт
     if (document.getElementById('talk-page')) return;
     const page = document.createElement('div');
     page.className = 'talk-page';
@@ -33739,6 +33773,9 @@
     if (!document.getElementById('chat-page') && !document.getElementById('plan-page') && !document.getElementById('ai-tutor-modal')) {
       document.body.classList.remove('chat-open');
     }
+    try { talkHistoryPop(); } catch (_) {}
+    // XP разговора — ПОСЛЕ закрытия страницы: попап «цель дня» (.modal-bg, z 200) иначе лёг бы под неё (z 300)
+    try { talkXpFlush(); } catch (_) {}
   }
   // ── /Разговор с Комдори: экран настройки ──
   // ───────────── «Разговор с Комдори» · звонок: машина состояний и озвучка ─────────────
@@ -33862,7 +33899,8 @@
       pending: null, aiFails: 0, silentFails: 0, ttsFails: 0, autoRetried: false, hint: '',
       kbOpen: false, kbAuto: false, kbHint: '', nativeNext: false, nativeBad: [],
       pauseReason: '', pausedFrom: '', replayOnResume: false, timeUp: false, farewell: false,
-      endReason: '', tickTimer: 0, bargeTimer: 0, sinceFlush: 0, onOnline: null, onOffline: null
+      endReason: '', tickTimer: 0, bargeTimer: 0, sinceFlush: 0, onOnline: null, onOffline: null,
+      summaryShown: false, summaryAct: '', sum: null, confirmPrev: ''
     });
     _talkRenderCall();
     c.onOffline = () => { if (_talk === c) _talkPause('offline'); };
@@ -33870,6 +33908,7 @@
     window.addEventListener('offline', c.onOffline);
     window.addEventListener('online', c.onOnline);
     c.tickTimer = setInterval(_talkTick, 1000);
+    try { talkHistoryPush(); } catch (_) {}      // системная «назад» во время звонка = «Завершить звонок?»
     // Первая реплика — заготовка (без ИИ): звучит сразу, первый запрос к ИИ — после ответа ученицы
     const line = { ko: opener.ko, tr: opener.tr || '', ru: (opener.ru && (opener.ru[APP_LANG] || opener.ru.ru)) || '' };
     c.history.push({ role: 'assistant', ko: opener.ko });
@@ -34257,12 +34296,10 @@
     _talkSync();
   }
   function talkHangup() { talkCallEnd('hangup'); }
-  // «Назад» в шапке звонка. Подтверждение «Завершить звонок?» с историей/Esc — хуки E6 (talkConfirmEnd);
-  // здесь: звонка нет — закрыть страницу, звонок идёт — завершить.
+  // «Назад» в шапке звонка: звонок идёт → «Завершить звонок?» (реплик не было — сразу итог), иначе закрыть страницу
   function talkBack() {
-    const c = _talk;
-    if (!c || c.phase === 'setup' || c.phase === 'ended') { talkClose(); return; }
-    talkCallEnd('back');
+    if (talkCallActive()) { talkConfirmEnd('header'); return; }
+    talkClose();
   }
   // ── Конец звонка (один на звонок): всё гасим, остаток минут — в норму, дальше итог (E5) ──
   function _talkTeardown(c) {
@@ -34275,6 +34312,7 @@
     if (c.onOnline) window.removeEventListener('online', c.onOnline);
     if (c.onOffline) window.removeEventListener('offline', c.onOffline);
     c.onOnline = c.onOffline = null;
+    try { talkHistoryPop(); } catch (_) {}
     try { talkUsageFlush(); } catch (_) {}
   }
   // reason: 'hangup' | 'back' | 'time' | 'ai_fail' | 'ai_end' | 'talk_ip' | 'talk_budget'
@@ -34345,6 +34383,17 @@
           <button type="button" class="talk-tool" id="talk-again" data-talk="repeat" aria-label="${escHtml(t('talk.call.repeatAria'))}"><i class="fa-solid fa-rotate-left" aria-hidden="true"></i></button>
           <button type="button" class="talk-tool talk-tool-end" id="talk-end" data-talk="hangup" aria-label="${escHtml(t('talk.call.hangupAria'))}"><i class="fa-solid fa-phone-slash" aria-hidden="true"></i></button>
         </div>
+      </div>
+      <div class="talk-card-bg" id="talk-confirm" data-talk="confirm-stay" role="alertdialog" aria-modal="true" aria-labelledby="talk-confirm-t" hidden>
+        <div class="talk-card">
+          <div class="talk-card-ico" aria-hidden="true">📞</div>
+          <div class="talk-card-t" id="talk-confirm-t">${t('talk.confirm.t')}</div>
+          <div class="talk-card-s">${t('talk.confirm.s')}</div>
+          <div class="talk-card-row">
+            <button type="button" class="btn btn-ghost" id="talk-confirm-stay" data-talk="confirm-stay">${t('talk.confirm.stay')}</button>
+            <button type="button" class="btn btn-primary" data-talk="confirm-end">${t('talk.confirm.end')}</button>
+          </div>
+        </div>
       </div>`;
     shell.onclick = _talkCallClick;
     const mic = document.getElementById('talk-mic');
@@ -34368,7 +34417,10 @@
     const el = e.target.closest('[data-talk]');
     if (!el || !e.currentTarget.contains(el) || el.disabled) return;
     const a = el.dataset.talk;
+    if (a === 'confirm-stay' && el.id === 'talk-confirm' && e.target !== el) return;   // тап по самой карточке — не «остаться»
     if (a === 'back') talkBack();
+    else if (a === 'confirm-stay') _talkConfirmHide();
+    else if (a === 'confirm-end') _talkConfirmEndNow();
     else if (a === 'cc') talkToggleCc();
     else if (a === 'native') talkNative();
     else if (a === 'kb') talkToggleKeyboard();
@@ -34477,7 +34529,7 @@
     }
     else if (ph === 'recognizing') st = t('talk.st.recognizing');
     else if (ph === 'thinking') st = t('talk.st.thinking');
-    else if (ph === 'paused') st = t({ offline: 'talk.st.offline', ai: 'talk.st.aiFail' }[c.pauseReason] || 'talk.st.paused');
+    else if (ph === 'paused') st = t({ offline: 'talk.st.offline', ai: 'talk.st.aiFail', hidden: 'talk.st.resume' }[c.pauseReason] || 'talk.st.paused');
     const stx = $('talk-status-tx'); if (stx) stx.textContent = st;
     const status = $('talk-status');
     if (status) {
@@ -34487,8 +34539,9 @@
     const log = $('talk-log'); if (log) log.classList.toggle('talk-nocc', !c.cc);
     const cc = $('talk-cc');
     if (cc) { cc.classList.toggle('on', c.cc); cc.setAttribute('aria-pressed', String(c.cc)); cc.setAttribute('aria-disabled', String(c.textMode)); }
-    // Своя плашка — только для пауз сети и «Комдори задумался»; остальные паузы рисует E6 (карточка «Продолжим?»)
-    const mine = ph === 'paused' && (c.pauseReason === 'offline' || c.pauseReason === 'ai');
+    // Плашка: пауза сети, «Комдори задумался» и «Пауза — продолжим?» (вкладка была скрыта). Пауза «Завершить звонок?»
+    // рисуется карточкой поверх страницы (#talk-confirm), остальное под ней неактивно (inert)
+    const mine = ph === 'paused' && (c.pauseReason === 'offline' || c.pauseReason === 'ai' || c.pauseReason === 'hidden');
     const notice = $('talk-notice');
     if (notice) {
       notice.hidden = !mine;
@@ -34496,10 +34549,18 @@
         $('talk-notice-t').textContent = st;
         const go = $('talk-notice-go');
         go.hidden = c.pauseReason === 'offline';
-        go.textContent = t('talk.btn.retry');
+        go.textContent = t(c.pauseReason === 'hidden' ? 'talk.btn.resume' : 'talk.btn.retry');
       }
     }
     const ctrl = $('talk-ctrl'); if (ctrl) ctrl.hidden = mine || ph === 'ended';
+    const cf = $('talk-confirm');
+    if (cf) {
+      const showCf = ph === 'paused' && c.pauseReason === 'confirm';
+      const wasCf = !cf.hidden;
+      cf.hidden = !showCf;
+      document.querySelectorAll('#talk-shell > .talk-head, #talk-shell > .talk-stage, #talk-shell > .talk-log, #talk-shell > .talk-notice, #talk-shell > .talk-ctrl').forEach(el => el.toggleAttribute('inert', showCf));
+      if (showCf && !wasCf) { try { $('talk-confirm-stay').focus({ preventScroll: true }); } catch (_) {} }
+    }
     const yourTurn = ph === 'listening' || ph === 'komdori';
     const mic = $('talk-mic');
     if (mic) {
@@ -34534,6 +34595,532 @@
   }
   // ── /Разговор с Комдори: звонок ──
 
+  // ───────────── «Разговор с Комдори» · распознавание речи: talkListen ─────────────
+  // talkListen({ lang, mode: 'hold'|'free', onInterim(text) }) → { promise, release(), cancel() }.
+  // promise ВСЕГДА завершается: { text } или { error: 'no-speech'|'not-allowed'|'unavailable'|'network'|'timeout' }.
+  // release() — «отпустила» (hold) / «я закончила» (free); cancel() — выход, пауза: abort() и сразу конец.
+  // Только on*-свойства (в APK addEventListener — пустышка). Три движка в одном коде:
+  //  • браузер, «Зажми»: continuous:true; преждевременный onend → новая сессия, финальные куски
+  //    склеиваются; release → stop() (отдаёт финал), сторож 4 с после отпускания;
+  //  • браузер, «Свободный»: continuous:false; no-speech или пустой конец → одно автоповторное
+  //    слушание; сторож 10 с без активности (живой текст продлевает);
+  //  • APK (window.__kmsttPoly): мост 1.1.0 (__kmsttPoly = 1): stop ≡ abort — фраза пропала бы,
+  //    событий нет, поэтому на release stop()/abort() НЕ зовём — ждём нативный результат (Android сам
+  //    закрывает фразу по паузе), сторож 8 с; живого текста нет. Мост 1.2.x (__kmsttPoly = 2 и
+  //    KMSTT.version() ≥ 2): stop() отдаёт результат, есть частичные результаты.
+  // Нераспознанный чужой 'aborted' (RECOGNIZER_BUSY/CLIENT в APK, потеря аудиофокуса) = 'no-speech'.
+  // Объект, а не числа: тесты укорачивают сторожей, не дожидаясь секунд.
+  const TALK_LISTEN_WD = { freeMs: 10000, freeMaxMs: 30000, afterFinalMs: 1500, holdWebMs: 4000, holdApkMs: 8000, holdMaxMs: 60000, restartMax: 10 };
+  function _talkListenApk() { return !!window.__kmsttPoly; }
+  function _talkListenApkV2() {
+    try { return Number(window.__kmsttPoly) >= 2 && typeof window.KMSTT.version === 'function' && Number(window.KMSTT.version()) >= 2; } catch (_) { return false; }
+  }
+  // Код ошибки движка → ответ talkListen (спека §5.1)
+  function _talkListenErr(code) {
+    switch (code) {
+      case 'not-allowed': return 'not-allowed';
+      case 'service-not-allowed':
+      case 'language-not-supported':
+      case 'audio-capture':   return 'unavailable';
+      case 'network':         return 'network';
+      default:                return 'no-speech';   // no-speech, чужой aborted, bad-grammar…
+    }
+  }
+  // Склейка кусков РАЗНЫХ сессий: без дублирующего «хвоста»
+  function _talkListenJoin(a, b) {
+    a = String(a || '').trim(); b = String(b || '').trim();
+    if (!a) return b;
+    if (!b || a === b) return a;
+    return a + ' ' + b;
+  }
+  // Склейка финальных кусков ОДНОЙ сессии: Chrome на Android в continuous-режиме присылает
+  // кумулятивные («привет» → «привет как дела») и повторные финалы — не дублируем
+  function _talkListenMerge(prev, next) {
+    prev = String(prev || '').trim(); next = String(next || '').trim();
+    if (!prev) return next;
+    if (!next || next === prev || prev.endsWith(next)) return prev;
+    if (next.startsWith(prev)) return next;
+    return prev + ' ' + next;
+  }
+  // Текст сессии из события: { fin — финальные куски, interim — хвост-гипотеза }
+  function _talkListenRead(e) {
+    let fin = '', interim = '';
+    const rs = (e && e.results) || [];
+    for (let i = 0; i < rs.length; i++) {
+      const r = rs[i];
+      if (!r || !r[0]) continue;
+      const tx = String(r[0].transcript || '').trim();
+      if (!tx) continue;
+      if (r.isFinal) fin = _talkListenMerge(fin, tx); else interim = interim ? interim + ' ' + tx : tx;
+    }
+    return { fin, interim };
+  }
+  function talkListen(opts) {
+    opts = opts || {};
+    const lang = String(opts.lang || 'ko-KR');
+    const hold = opts.mode === 'hold';
+    const onInterim = typeof opts.onInterim === 'function' ? opts.onInterim : null;
+    const apk = _talkListenApk();
+    const v2 = apk && _talkListenApkV2();
+    let resolveFn = null;
+    const promise = new Promise(r => { resolveFn = r; });
+    // acc — тексты закончившихся сессий; sessFin/sessInt — текущая сессия
+    const S = { done: false, released: false, rec: null, acc: '', sessFin: '', sessInt: '', shown: '', errCode: '', weAbort: false, restarts: 0, retried: false, wd: 0, cap: 0 };
+    const handle = { promise, release() { doRelease(); }, cancel() { doCancel(); } };
+
+    function best() { return _talkListenJoin(S.acc, _talkListenJoin(S.sessFin, S.sessInt)).slice(0, 600); }
+    function detach(rec) {
+      if (!rec) return;
+      try { rec.onresult = null; rec.onerror = null; rec.onend = null; rec.onstart = null; } catch (_) {}
+    }
+    function settle(res) {
+      if (S.done) return;
+      S.done = true;
+      clearTimeout(S.wd); clearTimeout(S.cap);
+      detach(S.rec);
+      resolveFn(res);
+    }
+    function abortRec() {
+      const rec = S.rec;
+      S.weAbort = true;
+      try { rec && rec.abort(); } catch (_) {}
+    }
+    function finishText() {
+      const tx = best();
+      settle(tx ? { text: tx } : { error: 'no-speech' });
+    }
+    function show() {
+      const tx = best();
+      if (!tx || tx === S.shown) return;
+      S.shown = tx;
+      if (onInterim && !S.done) { try { onInterim(tx); } catch (_) {} }
+    }
+    function armWd(ms) {
+      clearTimeout(S.wd);
+      S.wd = setTimeout(onWd, ms);
+    }
+    // Сторож: движок молчит (ни result, ни error, ни end). Что услышали — отдаём, иначе 'timeout'
+    function onWd() {
+      if (S.done) return;
+      const tx = best();
+      abortRec();
+      settle(tx ? { text: tx } : { error: 'timeout' });
+    }
+    // Абсолютный потолок попытки: удержание дольше holdMaxMs считаем отпусканием; «Свободный» — сторож
+    function onCap() {
+      if (S.done) return;
+      if (hold && !S.released) { doRelease(); return; }
+      onWd();
+    }
+    function startSession() {
+      const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+      const rec = new SR();
+      S.rec = rec; S.sessFin = ''; S.sessInt = ''; S.errCode = ''; S.weAbort = false;
+      rec.lang = lang; rec.maxAlternatives = 1;
+      rec.continuous = hold;          // в APK игнорируется: один start() — одна фраза
+      rec.interimResults = true;      // в APK 1.1.0 живого текста нет
+      rec.onresult = (e) => {
+        if (S.done || S.rec !== rec) return;
+        const r = _talkListenRead(e);
+        S.sessFin = r.fin; S.sessInt = r.interim;
+        show();
+        if (hold) return;
+        if (S.released) return;                       // после «я закончила» ждёт сторож отпускания
+        // «Свободный»: после финала конец придёт сам; не пришёл — не висим; живой текст продлевает сторож
+        if (r.fin && !r.interim) armWd(TALK_LISTEN_WD.afterFinalMs);
+        else armWd(TALK_LISTEN_WD.freeMs);
+      };
+      rec.onerror = (e) => {
+        if (S.done || S.rec !== rec) return;
+        const code = (e && e.error) ? String(e.error) : '';
+        if (code === 'aborted' && S.weAbort) return;
+        S.errCode = code;
+        const fatal = code === 'not-allowed' || code === 'service-not-allowed' || code === 'language-not-supported' || code === 'audio-capture' || code === 'network';
+        if (!fatal) return;                           // no-speech / чужой aborted: решит onend
+        const tx = best();
+        if (tx && code === 'network') { settle({ text: tx }); return; }   // уже услышанное не теряем
+        settle({ error: _talkListenErr(code) });
+      };
+      rec.onend = () => {
+        if (S.done || S.rec !== rec) return;
+        const code = S.errCode;
+        S.acc = _talkListenJoin(S.acc, _talkListenJoin(S.sessFin, S.sessInt));   // последний interim — если финала не было
+        S.sessFin = ''; S.sessInt = ''; S.errCode = '';
+        if (code === 'aborted') { finishText(); return; }                        // чужой abort: не перезапускаем
+        if (S.released) { finishText(); return; }
+        if (hold) {                                                              // сессия кончилась раньше, чем отпустили
+          if (S.restarts >= TALK_LISTEN_WD.restartMax) { finishText(); return; }
+          S.restarts++;
+          restart();
+          return;
+        }
+        if (!S.acc && !S.retried) { S.retried = true; restart(); return; }       // «Свободный»: no-speech/пустой конец — одно автоповторное
+        finishText();
+      };
+      try { rec.start(); } catch (_) { return false; }
+      return true;
+    }
+    function restart() {
+      if (S.done) return;
+      if (S.released) { finishText(); return; }
+      if (!hold) armWd(TALK_LISTEN_WD.freeMs);
+      if (startSession()) return;
+      setTimeout(() => {                                                         // «ещё останавливается» — одна повторная попытка
+        if (S.done) return;
+        if (S.released || startSession()) { if (S.released) finishText(); return; }
+        const tx = best();
+        settle(tx ? { text: tx } : { error: 'unavailable' });
+      }, 150);
+    }
+    function doRelease() {
+      if (S.done || S.released) return;
+      S.released = true;
+      armWd(apk ? TALK_LISTEN_WD.holdApkMs : TALK_LISTEN_WD.holdWebMs);
+      // APK 1.1.0: stop() ≡ abort() — результат пропал бы, событий нет → только ждём нативный результат
+      if (!apk || v2) { try { S.rec && S.rec.stop(); } catch (_) {} }
+    }
+    function doCancel() {
+      if (S.done) return;
+      abortRec();
+      settle({ error: 'no-speech', cancelled: true });
+    }
+
+    // Распознавания нет совсем / iPhone «с экрана Домой» (конструктор есть, но не работает) → сразу клавиатура
+    if ((_kmIsIos() && _kmIsStandalone()) || micUnavailableReason()) {
+      settle({ error: 'unavailable' });
+      return handle;
+    }
+    if (!startSession()) { settle({ error: 'unavailable' }); return handle; }
+    if (hold) S.cap = setTimeout(onCap, TALK_LISTEN_WD.holdMaxMs);
+    else { armWd(TALK_LISTEN_WD.freeMs); S.cap = setTimeout(onCap, TALK_LISTEN_WD.freeMaxMs); }
+    return handle;
+  }
+  // ── /Разговор с Комдори: распознавание речи ──
+  // ───────────── «Разговор с Комдори» · итог (спека §4.3) ─────────────
+  // Итог рисуется на той же странице #talk-page (разметка звонка заменяется): мордочка радуется,
+  // чипы (минуты, реплики, +XP), «Ошибки» (было → стало, без дублей), «Новые слова» с сердечками,
+  // «Осталось сегодня», «Готово» / «Ещё разговор». XP копится в UStore 'talkXpPending' (talkXpAdd)
+  // и начисляется ОДНИМ talkXpFlush() ПОСЛЕ закрытия страницы (talkClose): попап «цель дня» — .modal-bg
+  // (z 200) и лёг бы под страницу (z 300). «Ещё разговор» страницу не закрывает — XP ждёт закрытия.
+  // Быстрые повторные тапы: итог рисуется один раз на звонок (summaryShown), «Готово» — один раз
+  // (summaryAct), «Ещё разговор» работает, только пока звонок ended (после первого тапа _talk уже новый).
+  const _TALK_SUM_SUB = { talk_ip: 'talk.sum.subIp', talk_budget: 'talk.sum.subBudget', ai_fail: 'talk.sum.subAi' };
+  function _talkSumEl(tag, cls, text) {
+    const e = document.createElement(tag);
+    if (cls) e.className = cls;
+    if (text != null) e.textContent = text;
+    return e;
+  }
+  // Ошибки этого разговора без дублей (было → стало); текст ИИ — только через textContent
+  function _talkSumFixes(c) {
+    const seen = new Set(), out = [];
+    (c.fixes || []).forEach(f => {
+      if (!f || !f.good) return;
+      const bad = String(f.bad || '').trim(), good = String(f.good).trim();
+      const key = bad + '→' + good;
+      if (!good || seen.has(key)) return;
+      seen.add(key);
+      out.push({ bad: bad, good: good, why: String(f.why || '').trim() });
+    });
+    return out;
+  }
+  // Слова в словарик — только прошедшие talkWordOk (чистый ko, ru без хангыля и «→ ↔ |», tr кириллицей), без дублей
+  function _talkSumWords(c) {
+    const seen = new Set(), out = [];
+    (c.words || []).forEach(w => {
+      if (!talkWordOk(w)) return;
+      const ko = String(w.ko).trim();
+      if (seen.has(ko)) return;
+      seen.add(ko);
+      out.push({ ko: ko, tr: String(w.tr).trim(), ru: String(w.ru).trim() });
+    });
+    return out;
+  }
+  // Остаток на сегодня считаем по самому звонку (квота и израсходованное уже учтены машиной состояний)
+  function _talkSumLeft(c) {
+    const block = _talkBlockGet();
+    if (c.unlimited) return { unlimited: true, leftSec: Infinity, block: block };
+    const left = Math.max(0, (Number(c.quotaSec) || 0) - (Number(c.baseUsedSec) || 0) - (Number(c.usedSec) || 0));
+    return { unlimited: false, leftSec: left, block: block };
+  }
+  // Зовёт talkCallEnd (E3) после того, как звонок погашен; причина — c.endReason
+  function talkSummaryShow() {
+    const c = _talk;
+    if (!c || c.phase !== 'ended' || c.summaryShown) return;
+    c.summaryShown = true;
+    const reason = c.endReason;
+    const shell = document.getElementById('talk-shell');
+    if (!shell) { try { talkXpFlush(); } catch (_) {} return; }   // страницы уже нет — XP не должен потеряться
+    const fixes = _talkSumFixes(c), words = _talkSumWords(c);
+    c.sum = { fixes: fixes, words: words };
+    const none = !(c.turns > 0);
+    const xp = (c.xpTurns || 0) * TALK.xp.perTurn;
+    const mins = c.usedSec < 60 ? t('talk.sum.lessMin') : t('talk.sum.mins', { n: Math.max(1, Math.round(c.usedSec / 60)) });
+    shell.innerHTML = `
+      <header class="talk-head">
+        <div class="talk-head-inner">
+          <button type="button" class="chat-back-btn" data-talk="sum-done" aria-label="${escHtml(t('talk.sum.done'))}"><i class="fa-solid fa-arrow-left" aria-hidden="true"></i></button>
+          <div class="talk-head-title">
+            <div class="talk-head-t">${t('talk.sum.head')}</div>
+            <div class="talk-head-s"><span class="talk-head-s-tx">${_TALK_UI_EMOJI[c.topic] || '💬'} ${escHtml(t('talk.topic.' + c.topic + '.short'))}</span></div>
+          </div>
+        </div>
+      </header>
+      <div class="talk-body">
+        <div class="talk-body-inner talk-sum" id="talk-sum" role="region" aria-labelledby="talk-sum-t">
+          <div class="talk-face-wrap talk-face-sum" id="talk-sum-face">${kdFaceSvg()}</div>
+          <h2 class="talk-sum-t" id="talk-sum-t" tabindex="-1" aria-live="polite">${t(none ? 'talk.sum.titleNone' : 'talk.sum.title')}</h2>
+          <p class="talk-sum-s">${t(none ? 'talk.sum.subNone' : (_TALK_SUM_SUB[reason] || 'talk.sum.sub'))}</p>
+          <div class="talk-sum-chips" id="talk-sum-chips"></div>
+          <section class="talk-sum-card" id="talk-sum-errors" hidden></section>
+          <section class="talk-sum-card" id="talk-sum-words" hidden></section>
+          <button type="button" class="talk-sum-all" id="talk-sum-all" data-talk="sum-all" hidden></button>
+        </div>
+      </div>
+      <div class="talk-foot">
+        <div class="talk-foot-inner">
+          <div class="talk-left" id="talk-sum-left" aria-live="polite"></div>
+          <div class="talk-sum-btns">
+            <button type="button" class="btn btn-ghost" id="talk-sum-done" data-talk="sum-done">${t('talk.sum.done')}</button>
+            <button type="button" class="btn btn-primary" id="talk-sum-again" data-talk="sum-again"><i class="fa-solid fa-phone" aria-hidden="true"></i> ${t('talk.sum.again')}</button>
+          </div>
+        </div>
+      </div>`;
+    shell.onclick = _talkSumClick;
+    kdFaceSet(document.getElementById('talk-sum-face'), { mood: none ? 'normal' : 'kind' });
+    // Чипы: минуты · реплики · +XP (XP — только если был)
+    const chips = document.getElementById('talk-sum-chips');
+    const chip = (icon, text) => {
+      const s = _talkSumEl('span', 'talk-chip');
+      const i = _talkSumEl('i', icon); i.setAttribute('aria-hidden', 'true');
+      s.append(i, document.createTextNode(' ' + text));
+      chips.append(s);
+    };
+    chip('fa-regular fa-clock', mins);
+    chip('fa-regular fa-comment', t('talk.sum.turns', { n: c.turns || 0 }));
+    if (xp > 0) chip('fa-solid fa-wand-magic-sparkles', t('talk.sum.xp', { n: xp }));
+    // Ошибки: «было» зачёркнуто → «стало»; нет ошибок — подбодрить (если реплики были)
+    const eb = document.getElementById('talk-sum-errors');
+    if (fixes.length) {
+      eb.hidden = false;
+      eb.append(_talkSumEl('h3', 'talk-sum-h', t('talk.sum.errors', { n: fixes.length })));
+      fixes.forEach(f => {
+        const row = _talkSumEl('div', 'talk-sum-fix');
+        const line = _talkSumEl('div', 'talk-sum-fix-l');
+        if (f.bad) {
+          const b = _talkSumEl('s', 'ko talk-sum-bad', f.bad); b.lang = 'ko';
+          line.append(b, document.createTextNode(' → '));
+        }
+        const g = _talkSumEl('b', 'ko talk-sum-good', f.good); g.lang = 'ko';
+        line.append(g);
+        row.append(line);
+        if (f.why) row.append(_talkSumEl('div', 'talk-sum-why', f.why));
+        eb.append(row);
+      });
+    } else if (!none) {
+      eb.hidden = false;
+      eb.append(_talkSumEl('p', 'talk-sum-nofix', t('talk.sum.noErrors')));
+    }
+    // Новые слова: ko [tr] — ru, 🔊 и сердечко (data-индекс + делегирование: текст ИИ в onclick не попадает)
+    const wb = document.getElementById('talk-sum-words');
+    if (words.length) {
+      wb.hidden = false;
+      wb.append(_talkSumEl('h3', 'talk-sum-h', t('talk.sum.words', { n: words.length })));
+      words.forEach((w, i) => {
+        const row = _talkSumEl('div', 'talk-sum-word');
+        const tx = _talkSumEl('div', 'talk-sum-word-tx');
+        const ko = _talkSumEl('span', 'ko talk-sum-word-ko', w.ko); ko.lang = 'ko';
+        tx.append(ko, document.createTextNode(' '), _talkSumEl('span', 'talk-sum-word-tr', '[' + w.tr + ']'), document.createTextNode(' — ' + w.ru));
+        row.append(tx);
+        if (!c.textMode) {
+          const say = _talkSumEl('button', 'talk-sum-say'); say.type = 'button';
+          say.dataset.talk = 'sum-say'; say.dataset.idx = String(i);
+          say.setAttribute('aria-label', t('talk.call.replayAria'));
+          say.innerHTML = '<i class="fa-solid fa-volume-high" aria-hidden="true"></i>';
+          row.append(say);
+        }
+        const heart = _talkSumEl('button', 'talk-sum-heart'); heart.type = 'button';
+        heart.dataset.talk = 'sum-word'; heart.dataset.idx = String(i);
+        row.append(heart);
+        wb.append(row);
+      });
+    }
+    _talkSumSync();
+    // Остаток минут и кнопка «Ещё разговор»
+    const L = _talkSumLeft(c);
+    const left = document.getElementById('talk-sum-left');
+    const again = document.getElementById('talk-sum-again');
+    const canAgain = !L.block && (L.unlimited || L.leftSec > 0);
+    if (L.block) left.textContent = t(L.block === 'talk_budget' ? 'talk.setup.blockBudget' : 'talk.setup.blockIp');
+    else if (L.unlimited) left.textContent = t('talk.sum.leftInf');
+    else if (L.leftSec <= 0) left.textContent = t('talk.sum.leftNone');
+    else { left.textContent = ''; const b = _talkSumEl('b', null, t('talk.sum.mins', { n: Math.ceil(L.leftSec / 60) })); left.append(document.createTextNode(t('talk.sum.left') + ' '), b); }
+    again.disabled = !canAgain;
+    const h = document.getElementById('talk-sum-t');
+    if (h) { try { h.focus({ preventScroll: true }); } catch (_) {} }
+  }
+  // Сердечки и кнопка «Все слова в словарик» — по факту isMyWord
+  function _talkSumSync() {
+    const c = _talk, S = c && c.sum;
+    if (!S) return;
+    document.querySelectorAll('#talk-sum-words .talk-sum-heart').forEach(b => {
+      const w = S.words[Number(b.dataset.idx)];
+      if (!w) return;
+      const saved = isMyWord(w.ko);
+      b.classList.toggle('on', saved);
+      b.setAttribute('aria-pressed', String(saved));
+      b.setAttribute('aria-label', (saved ? t('talk.sum.removeAria') : t('talk.sum.addAria')) + ' ' + w.ko);
+      b.innerHTML = '<i class="' + (saved ? 'fa-solid' : 'fa-regular') + ' fa-heart" aria-hidden="true"></i>';
+    });
+    const all = document.getElementById('talk-sum-all');
+    if (all) {
+      const rest = S.words.filter(w => !isMyWord(w.ko)).length;
+      all.hidden = !S.words.length;
+      all.disabled = S.words.length > 0 && rest === 0;
+      all.innerHTML = '<i class="' + (rest === 0 ? 'fa-solid' : 'fa-regular') + ' fa-heart" aria-hidden="true"></i> ' + t(rest === 0 ? 'talk.sum.allSaved' : 'talk.sum.all');
+    }
+  }
+  function _talkSumToggleWord(i) {
+    const c = _talk, w = c && c.sum && c.sum.words[i];
+    if (!w) return;
+    if (isMyWord(w.ko)) removeMyWord(w.ko);
+    else if (talkWordOk(w)) saveMyWord(w.ko, w.ru, w.tr, '🐻', 'talk');   // не toggleMyWord: он кладёт ko в toast (innerHTML)
+    _talkSumSync();
+  }
+  function _talkSumSaveAll() {
+    const c = _talk, S = c && c.sum;
+    if (!S) return;
+    let n = 0;
+    S.words.forEach(w => { if (!isMyWord(w.ko) && talkWordOk(w) && saveMyWord(w.ko, w.ru, w.tr, '🐻', 'talk')) n++; });
+    _talkSumSync();
+    if (n) toast(t('talk.sum.savedN', { n: n }), 'var(--sage)');
+  }
+  function _talkSumClick(e) {
+    const el = e.target.closest('[data-talk]');
+    if (!el || !e.currentTarget.contains(el) || el.disabled) return;
+    const a = el.dataset.talk;
+    if (a === 'sum-done') talkSummaryDone();
+    else if (a === 'sum-again') talkSummaryAgain();
+    else if (a === 'sum-all') _talkSumSaveAll();
+    else if (a === 'sum-word') _talkSumToggleWord(Number(el.dataset.idx));
+    else if (a === 'sum-say') {
+      const w = _talk && _talk.sum && _talk.sum.words[Number(el.dataset.idx)];
+      if (w) talkSpeak(w.ko, {});
+    }
+  }
+  // «Готово» / «назад» / Esc на итоге: закрыть страницу (talkClose начисляет XP уже после закрытия)
+  function talkSummaryDone() {
+    const c = _talk;
+    if (c && (c.phase !== 'ended' || c.summaryAct)) return;      // идёт новый звонок или уже закрываем
+    if (c) c.summaryAct = 'done';
+    talkClose();
+  }
+  // «📞 Ещё разговор»: те же настройки, новый звонок. Страница не закрывается, XP остаётся в talkXpPending
+  // (talkXpAdd переносит его в carry) и начисляется при закрытии страницы.
+  function talkSummaryAgain() {
+    const c = _talk;
+    if (!c || c.phase !== 'ended' || c.summaryAct) return;       // второй тап: _talk уже новый (komdori/…) — выходим
+    if (!document.getElementById('talk-shell')) return;
+    if (!_talkSetupCanCall()) return;
+    talkCallStart();
+  }
+  // ── /Разговор с Комдори: итог ──
+  // ───────────── «Разговор с Комдори» · хуки: «Завершить?», Esc, «назад», автообновление, вкладка, ссылка уведомления ─────────────
+  // Идёт ли звонок: на экране настройки и на итоге его нет. Тихое автообновление не должно
+  // перезагружать вкладку посреди разговора.
+  function talkCallActive() { return !!(_talk && ['komdori', 'listening', 'recognizing', 'thinking', 'paused'].indexOf(_talk.phase) >= 0); }
+  // ── Карточка «Завершить звонок?» (спека §4.2): «назад» в шапке / Esc / системная «назад».
+  //    Реплики были → звонок встаёт на паузу (минуты стоят) и поверх страницы — карточка; реплик не было →
+  //    сразу итог. «Остаться» — возврат в звонок (Комдори переиграет прерванную реплику). ──
+  function _talkConfirmShown() {
+    const c = _talk;
+    return !!c && c.phase === 'paused' && c.pauseReason === 'confirm';
+  }
+  function talkConfirmEnd(src) {
+    const c = _talk;
+    if (!talkCallActive() || _talkConfirmShown()) return;
+    if (!(c.turns > 0)) { talkCallEnd('back'); return; }
+    if (c.phase === 'paused') {                  // уже на паузе (вкладка, сеть, «задумался»): карточка поверх, причину вернём
+      c.confirmPrev = c.pauseReason;
+      c.pauseReason = 'confirm';
+      _talkSync();
+    } else {
+      _talkPause('confirm');
+    }
+  }
+  function _talkConfirmHide() {
+    const c = _talk;
+    if (!_talkConfirmShown()) return;
+    if (c.confirmPrev) {
+      c.pauseReason = c.confirmPrev; c.confirmPrev = '';
+      if (c.pauseReason === 'offline' && navigator.onLine !== false) { _talkContinue(); return; }   // сеть вернулась, пока карточка была открыта
+      _talkSync();
+      return;
+    }
+    _talkContinue();
+  }
+  function _talkConfirmEndNow() {
+    const c = _talk;
+    if (!_talkConfirmShown()) return;
+    c.confirmPrev = ''; c.pauseReason = '';
+    talkCallEnd('back');
+  }
+  // Esc на странице разговора (после ветки .modal-bg в глобальном обработчике): звонок идёт → «Завершить?»
+  // (Esc при открытой карточке = «остаться»); итог → «Готово»; экран настройки → закрыть.
+  // Поверх лежат тарифы (#plan-page, z 300, добавлена позже) — Esc им не наш: false, цепочка идёт дальше.
+  function talkEscape() {
+    if (!document.getElementById('talk-page') || document.getElementById('plan-page')) return false;
+    if (talkCallActive()) {
+      if (_talkConfirmShown()) _talkConfirmHide(); else talkConfirmEnd('esc');
+      return true;
+    }
+    if (document.getElementById('talk-sum')) { talkSummaryDone(); return true; }
+    talkClose();
+    return true;
+  }
+  // Ссылка уведомления (_kmCloseCovering) и прочие «срочно закрыть»: звонок гасится (микрофон, озвучка,
+  // минуты — в talkCallEnd/_talkTeardown), итог не рисуем, страница убирается, XP начисляет talkClose.
+  function talkForceClose() {
+    const c = _talk;
+    if (c && c.phase !== 'setup' && c.phase !== 'ended') {
+      c.summaryShown = true;
+      try { talkCallEnd('closed'); } catch (_) {}
+    }
+    if (document.getElementById('talk-page')) talkClose();
+  }
+  // ── Системная «назад» (Android): на старте звонка кладём в history свою запись, popstate = «Завершить?» ──
+  // pushed — запись лежит; skip — наши собственные history.back(), чьи popstate надо пропустить.
+  const _talkHist = { pushed: false, skip: 0 };
+  function talkHistoryPush() {
+    if (_talkHist.pushed) return;
+    try { history.pushState({ kmTalk: 1 }, '', location.href); _talkHist.pushed = true; } catch (_) {}
+  }
+  // Звонок кончился не через «назад»: убираем свою запись, чтобы следующая «назад» не оказалась лишней
+  function talkHistoryPop() {
+    if (!_talkHist.pushed) return;
+    _talkHist.pushed = false;
+    if (!(history.state && history.state.kmTalk)) return;
+    _talkHist.skip++;
+    try { history.back(); } catch (_) { _talkHist.skip--; }
+  }
+  function _talkOnPopState() {
+    if (_talkHist.skip > 0) { _talkHist.skip--; return; }
+    if (!_talkHist.pushed) return;
+    _talkHist.pushed = false;                     // запись уже съела сама «назад»
+    if (!talkCallActive()) return;
+    if (_talkConfirmShown()) _talkConfirmHide(); else talkConfirmEnd('back');   // вторая «назад» при открытой карточке = «остаться»
+    if (talkCallActive()) talkHistoryPush();      // остались в звонке — следующая «назад» снова спросит
+  }
+  window.addEventListener('popstate', _talkOnPopState);
+  // ── Вкладка/APK скрыты: озвучка и распознавание останавливаются, минуты на паузе; вернулась — «Пауза — продолжим?» ──
+  function _talkOnVisibility() {
+    const c = _talk;
+    if (!talkCallActive()) return;
+    if (document.hidden) _talkPause('hidden');
+    else if (c.phase === 'paused') _talkSync();   // плашка «Продолжим?» с кнопкой (реплика Комдори переиграется по ней)
+  }
+  document.addEventListener('visibilitychange', _talkOnVisibility);
+  // ── /Разговор с Комдори: хуки ──
   const _skState = { view: 'home', uni: null, info: null };
   function openStudyKr() { _skState.view = 'home'; switchScreen('studykr'); }
   function studyKrBack() {
@@ -47777,6 +48364,7 @@
     if (e.key !== 'Escape') return;
     const modals = document.querySelectorAll('.modal-bg');
     if (modals.length) { modals[modals.length - 1].remove(); return; }
+    if (talkEscape()) return;   // «Разговор с Комдори» (z 300) выше игры, чата и урока
     if (document.getElementById('writing-practice-page')) { closeWritingPractice(); return; }
     if (document.getElementById('user-profile-page')) { closeUserProfile(); return; }
     const gamePages = document.querySelectorAll('.game-page');
