@@ -58,11 +58,11 @@
      вводят анимации из styles.css, поэтому без «мигания»; логотип не трогаем (fanUnfurl). -->
 <style>#intro{position:fixed;inset:0;z-index:999;display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:hidden;cursor:pointer;background:radial-gradient(120% 90% at 50% 35%,#FFFCF8 0%,#FFF4F0 38%,#FBE8EA 78%,#F2D5DA 100%)}#intro>.intro-tagline,#intro>.intro-subline,#intro>.intro-cta{opacity:0}</style>
 
-<link rel="stylesheet" href="styles.css?v=20261020a">
+<link rel="stylesheet" href="styles.css?v=20261020b">
 
 <!-- Предзагрузка тяжёлого JS: скачивание стартует сразу, параллельно с CSS/шрифтами -->
 <link rel="preload" href="assets/textbook/textbook-data.js?v=20260924b" as="script">
-<link rel="preload" href="app.js?v=20261020a" as="script">
+<link rel="preload" href="app.js?v=20261020b" as="script">
 </head>
 
 <body>
@@ -579,6 +579,16 @@
     </header>
 
     <div style="padding: 20px;">
+      <!-- Разговор с Комдори — голосовая практика, первой строкой «Игр» (20.10.2026). talkOpen() по флагу беты (appConfig/talk) открывает новый разговор или старый звонок -->
+      <div onclick="talkOpen()" class="topik-exam-card" style="margin-bottom:16px; cursor:pointer; position:relative;">
+        <span class="topik-exam-ico">📞</span>
+        <div class="topik-exam-tx">
+          <div class="topik-exam-t"><span data-i18n="kd.entry.t">Разговор с Комдори</span><span class="km-new" id="km-talk-new" data-until="2026-10-27" data-i18n="new.chip">NEW</span></div>
+          <div class="topik-exam-s" data-i18n="kd.entry.s">Говори голосом по-корейски — Комдори ответит 🐻</div>
+        </div>
+        <i class="fa-solid fa-chevron-right topik-exam-arrow"></i>
+      </div>
+
       <!-- Источник слов для игр: уроки или сохранённый словарик -->
       <div style="margin-bottom:16px;">
         <div style="display:flex; gap:6px; flex-wrap:wrap;" role="tablist">
@@ -795,16 +805,6 @@
           <span class="best-score gcv-best" style="color:var(--gold);">Ещё не играли</span>
           <span class="gcv-xp" style="background:rgba(201,165,92,.20); color:var(--gold);">+15 XP</span>
         </div>
-      </div>
-
-      <!-- Разговор с Комдори — голосовая практика, отдельной картой в самом низу. talkOpen() по флагу беты (appConfig/talk) открывает новый разговор или старый звонок -->
-      <div onclick="talkOpen()" class="topik-exam-card" style="margin-top:16px; cursor:pointer; position:relative;">
-        <span class="topik-exam-ico">📞</span>
-        <div class="topik-exam-tx">
-          <div class="topik-exam-t" data-i18n="kd.entry.t">Разговор с Комдори</div>
-          <div class="topik-exam-s" data-i18n="kd.entry.s">Говори голосом по-корейски — Комдори ответит 🐻</div>
-        </div>
-        <i class="fa-solid fa-chevron-right topik-exam-arrow"></i>
       </div>
 
       <div style="text-align: center; font-size: 11.5px; color: var(--soft); margin-top: 22px; line-height: 1.5;" data-i18n="games.footer">
@@ -1332,7 +1332,7 @@
 
 <!-- ─────────────── DATA + LOGIC ─────────────── -->
 <script src="assets/textbook/textbook-data.js?v=20260924b"></script>
-<script src="app.js?v=20261020a"></script>
+<script src="app.js?v=20261020b"></script>
 
 </body>
 </html>

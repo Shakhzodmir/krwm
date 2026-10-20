@@ -1346,7 +1346,9 @@
     'talk.setup.left':      { ru: 'Осталось сегодня: {n}', en: 'Left today: {n}', uz: 'Bugun qoldi: {n}' },
     'talk.min':             { ru: '{n} мин', en: '{n} min', uz: '{n} daq' },
     'talk.tier.pro':        { ru: 'Pro AI', en: 'Pro AI', uz: 'Pro AI' },
-    'talk.tier.trial':      { ru: 'Пробник', en: 'Trial', uz: 'Sinov' },
+    'talk.tier.master':     { ru: 'Master', en: 'Master', uz: 'Master' },
+    'talk.setup.freeOnly':  { ru: 'Разговор с Комдори — по подписке: Master — 1 минута в день, Pro AI — 30 минут', en: 'Talking with Komdori is for subscribers: Master — 1 minute a day, Pro AI — 30 minutes', uz: 'Komdori bilan suhbat — obuna orqali: Master — kuniga 1 daqiqa, Pro AI — 30 daqiqa' },
+    'talk.setup.upsellFree': { ru: 'Выбрать подписку', en: 'Choose a plan', uz: 'Obunani tanlash' },
     'talk.tier.admin':      { ru: 'Без лимита', en: 'No limit', uz: 'Cheklovsiz' },
     'talk.setup.loading':   { ru: 'Считаю минуты…', en: 'Counting minutes…', uz: 'Daqiqalarni hisoblayapman…' },
     'talk.setup.noMinutes': { ru: 'На сегодня всё — приходи завтра 🌙', en: 'That’s all for today — come back tomorrow 🌙', uz: 'Bugunga shu — ertaga keling 🌙' },
@@ -7182,7 +7184,7 @@
   // Версия сборки: держать ВРУЧНУЮ синхронной с ?v= в index.html при каждом деплое
   // (те же 3 места — stylesheet/preload/script). Используется тихим автообновлением
   // ниже — сама загрузка кода по-прежнему идёт через ?v=.
-  const APP_VERSION = '20261020a';
+  const APP_VERSION = '20261020b';
   // ── Тихое автообновление (25.08.2026, вместо попапа «Вышло обновление!») ──
   // Узнав из облака про новую версию (appVersion пишет первый клиент нового деплоя,
   // promptVersion — кнопка «Оповестить» в админке), вкладка НЕ дёргает ученицу:
@@ -30940,6 +30942,13 @@
     if (!isFinite(end) || Date.now() > end) return '';
     return ` <span class="km-new">${escHtml(t('new.chip'))}</span>`;
   }
+  // Метка NEW на карточке «Разговор с Комдори» (первая строка «Игр», статичный HTML): после даты data-until убираем
+  (function () {
+    const e = document.getElementById('km-talk-new');
+    if (!e) return;
+    const end = Date.parse((e.dataset.until || '') + 'T23:59:59Z');
+    if (!isFinite(end) || Date.now() > end) e.remove();
+  })();
   function openSelfStudy() { switchScreen('selfstudy'); }
   function ssHome() { _ssSection = null; renderSelfStudy(); requestAnimationFrame(() => _setScroll(_ssMenuScroll)); }
   function openSsSection(k) { _ssMenuScroll = _getScroll(); _ssSection = k; renderSelfStudy(); const sc = document.getElementById('screen-selfstudy'); if (sc) sc.scrollTop = 0; window.scrollTo(0, 0); }
@@ -33233,7 +33242,17 @@
     }
   };
   // ── Минуты и XP разговора (§7, §9) ──
-  const TALK = { quotaSec: { pro: 1800, trial: 300 }, xp: { perTurn: 3, max: 60 }, usageFlushSec: 15 };
+  // Минуты в день по тарифу (решение владельца 20.10.2026): Pro AI — 30 мин, Master — 1 мин (пробник),
+  // Базовый — 0: разговор по подписке, на экране настройки предлагаем тарифы.
+  const TALK = { quotaSec: { pro: 1800, master: 60, free: 0 }, xp: { perTurn: 3, max: 60 }, usageFlushSec: 15 };
+  // Админ может проверить лимиты по тарифам: localStorage.km_talk_sim = 'free' | 'master' | 'proai' (у остальных не действует)
+  function _talkSimTier() {
+    try { const v = localStorage.getItem('km_talk_sim'); return (isAdmin() && (v === 'free' || v === 'master' || v === 'proai')) ? v : ''; } catch (_) { return ''; }
+  }
+  function _talkPlanQuota() {
+    const id = _talkSimTier() || (planAtLeast('proai') ? 'proai' : (planAtLeast('master') ? 'master' : 'free'));
+    return id === 'proai' ? TALK.quotaSec.pro : (id === 'master' ? TALK.quotaSec.master : TALK.quotaSec.free);
+  }
   // Минуты: облако users/<uid>/talkUsage/<YYYY-MM-DD UTC> = секунды; запись — ServerValue.increment
   // (два устройства складываются, а не затирают друг друга). Не pushUserField: тот делает .set()
   // (последний пишущий побеждает) и для админов выключен. Неотправленная дельта — UStore
@@ -33271,7 +33290,7 @@
     const pendToday = Math.max(0, Number(_talkUsagePending()[today]) || 0);
     const sentRec = UStore.get('talkUsageSent', null);
     const sent = (sentRec && sentRec.d === today) ? Math.max(0, Number(sentRec.s) || 0) : 0;
-    if (u.isAdmin) {
+    if (u.isAdmin && !_talkSimTier()) {
       _talkUsage = { date: today, baseSec: sent + pendToday, sessionSec: 0, frac: 0, unlimited: true };
       return { usedSec: sent + pendToday, quotaSec: Infinity, unlimited: true };
     }
@@ -33289,7 +33308,7 @@
     }
     const used = Math.max(cloud, sent) + pendToday;
     _talkUsage = { date: today, baseSec: used, sessionSec: 0, frac: 0, unlimited: false };
-    return { usedSec: used, quotaSec: planAtLeast('proai') ? TALK.quotaSec.pro : TALK.quotaSec.trial, unlimited: false };
+    return { usedSec: used, quotaSec: _talkPlanQuota(), unlimited: false };
   }
   // Секунды разговора (машина состояний — каждую секунду фаз komdori/listening/recognizing).
   // Дроби копятся. Возвращает, сколько использовано сегодня (UTC); после 00:00 — с нуля в новой дате.
@@ -33321,7 +33340,7 @@
     if (_talkUsageFlushing) return _talkUsageFlushing;
     const u = Store.get('user');
     if (!u || u.guest) return false;
-    if (u.isAdmin) { UStore.del('talkUsagePending'); return true; }   // лимита нет, синк профиля админа выключен
+    if (u.isAdmin && !_talkSimTier()) { UStore.del('talkUsagePending'); return true; }   // лимита нет, синк профиля админа выключен
     if (typeof _db === 'undefined' || typeof firebase === 'undefined' || !firebase.database || !firebase.database.ServerValue) return false;
     const uid = firebaseUserId();
     if (!uid || uid === 'guest') return false;
@@ -33537,11 +33556,11 @@
     const c = _talk;
     const u = c && c.usage;
     const block = _talkBlockGet();
-    if (!u) return { ready: false, unlimited: false, leftSec: 0, tier: 'trial', block };
+    if (!u) return { ready: false, unlimited: false, leftSec: 0, tier: 'free', block };
     if (u.unlimited) return { ready: true, unlimited: true, leftSec: Infinity, tier: 'admin', block };
     const quota = Math.max(0, Number(u.quotaSec) || 0);
     const used = Math.max(0, Number(u.usedSec) || 0);
-    return { ready: true, unlimited: false, leftSec: Math.max(0, quota - used), tier: quota >= TALK.quotaSec.pro ? 'pro' : 'trial', block };
+    return { ready: true, unlimited: false, leftSec: Math.max(0, quota - used), tier: quota >= TALK.quotaSec.pro ? 'pro' : (quota > 0 ? 'master' : 'free'), block };
   }
   function _talkSetupCanCall() {
     const L = _talkSetupLeft();
@@ -33575,7 +33594,7 @@
     // talkUsageLoad сам ждёт облачный тариф и облачный счётчик; если он всё же упал — считаем
     // по локальному тарифу: настоящий потолок денег всё равно на сервере
     _talk.usage = (usage && typeof usage === 'object') ? usage
-      : { usedSec: 0, quotaSec: planAtLeast('proai') ? TALK.quotaSec.pro : TALK.quotaSec.trial, unlimited: isAdmin() };
+      : { usedSec: 0, quotaSec: _talkPlanQuota(), unlimited: isAdmin() && !_talkSimTier() };
     if (_talk.phase === 'setup') _talkSyncSetup();
   }
   function _talkRenderSetup() {
@@ -33753,16 +33772,22 @@
     } else if (L.unlimited) {
       chipTx.textContent = '∞';
       left.textContent = t('talk.tier.admin');
+    } else if (L.tier === 'free') {
+      chipTx.textContent = '🔒';
+      left.textContent = t('talk.setup.freeOnly');
     } else if (L.leftSec <= 0) {
       chipTx.textContent = mins(0);
       left.textContent = t('talk.setup.noMinutes');
     } else {
       chipTx.textContent = mins(L.leftSec);
-      left.innerHTML = `${t('talk.setup.left', { n: `<b>${escHtml(mins(L.leftSec))}</b>` })} · ${escHtml(t(L.tier === 'pro' ? 'talk.tier.pro' : 'talk.tier.trial'))}`;
+      left.innerHTML = `${t('talk.setup.left', { n: `<b>${escHtml(mins(L.leftSec))}</b>` })} · ${escHtml(t(L.tier === 'pro' ? 'talk.tier.pro' : 'talk.tier.master'))}`;
     }
     btn.disabled = !_talkSetupCanCall();
     btn.setAttribute('aria-busy', String(!L.ready));
-    if (up) up.hidden = !(L.ready && L.tier === 'trial');
+    if (up) {
+      up.hidden = !(L.ready && (L.tier === 'master' || L.tier === 'free'));
+      up.textContent = '✨ ' + t(L.tier === 'free' ? 'talk.setup.upsellFree' : 'talk.setup.upsell');
+    }
   }
   // Закрыть страницу (с экрана настройки, итога или «назад» в звонке): идущий звонок — гасим
   function talkClose() {
@@ -34186,8 +34211,8 @@
   }
   // ── Минуты: идут в komdori/listening/recognizing и первые 3 с ожидания ИИ; не идут на паузе и в скрытой вкладке ──
   function _talkQuotaNow() {
-    if (isAdmin()) return Infinity;
-    return planAtLeast('proai') ? TALK.quotaSec.pro : TALK.quotaSec.trial;
+    if (isAdmin() && !_talkSimTier()) return Infinity;
+    return _talkPlanQuota();
   }
   function _talkTick() {
     const c = _talk;
