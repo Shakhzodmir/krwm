@@ -1310,21 +1310,23 @@
     // ── Разговор с Комдори: вход и экран настройки (talk.*) ──
     'talk.title':           { ru: 'Разговор с Комдори', en: 'Talk with Komdori', uz: 'Komdori bilan suhbat' },
     'talk.setup.sub':       { ru: 'голосом, по-корейски', en: 'by voice, in Korean', uz: 'ovoz bilan, koreyscha' },
-    'talk.setup.q':         { ru: 'Каким будет Комдори?', en: 'What will Komdori be like?', uz: 'Komdori qanday boʻlsin?' },
-    'talk.mood.strict':     { ru: '😤 Строгий', en: '😤 Strict', uz: '😤 Talabchan' },
-    'talk.mood.normal':     { ru: '🙂 Обычный', en: '🙂 Normal', uz: '🙂 Oddiy' },
-    'talk.mood.kind':       { ru: '🤗 Добрый', en: '🤗 Kind', uz: '🤗 Mehribon' },
-    'talk.mood.strict.lbl': { ru: 'Строгий', en: 'Strict', uz: 'Talabchan' },
-    'talk.mood.normal.lbl': { ru: 'Обычный', en: 'Normal', uz: 'Oddiy' },
-    'talk.mood.kind.lbl':   { ru: 'Добрый', en: 'Kind', uz: 'Mehribon' },
-    'talk.mood.strict.short': { ru: 'строгий', en: 'strict', uz: 'talabchan' },
-    'talk.mood.normal.short': { ru: 'обычный', en: 'normal', uz: 'oddiy' },
-    'talk.mood.kind.short':   { ru: 'добрый', en: 'kind', uz: 'mehribon' },
-    'talk.mood.strict.desc': { ru: 'Только по-корейски, поправляет каждую ошибку и говорит быстрее. Застряла — скажи на своём языке, он всё равно вытащит из тебя корейский 💪', en: 'Korean only, corrects every mistake and speaks faster. Stuck? Say it in your language — he’ll still pull the Korean out of you 💪', uz: 'Faqat koreyscha, har bir xatoni tuzatadi va tezroq gapiradi. Qiynalsangiz — oʻz tilingizda ayting, u baribir sizdan koreyschani chiqarib oladi 💪' },
-    'talk.mood.normal.desc': { ru: 'Говорит в обычном темпе, поправляет главные ошибки и иногда подсказывает.', en: 'Speaks at a normal pace, fixes the main mistakes and gives a hint now and then.', uz: 'Odatiy tezlikda gapiradi, asosiy xatolarni tuzatadi va baʼzan maslahat beradi.' },
-    'talk.mood.kind.desc':   { ru: 'Говорит медленнее и проще, подсказывает на твоём языке и хвалит за каждую попытку 🌸', en: 'Speaks slower and simpler, gives hints in your language and praises every try 🌸', uz: 'Sekinroq va soddaroq gapiradi, oʻz tilingizda maslahat beradi va har bir urinish uchun maqtaydi 🌸' },
+    'talk.setup.q':         { ru: 'Как строго Комдори проверяет?', en: 'How strictly will Komdori correct you?', uz: 'Komdori qanchalik qattiq tekshirsin?' },
+    'talk.mood.strict':     { ru: '😤 Строго', en: '😤 Strict', uz: '😤 Qattiq' },
+    'talk.mood.normal':     { ru: '🙂 Обычно', en: '🙂 Normal', uz: '🙂 Oddiy' },
+    'talk.mood.kind':       { ru: '🤗 Мягко', en: '🤗 Gentle', uz: '🤗 Yumshoq' },
+    'talk.mood.strict.lbl': { ru: 'Строго', en: 'Strict', uz: 'Qattiq' },
+    'talk.mood.normal.lbl': { ru: 'Обычно', en: 'Normal', uz: 'Oddiy' },
+    'talk.mood.kind.lbl':   { ru: 'Мягко', en: 'Gentle', uz: 'Yumshoq' },
+    'talk.mood.strict.short': { ru: 'строго', en: 'strict', uz: 'qattiq' },
+    'talk.mood.normal.short': { ru: 'обычно', en: 'normal', uz: 'oddiy' },
+    'talk.mood.kind.short':   { ru: 'мягко', en: 'gentle', uz: 'yumshoq' },
+    'talk.mood.strict.desc': { ru: 'Поправляет каждую ошибку, даже мелкую. Без подсказок на твоём языке — только корейский.', en: 'Corrects every mistake, even small ones. No hints in your language — Korean only.', uz: 'Har bir xatoni, hatto mayda xatoni ham tuzatadi. Oʻz tilingizda maslahat yoʻq — faqat koreyscha.' },
+    'talk.mood.normal.desc': { ru: 'Поправляет главные ошибки и иногда подсказывает.', en: 'Fixes the main mistakes and gives a hint now and then.', uz: 'Asosiy xatolarni tuzatadi va ba’zan maslahat beradi.' },
+    'talk.mood.kind.desc':   { ru: 'Хвалит за каждую попытку, говорит проще, поправляет мягко и подсказывает на твоём языке 🌸', en: 'Praises every attempt, keeps it simple, corrects gently and gives hints in your language 🌸', uz: 'Har bir urinishni maqtaydi, soddaroq gapiradi, yumshoq tuzatadi va oʻz tilingizda maslahat beradi 🌸' },
     'talk.setup.casual':    { ru: 'Как с подругой (반말)', en: 'Like a friend (반말)', uz: 'Dugonadek (반말)' },
     'talk.setup.casualSub': { ru: 'Неформально и со сленгом — без грубостей', en: 'Casual speech and slang — nothing rude', uz: 'Norasmiy va slang bilan — qoʻpolliksiz' },
+    'talk.setup.slow':      { ru: 'Говорить медленнее', en: 'Slower speech', uz: 'Sekinroq gapirsin' },
+    'talk.setup.slowSub':   { ru: 'Комдори произносит фразы не спеша', en: 'Komdori speaks each line at a slow pace', uz: 'Komdori gaplarni shoshilmay aytadi' },
     'talk.setup.topic':     { ru: 'Тема', en: 'Topic', uz: 'Mavzu' },
     'talk.topic.free':      { ru: 'Свободный разговор', en: 'Free conversation', uz: 'Erkin suhbat' },
     'talk.topic.shop':      { ru: 'Кафе, магазин, такси', en: 'Café, shop, taxi', uz: 'Kafe, doʻkon, taksi' },
@@ -1369,13 +1371,10 @@
     'talk.call.kbAria':     { ru: 'Написать вместо голоса', en: 'Type instead of speaking', uz: 'Ovoz oʻrniga yozish' },
     'talk.call.repeatAria': { ru: 'Повторить реплику Комдори', en: 'Repeat Komdori’s line', uz: 'Komdori gapini takrorlash' },
     'talk.call.hangupAria': { ru: 'Завершить разговор', en: 'End the conversation', uz: 'Suhbatni tugatish' },
-    'talk.call.nativeAria': { ru: 'Сказать на своём языке', en: 'Say it in your own language', uz: 'Oʻz tilingizda aytish' },
-    'talk.call.native':     { ru: 'На своём языке', en: 'In my language', uz: 'Oʻz tilimda' },
     'talk.call.heard':      { ru: 'услышал так:', en: 'heard it as:', uz: 'shunday eshitdim:' },
     'talk.call.better':     { ru: 'Лучше:', en: 'Better:', uz: 'Yaxshisi:' },
     'talk.st.speaking':     { ru: 'Комдори говорит…', en: 'Komdori is speaking…', uz: 'Komdori gapiryapti…' },
     'talk.st.listening':    { ru: 'Слушаю…', en: 'Listening…', uz: 'Tinglayapman…' },
-    'talk.st.native':       { ru: 'Слушаю на твоём языке…', en: 'Listening in your language…', uz: 'Oʻz tilingizda tinglayapman…' },
     'talk.st.recognizing':  { ru: 'Распознаю…', en: 'Recognizing…', uz: 'Taniyapman…' },
     'talk.st.thinking':     { ru: 'Думаю…', en: 'Thinking…', uz: 'Oʻylayapman…' },
     'talk.st.again':        { ru: 'Не расслышал — повтори', en: 'Didn’t catch that — say it again', uz: 'Eshitmadim — takrorlang' },
@@ -1393,8 +1392,10 @@
     'talk.mic.done':        { ru: 'Я закончила', en: 'I’m done', uz: 'Tugatdim' },
     'talk.btn.retry':       { ru: 'Ещё раз', en: 'Try again', uz: 'Yana urinish' },
     'talk.btn.end':         { ru: 'Завершить', en: 'End', uz: 'Tugatish' },
+    'talk.words.saved':     { ru: 'Добавлено в словарик: {n} 🌸', en: 'Added to your words: {n} 🌸', uz: 'Lugʻatga qoʻshildi: {n} 🌸' },
+    'talk.words.none':      { ru: 'Новых слов пока нет — поговорим ещё 🌸', en: 'No new words yet — let’s keep talking 🌸', uz: 'Hozircha yangi soʻz yoʻq — yana gaplashamiz 🌸' },
+    'talk.words.already':   { ru: 'Эти слова уже в словарике 🌸', en: 'These words are already saved 🌸', uz: 'Bu soʻzlar allaqachon lugʻatda 🌸' },
     'talk.kb.ph':           { ru: 'Напиши по-корейски…', en: 'Type in Korean…', uz: 'Koreyscha yozing…' },
-    'talk.kb.native':       { ru: 'Напиши по-русски…', en: 'Type in English…', uz: 'Oʻzbekcha yozing…' },
     'talk.kb.denied':       { ru: 'Разреши микрофон в настройках — а пока пишем ⌨️', en: 'Allow the microphone in settings — for now we type ⌨️', uz: 'Sozlamalarda mikrofonga ruxsat bering — hozircha yozamiz ⌨️' },
     'talk.kb.unavailable':  { ru: 'Распознавание здесь недоступно — пишем ⌨️', en: 'Speech recognition isn’t available here — we type ⌨️', uz: 'Bu yerda nutqni tanish ishlamaydi — yozamiz ⌨️' },
     'talk.kb.network':      { ru: 'Распознавание речи не отвечает — пишем ⌨️', en: 'Speech recognition isn’t responding — we type ⌨️', uz: 'Nutqni tanish javob bermayapti — yozamiz ⌨️' },
@@ -7184,7 +7185,7 @@
   // Версия сборки: держать ВРУЧНУЮ синхронной с ?v= в index.html при каждом деплое
   // (те же 3 места — stylesheet/preload/script). Используется тихим автообновлением
   // ниже — сама загрузка кода по-прежнему идёт через ?v=.
-  const APP_VERSION = '20261020b';
+  const APP_VERSION = '20261020c';
   // ── Тихое автообновление (25.08.2026, вместо попапа «Вышло обновление!») ──
   // Узнав из облака про новую версию (appVersion пишет первый клиент нового деплоя,
   // promptVersion — кнопка «Оповестить» в админке), вкладка НЕ дёргает ученицу:
@@ -33530,6 +33531,7 @@
     return {
       mood: _TALK_UI_MOODS.indexOf(p.mood) >= 0 ? p.mood : 'normal',
       casual: p.casual === true,
+      slow: p.slow === true,
       topic: _TALK_UI_TOPICS.indexOf(p.topic) >= 0 ? p.topic : 'free',
       micPick: (p.micMode === 'free' || p.micMode === 'hold') ? p.micMode : _talkDefaultMicMode(),
       cc: p.cc !== false
@@ -33537,7 +33539,7 @@
   }
   function _talkPrefsSave() {
     const c = _talk; if (!c) return;
-    try { UStore.set('talkPrefs', { mood: c.mood, casual: !!c.casual, topic: c.topic, micMode: c.micPick, cc: !!c.cc }); } catch (_) {}
+    try { UStore.set('talkPrefs', { mood: c.mood, casual: !!c.casual, slow: !!c.slow, topic: c.topic, micMode: c.micPick, cc: !!c.cc }); } catch (_) {}
   }
   // 429 talk_ip / 503 talk_budget: до 00:00 UTC кнопка звонка неактивна (сутки — todayIsoDate)
   function _talkBlockSet(code) {
@@ -33582,6 +33584,7 @@
     page.innerHTML = '<div class="talk-shell" id="talk-shell"></div>';
     document.body.appendChild(page);
     document.body.classList.add('chat-open');            // полноэкранный режим: прячем нижнюю навигацию
+    _talkVvBind();
     const seq = ++_talkPageSeq;
     _talk = Object.assign({
       callId: 0, turnSeq: 0, phase: 'setup', pageSeq: seq, usage: null, textMode: !_talkTtsAvailable(), micMode: '',
@@ -33636,6 +33639,10 @@
             <span class="talk-row-tx"><span class="talk-row-t">${t('talk.setup.casual')}</span><span class="talk-row-s">${t('talk.setup.casualSub')}</span></span>
             <span class="switch" aria-hidden="true"></span>
           </button>
+          <button type="button" class="talk-row" id="talk-slow" role="switch" aria-checked="false" data-talk="slow">
+            <span class="talk-row-tx"><span class="talk-row-t">${t('talk.setup.slow')}</span><span class="talk-row-s">${t('talk.setup.slowSub')}</span></span>
+            <span class="switch" aria-hidden="true"></span>
+          </button>
           <div class="talk-sec" id="talk-topic-h">${t('talk.setup.topic')}</div>
           <div class="talk-topics" role="radiogroup" aria-labelledby="talk-topic-h">
             ${_TALK_UI_TOPICS.map(id => `<button type="button" role="radio" class="talk-topic" data-talk="topic" data-topic="${id}"><span class="talk-topic-e" aria-hidden="true">${_TALK_UI_EMOJI[id]}</span><span class="talk-topic-t">${t('talk.topic.' + id)}</span></button>`).join('')}
@@ -33671,6 +33678,7 @@
     if (a === 'close') { talkClose(); return; }
     if (a === 'mood') { _talkSetMood(el.dataset.mood); return; }
     if (a === 'casual') { c.casual = !c.casual; _talkPrefsSave(); _talkSyncSetup(); return; }
+    if (a === 'slow') { c.slow = !c.slow; _talkPrefsSave(); _talkSyncSetup(); return; }
     if (a === 'topic') { if (_TALK_UI_TOPICS.indexOf(el.dataset.topic) >= 0) { c.topic = el.dataset.topic; _talkPrefsSave(); _talkSyncSetup(); } return; }
     if (a === 'mic') { if (el.dataset.mode === 'free' || el.dataset.mode === 'hold') { c.micPick = el.dataset.mode; _talkPrefsSave(); _talkSyncSetup(); } return; }
     if (a === 'cc') { if (!c.textMode) { c.cc = !c.cc; _talkPrefsSave(); _talkSyncSetup(); } return; }
@@ -33723,6 +33731,8 @@
     if (slider) { slider.setAttribute('aria-valuenow', String(i)); slider.setAttribute('aria-valuetext', t('talk.mood.' + c.mood + '.lbl')); }
     const thumb = $('talk-thumb'); if (thumb) thumb.style.left = (i * 50) + '%';
     document.querySelectorAll('#talk-shell .talk-end-lbl').forEach(b => b.classList.toggle('on', b.dataset.mood === c.mood));
+    const slw = $('talk-slow');
+    if (slw) { slw.setAttribute('aria-checked', String(!!c.slow)); slw.querySelector('.switch').classList.toggle('on', !!c.slow); }
     const cas = $('talk-casual');
     if (cas) { cas.setAttribute('aria-checked', String(!!c.casual)); cas.querySelector('.switch').classList.toggle('on', !!c.casual); }
     document.querySelectorAll('#talk-shell .talk-topic').forEach(b => { const on = b.dataset.topic === c.topic; b.classList.toggle('on', on); b.setAttribute('aria-checked', String(on)); });
@@ -33793,6 +33803,7 @@
   function talkClose() {
     const c = _talk;
     if (c && c.phase !== 'setup' && c.phase !== 'ended') { try { _talkTeardown(c); } catch (_) {} }
+    _talkVvUnbind();
     document.getElementById('talk-page')?.remove();
     _talk = null;
     if (!document.getElementById('chat-page') && !document.getElementById('plan-page') && !document.getElementById('ai-tutor-modal')) {
@@ -33819,12 +33830,40 @@
   const TALK_SPEAK_WD = { preStartMs: 9000, minMs: 4000, perCharMs: 120, tailMs: 3000 };
   // thinkTickMs — ожидание ИИ дольше 3 с с минут не списывается; bargeMs — пауза между остановкой
   // озвучки и микрофоном (хвост звука не попадает в распознавание); holdShortMs — «тап» вместо удержания
+  // iPhone: клавиатура не уменьшает fixed-страницу — нижняя панель с полем ввода и микрофоном оказывалась ПОД ней
+  // (20.10.2026). Пока страница открыта, подгоняем её под visualViewport: высота = видимая область, сдвиг = offsetTop.
+  let _talkVvOff = null;
+  function _talkVvBind() {
+    _talkVvUnbind();
+    const vv = window.visualViewport;
+    if (!vv) return;
+    const fit = () => {
+      const pg = document.getElementById('talk-page');
+      if (!pg) return;
+      const kb = window.innerHeight - vv.height - vv.offsetTop;   // высота клавиатуры
+      pg.classList.toggle('talk-kb-open', kb > 80);               // клавиатура открыта: большую мордочку прячем (CSS), иначе панель не влезает
+      if (kb > 80 || vv.offsetTop > 0) { pg.style.top = vv.offsetTop + 'px'; pg.style.height = vv.height + 'px'; pg.style.bottom = 'auto'; }
+      else { pg.style.top = ''; pg.style.height = ''; pg.style.bottom = ''; }
+      const log = document.getElementById('talk-log');
+      if (log) log.scrollTop = log.scrollHeight;
+    };
+    vv.addEventListener('resize', fit);
+    vv.addEventListener('scroll', fit);
+    _talkVvOff = () => { vv.removeEventListener('resize', fit); vv.removeEventListener('scroll', fit); };
+    fit();
+  }
+  function _talkVvUnbind() { if (_talkVvOff) { _talkVvOff(); _talkVvOff = null; } }
+  // iPhone: после облачной озвучки (аудиоплеер) Safari оставляет звуковую сессию в режиме «только воспроизведение», и
+  // распознавание речи слышит хуже, чем со встроенным голосом (20.10.2026). Просим «воспроизведение и запись» на время
+  // звонка и подтверждаем перед каждым слушанием; после звонка возвращаем 'auto'. Где API нет — ничего не делаем.
+  function _talkAudioSession(mode) {
+    try { if (navigator.audioSession) navigator.audioSession.type = mode; } catch (_) {}
+  }
   const TALK_CALL = { thinkTickMs: 3000, maxUserChars: 300, bargeMs: 150, holdShortMs: 600 };
   const TALK_FAREWELL = {
     jon: { ko: '오늘은 여기까지! 내일 또 만나요~', tr: 'онырын ёгиккаджи! нэиль тто маннаё~', ru: { ru: 'На сегодня всё! Увидимся завтра~', en: 'That’s all for today! See you tomorrow~', uz: 'Bugunga shu! Ertaga yana koʻrishamiz~' } },
     ban: { ko: '오늘은 여기까지! 내일 또 만나~', tr: 'онырын ёгиккаджи! нэиль тто манна~', ru: { ru: 'На сегодня всё! Увидимся завтра~', en: 'That’s all for today! See you tomorrow~', uz: 'Bugunga shu! Ertaga yana koʻrishamiz~' } }
   };
-  const _TALK_NATIVE_SR = { ru: 'ru-RU', en: 'en-US', uz: 'uz-UZ' };
   // ── Токены асинхронных операций ──
   function _talkTok(kind) {
     const c = _talk;
@@ -33922,7 +33961,7 @@
       speakSeq: 0, listenSeq: 0, askSeq: 0, listen: null, micActive: false, holding: false, holdAt: 0, holdMs: 0,
       talking: false, sayAfter: 'turn', sayReason: 'ai_end', lastKo: '', lastUserText: '', liveEl: null, bubbles: [],
       pending: null, aiFails: 0, silentFails: 0, ttsFails: 0, autoRetried: false, hint: '',
-      kbOpen: false, kbAuto: false, kbHint: '', nativeNext: false, nativeBad: [],
+      kbOpen: false, kbHint: '', lastWords: [],
       pauseReason: '', pausedFrom: '', replayOnResume: false, timeUp: false, farewell: false,
       endReason: '', tickTimer: 0, bargeTimer: 0, sinceFlush: 0, onOnline: null, onOffline: null,
       summaryShown: false, summaryAct: '', sum: null, confirmPrev: ''
@@ -33933,6 +33972,7 @@
     window.addEventListener('offline', c.onOffline);
     window.addEventListener('online', c.onOnline);
     c.tickTimer = setInterval(_talkTick, 1000);
+    _talkAudioSession('play-and-record');
     try { talkHistoryPush(); } catch (_) {}      // системная «назад» во время звонка = «Завершить звонок?»
     // Первая реплика — заготовка (без ИИ): звучит сразу, первый запрос к ИИ — после ответа ученицы
     const line = { ko: opener.ko, tr: opener.tr || '', ru: (opener.ru && (opener.ru[APP_LANG] || opener.ru.ru)) || '' };
@@ -33951,7 +33991,7 @@
     _talkPhase('komdori');
     const tok = _talkTok('speak');
     let sawSound = false;
-    talkSpeak(ko, { slow: c.mood === 'kind', onStart: () => { sawSound = true; } }).then(res => {
+    talkSpeak(ko, { slow: !!c.slow, onStart: () => { sawSound = true; } }).then(res => {
       if (!_talkAlive(tok) || c.phase !== 'komdori') return;
       c.talking = false;
       if (!sawSound && (res === 'failed' || res === 'timeout') && !c.textMode) { if (++c.ttsFails >= 2) _talkTextMode(); }
@@ -33979,12 +34019,6 @@
     if (c.micMode === 'keyboard') { _talkFocusInput(); return; }
     if (c.micMode === 'free' && !c.kbOpen) _talkListenStart({ auto: true });
   }
-  function _talkNativeLang() {
-    const c = _talk;
-    const list = [_TALK_NATIVE_SR[APP_LANG] || 'ru-RU', 'ru-RU'].filter((l, i, a) => a.indexOf(l) === i);
-    const ok = list.filter(l => !(c && c.nativeBad.indexOf(l) >= 0));
-    return ok.length ? ok[0] : '';
-  }
   function _talkListenCancel() {
     const c = _talk; if (!c || !c.listen) return;
     const h = c.listen;
@@ -33995,17 +34029,15 @@
     const c = _talk;
     if (!c || c.phase === 'ended' || c.phase === 'setup' || c.phase === 'paused' || c.micMode === 'keyboard' || c.listen) return;
     o = o || {};
-    const native = !!(o.native || c.nativeNext);
-    const lang = native ? _talkNativeLang() : 'ko-KR';
-    if (native && !lang) { _talkOpenKeyboard(true); return; }   // ни языка интерфейса, ни ru-RU нет — пишем
+    _talkAudioSession('play-and-record');
     const tok = _talkTok('listen');
-    const meta = { native: native, lang: lang, auto: !!o.auto };
+    const meta = { auto: !!o.auto };
     c.micActive = true; c.hint = '';
     _talkPhase('listening');
     let h = null;
     try {
       h = talkListen({
-        lang: lang, mode: c.micMode === 'hold' ? 'hold' : 'free',
+        lang: 'ko-KR', mode: c.micMode === 'hold' ? 'hold' : 'free',
         onInterim: (txt) => { if (_talkAlive(tok)) _talkLive(txt); }
       });
     } catch (_) { h = null; }
@@ -34023,39 +34055,29 @@
     c.listen = null; c.micActive = false;
     _talkLive('');
     const text = (res && typeof res.text === 'string') ? res.text.replace(/\s+/g, ' ').trim() : '';
-    if (text) { _talkUserTurn(text, { voice: true, native: meta.native }); return; }
+    if (text) { _talkUserTurn(text, { voice: true }); return; }
     const err = (res && res.error) || 'no-speech';
     if (err === 'network' && navigator.onLine === false) { _talkPause('offline'); return; }   // это сеть, а не микрофон
-    if (meta.native && err === 'unavailable') {
-      // Движок не знает язык интерфейса (uz-UZ на iOS/APK) → ru-RU; нет и его → клавиатура
-      if (meta.lang && c.nativeBad.indexOf(meta.lang) < 0) c.nativeBad.push(meta.lang);
-      if (_talkNativeLang()) { _talkListenStart({ native: true }); return; }
-      _talkOpenKeyboard(true); return;
-    }
     if (err === 'not-allowed') { _talkKeyboardOnly('denied'); return; }
     if (err === 'unavailable') { _talkKeyboardOnly('unavailable'); return; }
     if (err === 'network') { _talkKeyboardOnly('network'); return; }
     // no-speech / timeout: «Не расслышал — повтори», реплика не тратится
     if (c.micMode === 'hold' && c.holdMs > 0 && c.holdMs < TALK_CALL.holdShortMs) { c.hint = 'hold'; _talkPhase('listening'); return; }
-    if (meta.auto && !c.autoRetried) { c.autoRetried = true; _talkListenStart({ auto: true, native: meta.native }); return; }   // «Свободный»: одно автоповторное слушание
+    if (meta.auto && !c.autoRetried) { c.autoRetried = true; _talkListenStart({ auto: true }); return; }   // «Свободный»: одно автоповторное слушание
     if (++c.silentFails >= 2) { _talkKeyboardOnly('silent'); return; }           // две тихие неудачи за звонок → клавиатура
     c.hint = 'again';
     _talkPhase('listening');
   }
-  // Распознавания нет / не разрешено / не слышит → клавиатура до конца звонка, микрофон скрыт
+  // Распознавания нет / не разрешён микрофон → клавиатура до конца звонка, микрофон скрыт. Сеть и «не слышит»
+  // (две тихие неудачи) — только открываем клавиатуру с подсказкой: микрофон остаётся, к голосу можно вернуться
+  // кнопкой ⌨ (20.10.2026: раньше микрофон пропадал до конца звонка).
   function _talkKeyboardOnly(why) {
     const c = _talk; if (!c || c.phase === 'ended' || c.phase === 'setup') return;
     _talkListenCancel();
-    c.micMode = 'keyboard'; c.kbHint = why; c.kbOpen = true; c.hint = '';
+    if (why === 'denied' || why === 'unavailable') c.micMode = 'keyboard';
+    if (why === 'silent') c.silentFails = 0;
+    c.kbHint = why; c.kbOpen = true; c.hint = '';
     _talkPhase('listening');
-    _talkFocusInput();
-  }
-  // auto — клавиатуру открыли мы (нечем распознать язык интерфейса): после этой реплики закрываем
-  function _talkOpenKeyboard(auto) {
-    const c = _talk; if (!c) return;
-    if (auto && !c.kbOpen) c.kbAuto = true;
-    c.kbOpen = true;
-    _talkSync();
     _talkFocusInput();
   }
   function _talkFocusInput() {
@@ -34107,15 +34129,15 @@
     meta = meta || {};
     const line = String(text).replace(/\s+/g, ' ').trim().slice(0, TALK_CALL.maxUserChars);
     if (!line) return;
-    const native = !!meta.native;
+    if (_talkWantsSave(line)) { _talkSaveCommand(line, meta); return; }
     c.turnSeq++;
-    const counts = !!talkTurnCounts(line, c.lastUserText, native);
+    const counts = !!talkTurnCounts(line, c.lastUserText, false);
     c.lastUserText = line;
     c.turns++;
-    c.nativeNext = false; c.hint = '';
-    if (c.kbAuto) { c.kbAuto = false; c.kbOpen = false; }
+    c.hint = '';
+    if (c.micMode !== 'keyboard') c.kbHint = '';
     c.history.push({ role: 'user', text: line });
-    const turn = { counts: counts, xpGiven: false, windowDiv: 1, tooLongRetried: false, el: _talkAddMe(line, !!meta.voice, native) };
+    const turn = { counts: counts, xpGiven: false, windowDiv: 1, tooLongRetried: false, el: _talkAddMe(line, !!meta.voice) };
     c.pending = turn;
     _talkAsk(turn);
   }
@@ -34175,15 +34197,21 @@
       const key = (fix.bad || '') + '→' + fix.good;
       if (!c.fixes.some(f => ((f.bad || '') + '→' + f.good) === key)) c.fixes.push({ bad: fix.bad || '', good: fix.good, why: fix.why || '' });
     }
+    const shown = [];
     if (!safety && Array.isArray(reply.words)) {
-      reply.words.forEach(w => { if (talkWordOk(w) && !c.words.some(x => x.ko === w.ko)) c.words.push({ ko: w.ko, tr: w.tr || '', ru: w.ru || '' }); });
+      reply.words.forEach(w => {
+        if (!talkWordOk(w)) return;
+        const o = { ko: w.ko, tr: w.tr || '', ru: w.ru || '' };
+        if (!c.words.some(x => x.ko === o.ko)) c.words.push(o);
+        if (!shown.some(x => x.ko === o.ko)) shown.push(o);
+      });
     }
     if (turn.counts && !safety && !turn.xpGiven && (c.xpTurns + 1) * TALK.xp.perTurn <= TALK.xp.max) {
       turn.xpGiven = true; c.xpTurns++;
       try { talkXpAdd(TALK.xp.perTurn); } catch (_) {}
     }
     c.history.push({ role: 'assistant', ko: reply.ko, good: fix ? fix.good : '' });
-    _talkAddKomdori({ ko: reply.ko, tr: reply.tr || '', ru: reply.ru || '' });
+    _talkAddKomdori({ ko: reply.ko, tr: reply.tr || '', ru: reply.ru || '', words: shown, prov: r && r.provider });
     _talkSay(reply.ko, { after: reply.end ? 'end' : 'turn', reason: 'ai_end' });
   }
   // Повтор после «Комдори задумался…»: тот же запрос ещё раз (его зовёт и хук «Продолжим» из E6)
@@ -34263,26 +34291,11 @@
     talkStudentTurn();
   }
   // ── Кнопки звонка ──
-  function talkNative() {
-    const c = _talk; if (!c || (c.phase !== 'listening' && c.phase !== 'komdori')) return;
-    c.nativeNext = true;
-    if (c.micMode === 'keyboard' || c.kbOpen) {
-      if (c.phase === 'komdori') { c.speakSeq++; c.talking = false; try { stopSpeech(); } catch (_) {} _talkPhase('listening'); }
-      _talkOpenKeyboard(); return;
-    }
-    if (c.micMode === 'hold') {        // «Зажми»: следующее удержание — на языке интерфейса
-      if (c.phase === 'komdori') { _talkBargeIn(() => _talkSync()); return; }
-      _talkListenCancel(); _talkSync(); return;
-    }
-    const go = () => { _talkListenCancel(); _talkListenStart({ native: true }); };
-    if (c.phase === 'komdori') { _talkBargeIn(go); return; }
-    go();
-  }
   function talkToggleKeyboard() {
     const c = _talk; if (!c || c.phase === 'ended' || c.phase === 'setup' || c.micMode === 'keyboard') return;
-    c.kbOpen = !c.kbOpen; c.kbAuto = false;
+    c.kbOpen = !c.kbOpen;
     if (c.kbOpen) { _talkListenCancel(); if (c.phase === 'listening') _talkPhase('listening'); _talkFocusInput(); }
-    else { c.nativeNext = false; _talkSync(); if (c.phase === 'listening' && c.micMode === 'free') _talkListenStart({ auto: true }); }
+    else { c.kbHint = ''; _talkSync(); if (c.phase === 'listening' && c.micMode === 'free') _talkListenStart({ auto: true }); }
   }
   function talkSendText() {
     const c = _talk; if (!c) return;
@@ -34296,13 +34309,13 @@
     _talkListenCancel();
     clearTimeout(c.bargeTimer);
     inp.value = '';
-    _talkUserTurn(text, { voice: false, native: c.nativeNext });
+    _talkUserTurn(text, { voice: false });
   }
   // 🔊 у реплики Комдори и 🔁: сначала гасим микрофон, потом talkSpeak; машина ждёт конца повтора
   function talkReplay(idx) {
     const c = _talk; if (!c) return;
     const b = c.bubbles[idx]; if (!b || !b.ko) return;
-    if (c.phase === 'ended') { talkSpeak(b.ko, { slow: c.mood === 'kind' }); return; }
+    if (c.phase === 'ended') { talkSpeak(b.ko, { slow: !!c.slow }); return; }
     if (c.phase !== 'listening' && c.phase !== 'komdori') return;
     _talkListenCancel();
     c.holding = false;
@@ -34337,6 +34350,7 @@
     if (c.onOnline) window.removeEventListener('online', c.onOnline);
     if (c.onOffline) window.removeEventListener('offline', c.onOffline);
     c.onOnline = c.onOffline = null;
+    _talkAudioSession('auto');
     try { talkHistoryPop(); } catch (_) {}
     try { talkUsageFlush(); } catch (_) {}
   }
@@ -34403,7 +34417,6 @@
         </form>
         <button type="button" class="talk-mic" id="talk-mic"><i class="fa-solid fa-microphone" aria-hidden="true"></i><span id="talk-mic-tx"></span></button>
         <div class="talk-tools">
-          <button type="button" class="talk-tool" id="talk-native" data-talk="native" aria-label="${escHtml(t('talk.call.nativeAria'))}"><span aria-hidden="true">🆘</span> ${t('talk.call.native')}</button>
           <button type="button" class="talk-tool" id="talk-kb" data-talk="kb" aria-label="${escHtml(t('talk.call.kbAria'))}" aria-pressed="false"><i class="fa-regular fa-keyboard" aria-hidden="true"></i></button>
           <button type="button" class="talk-tool" id="talk-again" data-talk="repeat" aria-label="${escHtml(t('talk.call.repeatAria'))}"><i class="fa-solid fa-rotate-left" aria-hidden="true"></i></button>
           <button type="button" class="talk-tool talk-tool-end" id="talk-end" data-talk="hangup" aria-label="${escHtml(t('talk.call.hangupAria'))}"><i class="fa-solid fa-phone-slash" aria-hidden="true"></i></button>
@@ -34447,7 +34460,6 @@
     else if (a === 'confirm-stay') _talkConfirmHide();
     else if (a === 'confirm-end') _talkConfirmEndNow();
     else if (a === 'cc') talkToggleCc();
-    else if (a === 'native') talkNative();
     else if (a === 'kb') talkToggleKeyboard();
     else if (a === 'repeat') talkRepeatLast();
     else if (a === 'hangup') talkHangup();
@@ -34477,10 +34489,40 @@
     b.append(play, ko);
     if (line.tr) { const tr = document.createElement('div'); tr.className = 'talk-tr'; tr.textContent = '[' + line.tr + ']'; b.append(tr); }
     if (line.ru) { const ru = document.createElement('div'); ru.className = 'talk-ru'; ru.textContent = line.ru; b.append(ru); }
+    if (line.prov && isAdmin()) {
+      const p = document.createElement('div');
+      p.className = 'talk-prov';
+      p.textContent = String(line.prov);
+      b.append(p);
+    }
     _talkLogAppend(b);
+    c.lastWords = (line.words || []).slice();   // слова этой реплики — для команды «сохрани слово»
     return idx;
   }
-  function _talkAddMe(text, voice, native) {
+  // Команда «сохрани слово» (голосом по-корейски — распознаём только ko-KR — или текстом на любом языке): слова ПОСЛЕДНЕЙ
+  // реплики Комдори уходят в словарик локально, без запроса к ИИ и без траты реплики.
+  const TALK_SAVE_RE = /сохрани|запомни|добав\S*\s.*слов|в\s+словар|save\b.*\bwords?|add\b.*\bwords?|words?\b.*\b(save|add)|saqla|lug[ʻ'’`]?atga|단어.*(저장|추가|넣)|저장\s*해/i;
+  function _talkWantsSave(line) { return line.length <= 60 && TALK_SAVE_RE.test(line); }
+  function _talkSaveCommand(line, meta) {
+    const c = _talk;
+    _talkAddMe(line, !!meta.voice);
+    const list = (c.lastWords || []).filter(w => w && talkWordOk(w));
+    const fresh = list.filter(w => !isMyWord(w.ko));
+    let msg;
+    if (!list.length) msg = t('talk.words.none');
+    else if (!fresh.length) msg = t('talk.words.already');
+    else {
+      fresh.forEach(w => saveMyWord(w.ko, w.ru, w.tr, '🐻', 'talk'));   // не toggleMyWord: он кладёт ko в toast (innerHTML)
+      msg = t('talk.words.saved', { n: fresh.length });
+    }
+    const note = document.createElement('div');
+    note.className = 'talk-note';
+    note.textContent = msg;
+    _talkLogAppend(note);
+    c.hint = '';
+    talkStudentTurn();
+  }
+  function _talkAddMe(text, voice) {
     const b = document.createElement('div');
     b.className = 'talk-b talk-b-me';
     if (voice) {
@@ -34492,7 +34534,7 @@
     }
     const tx = document.createElement('div');
     tx.className = 'talk-me-tx';
-    if (!native) tx.lang = 'ko';
+    if (/[가-힣]/.test(text)) tx.lang = 'ko';
     tx.textContent = text;
     b.append(tx);
     _talkLogAppend(b);
@@ -34546,10 +34588,9 @@
     let st = '';
     if (ph === 'komdori') st = t(c.talking ? 'talk.st.speaking' : 'talk.st.thinking');
     else if (ph === 'listening') {
-      if (c.micActive) st = t(c.nativeNext ? 'talk.st.native' : 'talk.st.listening');
+      if (c.micActive) st = t('talk.st.listening');
       else if (c.hint === 'again') st = t('talk.st.again');
       else if (c.hint === 'hold') st = t('talk.st.holdShort');
-      else if (c.nativeNext) st = t('talk.st.native');
       else st = t(c.micMode === 'keyboard' || c.kbOpen ? 'talk.st.yourType' : (c.micMode === 'hold' ? 'talk.st.yourHold' : 'talk.st.yourTap'));
     }
     else if (ph === 'recognizing') st = t('talk.st.recognizing');
@@ -34602,7 +34643,7 @@
     }
     const kbHint = $('talk-kb-hint');
     if (kbHint) {
-      const k = c.micMode === 'keyboard' ? (c.kbHint || (_talkPlatformMic() === 'ios-standalone' ? 'ios' : 'unavailable')) : '';
+      const k = c.micMode === 'keyboard' ? (c.kbHint || (_talkPlatformMic() === 'ios-standalone' ? 'ios' : 'unavailable')) : (c.kbOpen ? c.kbHint : '');
       kbHint.hidden = !k;
       kbHint.textContent = k ? t(k === 'ios' ? 'talk.mode.iosHint' : 'talk.kb.' + k) : '';
     }
@@ -34610,10 +34651,9 @@
     if (kbd) {
       kbd.hidden = !(c.micMode === 'keyboard' || c.kbOpen);
       const inp = $('talk-input');
-      if (inp) { inp.placeholder = t(c.nativeNext ? 'talk.kb.native' : 'talk.kb.ph'); inp.lang = c.nativeNext ? APP_LANG : 'ko'; inp.disabled = !yourTurn; }
+      if (inp) { inp.placeholder = t('talk.kb.ph'); inp.disabled = !yourTurn; }
       const send = $('talk-send'); if (send) send.disabled = !yourTurn;
     }
-    const nat = $('talk-native'); if (nat) { nat.disabled = !yourTurn; nat.classList.toggle('on', c.nativeNext); nat.setAttribute('aria-pressed', String(!!c.nativeNext)); }
     const kb = $('talk-kb'); if (kb) { kb.hidden = c.micMode === 'keyboard'; kb.setAttribute('aria-pressed', String(!!c.kbOpen)); kb.disabled = ph === 'ended'; }
     const again = $('talk-again'); if (again) again.disabled = !yourTurn || !c.lastKo;
     _talkSyncTimer();

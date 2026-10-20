@@ -7991,3 +7991,12 @@ body.calm-motion .talk-sum-card { animation: none; }
 body.theme-dark #talk-page .talk-card { background: #1E1E1E; border-color: #3A2A30; }
 body.calm-motion #talk-page .talk-card-bg, body.calm-motion #talk-page .talk-card { animation: none; }
 @media (prefers-reduced-motion: reduce) { #talk-page .talk-card-bg, #talk-page .talk-card { animation: none; } }
+
+/* ═══════════ «Разговор с Комдори»: пометка о сохранённых словах, подпись провайдера для админа (20.10.2026) ═══════════ */
+.talk-note { align-self: center; max-width: 86%; padding: 6px 12px; border-radius: 999px; background: rgba(201,165,92,.18); color: var(--berry); font-size: 12.5px; font-weight: 600; text-align: center; overflow-wrap: anywhere; animation: kmSoftUp .22s var(--ease-out) both; }
+.talk-prov { margin-top: 4px; font-size: 10px; letter-spacing: .06em; text-transform: uppercase; color: var(--hush); }
+body.calm-motion .talk-note { animation: none; }
+@media (prefers-reduced-motion: reduce) { .talk-note { animation: none; } }
+/* Клавиатура iPhone открыта (страница ужата до видимой области): мордочку прячем — панель ввода и микрофон должны влезть (20.10.2026) */
+.talk-page.talk-kb-open .talk-face-call { display: none; }
+.talk-page.talk-kb-open .talk-status { margin: 2px auto 4px; }
