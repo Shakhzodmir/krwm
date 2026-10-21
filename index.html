@@ -58,11 +58,11 @@
      вводят анимации из styles.css, поэтому без «мигания»; логотип не трогаем (fanUnfurl). -->
 <style>#intro{position:fixed;inset:0;z-index:999;display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:hidden;cursor:pointer;background:radial-gradient(120% 90% at 50% 35%,#FFFCF8 0%,#FFF4F0 38%,#FBE8EA 78%,#F2D5DA 100%)}#intro>.intro-tagline,#intro>.intro-subline,#intro>.intro-cta{opacity:0}</style>
 
-<link rel="stylesheet" href="styles.css?v=20261021a">
+<link rel="stylesheet" href="styles.css?v=20261021b">
 
 <!-- Предзагрузка тяжёлого JS: скачивание стартует сразу, параллельно с CSS/шрифтами -->
 <link rel="preload" href="assets/textbook/textbook-data.js?v=20260924b" as="script">
-<link rel="preload" href="app.js?v=20261021a" as="script">
+<link rel="preload" href="app.js?v=20261021b" as="script">
 </head>
 
 <body>
@@ -595,7 +595,6 @@
           <button type="button" role="tab" id="game-src-auto" class="wt-chip active" onclick="setGameSource('auto')">📚 <span data-i18n="games.src.auto">Слова из уроков</span></button>
           <button type="button" role="tab" id="game-src-mine" class="wt-chip" onclick="setGameSource('mine')">💗 <span data-i18n="games.src.mine">Мои слова</span> <span id="game-src-mine-n"></span></button>
         </div>
-        <div style="font-size:10px; color:var(--hush); margin-top:6px; line-height:1.45;" data-i18n="games.src.hint">Выбор действует на игры со словами: перевод, слух, память, сборка, карточки, кроссворд, поиск слов</div>
         <div id="hardcore-toggle-slot"></div>
       </div>
 
@@ -1089,6 +1088,12 @@
       <button onclick="openSettingsModal()" class="chat-back-btn" aria-label="Настройки" title="Настройки" data-i18n-aria="set.title" data-i18n-title="set.title" style="flex-shrink:0;"><i class="fa-solid fa-gear"></i></button>
     </header>
     <div style="padding: 20px;">
+      <!-- «Учимся вместе» — вход на страницу (показывается по флагу appConfig/together; не гостям и не админам) -->
+      <button type="button" id="together-entry" class="tg-entry" hidden onclick="togetherOpen()">
+        <span class="tg-entry-ico" aria-hidden="true">💞</span>
+        <span class="tg-entry-tx"><span class="tg-entry-t"><span data-i18n="tg.entry.t">Учимся вместе</span><span class="km-new" id="together-entry-new" data-until="2026-10-28" data-i18n="new.chip">NEW</span></span><span class="tg-entry-s" data-i18n="tg.entry.s">Огонёк на двоих, открытки со словом, проверка подруги</span></span>
+        <i class="fa-solid fa-chevron-right" aria-hidden="true"></i>
+      </button>
       <div id="friends-chat-section"></div>
     </div>
   </section>
@@ -1332,7 +1337,7 @@
 
 <!-- ─────────────── DATA + LOGIC ─────────────── -->
 <script src="assets/textbook/textbook-data.js?v=20260924b"></script>
-<script src="app.js?v=20261021a"></script>
+<script src="app.js?v=20261021b"></script>
 
 </body>
 </html>

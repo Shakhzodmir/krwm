@@ -1411,6 +1411,98 @@
     "report.confirmMsg": { ru: "Пожаловаться на это сообщение? Мади его проверит.", en: "Report this message? Madie will review it.", uz: "Bu xabardan shikoyat qilinsinmi? Madi uni koʻrib chiqadi." },
     "report.confirmUser": { ru: "Пожаловаться на пользователя {name}? Мади проверит.", en: "Report {name}? Madie will review it.", uz: "{name} haqida shikoyat qilinsinmi? Madi koʻrib chiqadi." },
     "report.sent": { ru: "Жалоба отправлена — Мади проверит 🌸", en: "Report sent — Madie will review it 🌸", uz: "Shikoyat yuborildi — Madi koʻrib chiqadi 🌸" },
+    "tg.entry.t": { ru: "Учимся вместе", en: "Learn together", uz: "Birga oʻrganamiz" },
+    "tg.entry.s": { ru: "Огонёк на двоих, открытки со словом, проверка подруги", en: "A shared streak, word postcards, quiz your friend", uz: "Ikkovlon olovcha, soʻzli ochiqkalar, doʻstni tekshirish" },
+    "tg.title": { ru: "Учимся вместе 💞", en: "Learn together 💞", uz: "Birga oʻrganamiz 💞" },
+    "tg.with": { ru: "с {name}", en: "with {name}", uz: "{name} bilan" },
+    "tg.pals": { ru: "Выбери подругу", en: "Choose a friend", uz: "Doʻstni tanlang" },
+    "tg.invite": { ru: "Позвать", en: "Invite", uz: "Taklif qilish" },
+    "tg.start.t": { ru: "Начни огонёк с {name}", en: "Start a shared streak with {name}", uz: "{name} bilan olovchani boshlang" },
+    "tg.start.s": { ru: "Каждый день, когда вы обе позанимались, огонёк растёт. Один день пропуска — не беда: он встанет на паузу.", en: "Every day you both study, the flame grows. One missed day is fine: it just pauses.", uz: "Ikkovingiz oʻqigan har kuni olov ulg‘ayadi. Bir kun oʻtkazib yuborsangiz ham mayli: u pauzaga qoʻyiladi." },
+    "tg.accept": { ru: "Принять", en: "Accept", uz: "Qabul qilish" },
+    "tg.callIn": { ru: "Позвать", en: "Invite", uz: "Chaqirish" },
+    "tg.waiting.t": { ru: "Ждём {name}", en: "Waiting for {name}", uz: "{name} kutilmoqda" },
+    "tg.waiting.s": { ru: "Приглашение отправлено в чат. Как только она примет, огонёк загорится.", en: "The invitation is in your chat. The flame lights up once she accepts.", uz: "Taklif chatga yuborildi. U qabul qilishi bilan olov yonadi." },
+    "tg.days": { ru: "{n} дн. вместе", en: "{n} days together", uz: "{n} kun birga" },
+    "tg.noStreak": { ru: "Огонёк ждёт вас", en: "Your flame is waiting", uz: "Olovcha sizni kutmoqda" },
+    "tg.today.both": { ru: "Сегодня вы обе позанимались ✓", en: "You both studied today ✓", uz: "Bugun ikkovingiz ham oʻqidingiz ✓" },
+    "tg.today.paused": { ru: "Огонёк на паузе — вернём его сегодня вместе", en: "The flame is paused — let’s bring it back today", uz: "Olov pauzada — bugun birga qaytaramiz" },
+    "tg.today.meOnly": { ru: "Ты сегодня ✓ · {name} ещё нет", en: "You ✓ today · {name} not yet", uz: "Bugun siz ✓ · {name} hali yoʻq" },
+    "tg.today.otherOnly": { ru: "{name} уже ✓ — твоя очередь!", en: "{name} is done ✓ — your turn!", uz: "{name} tayyor ✓ — navbat sizda!" },
+    "tg.today.none": { ru: "Сегодня ещё никто — самое время начать", en: "Nobody yet today — time to start", uz: "Bugun hali hech kim — boshlash payti" },
+    "tg.nudge": { ru: "Подсказать {name}", en: "Nudge {name}", uz: "{name}ga eslatish" },
+    "tg.nudge.done": { ru: "Сегодня ты уже подсказала 🌸", en: "You already nudged today 🌸", uz: "Bugun allaqachon eslatdingiz 🌸" },
+    "tg.nudge.text": { ru: "🔥 {name} зовёт позаниматься сегодня — наш огонёк ждёт!", en: "🔥 {name} invites you to study today — our flame is waiting!", uz: "🔥 {name} bugun birga oʻqishga chaqiryapti — olovchamiz kutyapti!" },
+    "tg.nudge.sent": { ru: "Подсказка отправлена 💌", en: "Nudge sent 💌", uz: "Eslatma yuborildi 💌" },
+    "tg.empty.t": { ru: "Сначала позови подругу", en: "Invite a friend first", uz: "Avval doʻstni chaqiring" },
+    "tg.empty.s": { ru: "Здесь учатся вместе с друзьями из приложения. Отправь ссылку-приглашение — и вернись сюда.", en: "Here you learn with friends from the app. Send an invite link and come back.", uz: "Bu yerda ilovadagi doʻstlar bilan birga oʻrganiladi. Taklif havolasini yuboring va qaytib keling." },
+    "tg.soon": { ru: "Скоро", en: "Soon", uz: "Tez orada" },
+    "tg.m.post": { ru: "Открытка со словом", en: "Word postcard", uz: "Soʻzli ochiqka" },
+    "tg.m.post.s": { ru: "Подари слово красивой карточкой", en: "Gift a word on a pretty card", uz: "Soʻzni chiroyli kartada sovgʻa qiling" },
+    "tg.m.quiz": { ru: "Проверь подругу", en: "Quiz your friend", uz: "Doʻstni tekshiring" },
+    "tg.m.quiz.s": { ru: "5 слов — и узнаешь, как она их знает", en: "5 words — see how well she knows them", uz: "5 ta soʻz — qanchalik bilishini bilib oling" },
+    "tg.m.deck": { ru: "Общая колода", en: "Shared deck", uz: "Umumiy toʻplam" },
+    "tg.m.deck.s": { ru: "Слова, которые вы учите вместе · {n}", en: "Words you learn together · {n}", uz: "Birga oʻrganadigan soʻzlaringiz · {n}" },
+    "tg.m.chain": { ru: "Слова по цепочке", en: "Word chain", uz: "Soʻzlar zanjiri" },
+    "tg.m.battle": { ru: "Баттл-комната", en: "Battle room", uz: "Bellashuv xonasi" },
+    "tg.m.scene": { ru: "Сценка вдвоём", en: "Scene for two", uz: "Ikki kishilik sahna" },
+    "tg.invite.text": { ru: "🔥 {name} зовёт тебя копить огонёк вместе — открой «Учимся вместе» и прими приглашение", en: "🔥 {name} invites you to build a shared streak — open “Learn together” and accept", uz: "🔥 {name} sizni birga olovcha yigʻishga chaqiryapti — “Birga oʻrganamiz”ni ochib, qabul qiling" },
+    "tg.card.invite": { ru: "{name} зовёт копить огонёк вместе", en: "{name} invites you to a shared streak", uz: "{name} birga olovcha yigʻishga chaqiryapti" },
+    "tg.card.joined": { ru: "Вы вместе", en: "You are together", uz: "Birgasiz" },
+    "tg.started": { ru: "Огонёк на двоих загорелся 🔥", en: "Your shared streak is on 🔥", uz: "Ikkovlon olovcha yondi 🔥" },
+    "tg.invited": { ru: "Приглашение отправлено в чат 💌", en: "Invitation sent to the chat 💌", uz: "Taklif chatga yuborildi 💌" },
+    "tg.pick.t": { ru: "Выбери слово", en: "Choose a word", uz: "Soʻzni tanlang" },
+    "tg.src.mine": { ru: "Мои слова", en: "My words", uz: "Mening soʻzlarim" },
+    "tg.src.lessons": { ru: "Из уроков", en: "From lessons", uz: "Darslardan" },
+    "tg.pick.search": { ru: "Поиск по слову или переводу", en: "Search by word or meaning", uz: "Soʻz yoki tarjima boʻyicha qidirish" },
+    "tg.pick.empty": { ru: "Ничего не нашлось — сохрани слова в словарик или выбери «Из уроков»", en: "Nothing found — save words to your list or choose “From lessons”", uz: "Hech narsa topilmadi — soʻzlarni lugʻatga saqlang yoki “Darslardan”ni tanlang" },
+    "tg.post.pickHint": { ru: "Выбери слово для открытки", en: "Pick a word for the postcard", uz: "Ochiqka uchun soʻz tanlang" },
+    "tg.post.pick": { ru: "Выбрать слово", en: "Choose a word", uz: "Soʻz tanlash" },
+    "tg.post.change": { ru: "Другое слово", en: "Another word", uz: "Boshqa soʻz" },
+    "tg.post.note": { ru: "Записка", en: "Note", uz: "Yozuv" },
+    "tg.post.notePh": { ru: "Пара тёплых слов (по желанию)", en: "A few warm words (optional)", uz: "Bir-ikki iliq soʻz (ixtiyoriy)" },
+    "tg.post.theme": { ru: "Оформление", en: "Style", uz: "Koʻrinishi" },
+    "tg.th.sakura": { ru: "Сакура", en: "Sakura", uz: "Sakura" },
+    "tg.th.stars": { ru: "Звёзды", en: "Stars", uz: "Yulduzlar" },
+    "tg.th.night": { ru: "Ночь", en: "Night", uz: "Tun" },
+    "tg.th.dawn": { ru: "Рассвет", en: "Dawn", uz: "Tong" },
+    "tg.post.send": { ru: "Отправить открытку", en: "Send the postcard", uz: "Ochiqkani yuborish" },
+    "tg.post.text": { ru: "💌 {name} прислала тебе слово: {ko} — открой, чтобы послушать", en: "💌 {name} sent you a word: {ko} — open to listen", uz: "💌 {name} sizga soʻz yubordi: {ko} — eshitish uchun oching" },
+    "tg.post.sent": { ru: "Открытка отправлена 💌", en: "Postcard sent 💌", uz: "Ochiqka yuborildi 💌" },
+    "tg.post.sentXp": { ru: "Открытка отправлена 💌 +{xp} XP", en: "Postcard sent 💌 +{xp} XP", uz: "Ochiqka yuborildi 💌 +{xp} XP" },
+    "tg.listen": { ru: "Послушать", en: "Listen", uz: "Eshitish" },
+    "tg.toWords": { ru: "В мои слова", en: "Save to my words", uz: "Lugʻatimga" },
+    "tg.saved": { ru: "Слово в твоём словарике 🌸", en: "Saved to your words 🌸", uz: "Soʻz lugʻatingizda 🌸" },
+    "tg.quiz.lead": { ru: "Соберём {n} слов — подруга выберет перевод. В чат уйдёт карточка.", en: "We’ll pick {n} words — your friend chooses the meaning. A card goes to the chat.", uz: "{n} ta soʻz tanlaymiz — doʻstingiz tarjimasini topadi. Chatga karta ketadi." },
+    "tg.quiz.fewMine": { ru: "В твоём словарике пока мало слов (нужно хотя бы 4). Выбери «Из уроков».", en: "You need at least 4 saved words. Choose “From lessons”.", uz: "Lugʻatingizda soʻz kam (kamida 4 ta kerak). “Darslardan”ni tanlang." },
+    "tg.quiz.few": { ru: "Слов для проверки пока не хватает", en: "Not enough words yet", uz: "Tekshirish uchun soʻzlar hali yetarli emas" },
+    "tg.quiz.reroll": { ru: "Собрать другие слова", en: "Pick other words", uz: "Boshqa soʻzlar tanlash" },
+    "tg.quiz.send": { ru: "Отправить проверку", en: "Send the quiz", uz: "Tekshiruvni yuborish" },
+    "tg.quiz.text": { ru: "🧩 {name} проверяет тебя: {n} слов — открой и пройди", en: "🧩 {name} is quizzing you: {n} words — open and take it", uz: "🧩 {name} sizni tekshiryapti: {n} ta soʻz — oching va yeching" },
+    "tg.quiz.sent": { ru: "Проверка отправлена 💌", en: "Quiz sent 💌", uz: "Tekshiruv yuborildi 💌" },
+    "tg.quiz.sentXp": { ru: "Проверка отправлена 💌 +{xp} XP", en: "Quiz sent 💌 +{xp} XP", uz: "Tekshiruv yuborildi 💌 +{xp} XP" },
+    "tg.quiz.gone": { ru: "Эта проверка уже недоступна", en: "This quiz is no longer available", uz: "Bu tekshiruv endi mavjud emas" },
+    "tg.quiz.q": { ru: "Слово {i} из {n}", en: "Word {i} of {n}", uz: "{i}-soʻz, jami {n} ta" },
+    "tg.quiz.done": { ru: "✅ {name} прошла твою проверку: {s} из {n}", en: "✅ {name} took your quiz: {s} of {n}", uz: "✅ {name} tekshiruvingizdan oʻtdi: {s} / {n}" },
+    "tg.you": { ru: "Ты", en: "You", uz: "Siz" },
+    "tg.quiz.hard": { ru: "Сложные слова", en: "Tricky words", uz: "Qiyin soʻzlar" },
+    "tg.quiz.noRes": { ru: "Подруга ещё не прошла проверку", en: "Your friend hasn’t taken the quiz yet", uz: "Doʻstingiz hali tekshiruvdan oʻtmadi" },
+    "tg.quiz.resMine": { ru: "Результаты проверки", en: "Quiz results", uz: "Tekshiruv natijalari" },
+    "tg.quiz.resTitle": { ru: "Готово! Вот результат", en: "Done! Here is the result", uz: "Tayyor! Natija mana" },
+    "tg.xp": { ru: "+{xp} XP 🌸", en: "+{xp} XP 🌸", uz: "+{xp} XP 🌸" },
+    "tg.card.quiz": { ru: "{name} проверяет тебя", en: "{name} is quizzing you", uz: "{name} sizni tekshiryapti" },
+    "tg.card.quizMine": { ru: "Ты проверяешь подругу", en: "You are quizzing your friend", uz: "Siz doʻstingizni tekshiryapsiz" },
+    "tg.card.quizS": { ru: "{n} слов из словарика и уроков", en: "{n} words from lists and lessons", uz: "{n} ta soʻz" },
+    "tg.card.take": { ru: "Пройти проверку", en: "Take the quiz", uz: "Tekshiruvdan oʻtish" },
+    "tg.card.results": { ru: "Результаты", en: "Results", uz: "Natijalar" },
+    "tg.deck.lead": { ru: "Слова, которые вы добавляете вместе. Любая может добавить, удалить или забрать слово к себе.", en: "Words you add together. Either of you can add, remove or keep a word.", uz: "Birga qoʻshadigan soʻzlaringiz. Ikkovingiz qoʻshishingiz, olib tashlashingiz yoki oʻzingizga olishingiz mumkin." },
+    "tg.deck.add": { ru: "Добавить слово", en: "Add a word", uz: "Soʻz qoʻshish" },
+    "tg.deck.study": { ru: "Повторять", en: "Practice", uz: "Takrorlash" },
+    "tg.deck.empty": { ru: "Колода пуста — добавьте первое слово 🌸", en: "The deck is empty — add the first word 🌸", uz: "Toʻplam boʻsh — birinchi soʻzni qoʻshing 🌸" },
+    "tg.deck.full": { ru: "В колоде уже 200 слов — удалите лишние", en: "The deck already has 200 words — remove some", uz: "Toʻplamda 200 ta soʻz bor — ortiqchasini oʻchiring" },
+    "tg.deck.added": { ru: "Слово в общей колоде ✨", en: "Added to the shared deck ✨", uz: "Soʻz umumiy toʻplamda ✨" },
+    "tg.deck.by": { ru: "добавила {name}", en: "added by {name}", uz: "{name} qoʻshdi" },
+    "tg.deck.del": { ru: "Убрать из колоды", en: "Remove from the deck", uz: "Toʻplamdan olib tashlash" },
     'talk.kb.ph':           { ru: 'Напиши по-корейски…', en: 'Type in Korean…', uz: 'Koreyscha yozing…' },
     'talk.kb.denied':       { ru: 'Разреши микрофон в настройках — а пока пишем ⌨️', en: 'Allow the microphone in settings — for now we type ⌨️', uz: 'Sozlamalarda mikrofonga ruxsat bering — hozircha yozamiz ⌨️' },
     'talk.kb.unavailable':  { ru: 'Распознавание здесь недоступно — пишем ⌨️', en: 'Speech recognition isn’t available here — we type ⌨️', uz: 'Bu yerda nutqni tanish ishlamaydi — yozamiz ⌨️' },
@@ -4999,6 +5091,98 @@
     "report.confirmMsg": "Осы хабарламаға шағымдану керек пе? Мади оны тексереді.",
     "report.confirmUser": "{name} туралы шағымдану керек пе? Мади тексереді.",
     "report.sent": "Шағым жіберілді — Мади тексереді 🌸",
+    "tg.entry.t": "Бірге үйренеміз",
+    "tg.entry.s": "Екеуге ортақ от, сөзді открыткалар, досты тексеру",
+    "tg.title": "Бірге үйренеміз 💞",
+    "tg.with": "{name} екеуміз",
+    "tg.pals": "Досты таңда",
+    "tg.invite": "Шақыру",
+    "tg.start.t": "{name} екеуміз отты бастайық",
+    "tg.start.s": "Екеуің оқыған сайын от өседі. Бір күн жіберіп алсаң да қорқыныш жоқ: ол үзіліске тұрады.",
+    "tg.accept": "Қабылдау",
+    "tg.callIn": "Шақыру",
+    "tg.waiting.t": "{name} күтілуде",
+    "tg.waiting.s": "Шақыру чатқа жіберілді. Ол қабылдағанда от жанады.",
+    "tg.days": "{n} күн бірге",
+    "tg.noStreak": "От сендерді күтіп тұр",
+    "tg.today.both": "Бүгін екеуің де оқыдыңдар ✓",
+    "tg.today.paused": "От үзілісте — бүгін бірге қайтарамыз",
+    "tg.today.meOnly": "Бүгін сен ✓ · {name} әлі жоқ",
+    "tg.today.otherOnly": "{name} дайын ✓ — кезек сенде!",
+    "tg.today.none": "Бүгін әлі ешкім жоқ — бастайтын кез",
+    "tg.nudge": "{name} досқа ескерту",
+    "tg.nudge.done": "Бүгін ескерттің 🌸",
+    "tg.nudge.text": "🔥 {name} бүгін бірге оқуға шақырады — отымыз күтіп тұр!",
+    "tg.nudge.sent": "Ескерту жіберілді 💌",
+    "tg.empty.t": "Алдымен досыңды шақыр",
+    "tg.empty.s": "Мұнда қосымшадағы достармен бірге үйренеді. Шақыру сілтемесін жіберіп, қайта кел.",
+    "tg.soon": "Жақында",
+    "tg.m.post": "Сөзді открытка",
+    "tg.m.post.s": "Сөзді әдемі карточкамен сыйла",
+    "tg.m.quiz": "Досты тексер",
+    "tg.m.quiz.s": "5 сөз — қаншалықты білетінін біл",
+    "tg.m.deck": "Ортақ топтама",
+    "tg.m.deck.s": "Бірге үйренетін сөздер · {n}",
+    "tg.m.chain": "Сөз тізбегі",
+    "tg.m.battle": "Баттл-бөлме",
+    "tg.m.scene": "Екеуге сахна",
+    "tg.invite.text": "🔥 {name} сені бірге от жинауға шақырады — «Бірге үйренеміз» ашып, қабылда",
+    "tg.card.invite": "{name} бірге от жинауға шақырады",
+    "tg.card.joined": "Бірге",
+    "tg.started": "Екеуге ортақ от жанды 🔥",
+    "tg.invited": "Шақыру чатқа жіберілді 💌",
+    "tg.pick.t": "Сөзді таңда",
+    "tg.src.mine": "Менің сөздерім",
+    "tg.src.lessons": "Сабақтардан",
+    "tg.pick.search": "Сөз немесе аударма бойынша іздеу",
+    "tg.pick.empty": "Ештеңе табылмады — сөздерді сөздікке сақта немесе «Сабақтардан» таңда",
+    "tg.post.pickHint": "Открыткаға сөз таңда",
+    "tg.post.pick": "Сөз таңдау",
+    "tg.post.change": "Басқа сөз",
+    "tg.post.note": "Жазба",
+    "tg.post.notePh": "Бірер жылы сөз (қалауыңша)",
+    "tg.post.theme": "Безендіру",
+    "tg.th.sakura": "Сакура",
+    "tg.th.stars": "Жұлдыздар",
+    "tg.th.night": "Түн",
+    "tg.th.dawn": "Таң",
+    "tg.post.send": "Открытканы жіберу",
+    "tg.post.text": "💌 {name} саған сөз жіберді: {ko} — тыңдау үшін аш",
+    "tg.post.sent": "Открытка жіберілді 💌",
+    "tg.post.sentXp": "Открытка жіберілді 💌 +{xp} XP",
+    "tg.listen": "Тыңдау",
+    "tg.toWords": "Менің сөздеріме",
+    "tg.saved": "Сөз сөздігіңде 🌸",
+    "tg.quiz.lead": "{n} сөз жинаймыз — дос аудармасын таңдайды. Чатқа карточка кетеді.",
+    "tg.quiz.fewMine": "Сөздігіңде сөз аз (кемінде 4 керек). «Сабақтардан» таңда.",
+    "tg.quiz.few": "Тексеруге сөз әзірге жеткіліксіз",
+    "tg.quiz.reroll": "Басқа сөздер жинау",
+    "tg.quiz.send": "Тексеруді жіберу",
+    "tg.quiz.text": "🧩 {name} сені тексереді: {n} сөз — аш та өт",
+    "tg.quiz.sent": "Тексеру жіберілді 💌",
+    "tg.quiz.sentXp": "Тексеру жіберілді 💌 +{xp} XP",
+    "tg.quiz.gone": "Бұл тексеру енді қолжетімсіз",
+    "tg.quiz.q": "{i}-сөз, барлығы {n}",
+    "tg.quiz.done": "✅ {name} тексеруіңнен өтті: {s} / {n}",
+    "tg.you": "Сен",
+    "tg.quiz.hard": "Қиын сөздер",
+    "tg.quiz.noRes": "Дос тексеруден әлі өтпеді",
+    "tg.quiz.resMine": "Тексеру нәтижелері",
+    "tg.quiz.resTitle": "Дайын! Нәтиже міне",
+    "tg.xp": "+{xp} XP 🌸",
+    "tg.card.quiz": "{name} сені тексереді",
+    "tg.card.quizMine": "Сен досыңды тексересің",
+    "tg.card.quizS": "{n} сөз",
+    "tg.card.take": "Тексеруден өту",
+    "tg.card.results": "Нәтижелер",
+    "tg.deck.lead": "Бірге қосатын сөздер. Екеуің де қоса, жоя немесе өзіңе ала аласыңдар.",
+    "tg.deck.add": "Сөз қосу",
+    "tg.deck.study": "Қайталау",
+    "tg.deck.empty": "Топтама бос — алғашқы сөзді қосыңдар 🌸",
+    "tg.deck.full": "Топтамада 200 сөз бар — артығын жойыңдар",
+    "tg.deck.added": "Сөз ортақ топтамада ✨",
+    "tg.deck.by": "{name} қосты",
+    "tg.deck.del": "Топтамадан алу",
   };
   // I18N_KK:END
   function t(key, vars) {
@@ -9587,7 +9771,7 @@
   // Версия сборки: держать ВРУЧНУЮ синхронной с ?v= в index.html при каждом деплое
   // (те же 3 места — stylesheet/preload/script). Используется тихим автообновлением
   // ниже — сама загрузка кода по-прежнему идёт через ?v=.
-  const APP_VERSION = '20261021a';
+  const APP_VERSION = '20261021b';
   // ── Тихое автообновление (25.08.2026, вместо попапа «Вышло обновление!») ──
   // Узнав из облака про новую версию (appVersion пишет первый клиент нового деплоя,
   // promptVersion — кнопка «Оповестить» в админке), вкладка НЕ дёргает ученицу:
@@ -9765,6 +9949,599 @@
       return true;
     } catch (_) { toast(t('block.fail')); return false; }
   }
+
+  // ───────────── «Учимся вместе» (фаза 1: пара по огоньку, открытки со словом, проверка подруги, общая колода) ─────────────
+  // Спека: docs/superpowers/specs/2026-10-20-learn-together-design.md. Страница за флагом appConfig/together = {enabled, beta:[sha256(uid)]}.
+  // Данные: together/<pairId>/{meta/on/<uid>, days/<UTC-дата>/<uid>, quizzes/<id>, deck/<ключ слова>}, pairId = chatIdFor(a, b);
+  // мои пары — users/<me>/together/<friendUid> = ts. День «вместе» = обе занимались (addXp; награды самой страницы идут с меткой
+  // 'together' и в зачёт не идут), дата — UTC, как у серии и цели дня. В чат уходят только карточки (type:'card'), не ходы.
+  // Всё из БД выводится через escHtml/textContent (урок 09.2026: stored-XSS).
+  const TG = { xpPost: 5, xpQuiz: 10, postDaily: 3, quizDaily: 3, quizN: 5, deckMax: 200, noteMax: 80, keepQuizDays: 14, keepDays: 120 };
+  const TG_THEMES = ['sakura', 'stars', 'night', 'dawn'];
+  let _tgCfg = null, _tgOpening = false;
+  let _tg = null;                 // состояние открытой страницы
+  let _tgData = {};               // together/<pairId> (живой)
+  let _tgOff = null;              // отписка от together/<pairId>
+  let _tgMyPairs = {};            // users/<me>/together: { friendUid: ts }
+  let _tgQz = null;               // идущая проверка
+  let _tgPick = null;             // выбор слова: { tab, q, cb }
+
+  async function togetherFlagEnabled() {
+    try {
+      if (!_tgCfg) {
+        if (typeof _db === 'undefined') return false;
+        const snap = await _talkWithTimeout(_db.ref('appConfig/together').once('value'), 3000);
+        const v = snap && typeof snap.val === 'function' ? snap.val() : null;
+        _tgCfg = (v && typeof v === 'object') ? v : {};
+      }
+      if (_tgCfg.enabled === true) return true;
+      const raw = _tgCfg.beta;
+      const beta = Array.isArray(raw) ? raw : (raw && typeof raw === 'object' ? Object.values(raw) : []);
+      if (!beta.length) return false;
+      const u = Store.get('user');
+      if (!u || u.guest) return false;
+      const h = await _talkSha256Hex(firebaseUserId());
+      return beta.some(x => String(x).toLowerCase() === h);
+    } catch (_) { return false; }
+  }
+  // Входная карточка на экране «Общение»: только вошедшим ученицам (не гостям и не админам) и только по флагу
+  async function togetherUpdateEntry() {
+    const el = document.getElementById('together-entry');
+    if (!el) return;
+    const u = Store.get('user');
+    if (!u || u.guest || u.isAdmin) { el.hidden = true; return; }
+    const on = await togetherFlagEnabled();
+    el.hidden = !on;
+    const nw = document.getElementById('together-entry-new');
+    if (nw) { const end = Date.parse((nw.dataset.until || '') + 'T23:59:59Z'); nw.hidden = !(isFinite(end) && Date.now() <= end); }
+  }
+
+  // ── Серия «вместе»: чистая функция (тестируется отдельно) ──
+  function _tgShiftDate(iso, days) { const d = new Date(iso + 'T00:00:00Z'); d.setUTCDate(d.getUTCDate() + days); return d.toISOString().slice(0, 10); }
+  // days = { 'YYYY-MM-DD': { uid: 1 } }. status: 'done' (сегодня обе), 'wait' (последний общий день — вчера), 'paused' (позавчера: один день
+  // не страшен, серия на паузе), 'none' (серии нет). n — длина серии (в паузе — прежняя).
+  function togetherStreak(days, me, other, today) {
+    const both = d => !!(days && days[d] && days[d][me] && days[d][other]);
+    const res = { n: 0, status: 'none', meToday: !!(days && days[today] && days[today][me]), otherToday: !!(days && days[today] && days[today][other]) };
+    let last = '';
+    if (both(today)) { last = today; res.status = 'done'; }
+    else if (both(_tgShiftDate(today, -1))) { last = _tgShiftDate(today, -1); res.status = 'wait'; }
+    else if (both(_tgShiftDate(today, -2))) { last = _tgShiftDate(today, -2); res.status = 'paused'; }
+    if (!last) return res;
+    let d = last;
+    while (both(d)) { res.n++; d = _tgShiftDate(d, -1); }
+    return res;
+  }
+  // Отметка «сегодня занималась» — из addXp (кроме наград этой страницы). Пишем раз в сутки на каждую мою пару.
+  function togetherMarkToday(label, n) {
+    if (label === 'together' || !(n > 0) || typeof _db === 'undefined') return;
+    const me = myUid();
+    if (!me || me === 'guest') return;
+    const pairs = Object.keys(_tgMyPairs || {});
+    if (!pairs.length) return;
+    const today = todayIsoDate();
+    let m = UStore.get('tgMarked', null);
+    if (!m || m.d !== today) m = { d: today, p: {} };
+    const up = {};
+    pairs.forEach(f => { if (!m.p[f] && !isBlocked(f)) { up['together/' + chatIdFor(me, f) + '/days/' + today + '/' + me] = 1; m.p[f] = 1; } });
+    if (!Object.keys(up).length) return;
+    UStore.set('tgMarked', m);
+    _db.ref().update(up).catch(() => { m.p = {}; UStore.set('tgMarked', m); });
+  }
+  // Награда за действие на странице: не больше N раз в день на устройстве (kind: post | quiz)
+  function _tgDaily() { const d = todayIsoDate(); const r = UStore.get('tgDaily', null); return (r && r.d === d) ? r : { d: d, post: 0, quiz: 0 }; }
+  function _tgReward(kind) {
+    const r = _tgDaily();
+    const lim = kind === 'quiz' ? TG.quizDaily : TG.postDaily;
+    if ((r[kind] || 0) >= lim) return 0;
+    r[kind] = (r[kind] || 0) + 1;
+    UStore.set('tgDaily', r);
+    const xp = kind === 'quiz' ? TG.xpQuiz : TG.xpPost;
+    addXp(xp, 'together');
+    return xp;
+  }
+
+  // ── Слова: чистка и ключ в колоде ──
+  function _tgWordOk(w) {
+    if (!w || typeof w !== 'object') return false;
+    const ko = String(w.ko == null ? '' : w.ko).trim(), ru = String(w.ru == null ? '' : w.ru).trim();
+    if (!ko || ko.length > 30 || !/[가-힣]/.test(ko) || /[A-Za-z]/.test(ko)) return false;
+    if (!ru || ru.length > 80 || /[가-힣]/.test(ru) || /[→↔|]/.test(ru)) return false;
+    return true;
+  }
+  function _tgKey(ko) {
+    let h = 5381; const s = String(ko);
+    for (let i = 0; i < s.length; i++) h = ((h * 33) ^ s.charCodeAt(i)) >>> 0;
+    return 'w' + h.toString(36) + s.length;
+  }
+  function _tgLessonPool() {
+    try { return gameWordPool().map(w => ({ ko: w.ko, tr: w.translit || '', ru: _gameGloss(w.ru || ''), emoji: w.emoji || '🌸' })).filter(_tgWordOk); } catch (_) { return []; }
+  }
+  function _tgMyWordsPool() {
+    return getMyWords().map(w => ({ ko: w.ko, tr: w.translit || '', ru: String(w.ru || ''), emoji: w.emoji || '🌸' })).filter(_tgWordOk);
+  }
+
+  // ── Друзья-партнёры ──
+  function _tgFriends() {
+    const out = [];
+    Object.keys(_friendsCache || {}).forEach(uid => {
+      const dir = (_usersDirCache && _usersDirCache[uid]) || {};
+      if (isBlocked(uid) || dir.isAdmin) return;
+      out.push({ uid: uid, name: (_friendsCache[uid] && _friendsCache[uid].name) || dir.name || '', avatar: dir.avatar || '' });
+    });
+    return out;
+  }
+  function _tgAv(f, cls) {
+    const url = safeImgUrl(f.avatar);
+    return url ? `<img class="${cls}" src="${escHtml(url)}" alt="">` : `<span class="${cls} tg-av-i">${escHtml((f.name || '?').charAt(0).toUpperCase())}</span>`;
+  }
+  function _tgPal() { return (_tg && _tgFriends().find(f => f.uid === _tg.pal)) || null; }
+  function _tgPairId() { return _tg && _tg.pal ? chatIdFor(myUid(), _tg.pal) : ''; }
+  function _tgOn() {
+    const on = (_tgData && _tgData.meta && _tgData.meta.on) || {};
+    return { me: !!on[myUid()], other: !!(_tg && on[_tg.pal]) };
+  }
+
+  // ── Открытие / закрытие страницы ──
+  async function togetherOpen(pal) {
+    if (_tgOpening || document.getElementById('together-page')) return;
+    _tgOpening = true;
+    let on = false;
+    try { on = await togetherFlagEnabled(); } catch (_) { on = false; } finally { _tgOpening = false; }
+    if (!on) return;
+    if (!requireAccount(t('tg.title'))) return;
+    if (document.getElementById('together-page')) return;
+    const page = document.createElement('div');
+    page.className = 'together-page';
+    page.id = 'together-page';
+    page.innerHTML = '<div class="tg-shell" id="tg-shell"></div>';
+    document.body.appendChild(page);
+    document.body.classList.add('chat-open');
+    _tg = { pal: '', view: 'home', src: 'mine', quiz: null, card: null };
+    const friends = _tgFriends();
+    let want = pal || UStore.get('tgPal', '');
+    if (!friends.some(f => f.uid === want)) want = friends.length ? friends[0].uid : '';
+    _tgSelectPal(want);
+    _tgRender();
+  }
+  function togetherClose() {
+    if (_tgOff) { try { _tgOff(); } catch (_) {} _tgOff = null; }
+    document.getElementById('together-page')?.remove();
+    document.querySelectorAll('.tg-sheet-bg').forEach(x => x.remove());
+    _tg = null; _tgData = {}; _tgQz = null; _tgPick = null;
+    if (!document.getElementById('chat-page') && !document.getElementById('plan-page') && !document.getElementById('ai-tutor-modal') && !document.getElementById('talk-page')) {
+      document.body.classList.remove('chat-open');
+    }
+  }
+  // Esc / «назад»: из вложенного вида — на главную страницы, с главной — закрыть
+  function togetherEscape() {
+    if (!document.getElementById('together-page')) return false;
+    if (_tg && _tg.view !== 'home') { _tg.view = 'home'; _tgRender(); return true; }
+    togetherClose();
+    return true;
+  }
+  function _tgSelectPal(uid) {
+    if (_tgOff) { try { _tgOff(); } catch (_) {} _tgOff = null; }
+    _tgData = {};
+    _tg.pal = uid || '';
+    _tg.view = 'home';
+    if (uid) UStore.set('tgPal', uid);
+    if (!uid || typeof _db === 'undefined') return;
+    const ref = _db.ref('together/' + chatIdFor(myUid(), uid));
+    const h = snap => { _tgData = snap.val() || {}; if (_tg) _tgRender(); };
+    ref.on('value', h);
+    _tgOff = () => ref.off('value', h);
+    _tgCleanup(chatIdFor(myUid(), uid));
+  }
+  // Чистка старого (клиент): викторины старше 14 дней, дни серии старше 120
+  function _tgCleanup(pair) {
+    try {
+      _db.ref('together/' + pair).once('value').then(snap => {
+        const v = snap.val() || {};
+        const up = {};
+        const qCut = Date.now() - TG.keepQuizDays * 86400000;
+        Object.keys(v.quizzes || {}).forEach(id => { if (((v.quizzes[id] || {}).ts || 0) < qCut) up['together/' + pair + '/quizzes/' + id] = null; });
+        const dCut = _tgShiftDate(todayIsoDate(), -TG.keepDays);
+        Object.keys(v.days || {}).forEach(d => { if (d < dCut) up['together/' + pair + '/days/' + d] = null; });
+        if (Object.keys(up).length) _db.ref().update(up).catch(() => {});
+      }).catch(() => {});
+    } catch (_) {}
+  }
+
+  // ── Отрисовка ──
+  function _tgSetShell(html) { const sh = document.getElementById('tg-shell'); if (sh) sh.innerHTML = html; return sh; }
+  function _tgHead(titleKey, backAct) {
+    const pal = _tgPal();
+    return `<header class="tg-head"><div class="tg-head-in">
+      <button type="button" class="chat-back-btn" onclick="${backAct}" aria-label="${escHtml(t('ui.053'))}"><i class="fa-solid fa-arrow-left" aria-hidden="true"></i></button>
+      <div class="tg-head-t"><div class="tg-h1">${t(titleKey)}</div>${pal ? `<div class="tg-h2">${escHtml(t('tg.with', { name: pal.name }))}</div>` : ''}</div>
+    </div></header>`;
+  }
+  function _tgRender() {
+    if (!_tg || !document.getElementById('together-page')) return;
+    const v = _tg.view;
+    if (v === 'postcard') return _tgRenderPostcard();
+    if (v === 'quiz') return _tgRenderQuizMake();
+    if (v === 'deck') return _tgRenderDeck();
+    return _tgRenderHome();
+  }
+  function _tgPalsHtml() {
+    const fr = _tgFriends();
+    const items = fr.map(f => `<button type="button" class="tg-pal${f.uid === _tg.pal ? ' on' : ''}" onclick="_tgPickPal('${jsStr(f.uid)}')" aria-pressed="${f.uid === _tg.pal}">${_tgAv(f, 'tg-av')}<span class="tg-pal-n">${escHtml(f.name || '—')}</span></button>`).join('');
+    return `<div class="tg-pals" role="group" aria-label="${escHtml(t('tg.pals'))}">${items}<button type="button" class="tg-pal tg-pal-add" onclick="togetherInvite()"><span class="tg-av tg-av-i">＋</span><span class="tg-pal-n">${escHtml(t('tg.invite'))}</span></button></div>`;
+  }
+  function _tgPickPal(uid) { if (!_tg) return; _tgSelectPal(uid); _tgRender(); }
+  function togetherInvite() { try { shareInviteLink(); } catch (_) {} }
+  function _tgHeroHtml() {
+    const pal = _tgPal();
+    if (!pal) return '';
+    const st = _tgOn();
+    const me = myUid();
+    const av = `<div class="tg-two">${_tgAv({ name: myName(), avatar: UStore.get('avatar') || '' }, 'tg-av tg-av-l')}<span class="tg-plus">＋</span>${_tgAv(pal, 'tg-av tg-av-l')}</div>`;
+    if (!st.me) {
+      return `<section class="tg-hero">${av}<div class="tg-big">${escHtml(t('tg.start.t', { name: pal.name }))}</div>
+        <div class="tg-sub">${escHtml(t('tg.start.s'))}</div>
+        <button type="button" class="tg-hero-btn" onclick="togetherStart()">${st.other ? '🔥 ' + escHtml(t('tg.accept')) : '💌 ' + escHtml(t('tg.callIn'))}</button></section>`;
+    }
+    if (!st.other) {
+      return `<section class="tg-hero">${av}<div class="tg-big">${escHtml(t('tg.waiting.t', { name: pal.name }))}</div>
+        <div class="tg-sub">${escHtml(t('tg.waiting.s'))}</div></section>`;
+    }
+    const s = togetherStreak(_tgData.days || {}, me, _tg.pal, todayIsoDate());
+    const dots = [];
+    for (let i = 6; i >= 0; i--) {
+      const d = _tgShiftDate(todayIsoDate(), -i);
+      const full = !!(_tgData.days && _tgData.days[d] && _tgData.days[d][me] && _tgData.days[d][_tg.pal]);
+      dots.push(`<span class="tg-dot${full ? ' on' : ''}"></span>`);
+    }
+    let line;
+    if (s.status === 'done') line = t('tg.today.both');
+    else if (s.status === 'paused') line = t('tg.today.paused');
+    else if (s.meToday) line = t('tg.today.meOnly', { name: pal.name });
+    else if (s.otherToday) line = t('tg.today.otherOnly', { name: pal.name });
+    else line = t('tg.today.none');
+    const nudge = (!s.otherToday && s.status !== 'done') ? `<button type="button" class="tg-nudge" onclick="togetherNudge()">💌 ${escHtml(t('tg.nudge', { name: pal.name }))}</button>` : '';
+    return `<section class="tg-hero">${av}<div class="tg-big">${s.n > 0 ? '🔥 ' + escHtml(t('tg.days', { n: s.n })) : '🔥 ' + escHtml(t('tg.noStreak'))}</div>
+      <div class="tg-sub">${escHtml(line)}</div><div class="tg-days" aria-hidden="true">${dots.join('')}</div>${nudge}</section>`;
+  }
+  function _tgRenderHome() {
+    const friends = _tgFriends();
+    const head = `<header class="tg-head"><div class="tg-head-in">
+      <button type="button" class="chat-back-btn" onclick="togetherClose()" aria-label="${escHtml(t('ui.053'))}"><i class="fa-solid fa-arrow-left" aria-hidden="true"></i></button>
+      <div class="tg-head-t"><div class="tg-h1">${t('tg.title')}</div>${_tgPal() ? `<div class="tg-h2">${escHtml(t('tg.with', { name: _tgPal().name }))}</div>` : ''}</div></div></header>`;
+    if (!friends.length) {
+      return _tgSetShell(head + `<div class="tg-body"><div class="tg-empty"><div class="tg-empty-e">💞</div>
+        <div class="tg-empty-t">${escHtml(t('tg.empty.t'))}</div><p class="tg-empty-s">${escHtml(t('tg.empty.s'))}</p>
+        <button type="button" class="btn btn-primary" onclick="togetherInvite()"><i class="fa-solid fa-user-plus" aria-hidden="true"></i> ${escHtml(t('tg.invite'))}</button></div></div>`);
+    }
+    const bothOn = _tgOn().me && _tgOn().other;
+    const mode = (ico, key, sub, act, extra) => `<button type="button" class="tg-mode" onclick="${act}"><span class="tg-mode-i">${ico}</span><span class="tg-mode-t">${escHtml(t(key))}</span><span class="tg-mode-s">${escHtml(sub)}</span>${extra || ''}</button>`;
+    const soon = (ico, key) => `<div class="tg-mode tg-soon" aria-disabled="true"><span class="tg-mode-i">${ico}</span><span class="tg-mode-t">${escHtml(t(key))}</span><span class="tg-mode-s">${escHtml(t('tg.soon'))}</span></div>`;
+    const deckN = Object.keys(_tgData.deck || {}).length;
+    _tgSetShell(head + `<div class="tg-body">${_tgPalsHtml()}${_tgHeroHtml()}
+      <div class="tg-grid">
+        ${mode('💌', 'tg.m.post', t('tg.m.post.s'), "_tgGo('postcard')", '<span class="tg-tag">NEW</span>')}
+        ${mode('🧩', 'tg.m.quiz', t('tg.m.quiz.s'), "_tgGo('quiz')", '<span class="tg-tag">NEW</span>')}
+        ${mode('📚', 'tg.m.deck', t('tg.m.deck.s', { n: deckN }), "_tgGo('deck')")}
+        ${soon('🔗', 'tg.m.chain')}${soon('⚡', 'tg.m.battle')}${soon('🎭', 'tg.m.scene')}
+      </div></div>`);
+  }
+  function _tgGo(view) { if (!_tg) return; _tg.view = view; _tg.card = null; _tg.quiz = null; _tgRender(); }
+
+  // ── Пара по огоньку: приглашение, принятие, подсказка ──
+  async function togetherStart() {
+    const me = myUid(), f = _tg && _tg.pal;
+    if (!f || !me || me === 'guest' || typeof _db === 'undefined') return;
+    const pal = _tgPal();
+    const now = Date.now();
+    const pair = chatIdFor(me, f);
+    const already = _tgOn().other;
+    try {
+      await _db.ref().update({ ['users/' + me + '/together/' + f]: now, ['together/' + pair + '/meta/on/' + me]: now });
+    } catch (_) { toast(t('block.fail')); return; }
+    _tgMyPairs = Object.assign({}, _tgMyPairs, { [f]: now });
+    if (!already) {
+      try { await sendChatMessage(f, pal ? pal.name : '', t('tg.invite.text', { name: myName() }), null, { type: 'card', card: { k: 'tg_invite' } }); } catch (_) {}
+    }
+    toast(t(already ? 'tg.started' : 'tg.invited'), 'var(--sage)');
+  }
+  async function togetherAcceptInvite(fromUid) {
+    const me = myUid();
+    if (!fromUid || !me || me === 'guest' || typeof _db === 'undefined') return;
+    const now = Date.now();
+    try {
+      await _db.ref().update({ ['users/' + me + '/together/' + fromUid]: now, ['together/' + chatIdFor(me, fromUid) + '/meta/on/' + me]: now });
+      _tgMyPairs = Object.assign({}, _tgMyPairs, { [fromUid]: now });
+      toast(t('tg.started'), 'var(--sage)');
+      if (_chatCurrentId) renderChatMessages(_lastChatMsgs);
+    } catch (_) { toast(t('block.fail')); }
+  }
+  async function togetherNudge() {
+    const me = myUid(), f = _tg && _tg.pal, pal = _tgPal();
+    if (!f || !pal || typeof _db === 'undefined') return;
+    const today = todayIsoDate(), pair = chatIdFor(me, f);
+    const sent = (_tgData.nudge && _tgData.nudge[today] && _tgData.nudge[today][me]);
+    if (sent) { toast(t('tg.nudge.done'), 'var(--sage)'); return; }
+    try { await _db.ref('together/' + pair + '/nudge/' + today + '/' + me).set(Date.now()); } catch (_) { toast(t('block.fail')); return; }
+    try { await sendChatMessage(f, pal.name, t('tg.nudge.text', { name: myName() }), null); } catch (_) {}
+    toast(t('tg.nudge.sent'), 'var(--sage)');
+  }
+
+  // ── Выбор слова (открытка, колода): мои слова / из уроков с поиском ──
+  function _tgOpenPicker(cb) {
+    document.querySelectorAll('.tg-sheet-bg').forEach(x => x.remove());
+    _tgPick = { tab: _tgMyWordsPool().length ? 'mine' : 'lessons', q: '', cb: cb };
+    const bg = document.createElement('div');
+    bg.className = 'modal-bg modal-center tg-sheet-bg';
+    bg.id = 'tg-picker';
+    bg.onclick = e => { if (e.target === bg) bg.remove(); };
+    document.body.appendChild(bg);
+    _tgPickerRender();
+  }
+  function _tgPickerRender() {
+    const bg = document.getElementById('tg-picker');
+    if (!bg || !_tgPick) return;
+    const pool = (_tgPick.tab === 'mine' ? _tgMyWordsPool() : _tgLessonPool());
+    const q = _tgPick.q.trim().toLowerCase();
+    const list = (q ? pool.filter(w => w.ko.toLowerCase().includes(q) || w.ru.toLowerCase().includes(q)) : pool).slice(0, 60);
+    bg.innerHTML = `<div class="modal-card tg-picker-card" role="dialog" aria-modal="true" aria-label="${escHtml(t('tg.pick.t'))}">
+      <div class="tg-sheet-h">${escHtml(t('tg.pick.t'))}</div>
+      <div class="tg-tabs"><button type="button" class="tg-tab${_tgPick.tab === 'mine' ? ' on' : ''}" onclick="_tgPickerTab('mine')">💗 ${escHtml(t('tg.src.mine'))}</button><button type="button" class="tg-tab${_tgPick.tab === 'lessons' ? ' on' : ''}" onclick="_tgPickerTab('lessons')">📚 ${escHtml(t('tg.src.lessons'))}</button></div>
+      <input id="tg-pick-q" class="input tg-pick-q" placeholder="${escHtml(t('tg.pick.search'))}" value="${escHtml(_tgPick.q)}" oninput="_tgPickerQuery(this.value)" autocomplete="off">
+      <div class="tg-pick-list" id="tg-pick-list">${list.length ? list.map((w, i) => `<button type="button" class="tg-pick-row" onclick="_tgPickerChoose(${i})"><span class="ko tg-pick-ko" lang="ko">${escHtml(w.ko)}</span><span class="tg-pick-ru">${escHtml(w.ru)}</span></button>`).join('') : `<div class="tg-pick-empty">${escHtml(t('tg.pick.empty'))}</div>`}</div>
+      <button type="button" class="btn btn-ghost btn-block" onclick="document.getElementById('tg-picker').remove()">${escHtml(t('ui.317'))}</button></div>`;
+    _tgPick.list = list;
+    const inp = document.getElementById('tg-pick-q');
+    if (inp && document.activeElement !== inp && _tgPick.q) { try { inp.focus(); inp.setSelectionRange(inp.value.length, inp.value.length); } catch (_) {} }
+  }
+  function _tgPickerTab(tab) { if (_tgPick) { _tgPick.tab = tab; _tgPick.q = ''; _tgPickerRender(); } }
+  function _tgPickerQuery(v) { if (_tgPick) { _tgPick.q = String(v || '').slice(0, 40); _tgPickerRender(); } }
+  function _tgPickerChoose(i) {
+    const w = _tgPick && _tgPick.list && _tgPick.list[i];
+    if (!w) return;
+    const cb = _tgPick.cb;
+    document.getElementById('tg-picker')?.remove();
+    _tgPick = null;
+    try { cb(w); } catch (_) {}
+  }
+
+  // ── Открытка со словом ──
+  function _tgRenderPostcard() {
+    const c = _tg.card || (_tg.card = { word: null, note: '', theme: 'sakura' });
+    const w = c.word;
+    const themes = TG_THEMES.map(th => `<button type="button" class="tg-theme tg-th-${th}${c.theme === th ? ' on' : ''}" onclick="_tgPostTheme('${th}')" aria-pressed="${c.theme === th}" aria-label="${escHtml(t('tg.th.' + th))}"></button>`).join('');
+    const preview = w ? `<div class="tg-post tg-th-${escHtml(c.theme)} tg-post-prev"><div class="tg-post-top"><div class="tg-post-ko ko" lang="ko">${escHtml(w.ko)}</div>${w.tr ? `<div class="tg-post-tr">[${escHtml(w.tr)}]</div>` : ''}<div class="tg-post-ru">${escHtml(w.ru)}</div></div>${c.note ? `<div class="tg-post-note">«${escHtml(c.note)}»</div>` : ''}</div>`
+      : `<div class="tg-post-empty">${escHtml(t('tg.post.pickHint'))}</div>`;
+    _tgSetShell(_tgHead('tg.m.post', "_tgGo('home')") + `<div class="tg-body">
+      ${preview}
+      <button type="button" class="btn btn-ghost btn-block" onclick="_tgPostPick()"><i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i> ${escHtml(t(w ? 'tg.post.change' : 'tg.post.pick'))}</button>
+      <label class="tg-label" for="tg-note">${escHtml(t('tg.post.note'))} <span class="tg-count" id="tg-note-n">${c.note.length}/${TG.noteMax}</span></label>
+      <input id="tg-note" class="input" maxlength="${TG.noteMax}" value="${escHtml(c.note)}" placeholder="${escHtml(t('tg.post.notePh'))}" oninput="_tgPostNote(this.value)" autocomplete="off">
+      <div class="tg-label">${escHtml(t('tg.post.theme'))}</div><div class="tg-themes">${themes}</div>
+      <button type="button" class="btn btn-primary btn-block tg-send" id="tg-post-send" onclick="togetherSendPostcard()" ${w ? '' : 'disabled'}>💌 ${escHtml(t('tg.post.send'))}</button>
+    </div>`);
+  }
+  function _tgPostPick() { _tgOpenPicker(w => { _tg.card.word = w; _tgRender(); }); }
+  function _tgPostNote(v) {
+    if (!_tg || !_tg.card) return;
+    _tg.card.note = String(v || '').slice(0, TG.noteMax);
+    const n = document.getElementById('tg-note-n'); if (n) n.textContent = _tg.card.note.length + '/' + TG.noteMax;
+    const pv = document.querySelector('.tg-post-prev');
+    if (pv) { let nt = pv.querySelector('.tg-post-note'); if (_tg.card.note) { if (!nt) { nt = document.createElement('div'); nt.className = 'tg-post-note'; pv.appendChild(nt); } nt.textContent = '«' + _tg.card.note + '»'; } else if (nt) nt.remove(); }
+  }
+  function _tgPostTheme(th) { if (!_tg || !_tg.card || TG_THEMES.indexOf(th) < 0) return; _tg.card.theme = th; _tgRender(); }
+  async function togetherSendPostcard() {
+    const c = _tg && _tg.card, pal = _tgPal();
+    if (!c || !c.word || !pal) return;
+    const btn = document.getElementById('tg-post-send'); if (btn) btn.disabled = true;
+    const w = c.word;
+    const card = { k: 'postcard', ko: w.ko, tr: String(w.tr || '').slice(0, 60), ru: String(w.ru || '').slice(0, 80), th: c.theme };
+    if (c.note.trim()) card.note = c.note.trim().slice(0, TG.noteMax);
+    try { await sendChatMessage(pal.uid, pal.name, t('tg.post.text', { name: myName(), ko: w.ko }), null, { type: 'card', card: card }); }
+    catch (_) { toast(t('block.fail')); if (btn) btn.disabled = false; return; }
+    const xp = _tgReward('post');
+    toast(xp ? t('tg.post.sentXp', { xp: xp }) : t('tg.post.sent'), 'var(--sage)');
+    _tg.card = null; _tg.view = 'home'; _tgRender();
+  }
+
+  // ── Проверь подругу ──
+  function _tgBuildQuiz(pool, n) {
+    const clean = pool.filter(_tgWordOk);
+    if (clean.length < 4) return null;
+    const picks = shuffleArr(clean.slice()).slice(0, n);
+    const out = [];
+    picks.forEach(w => {
+      const others = shuffleArr(clean.filter(x => x.ru !== w.ru)).map(x => x.ru).filter((r, i, a) => a.indexOf(r) === i).slice(0, 3);
+      if (others.length < 3) return;
+      const opts = shuffleArr([w.ru].concat(others));
+      out.push({ ko: w.ko, tr: String(w.tr || '').slice(0, 60), ru: w.ru, o: opts, a: opts.indexOf(w.ru) });
+    });
+    return out.length >= 3 ? out : null;
+  }
+  function _tgRenderQuizMake() {
+    const st = _tg;
+    const pool = st.src === 'mine' ? _tgMyWordsPool() : _tgLessonPool();
+    if (!st.quiz || st.quiz.src !== st.src) { const q = _tgBuildQuiz(pool, TG.quizN); st.quiz = { src: st.src, q: q }; }
+    const q = st.quiz.q;
+    const list = q ? q.map(x => `<div class="tg-qrow"><span class="ko tg-qko" lang="ko">${escHtml(x.ko)}</span><span class="tg-qru">${escHtml(x.ru)}</span></div>`).join('') : `<div class="tg-pick-empty">${escHtml(t(st.src === 'mine' ? 'tg.quiz.fewMine' : 'tg.quiz.few'))}</div>`;
+    _tgSetShell(_tgHead('tg.m.quiz', "_tgGo('home')") + `<div class="tg-body">
+      <p class="tg-lead">${escHtml(t('tg.quiz.lead', { n: TG.quizN }))}</p>
+      <div class="tg-tabs"><button type="button" class="tg-tab${st.src === 'mine' ? ' on' : ''}" onclick="_tgQuizSrc('mine')">💗 ${escHtml(t('tg.src.mine'))}</button><button type="button" class="tg-tab${st.src === 'lessons' ? ' on' : ''}" onclick="_tgQuizSrc('lessons')">📚 ${escHtml(t('tg.src.lessons'))}</button></div>
+      <div class="tg-qlist">${list}</div>
+      <button type="button" class="btn btn-ghost btn-block" onclick="_tgQuizReroll()" ${q ? '' : 'disabled'}><i class="fa-solid fa-shuffle" aria-hidden="true"></i> ${escHtml(t('tg.quiz.reroll'))}</button>
+      <button type="button" class="btn btn-primary btn-block tg-send" id="tg-quiz-send" onclick="togetherSendQuiz()" ${q ? '' : 'disabled'}>💌 ${escHtml(t('tg.quiz.send'))}</button>
+    </div>`);
+  }
+  function _tgQuizSrc(src) { if (!_tg) return; _tg.src = src; _tg.quiz = null; _tgRender(); }
+  function _tgQuizReroll() { if (!_tg) return; _tg.quiz = null; _tgRender(); }
+  async function togetherSendQuiz() {
+    const st = _tg, pal = _tgPal(), me = myUid();
+    if (!st || !st.quiz || !st.quiz.q || !pal || typeof _db === 'undefined') return;
+    const btn = document.getElementById('tg-quiz-send'); if (btn) btn.disabled = true;
+    const pair = chatIdFor(me, pal.uid);
+    const id = _db.ref('together/' + pair + '/quizzes').push().key;
+    const q = st.quiz.q;
+    try { await _db.ref('together/' + pair + '/quizzes/' + id).set({ by: me, byName: myName(), ts: Date.now(), q: q }); }
+    catch (_) { toast(t('block.fail')); if (btn) btn.disabled = false; return; }
+    try { await sendChatMessage(pal.uid, pal.name, t('tg.quiz.text', { name: myName(), n: q.length }), null, { type: 'card', card: { k: 'quiz', id: id, n: q.length } }); } catch (_) {}
+    const xp = _tgReward('quiz');
+    toast(xp ? t('tg.quiz.sentXp', { xp: xp }) : t('tg.quiz.sent'), 'var(--sage)');
+    st.quiz = null; st.view = 'home'; _tgRender();
+  }
+  // Открыть проверку из карточки в чате (или из истории): автор видит результаты, подруга проходит
+  async function togetherOpenQuiz(pair, id, otherUid) {
+    if (typeof _db === 'undefined' || !pair || !id) return;
+    let qz = null;
+    try { qz = (await _db.ref('together/' + pair + '/quizzes/' + id).once('value')).val(); } catch (_) { qz = null; }
+    if (!qz || !Array.isArray(qz.q) || !qz.q.length) { toast(t('tg.quiz.gone')); return; }
+    const me = myUid();
+    document.querySelectorAll('.tg-sheet-bg').forEach(x => x.remove());
+    const res = qz.res || {};
+    _tgQz = { pair: pair, id: id, qz: qz, i: 0, score: 0, picks: [], mine: qz.by === me, other: otherUid || '' };
+    const bg = document.createElement('div');
+    bg.className = 'modal-bg modal-center tg-sheet-bg';
+    bg.id = 'tg-quiz';
+    bg.onclick = e => { if (e.target === bg) bg.remove(); };
+    document.body.appendChild(bg);
+    if (qz.by === me || res[me]) _tgQuizResult(); else _tgQuizStep();
+  }
+  function _tgQuizStep() {
+    const bg = document.getElementById('tg-quiz'), z = _tgQz;
+    if (!bg || !z) return;
+    const q = z.qz.q[z.i];
+    bg.innerHTML = `<div class="modal-card tg-quiz-card" role="dialog" aria-modal="true" aria-label="${escHtml(t('tg.m.quiz'))}">
+      <div class="tg-quiz-n">${escHtml(t('tg.quiz.q', { i: z.i + 1, n: z.qz.q.length }))}</div>
+      <div class="tg-quiz-w ko" lang="ko">${escHtml(q.ko)}</div>${q.tr ? `<div class="tg-quiz-tr">[${escHtml(q.tr)}]</div>` : ''}
+      <div class="tg-quiz-opts">${q.o.map((o, i) => `<button type="button" class="tg-opt" onclick="_tgQuizPick(${i})">${escHtml(o)}</button>`).join('')}</div></div>`;
+  }
+  function _tgQuizPick(i) {
+    const z = _tgQz, bg = document.getElementById('tg-quiz');
+    if (!z || !bg || z.locked) return;
+    const q = z.qz.q[z.i];
+    z.locked = true;
+    const ok = i === q.a;
+    if (ok) z.score++;
+    z.picks.push(ok ? 1 : 0);
+    bg.querySelectorAll('.tg-opt').forEach((b, k) => { b.disabled = true; if (k === q.a) b.classList.add('ok'); else if (k === i) b.classList.add('bad'); });
+    setTimeout(() => {
+      if (!_tgQz || _tgQz !== z) return;
+      z.locked = false; z.i++;
+      if (z.i < z.qz.q.length) _tgQuizStep(); else _tgQuizFinish();
+    }, 750);
+  }
+  async function _tgQuizFinish() {
+    const z = _tgQz, me = myUid();
+    if (!z) return;
+    const n = z.qz.q.length;
+    const wrong = z.qz.q.filter((_, k) => !z.picks[k]).map(x => x.ko);
+    try { await _db.ref('together/' + z.pair + '/quizzes/' + z.id + '/res/' + me).set({ s: z.score, n: n, ts: Date.now(), w: wrong.slice(0, 5) }); } catch (_) {}
+    const xp = _tgReward('quiz');
+    const other = z.other || (z.qz.by || '');
+    if (other) { try { await sendChatMessage(other, '', t('tg.quiz.done', { name: myName(), s: z.score, n: n }), null); } catch (_) {} }
+    z.qz.res = Object.assign({}, z.qz.res || {}, { [me]: { s: z.score, n: n, w: wrong } });
+    _tgQuizResult(xp);
+  }
+  function _tgQuizResult(xp) {
+    const bg = document.getElementById('tg-quiz'), z = _tgQz, me = myUid();
+    if (!bg || !z) return;
+    const res = z.qz.res || {};
+    const rows = Object.keys(res).map(uid => {
+      const r = res[uid] || {};
+      const nm = uid === me ? t('tg.you') : (uid === z.qz.by ? (z.qz.byName || '') : ((_friendsCache[uid] && _friendsCache[uid].name) || ''));
+      const hard = Array.isArray(r.w) && r.w.length ? `<div class="tg-res-hard">${escHtml(t('tg.quiz.hard'))}: <span class="ko" lang="ko">${r.w.map(x => escHtml(String(x))).join(', ')}</span></div>` : '';
+      return `<div class="tg-res-row"><div class="tg-res-n">${escHtml(nm)}</div><div class="tg-res-s">${Number(r.s) || 0} / ${Number(r.n) || z.qz.q.length}</div>${hard}</div>`;
+    }).join('') || `<div class="tg-pick-empty">${escHtml(t('tg.quiz.noRes'))}</div>`;
+    bg.innerHTML = `<div class="modal-card tg-quiz-card" role="dialog" aria-modal="true" aria-label="${escHtml(t('tg.m.quiz'))}">
+      <div class="tg-quiz-w">${z.mine ? '🧩' : '🎉'}</div><div class="tg-res-t">${escHtml(t(z.mine ? 'tg.quiz.resMine' : 'tg.quiz.resTitle'))}</div>
+      ${xp ? `<div class="tg-xp">${escHtml(t('tg.xp', { xp: xp }))}</div>` : ''}<div class="tg-res-list">${rows}</div>
+      <button type="button" class="btn btn-primary btn-block" onclick="document.getElementById('tg-quiz').remove(); _tgQz = null;">${escHtml(t('talk.sum.done'))}</button></div>`;
+  }
+
+  // ── Общая колода ──
+  function _tgRenderDeck() {
+    const deck = Object.keys(_tgData.deck || {}).map(k => Object.assign({ key: k }, _tgData.deck[k])).filter(w => w && w.ko).sort((a, b) => (b.at || 0) - (a.at || 0));
+    const rows = deck.map(w => {
+      const mine = isMyWord(w.ko);
+      return `<div class="tg-drow"><div class="tg-drow-tx"><span class="ko tg-dko" lang="ko">${escHtml(String(w.ko))}</span>${w.tr ? `<span class="tg-dtr">[${escHtml(String(w.tr))}]</span>` : ''}<span class="tg-dru"> — ${escHtml(String(w.ru || ''))}</span><div class="tg-dby">${escHtml(t('tg.deck.by', { name: w.by === myUid() ? t('tg.you') : String(w.byName || '') }))}</div></div>
+        <button type="button" class="tg-ib${mine ? ' on' : ''}" onclick="_tgDeckSave('${jsStr(w.key)}')" aria-label="${escHtml(t(mine ? 'talk.sum.removeAria' : 'talk.sum.addAria'))} ${escHtml(String(w.ko))}" aria-pressed="${mine}"><i class="${mine ? 'fa-solid' : 'fa-regular'} fa-heart" aria-hidden="true"></i></button>
+        <button type="button" class="tg-ib" onclick="_tgDeckDel('${jsStr(w.key)}')" aria-label="${escHtml(t('tg.deck.del'))}"><i class="fa-regular fa-trash-can" aria-hidden="true"></i></button></div>`;
+    }).join('');
+    _tgSetShell(_tgHead('tg.m.deck', "_tgGo('home')") + `<div class="tg-body">
+      <p class="tg-lead">${escHtml(t('tg.deck.lead'))}</p>
+      <div class="tg-deck-acts"><button type="button" class="btn btn-primary" onclick="_tgDeckAdd()"><i class="fa-solid fa-plus" aria-hidden="true"></i> ${escHtml(t('tg.deck.add'))}</button>
+      <button type="button" class="btn btn-ghost" onclick="_tgDeckStudy()" ${deck.length >= 2 ? '' : 'disabled'}><i class="fa-solid fa-rotate" aria-hidden="true"></i> ${escHtml(t('tg.deck.study'))}</button></div>
+      <div class="tg-dlist">${rows || `<div class="tg-pick-empty">${escHtml(t('tg.deck.empty'))}</div>`}</div></div>`);
+  }
+  function _tgDeckAdd() {
+    _tgOpenPicker(async w => {
+      const pair = _tgPairId();
+      if (!pair || typeof _db === 'undefined') return;
+      if (Object.keys(_tgData.deck || {}).length >= TG.deckMax) { toast(t('tg.deck.full')); return; }
+      const key = _tgKey(w.ko);
+      try { await _db.ref('together/' + pair + '/deck/' + key).set({ ko: w.ko, tr: String(w.tr || '').slice(0, 60), ru: String(w.ru || '').slice(0, 80), by: myUid(), byName: myName(), at: Date.now() }); toast(t('tg.deck.added'), 'var(--sage)'); }
+      catch (_) { toast(t('block.fail')); }
+    });
+  }
+  async function _tgDeckDel(key) {
+    const pair = _tgPairId();
+    if (!pair || typeof _db === 'undefined' || !key) return;
+    try { await _db.ref('together/' + pair + '/deck/' + key).remove(); } catch (_) { toast(t('block.fail')); }
+  }
+  function _tgDeckSave(key) {
+    const w = (_tgData.deck || {})[key];
+    if (!w || !w.ko) return;
+    if (isMyWord(w.ko)) removeMyWord(w.ko); else if (_tgWordOk(w)) saveMyWord(w.ko, w.ru, w.tr || '', '💞', 'together');
+    _tgRender();
+  }
+  function _tgDeckStudy() {
+    const cards = Object.keys(_tgData.deck || {}).map(k => _tgData.deck[k]).filter(w => w && w.ko && w.ru)
+      .map(w => ({ front: String(w.ko), translit: String(w.tr || ''), emoji: '💞', meaning: String(w.ru), example: '' }));
+    if (cards.length < 2) return;
+    try { startFlashcardSession(cards, false); } catch (_) {}
+  }
+
+  // ── Карточки в чате (type:'card'): рисует renderChatMessages ──
+  function chatCardHtml(m, mine) {
+    const c = (m && m.card && typeof m.card === 'object') ? m.card : {};
+    const k = String(c.k || '');
+    const mid = jsStr(m.key);
+    if (k === 'postcard' && c.ko) {
+      const th = TG_THEMES.indexOf(c.th) >= 0 ? c.th : 'sakura';
+      return `<div class="tg-post tg-th-${th}"><div class="tg-post-top"><div class="tg-post-ko ko" lang="ko">${escHtml(String(c.ko).slice(0, 40))}</div>${c.tr ? `<div class="tg-post-tr">[${escHtml(String(c.tr).slice(0, 60))}]</div>` : ''}<div class="tg-post-ru">${escHtml(String(c.ru || '').slice(0, 80))}</div></div>
+        ${c.note ? `<div class="tg-post-note">«${escHtml(String(c.note).slice(0, TG.noteMax))}»</div>` : ''}
+        <div class="tg-post-acts"><button type="button" onclick="event.stopPropagation(); togetherCardAct('${mid}','speak')">🔊 ${escHtml(t('tg.listen'))}</button>${mine ? '' : `<button type="button" onclick="event.stopPropagation(); togetherCardAct('${mid}','save')">♡ ${escHtml(t('tg.toWords'))}</button>`}</div></div>`;
+    }
+    if (k === 'quiz' && c.id) {
+      return `<div class="tg-qcard"><div class="tg-qcard-t">🧩 ${escHtml(t(mine ? 'tg.card.quizMine' : 'tg.card.quiz', { name: String(m.fromName || '') }))}</div><div class="tg-qcard-s">${escHtml(t('tg.card.quizS', { n: Number(c.n) || TG.quizN }))}</div>
+        <button type="button" class="tg-qcard-b" onclick="event.stopPropagation(); togetherCardAct('${mid}','quiz')">${escHtml(t(mine ? 'tg.card.results' : 'tg.card.take'))}</button></div>`;
+    }
+    if (k === 'tg_invite') {
+      const joined = !mine && !!(_tgMyPairs && _tgMyPairs[m.from]);
+      return `<div class="tg-qcard"><div class="tg-qcard-t">🔥 ${escHtml(t('tg.card.invite', { name: String(m.fromName || '') }))}</div><div class="tg-qcard-s">${escHtml(t('tg.start.s'))}</div>
+        ${mine ? '' : (joined ? `<div class="tg-qcard-ok">✓ ${escHtml(t('tg.card.joined'))}</div>` : `<button type="button" class="tg-qcard-b" onclick="event.stopPropagation(); togetherCardAct('${mid}','accept')">🔥 ${escHtml(t('tg.accept'))}</button>`)}</div>`;
+    }
+    return `<div class="chat-bubble-text">${linkifyChat(m.text)}</div>`;
+  }
+  function togetherCardAct(mid, act) {
+    const m = _lastChatMsgs && _lastChatMsgs[mid];
+    if (!m || !m.card) return;
+    const c = m.card, me = myUid();
+    if (act === 'speak') { try { _koSpeakOne(String(c.ko || ''), {}, () => {}); } catch (_) {} return; }
+    if (act === 'save') {
+      const w = { ko: String(c.ko || ''), ru: String(c.ru || ''), tr: String(c.tr || '') };
+      if (!_tgWordOk(w)) return;
+      saveMyWord(w.ko, w.ru, w.tr, '💌', 'together');
+      toast(t('tg.saved'), 'var(--sage)');
+      return;
+    }
+    if (act === 'accept') { if (m.from && m.from !== me) togetherAcceptInvite(m.from); return; }
+    if (act === 'quiz') {
+      const other = m.from === me ? _chatOtherUid : m.from;
+      if (!other || !c.id) return;
+      togetherOpenQuiz(chatIdFor(me, other), String(c.id), other);
+    }
+  }
+  // ── /Учимся вместе ──
 
   // ── Friends & Chat ──
   let _friendsCache = {};
@@ -10173,7 +10950,7 @@
     } catch (e) { console.warn(e); }
   }
 
-  async function sendChatMessage(otherUid, otherName, text, replyTo) {
+  async function sendChatMessage(otherUid, otherName, text, replyTo, extra) {
     text = (text || '').trim();
     if (!text) return;
     if (text.length > 2000) text = text.slice(0, 2000);
@@ -10193,6 +10970,7 @@
         fromName: replyTo.fromName || ''
       };
     }
+    if (extra && typeof extra === 'object') Object.assign(msg, extra);   // type:'card' + card:{…} («Учимся вместе»)
     updates[`chats/${chatId}/messages/${newRef.key}`] = msg;
     updates[`chats/${chatId}/meta/members/${me}`] = true;
     updates[`chats/${chatId}/meta/members/${otherUid}`] = true;
@@ -10671,6 +11449,7 @@
     _friendsListenerOffs = [];
     _friendsLoaded = false; _groupsLoaded = false;
     _blockedCache = {};
+    _tgMyPairs = {};
     _kmInboxKnown = null; // новая личность — её первый снапшот inbox не «новые заявки»
     if (_unreadCleanupTimer) { clearTimeout(_unreadCleanupTimer); _unreadCleanupTimer = null; }
   }
@@ -10687,6 +11466,7 @@
       _friendsListenerOffs.push(() => ref.off('value', handler));
     };
     _blockedLoadLocal();
+    wire(`users/${me}/together`, val => { _tgMyPairs = (val && typeof val === 'object') ? val : {}; if (_tg) _tgRender(); });
     wire(`users/${me}/blocked`, val => { _blockedCache = (val && typeof val === 'object') ? val : {}; try { UStore.set('blockedCache', _blockedCache); } catch (_) {} _blockedRefresh(); });
     wire(`users/${me}/friends`,  val => { _friendsCache  = val; _friendsLoaded = true; renderFriendsAndChat(); updateChatBadges(); scheduleUnreadCleanup(); if (document.getElementById('add-friend-modal')) filterAddFriend(); });
     wire(`users/${me}/groups`,   val => { _groupsCache   = val; _groupsLoaded = true; renderFriendsAndChat(); updateChatBadges(); scheduleUnreadCleanup(); });
@@ -11002,6 +11782,7 @@
   async function renderFriendsAndChat(fromBgRefresh) {
     const slot = document.getElementById('friends-chat-section');
     if (!slot) return;
+    try { togetherUpdateEntry(); } catch (_) {}   // карточка «Учимся вместе» над списком (по флагу)
     const seq = ++_renderFriendsSeq;
     // Справочник (355 КБ!) грузим ТОЛЬКО когда список реально на экране. Раньше он
     // скачивался при каждом старте у КАЖДОЙ вошедшей ученицы — даже у той, которая
@@ -12566,7 +13347,7 @@
           <div class="chat-bubble ${mine ? 'mine' : 'theirs'}${jumbo}${enter}" data-mid="${m.key}">
             ${senderHtml}
             ${replyHtml}
-            <div class="chat-bubble-text">${linkifyChat(m.text)}</div>
+            ${(m.type === 'card' && m.card) ? chatCardHtml(m, mine) : `<div class="chat-bubble-text">${linkifyChat(m.text)}</div>`}
             <div class="chat-bubble-meta"><span class="chat-bubble-time">${time}</span>${tick}</div>
             ${reactHtml}
           </div>
@@ -13233,7 +14014,8 @@
   }
   // Закрыть то, что накрыло бы цель ссылки (тарифы z 300 выше чата, модалка настроек)
   function _kmCloseCovering(go) {
-    try { talkForceClose(); } catch (_) {}   // «Разговор с Комдори» (z 300) накрыл бы цель ссылки: звонок гасится, страница закрывается
+    try { talkForceClose(); } catch (_) {}
+    try { togetherClose(); } catch (_) {}   // «Разговор с Комдори» (z 300) накрыл бы цель ссылки: звонок гасится, страница закрывается
     document.getElementById('settings-modal')?.remove();
     const pp = document.getElementById('plan-page');
     if (pp && go !== 'plan') {
@@ -13260,7 +14042,7 @@
         if (Store.get('tourDone') || document.getElementById('app-tour')) { _kmTourDeferred = false; return; }
         if (document.getElementById('chat-page') || document.getElementById('plan-page')) return;
         const busy = document.hidden || document.querySelector('.modal-bg, .game-page')
-          || ['intro', 'onboard', 'access-gate', 'lesson-modal', 'lesson-complete-page', 'topik-exam-overlay', 'user-profile-page', 'writing-practice-page', 'talk-page'].some(id => document.getElementById(id));
+          || ['intro', 'onboard', 'access-gate', 'lesson-modal', 'lesson-complete-page', 'topik-exam-overlay', 'user-profile-page', 'writing-practice-page', 'talk-page', 'together-page'].some(id => document.getElementById(id));
         if (busy) { _kmTourResume(1500); return; }
         _kmTourDeferred = false;
         startAppTour();
@@ -13739,6 +14521,7 @@
     // на тарифах, ушла с них по уведомлению) больше не глушит рассылки навсегда.
     if (Store.get('tourPending') && (document.getElementById('plan-page') || Date.now() - _kmWelcomeAt < 3000)) return true;
     if (document.querySelector('.modal-bg')) return true;
+    if (document.getElementById('together-page')) return true;   // «Учимся вместе»: попап рассылки не всплывает поверх
     if (document.getElementById('talk-page')) return true;   // «Разговор с Комдори» (z 300): попап рассылки не всплывает посреди звонка
     if (document.getElementById('lesson-modal') || document.getElementById('lesson-complete-page') || document.getElementById('topik-exam-overlay') || document.querySelector('.game-page')) return true;
     return false;
@@ -17412,7 +18195,6 @@
       <button type="button" role="switch" aria-checked="${on}" class="wt-chip${on ? ' active' : ''}" onclick="setHardcore(${!on})" style="margin-top:8px; display:flex; align-items:center; justify-content:center; min-height:44px;">
         🔥 <span>${t('hc.chip')}</span><span class="ko" style="color:var(--coral); font-weight:500; margin-left:6px;">고급</span>
       </button>
-      <div style="font-size:10px; color:var(--hush); margin-top:6px; line-height:1.45;">${t('hc.hint')}</div>
     `;
   }
   // Кол-во раундов растёт с числом пройденных уроков (+1 за урок, максимум +6)
@@ -36977,12 +37759,6 @@
     b.append(play, ko);
     if (line.tr) { const tr = document.createElement('div'); tr.className = 'talk-tr'; tr.textContent = '[' + line.tr + ']'; b.append(tr); }
     if (line.ru) { const ru = document.createElement('div'); ru.className = 'talk-ru'; ru.textContent = line.ru; b.append(ru); }
-    if (line.prov && isAdmin()) {
-      const p = document.createElement('div');
-      p.className = 'talk-prov';
-      p.textContent = String(line.prov);
-      b.append(p);
-    }
     _talkLogAppend(b);
     c.lastWords = (line.words || []).slice();   // слова этой реплики — для команды «сохрани слово»
     return idx;
@@ -41535,6 +42311,7 @@
     const xbdKeys = Object.keys(stats.xpByDay).sort();
     if (xbdKeys.length > 30) xbdKeys.slice(0, xbdKeys.length - 30).forEach(k => delete stats.xpByDay[k]);
     _bumpMonthly('xp', n);
+    try { togetherMarkToday(label, n); } catch (_) {}   // общая серия «Учимся вместе»
     // Daily goal tracking — increment dailyXp, detect goal-reached transition
     ensureDailyCounter();
     const goal = stats.dailyGoal || 30;
@@ -50924,7 +51701,8 @@
     if (e.key !== 'Escape') return;
     const modals = document.querySelectorAll('.modal-bg');
     if (modals.length) { modals[modals.length - 1].remove(); return; }
-    if (talkEscape()) return;   // «Разговор с Комдори» (z 300) выше игры, чата и урока
+    if (talkEscape()) return;
+    if (togetherEscape()) return;   // «Разговор с Комдори» (z 300) выше игры, чата и урока
     if (document.getElementById('writing-practice-page')) { closeWritingPractice(); return; }
     if (document.getElementById('user-profile-page')) { closeUserProfile(); return; }
     const gamePages = document.querySelectorAll('.game-page');
