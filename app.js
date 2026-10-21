@@ -1395,6 +1395,22 @@
     'talk.words.saved':     { ru: 'Добавлено в словарик: {n} 🌸', en: 'Added to your words: {n} 🌸', uz: 'Lugʻatga qoʻshildi: {n} 🌸' },
     'talk.words.none':      { ru: 'Новых слов пока нет — поговорим ещё 🌸', en: 'No new words yet — let’s keep talking 🌸', uz: 'Hozircha yangi soʻz yoʻq — yana gaplashamiz 🌸' },
     'talk.words.already':   { ru: 'Эти слова уже в словарике 🌸', en: 'These words are already saved 🌸', uz: 'Bu soʻzlar allaqachon lugʻatda 🌸' },
+    "block.btn": { ru: "Заблокировать", en: "Block", uz: "Bloklash" },
+    "block.unblock": { ru: "Разблокировать", en: "Unblock", uz: "Blokdan chiqarish" },
+    "block.confirm": { ru: "Заблокировать: {name}? Ты больше не увидишь его сообщения, посты и комментарии. Разблокировать можно в Настройках.", en: "Block {name}? You will no longer see their messages, posts and comments. You can unblock in Settings.", uz: "{name} bloklansinmi? Uning xabarlari, postlari va izohlarini koʻrmaysiz. Sozlamalarda blokdan chiqarish mumkin." },
+    "block.done": { ru: "Заблокирован: {name}", en: "Blocked: {name}", uz: "Bloklandi: {name}" },
+    "block.undone": { ru: "Разблокировано 🌸", en: "Unblocked 🌸", uz: "Blokdan chiqarildi 🌸" },
+    "block.fail": { ru: "Не получилось — проверь интернет и попробуй ещё раз", en: "Could not do it — check your connection and try again", uz: "Boʻlmadi — internetni tekshirib, qayta urinib koʻring" },
+    "block.cantTeacher": { ru: "Преподавателя заблокировать нельзя — если что-то не так, пожалуйся или напиши Мади", en: "A teacher cannot be blocked — if something is wrong, report it or write to Madie", uz: "Ustozni bloklab boʻlmaydi — muammo boʻlsa, shikoyat qiling yoki Madiga yozing" },
+    "block.title": { ru: "Заблокированные", en: "Blocked users", uz: "Bloklanganlar" },
+    "block.sub": { ru: "Их сообщения, посты и комментарии скрыты, пуши от них не приходят.", en: "Their messages, posts and comments are hidden and you get no push notifications from them.", uz: "Ularning xabarlari, postlari va izohlari yashirilgan, ulardan push kelmaydi." },
+    "block.none": { ru: "Никого нет", en: "Nobody", uz: "Hech kim yoʻq" },
+    "block.count": { ru: "Заблокировано: {n}", en: "Blocked: {n}", uz: "Bloklangan: {n}" },
+    "report.msg": { ru: "Пожаловаться на сообщение", en: "Report message", uz: "Xabardan shikoyat qilish" },
+    "report.user": { ru: "Пожаловаться", en: "Report", uz: "Shikoyat" },
+    "report.confirmMsg": { ru: "Пожаловаться на это сообщение? Мади его проверит.", en: "Report this message? Madie will review it.", uz: "Bu xabardan shikoyat qilinsinmi? Madi uni koʻrib chiqadi." },
+    "report.confirmUser": { ru: "Пожаловаться на пользователя {name}? Мади проверит.", en: "Report {name}? Madie will review it.", uz: "{name} haqida shikoyat qilinsinmi? Madi koʻrib chiqadi." },
+    "report.sent": { ru: "Жалоба отправлена — Мади проверит 🌸", en: "Report sent — Madie will review it 🌸", uz: "Shikoyat yuborildi — Madi koʻrib chiqadi 🌸" },
     'talk.kb.ph':           { ru: 'Напиши по-корейски…', en: 'Type in Korean…', uz: 'Koreyscha yozing…' },
     'talk.kb.denied':       { ru: 'Разреши микрофон в настройках — а пока пишем ⌨️', en: 'Allow the microphone in settings — for now we type ⌨️', uz: 'Sozlamalarda mikrofonga ruxsat bering — hozircha yozamiz ⌨️' },
     'talk.kb.unavailable':  { ru: 'Распознавание здесь недоступно — пишем ⌨️', en: 'Speech recognition isn’t available here — we type ⌨️', uz: 'Bu yerda nutqni tanish ishlamaydi — yozamiz ⌨️' },
@@ -4967,6 +4983,22 @@
     "mw.g.listen": "Есту арқылы",
     "mw.g.memory": "Жады",
     "mw.g.build": "Сөзді құрастыр",
+    "block.btn": "Бұғаттау",
+    "block.unblock": "Бұғаттан шығару",
+    "block.confirm": "{name} бұғатталсын ба? Оның хабарламалары, посттары мен пікірлері көрінбейді. Баптауларда бұғаттан шығаруға болады.",
+    "block.done": "Бұғатталды: {name}",
+    "block.undone": "Бұғаттан шығарылды 🌸",
+    "block.fail": "Болмады — интернетті тексеріп, қайта көр",
+    "block.cantTeacher": "Ұстазды бұғаттауға болмайды — бірдеңе дұрыс болмаса, шағымдан немесе Мадиге жаз",
+    "block.title": "Бұғатталғандар",
+    "block.sub": "Олардың хабарламалары, посттары мен пікірлері жасырылған, олардан push келмейді.",
+    "block.none": "Ешкім жоқ",
+    "block.count": "Бұғатталған: {n}",
+    "report.msg": "Хабарламаға шағымдану",
+    "report.user": "Шағымдану",
+    "report.confirmMsg": "Осы хабарламаға шағымдану керек пе? Мади оны тексереді.",
+    "report.confirmUser": "{name} туралы шағымдану керек пе? Мади тексереді.",
+    "report.sent": "Шағым жіберілді — Мади тексереді 🌸",
   };
   // I18N_KK:END
   function t(key, vars) {
@@ -4976,7 +5008,7 @@
     return s;
   }
   // Метка NEW у кнопки «Қазақша» в настройках — 7 дней с релиза (дату выставить в день выпуска)
-  const KM_KK_NEW_UNTIL = '2026-10-27';
+  const KM_KK_NEW_UNTIL = '2026-10-28';
   // Казахские названия: свои массивы, не Intl (в части браузеров нет данных локали kk)
   const monthsKk = ['қаңтар','ақпан','наурыз','сәуір','мамыр','маусым','шілде','тамыз','қыркүйек','қазан','қараша','желтоқсан'];
   const weekdaysKkShort = ['Дс','Сс','Ср','Бс','Жм','Сб','Жс'];            // Пн..Вс
@@ -9555,7 +9587,7 @@
   // Версия сборки: держать ВРУЧНУЮ синхронной с ?v= в index.html при каждом деплое
   // (те же 3 места — stylesheet/preload/script). Используется тихим автообновлением
   // ниже — сама загрузка кода по-прежнему идёт через ?v=.
-  const APP_VERSION = '20261020c';
+  const APP_VERSION = '20261021a';
   // ── Тихое автообновление (25.08.2026, вместо попапа «Вышло обновление!») ──
   // Узнав из облака про новую версию (appVersion пишет первый клиент нового деплоя,
   // promptVersion — кнопка «Оповестить» в админке), вкладка НЕ дёргает ученицу:
@@ -9660,6 +9692,80 @@
     // теперь это просто ручной форс того же тихого механизма.
     _db.ref('shared/config/promptVersion').on('value', snap => _updSchedule(snap.val()));
   }
+  // ── Блокировка пользователей и жалобы (требование Google Play к приложениям с UGC, 21.10.2026) ──
+  // users/<me>/blocked/<uid> = { name, ts } — живой слушатель в attachFriendsListeners, копия в UStore 'blockedCache'
+  // (мгновенный старт). Заблокированного не видно: личка и непрочитанное, сообщения в общем чате/группах, посты и
+  // комментарии ленты, заявки в друзья, баннеры. Он об этом не знает; сервер не шлёт мне его пуши (functions/lib/chat.js).
+  // Мади/админов блокировать нельзя (учитель). Жалобы: shared/chatReports/<chatId>__<mid>/<я>, shared/userReports/<uid>/<я>.
+  let _blockedCache = {};
+  function _blockedLoadLocal() {
+    try { const v = UStore.get('blockedCache', null); _blockedCache = (v && typeof v === 'object') ? v : {}; } catch (_) { _blockedCache = {}; }
+  }
+  function isBlocked(uid) { return !!(uid && _blockedCache && Object.prototype.hasOwnProperty.call(_blockedCache, uid)); }
+  function blockedList() { return Object.keys(_blockedCache || {}).map(uid => ({ uid, name: (_blockedCache[uid] && _blockedCache[uid].name) || '', ts: (_blockedCache[uid] && _blockedCache[uid].ts) || 0 })); }
+  function _blockedRefresh() {
+    try { renderFriendsAndChat(); } catch (_) {}
+    try { updateChatBadges(); } catch (_) {}
+    try { if (_chatCurrentId && _lastChatMsgs) renderChatMessages(_lastChatMsgs); } catch (_) {}
+    try { if (typeof renderCustomFeedPosts === 'function') renderCustomFeedPosts(); } catch (_) {}
+    try { if (document.getElementById('settings-card')) renderSettingsCard(); } catch (_) {}
+  }
+  async function blockUser(uid, name, skipConfirm) {
+    const me = myUid();
+    if (!uid || !me || me === 'guest' || uid === me || typeof _db === 'undefined') return false;
+    const dir = (_usersDirCache && _usersDirCache[uid]) || {};
+    if (dir.isAdmin) { toast(t('block.cantTeacher')); return false; }
+    const nm = String(name || dir.name || '').slice(0, 60);
+    if (!skipConfirm && !confirm(t('block.confirm', { name: nm || '…' }))) return false;
+    try { await _db.ref(`users/${me}/blocked/${uid}`).set({ name: nm, ts: Date.now() }); }
+    catch (_) { toast(t('block.fail')); return false; }
+    _blockedCache = Object.assign({}, _blockedCache, { [uid]: { name: nm, ts: Date.now() } });
+    try { UStore.set('blockedCache', _blockedCache); } catch (_) {}
+    toast(t('block.done', { name: nm || '…' }), 'var(--sage)');
+    // открытая с ним личная переписка и его профиль закрываются
+    try { if (_chatCurrentId && !_chatIsGroup && _chatOtherUid === uid) closeChat(); } catch (_) {}
+    try { const up = document.getElementById('user-profile-page'); if (up) closeUserProfile(); } catch (_) {}
+    _blockedRefresh();
+    return true;
+  }
+  async function unblockUser(uid) {
+    const me = myUid();
+    if (!uid || !me || me === 'guest' || typeof _db === 'undefined') return false;
+    try { await _db.ref(`users/${me}/blocked/${uid}`).remove(); } catch (_) { toast(t('block.fail')); return false; }
+    const next = Object.assign({}, _blockedCache); delete next[uid];
+    _blockedCache = next;
+    try { UStore.set('blockedCache', _blockedCache); } catch (_) {}
+    toast(t('block.undone'), 'var(--sage)');
+    _blockedRefresh();
+    return true;
+  }
+  // Сообщение чата: жалоба. Текст режем до 300 знаков (в базу — минимум нужного для разбора).
+  async function reportChatMessage(mid) {
+    const m = _lastChatMsgs && _lastChatMsgs[mid];
+    const me = myUid(); const chatId = _chatCurrentId;
+    if (!m || !chatId || !me || me === 'guest' || typeof _db === 'undefined') return false;
+    if (m.from === me) return false;
+    if (!confirm(t('report.confirmMsg'))) return false;
+    try {
+      await _db.ref(`shared/chatReports/${chatId}__${mid}/${me}`).set({
+        ts: Date.now(), by: socialUserName(), chatId: chatId, mid: String(mid), from: m.from, fromName: String(m.fromName || '').slice(0, 60),
+        text: String(m.text || '').slice(0, 300)
+      });
+      toast(t('report.sent'), 'var(--sage)');
+      return true;
+    } catch (_) { toast(t('block.fail')); return false; }
+  }
+  async function reportUser(uid, name) {
+    const me = myUid();
+    if (!uid || !me || me === 'guest' || uid === me || typeof _db === 'undefined') return false;
+    if (!confirm(t('report.confirmUser', { name: String(name || '…') }))) return false;
+    try {
+      await _db.ref(`shared/userReports/${uid}/${me}`).set({ ts: Date.now(), by: socialUserName(), name: String(name || '').slice(0, 60) });
+      toast(t('report.sent'), 'var(--sage)');
+      return true;
+    } catch (_) { toast(t('block.fail')); return false; }
+  }
+
   // ── Friends & Chat ──
   let _friendsCache = {};
   let _inboxCache = {};
@@ -10464,6 +10570,7 @@
   }
   function notifyNewMessage(key) {
     // key = friend uid (DM) or gid (group chat)
+    if (isBlocked(key)) return;
     const isGroup = !!(_groupsCache && _groupsCache[key]);
     const dir = (_usersDirCache && _usersDirCache[key]) || {};
     const fr  = (_friendsCache && _friendsCache[key]) || {};
@@ -10563,6 +10670,7 @@
     _friendsListenerOffs.forEach(off => { try { off(); } catch(_){} });
     _friendsListenerOffs = [];
     _friendsLoaded = false; _groupsLoaded = false;
+    _blockedCache = {};
     _kmInboxKnown = null; // новая личность — её первый снапшот inbox не «новые заявки»
     if (_unreadCleanupTimer) { clearTimeout(_unreadCleanupTimer); _unreadCleanupTimer = null; }
   }
@@ -10578,6 +10686,8 @@
       ref.on('value', handler);
       _friendsListenerOffs.push(() => ref.off('value', handler));
     };
+    _blockedLoadLocal();
+    wire(`users/${me}/blocked`, val => { _blockedCache = (val && typeof val === 'object') ? val : {}; try { UStore.set('blockedCache', _blockedCache); } catch (_) {} _blockedRefresh(); });
     wire(`users/${me}/friends`,  val => { _friendsCache  = val; _friendsLoaded = true; renderFriendsAndChat(); updateChatBadges(); scheduleUnreadCleanup(); if (document.getElementById('add-friend-modal')) filterAddFriend(); });
     wire(`users/${me}/groups`,   val => { _groupsCache   = val; _groupsLoaded = true; renderFriendsAndChat(); updateChatBadges(); scheduleUnreadCleanup(); });
     wire(`users/${me}/inbox`,    val => { _inboxCache    = val; if (isAdmin()) adminAutoAcceptRequests(val); renderFriendsAndChat(); updateChatBadges(); processReferralRewards(); try { kmInboxNotices(val); } catch (e) { console.warn('[inbox]', e); } });
@@ -10612,7 +10722,7 @@
       if (!_usersDirCache) return true;                 // каталог ещё не загружен — как раньше
       return !!(_usersDirCache[key] && !_usersDirCache[key].isAdmin);
     }
-    if (_friendsCache && _friendsCache[key]) return true;
+    if (_friendsCache && _friendsCache[key]) return !isBlocked(key);
     return false;
   }
   // Админ не имеет UI для заявок в друзья (его список чатов = весь каталог учениц,
@@ -10846,7 +10956,7 @@
   function communityRowHtml() {
     const meta = _chatMetaCache[COMMUNITY_GID] || {};
     const hasNew = _communityHasNew();
-    const preview = meta.lastMessage
+    const preview = (meta.lastMessage && !isBlocked(meta.lastFrom))
       ? `${meta.lastFromName ? escHtml(meta.lastFromName) + ': ' : ''}${escHtml(meta.lastMessage)}`
       : t('comm.preview');
     const timeLabel = chatListTimeLabel(meta.lastAt);
@@ -10936,7 +11046,7 @@
         (friends[key] && friends[key].since) || (groups[key] && groups[key].since) || 0;
     };
     const convos = [
-      ...Object.keys(friends).map(uid => ({ kind: 'dm', key: uid })),
+      ...Object.keys(friends).filter(uid => !isBlocked(uid)).map(uid => ({ kind: 'dm', key: uid })),
       ...Object.keys(groups).map(gid => ({ kind: 'group', key: gid }))
     ].sort((a, b) => {
       // Закреплённые — всегда вверху, затем по времени последнего сообщения
@@ -10944,7 +11054,7 @@
       if (pa !== pb) return pb - pa;
       return lastTs(b.key) - lastTs(a.key);
     });
-    const requests = Object.entries(inbox).filter(([k, v]) => v && v.type === 'friend_request');
+    const requests = Object.entries(inbox).filter(([k, v]) => v && v.type === 'friend_request' && !isBlocked(v.from || v.fromUid || k));
 
     const requestsHtml = requests.length
       ? `<div id="friend-requests" style="font-size:10px;letter-spacing:.18em;color:var(--coral);font-weight:700;margin:4px 4px 8px;scroll-margin-top:80px;">${t('ui.r034')} · ${requests.length}</div>
@@ -11946,6 +12056,10 @@
         ${bioBlock}
         ${joinLine}
         <div class="up-actions">${action}</div>
+        ${(!o.isMe && !o.isAdmin && !isAdmin()) ? `<div class="up-actions up-actions-safety">
+          <button class="up-action up-action-ghost" onclick="reportUser('${jsStr(o.uid)}','${jsStr(o.name || '')}')"><i class="fa-regular fa-flag"></i> ${t('report.user')}</button>
+          ${isBlocked(o.uid) ? `<button class="up-action up-action-ghost" onclick="unblockUser('${jsStr(o.uid)}')"><i class="fa-solid fa-lock-open"></i> ${t('block.unblock')}</button>` : `<button class="up-action up-action-ghost" onclick="blockUser('${jsStr(o.uid)}','${jsStr(o.name || '')}')"><i class="fa-solid fa-ban"></i> ${t('block.btn')}</button>`}
+        </div>` : ''}
       </div>`;
   }
   function _fmtJoinDate(ts) {
@@ -12134,6 +12248,7 @@
         <button class="btn btn-ghost btn-block" style="margin-top:10px;" onclick="startReply('${jsStr(mid)}'); this.closest('.modal-bg').remove();"><i class="fa-solid fa-reply"></i> ${t('ui.122')}</button>
         <button class="btn btn-ghost btn-block" style="margin-top:8px;" onclick="copyChatMessage('${jsStr(mid)}'); this.closest('.modal-bg').remove();"><i class="fa-solid fa-copy"></i> ${t('chat.copy')}</button>
         <button class="btn btn-ghost btn-block" style="margin-top:8px;" onclick="forwardChatMessage('${jsStr(mid)}'); this.closest('.modal-bg').remove();"><i class="fa-solid fa-share"></i> ${t('chat.forward')}</button>
+        ${(!mine && m.from && !m.auto && m.type !== 'system') ? `<button class="btn btn-ghost btn-block" style="margin-top:8px;" onclick="reportChatMessage('${jsStr(mid)}'); this.closest('.modal-bg').remove();"><i class="fa-regular fa-flag"></i> ${t('report.msg')}</button>${((_usersDirCache && _usersDirCache[m.from] && _usersDirCache[m.from].isAdmin) || isAdmin()) ? '' : `<button class="btn btn-ghost btn-block" style="margin-top:8px; color:var(--bad-ink); border-color:rgba(179,58,74,.25);" onclick="blockUser('${jsStr(m.from)}','${jsStr(m.fromName || '')}'); this.closest('.modal-bg').remove();"><i class="fa-solid fa-ban"></i> ${t('block.btn')}</button>`}` : ''}
         ${mine ? `<button class="btn btn-ghost btn-block" style="margin-top:8px; color:var(--bad-ink); border-color:rgba(179,58,74,.25);" onclick="deleteChatMessage('${jsStr(mid)}'); this.closest('.modal-bg').remove();"><i class="fa-solid fa-trash"></i> ${t('ui.018')}</button>` : ''}
       </div>`;
     document.body.appendChild(sheet);
@@ -12385,7 +12500,7 @@
     } else {
       otherRead = (_chatOtherUid && _chatReadMeta && _chatReadMeta[_chatOtherUid]) || 0;
     }
-    const entries = Object.entries(msgs).map(([k, v]) => ({ key: k, ...v })).sort((a, b) => (a.at || 0) - (b.at || 0));
+    const entries = Object.entries(msgs).map(([k, v]) => ({ key: k, ...v })).filter(m => !(m.from && isBlocked(m.from))).sort((a, b) => (a.at || 0) - (b.at || 0));
     if (!entries.length) {
       body.innerHTML = `<div style="text-align:center;padding:36px 24px;color:var(--soft);font-size:12px;">${t('ui.127')}<br>${t('ui.128')}</div>`;
       _chatSeenKeys = new Set();
@@ -14824,6 +14939,8 @@
         <div class="gender-pick-row country-row">
           ${COUNTRIES.map(cn => `<button type="button" class="gender-opt country-opt ${chosenCountry() === cn.code ? 'active' : ''}" aria-pressed="${chosenCountry() === cn.code}" onclick="pickCountryFold('${cn.code}')">${flagImg(cn.code)}<span>${countryName(cn.code)}</span></button>`).join('')}
         </div>`, !chosenCountry()),
+      (Store.get('user') && !Store.get('user').guest && !Store.get('user').isAdmin) ? setFold('blocked', '🚫', t('block.title'), escHtml(blockedList().length ? t('block.count', { n: blockedList().length }) : t('block.none')),
+        `<div class="gender-pick-sub">${t('block.sub')}</div>${blockedList().length ? blockedList().map(b => `<div class="settings-row" style="cursor:default;"><span class="settings-tx"><span class="settings-title" style="display:block;">${escHtml(b.name || '—')}</span></span><button type="button" class="btn btn-ghost" style="padding:8px 12px; min-height:44px;" onclick="unblockUser('${jsStr(b.uid)}')">${t('block.unblock')}</button></div>`).join('') : ''}`, false) : '',
       row('🔊', t('set.sound'), t('set.sound.sub'), sw(s.sound), "toggleSetting('sound')", 'sound'),
       row('🐢', t('set.slow'), t('set.slow.sub'), sw(s.slowVoice), "toggleSetting('slowVoice')", 'slowVoice'),
       `<div class="gender-pick">
@@ -39670,6 +39787,7 @@
 
   // Карточка поста ученика (шапка автора → фото → подпись → лайки/комменты)
   function studentPostCardHtml(p) {
+    if (isBlocked(p.uid)) return '';
     const pid = p.id;
     const isAuthor = p.uid === socialUserId();
     const canDelete = isAuthor || isAdmin();
@@ -39684,7 +39802,7 @@
         </div>
         ${canDelete
           ? `<button class="feed-student-act" onclick="deleteUserPost('${pid}')" aria-label="${t('ui.233')}" title="${t('ui.018')}"><i class="fa-solid fa-trash-can"></i></button>`
-          : `<button class="feed-student-act" onclick="reportUserPost('${pid}')" aria-label="${t('ui.234')}" title="${t('ui.234')}"><i class="fa-regular fa-flag"></i></button>`}
+          : `<button class="feed-student-act" onclick="reportUserPost('${pid}')" aria-label="${t('ui.234')}" title="${t('ui.234')}"><i class="fa-regular fa-flag"></i></button>${isAdmin() ? '' : `<button class="feed-student-act" onclick="blockUser('${jsStr(p.uid)}','${jsStr(p.name || '')}')" aria-label="${t('block.btn')}" title="${t('block.btn')}"><i class="fa-solid fa-ban"></i></button>`}`}
       </div>`;
     return `
       <div class="feed-card feed-card-student" data-post-id="${pid}">
@@ -40218,6 +40336,7 @@
     if (!c || !c.replies) return [];
     return Object.entries(c.replies)
       .map(([rid, r]) => ({ rid, ...r }))
+      .filter(r => !isBlocked(r.uid))
       .sort((a, b) => (a.ts || 0) - (b.ts || 0));
   }
   function totalCommentsCount(pid) {
@@ -40343,7 +40462,7 @@
   }
 
   function renderCommentsList(pid) {
-    const list = _feedComments[pid] || [];
+    const list = (_feedComments[pid] || []).filter(c => !isBlocked(c.uid));
     if (list.length === 0) return '<div class="feed-comment-empty">' + t('ui.256') + '</div>';
     // Most-liked first; ties broken by oldest (so without any likes, the first-poster appears on top)
     const sorted = list.slice().sort((a, b) => {
