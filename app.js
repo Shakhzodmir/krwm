@@ -1418,11 +1418,9 @@
     "tg.pals": { ru: "Выбери подругу", en: "Choose a friend", uz: "Doʻstni tanlang" },
     "tg.invite": { ru: "Позвать", en: "Invite", uz: "Taklif qilish" },
     "tg.start.t": { ru: "Начни огонёк с {name}", en: "Start a shared streak with {name}", uz: "{name} bilan olovchani boshlang" },
-    "tg.start.s": { ru: "Каждый день, когда вы обе позанимались, огонёк растёт. Один день пропуска — не беда: он встанет на паузу.", en: "Every day you both study, the flame grows. One missed day is fine: it just pauses.", uz: "Ikkovingiz oʻqigan har kuni olov ulg‘ayadi. Bir kun oʻtkazib yuborsangiz ham mayli: u pauzaga qoʻyiladi." },
     "tg.accept": { ru: "Принять", en: "Accept", uz: "Qabul qilish" },
     "tg.callIn": { ru: "Позвать", en: "Invite", uz: "Chaqirish" },
     "tg.waiting.t": { ru: "Ждём {name}", en: "Waiting for {name}", uz: "{name} kutilmoqda" },
-    "tg.waiting.s": { ru: "Приглашение отправлено в чат. Как только она примет, огонёк загорится.", en: "The invitation is in your chat. The flame lights up once she accepts.", uz: "Taklif chatga yuborildi. U qabul qilishi bilan olov yonadi." },
     "tg.days": { ru: "{n} дн. вместе", en: "{n} days together", uz: "{n} kun birga" },
     "tg.noStreak": { ru: "Огонёк ждёт вас", en: "Your flame is waiting", uz: "Olovcha sizni kutmoqda" },
     "tg.today.both": { ru: "Сегодня вы обе позанимались ✓", en: "You both studied today ✓", uz: "Bugun ikkovingiz ham oʻqidingiz ✓" },
@@ -1435,7 +1433,6 @@
     "tg.nudge.text": { ru: "🔥 {name} зовёт позаниматься сегодня — наш огонёк ждёт!", en: "🔥 {name} invites you to study today — our flame is waiting!", uz: "🔥 {name} bugun birga oʻqishga chaqiryapti — olovchamiz kutyapti!" },
     "tg.nudge.sent": { ru: "Подсказка отправлена 💌", en: "Nudge sent 💌", uz: "Eslatma yuborildi 💌" },
     "tg.empty.t": { ru: "Сначала позови подругу", en: "Invite a friend first", uz: "Avval doʻstni chaqiring" },
-    "tg.empty.s": { ru: "Здесь учатся вместе с друзьями из приложения. Отправь ссылку-приглашение — и вернись сюда.", en: "Here you learn with friends from the app. Send an invite link and come back.", uz: "Bu yerda ilovadagi doʻstlar bilan birga oʻrganiladi. Taklif havolasini yuboring va qaytib keling." },
     "tg.soon": { ru: "Скоро", en: "Soon", uz: "Tez orada" },
     "tg.m.post": { ru: "Открытка со словом", en: "Word postcard", uz: "Soʻzli ochiqka" },
     "tg.m.post.s": { ru: "Подари слово красивой карточкой", en: "Gift a word on a pretty card", uz: "Soʻzni chiroyli kartada sovgʻa qiling" },
@@ -1446,11 +1443,9 @@
     "tg.m.chain": { ru: "Слова по цепочке", en: "Word chain", uz: "Soʻzlar zanjiri" },
     "tg.m.battle": { ru: "Баттл-комната", en: "Battle room", uz: "Bellashuv xonasi" },
     "tg.m.scene": { ru: "Сценка вдвоём", en: "Scene for two", uz: "Ikki kishilik sahna" },
-    "tg.invite.text": { ru: "🔥 {name} зовёт тебя копить огонёк вместе — открой «Учимся вместе» и прими приглашение", en: "🔥 {name} invites you to build a shared streak — open “Learn together” and accept", uz: "🔥 {name} sizni birga olovcha yigʻishga chaqiryapti — “Birga oʻrganamiz”ni ochib, qabul qiling" },
     "tg.card.invite": { ru: "{name} зовёт копить огонёк вместе", en: "{name} invites you to a shared streak", uz: "{name} birga olovcha yigʻishga chaqiryapti" },
     "tg.card.joined": { ru: "Вы вместе", en: "You are together", uz: "Birgasiz" },
     "tg.started": { ru: "Огонёк на двоих загорелся 🔥", en: "Your shared streak is on 🔥", uz: "Ikkovlon olovcha yondi 🔥" },
-    "tg.invited": { ru: "Приглашение отправлено в чат 💌", en: "Invitation sent to the chat 💌", uz: "Taklif chatga yuborildi 💌" },
     "tg.pick.t": { ru: "Выбери слово", en: "Choose a word", uz: "Soʻzni tanlang" },
     "tg.src.mine": { ru: "Мои слова", en: "My words", uz: "Mening soʻzlarim" },
     "tg.src.lessons": { ru: "Из уроков", en: "From lessons", uz: "Darslardan" },
@@ -1467,18 +1462,16 @@
     "tg.th.night": { ru: "Ночь", en: "Night", uz: "Tun" },
     "tg.th.dawn": { ru: "Рассвет", en: "Dawn", uz: "Tong" },
     "tg.post.send": { ru: "Отправить открытку", en: "Send the postcard", uz: "Ochiqkani yuborish" },
-    "tg.post.text": { ru: "💌 {name} прислала тебе слово: {ko} — открой, чтобы послушать", en: "💌 {name} sent you a word: {ko} — open to listen", uz: "💌 {name} sizga soʻz yubordi: {ko} — eshitish uchun oching" },
     "tg.post.sent": { ru: "Открытка отправлена 💌", en: "Postcard sent 💌", uz: "Ochiqka yuborildi 💌" },
     "tg.post.sentXp": { ru: "Открытка отправлена 💌 +{xp} XP", en: "Postcard sent 💌 +{xp} XP", uz: "Ochiqka yuborildi 💌 +{xp} XP" },
     "tg.listen": { ru: "Послушать", en: "Listen", uz: "Eshitish" },
     "tg.toWords": { ru: "В мои слова", en: "Save to my words", uz: "Lugʻatimga" },
     "tg.saved": { ru: "Слово в твоём словарике 🌸", en: "Saved to your words 🌸", uz: "Soʻz lugʻatingizda 🌸" },
-    "tg.quiz.lead": { ru: "Соберём {n} слов — подруга выберет перевод. В чат уйдёт карточка.", en: "We’ll pick {n} words — your friend chooses the meaning. A card goes to the chat.", uz: "{n} ta soʻz tanlaymiz — doʻstingiz tarjimasini topadi. Chatga karta ketadi." },
+    "tg.quiz.lead": { ru: "Соберём {n} слов — подруга выберет перевод. Проверка появится у неё на странице «Учимся вместе».", en: "We’ll pick {n} words — your friend chooses the meaning. The quiz appears on her “Learn together” page.", uz: "{n} ta soʻz tanlaymiz — doʻstingiz tarjimasini topadi. Tekshiruv uning “Birga oʻrganamiz” sahifasida paydo boʻladi." },
     "tg.quiz.fewMine": { ru: "В твоём словарике пока мало слов (нужно хотя бы 4). Выбери «Из уроков».", en: "You need at least 4 saved words. Choose “From lessons”.", uz: "Lugʻatingizda soʻz kam (kamida 4 ta kerak). “Darslardan”ni tanlang." },
     "tg.quiz.few": { ru: "Слов для проверки пока не хватает", en: "Not enough words yet", uz: "Tekshirish uchun soʻzlar hali yetarli emas" },
     "tg.quiz.reroll": { ru: "Собрать другие слова", en: "Pick other words", uz: "Boshqa soʻzlar tanlash" },
     "tg.quiz.send": { ru: "Отправить проверку", en: "Send the quiz", uz: "Tekshiruvni yuborish" },
-    "tg.quiz.text": { ru: "🧩 {name} проверяет тебя: {n} слов — открой и пройди", en: "🧩 {name} is quizzing you: {n} words — open and take it", uz: "🧩 {name} sizni tekshiryapti: {n} ta soʻz — oching va yeching" },
     "tg.quiz.sent": { ru: "Проверка отправлена 💌", en: "Quiz sent 💌", uz: "Tekshiruv yuborildi 💌" },
     "tg.quiz.sentXp": { ru: "Проверка отправлена 💌 +{xp} XP", en: "Quiz sent 💌 +{xp} XP", uz: "Tekshiruv yuborildi 💌 +{xp} XP" },
     "tg.quiz.gone": { ru: "Эта проверка уже недоступна", en: "This quiz is no longer available", uz: "Bu tekshiruv endi mavjud emas" },
@@ -1492,7 +1485,7 @@
     "tg.xp": { ru: "+{xp} XP 🌸", en: "+{xp} XP 🌸", uz: "+{xp} XP 🌸" },
     "tg.card.quiz": { ru: "{name} проверяет тебя", en: "{name} is quizzing you", uz: "{name} sizni tekshiryapti" },
     "tg.card.quizMine": { ru: "Ты проверяешь подругу", en: "You are quizzing your friend", uz: "Siz doʻstingizni tekshiryapsiz" },
-    "tg.card.quizS": { ru: "{n} слов из словарика и уроков", en: "{n} words from lists and lessons", uz: "{n} ta soʻz" },
+    "tg.card.quizS": { ru: "Слов в проверке: {n}", en: "Words in the quiz: {n}", uz: "Tekshiruvdagi soʻzlar: {n}" },
     "tg.card.take": { ru: "Пройти проверку", en: "Take the quiz", uz: "Tekshiruvdan oʻtish" },
     "tg.card.results": { ru: "Результаты", en: "Results", uz: "Natijalar" },
     "tg.deck.lead": { ru: "Слова, которые вы добавляете вместе. Любая может добавить, удалить или забрать слово к себе.", en: "Words you add together. Either of you can add, remove or keep a word.", uz: "Birga qoʻshadigan soʻzlaringiz. Ikkovingiz qoʻshishingiz, olib tashlashingiz yoki oʻzingizga olishingiz mumkin." },
@@ -1503,6 +1496,42 @@
     "tg.deck.added": { ru: "Слово в общей колоде ✨", en: "Added to the shared deck ✨", uz: "Soʻz umumiy toʻplamda ✨" },
     "tg.deck.by": { ru: "добавила {name}", en: "added by {name}", uz: "{name} qoʻshdi" },
     "tg.deck.del": { ru: "Убрать из колоды", en: "Remove from the deck", uz: "Toʻplamdan olib tashlash" },
+    "tg.find": { ru: "Найти подругу", en: "Find a friend", uz: "Doʻst topish" },
+    "tg.inv.t": { ru: "{name} зовёт тебя копить огонёк", en: "{name} invites you to build a shared streak", uz: "{name} sizni birga olovcha yigʻishga chaqiryapti" },
+    "tg.inv.no": { ru: "Не сейчас", en: "Not now", uz: "Hozir emas" },
+    "tg.how.t": { ru: "Как получить огонёк", en: "How to get the streak", uz: "Olovchani qanday olish mumkin" },
+    "tg.how.1": { ru: "Позови подругу — она примет приглашение прямо здесь, на этой странице.", en: "Invite a friend — she accepts right here on this page.", uz: "Doʻstingizni chaqiring — u taklifni shu sahifaning oʻzida qabul qiladi." },
+    "tg.how.2": { ru: "Каждый день занимайтесь обе — каждая у себя: любой урок, игра или повторение слов засчитывается сам.", en: "Study every day, each on your own: any lesson, game or word review counts automatically.", uz: "Har kuni ikkovingiz oʻqing, har kim oʻzida: har qanday dars, oʻyin yoki soʻzlarni takrorlash oʻzi hisoblanadi." },
+    "tg.how.3": { ru: "День, когда позанимались обе, добавляет +1 к огоньку. Один пропущенный день огонёк переживёт.", en: "A day when you both studied adds +1 to the streak. One missed day won’t put it out.", uz: "Ikkovingiz oʻqigan kun olovchaga +1 qoʻshadi. Bir kun oʻtkazib yuborilsa, olov oʻchmaydi." },
+    "tg.how.lessons": { ru: "Уроки", en: "Lessons", uz: "Darslar" },
+    "tg.how.games": { ru: "Игры", en: "Games", uz: "Oʻyinlar" },
+    "tg.feed.t": { ru: "Открытки и проверки", en: "Postcards and quizzes", uz: "Ochiqkalar va tekshiruvlar" },
+    "tg.feed.empty": { ru: "Здесь появятся открытки и проверки, которыми вы обмениваетесь 🌸", en: "Postcards and quizzes you exchange will appear here 🌸", uz: "Bu yerda siz almashadigan ochiqkalar va tekshiruvlar paydo boʻladi 🌸" },
+    "tg.feed.toPal": { ru: "Ты → {name}", en: "You → {name}", uz: "Siz → {name}" },
+    "tg.feed.fromPal": { ru: "{name} → тебе", en: "{name} → you", uz: "{name} → sizga" },
+    "tg.feed.new": { ru: "Новое", en: "New", uz: "Yangi" },
+    "tg.feed.score": { ru: "Результат: {s} из {n}", en: "Result: {s} of {n}", uz: "Natija: {s} / {n}" },
+    "tg.feed.wait": { ru: "ещё не пройдена", en: "not taken yet", uz: "hali yechilmagan" },
+    "tg.src.own": { ru: "Своё слово", en: "My own word", uz: "Oʻz soʻzim" },
+    "tg.own.ko": { ru: "Слово по-корейски (хангылем)", en: "Korean word (in Hangul)", uz: "Koreyscha soʻz (xangılda)" },
+    "tg.own.ru": { ru: "Перевод на русский", en: "Meaning in Russian", uz: "Ruscha tarjimasi" },
+    "tg.own.tr": { ru: "Транскрипция (по желанию)", en: "Transcription (optional)", uz: "Transkripsiya (ixtiyoriy)" },
+    "tg.own.add": { ru: "Готово", en: "Done", uz: "Tayyor" },
+    "tg.own.addList": { ru: "Добавить в проверку", en: "Add to the quiz", uz: "Tekshiruvga qoʻshish" },
+    "tg.own.bad": { ru: "Проверь: слово — только хангылем, перевод — без корейских знаков", en: "Check: the word in Hangul only, the meaning without Korean characters", uz: "Tekshiring: soʻz faqat xangılda, tarjima koreys belgilarisiz" },
+    "tg.own.dup": { ru: "Это слово уже в списке", en: "This word is already in the list", uz: "Bu soʻz roʻyxatda bor" },
+    "tg.own.min": { ru: "Добавь хотя бы 3 своих слова — и соберём проверку", en: "Add at least 3 words of your own and we’ll build the quiz", uz: "Kamida 3 ta oʻz soʻzingizni qoʻshing — tekshiruvni tuzamiz" },
+    "tg.own.list": { ru: "Твои слова ({n}/{max})", en: "Your words ({n}/{max})", uz: "Soʻzlaringiz ({n}/{max})" },
+    "tg.own.del": { ru: "Убрать", en: "Remove", uz: "Olib tashlash" },
+    "tg.quiz.preview": { ru: "Вот что получится", en: "Here is the quiz", uz: "Tekshiruv shunday boʻladi" },
+    "tg.quiz.rerollOpts": { ru: "Перемешать варианты", en: "Shuffle the options", uz: "Variantlarni aralashtirish" },
+    "tg.invite.text": { ru: "💞 {name} зовёт тебя копить огонёк вместе — открой «Учимся вместе» на экране «Общение» и прими приглашение", en: "💞 {name} invites you to build a shared streak — open “Learn together” on the Chat screen and accept", uz: "💞 {name} sizni birga olovcha yigʻishga chaqiryapti — “Birga oʻrganamiz”ni ochib, qabul qiling" },
+    "tg.post.text": { ru: "💌 {name} прислала тебе слово {ko} — открой «Учимся вместе» на экране «Общение»", en: "💌 {name} sent you a word {ko} — open “Learn together” on the Chat screen", uz: "💌 {name} sizga soʻz yubordi: {ko} — “Birga oʻrganamiz”ni oching" },
+    "tg.quiz.text": { ru: "🧩 {name} проверяет тебя: {n} слов — открой «Учимся вместе» на экране «Общение»", en: "🧩 {name} is quizzing you: {n} words — open “Learn together” on the Chat screen", uz: "🧩 {name} sizni tekshiryapti: {n} ta soʻz — “Birga oʻrganamiz”ni oching" },
+    "tg.empty.s": { ru: "Здесь учатся вместе с подругами из приложения. Найди ученицу, добавь её в друзья — и возвращайся сюда.", en: "Here you learn with friends from the app. Find a student, add her as a friend and come back.", uz: "Bu yerda ilovadagi doʻstlar bilan birga oʻrganiladi. Oʻquvchini toping, doʻstlikka qoʻshing va qaytib keling." },
+    "tg.start.s": { ru: "Каждый день, когда вы обе позанимались, огонёк растёт. Один пропущенный день его не гасит.", en: "Every day you both study, the flame grows. One missed day doesn’t put it out.", uz: "Ikkovingiz oʻqigan har kuni olov ulgʻayadi. Bir kun oʻtkazib yuborsangiz, u oʻchmaydi." },
+    "tg.waiting.s": { ru: "Приглашение уже у подруги на этой странице. Как только она примет, огонёк загорится.", en: "The invitation is waiting on her page. The flame lights up once she accepts.", uz: "Taklif doʻstingizning sahifasida turibdi. U qabul qilishi bilan olov yonadi." },
+    "tg.invited": { ru: "Приглашение отправлено 💌", en: "Invitation sent 💌", uz: "Taklif yuborildi 💌" },
     'talk.kb.ph':           { ru: 'Напиши по-корейски…', en: 'Type in Korean…', uz: 'Koreyscha yozing…' },
     'talk.kb.denied':       { ru: 'Разреши микрофон в настройках — а пока пишем ⌨️', en: 'Allow the microphone in settings — for now we type ⌨️', uz: 'Sozlamalarda mikrofonga ruxsat bering — hozircha yozamiz ⌨️' },
     'talk.kb.unavailable':  { ru: 'Распознавание здесь недоступно — пишем ⌨️', en: 'Speech recognition isn’t available here — we type ⌨️', uz: 'Bu yerda nutqni tanish ishlamaydi — yozamiz ⌨️' },
@@ -5098,11 +5127,11 @@
     "tg.pals": "Досты таңда",
     "tg.invite": "Шақыру",
     "tg.start.t": "{name} екеуміз отты бастайық",
-    "tg.start.s": "Екеуің оқыған сайын от өседі. Бір күн жіберіп алсаң да қорқыныш жоқ: ол үзіліске тұрады.",
+    "tg.start.s": "Екеуің оқыған сайын от өседі. Бір күн жіберіп алсаңдар, ол сөнбейді.",
     "tg.accept": "Қабылдау",
     "tg.callIn": "Шақыру",
     "tg.waiting.t": "{name} күтілуде",
-    "tg.waiting.s": "Шақыру чатқа жіберілді. Ол қабылдағанда от жанады.",
+    "tg.waiting.s": "Шақыру досыңның бетінде тұр. Ол қабылдағанда от жанады.",
     "tg.days": "{n} күн бірге",
     "tg.noStreak": "От сендерді күтіп тұр",
     "tg.today.both": "Бүгін екеуің де оқыдыңдар ✓",
@@ -5115,7 +5144,7 @@
     "tg.nudge.text": "🔥 {name} бүгін бірге оқуға шақырады — отымыз күтіп тұр!",
     "tg.nudge.sent": "Ескерту жіберілді 💌",
     "tg.empty.t": "Алдымен досыңды шақыр",
-    "tg.empty.s": "Мұнда қосымшадағы достармен бірге үйренеді. Шақыру сілтемесін жіберіп, қайта кел.",
+    "tg.empty.s": "Мұнда қосымшадағы достармен бірге үйренеді. Оқушыны тауып, дос етіп қос та, қайта кел.",
     "tg.soon": "Жақында",
     "tg.m.post": "Сөзді открытка",
     "tg.m.post.s": "Сөзді әдемі карточкамен сыйла",
@@ -5126,11 +5155,11 @@
     "tg.m.chain": "Сөз тізбегі",
     "tg.m.battle": "Баттл-бөлме",
     "tg.m.scene": "Екеуге сахна",
-    "tg.invite.text": "🔥 {name} сені бірге от жинауға шақырады — «Бірге үйренеміз» ашып, қабылда",
+    "tg.invite.text": "💞 {name} сені бірге от жинауға шақырады — «Бірге үйренеміз» бөлімін ашып, қабылда",
     "tg.card.invite": "{name} бірге от жинауға шақырады",
     "tg.card.joined": "Бірге",
     "tg.started": "Екеуге ортақ от жанды 🔥",
-    "tg.invited": "Шақыру чатқа жіберілді 💌",
+    "tg.invited": "Шақыру жіберілді 💌",
     "tg.pick.t": "Сөзді таңда",
     "tg.src.mine": "Менің сөздерім",
     "tg.src.lessons": "Сабақтардан",
@@ -5147,18 +5176,18 @@
     "tg.th.night": "Түн",
     "tg.th.dawn": "Таң",
     "tg.post.send": "Открытканы жіберу",
-    "tg.post.text": "💌 {name} саған сөз жіберді: {ko} — тыңдау үшін аш",
+    "tg.post.text": "💌 {name} саған сөз жіберді: {ko} — «Бірге үйренеміз» бөлімін аш",
     "tg.post.sent": "Открытка жіберілді 💌",
     "tg.post.sentXp": "Открытка жіберілді 💌 +{xp} XP",
     "tg.listen": "Тыңдау",
     "tg.toWords": "Менің сөздеріме",
     "tg.saved": "Сөз сөздігіңде 🌸",
-    "tg.quiz.lead": "{n} сөз жинаймыз — дос аудармасын таңдайды. Чатқа карточка кетеді.",
+    "tg.quiz.lead": "{n} сөз жинаймыз — дос аудармасын таңдайды. Тексеру оның «Бірге үйренеміз» бетінде пайда болады.",
     "tg.quiz.fewMine": "Сөздігіңде сөз аз (кемінде 4 керек). «Сабақтардан» таңда.",
     "tg.quiz.few": "Тексеруге сөз әзірге жеткіліксіз",
     "tg.quiz.reroll": "Басқа сөздер жинау",
     "tg.quiz.send": "Тексеруді жіберу",
-    "tg.quiz.text": "🧩 {name} сені тексереді: {n} сөз — аш та өт",
+    "tg.quiz.text": "🧩 {name} сені тексереді: {n} сөз — «Бірге үйренеміз» бөлімін аш",
     "tg.quiz.sent": "Тексеру жіберілді 💌",
     "tg.quiz.sentXp": "Тексеру жіберілді 💌 +{xp} XP",
     "tg.quiz.gone": "Бұл тексеру енді қолжетімсіз",
@@ -5172,7 +5201,7 @@
     "tg.xp": "+{xp} XP 🌸",
     "tg.card.quiz": "{name} сені тексереді",
     "tg.card.quizMine": "Сен досыңды тексересің",
-    "tg.card.quizS": "{n} сөз",
+    "tg.card.quizS": "Тексерудегі сөздер: {n}",
     "tg.card.take": "Тексеруден өту",
     "tg.card.results": "Нәтижелер",
     "tg.deck.lead": "Бірге қосатын сөздер. Екеуің де қоса, жоя немесе өзіңе ала аласыңдар.",
@@ -5183,6 +5212,35 @@
     "tg.deck.added": "Сөз ортақ топтамада ✨",
     "tg.deck.by": "{name} қосты",
     "tg.deck.del": "Топтамадан алу",
+    "tg.find": "Дос табу",
+    "tg.inv.t": "{name} сені бірге от жинауға шақырады",
+    "tg.inv.no": "Қазір емес",
+    "tg.how.t": "Отты қалай алуға болады",
+    "tg.how.1": "Досыңды шақыр — ол шақыруды дәл осы беттен қабылдайды.",
+    "tg.how.2": "Күн сайын екеуің де оқыңдар, әрқайсысың өзіңде: кез келген сабақ, ойын немесе сөз қайталау өзі есептеледі.",
+    "tg.how.3": "Екеуің оқыған күн отқа +1 қосады. Бір күн жіберіп алсаңдар, от сөнбейді.",
+    "tg.how.lessons": "Сабақтар",
+    "tg.how.games": "Ойындар",
+    "tg.feed.t": "Открыткалар мен тексерулер",
+    "tg.feed.empty": "Мұнда сендер алмасатын открыткалар мен тексерулер пайда болады 🌸",
+    "tg.feed.toPal": "Сен → {name}",
+    "tg.feed.fromPal": "{name} → саған",
+    "tg.feed.new": "Жаңа",
+    "tg.feed.score": "Нәтиже: {s} / {n}",
+    "tg.feed.wait": "әлі өтілмеген",
+    "tg.src.own": "Өз сөзім",
+    "tg.own.ko": "Корей сөзі (хангылмен)",
+    "tg.own.ru": "Орысша аудармасы",
+    "tg.own.tr": "Транскрипция (қалауыңша)",
+    "tg.own.add": "Дайын",
+    "tg.own.addList": "Тексеруге қосу",
+    "tg.own.bad": "Тексер: сөз тек хангылмен, аударма корей таңбаларынсыз",
+    "tg.own.dup": "Бұл сөз тізімде бар",
+    "tg.own.min": "Кемінде 3 өз сөзіңді қос — тексеруді құрастырамыз",
+    "tg.own.list": "Сөздерің ({n}/{max})",
+    "tg.own.del": "Алып тастау",
+    "tg.quiz.preview": "Тексеру былай болады",
+    "tg.quiz.rerollOpts": "Нұсқаларды араластыру",
   };
   // I18N_KK:END
   function t(key, vars) {
@@ -9771,7 +9829,7 @@
   // Версия сборки: держать ВРУЧНУЮ синхронной с ?v= в index.html при каждом деплое
   // (те же 3 места — stylesheet/preload/script). Используется тихим автообновлением
   // ниже — сама загрузка кода по-прежнему идёт через ?v=.
-  const APP_VERSION = '20261021b';
+  const APP_VERSION = '20261022a';
   // ── Тихое автообновление (25.08.2026, вместо попапа «Вышло обновление!») ──
   // Узнав из облака про новую версию (appVersion пишет первый клиент нового деплоя,
   // promptVersion — кнопка «Оповестить» в админке), вкладка НЕ дёргает ученицу:
@@ -9956,13 +10014,15 @@
   // мои пары — users/<me>/together/<friendUid> = ts. День «вместе» = обе занимались (addXp; награды самой страницы идут с меткой
   // 'together' и в зачёт не идут), дата — UTC, как у серии и цели дня. В чат уходят только карточки (type:'card'), не ходы.
   // Всё из БД выводится через escHtml/textContent (урок 09.2026: stored-XSS).
-  const TG = { xpPost: 5, xpQuiz: 10, postDaily: 3, quizDaily: 3, quizN: 5, deckMax: 200, noteMax: 80, keepQuizDays: 14, keepDays: 120 };
+  const TG = { xpPost: 5, xpQuiz: 10, postDaily: 3, quizDaily: 3, quizN: 5, deckMax: 200, noteMax: 80, keepQuizDays: 14, keepDays: 120, keepFeedDays: 30, feedShow: 20, ownMax: 5 };
   const TG_THEMES = ['sakura', 'stars', 'night', 'dawn'];
   let _tgCfg = null, _tgOpening = false;
   let _tg = null;                 // состояние открытой страницы
   let _tgData = {};               // together/<pairId> (живой)
   let _tgOff = null;              // отписка от together/<pairId>
   let _tgMyPairs = {};            // users/<me>/together: { friendUid: ts }
+  let _tgInv = {};                // users/<me>/togetherInv: { fromUid: {name, ts} } — входящие приглашения (внутри страницы, не в чате)
+  let _tgNew = {};                // users/<me>/togetherNew: { fromUid: ts последней открытки/проверки } — точка «новое» у подруги
   let _tgQz = null;               // идущая проверка
   let _tgPick = null;             // выбор слова: { tab, q, cb }
 
@@ -9994,6 +10054,25 @@
     el.hidden = !on;
     const nw = document.getElementById('together-entry-new');
     if (nw) { const end = Date.parse((nw.dataset.until || '') + 'T23:59:59Z'); nw.hidden = !(isFinite(end) && Date.now() <= end); }
+    const bd = document.getElementById('together-entry-badge');
+    if (bd) { const n = _tgBadgeCount(); bd.hidden = !n; bd.textContent = n > 9 ? '9+' : String(n); }
+  }
+  // Входящие приглашения (от видимых друзей, которые я ещё не приняла) и «новое» от подруг — счётчик на карточке и точки у подруг
+  function _tgSeenMap() { const m = UStore.get('tgSeen', null); return (m && typeof m === 'object') ? m : {}; }
+  function _tgInvList() {
+    return Object.keys(_tgInv || {}).filter(uid => !(_tgMyPairs && _tgMyPairs[uid]) && !isBlocked(uid) && _tgInv[uid] && typeof _tgInv[uid] === 'object')
+      .map(uid => ({ uid: uid, name: String(_tgInv[uid].name || '').slice(0, 60), ts: Number(_tgInv[uid].ts) || 0 })).sort((a, b) => b.ts - a.ts);
+  }
+  function _tgPalNew(uid) { const seen = _tgSeenMap(); return !!(uid && _tgNew && Number(_tgNew[uid]) > (Number(seen[uid]) || 0) && !isBlocked(uid)); }
+  function _tgBadgeCount() {
+    let n = _tgInvList().length;
+    Object.keys(_tgNew || {}).forEach(uid => { if (_tgPalNew(uid)) n++; });
+    return n;
+  }
+  // Данные «моих пар/приглашений/нового» изменились: обновить карточку на «Общении» и (если открыта главная страницы) саму страницу
+  function _tgPush() {
+    try { togetherUpdateEntry(); } catch (_) {}
+    try { if (_tg && _tg.view === 'home') _tgRender(); } catch (_) {}
   }
 
   // ── Серия «вместе»: чистая функция (тестируется отдельно) ──
@@ -10008,8 +10087,13 @@
     else if (both(_tgShiftDate(today, -1))) { last = _tgShiftDate(today, -1); res.status = 'wait'; }
     else if (both(_tgShiftDate(today, -2))) { last = _tgShiftDate(today, -2); res.status = 'paused'; }
     if (!last) return res;
-    let d = last;
-    while (both(d)) { res.n++; d = _tgShiftDate(d, -1); }
+    // Серия считает дни, где занимались обе. Один пропущенный день внутри серии её не обрывает (одна «пауза»), два — обрывают.
+    let d = last, gap = false;
+    for (let guard = 0; guard < 400; guard++) {
+      if (both(d)) { res.n++; d = _tgShiftDate(d, -1); }
+      else if (!gap && both(_tgShiftDate(d, -1))) { gap = true; d = _tgShiftDate(d, -1); }
+      else break;
+    }
     return res;
   }
   // Отметка «сегодня занималась» — из addXp (кроме наград этой страницы). Пишем раз в сутки на каждую мою пару.
@@ -10097,7 +10181,7 @@
     page.innerHTML = '<div class="tg-shell" id="tg-shell"></div>';
     document.body.appendChild(page);
     document.body.classList.add('chat-open');
-    _tg = { pal: '', view: 'home', src: 'mine', quiz: null, card: null };
+    _tg = { pal: '', view: 'home', src: _tgMyWordsPool().length >= 4 ? 'mine' : 'lessons', quiz: null, card: null, own: [] };
     const friends = _tgFriends();
     let want = pal || UStore.get('tgPal', '');
     if (!friends.some(f => f.uid === want)) want = friends.length ? friends[0].uid : '';
@@ -10125,6 +10209,7 @@
     _tgData = {};
     _tg.pal = uid || '';
     _tg.view = 'home';
+    _tg.seenAt = Number(_tgSeenMap()[uid]) || 0;
     if (uid) UStore.set('tgPal', uid);
     if (!uid || typeof _db === 'undefined') return;
     const ref = _db.ref('together/' + chatIdFor(myUid(), uid));
@@ -10143,6 +10228,8 @@
         Object.keys(v.quizzes || {}).forEach(id => { if (((v.quizzes[id] || {}).ts || 0) < qCut) up['together/' + pair + '/quizzes/' + id] = null; });
         const dCut = _tgShiftDate(todayIsoDate(), -TG.keepDays);
         Object.keys(v.days || {}).forEach(d => { if (d < dCut) up['together/' + pair + '/days/' + d] = null; });
+        const fCut = Date.now() - TG.keepFeedDays * 86400000;
+        Object.keys(v.feed || {}).forEach(id => { if (((v.feed[id] || {}).ts || 0) < fCut) up['together/' + pair + '/feed/' + id] = null; });
         if (Object.keys(up).length) _db.ref().update(up).catch(() => {});
       }).catch(() => {});
     } catch (_) {}
@@ -10167,11 +10254,29 @@
   }
   function _tgPalsHtml() {
     const fr = _tgFriends();
-    const items = fr.map(f => `<button type="button" class="tg-pal${f.uid === _tg.pal ? ' on' : ''}" onclick="_tgPickPal('${jsStr(f.uid)}')" aria-pressed="${f.uid === _tg.pal}">${_tgAv(f, 'tg-av')}<span class="tg-pal-n">${escHtml(f.name || '—')}</span></button>`).join('');
-    return `<div class="tg-pals" role="group" aria-label="${escHtml(t('tg.pals'))}">${items}<button type="button" class="tg-pal tg-pal-add" onclick="togetherInvite()"><span class="tg-av tg-av-i">＋</span><span class="tg-pal-n">${escHtml(t('tg.invite'))}</span></button></div>`;
+    const items = fr.map(f => {
+      const dot = (f.uid !== _tg.pal && (_tgPalNew(f.uid) || (_tgInv && _tgInv[f.uid] && !(_tgMyPairs && _tgMyPairs[f.uid])))) ? '<span class="tg-pal-dot" aria-hidden="true"></span>' : '';
+      return `<button type="button" class="tg-pal${f.uid === _tg.pal ? ' on' : ''}" onclick="_tgPickPal('${jsStr(f.uid)}')" aria-pressed="${f.uid === _tg.pal}">${_tgAv(f, 'tg-av')}${dot}<span class="tg-pal-n">${escHtml(f.name || '—')}</span></button>`;
+    }).join('');
+    return `<div class="tg-pals" role="group" aria-label="${escHtml(t('tg.pals'))}">${items}<button type="button" class="tg-pal tg-pal-add" onclick="togetherInvite()"><span class="tg-av tg-av-i">＋</span><span class="tg-pal-n">${escHtml(t('tg.find'))}</span></button></div>`;
   }
   function _tgPickPal(uid) { if (!_tg) return; _tgSelectPal(uid); _tgRender(); }
-  function togetherInvite() { try { shareInviteLink(); } catch (_) {} }
+  // «＋ Найти подругу»: поиск учениц прямо в приложении (заявка в друзья); принятая подруга появляется в этом списке
+  function togetherInvite() { try { openAddFriendModal(); } catch (_) {} }
+  // Входящие приглашения — прямо на странице: принять или «не сейчас»
+  function _tgInvBannerHtml() {
+    const list = _tgInvList();
+    if (!list.length) return '';
+    return list.map(i => `<section class="tg-inv"><div class="tg-inv-t">🔥 ${escHtml(t('tg.inv.t', { name: i.name || '—' }))}</div>
+      <div class="tg-inv-b"><button type="button" class="tg-hero-btn tg-sm" onclick="togetherAcceptInvite('${jsStr(i.uid)}')">${escHtml(t('tg.accept'))}</button><button type="button" class="tg-inv-no" onclick="togetherDeclineInvite('${jsStr(i.uid)}')">${escHtml(t('tg.inv.no'))}</button></div></section>`).join('');
+  }
+  // «Как получить огонёк»: свёрнуто, когда серия уже идёт; раскрыто, пока серии нет
+  function _tgHowHtml(open) {
+    return `<details class="tg-how"${open ? ' open' : ''}><summary>💡 ${escHtml(t('tg.how.t'))}</summary>
+      <ol><li>${escHtml(t('tg.how.1'))}</li><li>${escHtml(t('tg.how.2'))}</li><li>${escHtml(t('tg.how.3'))}</li></ol>
+      <div class="tg-how-go"><button type="button" class="btn btn-ghost" onclick="_tgGoStudy('lessons')">📚 ${escHtml(t('tg.how.lessons'))}</button><button type="button" class="btn btn-ghost" onclick="_tgGoStudy('games')">🎮 ${escHtml(t('tg.how.games'))}</button></div></details>`;
+  }
+  function _tgGoStudy(screen) { togetherClose(); try { switchScreen(screen); } catch (_) {} }
   function _tgHeroHtml() {
     const pal = _tgPal();
     if (!pal) return '';
@@ -10179,7 +10284,7 @@
     const me = myUid();
     const av = `<div class="tg-two">${_tgAv({ name: myName(), avatar: UStore.get('avatar') || '' }, 'tg-av tg-av-l')}<span class="tg-plus">＋</span>${_tgAv(pal, 'tg-av tg-av-l')}</div>`;
     if (!st.me) {
-      return `<section class="tg-hero">${av}<div class="tg-big">${escHtml(t('tg.start.t', { name: pal.name }))}</div>
+      return `<section class="tg-hero">${av}<div class="tg-big">${escHtml(t(st.other ? 'tg.inv.t' : 'tg.start.t', { name: pal.name }))}</div>
         <div class="tg-sub">${escHtml(t('tg.start.s'))}</div>
         <button type="button" class="tg-hero-btn" onclick="togetherStart()">${st.other ? '🔥 ' + escHtml(t('tg.accept')) : '💌 ' + escHtml(t('tg.callIn'))}</button></section>`;
     }
@@ -10210,21 +10315,80 @@
       <button type="button" class="chat-back-btn" onclick="togetherClose()" aria-label="${escHtml(t('ui.053'))}"><i class="fa-solid fa-arrow-left" aria-hidden="true"></i></button>
       <div class="tg-head-t"><div class="tg-h1">${t('tg.title')}</div>${_tgPal() ? `<div class="tg-h2">${escHtml(t('tg.with', { name: _tgPal().name }))}</div>` : ''}</div></div></header>`;
     if (!friends.length) {
-      return _tgSetShell(head + `<div class="tg-body"><div class="tg-empty"><div class="tg-empty-e">💞</div>
+      return _tgSetShell(head + `<div class="tg-body">${_tgInvBannerHtml()}<div class="tg-empty"><div class="tg-empty-e">💞</div>
         <div class="tg-empty-t">${escHtml(t('tg.empty.t'))}</div><p class="tg-empty-s">${escHtml(t('tg.empty.s'))}</p>
-        <button type="button" class="btn btn-primary" onclick="togetherInvite()"><i class="fa-solid fa-user-plus" aria-hidden="true"></i> ${escHtml(t('tg.invite'))}</button></div></div>`);
+        <button type="button" class="btn btn-primary" onclick="togetherInvite()"><i class="fa-solid fa-user-plus" aria-hidden="true"></i> ${escHtml(t('tg.find'))}</button></div></div>`);
     }
     const bothOn = _tgOn().me && _tgOn().other;
     const mode = (ico, key, sub, act, extra) => `<button type="button" class="tg-mode" onclick="${act}"><span class="tg-mode-i">${ico}</span><span class="tg-mode-t">${escHtml(t(key))}</span><span class="tg-mode-s">${escHtml(sub)}</span>${extra || ''}</button>`;
     const soon = (ico, key) => `<div class="tg-mode tg-soon" aria-disabled="true"><span class="tg-mode-i">${ico}</span><span class="tg-mode-t">${escHtml(t(key))}</span><span class="tg-mode-s">${escHtml(t('tg.soon'))}</span></div>`;
     const deckN = Object.keys(_tgData.deck || {}).length;
-    _tgSetShell(head + `<div class="tg-body">${_tgPalsHtml()}${_tgHeroHtml()}
+    const streakOn = bothOn && togetherStreak(_tgData.days || {}, myUid(), _tg.pal, todayIsoDate()).n > 0;
+    const sh = _tgSetShell(head + `<div class="tg-body">${_tgInvBannerHtml()}${_tgPalsHtml()}${_tgHeroHtml()}${_tgPal() ? _tgHowHtml(!streakOn) : ''}
       <div class="tg-grid">
         ${mode('💌', 'tg.m.post', t('tg.m.post.s'), "_tgGo('postcard')", '<span class="tg-tag">NEW</span>')}
         ${mode('🧩', 'tg.m.quiz', t('tg.m.quiz.s'), "_tgGo('quiz')", '<span class="tg-tag">NEW</span>')}
         ${mode('📚', 'tg.m.deck', t('tg.m.deck.s', { n: deckN }), "_tgGo('deck')")}
         ${soon('🔗', 'tg.m.chain')}${soon('⚡', 'tg.m.battle')}${soon('🎭', 'tg.m.scene')}
-      </div></div>`);
+      </div>${_tgPal() ? _tgFeedHtml() : ''}</div>`);
+    _tgMarkSeen();
+  }
+  // Открытки и проверки пары — прямо на странице (не в чате). Новое от подруги подсвечено, пока не открыла страницу.
+  function _tgFeedList() {
+    const f = (_tgData && _tgData.feed) || {};
+    return Object.keys(f).map(k => Object.assign({ key: k }, f[k])).filter(x => x && typeof x === 'object' && (x.k === 'postcard' || x.k === 'quiz'))
+      .sort((a, b) => (b.ts || 0) - (a.ts || 0)).slice(0, TG.feedShow);
+  }
+  function _tgFeedHtml() {
+    const me = myUid(), pal = _tgPal();
+    const list = _tgFeedList();
+    const seenAt = (_tg && _tg.seenAt) || 0;
+    const rows = list.map(x => {
+      const mine = x.by === me;
+      const fresh = !mine && (Number(x.ts) || 0) > seenAt;
+      const who = mine ? t('tg.feed.toPal', { name: pal ? pal.name : '' }) : t('tg.feed.fromPal', { name: String(x.byName || (pal && pal.name) || '').slice(0, 60) });
+      const head = `<div class="tg-feed-who">${escHtml(who)}${fresh ? ` <span class="tg-feed-new">${escHtml(t('tg.feed.new'))}</span>` : ''}</div>`;
+      if (x.k === 'postcard' && x.ko) {
+        const th = TG_THEMES.indexOf(x.th) >= 0 ? x.th : 'sakura';
+        return `<div class="tg-feed-it">${head}<div class="tg-post tg-th-${th}"><div class="tg-post-top"><div class="tg-post-ko ko" lang="ko">${escHtml(String(x.ko).slice(0, 40))}</div>${x.tr ? `<div class="tg-post-tr">[${escHtml(String(x.tr).slice(0, 60))}]</div>` : ''}<div class="tg-post-ru">${escHtml(String(x.ru || '').slice(0, 80))}</div></div>
+          ${x.note ? `<div class="tg-post-note">«${escHtml(String(x.note).slice(0, TG.noteMax))}»</div>` : ''}
+          <div class="tg-post-acts"><button type="button" onclick="_tgFeedAct('${jsStr(x.key)}','speak')">🔊 ${escHtml(t('tg.listen'))}</button>${mine ? '' : `<button type="button" onclick="_tgFeedAct('${jsStr(x.key)}','save')">♡ ${escHtml(t('tg.toWords'))}</button>`}</div></div></div>`;
+      }
+      if (x.k === 'quiz' && x.id) {
+        const qz = (_tgData.quizzes || {})[x.id];
+        const res = qz && qz.res ? qz.res : {};
+        const palRes = pal ? res[pal.uid] : null, myRes = res[me];
+        const done = mine ? palRes : myRes;
+        const status = done ? t('tg.feed.score', { s: Number(done.s) || 0, n: Number(done.n) || Number(x.n) || TG.quizN }) : t('tg.feed.wait');
+        const gone = !qz;
+        return `<div class="tg-feed-it">${head}<div class="tg-qcard"><div class="tg-qcard-t">🧩 ${escHtml(t(mine ? 'tg.card.quizMine' : 'tg.card.quiz', { name: String(x.byName || '').slice(0, 60) }))}</div><div class="tg-qcard-s">${escHtml(t('tg.card.quizS', { n: Number(x.n) || TG.quizN }))} · ${escHtml(gone ? t('tg.quiz.gone') : status)}</div>
+          ${gone ? '' : `<button type="button" class="tg-qcard-b" onclick="_tgFeedAct('${jsStr(x.key)}','quiz')">${escHtml(t(mine || myRes ? 'tg.card.results' : 'tg.card.take'))}</button>`}</div></div>`;
+      }
+      return '';
+    }).join('');
+    return `<section class="tg-feed"><div class="tg-label">${escHtml(t('tg.feed.t'))}</div>${rows || `<div class="tg-pick-empty">${escHtml(t('tg.feed.empty'))}</div>`}</section>`;
+  }
+  function _tgFeedAct(key, act) {
+    const x = _tgData && _tgData.feed && _tgData.feed[key];
+    if (!x) return;
+    if (act === 'speak') { try { _koSpeakOne(String(x.ko || ''), {}, () => {}); } catch (_) {} return; }
+    if (act === 'save') {
+      const w = { ko: String(x.ko || ''), ru: String(x.ru || ''), tr: String(x.tr || '') };
+      if (!_tgWordOk(w)) return;
+      saveMyWord(w.ko, w.ru, w.tr, '💌', 'together');
+      toast(t('tg.saved'), 'var(--sage)');
+      return;
+    }
+    if (act === 'quiz' && x.id && _tg && _tg.pal) togetherOpenQuiz(chatIdFor(myUid(), _tg.pal), String(x.id), _tg.pal);
+  }
+  // Страница с подругой открыта — «новое» от неё прочитано (карточка на «Общении» и точка у подруги гаснут)
+  function _tgMarkSeen() {
+    if (!_tg || !_tg.pal || _tg.view !== 'home') return;
+    const uid = _tg.pal;
+    if (!_tgPalNew(uid)) return;
+    const m = Object.assign({}, _tgSeenMap());
+    m[uid] = Math.max(Date.now(), Number(_tgNew && _tgNew[uid]) || 0); UStore.set('tgSeen', m);
+    try { togetherUpdateEntry(); } catch (_) {}
   }
   function _tgGo(view) { if (!_tg) return; _tg.view = view; _tg.card = null; _tg.quiz = null; _tgRender(); }
 
@@ -10235,26 +10399,38 @@
     const pal = _tgPal();
     const now = Date.now();
     const pair = chatIdFor(me, f);
-    const already = _tgOn().other;
-    try {
-      await _db.ref().update({ ['users/' + me + '/together/' + f]: now, ['together/' + pair + '/meta/on/' + me]: now });
-    } catch (_) { toast(t('block.fail')); return; }
+    const already = _tgOn().other || !!(_tgInv && _tgInv[f]);
+    const up = { ['users/' + me + '/together/' + f]: now, ['together/' + pair + '/meta/on/' + me]: now, ['users/' + me + '/togetherInv/' + f]: null };
+    // Приглашение живёт на странице подруги («Учимся вместе»), а не в чате: запись в её togetherInv
+    if (!already) up['users/' + f + '/togetherInv/' + me] = { name: String(myName()).slice(0, 60), ts: now };
+    try { await _db.ref().update(up); } catch (_) { toast(t('block.fail')); return; }
     _tgMyPairs = Object.assign({}, _tgMyPairs, { [f]: now });
-    if (!already) {
-      try { await sendChatMessage(f, pal ? pal.name : '', t('tg.invite.text', { name: myName() }), null, { type: 'card', card: { k: 'tg_invite' } }); } catch (_) {}
-    }
+    if (_tgInv && _tgInv[f]) { const n = Object.assign({}, _tgInv); delete n[f]; _tgInv = n; }
+    // В чат — одна короткая строка, только чтобы пришёл пуш; сама работа идёт на странице
+    if (!already) { try { await sendChatMessage(f, pal ? pal.name : '', t('tg.invite.text', { name: myName() }), null); } catch (_) {} }
     toast(t(already ? 'tg.started' : 'tg.invited'), 'var(--sage)');
+    _tgPush();
   }
+  // Принять приглашение подруги (на странице): пара включается, приглашение стирается, подруга выбирается
   async function togetherAcceptInvite(fromUid) {
     const me = myUid();
     if (!fromUid || !me || me === 'guest' || typeof _db === 'undefined') return;
     const now = Date.now();
     try {
-      await _db.ref().update({ ['users/' + me + '/together/' + fromUid]: now, ['together/' + chatIdFor(me, fromUid) + '/meta/on/' + me]: now });
-      _tgMyPairs = Object.assign({}, _tgMyPairs, { [fromUid]: now });
-      toast(t('tg.started'), 'var(--sage)');
-      if (_chatCurrentId) renderChatMessages(_lastChatMsgs);
-    } catch (_) { toast(t('block.fail')); }
+      await _db.ref().update({ ['users/' + me + '/together/' + fromUid]: now, ['together/' + chatIdFor(me, fromUid) + '/meta/on/' + me]: now, ['users/' + me + '/togetherInv/' + fromUid]: null });
+    } catch (_) { toast(t('block.fail')); return; }
+    _tgMyPairs = Object.assign({}, _tgMyPairs, { [fromUid]: now });
+    if (_tgInv && _tgInv[fromUid]) { const n = Object.assign({}, _tgInv); delete n[fromUid]; _tgInv = n; }
+    toast(t('tg.started'), 'var(--sage)');
+    if (_tg && _tgFriends().some(f => f.uid === fromUid)) { _tgSelectPal(fromUid); _tgRender(); } else _tgPush();
+    try { if (_chatCurrentId) renderChatMessages(_lastChatMsgs); } catch (_) {}
+  }
+  async function togetherDeclineInvite(fromUid) {
+    const me = myUid();
+    if (!fromUid || !me || me === 'guest' || typeof _db === 'undefined') return;
+    try { await _db.ref('users/' + me + '/togetherInv/' + fromUid).remove(); } catch (_) { toast(t('block.fail')); return; }
+    const n = Object.assign({}, _tgInv); delete n[fromUid]; _tgInv = n;
+    _tgPush();
   }
   async function togetherNudge() {
     const me = myUid(), f = _tg && _tg.pal, pal = _tgPal();
@@ -10281,18 +10457,48 @@
   function _tgPickerRender() {
     const bg = document.getElementById('tg-picker');
     if (!bg || !_tgPick) return;
-    const pool = (_tgPick.tab === 'mine' ? _tgMyWordsPool() : _tgLessonPool());
+    const own = _tgPick.tab === 'own';
+    const pool = own ? [] : (_tgPick.tab === 'mine' ? _tgMyWordsPool() : _tgLessonPool());
     const q = _tgPick.q.trim().toLowerCase();
     const list = (q ? pool.filter(w => w.ko.toLowerCase().includes(q) || w.ru.toLowerCase().includes(q)) : pool).slice(0, 60);
+    const tab = (k, ico, key) => `<button type="button" class="tg-tab${_tgPick.tab === k ? ' on' : ''}" onclick="_tgPickerTab('${k}')">${ico} ${escHtml(t(key))}</button>`;
+    const body = own ? _tgOwnFormHtml('pk', 'tg.own.add', '_tgPickerOwn()')
+      : `<input id="tg-pick-q" class="input tg-pick-q" placeholder="${escHtml(t('tg.pick.search'))}" value="${escHtml(_tgPick.q)}" oninput="_tgPickerQuery(this.value)" autocomplete="off">
+      <div class="tg-pick-list" id="tg-pick-list">${list.length ? list.map((w, i) => `<button type="button" class="tg-pick-row" onclick="_tgPickerChoose(${i})"><span class="ko tg-pick-ko" lang="ko">${escHtml(w.ko)}</span><span class="tg-pick-ru">${escHtml(w.ru)}</span></button>`).join('') : `<div class="tg-pick-empty">${escHtml(t('tg.pick.empty'))}</div>`}</div>`;
     bg.innerHTML = `<div class="modal-card tg-picker-card" role="dialog" aria-modal="true" aria-label="${escHtml(t('tg.pick.t'))}">
       <div class="tg-sheet-h">${escHtml(t('tg.pick.t'))}</div>
-      <div class="tg-tabs"><button type="button" class="tg-tab${_tgPick.tab === 'mine' ? ' on' : ''}" onclick="_tgPickerTab('mine')">💗 ${escHtml(t('tg.src.mine'))}</button><button type="button" class="tg-tab${_tgPick.tab === 'lessons' ? ' on' : ''}" onclick="_tgPickerTab('lessons')">📚 ${escHtml(t('tg.src.lessons'))}</button></div>
-      <input id="tg-pick-q" class="input tg-pick-q" placeholder="${escHtml(t('tg.pick.search'))}" value="${escHtml(_tgPick.q)}" oninput="_tgPickerQuery(this.value)" autocomplete="off">
-      <div class="tg-pick-list" id="tg-pick-list">${list.length ? list.map((w, i) => `<button type="button" class="tg-pick-row" onclick="_tgPickerChoose(${i})"><span class="ko tg-pick-ko" lang="ko">${escHtml(w.ko)}</span><span class="tg-pick-ru">${escHtml(w.ru)}</span></button>`).join('') : `<div class="tg-pick-empty">${escHtml(t('tg.pick.empty'))}</div>`}</div>
+      <div class="tg-tabs tg-tabs3">${tab('own', '✍️', 'tg.src.own')}${tab('mine', '💗', 'tg.src.mine')}${tab('lessons', '📚', 'tg.src.lessons')}</div>
+      ${body}
       <button type="button" class="btn btn-ghost btn-block" onclick="document.getElementById('tg-picker').remove()">${escHtml(t('ui.317'))}</button></div>`;
     _tgPick.list = list;
     const inp = document.getElementById('tg-pick-q');
     if (inp && document.activeElement !== inp && _tgPick.q) { try { inp.focus(); inp.setSelectionRange(inp.value.length, inp.value.length); } catch (_) {} }
+  }
+  // Форма «своё слово» (ko, перевод, транскрипция по желанию): общая для пикера и сборки проверки; id полей — по префиксу
+  function _tgOwnFormHtml(p, btnKey, act) {
+    return `<div class="tg-own" id="tg-own-${p}">
+      <input id="tg-own-${p}-ko" class="input ko" lang="ko" maxlength="30" placeholder="${escHtml(t('tg.own.ko'))}" autocomplete="off" autocapitalize="off" spellcheck="false">
+      <input id="tg-own-${p}-ru" class="input" maxlength="80" placeholder="${escHtml(t('tg.own.ru'))}" autocomplete="off">
+      <input id="tg-own-${p}-tr" class="input" maxlength="60" placeholder="${escHtml(t('tg.own.tr'))}" autocomplete="off" autocapitalize="off">
+      <div class="tg-err" id="tg-own-${p}-err" role="alert" hidden>${escHtml(t('tg.own.bad'))}</div>
+      <button type="button" class="btn btn-primary btn-block" onclick="${act}">${escHtml(t(btnKey))}</button></div>`;
+  }
+  // Прочитать и проверить поля формы: слово {ko, ru, tr} или null (и показать подсказку)
+  function _tgOwnRead(p) {
+    const v = id => { const el = document.getElementById('tg-own-' + p + '-' + id); return el ? String(el.value || '').trim().replace(/\s+/g, ' ') : ''; };
+    const w = { ko: v('ko'), ru: v('ru'), tr: v('tr').replace(/[\[\]<>]/g, '') };
+    const err = document.getElementById('tg-own-' + p + '-err');
+    const ok = _tgWordOk(w);
+    if (err) { err.textContent = t('tg.own.bad'); err.hidden = ok; }
+    return ok ? w : null;
+  }
+  function _tgPickerOwn() {
+    const w = _tgOwnRead('pk');
+    if (!w || !_tgPick) return;
+    const cb = _tgPick.cb;
+    document.getElementById('tg-picker')?.remove();
+    _tgPick = null;
+    try { cb({ ko: w.ko, ru: w.ru, tr: w.tr, emoji: '✍️' }); } catch (_) {}
   }
   function _tgPickerTab(tab) { if (_tgPick) { _tgPick.tab = tab; _tgPick.q = ''; _tgPickerRender(); } }
   function _tgPickerQuery(v) { if (_tgPick) { _tgPick.q = String(v || '').slice(0, 40); _tgPickerRender(); } }
@@ -10335,43 +10541,71 @@
     if (!c || !c.word || !pal) return;
     const btn = document.getElementById('tg-post-send'); if (btn) btn.disabled = true;
     const w = c.word;
-    const card = { k: 'postcard', ko: w.ko, tr: String(w.tr || '').slice(0, 60), ru: String(w.ru || '').slice(0, 80), th: c.theme };
+    const me = myUid(), pair = chatIdFor(me, pal.uid), now = Date.now();
+    const card = { k: 'postcard', by: me, byName: String(myName()).slice(0, 60), ts: now, ko: w.ko, tr: String(w.tr || '').slice(0, 60), ru: String(w.ru || '').slice(0, 80), th: c.theme };
     if (c.note.trim()) card.note = c.note.trim().slice(0, TG.noteMax);
-    try { await sendChatMessage(pal.uid, pal.name, t('tg.post.text', { name: myName(), ko: w.ko }), null, { type: 'card', card: card }); }
+    // Открытка живёт на странице пары (together/<пара>/feed), подруге — отметка «новое»; в чат уходит одна короткая строка ради пуша
+    try { await _db.ref().update({ ['together/' + pair + '/feed/' + _db.ref('together/' + pair + '/feed').push().key]: card, ['users/' + pal.uid + '/togetherNew/' + me]: now }); }
     catch (_) { toast(t('block.fail')); if (btn) btn.disabled = false; return; }
+    try { await sendChatMessage(pal.uid, pal.name, t('tg.post.text', { name: myName(), ko: w.ko }), null); } catch (_) {}
     const xp = _tgReward('post');
     toast(xp ? t('tg.post.sentXp', { xp: xp }) : t('tg.post.sent'), 'var(--sage)');
     _tg.card = null; _tg.view = 'home'; _tgRender();
   }
 
   // ── Проверь подругу ──
-  function _tgBuildQuiz(pool, n) {
-    const clean = pool.filter(_tgWordOk);
-    if (clean.length < 4) return null;
+  // words — слова проверки; distract — откуда брать неверные варианты (по умолчанию из тех же слов; для «своих» — ещё и из уроков)
+  function _tgBuildQuiz(words, n, distract) {
+    const clean = words.filter(_tgWordOk);
+    const dpool = (distract || clean).filter(_tgWordOk);
+    if (clean.length < (distract ? 3 : 4)) return null;
     const picks = shuffleArr(clean.slice()).slice(0, n);
     const out = [];
     picks.forEach(w => {
-      const others = shuffleArr(clean.filter(x => x.ru !== w.ru)).map(x => x.ru).filter((r, i, a) => a.indexOf(r) === i).slice(0, 3);
+      const others = shuffleArr(dpool.filter(x => x.ru !== w.ru)).map(x => x.ru).filter((r, i, a) => a.indexOf(r) === i).slice(0, 3);
       if (others.length < 3) return;
       const opts = shuffleArr([w.ru].concat(others));
       out.push({ ko: w.ko, tr: String(w.tr || '').slice(0, 60), ru: w.ru, o: opts, a: opts.indexOf(w.ru) });
     });
     return out.length >= 3 ? out : null;
   }
+  function _tgMakeQuizFor(src) {
+    if (src === 'own') { const own = (_tg.own || []); return _tgBuildQuiz(own, TG.quizN, own.concat(_tgLessonPool())); }
+    return _tgBuildQuiz(src === 'mine' ? _tgMyWordsPool() : _tgLessonPool(), TG.quizN);
+  }
   function _tgRenderQuizMake() {
     const st = _tg;
-    const pool = st.src === 'mine' ? _tgMyWordsPool() : _tgLessonPool();
-    if (!st.quiz || st.quiz.src !== st.src) { const q = _tgBuildQuiz(pool, TG.quizN); st.quiz = { src: st.src, q: q }; }
+    if (!Array.isArray(st.own)) st.own = [];
+    if (!st.quiz || st.quiz.src !== st.src) st.quiz = { src: st.src, q: _tgMakeQuizFor(st.src) };
     const q = st.quiz.q;
-    const list = q ? q.map(x => `<div class="tg-qrow"><span class="ko tg-qko" lang="ko">${escHtml(x.ko)}</span><span class="tg-qru">${escHtml(x.ru)}</span></div>`).join('') : `<div class="tg-pick-empty">${escHtml(t(st.src === 'mine' ? 'tg.quiz.fewMine' : 'tg.quiz.few'))}</div>`;
+    const tab = (k, ico, key) => `<button type="button" class="tg-tab${st.src === k ? ' on' : ''}" onclick="_tgQuizSrc('${k}')">${ico} ${escHtml(t(key))}</button>`;
+    const emptyKey = st.src === 'own' ? 'tg.own.min' : (st.src === 'mine' ? 'tg.quiz.fewMine' : 'tg.quiz.few');
+    const list = q ? q.map(x => `<div class="tg-qrow"><span class="ko tg-qko" lang="ko">${escHtml(x.ko)}</span><span class="tg-qru">${escHtml(x.ru)}</span></div>`).join('') : `<div class="tg-pick-empty">${escHtml(t(emptyKey))}</div>`;
+    let own = '';
+    if (st.src === 'own') {
+      const rows = st.own.map((w, i) => `<div class="tg-qrow"><span class="ko tg-qko" lang="ko">${escHtml(w.ko)}</span><span class="tg-qru">${escHtml(w.ru)}</span><button type="button" class="tg-ib" onclick="_tgOwnDel(${i})" aria-label="${escHtml(t('tg.own.del'))} ${escHtml(w.ko)}"><i class="fa-solid fa-xmark" aria-hidden="true"></i></button></div>`).join('');
+      own = `<div class="tg-label">${escHtml(t('tg.own.list', { n: st.own.length, max: TG.ownMax }))}</div>${rows ? `<div class="tg-qlist">${rows}</div>` : ''}${st.own.length < TG.ownMax ? _tgOwnFormHtml('qz', 'tg.own.addList', '_tgQuizOwnAdd()') : ''}`;
+    }
     _tgSetShell(_tgHead('tg.m.quiz', "_tgGo('home')") + `<div class="tg-body">
       <p class="tg-lead">${escHtml(t('tg.quiz.lead', { n: TG.quizN }))}</p>
-      <div class="tg-tabs"><button type="button" class="tg-tab${st.src === 'mine' ? ' on' : ''}" onclick="_tgQuizSrc('mine')">💗 ${escHtml(t('tg.src.mine'))}</button><button type="button" class="tg-tab${st.src === 'lessons' ? ' on' : ''}" onclick="_tgQuizSrc('lessons')">📚 ${escHtml(t('tg.src.lessons'))}</button></div>
-      <div class="tg-qlist">${list}</div>
-      <button type="button" class="btn btn-ghost btn-block" onclick="_tgQuizReroll()" ${q ? '' : 'disabled'}><i class="fa-solid fa-shuffle" aria-hidden="true"></i> ${escHtml(t('tg.quiz.reroll'))}</button>
+      <div class="tg-tabs tg-tabs3">${tab('own', '✍️', 'tg.src.own')}${tab('mine', '💗', 'tg.src.mine')}${tab('lessons', '📚', 'tg.src.lessons')}</div>
+      ${own}
+      ${st.src === 'own' && q ? `<div class="tg-label">${escHtml(t('tg.quiz.preview'))}</div>` : ''}
+      ${st.src === 'own' && !q ? `<div class="tg-pick-empty">${escHtml(t('tg.own.min'))}</div>` : `<div class="tg-qlist">${list}</div>`}
+      <button type="button" class="btn btn-ghost btn-block" onclick="_tgQuizReroll()" ${q ? '' : 'disabled'}><i class="fa-solid fa-shuffle" aria-hidden="true"></i> ${escHtml(t(st.src === 'own' ? 'tg.quiz.rerollOpts' : 'tg.quiz.reroll'))}</button>
       <button type="button" class="btn btn-primary btn-block tg-send" id="tg-quiz-send" onclick="togetherSendQuiz()" ${q ? '' : 'disabled'}>💌 ${escHtml(t('tg.quiz.send'))}</button>
     </div>`);
   }
+  function _tgQuizOwnAdd() {
+    const w = _tgOwnRead('qz');
+    if (!w || !_tg) return;
+    if (!Array.isArray(_tg.own)) _tg.own = [];
+    if (_tg.own.length >= TG.ownMax) return;
+    if (_tg.own.some(x => x.ko === w.ko)) { const er = document.getElementById('tg-own-qz-err'); if (er) { er.textContent = t('tg.own.dup'); er.hidden = false; } return; }
+    _tg.own.push({ ko: w.ko, ru: w.ru, tr: w.tr });
+    _tg.quiz = null; _tgRender();
+  }
+  function _tgOwnDel(i) { if (!_tg || !Array.isArray(_tg.own)) return; _tg.own.splice(i, 1); _tg.quiz = null; _tgRender(); }
   function _tgQuizSrc(src) { if (!_tg) return; _tg.src = src; _tg.quiz = null; _tgRender(); }
   function _tgQuizReroll() { if (!_tg) return; _tg.quiz = null; _tgRender(); }
   async function togetherSendQuiz() {
@@ -10383,7 +10617,11 @@
     const q = st.quiz.q;
     try { await _db.ref('together/' + pair + '/quizzes/' + id).set({ by: me, byName: myName(), ts: Date.now(), q: q }); }
     catch (_) { toast(t('block.fail')); if (btn) btn.disabled = false; return; }
-    try { await sendChatMessage(pal.uid, pal.name, t('tg.quiz.text', { name: myName(), n: q.length }), null, { type: 'card', card: { k: 'quiz', id: id, n: q.length } }); } catch (_) {}
+    try {
+      const now = Date.now();
+      await _db.ref().update({ ['together/' + pair + '/feed/' + _db.ref('together/' + pair + '/feed').push().key]: { k: 'quiz', id: id, n: q.length, by: me, byName: String(myName()).slice(0, 60), ts: now }, ['users/' + pal.uid + '/togetherNew/' + me]: now });
+    } catch (_) {}
+    try { await sendChatMessage(pal.uid, pal.name, t('tg.quiz.text', { name: myName(), n: q.length }), null); } catch (_) {}
     const xp = _tgReward('quiz');
     toast(xp ? t('tg.quiz.sentXp', { xp: xp }) : t('tg.quiz.sent'), 'var(--sage)');
     st.quiz = null; st.view = 'home'; _tgRender();
@@ -11449,7 +11687,7 @@
     _friendsListenerOffs = [];
     _friendsLoaded = false; _groupsLoaded = false;
     _blockedCache = {};
-    _tgMyPairs = {};
+    _tgMyPairs = {}; _tgInv = {}; _tgNew = {};
     _kmInboxKnown = null; // новая личность — её первый снапшот inbox не «новые заявки»
     if (_unreadCleanupTimer) { clearTimeout(_unreadCleanupTimer); _unreadCleanupTimer = null; }
   }
@@ -11466,7 +11704,9 @@
       _friendsListenerOffs.push(() => ref.off('value', handler));
     };
     _blockedLoadLocal();
-    wire(`users/${me}/together`, val => { _tgMyPairs = (val && typeof val === 'object') ? val : {}; if (_tg) _tgRender(); });
+    wire(`users/${me}/together`, val => { _tgMyPairs = (val && typeof val === 'object') ? val : {}; _tgPush(); });
+    wire(`users/${me}/togetherInv`, val => { _tgInv = (val && typeof val === 'object') ? val : {}; _tgPush(); });
+    wire(`users/${me}/togetherNew`, val => { _tgNew = (val && typeof val === 'object') ? val : {}; _tgPush(); });
     wire(`users/${me}/blocked`, val => { _blockedCache = (val && typeof val === 'object') ? val : {}; try { UStore.set('blockedCache', _blockedCache); } catch (_) {} _blockedRefresh(); });
     wire(`users/${me}/friends`,  val => { _friendsCache  = val; _friendsLoaded = true; renderFriendsAndChat(); updateChatBadges(); scheduleUnreadCleanup(); if (document.getElementById('add-friend-modal')) filterAddFriend(); });
     wire(`users/${me}/groups`,   val => { _groupsCache   = val; _groupsLoaded = true; renderFriendsAndChat(); updateChatBadges(); scheduleUnreadCleanup(); });
