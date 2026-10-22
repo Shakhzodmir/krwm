@@ -1532,6 +1532,57 @@
     "tg.start.s": { ru: "Каждый день, когда вы обе позанимались, огонёк растёт. Один пропущенный день его не гасит.", en: "Every day you both study, the flame grows. One missed day doesn’t put it out.", uz: "Ikkovingiz oʻqigan har kuni olov ulgʻayadi. Bir kun oʻtkazib yuborsangiz, u oʻchmaydi." },
     "tg.waiting.s": { ru: "Приглашение уже у подруги на этой странице. Как только она примет, огонёк загорится.", en: "The invitation is waiting on her page. The flame lights up once she accepts.", uz: "Taklif doʻstingizning sahifasida turibdi. U qabul qilishi bilan olov yonadi." },
     "tg.invited": { ru: "Приглашение отправлено 💌", en: "Invitation sent 💌", uz: "Taklif yuborildi 💌" },
+    "tg.m.chain.s": { ru: "Слово на последний слог — по очереди", en: "A word starting with the last syllable — taking turns", uz: "Oxirgi boʻgʻinga soʻz — navbat bilan" },
+    "tg.chain.my": { ru: "Твой ход", en: "Your turn", uz: "Navbat sizda" },
+    "tg.chain.their": { ru: "Ход {name}", en: "{name}’s turn", uz: "Navbat {name}da" },
+    "tg.chain.myTag": { ru: "Твой ход", en: "Your turn", uz: "Sizning navbat" },
+    "tg.chain.lead": { ru: "Назови слово, которое начинается на последний слог предыдущего. Подойдёт любое слово из приложения — или своё, с переводом.", en: "Say a word that starts with the last syllable of the previous one. Any word from the app works — or your own, with a translation.", uz: "Oldingi soʻzning oxirgi boʻgʻinidan boshlanadigan soʻz ayting. Ilovadagi har qanday soʻz yoki oʻzingizniki (tarjimasi bilan) mos keladi." },
+    "tg.chain.last": { ru: "Последнее слово", en: "Last word", uz: "Oxirgi soʻz" },
+    "tg.chain.start": { ru: "Начни цепочку — любое слово по-корейски", en: "Start the chain — any Korean word", uz: "Zanjirni boshlang — istalgan koreyscha soʻz" },
+    "tg.chain.need": { ru: "Слово на «{syl}»", en: "A word starting with “{syl}”", uz: "“{syl}” bilan boshlanadigan soʻz" },
+    "tg.chain.needAlt": { ru: "Слово на «{syl}» или «{alt}»", en: "A word starting with “{syl}” or “{alt}”", uz: "“{syl}” yoki “{alt}” bilan boshlanadigan soʻz" },
+    "tg.chain.ph": { ru: "Слово по-корейски", en: "Korean word", uz: "Koreyscha soʻz" },
+    "tg.chain.send": { ru: "Отправить слово", en: "Send the word", uz: "Soʻzni yuborish" },
+    "tg.chain.hint": { ru: "Подсказка", en: "Hint", uz: "Maslahat" },
+    "tg.chain.nohint": { ru: "Подходящих слов в словаре не нашлось — попробуй своё", en: "No suitable words in the dictionary — try your own", uz: "Lugʻatda mos soʻz topilmadi — oʻzingizniki bilan urinib koʻring" },
+    "tg.chain.wait": { ru: "Сейчас ход {name}. Когда она сходит, слово появится здесь.", en: "It’s {name}’s turn. Her word will appear here.", uz: "Hozir navbat {name}da. U yurgach, soʻz shu yerda paydo boʻladi." },
+    "tg.chain.count": { ru: "Слов в цепочке: {n}", en: "Words in the chain: {n}", uz: "Zanjirdagi soʻzlar: {n}" },
+    "tg.chain.new": { ru: "Начать новую цепочку", en: "Start a new chain", uz: "Yangi zanjir boshlash" },
+    "tg.chain.newConfirm": { ru: "Начать цепочку заново? Текущая сотрётся.", en: "Start the chain over? The current one will be erased.", uz: "Zanjirni qaytadan boshlaymizmi? Hozirgisi oʻchadi." },
+    "tg.chain.bad": { ru: "Напиши слово хангылем (от 2 до 10 букв), без пробелов", en: "Write the word in Hangul (2–10 letters), no spaces", uz: "Soʻzni xangılda yozing (2–10 harf), boʻsh joysiz" },
+    "tg.chain.syl": { ru: "Слово должно начинаться на «{syl}»", en: "The word must start with “{syl}”", uz: "Soʻz “{syl}” bilan boshlanishi kerak" },
+    "tg.chain.used": { ru: "Это слово уже было в цепочке", en: "This word was already used in the chain", uz: "Bu soʻz zanjirda allaqachon boʻlgan" },
+    "tg.chain.unknown": { ru: "Такого слова нет в словаре приложения. Добавь перевод — подруга его выучит.", en: "This word isn’t in the app dictionary. Add a translation — your friend will learn it.", uz: "Bu soʻz ilova lugʻatida yoʻq. Tarjima qoʻshing — doʻstingiz uni oʻrganadi." },
+    "tg.chain.notTurn": { ru: "Сейчас не твой ход — страница обновится", en: "It’s not your turn — the page will refresh", uz: "Hozir sizning navbatingiz emas — sahifa yangilanadi" },
+    "tg.chain.sent": { ru: "Слово в цепочке 🔗", en: "Word added to the chain 🔗", uz: "Soʻz zanjirga qoʻshildi 🔗" },
+    "tg.chain.sentXp": { ru: "Слово в цепочке 🔗 +{xp} XP", en: "Word added to the chain 🔗 +{xp} XP", uz: "Soʻz zanjirga qoʻshildi 🔗 +{xp} XP" },
+    "tg.chain.text": { ru: "🔗 {name}: слово в цепочке — {ko}. Твой ход! Открой «Учимся вместе»", en: "🔗 {name}: a word in the chain — {ko}. Your turn! Open “Learn together”", uz: "🔗 {name}: zanjirda soʻz — {ko}. Navbat sizda! “Birga oʻrganamiz”ni oching" },
+    "tg.m.battle.s": { ru: "Дуэль на скорость: 7 слов", en: "A speed duel: 7 words", uz: "Tezlik duelı: 7 ta soʻz" },
+    "tg.battle.score": { ru: "Счёт {a}:{b}", en: "Score {a}:{b}", uz: "Hisob {a}:{b}" },
+    "tg.battle.tag": { ru: "Вызов!", en: "Challenge!", uz: "Chaqiriq!" },
+    "tg.battle.lead": { ru: "Дуэль: {n} слов, на каждое {s} секунд. Побеждает тот, кто ответил верно на большее число слов, а при равенстве — быстрее. Вызов отвечает подруга, когда ей удобно.", en: "A duel: {n} words, {s} seconds for each. Whoever answers more correctly wins; on a tie, the faster one. Your friend answers whenever she likes.", uz: "Duel: {n} ta soʻz, har biriga {s} soniya. Koʻproq toʻgʻri javob bergan yutadi, teng boʻlsa — tezroq bergan. Doʻstingiz qulay paytda javob beradi." },
+    "tg.battle.tally": { ru: "Счёт дуэлей: ты {a} : {b} {name}", en: "Duel score: you {a} : {b} {name}", uz: "Duel hisobi: siz {a} : {b} {name}" },
+    "tg.battle.go": { ru: "Бросить вызов", en: "Throw a challenge", uz: "Chaqiriq tashlash" },
+    "tg.battle.few": { ru: "Слов для дуэли не хватает — выбери «Из уроков»", en: "Not enough words for a duel — choose “From lessons”", uz: "Duel uchun soʻzlar yetarli emas — “Darslardan”ni tanlang" },
+    "tg.battle.list": { ru: "Дуэли", en: "Duels", uz: "Duellar" },
+    "tg.battle.empty": { ru: "Дуэлей пока не было — брось первый вызов ⚡", en: "No duels yet — throw the first challenge ⚡", uz: "Hozircha duel boʻlmagan — birinchi chaqiriqni tashlang ⚡" },
+    "tg.battle.accept": { ru: "Принять вызов", en: "Accept the challenge", uz: "Chaqiriqni qabul qilish" },
+    "tg.battle.res": { ru: "Результат", en: "Result", uz: "Natija" },
+    "tg.battle.pending": { ru: "ждёт твоего ответа", en: "waiting for your answer", uz: "javobingizni kutyapti" },
+    "tg.battle.todo": { ru: "Вызов от {name}", en: "Challenge from {name}", uz: "{name}dan chaqiriq" },
+    "tg.battle.q": { ru: "Слово {i} из {n}", en: "Word {i} of {n}", uz: "{i}-soʻz, jami {n} ta" },
+    "tg.battle.time": { ru: "{s} с", en: "{s} s", uz: "{s} s" },
+    "tg.battle.row": { ru: "{s} из {n} · {sec} с", en: "{s} of {n} · {sec} s", uz: "{s} / {n} · {sec} s" },
+    "tg.battle.win": { ru: "Победа! 🏆", en: "Victory! 🏆", uz: "Gʻalaba! 🏆" },
+    "tg.battle.lose": { ru: "В этот раз — {name}. Реванш?", en: "This time it’s {name}. Rematch?", uz: "Bu safar — {name}. Revanshmi?" },
+    "tg.battle.draw": { ru: "Ничья 🤝", en: "A draw 🤝", uz: "Durang 🤝" },
+    "tg.battle.wait": { ru: "Ждём ответа {name}", en: "Waiting for {name}", uz: "{name} javobi kutilmoqda" },
+    "tg.battle.rematch": { ru: "Реванш", en: "Rematch", uz: "Revansh" },
+    "tg.battle.gone": { ru: "Этот вызов уже недоступен", en: "This challenge is no longer available", uz: "Bu chaqiriq endi mavjud emas" },
+    "tg.battle.text": { ru: "⚡ {name} бросает тебе вызов: дуэль на {n} слов — открой «Учимся вместе» на экране «Общение»", en: "⚡ {name} challenges you to a {n}-word duel — open “Learn together” on the Chat screen", uz: "⚡ {name} sizga {n} ta soʻzlik duelga chaqiryapti — “Birga oʻrganamiz”ni oching" },
+    "tg.battle.done": { ru: "⚡ {name} ответил(а) на твой вызов: {s} из {n} — загляни в «Учимся вместе»", en: "⚡ {name} answered your challenge: {s} of {n} — check “Learn together”", uz: "⚡ {name} chaqiriqqa javob berdi: {s} / {n} — “Birga oʻrganamiz”ga qarang" },
+    "tg.card.battle": { ru: "{name} бросает тебе вызов", en: "{name} challenges you", uz: "{name} sizni chaqiryapti" },
+    "tg.card.battleMine": { ru: "Ты бросила вызов", en: "You threw a challenge", uz: "Siz chaqiriq tashladingiz" },
     'talk.kb.ph':           { ru: 'Напиши по-корейски…', en: 'Type in Korean…', uz: 'Koreyscha yozing…' },
     'talk.kb.denied':       { ru: 'Разреши микрофон в настройках — а пока пишем ⌨️', en: 'Allow the microphone in settings — for now we type ⌨️', uz: 'Sozlamalarda mikrofonga ruxsat bering — hozircha yozamiz ⌨️' },
     'talk.kb.unavailable':  { ru: 'Распознавание здесь недоступно — пишем ⌨️', en: 'Speech recognition isn’t available here — we type ⌨️', uz: 'Bu yerda nutqni tanish ishlamaydi — yozamiz ⌨️' },
@@ -5241,6 +5292,57 @@
     "tg.own.del": "Алып тастау",
     "tg.quiz.preview": "Тексеру былай болады",
     "tg.quiz.rerollOpts": "Нұсқаларды араластыру",
+    "tg.m.chain.s": "Соңғы буынға сөз — кезекпен",
+    "tg.chain.my": "Кезек сенде",
+    "tg.chain.their": "Кезек {name} досыңда",
+    "tg.chain.myTag": "Сенің кезегің",
+    "tg.chain.lead": "Алдыңғы сөздің соңғы буынынан басталатын сөз ата. Қосымшадағы кез келген сөз немесе өз сөзің (аудармасымен) болады.",
+    "tg.chain.last": "Соңғы сөз",
+    "tg.chain.start": "Тізбекті баста — кез келген корей сөзі",
+    "tg.chain.need": "«{syl}» буынынан басталатын сөз",
+    "tg.chain.needAlt": "«{syl}» немесе «{alt}» буынынан басталатын сөз",
+    "tg.chain.ph": "Корей сөзі",
+    "tg.chain.send": "Сөзді жіберу",
+    "tg.chain.hint": "Кеңес",
+    "tg.chain.nohint": "Сөздікте сәйкес сөз табылмады — өзіңдікін байқап көр",
+    "tg.chain.wait": "Қазір кезек {name} досыңда. Ол жүргенде, сөз осында шығады.",
+    "tg.chain.count": "Тізбектегі сөздер: {n}",
+    "tg.chain.new": "Жаңа тізбек бастау",
+    "tg.chain.newConfirm": "Тізбекті қайта бастаймыз ба? Қазіргісі өшеді.",
+    "tg.chain.bad": "Сөзді хангылмен жаз (2–10 әріп), бос орынсыз",
+    "tg.chain.syl": "Сөз «{syl}» буынынан басталуы керек",
+    "tg.chain.used": "Бұл сөз тізбекте бұрын болған",
+    "tg.chain.unknown": "Бұл сөз қосымша сөздігінде жоқ. Аударма қос — досың оны үйренеді.",
+    "tg.chain.notTurn": "Қазір сенің кезегің емес — бет жаңарады",
+    "tg.chain.sent": "Сөз тізбекке қосылды 🔗",
+    "tg.chain.sentXp": "Сөз тізбекке қосылды 🔗 +{xp} XP",
+    "tg.chain.text": "🔗 {name}: тізбекте сөз — {ko}. Кезек сенде! «Бірге үйренеміз» бөлімін аш",
+    "tg.m.battle.s": "Жылдамдыққа дуэль: 7 сөз",
+    "tg.battle.score": "Есеп {a}:{b}",
+    "tg.battle.tag": "Шақыру!",
+    "tg.battle.lead": "Дуэль: {n} сөз, әрқайсысына {s} секунд. Көбірек дұрыс жауап бергені жеңеді, тең болса — жылдамырағы. Досың ыңғайлы кезде жауап береді.",
+    "tg.battle.tally": "Дуэль есебі: сен {a} : {b} {name}",
+    "tg.battle.go": "Шақыру тастау",
+    "tg.battle.few": "Дуэльге сөз жеткіліксіз — «Сабақтардан» таңда",
+    "tg.battle.list": "Дуэльдер",
+    "tg.battle.empty": "Әзірге дуэль болған жоқ — алғашқы шақыруды тастаңдар ⚡",
+    "tg.battle.accept": "Шақыруды қабылдау",
+    "tg.battle.res": "Нәтиже",
+    "tg.battle.pending": "жауабыңды күтіп тұр",
+    "tg.battle.todo": "{name} досыңнан шақыру",
+    "tg.battle.q": "{i}-сөз, барлығы {n}",
+    "tg.battle.time": "{s} с",
+    "tg.battle.row": "{s} / {n} · {sec} с",
+    "tg.battle.win": "Жеңіс! 🏆",
+    "tg.battle.lose": "Бұл жолы — {name}. Реванш па?",
+    "tg.battle.draw": "Тең 🤝",
+    "tg.battle.wait": "{name} жауабын күтеміз",
+    "tg.battle.rematch": "Реванш",
+    "tg.battle.gone": "Бұл шақыру енді қолжетімсіз",
+    "tg.battle.text": "⚡ {name} саған {n} сөзден дуэльге шақыру тастады — «Бірге үйренеміз» бөлімін аш",
+    "tg.battle.done": "⚡ {name} шақыруыңа жауап берді: {s} / {n} — «Бірге үйренеміз» бөлімін қара",
+    "tg.card.battle": "{name} сені шақырады",
+    "tg.card.battleMine": "Сен шақыру тастадың",
   };
   // I18N_KK:END
   function t(key, vars) {
@@ -9829,7 +9931,7 @@
   // Версия сборки: держать ВРУЧНУЮ синхронной с ?v= в index.html при каждом деплое
   // (те же 3 места — stylesheet/preload/script). Используется тихим автообновлением
   // ниже — сама загрузка кода по-прежнему идёт через ?v=.
-  const APP_VERSION = '20261022a';
+  const APP_VERSION = '20261022b';
   // ── Тихое автообновление (25.08.2026, вместо попапа «Вышло обновление!») ──
   // Узнав из облака про новую версию (appVersion пишет первый клиент нового деплоя,
   // promptVersion — кнопка «Оповестить» в админке), вкладка НЕ дёргает ученицу:
@@ -10014,7 +10116,7 @@
   // мои пары — users/<me>/together/<friendUid> = ts. День «вместе» = обе занимались (addXp; награды самой страницы идут с меткой
   // 'together' и в зачёт не идут), дата — UTC, как у серии и цели дня. В чат уходят только карточки (type:'card'), не ходы.
   // Всё из БД выводится через escHtml/textContent (урок 09.2026: stored-XSS).
-  const TG = { xpPost: 5, xpQuiz: 10, postDaily: 3, quizDaily: 3, quizN: 5, deckMax: 200, noteMax: 80, keepQuizDays: 14, keepDays: 120, keepFeedDays: 30, feedShow: 20, ownMax: 5 };
+  const TG = { xpPost: 5, xpQuiz: 10, postDaily: 3, quizDaily: 3, quizN: 5, deckMax: 200, noteMax: 80, keepQuizDays: 14, keepDays: 120, keepFeedDays: 30, feedShow: 20, ownMax: 5, xpChain: 3, chainDaily: 5, chainKeep: 40, xpBattle: 10, battleDaily: 3, battleN: 7, battleMs: 8000 };
   const TG_THEMES = ['sakura', 'stars', 'night', 'dawn'];
   let _tgCfg = null, _tgOpening = false;
   let _tg = null;                 // состояние открытой страницы
@@ -10116,11 +10218,11 @@
   function _tgDaily() { const d = todayIsoDate(); const r = UStore.get('tgDaily', null); return (r && r.d === d) ? r : { d: d, post: 0, quiz: 0 }; }
   function _tgReward(kind) {
     const r = _tgDaily();
-    const lim = kind === 'quiz' ? TG.quizDaily : TG.postDaily;
-    if ((r[kind] || 0) >= lim) return 0;
+    const cfg = { post: [TG.postDaily, TG.xpPost], quiz: [TG.quizDaily, TG.xpQuiz], chain: [TG.chainDaily, TG.xpChain], battle: [TG.battleDaily, TG.xpBattle] }[kind] || [0, 0];
+    if ((r[kind] || 0) >= cfg[0]) return 0;
     r[kind] = (r[kind] || 0) + 1;
     UStore.set('tgDaily', r);
-    const xp = kind === 'quiz' ? TG.xpQuiz : TG.xpPost;
+    const xp = cfg[1];
     addXp(xp, 'together');
     return xp;
   }
@@ -10192,7 +10294,8 @@
     if (_tgOff) { try { _tgOff(); } catch (_) {} _tgOff = null; }
     document.getElementById('together-page')?.remove();
     document.querySelectorAll('.tg-sheet-bg').forEach(x => x.remove());
-    _tg = null; _tgData = {}; _tgQz = null; _tgPick = null;
+    try { _tgBattleStop(); } catch (_) {}
+    _tg = null; _tgData = {}; _tgQz = null; _tgPick = null; _tgBt = null;
     if (!document.getElementById('chat-page') && !document.getElementById('plan-page') && !document.getElementById('ai-tutor-modal') && !document.getElementById('talk-page')) {
       document.body.classList.remove('chat-open');
     }
@@ -10226,6 +10329,7 @@
         const up = {};
         const qCut = Date.now() - TG.keepQuizDays * 86400000;
         Object.keys(v.quizzes || {}).forEach(id => { if (((v.quizzes[id] || {}).ts || 0) < qCut) up['together/' + pair + '/quizzes/' + id] = null; });
+        Object.keys(v.battles || {}).forEach(id => { if (((v.battles[id] || {}).ts || 0) < qCut) up['together/' + pair + '/battles/' + id] = null; });
         const dCut = _tgShiftDate(todayIsoDate(), -TG.keepDays);
         Object.keys(v.days || {}).forEach(d => { if (d < dCut) up['together/' + pair + '/days/' + d] = null; });
         const fCut = Date.now() - TG.keepFeedDays * 86400000;
@@ -10250,6 +10354,8 @@
     if (v === 'postcard') return _tgRenderPostcard();
     if (v === 'quiz') return _tgRenderQuizMake();
     if (v === 'deck') return _tgRenderDeck();
+    if (v === 'chain') return _tgRenderChain();
+    if (v === 'battle') return _tgRenderBattle();
     return _tgRenderHome();
   }
   function _tgPalsHtml() {
@@ -10323,20 +10429,29 @@
     const mode = (ico, key, sub, act, extra) => `<button type="button" class="tg-mode" onclick="${act}"><span class="tg-mode-i">${ico}</span><span class="tg-mode-t">${escHtml(t(key))}</span><span class="tg-mode-s">${escHtml(sub)}</span>${extra || ''}</button>`;
     const soon = (ico, key) => `<div class="tg-mode tg-soon" aria-disabled="true"><span class="tg-mode-i">${ico}</span><span class="tg-mode-t">${escHtml(t(key))}</span><span class="tg-mode-s">${escHtml(t('tg.soon'))}</span></div>`;
     const deckN = Object.keys(_tgData.deck || {}).length;
+    const cs = _tgChainStatus(), pn = _tgPal() ? _tgPal().name : '';
+    const chainSub = cs.n ? t(cs.mine ? 'tg.chain.my' : 'tg.chain.their', { name: pn }) : t('tg.m.chain.s');
+    const chainTag = cs.n && cs.mine ? `<span class="tg-tag">${escHtml(t('tg.chain.myTag'))}</span>` : '';
+    const bl = _tgBattleList(), tl = _tgBattleTally();
+    const battleTodo = bl.some(x => _tgBattleVerdict(x, myUid(), _tg.pal) === 'todo');
+    const battleSub = (tl.a || tl.b) ? t('tg.battle.score', { a: tl.a, b: tl.b }) : t('tg.m.battle.s');
+    const battleTag = battleTodo ? `<span class="tg-tag">${escHtml(t('tg.battle.tag'))}</span>` : '';
     const streakOn = bothOn && togetherStreak(_tgData.days || {}, myUid(), _tg.pal, todayIsoDate()).n > 0;
     const sh = _tgSetShell(head + `<div class="tg-body">${_tgInvBannerHtml()}${_tgPalsHtml()}${_tgHeroHtml()}${_tgPal() ? _tgHowHtml(!streakOn) : ''}
       <div class="tg-grid">
         ${mode('💌', 'tg.m.post', t('tg.m.post.s'), "_tgGo('postcard')", '<span class="tg-tag">NEW</span>')}
         ${mode('🧩', 'tg.m.quiz', t('tg.m.quiz.s'), "_tgGo('quiz')", '<span class="tg-tag">NEW</span>')}
         ${mode('📚', 'tg.m.deck', t('tg.m.deck.s', { n: deckN }), "_tgGo('deck')")}
-        ${soon('🔗', 'tg.m.chain')}${soon('⚡', 'tg.m.battle')}${soon('🎭', 'tg.m.scene')}
+        ${mode('🔗', 'tg.m.chain', chainSub, "_tgGo('chain')", chainTag)}
+        ${mode('⚡', 'tg.m.battle', battleSub, "_tgGo('battle')", battleTag)}
+        ${soon('🎭', 'tg.m.scene')}
       </div>${_tgPal() ? _tgFeedHtml() : ''}</div>`);
     _tgMarkSeen();
   }
   // Открытки и проверки пары — прямо на странице (не в чате). Новое от подруги подсвечено, пока не открыла страницу.
   function _tgFeedList() {
     const f = (_tgData && _tgData.feed) || {};
-    return Object.keys(f).map(k => Object.assign({ key: k }, f[k])).filter(x => x && typeof x === 'object' && (x.k === 'postcard' || x.k === 'quiz'))
+    return Object.keys(f).map(k => Object.assign({ key: k }, f[k])).filter(x => x && typeof x === 'object' && (x.k === 'postcard' || x.k === 'quiz' || x.k === 'battle'))
       .sort((a, b) => (b.ts || 0) - (a.ts || 0)).slice(0, TG.feedShow);
   }
   function _tgFeedHtml() {
@@ -10364,6 +10479,13 @@
         return `<div class="tg-feed-it">${head}<div class="tg-qcard"><div class="tg-qcard-t">🧩 ${escHtml(t(mine ? 'tg.card.quizMine' : 'tg.card.quiz', { name: String(x.byName || '').slice(0, 60) }))}</div><div class="tg-qcard-s">${escHtml(t('tg.card.quizS', { n: Number(x.n) || TG.quizN }))} · ${escHtml(gone ? t('tg.quiz.gone') : status)}</div>
           ${gone ? '' : `<button type="button" class="tg-qcard-b" onclick="_tgFeedAct('${jsStr(x.key)}','quiz')">${escHtml(t(mine || myRes ? 'tg.card.results' : 'tg.card.take'))}</button>`}</div></div>`;
       }
+      if (x.k === 'battle' && x.id) {
+        const bt = (_tgData.battles || {})[x.id];
+        const v = bt ? _tgBattleVerdict(bt, me, pal ? pal.uid : '') : '';
+        const status = !bt ? t('tg.battle.gone') : v === 'win' ? t('tg.battle.win') : v === 'lose' ? t('tg.battle.lose', { name: pal ? pal.name : '' }) : v === 'draw' ? t('tg.battle.draw') : v === 'wait' ? t('tg.battle.wait', { name: pal ? pal.name : '' }) : t('tg.battle.pending');
+        return `<div class="tg-feed-it">${head}<div class="tg-qcard"><div class="tg-qcard-t">⚡ ${escHtml(t(mine ? 'tg.card.battleMine' : 'tg.card.battle', { name: String(x.byName || '').slice(0, 60) }))}</div><div class="tg-qcard-s">${escHtml(t('tg.card.quizS', { n: Number(x.n) || TG.battleN }))} · ${escHtml(status)}</div>
+          ${bt ? `<button type="button" class="tg-qcard-b" onclick="_tgFeedAct('${jsStr(x.key)}','battle')">${escHtml(t(v === 'todo' ? 'tg.battle.accept' : 'tg.battle.res'))}</button>` : ''}</div></div>`;
+      }
       return '';
     }).join('');
     return `<section class="tg-feed"><div class="tg-label">${escHtml(t('tg.feed.t'))}</div>${rows || `<div class="tg-pick-empty">${escHtml(t('tg.feed.empty'))}</div>`}</section>`;
@@ -10379,6 +10501,7 @@
       toast(t('tg.saved'), 'var(--sage)');
       return;
     }
+    if (act === 'battle' && x.id) { togetherPlayBattle(String(x.id)); return; }
     if (act === 'quiz' && x.id && _tg && _tg.pal) togetherOpenQuiz(chatIdFor(myUid(), _tg.pal), String(x.id), _tg.pal);
   }
   // Страница с подругой открыта — «новое» от неё прочитано (карточка на «Общении» и точка у подруги гаснут)
@@ -10778,6 +10901,315 @@
       if (!other || !c.id) return;
       togetherOpenQuiz(chatIdFor(me, other), String(c.id), other);
     }
+  }
+  // ── Слова по цепочке (끝말잇기): по очереди, слово на последний слог предыдущего ──
+  // Данные: together/<пара>/chain = { n, turn: uid, ts, words: { <номер>: {ko, ru, tr, by, byName, ts} } } (последние TG.chainKeep слов).
+  // Ход — транзакцией (нельзя сходить не в свой ход и дважды подряд). Слово из словаря приложения принимается сразу;
+  // незнакомое — только с переводом (подруга его выучит). Окончание по правилу 두음법칙 (리→이, 라→나, 녀→여…) считается тем же слогом.
+  let _tgDictCache = null;
+  function _tgDict() {
+    if (_tgDictCache) return _tgDictCache;
+    const m = new Map();
+    const add = w => {
+      if (!w || !w.ko || !w.ru) return;
+      const ko = String(w.ko).trim();
+      if (m.has(ko) || !/^[가-힣]{2,7}$/.test(ko)) return;
+      let ru = String(w.ru);
+      try { ru = _gameGloss(ru); } catch (_) {}
+      if (!_tgWordOk({ ko: ko, ru: ru })) return;
+      m.set(ko, { ko: ko, ru: ru, tr: String(w.translit || '') });
+    };
+    try { Object.keys(LESSON_MODULES).forEach(mid => ((LESSON_MODULES[mid] && LESSON_MODULES[mid].lessons) || []).forEach(l => { if (Array.isArray(l.vocab)) l.vocab.forEach(add); })); } catch (_) {}
+    try { ssGameWords(99).forEach(add); } catch (_) {}
+    _tgDictCache = m;
+    return m;
+  }
+  function _tgNormSyl(ch) {
+    const c = String(ch || '').charCodeAt(0) - 0xAC00;
+    if (!(c >= 0 && c <= 11171)) return String(ch || '');
+    let cho = Math.floor(c / 588);
+    const jung = Math.floor((c % 588) / 28), jong = c % 28;
+    const Y = [2, 3, 6, 7, 12, 17, 20];                     // ㅑ ㅒ ㅕ ㅖ ㅛ ㅠ ㅣ
+    if (cho === 5) cho = Y.indexOf(jung) >= 0 ? 11 : 2;     // ㄹ → ㅇ (리→이) / ㄴ (라→나)
+    else if (cho === 2 && Y.indexOf(jung) >= 0) cho = 11;   // ㄴ → ㅇ (녀→여)
+    return String.fromCharCode(0xAC00 + cho * 588 + jung * 28 + jong);
+  }
+  function _tgChainOk(prev, word) {
+    prev = String(prev || ''); word = String(word || '');
+    return !!prev && !!word && _tgNormSyl(prev.charAt(prev.length - 1)) === _tgNormSyl(word.charAt(0));
+  }
+  function _tgChainWords(ch) {
+    const w = ch && ch.words;
+    if (!w || typeof w !== 'object') return [];
+    const keys = Array.isArray(w) ? w.map((_, i) => i).filter(i => w[i]) : Object.keys(w).map(Number).filter(n => isFinite(n)).sort((a, b) => a - b);
+    return keys.map(k => Object.assign({ i: k }, w[k])).filter(x => x && typeof x === 'object' && x.ko);
+  }
+  function _tgChainSuggest(lastKo, used, n) {
+    const need = lastKo ? _tgNormSyl(lastKo.charAt(lastKo.length - 1)) : '';
+    const pool = [];
+    _tgDict().forEach(w => { if ((!need || _tgNormSyl(w.ko.charAt(0)) === need) && !used.has(w.ko)) pool.push(w); });
+    return shuffleArr(pool).slice(0, n || 3);
+  }
+  function _tgChainSaveInputs() {
+    if (!_tg) return;
+    ['ko', 'ru', 'tr'].forEach(k => { const el = document.getElementById('tg-chain-' + k); if (el) _tg['chain' + k.charAt(0).toUpperCase() + k.slice(1)] = String(el.value || ''); });
+  }
+  function _tgChainStatus() {
+    const ch = _tgData && _tgData.chain;
+    const ws = _tgChainWords(ch);
+    const me = myUid();
+    if (!ws.length) return { n: 0, mine: true };
+    return { n: ws.length, mine: !ch.turn || ch.turn === me };
+  }
+  function _tgRenderChain() {
+    const st = _tg, pal = _tgPal(), me = myUid();
+    _tgChainSaveInputs();
+    const hadFocus = document.activeElement && /^tg-chain-/.test(document.activeElement.id || '') ? document.activeElement.id : '';
+    const ch = _tgData && _tgData.chain;
+    const ws = _tgChainWords(ch);
+    const last = ws.length ? ws[ws.length - 1] : null;
+    const myTurn = !last || !ch.turn || ch.turn === me;
+    const used = new Set(ws.map(x => x.ko));
+    let cur = '';
+    if (last) {
+      const syl = last.ko.charAt(last.ko.length - 1), alt = _tgNormSyl(syl);
+      cur = `<div class="tg-chain-cur"><div class="tg-chain-lbl">${escHtml(t('tg.chain.last'))}</div>
+        <div class="tg-chain-ko ko" lang="ko">${escHtml(last.ko.slice(0, -1))}<b>${escHtml(syl)}</b></div>${last.tr ? `<div class="tg-post-tr">[${escHtml(last.tr)}]</div>` : ''}<div class="tg-chain-ru">${escHtml(last.ru || '')}</div>
+        <div class="tg-chain-by">${escHtml(last.by === me ? t('tg.you') : String(last.byName || (pal && pal.name) || ''))}</div></div>`;
+    }
+    const need = last ? (() => { const syl = last.ko.charAt(last.ko.length - 1), alt = _tgNormSyl(syl); return alt !== syl ? t('tg.chain.needAlt', { syl: syl, alt: alt }) : t('tg.chain.need', { syl: syl }); })() : t('tg.chain.start');
+    const sugg = st.chainSugg && st.chainSugg.length ? `<div class="tg-chain-sugg">${st.chainSugg.map(w => `<button type="button" class="tg-chip" onclick="_tgChainUse('${jsStr(w.ko)}')"><span class="ko" lang="ko">${escHtml(w.ko)}</span> <span class="tg-chip-ru">${escHtml(w.ru)}</span></button>`).join('')}</div>` : (st.chainSugg ? `<div class="tg-pick-empty">${escHtml(t('tg.chain.nohint'))}</div>` : '');
+    const form = myTurn ? `<div class="tg-own tg-chain-form">
+        <div class="tg-label">${escHtml(need)}</div>
+        <input id="tg-chain-ko" class="input ko" lang="ko" maxlength="10" value="${escHtml(st.chainKo || '')}" placeholder="${escHtml(t('tg.chain.ph'))}" autocomplete="off" autocapitalize="off" spellcheck="false" onkeydown="if(event.key==='Enter'){event.preventDefault();togetherChainSubmit();}">
+        ${st.chainNeedRu ? `<input id="tg-chain-ru" class="input" maxlength="80" value="${escHtml(st.chainRu || '')}" placeholder="${escHtml(t('tg.own.ru'))}" autocomplete="off"><input id="tg-chain-tr" class="input" maxlength="60" value="${escHtml(st.chainTr || '')}" placeholder="${escHtml(t('tg.own.tr'))}" autocomplete="off" autocapitalize="off">` : ''}
+        <div class="tg-err" id="tg-chain-err" role="alert" ${st.chainErr ? '' : 'hidden'}>${escHtml(st.chainErr || '')}</div>
+        <div class="tg-chain-btns"><button type="button" class="btn btn-ghost" onclick="_tgChainHint()">💡 ${escHtml(t('tg.chain.hint'))}</button><button type="button" class="btn btn-primary" id="tg-chain-send" onclick="togetherChainSubmit()">🔗 ${escHtml(t('tg.chain.send'))}</button></div>${sugg}</div>`
+      : `<div class="tg-chain-wait">⏳ ${escHtml(t('tg.chain.wait', { name: pal ? pal.name : '' }))}</div>`;
+    const hist = ws.slice(-13, -1).reverse().map(x => `<div class="tg-qrow"><span class="ko tg-qko" lang="ko">${escHtml(x.ko)}</span><span class="tg-qru">${escHtml(x.ru || '')}</span></div>`).join('');
+    _tgSetShell(_tgHead('tg.m.chain', "_tgGo('home')") + `<div class="tg-body">
+      <p class="tg-lead">${escHtml(t('tg.chain.lead'))}</p>${cur}${form}
+      ${ws.length ? `<div class="tg-label">${escHtml(t('tg.chain.count', { n: Number(ch.n) || ws.length }))}</div>` : ''}${hist ? `<div class="tg-qlist">${hist}</div>` : ''}
+      ${ws.length ? `<button type="button" class="btn btn-ghost btn-block" onclick="togetherChainReset()"><i class="fa-solid fa-rotate-left" aria-hidden="true"></i> ${escHtml(t('tg.chain.new'))}</button>` : ''}
+    </div>`);
+    if (hadFocus) { const el = document.getElementById(hadFocus); if (el) { try { el.focus(); el.setSelectionRange(el.value.length, el.value.length); } catch (_) {} } }
+  }
+  function _tgChainHint() {
+    const ws = _tgChainWords(_tgData && _tgData.chain);
+    const last = ws.length ? ws[ws.length - 1] : null;
+    _tg.chainSugg = _tgChainSuggest(last ? last.ko : '', new Set(ws.map(x => x.ko)), 3);
+    _tgRender();
+  }
+  // Слово из подсказки — сразу ходом (значение кладём в поле: перерисовка берёт текст из него)
+  function _tgChainUse(ko) { if (!_tg) return; const el = document.getElementById('tg-chain-ko'); if (el) el.value = ko; _tg.chainKo = ko; _tg.chainSugg = null; _tg.chainErr = ''; togetherChainSubmit(); }
+  async function togetherChainSubmit() {
+    const st = _tg, pal = _tgPal(), me = myUid();
+    if (!st || !pal || !me || typeof _db === 'undefined' || st.chainBusy) return;
+    _tgChainSaveInputs();
+    const fail = msg => { st.chainErr = msg; _tgRender(); };
+    const ws = _tgChainWords(_tgData && _tgData.chain);
+    const last = ws.length ? ws[ws.length - 1] : null;
+    const ko = String(st.chainKo || '').trim();
+    if (!/^[가-힣]{2,10}$/.test(ko)) return fail(t('tg.chain.bad'));
+    if (ws.some(x => x.ko === ko)) return fail(t('tg.chain.used'));
+    if (last && !_tgChainOk(last.ko, ko)) return fail(t('tg.chain.syl', { syl: last.ko.charAt(last.ko.length - 1) }));
+    const d = _tgDict().get(ko);
+    let ru = '', tr = '';
+    if (d) { ru = d.ru; tr = d.tr; }
+    else {
+      ru = String(st.chainRu || '').trim().replace(/\s+/g, ' ');
+      tr = String(st.chainTr || '').trim().replace(/[\[\]<>]/g, '');
+      if (!st.chainNeedRu || !ru) { st.chainNeedRu = true; return fail(t('tg.chain.unknown')); }
+      if (!_tgWordOk({ ko: ko, ru: ru })) return fail(t('tg.own.bad'));
+    }
+    st.chainBusy = true;
+    const pair = _tgPairId(), nm = String(myName()).slice(0, 60);
+    let res = null;
+    try {
+      res = await _db.ref('together/' + pair + '/chain').transaction(cur => {
+        cur = (cur && typeof cur === 'object') ? cur : {};
+        const cw = _tgChainWords(cur), lw = cw.length ? cw[cw.length - 1] : null;
+        if (cur.turn && cur.turn !== me) return;                       // не мой ход
+        if (lw && !_tgChainOk(lw.ko, ko)) return;                      // цепочка ушла вперёд
+        if (cw.some(x => x.ko === ko)) return;
+        const n = Number(cur.n) || (lw ? lw.i + 1 : 0), words = {};
+        cw.slice(-(TG.chainKeep - 1)).forEach(x => { words[x.i] = { ko: x.ko, ru: x.ru || '', tr: x.tr || '', by: x.by || '', byName: x.byName || '', ts: x.ts || 0 }; });
+        words[n] = { ko: ko, ru: ru, tr: tr, by: me, byName: nm, ts: Date.now() };
+        return { n: n + 1, turn: pal.uid, ts: Date.now(), words: words };
+      });
+    } catch (_) { st.chainBusy = false; toast(t('block.fail')); return; }
+    st.chainBusy = false;
+    if (!res || !res.committed) { toast(t('tg.chain.notTurn')); return; }
+    st.chainKo = ''; st.chainRu = ''; st.chainTr = ''; st.chainNeedRu = false; st.chainSugg = null; st.chainErr = '';
+    const xp = _tgReward('chain');
+    toast(xp ? t('tg.chain.sentXp', { xp: xp }) : t('tg.chain.sent'), 'var(--sage)');
+    _tgNotifyPal('chain', pal, t('tg.chain.text', { name: myName(), ko: ko }));
+    _tgRender();
+  }
+  async function togetherChainReset() {
+    const pair = _tgPairId();
+    if (!pair || typeof _db === 'undefined') return;
+    if (!confirm(t('tg.chain.newConfirm'))) return;
+    try { await _db.ref('together/' + pair + '/chain').remove(); } catch (_) { toast(t('block.fail')); return; }
+    _tg.chainKo = ''; _tg.chainRu = ''; _tg.chainTr = ''; _tg.chainNeedRu = false; _tg.chainSugg = null; _tg.chainErr = '';
+  }
+  // «Новое» подруге (точка на её странице) + короткая строка в чат ради пуша — не чаще раза в 3 часа на тип
+  function _tgNotifyPal(kind, pal, text) {
+    const me = myUid(), now = Date.now();
+    try { _db.ref('users/' + pal.uid + '/togetherNew/' + me).set(now).catch(() => {}); } catch (_) {}
+    const m = UStore.get('tgNote', null) || {};
+    const key = kind + ':' + pal.uid;
+    if (kind === 'chain' && m[key] && now - m[key] < 3 * 3600000) return;
+    if (kind === 'chain') { m[key] = now; UStore.set('tgNote', m); }
+    try { sendChatMessage(pal.uid, pal.name, text, null).catch(() => {}); } catch (_) {}
+  }
+
+  // ── Баттл-комната: дуэль на скорость (TG.battleN слов, TG.battleMs мс на слово). Вызов бросает одна, отвечает другая когда ей удобно ──
+  // Данные: together/<пара>/battles/<id> = { by, byName, ts, q:[{ko,tr,ru,o,a}], res:{<uid>:{s, ms, ts}} }. Побеждает больше верных, при равенстве — быстрее.
+  let _tgBt = null;
+  function _tgBattleList() {
+    const b = (_tgData && _tgData.battles) || {};
+    return Object.keys(b).map(k => Object.assign({ id: k }, b[k])).filter(x => x && Array.isArray(x.q) && x.q.length).sort((a, c) => (c.ts || 0) - (a.ts || 0));
+  }
+  // Итог одного баттла для меня: 'win' | 'lose' | 'draw' | 'wait' (ждём соперницу) | 'todo' (я ещё не играла)
+  function _tgBattleVerdict(bt, me, other) {
+    const res = (bt && bt.res) || {};
+    const a = res[me], b = res[other];
+    if (!a) return 'todo';
+    if (!b) return 'wait';
+    const sa = Number(a.s) || 0, sb = Number(b.s) || 0;
+    if (sa !== sb) return sa > sb ? 'win' : 'lose';
+    const ma = Number(a.ms) || 0, mb = Number(b.ms) || 0;
+    if (ma !== mb) return ma < mb ? 'win' : 'lose';
+    return 'draw';
+  }
+  function _tgBattleTally() {
+    const me = myUid(), other = _tg && _tg.pal; let a = 0, b = 0;
+    _tgBattleList().forEach(x => { const v = _tgBattleVerdict(x, me, other); if (v === 'win') a++; else if (v === 'lose') b++; });
+    return { a: a, b: b };
+  }
+  function _tgRenderBattle() {
+    const st = _tg, pal = _tgPal(), me = myUid();
+    if (!st.battleSrc) st.battleSrc = _tgMyWordsPool().length >= 8 ? 'mine' : 'lessons';
+    const tab = (k, ico, key) => `<button type="button" class="tg-tab${st.battleSrc === k ? ' on' : ''}" onclick="_tgBattleSrc('${k}')">${ico} ${escHtml(t(key))}</button>`;
+    const tally = _tgBattleTally();
+    const rows = _tgBattleList().slice(0, 8).map(x => {
+      const v = _tgBattleVerdict(x, me, pal ? pal.uid : ''), res = x.res || {}, mine = x.by === me;
+      const my = res[me], pr = pal ? res[pal.uid] : null;
+      const sc = (r) => r ? t('tg.battle.row', { s: Number(r.s) || 0, n: x.q.length, sec: Math.round((Number(r.ms) || 0) / 100) / 10 }) : '—';
+      const verdict = v === 'win' ? t('tg.battle.win') : v === 'lose' ? t('tg.battle.lose', { name: pal ? pal.name : '' }) : v === 'draw' ? t('tg.battle.draw') : v === 'wait' ? t('tg.battle.wait', { name: pal ? pal.name : '' }) : t('tg.battle.todo', { name: String(x.byName || (pal && pal.name) || '') });
+      return `<div class="tg-qcard tg-bt-row"><div class="tg-qcard-t">⚡ ${escHtml(verdict)}</div>
+        <div class="tg-qcard-s">${escHtml(t('tg.you'))}: ${escHtml(sc(my))} · ${escHtml(pal ? pal.name : '')}: ${escHtml(sc(pr))}</div>
+        <button type="button" class="tg-qcard-b" onclick="togetherPlayBattle('${jsStr(x.id)}')">${escHtml(t(v === 'todo' ? 'tg.battle.accept' : 'tg.battle.res'))}</button></div>`;
+    }).join('');
+    _tgSetShell(_tgHead('tg.m.battle', "_tgGo('home')") + `<div class="tg-body">
+      <p class="tg-lead">${escHtml(t('tg.battle.lead', { n: TG.battleN, s: Math.round(TG.battleMs / 1000) }))}</p>
+      <div class="tg-battle-score" aria-label="${escHtml(t('tg.battle.tally', { a: tally.a, b: tally.b, name: pal ? pal.name : '' }))}"><span>${escHtml(t('tg.you'))}</span><b>${tally.a} : ${tally.b}</b><span>${escHtml(pal ? pal.name : '')}</span></div>
+      <div class="tg-tabs">${tab('lessons', '📚', 'tg.src.lessons')}${tab('mine', '💗', 'tg.src.mine')}</div>
+      <button type="button" class="btn btn-primary btn-block tg-send" id="tg-battle-go" onclick="togetherBattleCreate()">⚡ ${escHtml(t('tg.battle.go'))}</button>
+      <div class="tg-label">${escHtml(t('tg.battle.list'))}</div>${rows || `<div class="tg-pick-empty">${escHtml(t('tg.battle.empty'))}</div>`}
+    </div>`);
+  }
+  function _tgBattleSrc(src) { if (!_tg) return; _tg.battleSrc = src; _tgRender(); }
+  async function togetherBattleCreate() {
+    const st = _tg, pal = _tgPal(), me = myUid();
+    if (!st || !pal || typeof _db === 'undefined') return;
+    const q = _tgBuildQuiz(st.battleSrc === 'mine' ? _tgMyWordsPool() : _tgLessonPool(), TG.battleN);
+    if (!q || q.length < 5) { toast(t('tg.battle.few')); return; }
+    const btn = document.getElementById('tg-battle-go'); if (btn) btn.disabled = true;
+    const pair = chatIdFor(me, pal.uid), now = Date.now();
+    const id = _db.ref('together/' + pair + '/battles').push().key;
+    try {
+      await _db.ref().update({
+        ['together/' + pair + '/battles/' + id]: { by: me, byName: String(myName()).slice(0, 60), ts: now, q: q },
+        ['together/' + pair + '/feed/' + _db.ref('together/' + pair + '/feed').push().key]: { k: 'battle', id: id, n: q.length, by: me, byName: String(myName()).slice(0, 60), ts: now },
+        ['users/' + pal.uid + '/togetherNew/' + me]: now
+      });
+    } catch (_) { toast(t('block.fail')); if (btn) btn.disabled = false; return; }
+    try { await sendChatMessage(pal.uid, pal.name, t('tg.battle.text', { name: myName(), n: q.length }), null); } catch (_) {}
+    if (btn) btn.disabled = false;
+    togetherPlayBattle(id, { q: q, by: me, res: {} });
+  }
+  // Играть дуэль (или посмотреть итог, если я уже ответила)
+  function togetherPlayBattle(id, local) {
+    if (!_tg || !_tg.pal) return;
+    const me = myUid(), pair = _tgPairId();
+    const bt = (_tgData.battles && _tgData.battles[id]) || local;
+    if (!bt || !Array.isArray(bt.q) || !bt.q.length) { toast(t('tg.battle.gone')); return; }
+    _tgBattleStop();
+    document.querySelectorAll('.tg-sheet-bg').forEach(x => x.remove());
+    const bg = document.createElement('div');
+    bg.className = 'modal-bg modal-center tg-sheet-bg';
+    bg.id = 'tg-battle';
+    bg.onclick = e => { if (e.target === bg) { _tgBattleStop(); bg.remove(); } };
+    document.body.appendChild(bg);
+    _tgBt = { pair: pair, id: id, bt: bt, other: _tg.pal, i: 0, score: 0, ms: 0, locked: false, timer: null, t0: 0 };
+    if (bt.res && bt.res[me]) _tgBattleResult(false); else _tgBattleStep();
+  }
+  function _tgBattleStop() { if (_tgBt && _tgBt.timer) { clearTimeout(_tgBt.timer); _tgBt.timer = null; } }
+  function _tgBattleStep() {
+    const bg = document.getElementById('tg-battle'), z = _tgBt;
+    if (!bg || !z) return;
+    const q = z.bt.q[z.i];
+    const secs = Math.round(TG.battleMs / 1000);
+    bg.innerHTML = `<div class="modal-card tg-quiz-card" role="dialog" aria-modal="true" aria-label="${escHtml(t('tg.m.battle'))}">
+      <div class="tg-quiz-n">${escHtml(t('tg.battle.q', { i: z.i + 1, n: z.bt.q.length }))}</div>
+      <div class="tg-timer" aria-hidden="true"><i style="animation-duration:${TG.battleMs}ms"></i></div>
+      <div class="tg-quiz-w ko" lang="ko">${escHtml(q.ko)}</div>${q.tr ? `<div class="tg-quiz-tr">[${escHtml(q.tr)}]</div>` : ''}
+      <div class="tg-quiz-opts">${q.o.map((o, i) => `<button type="button" class="tg-opt" onclick="_tgBattlePick(${i})">${escHtml(o)}</button>`).join('')}</div>
+      <div class="tg-battle-hint">${escHtml(t('tg.battle.time', { s: secs }))}</div></div>`;
+    z.locked = false; z.t0 = Date.now();
+    z.timer = setTimeout(() => _tgBattlePick(-1), TG.battleMs + 50);
+  }
+  function _tgBattlePick(i) {
+    const z = _tgBt, bg = document.getElementById('tg-battle');
+    if (!z || !bg || z.locked) return;
+    z.locked = true;
+    if (z.timer) { clearTimeout(z.timer); z.timer = null; }
+    const q = z.bt.q[z.i];
+    z.ms += Math.min(TG.battleMs, Math.max(0, Date.now() - z.t0));
+    const ok = i === q.a;
+    if (ok) z.score++;
+    bg.querySelectorAll('.tg-opt').forEach((b, k) => { b.disabled = true; if (k === q.a) b.classList.add('ok'); else if (k === i) b.classList.add('bad'); });
+    setTimeout(() => {
+      if (_tgBt !== z || !document.getElementById('tg-battle')) return;
+      z.i++;
+      if (z.i < z.bt.q.length) _tgBattleStep(); else _tgBattleFinish();
+    }, 650);
+  }
+  async function _tgBattleFinish() {
+    const z = _tgBt, me = myUid();
+    if (!z) return;
+    const rec = { s: z.score, ms: z.ms, ts: Date.now() };
+    try { await _db.ref('together/' + z.pair + '/battles/' + z.id + '/res/' + me).set(rec); } catch (_) {}
+    z.bt = Object.assign({}, z.bt, { res: Object.assign({}, z.bt.res || {}, { [me]: rec }) });
+    const first = z.bt.by === me;                       // автор вызова играет первым — ей отдельное сообщение не нужно
+    const xp = _tgReward('battle');
+    const pal = _tgPal();
+    if (!first && pal) { try { await sendChatMessage(pal.uid, pal.name, t('tg.battle.done', { name: myName(), s: z.score, n: z.bt.q.length }), null); } catch (_) {} }
+    _tgBattleResult(xp);
+  }
+  function _tgBattleResult(xp) {
+    const bg = document.getElementById('tg-battle'), z = _tgBt, me = myUid();
+    if (!bg || !z) return;
+    const pal = _tgPal(), res = z.bt.res || {}, other = z.other;
+    const v = _tgBattleVerdict(z.bt, me, other);
+    const n = z.bt.q.length;
+    const line = (nm, r) => `<div class="tg-res-row"><div class="tg-res-n">${escHtml(nm)}</div><div class="tg-res-s">${r ? (Number(r.s) || 0) + ' / ' + n : '—'}</div>${r ? `<div class="tg-res-hard">${escHtml(t('tg.battle.time', { s: Math.round((Number(r.ms) || 0) / 100) / 10 }))}</div>` : ''}</div>`;
+    const head = v === 'win' ? t('tg.battle.win') : v === 'lose' ? t('tg.battle.lose', { name: pal ? pal.name : '' }) : v === 'draw' ? t('tg.battle.draw') : t('tg.battle.wait', { name: pal ? pal.name : '' });
+    bg.innerHTML = `<div class="modal-card tg-quiz-card" role="dialog" aria-modal="true" aria-label="${escHtml(t('tg.m.battle'))}">
+      <div class="tg-quiz-w">${v === 'win' ? '🏆' : v === 'draw' ? '🤝' : '⚡'}</div><div class="tg-res-t">${escHtml(head)}</div>
+      ${xp ? `<div class="tg-xp">${escHtml(t('tg.xp', { xp: xp }))}</div>` : ''}
+      <div class="tg-res-list">${line(t('tg.you'), res[me])}${line(pal ? pal.name : '', res[other])}</div>
+      ${v === 'win' || v === 'lose' || v === 'draw' ? `<button type="button" class="btn btn-ghost btn-block" onclick="_tgBattleRematch()">🔁 ${escHtml(t('tg.battle.rematch'))}</button>` : ''}
+      <button type="button" class="btn btn-primary btn-block" onclick="_tgBattleStop(); document.getElementById('tg-battle').remove(); _tgBt = null;">${escHtml(t('talk.sum.done'))}</button></div>`;
+  }
+  function _tgBattleRematch() {
+    _tgBattleStop();
+    document.getElementById('tg-battle')?.remove();
+    _tgBt = null;
+    if (_tg && _tg.view !== 'battle') { _tg.view = 'battle'; _tgRender(); }
+    togetherBattleCreate();
   }
   // ── /Учимся вместе ──
 

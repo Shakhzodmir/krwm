@@ -8227,3 +8227,34 @@ body.theme-dark .tg-how, body.theme-dark .tg-feed .tg-qcard { background: #1E1E1
 body.theme-dark .tg-err { background: rgba(var(--accent-rgb), .18); }
 body.calm-motion .tg-how > summary::after { transition: none; }
 @media (prefers-reduced-motion: reduce) { .tg-how > summary::after { transition: none; } }
+
+/* «Слова по цепочке» и «Баттл-комната» (22.10.2026) */
+.tg-chain-cur { text-align: center; padding: 16px; border-radius: 20px; border: 1px solid var(--line); background: linear-gradient(160deg, rgba(var(--petal-rgb), .55), var(--card) 70%); display: flex; flex-direction: column; align-items: center; gap: 2px; }
+.tg-chain-lbl { font-size: 11px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: var(--soft); }
+.tg-chain-ko { font-size: 34px; font-weight: 800; line-height: 1.2; color: var(--berry); overflow-wrap: anywhere; }
+.tg-chain-ko b { color: var(--coral); border-bottom: 3px solid var(--coral); }
+.tg-chain-ru { font-size: 14px; font-weight: 700; color: var(--berry); }
+.tg-chain-by { font-size: 12px; color: var(--soft); margin-top: 2px; }
+.tg-chain-form .tg-label { justify-content: flex-start; }
+.tg-chain-btns { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr); gap: 8px; }
+.tg-chain-btns .btn { min-height: 48px; }
+.tg-chain-wait { padding: 14px; border-radius: 16px; background: var(--blush); color: var(--berry); font-size: 13.5px; line-height: 1.45; text-align: center; }
+.tg-chain-sugg { display: flex; flex-wrap: wrap; gap: 8px; }
+.tg-chip { min-height: 44px; padding: 6px 14px; border: 1px solid var(--line-strong); border-radius: 999px; background: var(--card); color: var(--berry); font-family: inherit; font-size: 14px; font-weight: 800; cursor: pointer; transition: background .2s var(--ease-out), border-color .2s var(--ease-out); }
+.tg-chip:hover, .tg-chip:focus-visible { border-color: var(--coral); background: var(--blush); }
+.tg-chip-ru { font-weight: 600; font-size: 12px; color: var(--soft); margin-left: 4px; }
+.tg-battle-score { display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); align-items: center; gap: 12px; padding: 12px 16px; border-radius: 18px; border: 1px solid var(--line); background: var(--card); color: var(--berry); }
+.tg-battle-score span { font-weight: 700; font-size: 13px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.tg-battle-score span:last-child { text-align: right; }
+.tg-battle-score b { font-family: 'Fraunces', Georgia, serif; font-size: 26px; font-variant-numeric: tabular-nums; }
+.tg-bt-row { padding: 12px; border-radius: 16px; background: var(--card); border: 1px solid var(--line); }
+.tg-timer { height: 6px; border-radius: 99px; background: var(--blush); overflow: hidden; }
+.tg-timer i { display: block; height: 100%; width: 100%; border-radius: 99px; background: var(--coral); transform-origin: left center; animation: tgTimer linear forwards; }
+@keyframes tgTimer { from { transform: scaleX(1); } to { transform: scaleX(0); } }
+.tg-battle-hint { font-size: 11.5px; color: var(--soft); }
+body.theme-dark .tg-chain-cur { background: linear-gradient(160deg, #2A1F23, #1E1E1E 70%); border-color: #3A2A30; }
+body.theme-dark .tg-chain-wait, body.theme-dark .tg-timer { background: #2A1F23; }
+body.theme-dark .tg-chip, body.theme-dark .tg-battle-score, body.theme-dark .tg-bt-row { background: #1E1E1E; border-color: #3A2A30; }
+body.theme-dark .tg-chip:hover, body.theme-dark .tg-chip:focus-visible { background: #2A1F23; }
+body.calm-motion .tg-timer i { animation: none; transform: none; }
+@media (prefers-reduced-motion: reduce) { .tg-timer i { animation: none; } }
