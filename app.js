@@ -9942,7 +9942,7 @@
   // Версия сборки: держать ВРУЧНУЮ синхронной с ?v= в index.html при каждом деплое
   // (те же 3 места — stylesheet/preload/script). Используется тихим автообновлением
   // ниже — сама загрузка кода по-прежнему идёт через ?v=.
-  const APP_VERSION = '20261026c';
+  const APP_VERSION = '20261026d';
   // ── Тихое автообновление (25.08.2026, вместо попапа «Вышло обновление!») ──
   // Узнав из облака про новую версию (appVersion пишет первый клиент нового деплоя,
   // promptVersion — кнопка «Оповестить» в админке), вкладка НЕ дёргает ученицу:
@@ -37441,12 +37441,41 @@
   // root — сама svg.kd-face или любой её контейнер.
   function kdFaceSet(root, state) {
     if (!root || !state) return;
+    const bear = (root.matches && root.matches('svg.kdb')) ? root : (root.querySelector ? root.querySelector('svg.kdb') : null);
+    if (bear) { _kdBearSet(bear, state); return; }
     const svg = (root.classList && root.classList.contains('kd-face')) ? root : (root.querySelector ? root.querySelector('svg.kd-face') : null);
     if (!svg) return;
     if (state.mood !== undefined && KD_FACE_MOODS.indexOf(state.mood) >= 0) svg.setAttribute('data-mood', state.mood);
     ['talking', 'listening', 'thinking'].forEach(k => {
       if (state[k] !== undefined) svg.setAttribute('data-' + k, state[k] ? '1' : '0');
     });
+  }
+  // ── Новая мишка Комдори (assets/komdori/komdori.js, 26.10.2026): вся фигура, пружинная мимика, губы по тексту ──
+  // Те же вызовы kdFaceSet(контейнер, { mood, talking, listening, thinking }) + text/seconds для губ. Нет движка
+  // (не загрузился) — рисуем прежнюю мордочку, так что звонок работает в любом случае.
+  function kdBearHtml() {
+    // класс kd-face оставляем: по нему страница звонка и тесты находят мордочку и читают её data-состояние
+    try { if (window.Komdori && typeof Komdori.svg === 'function') return Komdori.svg().replace('<svg class="kdb"', '<svg class="kdb kd-face" data-mood="normal" data-talking="0" data-listening="0" data-thinking="0"'); } catch (_) {}
+    return kdFaceSvg();
+  }
+  function _kdBearSet(svg, st) {
+    let inst = svg.__kd;
+    if (!inst) {
+      try { inst = svg.__kd = Komdori.attach(svg, { pointer: true, idle: true }); }
+      catch (_) { return; }
+    }
+    if (st.mood !== undefined && KD_FACE_MOODS.indexOf(st.mood) >= 0) { inst.setMood(st.mood); svg.setAttribute('data-mood', st.mood); }
+    if (st.listening !== undefined) { inst.setListening(!!st.listening); svg.setAttribute('data-listening', st.listening ? '1' : '0'); }
+    if (st.thinking !== undefined) { inst.setThinking(!!st.thinking); svg.setAttribute('data-thinking', st.thinking ? '1' : '0'); }
+    if (st.perform) { try { inst.perform(st.perform); } catch (_) {} }
+    if (st.talking !== undefined) {
+      const on = !!st.talking;
+      if (on && !inst.__talking) {
+        const text = String(st.text || '').trim() || 'ㅡ';
+        inst.speak(text, { rate: .95, loop: true, seconds: Number(st.seconds) > 0 ? Number(st.seconds) : 0 });
+      } else if (!on && inst.__talking) inst.stopSpeak();
+      inst.__talking = on; svg.setAttribute('data-talking', on ? '1' : '0');
+    }
   }
   // ── /Мордочка Комдори ──
   // ───────────── «Разговор с Комдори» · вход и экран настройки (#talk-page) ─────────────
@@ -37578,7 +37607,7 @@
       </header>
       <div class="talk-body">
         <div class="talk-body-inner">
-          <div class="talk-face-wrap talk-face-setup" id="talk-setup-face">${kdFaceSvg()}</div>
+          <div class="talk-face-wrap talk-face-setup" id="talk-setup-face">${kdBearHtml()}</div>
           <h2 class="talk-q" id="talk-mood-q">${t('talk.setup.q')}</h2>
           <div class="talk-mood-name" id="talk-mood-name" aria-hidden="true"></div>
           <div class="talk-slider" id="talk-mood-slider" role="slider" tabindex="0" aria-labelledby="talk-mood-q" aria-valuemin="0" aria-valuemax="2" aria-valuenow="1" aria-valuetext="">
@@ -37887,6 +37916,7 @@
             rec.started = true;
             clearTimeout(rec.t1);
             rec.t2 = setTimeout(() => finish('timeout'), Math.max(TALK_SPEAK_WD.minMs, TALK_SPEAK_WD.perCharMs * ko.length) + TALK_SPEAK_WD.tailMs);
+            try { const c0 = _talk; if (c0) { c0.speakText = ko; const el = (typeof _ttsAudioEl !== 'undefined') ? _ttsAudioEl : null; c0.speakSec = (el && isFinite(el.duration) && el.duration > 0.3) ? el.duration : 0; } } catch (_) {}
             _talkSetTalking(true);
             if (typeof opts.onStart === 'function') { try { opts.onStart(); } catch (_) {} }
           },
@@ -38351,7 +38381,7 @@
         </div>
       </header>
       <div class="talk-stage">
-        <div class="talk-face-wrap talk-face-call" id="talk-call-face">${kdFaceSvg()}</div>
+        <div class="talk-face-wrap talk-face-call" id="talk-call-face">${kdBearHtml()}</div>
         <div class="talk-status" id="talk-status" role="status"><span class="talk-wave" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span><span id="talk-status-tx"></span></div>
       </div>
       <div class="talk-log" id="talk-log" aria-live="polite" aria-relevant="additions"></div>
@@ -38529,6 +38559,7 @@
     kdFaceSet($('talk-call-face'), {
       mood: c.mood,
       talking: ph === 'komdori' && c.talking,
+      text: c.speakText || '', seconds: c.speakSec || 0,
       listening: ph === 'listening' && c.micActive,
       thinking: ph === 'thinking' || ph === 'recognizing' || (ph === 'komdori' && !c.talking)
     });
@@ -38880,7 +38911,7 @@
       </header>
       <div class="talk-body">
         <div class="talk-body-inner talk-sum" id="talk-sum" role="region" aria-labelledby="talk-sum-t">
-          <div class="talk-face-wrap talk-face-sum" id="talk-sum-face">${kdFaceSvg()}</div>
+          <div class="talk-face-wrap talk-face-sum" id="talk-sum-face">${kdBearHtml()}</div>
           <h2 class="talk-sum-t" id="talk-sum-t" tabindex="-1" aria-live="polite">${t(none ? 'talk.sum.titleNone' : 'talk.sum.title')}</h2>
           <p class="talk-sum-s">${t(none ? 'talk.sum.subNone' : (_TALK_SUM_SUB[reason] || 'talk.sum.sub'))}</p>
           <div class="talk-sum-chips" id="talk-sum-chips"></div>
@@ -38899,7 +38930,7 @@
         </div>
       </div>`;
     shell.onclick = _talkSumClick;
-    kdFaceSet(document.getElementById('talk-sum-face'), { mood: none ? 'normal' : 'kind' });
+    kdFaceSet(document.getElementById('talk-sum-face'), { mood: none ? 'normal' : 'kind', perform: none ? 'wave' : 'celebrate' });
     // Чипы: минуты · реплики · +XP (XP — только если был)
     const chips = document.getElementById('talk-sum-chips');
     const chip = (icon, text) => {

@@ -8258,3 +8258,11 @@ body.theme-dark .tg-chip, body.theme-dark .tg-battle-score, body.theme-dark .tg-
 body.theme-dark .tg-chip:hover, body.theme-dark .tg-chip:focus-visible { background: #2A1F23; }
 body.calm-motion .tg-timer i { animation: none; transform: none; }
 @media (prefers-reduced-motion: reduce) { .tg-timer i { animation: none; } }
+
+/* Новая мишка Комдори (assets/komdori, 26.10.2026): вся фигура, поэтому крупнее прежней мордочки; размеры — --kdb-size у экрана */
+.kdb { display: block; width: var(--kdb-size, 160px); max-width: 100%; height: auto; aspect-ratio: 1; margin: 0 auto; overflow: visible; stroke: none; }
+.talk-face-setup { --kdb-size: 190px; }
+.talk-face-call { --kdb-size: 170px; }
+.talk-face-sum { --kdb-size: 150px; }
+@media (max-height: 700px) { .talk-face-call { --kdb-size: 120px; } }
+@media (min-width: 768px) { .talk-face-setup { --kdb-size: 220px; } .talk-face-call { --kdb-size: 220px; } .talk-face-sum { --kdb-size: 180px; } }
