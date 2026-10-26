@@ -5545,6 +5545,7 @@
     if (name === 'studykr') renderStudyKr();
     if (name === 'admin') renderProfileAdminPanel(adminCurrentTab || 'hub');
     _curScreen = name;
+    try { _kmBackSyncSoon(); } catch (_) {}   // системная «назад» в приложении: на Главной записи нет, на остальных экранах есть
     tagInteractive(); // make any freshly-rendered clickable cards keyboard-focusable
     if (restoreScroll) {
       const y = _screenScroll[name] || 0;
@@ -9933,7 +9934,7 @@
   // Версия сборки: держать ВРУЧНУЮ синхронной с ?v= в index.html при каждом деплое
   // (те же 3 места — stylesheet/preload/script). Используется тихим автообновлением
   // ниже — сама загрузка кода по-прежнему идёт через ?v=.
-  const APP_VERSION = '20261026a';
+  const APP_VERSION = '20261026b';
   // ── Тихое автообновление (25.08.2026, вместо попапа «Вышло обновление!») ──
   // Узнав из облака про новую версию (appVersion пишет первый клиент нового деплоя,
   // promptVersion — кнопка «Оповестить» в админке), вкладка НЕ дёргает ученицу:
@@ -52396,21 +52397,76 @@
   })();
 
   // ── Escape key closes the topmost overlay (modal → game → chat → lesson) ──
+  // Закрывает верхнее окно; true — что-то закрыли. Тот же порядок использует системная «назад» в приложении (ниже).
+  function _kmCloseTopmost() {
+    const modals = document.querySelectorAll('.modal-bg');
+    if (modals.length) { modals[modals.length - 1].remove(); return true; }
+    if (talkEscape()) return true;
+    if (togetherEscape()) return true;   // «Разговор с Комдори» (z 300) выше игры, чата и урока
+    if (document.getElementById('writing-practice-page')) { closeWritingPractice(); return true; }
+    if (document.getElementById('user-profile-page')) { closeUserProfile(); return true; }
+    const gamePages = document.querySelectorAll('.game-page');
+    if (gamePages.length) { closeGameModal(gamePages[gamePages.length - 1].id); return true; }
+    const complete = document.getElementById('lesson-complete-page');
+    if (complete) { complete.remove(); return true; }
+    if (document.getElementById('chat-page')) { closeChat(); return true; }
+    if (document.getElementById('lesson-modal')) { closeLessonFlow(); return true; }
+    return false;
+  }
   document.addEventListener('keydown', e => {
     if (e.key !== 'Escape') return;
-    const modals = document.querySelectorAll('.modal-bg');
-    if (modals.length) { modals[modals.length - 1].remove(); return; }
-    if (talkEscape()) return;
-    if (togetherEscape()) return;   // «Разговор с Комдори» (z 300) выше игры, чата и урока
-    if (document.getElementById('writing-practice-page')) { closeWritingPractice(); return; }
-    if (document.getElementById('user-profile-page')) { closeUserProfile(); return; }
-    const gamePages = document.querySelectorAll('.game-page');
-    if (gamePages.length) { closeGameModal(gamePages[gamePages.length - 1].id); return; }
-    const complete = document.getElementById('lesson-complete-page');
-    if (complete) { complete.remove(); return; }
-    if (document.getElementById('chat-page')) { closeChat(); return; }
-    if (document.getElementById('lesson-modal')) { closeLessonFlow(); return; }
+    _kmCloseTopmost();
   });
+
+  // ── «Назад» в приложении (APK и установленная PWA) ──
+  // В приложении переходы между экранами — не история браузера, поэтому системная «назад» сразу закрывала приложение
+  // (отзыв 26.10). Теперь: пока есть что закрыть (окно, игра, чат, урок) или мы не на Главной, в history лежит одна
+  // наша запись-«страховка»: «назад» съедает её, мы закрываем верхнее окно (а если окон нет — идём на Главную) и кладём
+  // запись снова, если ещё есть куда возвращаться. На Главной без окон записи нет — «назад» закрывает приложение, как везде.
+  // Срабатывает и в уже установленных APK (1.2.x): их WebView и так идёт назад по history (CanGoBack/GoBack),
+  // а запись pushState он видит через DoUpdateVisitedHistory. «Разговор с Комдори» ведёт свою запись (_talkHist) — не трогаем.
+  const _kmBack = { present: false, skip: 0, retry: 0, timer: null };
+  function _kmBackEnabled() {
+    try { return !!window.KMTTS || !!(window.matchMedia && matchMedia('(display-mode: standalone)').matches); } catch (_) { return false; }
+  }
+  function _kmBackNeeded() {
+    if (document.getElementById('talk-page')) return false;
+    if (_curScreen !== 'home') return true;
+    return !!document.querySelector('.modal-bg, #plan-page, #together-page, #writing-practice-page, #user-profile-page, .game-page, #lesson-complete-page, #chat-page, #lesson-modal');
+  }
+  function _kmBackSync() {
+    if (!_kmBackEnabled()) return;
+    const need = _kmBackNeeded();
+    if (need && !_kmBack.present) {
+      try { history.pushState({ kmBack: 1 }, '', location.href); _kmBack.present = true; _kmBack.retry = 0; } catch (_) {}
+    } else if (!need && _kmBack.present) {
+      if (history.state && history.state.kmBack) {
+        // окно закрыли не кнопкой «назад» — убираем свою запись тихо
+        _kmBack.skip++; _kmBack.present = false;
+        try { history.back(); } catch (_) { _kmBack.skip--; }
+      } else if (_kmBack.retry < 5) {
+        // сверху чужая запись (разговор) — вернёмся, когда она уйдёт
+        _kmBack.retry++;
+        clearTimeout(_kmBack.timer);
+        _kmBack.timer = setTimeout(_kmBackSync, 400);
+      }
+    }
+  }
+  function _kmBackSyncSoon() { clearTimeout(_kmBack.timer); _kmBack.timer = setTimeout(_kmBackSync, 0); }
+  function _kmBackOnPop() {
+    if (!_kmBackEnabled()) return;
+    if (_kmBack.skip > 0) { _kmBack.skip--; return; }
+    if (!_kmBack.present) return;
+    if (history.state && history.state.kmBack) return;   // вернулись на нашу запись из-под чужой (разговор) — это не наша «назад»
+    _kmBack.present = false;                             // запись уже съела сама «назад»
+    if (!_kmCloseTopmost() && _curScreen !== 'home') switchScreen('home');
+    _kmBackSync();
+  }
+  window.addEventListener('popstate', _kmBackOnPop);
+  try {
+    _kmBack.present = !!(history.state && history.state.kmBack);   // после перезагрузки страницы запись могла остаться
+    new MutationObserver(_kmBackSyncSoon).observe(document.body, { childList: true });   // сам _kmBackSync ничего не делает вне приложения
+  } catch (_) {}
 
   // ── Init ──
   // Экскурсия после регистрации ждёт закрытия тарифов (tourPending). При запуске тарифов на экране
