@@ -1584,6 +1584,10 @@
     "tg.battle.done": { ru: "⚡ {name} ответил(а) на твой вызов: {s} из {n} — загляни в «Учимся вместе»", en: "⚡ {name} answered your challenge: {s} of {n} — check “Learn together”", uz: "⚡ {name} chaqiriqqa javob berdi: {s} / {n} — “Birga oʻrganamiz”ga qarang" },
     "tg.card.battle": { ru: "{name} бросает тебе вызов", en: "{name} challenges you", uz: "{name} sizni chaqiryapti" },
     "tg.card.battleMine": { ru: "Ты бросила вызов", en: "You threw a challenge", uz: "Siz chaqiriq tashladingiz" },
+    "app.exit.t": { ru: "Выйти из приложения?", en: "Leave the app?", uz: "Ilovadan chiqasizmi?" },
+    "app.exit.s": { ru: "Твой прогресс сохранён", en: "Your progress is saved", uz: "Yutuqlaringiz saqlangan" },
+    "app.exit.stay": { ru: "Остаться", en: "Stay", uz: "Qolish" },
+    "app.exit.go": { ru: "Выйти", en: "Leave", uz: "Chiqish" },
     'talk.kb.ph':           { ru: 'Напиши по-корейски…', en: 'Type in Korean…', uz: 'Koreyscha yozing…' },
     'talk.kb.denied':       { ru: 'Разреши микрофон в настройках — а пока пишем ⌨️', en: 'Allow the microphone in settings — for now we type ⌨️', uz: 'Sozlamalarda mikrofonga ruxsat bering — hozircha yozamiz ⌨️' },
     'talk.kb.unavailable':  { ru: 'Распознавание здесь недоступно — пишем ⌨️', en: 'Speech recognition isn’t available here — we type ⌨️', uz: 'Bu yerda nutqni tanish ishlamaydi — yozamiz ⌨️' },
@@ -5345,6 +5349,10 @@
     "tg.card.battle": "{name} сені шақырады",
     "tg.card.battleMine": "Сен шақыру тастадың",
     "auth.google.noAccount": "Телефонда Google аккаунты жоқ. Оны телефон Параметрлерінде (Аккаунттар) қосып, қайта байқап көр",
+    "app.exit.t": "Қосымшадан шығасың ба?",
+    "app.exit.s": "Прогресс сақталған",
+    "app.exit.stay": "Қалу",
+    "app.exit.go": "Шығу",
   };
   // I18N_KK:END
   function t(key, vars) {
@@ -9934,7 +9942,7 @@
   // Версия сборки: держать ВРУЧНУЮ синхронной с ?v= в index.html при каждом деплое
   // (те же 3 места — stylesheet/preload/script). Используется тихим автообновлением
   // ниже — сама загрузка кода по-прежнему идёт через ?v=.
-  const APP_VERSION = '20261026b';
+  const APP_VERSION = '20261026c';
   // ── Тихое автообновление (25.08.2026, вместо попапа «Вышло обновление!») ──
   // Узнав из облака про новую версию (appVersion пишет первый клиент нового деплоя,
   // promptVersion — кнопка «Оповестить» в админке), вкладка НЕ дёргает ученицу:
@@ -52463,6 +52471,30 @@
     _kmBackSync();
   }
   window.addEventListener('popstate', _kmBackOnPop);
+  // Приложение 1.2.3+: «назад» на Главной без окон зовёт этот хук (MainActivity.AskExit) — спрашиваем «Выйти из приложения?».
+  // «Выйти» → KMUI.exit(); «Остаться»/«назад» — закрывает окно (оно обычный .modal-bg, его закрывает _kmCloseTopmost).
+  window.__kmAskExit = function () {
+    if (document.getElementById('km-exit-ask')) return true;
+    const m = document.createElement('div');
+    m.className = 'modal-bg modal-center';
+    m.id = 'km-exit-ask';
+    m.setAttribute('role', 'dialog');
+    m.setAttribute('aria-modal', 'true');
+    m.onclick = e => { if (e.target === m) m.remove(); };
+    m.innerHTML = `
+      <div class="modal-card" style="max-width:340px; text-align:center;">
+        <div class="display" style="font-size:20px; color:var(--berry);">${escHtml(t('app.exit.t'))}</div>
+        <div style="font-size:13px; color:var(--soft); margin-top:6px; line-height:1.5;">${escHtml(t('app.exit.s'))}</div>
+        <button type="button" class="btn btn-primary btn-block" style="margin-top:16px;" onclick="document.getElementById('km-exit-ask')?.remove()">${escHtml(t('app.exit.stay'))}</button>
+        <button type="button" class="btn btn-ghost btn-block" style="margin-top:8px;" onclick="kmExitApp()">${escHtml(t('app.exit.go'))}</button>
+      </div>`;
+    document.body.appendChild(m);
+    return true;
+  };
+  function kmExitApp() {
+    try { if (window.KMUI && typeof KMUI.exit === 'function') { KMUI.exit(); return; } } catch (_) {}
+    document.getElementById('km-exit-ask')?.remove();
+  }
   try {
     _kmBack.present = !!(history.state && history.state.kmBack);   // после перезагрузки страницы запись могла остаться
     new MutationObserver(_kmBackSyncSoon).observe(document.body, { childList: true });   // сам _kmBackSync ничего не делает вне приложения
