@@ -1226,6 +1226,7 @@
     'auth.google.old':   { ru: 'Уже есть аккаунт? Входи как раньше — через Email.', en: 'Already have an account? Sign in as before — with Email.', uz: 'Akkauntingiz bormi? Avvalgidek — Email orqali kiring.' },
     'auth.google.terms': { ru: 'Входя через Google, ты принимаешь условия использования', en: 'By continuing with Google, you accept the terms of use', uz: 'Google orqali kirib, foydalanish shartlarini qabul qilasiz' },
     'auth.google.pwHint': { ru: 'Входила через Google? Нажми сюда — войдём через Google', en: 'Signed in with Google before? Tap here to continue with Google', uz: 'Google orqali kirganmidingiz? Shu yerni bosing — Google orqali kiramiz' },
+    'auth.google.noAccount': { ru: 'На телефоне нет аккаунта Google. Добавь его в Настройках телефона (Аккаунты) и попробуй снова', en: 'There is no Google account on this phone. Add one in phone Settings (Accounts) and try again', uz: 'Telefonda Google akkaunti yoʻq. Uni telefon Sozlamalari (Akkauntlar) boʻlimida qoʻshing va qayta urinib koʻring' },
     'auth.google.fail':  { ru: 'Не получилось войти через Google 😔 Попробуй ещё раз', en: 'Couldn’t sign in with Google 😔 Please try again', uz: 'Google orqali kirib boʻlmadi 😔 Yana urinib koʻring' },
     'auth.google.popupBlocked': { ru: 'Браузер заблокировал окно входа. Разреши всплывающие окна для сайта и нажми ещё раз', en: 'The browser blocked the sign-in window. Allow pop-ups for this site and try again', uz: 'Brauzer kirish oynasini blokladi. Sayt uchun qalqib chiquvchi oynalarga ruxsat bering va qayta bosing' },
     'auth.google.admin': { ru: 'Для админки входи через Email, как обычно 🌸', en: 'For the admin panel, sign in with Email as usual 🌸', uz: 'Admin panel uchun odatdagidek Email orqali kiring 🌸' },
@@ -5343,6 +5344,7 @@
     "tg.battle.done": "⚡ {name} шақыруыңа жауап берді: {s} / {n} — «Бірге үйренеміз» бөлімін қара",
     "tg.card.battle": "{name} сені шақырады",
     "tg.card.battleMine": "Сен шақыру тастадың",
+    "auth.google.noAccount": "Телефонда Google аккаунты жоқ. Оны телефон Параметрлерінде (Аккаунттар) қосып, қайта байқап көр",
   };
   // I18N_KK:END
   function t(key, vars) {
@@ -9931,7 +9933,7 @@
   // Версия сборки: держать ВРУЧНУЮ синхронной с ?v= в index.html при каждом деплое
   // (те же 3 места — stylesheet/preload/script). Используется тихим автообновлением
   // ниже — сама загрузка кода по-прежнему идёт через ?v=.
-  const APP_VERSION = '20261022b';
+  const APP_VERSION = '20261026a';
   // ── Тихое автообновление (25.08.2026, вместо попапа «Вышло обновление!») ──
   // Узнав из облака про новую версию (appVersion пишет первый клиент нового деплоя,
   // promptVersion — кнопка «Оповестить» в админке), вкладка НЕ дёргает ученицу:
@@ -46381,7 +46383,19 @@
   var _googleAuthPending = false; // пока идёт вход — onAuthStateChanged не вмешивается
   // Наш APK (WebView с мостом KMTTS): Google запрещает вход во встроенном браузере
   // (403 disallowed_useragent), поэтому там кнопки нет — до обновления приложения.
-  function _googleUnavailableHere() { return !!window.KMTTS; }
+  // С 1.2.2 в приложении есть нативный вход (мост KMGOOGLE → Credential Manager): окно выбора аккаунта рисует Android,
+  // сайту приходит idToken, и он входит в тот же Firebase-аккаунт, что и в браузере. Старые APK моста не имеют.
+  function _kmNativeGoogle() { try { return !!(window.KMGOOGLE && typeof KMGOOGLE.isAvailable === 'function' && KMGOOGLE.isAvailable()); } catch (_) { return false; } }
+  function _googleUnavailableHere() { return !!window.KMTTS && !_kmNativeGoogle(); }
+  // Один вызов нативного входа → idToken (строка) или отказ { code: 'cancelled' | 'no_account' | 'timeout' | 'failed' }
+  function _kmNativeGoogleSignIn() {
+    return new Promise((resolve, reject) => {
+      const done = () => { clearTimeout(to); window.__kmGoogleResult = null; };
+      const to = setTimeout(() => { done(); reject({ code: 'timeout' }); }, 120000);
+      window.__kmGoogleResult = r => { done(); if (r && r.ok && typeof r.idToken === 'string' && r.idToken) resolve(r.idToken); else reject({ code: String((r && r.error) || 'failed') }); };
+      try { KMGOOGLE.signIn(); } catch (_) { done(); reject({ code: 'failed' }); }
+    });
+  }
   function hideGoogleInApp() {
     if (!_googleUnavailableHere()) return;
     const w = document.getElementById('auth-google-wrap');
@@ -46444,7 +46458,8 @@
   }
   async function loginWithGoogle() {
     if (_authBusy || _googleAuthPending) return;
-    if (_googleUnavailableHere() || _isInAppBrowser()) { _showGoogleInAppHint(); return; }
+    const nativeG = _kmNativeGoogle();
+    if (!nativeG && (_googleUnavailableHere() || _isInAppBrowser())) { _showGoogleInAppHint(); return; }
     const btn = document.querySelector('#auth-google-wrap .auth-google');
     const local = Store.get('user');
     const wasGuest = !!(local && local.guest);
@@ -46456,7 +46471,19 @@
     try {
       let cred;
       try {
-        cred = await _auth.signInWithPopup(provider);
+        if (nativeG) {
+          let idToken;
+          try { idToken = await _kmNativeGoogleSignIn(); }
+          catch (e) {
+            const c = (e && e.code) || '';
+            if (c === 'cancelled') return;
+            toast(t(c === 'no_account' ? 'auth.google.noAccount' : 'auth.google.fail'));
+            return;
+          }
+          cred = await _auth.signInWithCredential(firebase.auth.GoogleAuthProvider.credential(idToken));
+        } else {
+          cred = await _auth.signInWithPopup(provider);
+        }
       } catch (e) {
         const c = (e && e.code) || '';
         if (c === 'auth/popup-closed-by-user' || c === 'auth/cancelled-popup-request' || c === 'auth/user-cancelled') return;
