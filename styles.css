@@ -3164,8 +3164,8 @@ body.calm-motion .talk-wave i { height: 10px; }
     box-shadow: 0 4px 12px -4px rgba(var(--accent-rgb),.5);
   }
   body.calm-motion .lvl-chip { transition: none; }
-  /* «Редактировать профиль» под чипами вверху профиля (то же действие, что в настройках) */
-  .profile-edit-btn { display: inline-flex; align-items: center; justify-content: center; gap: 7px; min-height: 40px; margin-top: 14px; padding: 8px 16px; max-width: 100%; }
+  /* «Редактировать профиль» сразу под почтой вверху профиля (то же действие, что в настройках) */
+  .profile-edit-btn { display: inline-flex; align-items: center; justify-content: center; gap: 7px; min-height: 40px; margin-top: 12px; padding: 8px 16px; max-width: 100%; }
   .profile-edit-btn i { font-size: 11px; }
   /* Флаг страны (assets/flags, 4:3). Тонкая рамка — чтобы белые полосы флагов
      (Россия, Узбекистан, Таджикистан) не сливались с белым чипом */

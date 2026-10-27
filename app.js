@@ -9428,16 +9428,17 @@
       </div>`;
     document.body.appendChild(m);
   }
-  // Чип страны в профиле (рядом с уровнем); без выбора — подсвечен «выбери страну»
+  // Кнопка страны в окне «Редактировать профиль» (#ep-country-slot; с 27.10.2026 в самом профиле
+  // её нет); без выбора — пунктирная «выбери страну». Окно открыто → обновляется после выбора.
   function renderMyCountryChip() {
-    const slot = document.getElementById('profile-country-slot');
+    const slot = document.getElementById('ep-country-slot');
     if (!slot) return;
     const u = Store.get('user');
     if (!u || u.guest || u.isAdmin) { slot.innerHTML = ''; return; }
     const chosen = chosenCountry();
     const flag = flagImg(chosen || 'GL');
     slot.innerHTML = `<button type="button" onclick="openCountryPicker()" class="lvl-chip ${chosen ? 'on' : ''}" style="${chosen ? '' : 'border-style:dashed;'}">
-      ${flag} ${t('country.pick')}: ${chosen ? countryName(chosen) : t('country.notSet')} <i class="fa-solid fa-pen" style="font-size:9px; margin-left:4px;" aria-hidden="true"></i></button>`;
+      ${flag} ${chosen ? countryName(chosen) : t('country.notSet')} <i class="fa-solid fa-pen" style="font-size:9px; margin-left:4px;" aria-hidden="true"></i></button>`;
   }
   function myPlanObj() {
     const p = UStore.get('plan', null);
@@ -47056,6 +47057,12 @@
             <input id="ep-email" class="input" type="email" value="${escAttr(user.email||'')}" readonly style="margin-top:4px; opacity:.7;">
             <div style="font-size:10.5px; color:var(--soft); margin-top:2px;">${t('ep.emailLock')}</div>
           </div>`}
+          ${(isAdmin || user.guest) ? '' : `
+          <div>
+            <label style="font-size:10px; letter-spacing:.16em; color:var(--coral); font-weight:600;">${t('country.pick')}</label>
+            <div id="ep-country-slot" style="margin-top:4px;"></div>
+            <div style="font-size:10.5px; color:var(--soft); margin-top:4px;">${t('country.pickSub')}</div>
+          </div>`}
           <div>
             <label style="font-size:10px; letter-spacing:.16em; color:var(--coral); font-weight:600;">${t('ep.newPass')}</label>
             <div style="font-size:10.5px; color:var(--soft); margin-top:2px;">${t('ep.passHint')}</div>
@@ -47091,6 +47098,7 @@
       const bioCount = document.getElementById('ep-bio-count');
       if (bioCount) bioCount.textContent = String(savedBio.length);
     } catch (_) {}
+    try { renderMyCountryChip(); } catch (_) {}
   }
   function saveProfileEdits() {
     const user = Store.get('user');
