@@ -3167,6 +3167,14 @@ body.calm-motion .talk-wave i { height: 10px; }
   /* «Редактировать профиль» сразу под почтой вверху профиля (то же действие, что в настройках) */
   .profile-edit-btn { display: inline-flex; align-items: center; justify-content: center; gap: 7px; min-height: 40px; margin-top: 12px; padding: 8px 16px; max-width: 100%; }
   .profile-edit-btn i { font-size: 11px; }
+  /* Новый пароль по ссылке из письма (kmResetStart): над тарифами (z 300), под тостами (z 600) */
+  .km-reset-bg { z-index: 450; }
+  .km-reset-field { position: relative; margin-top: 12px; }
+  .km-reset-field .input { padding-right: 52px; }
+  .km-reset-eye { position: absolute; right: 4px; top: 50%; transform: translateY(-50%); width: 44px; height: 44px; border: 0; background: none; color: var(--soft); font-size: 16px; cursor: pointer; border-radius: 50%; }
+  .km-reset-eye:focus-visible { outline: 2px solid var(--coral); outline-offset: -2px; }
+  .km-reset-err { min-height: 18px; margin-top: 10px; font-size: 12.5px; font-weight: 600; color: var(--bad-ink); }
+  body.theme-dark .km-reset-err { color: #FF9AA8; }
   /* Флаг страны (assets/flags, 4:3). Тонкая рамка — чтобы белые полосы флагов
      (Россия, Узбекистан, Таджикистан) не сливались с белым чипом */
   .cflag {

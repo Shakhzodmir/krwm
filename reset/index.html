@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<meta name="color-scheme" content="light dark">
+<meta name="referrer" content="no-referrer">
+<title>Новый пароль — Korean with Madie</title>
+<!-- Адрес действия письма «сброс пароля» (консоль Firebase → Authentication → Шаблоны).
+     Firebase открывает его как /reset/?mode=resetPassword&oobCode=…; здесь параметры
+     переносятся на главную, где приложение показывает окно «Новый пароль» (kmResetStart в app.js).
+     В нашем APK этот адрес перехватывает приложение (App Links), страница до него не доходит. -->
+<style>
+  html, body { margin: 0; height: 100%; }
+  body { display: grid; place-items: center; padding: 24px; box-sizing: border-box; text-align: center;
+    background: #FBF3EC; color: #5C2A33; font: 16px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+  .ico { font-size: 44px; }
+  p { margin: 10px 0 0; }
+  a { color: #A93F52; font-weight: 600; }
+  @media (prefers-color-scheme: dark) {
+    body { background: #121212; color: #F1DCE0; }
+    a { color: #F2A6B4; }
+  }
+</style>
+</head>
+<body>
+<main>
+  <div class="ico" aria-hidden="true">🌸</div>
+  <p id="msg">Открываем форму нового пароля…</p>
+  <p><a id="go" href="/">Если ничего не происходит — открыть приложение</a></p>
+</main>
+<script>
+  // Только относительный переход на свой же корень: параметры (mode, oobCode…) едут как есть,
+  // а куда идти — решаем не мы по присланному адресу (continueUrl не используется).
+  (function () {
+    var q = location.search || '';
+    var ok = /[?&]mode=resetPassword(&|$)/.test(q) && /[?&]oobCode=/.test(q);
+    if (ok) location.replace('/' + q);
+    else location.replace('/');
+  })();
+</script>
+<noscript><p>Для смены пароля нужен включённый JavaScript.</p></noscript>
+</body>
+</html>

@@ -1226,7 +1226,30 @@
     'auth.google.old':   { ru: 'Уже есть аккаунт? Входи как раньше — через Email.', en: 'Already have an account? Sign in as before — with Email.', uz: 'Akkauntingiz bormi? Avvalgidek — Email orqali kiring.' },
     'auth.google.terms': { ru: 'Входя через Google, ты принимаешь условия использования', en: 'By continuing with Google, you accept the terms of use', uz: 'Google orqali kirib, foydalanish shartlarini qabul qilasiz' },
     'auth.google.pwHint': { ru: 'Входила через Google? Нажми сюда — войдём через Google', en: 'Signed in with Google before? Tap here to continue with Google', uz: 'Google orqali kirganmidingiz? Shu yerni bosing — Google orqali kiramiz' },
-    'auth.google.noAccount': { ru: 'На телефоне нет аккаунта Google. Добавь его в Настройках телефона (Аккаунты) и попробуй снова', en: 'There is no Google account on this phone. Add one in phone Settings (Accounts) and try again', uz: 'Telefonda Google akkaunti yoʻq. Uni telefon Sozlamalari (Akkauntlar) boʻlimida qoʻshing va qayta urinib koʻring' },
+    // ── Новый пароль по ссылке из письма (kmResetStart) ──
+    'reset.loading':   { ru: 'Проверяем ссылку…', en: 'Checking the link…', uz: 'Havola tekshirilmoqda…' },
+    'reset.title':     { ru: 'Новый пароль', en: 'New password', uz: 'Yangi parol' },
+    'reset.for':       { ru: 'Для аккаунта {email}', en: 'For the account {email}', uz: '{email} hisobi uchun' },
+    'reset.p1':        { ru: 'Новый пароль', en: 'New password', uz: 'Yangi parol' },
+    'reset.p2':        { ru: 'Повтори пароль', en: 'Repeat the password', uz: 'Parolni takrorlang' },
+    'reset.show':      { ru: 'Показать или скрыть пароль', en: 'Show or hide the password', uz: 'Parolni koʻrsatish yoki yashirish' },
+    'reset.hint':      { ru: 'Минимум 6 символов. После сохранения ты сразу войдёшь в аккаунт.', en: 'At least 6 characters. After saving you will be signed in right away.', uz: 'Kamida 6 ta belgi. Saqlagach, darhol hisobingizga kirasiz.' },
+    'reset.save':      { ru: 'Сохранить и войти', en: 'Save and sign in', uz: 'Saqlash va kirish' },
+    'reset.saving':    { ru: 'Сохраняем…', en: 'Saving…', uz: 'Saqlanmoqda…' },
+    'reset.short':     { ru: 'Пароль — минимум 6 символов', en: 'The password needs at least 6 characters', uz: 'Parol kamida 6 ta belgidan iborat boʻlsin' },
+    'reset.mismatch':  { ru: 'Пароли не совпадают', en: 'The passwords do not match', uz: 'Parollar mos kelmadi' },
+    'reset.weak':      { ru: 'Слишком простой пароль — придумай посложнее', en: 'That password is too weak — try a stronger one', uz: 'Parol juda oddiy — murakkabroq oʻylab toping' },
+    'reset.badTitle':  { ru: 'Ссылка больше не действует', en: 'This link no longer works', uz: 'Havola endi amal qilmaydi' },
+    'reset.badText':   { ru: 'Такая ссылка работает один раз и недолго. Запроси новое письмо — это быстро.', en: 'A link like this works once and only for a short time. Request a new email — it takes a moment.', uz: 'Bunday havola bir marta va qisqa muddat ishlaydi. Yangi xat soʻrang — bu tez.' },
+    'reset.again':     { ru: 'Запросить новое письмо', en: 'Request a new email', uz: 'Yangi xat soʻrash' },
+    'reset.close':     { ru: 'Закрыть', en: 'Close', uz: 'Yopish' },
+    'reset.netTitle':  { ru: 'Нет соединения', en: 'No connection', uz: 'Aloqa yoʻq' },
+    'reset.netText':   { ru: 'Проверь интернет и попробуй ещё раз.', en: 'Check your internet and try again.', uz: 'Internetni tekshiring va qayta urinib koʻring.' },
+    'reset.retry':     { ru: 'Повторить', en: 'Try again', uz: 'Qayta urinish' },
+    'reset.done':      { ru: 'Пароль изменён — ты в аккаунте 🌸', en: 'Password changed — you are signed in 🌸', uz: 'Parol almashtirildi — hisobingizdasiz 🌸' },
+    'reset.doneLogin': { ru: 'Пароль изменён. Войди с новым паролем', en: 'Password changed. Sign in with the new password', uz: 'Parol almashtirildi. Yangi parol bilan kiring' },
+    'reset.err':       { ru: 'Не получилось сохранить пароль. Попробуй ещё раз', en: 'Could not save the password. Please try again', uz: 'Parolni saqlab boʻlmadi. Qayta urinib koʻring' },
+    'auth.google.noAccount': { ru:'На телефоне нет аккаунта Google. Добавь его в Настройках телефона (Аккаунты) и попробуй снова', en: 'There is no Google account on this phone. Add one in phone Settings (Accounts) and try again', uz: 'Telefonda Google akkaunti yoʻq. Uni telefon Sozlamalari (Akkauntlar) boʻlimida qoʻshing va qayta urinib koʻring' },
     'auth.google.fail':  { ru: 'Не получилось войти через Google 😔 Попробуй ещё раз', en: 'Couldn’t sign in with Google 😔 Please try again', uz: 'Google orqali kirib boʻlmadi 😔 Yana urinib koʻring' },
     'auth.google.popupBlocked': { ru: 'Браузер заблокировал окно входа. Разреши всплывающие окна для сайта и нажми ещё раз', en: 'The browser blocked the sign-in window. Allow pop-ups for this site and try again', uz: 'Brauzer kirish oynasini blokladi. Sayt uchun qalqib chiquvchi oynalarga ruxsat bering va qayta bosing' },
     'auth.google.admin': { ru: 'Для админки входи через Email, как обычно 🌸', en: 'For the admin panel, sign in with Email as usual 🌸', uz: 'Admin panel uchun odatdagidek Email orqali kiring 🌸' },
@@ -2416,8 +2439,8 @@
     "ui.480": { ru: "Email-вход не включён в Firebase Console", en: "Email sign-in is not enabled in Firebase Console", uz: "Firebase Console-da email orqali kirish yoqilmagan" },
     "ui.481": { ru: "Ошибка регистрации: ", en: "Registration error: ", uz: "Roʻyxatdan oʻtishda xatolik: " },
     "ui.482": { ru: "Восстановление пароля", en: "Password recovery", uz: "Parolni tiklash" },
-    "ui.483": { ru: "Введи email от аккаунта — пришлём код для сброса", en: "Enter your account email — we'll send a reset code", uz: "Hisob emailingizni kiriting — tiklash kodini yuboramiz" },
-    "ui.484": { ru: "Отправить код", en: "Send code", uz: "Kodni yuborish" },
+    "ui.483": { ru: "Введи email от аккаунта — пришлём ссылку, чтобы задать новый пароль", en: "Enter your account email — we'll send a link to set a new password", uz: "Hisob emailingizni kiriting — yangi parol oʻrnatish uchun havola yuboramiz" },
+    "ui.484": { ru: "Отправить ссылку", en: "Send link", uz: "Havolani yuborish" },
     "ui.485": { ru: "Введи корректный email", en: "Enter a valid email", uz: "Toʻgʻri email kiriting" },
     "ui.486": { ru: "📧 Письмо для сброса пароля отправлено на <strong>{email}</strong>. Проверь почту (и папку Спам).", en: "📧 A password reset email was sent to <strong>{email}</strong>. Check your inbox (and the Spam folder).", uz: "📧 Parolni tiklash xati <strong>{email}</strong> manziliga yuborildi. Pochtangizni (va Spam jildini) tekshiring." },
     "ui.487": { ru: "Аккаунт с таким email не найден", en: "No account found with this email", uz: "Bu email bilan hisob topilmadi" },
@@ -4777,8 +4800,8 @@
     "ui.480": "Email арқылы кіру Firebase Console-да қосылмаған",
     "ui.481": "Тіркелу қатесі: ",
     "ui.482": "Құпиясөзді қалпына келтіру",
-    "ui.483": "Аккаунттың email-ін енгіз — қалпына келтіру кодын жібереміз",
-    "ui.484": "Кодты жіберу",
+    "ui.483": "Аккаунттың email-ін енгіз — жаңа құпиясөз орнату үшін сілтеме жібереміз",
+    "ui.484": "Сілтемені жіберу",
     "ui.485": "Дұрыс email енгіз",
     "ui.486": "📧 Құпиясөзді қалпына келтіру хаты <strong>{email}</strong> поштасына жіберілді. Поштаңды тексер (Спам қалтасын да).",
     "ui.487": "Мұндай email-мен аккаунт табылмады",
@@ -5353,6 +5376,28 @@
     "app.exit.s": "Прогресс сақталған",
     "app.exit.stay": "Қалу",
     "app.exit.go": "Шығу",
+    "reset.loading": "Сілтеме тексерілуде…",
+    "reset.title": "Жаңа құпиясөз",
+    "reset.for": "{email} аккаунты үшін",
+    "reset.p1": "Жаңа құпиясөз",
+    "reset.p2": "Құпиясөзді қайтала",
+    "reset.show": "Құпиясөзді көрсету немесе жасыру",
+    "reset.hint": "Кемінде 6 таңба. Сақтағаннан кейін бірден аккаунтқа кіресің.",
+    "reset.save": "Сақтап, кіру",
+    "reset.saving": "Сақталуда…",
+    "reset.short": "Құпиясөз кемінде 6 таңбадан тұруы керек",
+    "reset.mismatch": "Құпиясөздер сәйкес келмейді",
+    "reset.weak": "Құпиясөз тым оңай — күрделірек ойлап тап",
+    "reset.badTitle": "Сілтеме енді жарамсыз",
+    "reset.badText": "Мұндай сілтеме бір рет және қысқа уақыт жұмыс істейді. Жаңа хат сұра — бұл тез.",
+    "reset.again": "Жаңа хат сұрау",
+    "reset.close": "Жабу",
+    "reset.netTitle": "Байланыс жоқ",
+    "reset.netText": "Интернетті тексеріп, қайта байқап көр.",
+    "reset.retry": "Қайталау",
+    "reset.done": "Құпиясөз өзгертілді — аккаунттасың 🌸",
+    "reset.doneLogin": "Құпиясөз өзгертілді. Жаңа құпиясөзбен кір",
+    "reset.err": "Құпиясөзді сақтау мүмкін болмады. Қайта байқап көр",
   };
   // I18N_KK:END
   function t(key, vars) {
@@ -46996,6 +47041,8 @@
     const email = (document.getElementById('fp-email').value || '').trim();
     if (!email || !email.includes('@')) { toast(t('ui.485')); return; }
     try {
+      // Язык письма (тема, текст) — как у интерфейса; иначе Firebase берёт язык браузера
+      try { _auth.languageCode = APP_LANG || 'ru'; } catch (_) {}
       await _auth.sendPasswordResetEmail(email);
       document.getElementById('forgot-prompt')?.remove();
       toast(t('ui.486',{email: email}), 'var(--sage)');
@@ -47010,6 +47057,170 @@
   }
   // (Legacy local code-based password reset removed — recovery now goes through
   //  Firebase Auth's sendPasswordResetEmail in forgotPasswordSendCode above.)
+
+  // ── Новый пароль по ссылке из письма (27.10.2026) ──
+  // Адрес действия письма в консоли Firebase — https://koreanmadie.study/reset/ ; страница
+  // /reset/ пересылает на /?mode=resetPassword&oobCode=… (с теми же параметрами). Здесь код
+  // проверяется, человек вводит новый пароль и сразу входит — без стандартной страницы
+  // Firebase. В нашем APK ссылка открывается прямо в приложении (App Links, MainActivity).
+  let _kmResetCode = '', _kmResetEmail = '', _kmResetBusy = false;
+  function kmResetStart() {
+    let sp;
+    try { sp = new URLSearchParams(location.search); } catch (_) { return false; }
+    if (sp.get('mode') !== 'resetPassword') return false;
+    const code = (sp.get('oobCode') || '').trim();
+    // Код одноразовый и секретный: сразу убрать из адреса (история, «поделиться», перезагрузка)
+    ['mode', 'oobCode', 'apiKey', 'lang', 'continueUrl'].forEach(k => sp.delete(k));
+    try { const rest = sp.toString(); history.replaceState(null, '', location.pathname + (rest ? '?' + rest : '') + location.hash); } catch (_) {}
+    // Заставка и знакомство не должны перекрывать окно
+    document.querySelectorAll('#intro, #onboard').forEach(x => x.remove());
+    _kmResetCode = code; _kmResetEmail = '';
+    if (!code) { _kmResetShow('bad'); return true; }
+    _kmResetVerify();
+    return true;
+  }
+  function _kmResetVerify() {
+    const code = _kmResetCode;
+    _kmResetShow('loading');
+    _auth.verifyPasswordResetCode(code).then(email => {
+      if (code !== _kmResetCode) return;
+      _kmResetEmail = String(email || '');
+      _kmResetShow('form');
+    }).catch(e => {
+      if (code !== _kmResetCode) return;
+      console.warn('reset verify:', e);
+      _kmResetShow((e && e.code) === 'auth/network-request-failed' ? 'net' : 'bad');
+    });
+  }
+  function _kmResetShow(state) {
+    let m = document.getElementById('km-reset');
+    if (!m) {
+      m = document.createElement('div');
+      m.id = 'km-reset';
+      m.className = 'modal-bg modal-center km-reset-bg';
+      m.setAttribute('role', 'dialog');
+      m.setAttribute('aria-modal', 'true');
+      document.body.appendChild(m);
+    }
+    let body;
+    if (state === 'loading') {
+      body = `<div style="text-align:center;">
+        <div style="font-size:38px;" aria-hidden="true">🔑</div>
+        <div style="font-size:13px; color:var(--soft); margin-top:10px;">${t('reset.loading')}</div>
+      </div>`;
+    } else if (state === 'form') {
+      const email = _kmResetEmail;
+      body = `<div style="text-align:center;">
+          <div style="font-size:38px;" aria-hidden="true">🔑</div>
+          <div class="display" style="font-size:22px; color:var(--berry); margin-top:6px;">${t('reset.title')}</div>
+          <div style="font-size:12px; color:var(--soft); margin-top:4px; overflow-wrap:anywhere;">${t('reset.for', { email: escHtml(email) })}</div>
+        </div>
+        <form id="kr-form" onsubmit="kmResetSubmit(); return false;" novalidate>
+          <input type="email" name="username" autocomplete="username" value="${escAttr(email)}" readonly tabindex="-1" aria-hidden="true" style="position:absolute; width:1px; height:1px; opacity:0; pointer-events:none;">
+          <div class="km-reset-field">
+            <input id="kr-p1" class="input" type="password" name="new-password" autocomplete="new-password" placeholder="${escAttr(t('reset.p1'))}" aria-label="${escAttr(t('reset.p1'))}">
+            <button type="button" class="km-reset-eye" onclick="kmResetToggleEye(this)" aria-label="${escAttr(t('reset.show'))}" aria-pressed="false"><i class="fa-solid fa-eye" aria-hidden="true"></i></button>
+          </div>
+          <div class="km-reset-field">
+            <input id="kr-p2" class="input" type="password" name="new-password-repeat" autocomplete="new-password" placeholder="${escAttr(t('reset.p2'))}" aria-label="${escAttr(t('reset.p2'))}">
+          </div>
+          <div style="font-size:11.5px; color:var(--soft); margin-top:8px; line-height:1.5;">${t('reset.hint')}</div>
+          <div id="kr-err" class="km-reset-err" role="alert" aria-live="polite"></div>
+          <button type="submit" id="kr-save" class="btn btn-primary btn-block" style="margin-top:6px;">${t('reset.save')}</button>
+          <button type="button" class="btn btn-ghost btn-block" style="margin-top:8px;" onclick="kmResetClose()">${t('reset.close')}</button>
+        </form>`;
+    } else {
+      const net = state === 'net';
+      body = `<div style="text-align:center;">
+          <div style="font-size:38px;" aria-hidden="true">${net ? '📡' : '⏳'}</div>
+          <div class="display" style="font-size:20px; color:var(--berry); margin-top:6px;">${t(net ? 'reset.netTitle' : 'reset.badTitle')}</div>
+          <div style="font-size:12.5px; color:var(--soft); margin-top:8px; line-height:1.6;">${t(net ? 'reset.netText' : 'reset.badText')}</div>
+        </div>
+        <button type="button" class="btn btn-primary btn-block" style="margin-top:16px;" onclick="${net ? 'kmResetRetry()' : 'kmResetAgain()'}">${t(net ? 'reset.retry' : 'reset.again')}</button>
+        <button type="button" class="btn btn-ghost btn-block" style="margin-top:8px;" onclick="kmResetClose()">${t('reset.close')}</button>`;
+    }
+    m.innerHTML = `<div class="modal-card" style="max-width:360px;">${body}</div>`;
+    if (state === 'form') setTimeout(() => document.getElementById('kr-p1')?.focus(), 120);
+  }
+  function kmResetToggleEye(btn) {
+    const on = btn.getAttribute('aria-pressed') !== 'true';
+    btn.setAttribute('aria-pressed', String(on));
+    btn.innerHTML = `<i class="fa-solid ${on ? 'fa-eye-slash' : 'fa-eye'}" aria-hidden="true"></i>`;
+    ['kr-p1', 'kr-p2'].forEach(id => { const i = document.getElementById(id); if (i) i.type = on ? 'text' : 'password'; });
+  }
+  function _kmResetErr(msg) { const e = document.getElementById('kr-err'); if (e) e.textContent = msg || ''; }
+  function kmResetClose() { document.getElementById('km-reset')?.remove(); _kmResetCode = ''; }
+  function kmResetRetry() { _kmResetVerify(); }
+  // Ссылка не сработала → форма «забыли пароль» (почта подставлена, если мы её уже знаем)
+  function kmResetAgain() {
+    const email = _kmResetEmail;
+    kmResetClose();
+    showForgotPassword();
+    const f = document.getElementById('fp-email');
+    if (f && email) f.value = email;
+  }
+  async function kmResetSubmit() {
+    if (_kmResetBusy || _authBusy) return;
+    const p1 = (document.getElementById('kr-p1') || {}).value || '';
+    const p2 = (document.getElementById('kr-p2') || {}).value || '';
+    if (p1.length < 6) { _kmResetErr(t('reset.short')); document.getElementById('kr-p1')?.focus(); return; }
+    if (p1 !== p2) { _kmResetErr(t('reset.mismatch')); document.getElementById('kr-p2')?.focus(); return; }
+    _kmResetErr('');
+    _kmResetBusy = true; _authBusy = true;
+    const btn = document.getElementById('kr-save');
+    if (btn) { btn.disabled = true; btn.textContent = t('reset.saving'); }
+    const free = () => {
+      _kmResetBusy = false; _authBusy = false;
+      const b = document.getElementById('kr-save');
+      if (b) { b.disabled = false; b.textContent = t('reset.save'); }
+    };
+    try {
+      await _auth.confirmPasswordReset(_kmResetCode, p1);
+    } catch (e) {
+      console.warn('reset confirm:', e);
+      const c = (e && e.code) || '';
+      free();
+      if (c === 'auth/expired-action-code' || c === 'auth/invalid-action-code' || c === 'auth/user-disabled' || c === 'auth/user-not-found') _kmResetShow('bad');
+      else if (c === 'auth/weak-password') _kmResetErr(t('reset.weak'));
+      else if (c === 'auth/network-request-failed') _kmResetErr(t('ui.470'));
+      else _kmResetErr(t('reset.err'));
+      return;
+    }
+    _kmResetCode = '';   // одноразовый код израсходован
+    const email = _kmResetEmail;
+    const local = Store.get('user');
+    try {
+      // Админский сеанс этого устройства ученица не подменяет: пароль сменён, войти — вручную
+      if (local && local.isAdmin) { _kmResetDone(false, email); return; }
+      // Вход в ДРУГОЙ аккаунт на этом телефоне: пуши прежнего снимаем до смены личности
+      if (local && !local.guest && local.email && String(local.email).toLowerCase() !== email.toLowerCase()) {
+        try { kmPushForgetDevice(); } catch (_) {}
+      }
+      const cred = await _auth.signInWithEmailAndPassword(email, p1);
+      const display = cred.user.displayName || (cred.user.email || email).split('@')[0];
+      setActiveUser({ name: display, email: cred.user.email || email, uid: cred.user.uid });
+      _kmResetDone(true, email);
+    } catch (e) {
+      // Пароль уже сменён, а вход не вышел (сеть и т.п.) — честно говорим и ведём на форму входа
+      console.warn('reset login:', e);
+      _kmResetDone(false, email);
+    } finally {
+      _kmResetBusy = false; _authBusy = false;
+    }
+  }
+  function _kmResetDone(loggedIn, email) {
+    document.getElementById('km-reset')?.remove();
+    toast(t(loggedIn ? 'reset.done' : 'reset.doneLogin'), 'var(--sage)');
+    if (loggedIn) { try { switchScreen('home'); } catch (_) {} return; }
+    // Не вошла сама: форма входа с подставленной почтой
+    try {
+      switchScreen('profile');
+      const b = document.getElementById('auth-email-block');
+      if (b) b.style.display = 'block';
+      const f = document.getElementById('li-name');
+      if (f && email) f.value = email;
+    } catch (_) {}
+  }
 
   // ── Edit profile ──
   function escAttr(s) { return String(s||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
@@ -52608,6 +52819,8 @@
   // прогресса, её счётчик цели дня сохранял ПУСТУЮ стату поверх настоящей — у гостей XP,
   // стрик и слова обнулялись безвозвратно (кнопка календаря на /korean-culture/, 07–24.09.2026).
   // До этой строки клики по уведомлениям (сообщения SW, тапы в APK) ждут в очереди.
+  // Ссылка «новый пароль» из письма (/reset/ → /?mode=resetPassword&oobCode=…) — окно ввода пароля
+  try { kmResetStart(); } catch (e) { console.warn('[reset] start', e); }
   try { kmRouteStart(); } catch (e) { console.warn('[route] start', e); }
   // APK 1.2.0: токен натива → users/<uid>/fcmAndroid, KMPUSH.ready() → отложенный тап по пушу
   try { kmPushNativeInit(); } catch (e) { console.warn('[push] native init', e); }
