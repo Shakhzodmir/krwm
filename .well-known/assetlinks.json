@@ -1,0 +1,12 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "study.koreanmadie.app",
+      "sha256_cert_fingerprints": [
+        "3E:08:91:6D:85:A9:80:26:FF:E2:8F:9E:90:00:F5:08:18:F6:78:F6:B2:E9:80:B8:40:10:3D:2B:68:E0:4C:29"
+      ]
+    }
+  }
+]
