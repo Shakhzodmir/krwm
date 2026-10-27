@@ -58,11 +58,11 @@
      вводят анимации из styles.css, поэтому без «мигания»; логотип не трогаем (fanUnfurl). -->
 <style>#intro{position:fixed;inset:0;z-index:999;display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:hidden;cursor:pointer;background:radial-gradient(120% 90% at 50% 35%,#FFFCF8 0%,#FFF4F0 38%,#FBE8EA 78%,#F2D5DA 100%)}#intro>.intro-tagline,#intro>.intro-subline,#intro>.intro-cta{opacity:0}</style>
 
-<link rel="stylesheet" href="styles.css?v=20261026d">
+<link rel="stylesheet" href="styles.css?v=20261027a">
 
 <!-- Предзагрузка тяжёлого JS: скачивание стартует сразу, параллельно с CSS/шрифтами -->
 <link rel="preload" href="assets/textbook/textbook-data.js?v=20260924b" as="script">
-<link rel="preload" href="app.js?v=20261026d" as="script">
+<link rel="preload" href="app.js?v=20261027a" as="script">
 </head>
 
 <body>
@@ -962,6 +962,7 @@
         <div id="profile-plan-top" class="profile-student-only" style="margin-top:10px;"></div>
         <div id="profile-level-slot" class="profile-student-only" style="margin-top:10px;"></div>
         <div id="profile-country-slot" class="profile-student-only" style="margin-top:8px;"></div>
+        <button type="button" id="profile-edit-btn" class="lvl-chip profile-edit-btn" onclick="showEditProfile()"><i class="fa-solid fa-pen" aria-hidden="true"></i><span data-i18n="set.editProfile">Редактировать профиль</span></button>
       </div>
 
       <!-- Level card -->
@@ -1338,8 +1339,8 @@
 
 <!-- ─────────────── DATA + LOGIC ─────────────── -->
 <script src="assets/textbook/textbook-data.js?v=20260924b"></script>
-<script src="assets/komdori/komdori.js?v=20261026d"></script>
-<script src="app.js?v=20261026d"></script>
+<script src="assets/komdori/komdori.js?v=20261027a"></script>
+<script src="app.js?v=20261027a"></script>
 
 </body>
 </html>
