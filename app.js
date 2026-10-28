@@ -9988,7 +9988,7 @@
   // Версия сборки: держать ВРУЧНУЮ синхронной с ?v= в index.html при каждом деплое
   // (те же 3 места — stylesheet/preload/script). Используется тихим автообновлением
   // ниже — сама загрузка кода по-прежнему идёт через ?v=.
-  const APP_VERSION = '20261027a';
+  const APP_VERSION = '20261028a';
   // ── Тихое автообновление (25.08.2026, вместо попапа «Вышло обновление!») ──
   // Узнав из облака про новую версию (appVersion пишет первый клиент нового деплоя,
   // promptVersion — кнопка «Оповестить» в админке), вкладка НЕ дёргает ученицу:
@@ -47043,7 +47043,9 @@
     try {
       // Язык письма (тема, текст) — как у интерфейса; иначе Firebase берёт язык браузера
       try { _auth.languageCode = APP_LANG || 'ru'; } catch (_) {}
-      await _auth.sendPasswordResetEmail(email);
+      // Google заблокировал смену action URL в консоли (EMAIL_TEMPLATE_UPDATE_NOT_ALLOWED, 28.10.2026):
+      // ссылка ведёт на страницу Firebase, а кнопка «Продолжить» после смены пароля — на наш сайт.
+      await _auth.sendPasswordResetEmail(email, { url: 'https://koreanmadie.study/' });
       document.getElementById('forgot-prompt')?.remove();
       toast(t('ui.486',{email: email}), 'var(--sage)');
     } catch (e) {
