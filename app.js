@@ -9988,7 +9988,7 @@
   // Версия сборки: держать ВРУЧНУЮ синхронной с ?v= в index.html при каждом деплое
   // (те же 3 места — stylesheet/preload/script). Используется тихим автообновлением
   // ниже — сама загрузка кода по-прежнему идёт через ?v=.
-  const APP_VERSION = '20261028a';
+  const APP_VERSION = '20261102a';
   // ── Тихое автообновление (25.08.2026, вместо попапа «Вышло обновление!») ──
   // Узнав из облака про новую версию (appVersion пишет первый клиент нового деплоя,
   // promptVersion — кнопка «Оповестить» в админке), вкладка НЕ дёргает ученицу:
@@ -11808,7 +11808,7 @@
         </div>
         <textarea id="group-desc-input" class="input" rows="2" placeholder="${escAttr(t('grp.descPh'))}" maxlength="200" style="font-size:13px;resize:vertical;margin-bottom:4px;"></textarea>
         <div style="font-size:10px;letter-spacing:.18em;color:var(--soft);margin:14px 2px 8px;">${t('grp.members')}</div>
-        <div id="group-member-list" style="display:grid;gap:6px;max-height:260px;overflow-y:auto;">
+        <div id="group-member-list" style="display:grid;grid-template-columns:minmax(0,1fr);gap:6px;max-height:260px;overflow-y:auto;overflow-x:hidden;">
           ${fids.map(uid => {
             const nm = (friends[uid] && friends[uid].name) || t('grp.defFriend');
             const dir = (_usersDirCache && _usersDirCache[uid]) || {};
@@ -13034,7 +13034,7 @@
           <div onclick="this.closest('.modal-bg').remove()" style="font-size:24px;color:var(--soft);cursor:pointer;line-height:1;padding:2px 6px;">×</div>
         </div>
         <input id="add-friend-search" class="input" placeholder="${escAttr(t('friend.find.ph'))}" oninput="filterAddFriend()" style="font-size:13px;">
-        <div id="add-friend-results" style="display:grid;gap:8px;margin-top:14px;max-height:340px;overflow-y:auto;">
+        <div id="add-friend-results" style="display:grid;grid-template-columns:minmax(0,1fr);gap:8px;margin-top:14px;max-height:340px;overflow-y:auto;overflow-x:hidden;">
           <div style="text-align:center;padding:18px;color:var(--soft);font-size:12px;">${t('common.loading')}</div>
         </div>
       </div>`;
@@ -13076,13 +13076,13 @@
         actionHtml = `<button onclick="sendFriendRequest('${jsStr(u.uid)}','${jsStr(u.name||'')}')" class="btn btn-primary" style="padding:6px 10px;font-size:11px;flex-shrink:0;">${t('friend.add')}</button>`;
       }
       return `
-        <div style="display:flex;align-items:center;gap:10px;padding:8px 4px;">
+        <div style="display:flex;flex-wrap:wrap;align-items:center;gap:8px 10px;padding:8px 4px;">
           ${avatar}
-          <div style="flex:1;min-width:0;">
+          <div style="flex:1 1 130px;min-width:0;">
             <div style="font-weight:600;color:var(--berry);font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${escHtml(u.name || t('friend.noName'))} ${u.isAdmin ? '<span class="chip chip-coral" style="font-size:9px;padding:1px 6px;">🎓</span>' : ''}</div>
-            <div style="font-size:10.5px;color:var(--soft);">${escHtml(u.email || '')}</div>
+            <div style="font-size:10.5px;color:var(--soft);overflow-wrap:anywhere;">${escHtml(u.email || '')}</div>
           </div>
-          ${actionHtml}
+          <div style="margin-left:auto;display:flex;">${actionHtml}</div>
         </div>`;
     }).join('');
   }
@@ -13392,7 +13392,7 @@
           <span style="font-size:10px;letter-spacing:.18em;color:var(--soft);">${t('ui.t011')} · ${names.length}</span>
           <button class="chip chip-coral" style="font-size:10px;padding:4px 10px;cursor:pointer;border:none;" onclick="openAddGroupMember('${jsStr(gid)}')"><i class="fa-solid fa-user-plus" style="font-size:9px;"></i> ${t('ui.090')}</button>
         </div>
-        <div style="display:grid;gap:6px;max-height:240px;overflow-y:auto;">
+        <div style="display:grid;grid-template-columns:minmax(0,1fr);gap:6px;max-height:240px;overflow-y:auto;overflow-x:hidden;">
           ${names.map(([uid, nm]) => `
             <div style="display:flex;align-items:center;gap:10px;padding:7px 8px;border-radius:12px;background:var(--paper);">
               <div class="chat-row-av chat-row-av-initial" style="width:34px;height:34px;font-size:13px;">${escHtml((nm || '?').charAt(0).toUpperCase())}</div>
@@ -13422,7 +13422,7 @@
       <div class="modal-card" style="max-width:340px;">
         <div class="page-eyebrow">${t('ui.115')}</div>
         <div class="display" style="font-size:18px;color:var(--berry);margin:2px 0 12px;">${t('ui.116')}</div>
-        <div style="display:grid;gap:6px;max-height:300px;overflow-y:auto;">
+        <div style="display:grid;grid-template-columns:minmax(0,1fr);gap:6px;max-height:300px;overflow-y:auto;overflow-x:hidden;">
           ${candidates.map(uid => {
             const nm = (pool[uid] && pool[uid].name) || (_usersDirCache && _usersDirCache[uid] && _usersDirCache[uid].name) || t('grp.defMember');
             return `<button type="button" class="cw-lobby-card" style="padding:9px 12px;" onclick="addGroupMember('${jsStr(gid)}','${jsStr(uid)}','${jsStr(nm)}')">
