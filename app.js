@@ -1249,6 +1249,25 @@
     'reset.done':      { ru: 'Пароль изменён — ты в аккаунте 🌸', en: 'Password changed — you are signed in 🌸', uz: 'Parol almashtirildi — hisobingizdasiz 🌸' },
     'reset.doneLogin': { ru: 'Пароль изменён. Войди с новым паролем', en: 'Password changed. Sign in with the new password', uz: 'Parol almashtirildi. Yangi parol bilan kiring' },
     'reset.err':       { ru: 'Не получилось сохранить пароль. Попробуй ещё раз', en: 'Could not save the password. Please try again', uz: 'Parolni saqlab boʻlmadi. Qayta urinib koʻring' },
+    // ── Установка на iPhone («На экран Домой») ──
+    'ios.inst.title':     { ru: 'Установить на iPhone', en: 'Install on iPhone', uz: 'iPhone’ga oʻrnatish' },
+    'ios.inst.sub':       { ru: 'Значок на экране «Домой» и уведомления', en: 'Home Screen icon and notifications', uz: 'Bosh ekrandagi belgi va bildirishnomalar' },
+    'ios.inst.banner':    { ru: 'Установи Madie на iPhone', en: 'Install Madie on iPhone', uz: 'Madie’ni iPhone’ga oʻrnating' },
+    'ios.inst.bannerSub': { ru: 'Значок на экране «Домой» и уведомления — за минуту', en: 'Home Screen icon and notifications — in a minute', uz: 'Bosh ekrandagi belgi va bildirishnomalar — bir daqiqada' },
+    'ios.inst.hide':      { ru: 'Скрыть', en: 'Hide', uz: 'Yashirish' },
+    'ios.inst.eyebrow':   { ru: 'Приложение', en: 'App', uz: 'Ilova' },
+    'ios.inst.lead':      { ru: 'Madie ставится на iPhone прямо из Safari, без App Store:', en: 'Madie installs on iPhone straight from Safari — no App Store needed:', uz: 'Madie iPhone’ga App Store’siz, bevosita Safari’dan oʻrnatiladi:' },
+    'ios.inst.s1':        { ru: 'Нажми «Поделиться» — квадрат со стрелкой вверх (внизу экрана; в новых iPhone — в меню «⋯»)', en: 'Tap Share — the square with an arrow pointing up (at the bottom of the screen; on newer iPhones, in the “⋯” menu)', uz: '«Ulashish» tugmasini bosing — tepaga strelkali kvadrat (ekran pastida; yangi iPhone’larda — «⋯» menyusida)' },
+    'ios.inst.s2':        { ru: 'Пролистай список и выбери «На экран «Домой»»', en: 'Scroll the list and choose “Add to Home Screen”', uz: 'Roʻyxatni pastga aylantirib, «Bosh ekranga qoʻshish»ni tanlang' },
+    'ios.inst.s3':        { ru: 'Нажми «Добавить» — значок Madie появится среди приложений', en: 'Tap “Add” — the Madie icon will appear among your apps', uz: '«Qoʻshish»ni bosing — Madie belgisi ilovalar orasida paydo boʻladi' },
+    'ios.inst.s4':        { ru: 'Открывай Madie с этого значка — только так работают уведомления. Включить их можно в Настройках → «Уведомления»', en: 'Open Madie from that icon — it is the only way notifications work. Turn them on in Settings → Notifications', uz: 'Madie’ni shu belgidan oching — bildirishnomalar faqat shunday ishlaydi. Ularni Sozlamalar → «Bildirishnomalar»da yoqing' },
+    'ios.inst.mic':       { ru: 'Ограничение iPhone: из приложения с экрана «Домой» голосовой ввод недоступен — вместо него клавиатура. Для голосовых заданий открывай сайт в Safari.', en: 'iPhone limitation: voice input is unavailable in an app opened from the Home Screen — the keyboard is used instead. For voice tasks, open the site in Safari.', uz: 'iPhone cheklovi: Bosh ekrandan ochilgan ilovada ovozli kiritish ishlamaydi — oʻrniga klaviatura ishlatiladi. Ovozli topshiriqlar uchun saytni Safari’da oching.' },
+    'ios.inst.ok':        { ru: 'Понятно', en: 'Got it', uz: 'Tushunarli' },
+    'ios.inst.inapp':     { ru: 'Сайт открыт внутри другого приложения (Instagram, Telegram и т. п.) — отсюда установить нельзя. Открой ссылку в Safari:', en: 'The site is open inside another app (Instagram, Telegram, etc.), so it can’t be installed from here. Open the link in Safari:', uz: 'Sayt boshqa ilova ichida ochilgan (Instagram, Telegram va h.k.) — bu yerdan oʻrnatib boʻlmaydi. Havolani Safari’da oching:' },
+    'ios.inst.inappHow':  { ru: 'Нажми «⋯» или значок компаса → «Открыть в Safari». Либо скопируй ссылку и вставь в Safari — там появится эта же подсказка.', en: 'Tap “⋯” or the compass icon → “Open in Safari”. Or copy the link and paste it into Safari — the same hint will appear there.', uz: '«⋯» yoki kompas belgisini bosing → «Safari’da ochish». Yoki havolani nusxalab, Safari’ga qoʻying — u yerda ham shu maslahat chiqadi.' },
+    'ios.inst.copy':      { ru: 'Скопировать ссылку', en: 'Copy link', uz: 'Havolani nusxalash' },
+    'ios.inst.copied':    { ru: 'Ссылка скопирована 🌸', en: 'Link copied 🌸', uz: 'Havola nusxalandi 🌸' },
+    'ios.inst.copyFail':  { ru: 'Не получилось скопировать — выдели ссылку и скопируй вручную', en: 'Couldn’t copy — select the link and copy it manually', uz: 'Nusxalab boʻlmadi — havolani belgilab, qoʻlda nusxalang' },
     'auth.google.noAccount': { ru:'На телефоне нет аккаунта Google. Добавь его в Настройках телефона (Аккаунты) и попробуй снова', en: 'There is no Google account on this phone. Add one in phone Settings (Accounts) and try again', uz: 'Telefonda Google akkaunti yoʻq. Uni telefon Sozlamalari (Akkauntlar) boʻlimida qoʻshing va qayta urinib koʻring' },
     'auth.google.fail':  { ru: 'Не получилось войти через Google 😔 Попробуй ещё раз', en: 'Couldn’t sign in with Google 😔 Please try again', uz: 'Google orqali kirib boʻlmadi 😔 Yana urinib koʻring' },
     'auth.google.popupBlocked': { ru: 'Браузер заблокировал окно входа. Разреши всплывающие окна для сайта и нажми ещё раз', en: 'The browser blocked the sign-in window. Allow pop-ups for this site and try again', uz: 'Brauzer kirish oynasini blokladi. Sayt uchun qalqib chiquvchi oynalarga ruxsat bering va qayta bosing' },
@@ -5398,6 +5417,24 @@
     "reset.done": "Құпиясөз өзгертілді — аккаунттасың 🌸",
     "reset.doneLogin": "Құпиясөз өзгертілді. Жаңа құпиясөзбен кір",
     "reset.err": "Құпиясөзді сақтау мүмкін болмады. Қайта байқап көр",
+    "ios.inst.title": "iPhone-ға орнату",
+    "ios.inst.sub": "Басты экрандағы белгі және хабарландырулар",
+    "ios.inst.banner": "Madie-ді iPhone-ға орнат",
+    "ios.inst.bannerSub": "Басты экрандағы белгі және хабарландырулар — бір минутта",
+    "ios.inst.hide": "Жасыру",
+    "ios.inst.eyebrow": "Қолданба",
+    "ios.inst.lead": "Madie iPhone-ға App Store-сыз, тікелей Safari арқылы орнатылады:",
+    "ios.inst.s1": "«Бөлісу» түймесін бас — жоғары көрсеткісі бар шаршы (экранның төменгі жағында; жаңа iPhone-дарда — «⋯» мәзірінде)",
+    "ios.inst.s2": "Тізімді төмен айналдырып, «Басты экранға қосу» таңда",
+    "ios.inst.s3": "«Қосу» түймесін бас — Madie белгісі қолданбалар арасында пайда болады",
+    "ios.inst.s4": "Madie-ді осы белгіден аш — хабарландырулар тек осылай жұмыс істейді. Оларды Баптаулар → «Хабарландырулар» бөлімінде қос",
+    "ios.inst.mic": "iPhone шектеуі: «Басты экраннан» ашылған қолданбада дауыспен енгізу жұмыс істемейді — оның орнына пернетақта. Дауыстық тапсырмалар үшін сайтты Safari-де аш.",
+    "ios.inst.ok": "Түсінікті",
+    "ios.inst.inapp": "Сайт басқа қолданбаның ішінде ашылған (Instagram, Telegram т.б.) — мұнда орнату мүмкін емес. Сілтемені Safari-де аш:",
+    "ios.inst.inappHow": "«⋯» немесе компас белгісін бас → «Safari-де ашу». Не сілтемені көшіріп, Safari-ге қой — онда да осы кеңес шығады.",
+    "ios.inst.copy": "Сілтемені көшіру",
+    "ios.inst.copied": "Сілтеме көшірілді 🌸",
+    "ios.inst.copyFail": "Көшіру мүмкін болмады — сілтемені белгілеп, қолмен көшір",
   };
   // I18N_KK:END
   function t(key, vars) {
@@ -5436,6 +5473,7 @@
     try { renderGreeting(); } catch (e) {}
     try { updateHomeDateLine(); } catch (e) {}
     try { renderCultureBanner(); } catch (e) {}
+    try { renderIosInstall(); } catch (e) {}
     // Перерисовать динамику текущего экрана в новом языке
     try { if (typeof _curScreen !== 'undefined' && typeof switchScreen === 'function') switchScreen(_curScreen, true); } catch (e) {}
     // Пуши приходят на языке интерфейса: язык лежит в токенах устройства и в users/<uid>/notif
@@ -9988,7 +10026,7 @@
   // Версия сборки: держать ВРУЧНУЮ синхронной с ?v= в index.html при каждом деплое
   // (те же 3 места — stylesheet/preload/script). Используется тихим автообновлением
   // ниже — сама загрузка кода по-прежнему идёт через ?v=.
-  const APP_VERSION = '20261102a';
+  const APP_VERSION = '20261106a';
   // ── Тихое автообновление (25.08.2026, вместо попапа «Вышло обновление!») ──
   // Узнав из облака про новую версию (appVersion пишет первый клиент нового деплоя,
   // promptVersion — кнопка «Оповестить» в админке), вкладка НЕ дёргает ученицу:
@@ -14185,6 +14223,95 @@
   function _kmIsStandalone() {
     try { return !!((window.matchMedia && matchMedia('(display-mode: standalone)').matches) || navigator.standalone === true); } catch (_) { return false; }
   }
+
+  // ── Установка на iPhone («На экран Домой») ──
+  // Без неё в Safari нет ни пушей (Notification на iOS появляется только у приложения с экрана
+  // «Домой», iOS 16.4+), ни значка. Три случая: обычный Safari / другой браузер iOS → шаги;
+  // сайт открыт ВНУТРИ другого приложения (Instagram, Telegram…: WKWebView без «Safari/» в
+  // user-agent) → установить оттуда нельзя, сначала открыть в Safari.
+  const KM_IOS_HIDE_KEY = 'iosInstallHide';
+  const KM_IOS_SITE_URL = 'https://koreanmadie.study/';
+  function _kmIosInstallable() { return _kmIsIos() && !_kmIsStandalone() && !window.KMTTS; }
+  function _kmIosInApp() {
+    const ua = navigator.userAgent || '';
+    if (/CriOS|FxiOS|EdgiOS|OPiOS|YaBrowser/.test(ua)) return false;   // у них своё меню «Поделиться» → «На экран Домой»
+    return !/Safari\//.test(ua) || /Instagram|FBAN|FBAV|Line\/|MicroMessenger|Snapchat|TikTok|musical_ly|Bytedance|VKClient/.test(ua);
+  }
+  function renderIosInstall() {
+    const slot = document.getElementById('ios-install-slot');
+    if (!slot) return;
+    if (!_kmIosInstallable()) { slot.innerHTML = ''; return; }
+    const hiddenAt = +Store.get(KM_IOS_HIDE_KEY, 0) || 0;
+    if (hiddenAt && Date.now() - hiddenAt < 21 * 86400000) { slot.innerHTML = ''; return; }   // закрыла — не мозолим 3 недели
+    slot.innerHTML = `
+      <div class="ios-inst-banner">
+        <button type="button" class="ios-inst-main" onclick="openIosInstallGuide()">
+          <span class="ios-inst-ico" aria-hidden="true">📲</span>
+          <span class="ios-inst-tx">
+            <span class="ios-inst-t">${t('ios.inst.banner')}</span>
+            <span class="ios-inst-s">${t('ios.inst.bannerSub')}</span>
+          </span>
+        </button>
+        <button type="button" class="ios-inst-x" onclick="hideIosInstall()" aria-label="${escAttr(t('ios.inst.hide'))}">×</button>
+      </div>`;
+  }
+  function hideIosInstall() {
+    Store.set(KM_IOS_HIDE_KEY, Date.now());
+    renderIosInstall();
+  }
+  function openIosInstallGuide() {
+    document.getElementById('settings-modal')?.remove();
+    document.getElementById('ios-install-modal')?.remove();
+    const share = `<svg class="ios-inst-share" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="M8 7l4-4 4 4"/><path d="M6 11H5a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-8a1 1 0 0 0-1-1h-1"/></svg>`;
+    const step = (n, html) => `<li class="ios-inst-step"><span class="ios-inst-n" aria-hidden="true">${n}</span><span class="ios-inst-st">${html}</span></li>`;
+    const body = _kmIosInApp()
+      ? `<p class="ios-inst-lead">${t('ios.inst.inapp')}</p>
+         <div class="ios-inst-url"><span class="ios-inst-link">koreanmadie.study</span></div>
+         <button type="button" class="btn btn-primary btn-block" style="margin-top:10px;" onclick="copyIosInstallLink()">${t('ios.inst.copy')}</button>
+         <div class="ios-inst-note">${t('ios.inst.inappHow')}</div>`
+      : `<p class="ios-inst-lead">${t('ios.inst.lead')}</p>
+         <ol class="ios-inst-steps">
+           ${step(1, `${t('ios.inst.s1')} ${share}`)}
+           ${step(2, t('ios.inst.s2'))}
+           ${step(3, t('ios.inst.s3'))}
+           ${step(4, t('ios.inst.s4'))}
+         </ol>
+         <div class="ios-inst-note">${t('ios.inst.mic')}</div>`;
+    const m = document.createElement('div');
+    m.className = 'modal-bg modal-center';
+    m.id = 'ios-install-modal';
+    m.onclick = e => { if (e.target === m) m.remove(); };
+    m.innerHTML = `
+      <div class="modal-card ios-inst-card" role="dialog" aria-modal="true" aria-labelledby="ios-inst-title">
+        <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:10px;">
+          <div style="min-width:0;">
+            <div class="page-eyebrow">${t('ios.inst.eyebrow')}</div>
+            <div id="ios-inst-title" class="display" style="font-size:20px; color:var(--berry); margin-top:4px; overflow-wrap:anywhere;">${t('ios.inst.title')}</div>
+          </div>
+          <button type="button" onclick="this.closest('.modal-bg').remove()" aria-label="${escAttr(t('ios.inst.ok'))}" style="background:none; border:none; font-family:inherit; font-size:26px; line-height:1; color:var(--soft); cursor:pointer; min-width:44px; min-height:44px; margin:-8px -10px 0 0;">×</button>
+        </div>
+        ${body}
+        <button type="button" class="btn btn-ghost btn-block" style="margin-top:14px;" onclick="this.closest('.modal-bg').remove()">${t('ios.inst.ok')}</button>
+      </div>`;
+    document.body.appendChild(m);
+  }
+  function copyIosInstallLink() {
+    const done = () => toast(t('ios.inst.copied'), 'var(--sage)');
+    const fallback = () => {
+      try {
+        const ta = document.createElement('textarea');
+        ta.value = KM_IOS_SITE_URL; ta.style.position = 'fixed'; ta.style.opacity = '0';
+        document.body.appendChild(ta); ta.focus(); ta.select();
+        ta.setSelectionRange(0, ta.value.length);
+        const ok = document.execCommand('copy'); ta.remove();
+        if (ok) done(); else toast(t('ios.inst.copyFail'));
+      } catch (_) { toast(t('ios.inst.copyFail')); }
+    };
+    try {
+      if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(KM_IOS_SITE_URL).then(done).catch(fallback);
+      else fallback();
+    } catch (_) { fallback(); }
+  }
   // Разрешение на уведомления ЭТОГО устройства: granted | default | denied | unsupported
   function kmPushPermission() {
     if (_kmApkPush()) return _kmApkPerm();
@@ -14322,7 +14449,11 @@
       return;
     }
     if (!_messaging) { toast(t('ui.129')); return; }
-    if (!('Notification' in window)) { toast((_kmIsIos() && !_kmIsStandalone()) ? t('set.notif.unsupIos') : t('ui.130')); return; }
+    if (!('Notification' in window)) {
+      // iPhone в Safari: пуши есть только у приложения с экрана «Домой» — показываем шаги установки
+      if (_kmIosInstallable()) openIosInstallGuide(); else toast(t('ui.130'));
+      return;
+    }
     if (!_VAPID_KEY || _VAPID_KEY.startsWith('REPLACE_')) { toast(t('ui.131')); return; }
     if (Notification.permission === 'denied') { toast(t('ui.132')); return; }
     if (Notification.permission !== 'granted') {
@@ -16503,6 +16634,8 @@
       row('🌸', t('set.intro'), t('set.intro.sub'), chev, 'startOnboardingTour()'),
       row('🧭', t('set.tour'), t('set.tour.sub'), chev, 'startAppTour()'),
       row('🎯', t('set.goal'), t('set.goal.sub'), chev, 'openDailyGoalSettings()'),
+      // iPhone в Safari: установка на экран «Домой» (даёт значок и уведомления)
+      ...(_kmIosInstallable() ? [row('📲', t('ios.inst.title'), t('ios.inst.sub'), chev, 'openIosInstallGuide()')] : []),
       // Уведомления: статус этого устройства (веб / APK) + что присылать (настройка аккаунта)
       _kmNotifSettingsHtml(row, sw),
       row('💌', t('set.feedback'), t('set.feedback.sub'), chev, 'openFeedbackModal()'),
@@ -16793,6 +16926,7 @@
     renderTopikQuestionCard();
     renderContinue();
     renderBearGuide();
+    try { renderIosInstall(); } catch (e) { console.warn('[ios-install]', e); }
     applyAvatar(UStore.get('avatar'));
     updateGameSourceUI();
   }

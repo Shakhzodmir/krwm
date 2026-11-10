@@ -58,11 +58,11 @@
      вводят анимации из styles.css, поэтому без «мигания»; логотип не трогаем (fanUnfurl). -->
 <style>#intro{position:fixed;inset:0;z-index:999;display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:hidden;cursor:pointer;background:radial-gradient(120% 90% at 50% 35%,#FFFCF8 0%,#FFF4F0 38%,#FBE8EA 78%,#F2D5DA 100%)}#intro>.intro-tagline,#intro>.intro-subline,#intro>.intro-cta{opacity:0}</style>
 
-<link rel="stylesheet" href="styles.css?v=20261102a">
+<link rel="stylesheet" href="styles.css?v=20261106a">
 
 <!-- Предзагрузка тяжёлого JS: скачивание стартует сразу, параллельно с CSS/шрифтами -->
 <link rel="preload" href="assets/textbook/textbook-data.js?v=20260924b" as="script">
-<link rel="preload" href="app.js?v=20261102a" as="script">
+<link rel="preload" href="app.js?v=20261106a" as="script">
 </head>
 
 <body>
@@ -191,6 +191,9 @@
 
     <!-- Мишка-гид Комдори (dynamic) -->
     <div id="bear-guide-slot" style="padding: 0 20px 14px;"></div>
+
+    <!-- iPhone в Safari: плашка «Установи на экран Домой» (dynamic; пусто на всех остальных устройствах) -->
+    <div id="ios-install-slot" style="padding: 0 20px;"></div>
 
     <!-- Continue last game (dynamic; hidden when nothing to resume) -->
     <div id="continue-slot" style="padding: 0 20px 4px;"></div>
@@ -1337,8 +1340,8 @@
 
 <!-- ─────────────── DATA + LOGIC ─────────────── -->
 <script src="assets/textbook/textbook-data.js?v=20260924b"></script>
-<script src="assets/komdori/komdori.js?v=20261102a"></script>
-<script src="app.js?v=20261102a"></script>
+<script src="assets/komdori/komdori.js?v=20261106a"></script>
+<script src="app.js?v=20261106a"></script>
 
 </body>
 </html>

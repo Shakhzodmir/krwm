@@ -3824,6 +3824,49 @@ body.calm-motion .talk-wave i { height: 10px; }
   .continue-chip .cc-sub { font-size: 14px; font-weight: 600; color: var(--berry); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .continue-chip .cc-arrow { color: var(--soft); font-size: 13px; flex-shrink: 0; }
 
+  /* iPhone в Safari: плашка «Установи на iPhone» на главной + окно с шагами установки */
+  .ios-inst-banner {
+    display: flex; align-items: stretch; margin-bottom: 14px;
+    border-radius: 18px; border: 1px solid var(--line);
+    background: linear-gradient(135deg, rgba(var(--rose-rgb),.16), rgba(var(--accent-rgb),.10));
+  }
+  .ios-inst-main {
+    flex: 1; min-width: 0; display: flex; align-items: center; gap: 12px;
+    padding: 12px 4px 12px 14px; background: none; border: none; border-radius: 18px;
+    font-family: inherit; text-align: left; cursor: pointer;
+    transition: transform var(--t-fast) var(--ease-out);
+  }
+  .ios-inst-main:active { transform: scale(.985); }
+  .ios-inst-ico {
+    flex-shrink: 0; width: 38px; height: 38px; border-radius: 12px;
+    background: var(--grad-coral); font-size: 18px;
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 4px 12px -3px rgba(var(--accent-rgb),.55);
+  }
+  .ios-inst-tx { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+  .ios-inst-t { font-size: 14px; font-weight: 600; color: var(--berry); overflow-wrap: anywhere; }
+  .ios-inst-s { font-size: 11.5px; line-height: 1.35; color: var(--soft); overflow-wrap: anywhere; }
+  .ios-inst-x {
+    flex-shrink: 0; width: 44px; background: none; border: none; border-radius: 0 18px 18px 0;
+    font-family: inherit; font-size: 22px; line-height: 1; color: var(--soft); cursor: pointer;
+    transition: color var(--t-fast) var(--ease-out);
+  }
+  .ios-inst-x:active { color: var(--berry); }
+  .ios-inst-card { max-width: 400px; }
+  .ios-inst-lead { margin: 12px 0 0; font-size: 13px; line-height: 1.5; color: var(--text2); overflow-wrap: anywhere; }
+  .ios-inst-steps { list-style: none; margin: 14px 0 0; padding: 0; display: grid; grid-template-columns: minmax(0, 1fr); gap: 12px; }
+  .ios-inst-step { display: flex; align-items: flex-start; gap: 12px; font-size: 13.5px; line-height: 1.5; color: var(--text2); }
+  .ios-inst-st { flex: 1; min-width: 0; overflow-wrap: anywhere; }
+  .ios-inst-n {
+    flex-shrink: 0; width: 26px; height: 26px; border-radius: 50%;
+    background: var(--grad-coral); color: #fff; font-size: 13px; font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .ios-inst-share { display: inline-block; vertical-align: -3px; color: var(--coral); }
+  .ios-inst-note { margin-top: 14px; padding: 10px 12px; border-radius: 14px; background: var(--blush); font-size: 11.5px; line-height: 1.5; color: var(--soft); overflow-wrap: anywhere; }
+  .ios-inst-url { margin-top: 12px; padding: 12px; border: 1.5px solid var(--line); border-radius: 14px; background: var(--paper); text-align: center; }
+  .ios-inst-link { font-size: 15px; font-weight: 600; color: var(--berry); overflow-wrap: anywhere; -webkit-user-select: text; user-select: text; }
+
   /* Mini progress bar under the current lesson tile (resume point) */
   .tile-progress {
     width: 72px; height: 5px; margin: 6px auto 0;
@@ -7038,7 +7081,8 @@ body.calm-motion .talk-wave i { height: 10px; }
   body.theme-dark .profile-nav-badge { background: var(--dk-fill-deep); }
   body.theme-dark .gcv-emoji-icon { background: var(--blush); }
   body.theme-dark .home-greet-avatar { background: var(--blush); }
-  body.theme-dark .continue-chip { background: rgba(var(--accent-rgb),.10); }
+  body.theme-dark .continue-chip,
+  body.theme-dark .ios-inst-banner { background: rgba(var(--accent-rgb),.10); }
   body.theme-dark .wxc-bar { background: var(--dk-fill); }
   body.theme-dark .sidenav .nav-item.active { background: rgba(var(--accent-rgb),.14); }
   body.theme-dark .nav-item.active i { background: rgba(var(--accent-rgb),.14); }
