@@ -1268,6 +1268,11 @@
     'ios.inst.copy':      { ru: 'Скопировать ссылку', en: 'Copy link', uz: 'Havolani nusxalash' },
     'ios.inst.copied':    { ru: 'Ссылка скопирована 🌸', en: 'Link copied 🌸', uz: 'Havola nusxalandi 🌸' },
     'ios.inst.copyFail':  { ru: 'Не получилось скопировать — выдели ссылку и скопируй вручную', en: 'Couldn’t copy — select the link and copy it manually', uz: 'Nusxalab boʻlmadi — havolani belgilab, qoʻlda nusxalang' },
+    // ── Android: приложение в Google Play ──
+    'play.get.title':     { ru: 'Скачать в Google Play', en: 'Get it on Google Play', uz: 'Google Play’dan yuklab olish' },
+    'play.get.sub':       { ru: 'Приложение для Android: уведомления и голосовые задания', en: 'Android app: notifications and voice tasks', uz: 'Android uchun ilova: bildirishnomalar va ovozli topshiriqlar' },
+    'play.get.banner':    { ru: 'Madie теперь в Google Play', en: 'Madie is now on Google Play', uz: 'Madie endi Google Play’da' },
+    'play.get.bannerSub': { ru: 'Установи приложение: уведомления и голосовые задания', en: 'Install the app: notifications and voice tasks', uz: 'Ilovani oʻrnating: bildirishnomalar va ovozli topshiriqlar' },
     'auth.google.noAccount': { ru:'На телефоне нет аккаунта Google. Добавь его в Настройках телефона (Аккаунты) и попробуй снова', en: 'There is no Google account on this phone. Add one in phone Settings (Accounts) and try again', uz: 'Telefonda Google akkaunti yoʻq. Uni telefon Sozlamalari (Akkauntlar) boʻlimida qoʻshing va qayta urinib koʻring' },
     'auth.google.fail':  { ru: 'Не получилось войти через Google 😔 Попробуй ещё раз', en: 'Couldn’t sign in with Google 😔 Please try again', uz: 'Google orqali kirib boʻlmadi 😔 Yana urinib koʻring' },
     'auth.google.popupBlocked': { ru: 'Браузер заблокировал окно входа. Разреши всплывающие окна для сайта и нажми ещё раз', en: 'The browser blocked the sign-in window. Allow pop-ups for this site and try again', uz: 'Brauzer kirish oynasini blokladi. Sayt uchun qalqib chiquvchi oynalarga ruxsat bering va qayta bosing' },
@@ -5435,6 +5440,10 @@
     "ios.inst.copy": "Сілтемені көшіру",
     "ios.inst.copied": "Сілтеме көшірілді 🌸",
     "ios.inst.copyFail": "Көшіру мүмкін болмады — сілтемені белгілеп, қолмен көшір",
+    "play.get.title": "Google Play-ден жүктеу",
+    "play.get.sub": "Android қолданбасы: хабарландырулар және дауыстық тапсырмалар",
+    "play.get.banner": "Madie енді Google Play-де",
+    "play.get.bannerSub": "Қолданбаны орнат: хабарландырулар және дауыстық тапсырмалар",
   };
   // I18N_KK:END
   function t(key, vars) {
@@ -10026,7 +10035,7 @@
   // Версия сборки: держать ВРУЧНУЮ синхронной с ?v= в index.html при каждом деплое
   // (те же 3 места — stylesheet/preload/script). Используется тихим автообновлением
   // ниже — сама загрузка кода по-прежнему идёт через ?v=.
-  const APP_VERSION = '20261106a';
+  const APP_VERSION = '20261116a';
   // ── Тихое автообновление (25.08.2026, вместо попапа «Вышло обновление!») ──
   // Узнав из облака про новую версию (appVersion пишет первый клиент нового деплоя,
   // promptVersion — кнопка «Оповестить» в админке), вкладка НЕ дёргает ученицу:
@@ -14199,11 +14208,12 @@
   // ── Где мы: APK 1.2.0+ (мост KMPUSH), APK 1.1.0 (KMTTS без KMPUSH — пушей нет), браузер ──
   function _kmApkPush() { return !!(window.KMPUSH && typeof window.KMPUSH.permission === 'function'); }
   function _kmApkOld() { return !!window.KMTTS && !window.KMPUSH; }
-  // APK с уведомлениями (1.2.0+) уже лежит в app/KoreanWithMadie.apk? Пока нет — ссылка «Обнови
-  // приложение» скачала бы тот же 1.1.0 (замкнутый круг), поэтому в APK 1.1.0 честно пишем «появятся
-  // со следующим обновлением». Переключить на true ТЕМ ЖЕ коммитом, что кладёт 1.2.0 в
-  // app/KoreanWithMadie.apk (и поднять версию во всех 4 местах).
-  const KM_APK_PUSH_OUT = false;
+  // С 16.11.2026 версия с уведомлениями (1.2.4) опубликована в Google Play — «Обнови приложение»
+  // в старом APK 1.1.0 ведёт туда (файл app/KoreanWithMadie.apk остался прежним 1.1.0, на него не шлём).
+  const KM_APK_PUSH_OUT = true;
+  const KM_PLAY_URL = 'https://play.google.com/store/apps/details?id=study.koreanmadie.app';
+  // Android-браузер (не наше приложение): предлагаем установить из Google Play
+  function _kmAndroidWeb() { return /Android/i.test(navigator.userAgent || '') && !window.KMTTS; }
   function _kmApkPerm() {
     try {
       const s = String(window.KMPUSH.permission() || '');
@@ -14240,9 +14250,25 @@
   function renderIosInstall() {
     const slot = document.getElementById('ios-install-slot');
     if (!slot) return;
-    if (!_kmIosInstallable()) { slot.innerHTML = ''; return; }
+    const android = _kmAndroidWeb();
+    if (!_kmIosInstallable() && !android) { slot.innerHTML = ''; return; }
     const hiddenAt = +Store.get(KM_IOS_HIDE_KEY, 0) || 0;
     if (hiddenAt && Date.now() - hiddenAt < 21 * 86400000) { slot.innerHTML = ''; return; }   // закрыла — не мозолим 3 недели
+    if (android) {
+      // Android в браузере: плашка-ссылка на Google Play (те же стили и то же «скрыть на 3 недели»)
+      slot.innerHTML = `
+      <div class="ios-inst-banner">
+        <a class="ios-inst-main" href="${KM_PLAY_URL}" target="_blank" rel="noopener" style="text-decoration:none;">
+          <span class="ios-inst-ico" aria-hidden="true">📲</span>
+          <span class="ios-inst-tx">
+            <span class="ios-inst-t">${t('play.get.banner')}</span>
+            <span class="ios-inst-s">${t('play.get.bannerSub')}</span>
+          </span>
+        </a>
+        <button type="button" class="ios-inst-x" onclick="hideIosInstall()" aria-label="${escAttr(t('ios.inst.hide'))}">×</button>
+      </div>`;
+      return;
+    }
     slot.innerHTML = `
       <div class="ios-inst-banner">
         <button type="button" class="ios-inst-main" onclick="openIosInstallGuide()">
@@ -14427,7 +14453,7 @@
     // APK 1.1.0: пушей в нём нет (моста KMPUSH нет ни у кого) — нужна новая версия приложения.
     // Пока она не выложена (KM_APK_PUSH_OUT), не скачиваем тот же 1.1.0 по кругу, а объясняем.
     if (_kmApkOld()) {
-      if (KM_APK_PUSH_OUT) location.href = '/app/KoreanWithMadie.apk';
+      if (KM_APK_PUSH_OUT) location.href = KM_PLAY_URL;
       else toast(t('set.notif') + ': ' + t('set.notif.appSoon'));
       return;
     }
@@ -14642,7 +14668,7 @@
     } else if (_kmApkOld()) {
       // APK 1.1.0: в WebView пушей нет — нужна новая версия приложения
       head = `
-      <a class="settings-row" href="/app/KoreanWithMadie.apk" rel="noopener">
+      <a class="settings-row" href="${KM_PLAY_URL}" rel="noopener">
         <span class="settings-ico">🔔</span>
         <span class="settings-tx">
           <span class="settings-title" style="display:block;">${t('set.notif')}</span>
@@ -16636,6 +16662,16 @@
       row('🎯', t('set.goal'), t('set.goal.sub'), chev, 'openDailyGoalSettings()'),
       // iPhone в Safari: установка на экран «Домой» (даёт значок и уведомления)
       ...(_kmIosInstallable() ? [row('📲', t('ios.inst.title'), t('ios.inst.sub'), chev, 'openIosInstallGuide()')] : []),
+      // Android в браузере: приложение в Google Play
+      ...(_kmAndroidWeb() ? [`
+      <a class="settings-row" href="${KM_PLAY_URL}" target="_blank" rel="noopener">
+        <span class="settings-ico">📲</span>
+        <span class="settings-tx">
+          <span class="settings-title" style="display:block;">${t('play.get.title')}</span>
+          <span class="settings-sub" style="display:block;">${t('play.get.sub')}</span>
+        </span>
+        ${chev}
+      </a>`] : []),
       // Уведомления: статус этого устройства (веб / APK) + что присылать (настройка аккаунта)
       _kmNotifSettingsHtml(row, sw),
       row('💌', t('set.feedback'), t('set.feedback.sub'), chev, 'openFeedbackModal()'),
