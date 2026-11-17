@@ -1268,6 +1268,22 @@
     'ios.inst.copy':      { ru: 'Скопировать ссылку', en: 'Copy link', uz: 'Havolani nusxalash' },
     'ios.inst.copied':    { ru: 'Ссылка скопирована 🌸', en: 'Link copied 🌸', uz: 'Havola nusxalandi 🌸' },
     'ios.inst.copyFail':  { ru: 'Не получилось скопировать — выдели ссылку и скопируй вручную', en: 'Couldn’t copy — select the link and copy it manually', uz: 'Nusxalab boʻlmadi — havolani belgilab, qoʻlda nusxalang' },
+    // Интерактивный показ установки (мини-iPhone в окне «Установить на iPhone»)
+    'ios.demo.c1':        { ru: 'Нажми «Поделиться» внизу экрана', en: 'Tap “Share” at the bottom of the screen', uz: 'Ekran pastidagi «Ulashish» tugmasini bosing' },
+    'ios.demo.c1top':     { ru: 'Нажми «Поделиться» — вверху, в адресной строке', en: 'Tap “Share” — at the top, in the address bar', uz: '«Ulashish» tugmasini bosing — yuqorida, manzil satrida' },
+    'ios.demo.c4':        { ru: 'Готово! Открывай Madie с экрана «Домой»', en: 'Done! Open Madie from your Home Screen', uz: 'Tayyor! Madie’ni bosh ekrandan oching' },
+    'ios.demo.a2hs':      { ru: 'На экран «Домой»', en: 'Add to Home Screen', uz: 'Bosh ekranga qoʻshish' },
+    'ios.demo.add':       { ru: 'Добавить', en: 'Add', uz: 'Qoʻshish' },
+    'ios.demo.cancel':    { ru: 'Отмена', en: 'Cancel', uz: 'Bekor qilish' },
+    'ios.demo.copy':      { ru: 'Скопировать', en: 'Copy', uz: 'Nusxalash' },
+    'ios.demo.bookmark':  { ru: 'В закладки', en: 'Add Bookmark', uz: 'Xatchoʻpga qoʻshish' },
+    'ios.demo.find':      { ru: 'Найти на странице', en: 'Find on Page', uz: 'Sahifadan topish' },
+    'ios.demo.more':      { ru: 'Подробнее текстом', en: 'More details', uz: 'Batafsil, matn koʻrinishida' },
+    'ios.demo.prev':      { ru: 'Предыдущий шаг', en: 'Previous step', uz: 'Oldingi qadam' },
+    'ios.demo.next':      { ru: 'Следующий шаг', en: 'Next step', uz: 'Keyingi qadam' },
+    'ios.demo.pause':     { ru: 'Пауза', en: 'Pause', uz: 'Pauza' },
+    'ios.demo.play':      { ru: 'Продолжить показ', en: 'Play', uz: 'Davom ettirish' },
+    'ios.demo.stepN':     { ru: 'Шаг {i}', en: 'Step {i}', uz: '{i}-qadam' },
     // ── Android: приложение в Google Play ──
     'play.get.title':     { ru: 'Скачать в Google Play', en: 'Get it on Google Play', uz: 'Google Play’dan yuklab olish' },
     'play.get.sub':       { ru: 'Приложение для Android: уведомления и голосовые задания', en: 'Android app: notifications and voice tasks', uz: 'Android uchun ilova: bildirishnomalar va ovozli topshiriqlar' },
@@ -5440,6 +5456,21 @@
     "ios.inst.copy": "Сілтемені көшіру",
     "ios.inst.copied": "Сілтеме көшірілді 🌸",
     "ios.inst.copyFail": "Көшіру мүмкін болмады — сілтемені белгілеп, қолмен көшір",
+    "ios.demo.c1": "Экранның төменгі жағындағы «Бөлісу» түймесін бас",
+    "ios.demo.c1top": "«Бөлісу» түймесін бас — жоғарыда, мекенжай жолағында",
+    "ios.demo.c4": "Дайын! Madie-ді басты экраннан аш",
+    "ios.demo.a2hs": "Басты экранға қосу",
+    "ios.demo.add": "Қосу",
+    "ios.demo.cancel": "Бас тарту",
+    "ios.demo.copy": "Көшіру",
+    "ios.demo.bookmark": "Бетбелгіге қосу",
+    "ios.demo.find": "Беттен табу",
+    "ios.demo.more": "Толығырақ, мәтінмен",
+    "ios.demo.prev": "Алдыңғы қадам",
+    "ios.demo.next": "Келесі қадам",
+    "ios.demo.pause": "Кідірту",
+    "ios.demo.play": "Көрсетуді жалғастыру",
+    "ios.demo.stepN": "{i}-қадам",
     "play.get.title": "Google Play-ден жүктеу",
     "play.get.sub": "Android қолданбасы: хабарландырулар және дауыстық тапсырмалар",
     "play.get.banner": "Madie енді Google Play-де",
@@ -10035,7 +10066,7 @@
   // Версия сборки: держать ВРУЧНУЮ синхронной с ?v= в index.html при каждом деплое
   // (те же 3 места — stylesheet/preload/script). Используется тихим автообновлением
   // ниже — сама загрузка кода по-прежнему идёт через ?v=.
-  const APP_VERSION = '20261116a';
+  const APP_VERSION = '20261117a';
   // ── Тихое автообновление (25.08.2026, вместо попапа «Вышло обновление!») ──
   // Узнав из облака про новую версию (appVersion пишет первый клиент нового деплоя,
   // promptVersion — кнопка «Оповестить» в админке), вкладка НЕ дёргает ученицу:
@@ -14296,13 +14327,17 @@
          <button type="button" class="btn btn-primary btn-block" style="margin-top:10px;" onclick="copyIosInstallLink()">${t('ios.inst.copy')}</button>
          <div class="ios-inst-note">${t('ios.inst.inappHow')}</div>`
       : `<p class="ios-inst-lead">${t('ios.inst.lead')}</p>
-         <ol class="ios-inst-steps">
-           ${step(1, `${t('ios.inst.s1')} ${share}`)}
-           ${step(2, t('ios.inst.s2'))}
-           ${step(3, t('ios.inst.s3'))}
-           ${step(4, t('ios.inst.s4'))}
-         </ol>
-         <div class="ios-inst-note">${t('ios.inst.mic')}</div>`;
+         ${_iosDemoHtml()}
+         <details class="ios-demo-more">
+           <summary>${t('ios.demo.more')}</summary>
+           <ol class="ios-inst-steps">
+             ${step(1, `${t('ios.inst.s1')} ${share}`)}
+             ${step(2, t('ios.inst.s2'))}
+             ${step(3, t('ios.inst.s3'))}
+             ${step(4, t('ios.inst.s4'))}
+           </ol>
+           <div class="ios-inst-note">${t('ios.inst.mic')}</div>
+         </details>`;
     const m = document.createElement('div');
     m.className = 'modal-bg modal-center';
     m.id = 'ios-install-modal';
@@ -14320,6 +14355,150 @@
         <button type="button" class="btn btn-ghost btn-block" style="margin-top:14px;" onclick="this.closest('.modal-bg').remove()">${t('ios.inst.ok')}</button>
       </div>`;
     document.body.appendChild(m);
+    // Показ шагов: сам листается как ролик; в «спокойном режиме» стоит на паузе до нажатия ▶
+    if (document.getElementById('ios-demo')) {
+      _iosDemoPaused = _iosDemoCalm();
+      _iosDemoPaintToggle();
+      iosDemoGo(1);
+    }
+  }
+  // ── Интерактивный показ установки: мини-iPhone, 4 сцены ──
+  // Сцену выбирает data-step на #ios-demo (вся анимация — в CSS, перезапускается при смене шага).
+  // Листается сам (как видео), а ещё — нажатием на подсвеченную кнопку в «телефоне», стрелками и точками.
+  // В Chrome на iPhone «Поделиться» стоит вверху, в адресной строке — для него первая сцена другая.
+  const IOS_DEMO_STEPS = 4;
+  let _iosDemoTimer = null, _iosDemoPaused = false;
+  function _iosDemoTop() { return /CriOS/.test(navigator.userAgent || ''); }
+  function _iosDemoCalm() {
+    try {
+      if (document.body.classList.contains('calm-motion')) return true;
+      return !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+    } catch (_) { return false; }
+  }
+  function _iosDemoShareSvg(size) {
+    return `<svg class="ios-inst-share" viewBox="0 0 24 24" width="${size}" height="${size}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="M8 7l4-4 4 4"/><path d="M6 11H5a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-8a1 1 0 0 0-1-1h-1"/></svg>`;
+  }
+  function _iosDemoCaption(i) {
+    if (i === 1) return `${escHtml(t(_iosDemoTop() ? 'ios.demo.c1top' : 'ios.demo.c1'))}&nbsp;${_iosDemoShareSvg(16)}`;   // значок не отрывается от последнего слова
+    if (i === 2) return escHtml(t('ios.inst.s2'));
+    if (i === 3) return escHtml(t('ios.inst.s3'));
+    return escHtml(t('ios.demo.c4'));
+  }
+  function _iosDemoHtml() {
+    const top = _iosDemoTop();
+    const icon = `<img class="ios-demo-app" src="assets/pwa/apple-touch-icon.png" alt="">`;
+    // «Мишень» — то, на что нужно нажать на этом шаге; нажатие ведёт к следующему
+    const hit = (cls, inner, next) => `<button type="button" tabindex="-1" class="ios-demo-hit ${cls}" onclick="iosDemoGo(${next})">${inner}</button>`;
+    const shareHit = hit('ios-demo-share', _iosDemoShareSvg(15), 2);
+    const row = (ico, label) => `<div class="ios-demo-row"><span>${escHtml(label)}</span><i class="${ico}"></i></div>`;
+    const blank = n => Array.from({ length: n }, () => '<span class="ios-demo-ic"></span>').join('');
+    return `
+      <div class="ios-demo${top ? ' ios-demo--top' : ''}" id="ios-demo" data-step="1">
+        <div class="ios-demo-phone" aria-hidden="true">
+          <div class="ios-demo-screen">
+            <div class="ios-demo-sc ios-demo-sc1">
+              ${top ? `<div class="ios-demo-topbar"><span class="ios-demo-addr">koreanmadie.study</span>${shareHit}</div>` : ''}
+              <div class="ios-demo-page">
+                <div class="ios-demo-pg-h">${icon}<span>Korean with Madie</span></div>
+                <div class="ios-demo-sk ios-demo-sk--hero"></div>
+                <div class="ios-demo-sk"></div>
+                <div class="ios-demo-sk ios-demo-sk--short"></div>
+              </div>
+              <div class="ios-demo-bar">
+                ${top ? '' : '<span class="ios-demo-addr">koreanmadie.study</span>'}
+                <div class="ios-demo-tools">
+                  <i class="fa-solid fa-chevron-left"></i>
+                  <i class="fa-solid fa-chevron-right ios-demo-dim"></i>
+                  ${top ? '<i class="fa-solid fa-plus"></i>' : shareHit}
+                  <i class="fa-solid fa-book-open"></i>
+                  <i class="fa-regular fa-clone"></i>
+                </div>
+              </div>
+            </div>
+            <div class="ios-demo-sc ios-demo-sc2">
+              <div class="ios-demo-sheet">
+                <div class="ios-demo-sheet-h">${icon}<span class="ios-demo-sheet-tx"><b>Korean with Madie</b><small>koreanmadie.study</small></span></div>
+                <div class="ios-demo-apps">${blank(4)}</div>
+                <div class="ios-demo-list">
+                  <div class="ios-demo-list-in">
+                    ${row('fa-regular fa-copy', t('ios.demo.copy'))}
+                    ${row('fa-solid fa-book-open', t('ios.demo.bookmark'))}
+                    ${row('fa-solid fa-magnifying-glass', t('ios.demo.find'))}
+                    ${hit('ios-demo-row ios-demo-a2hs', `<span>${escHtml(t('ios.demo.a2hs'))}</span><i class="fa-regular fa-square-plus"></i>`, 3)}
+                    <div class="ios-demo-row ios-demo-row--blank"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="ios-demo-sc ios-demo-sc3">
+              <div class="ios-demo-dlg-nav">
+                <span class="ios-demo-dlg-cancel">${escHtml(t('ios.demo.cancel'))}</span>
+                ${hit('ios-demo-add', escHtml(t('ios.demo.add')), 4)}
+              </div>
+              <div class="ios-demo-dlg-title">${escHtml(t('ios.demo.a2hs'))}</div>
+              <div class="ios-demo-dlg-row">${icon}<span class="ios-demo-sheet-tx"><b>Madie</b><small>koreanmadie.study</small></span></div>
+            </div>
+            <div class="ios-demo-sc ios-demo-sc4">
+              <div class="ios-demo-grid">
+                ${blank(5)}
+                <span class="ios-demo-new">${icon}<small>Madie</small></span>
+              </div>
+              <div class="ios-demo-dock">${blank(4)}</div>
+            </div>
+          </div>
+        </div>
+        <div class="ios-demo-cap" aria-live="polite"><span class="ios-inst-n" id="ios-demo-n" aria-hidden="true">1</span><span class="ios-inst-st" id="ios-demo-tx"></span></div>
+        <div class="ios-demo-nav">
+          <button type="button" class="ios-demo-btn" id="ios-demo-toggle" onclick="iosDemoToggle()"><i class="fa-solid fa-pause" aria-hidden="true"></i></button>
+          <button type="button" class="ios-demo-btn" onclick="iosDemoStep(-1)" aria-label="${escAttr(t('ios.demo.prev'))}"><i class="fa-solid fa-chevron-left" aria-hidden="true"></i></button>
+          <div class="ios-demo-dots">
+            ${Array.from({ length: IOS_DEMO_STEPS }, (_, k) => `<button type="button" class="ios-demo-dot" onclick="iosDemoGo(${k + 1})" aria-label="${escAttr(t('ios.demo.stepN', { i: k + 1 }))}"></button>`).join('')}
+          </div>
+          <button type="button" class="ios-demo-btn" onclick="iosDemoStep(1)" aria-label="${escAttr(t('ios.demo.next'))}"><i class="fa-solid fa-chevron-right" aria-hidden="true"></i></button>
+        </div>
+      </div>`;
+  }
+  function _iosDemoPaintToggle() {
+    const b = document.getElementById('ios-demo-toggle');
+    if (!b) return;
+    b.setAttribute('aria-label', t(_iosDemoPaused ? 'ios.demo.play' : 'ios.demo.pause'));
+    b.innerHTML = `<i class="fa-solid ${_iosDemoPaused ? 'fa-play' : 'fa-pause'}" aria-hidden="true"></i>`;
+  }
+  // Следующий шаг сам, пока показ не на паузе и окно открыто (окно закрыли — таймер просто не продлевается)
+  function _iosDemoArm() {
+    clearTimeout(_iosDemoTimer); _iosDemoTimer = null;
+    const d = document.getElementById('ios-demo');
+    if (!d || _iosDemoPaused) return;
+    const cur = +d.dataset.step || 1;
+    _iosDemoTimer = setTimeout(() => {
+      const el = document.getElementById('ios-demo');
+      if (el && !_iosDemoPaused) iosDemoGo((+el.dataset.step || 1) + 1);
+    }, cur === IOS_DEMO_STEPS ? 5200 : 4400);
+  }
+  function iosDemoGo(i) {
+    const d = document.getElementById('ios-demo');
+    if (!d) { clearTimeout(_iosDemoTimer); _iosDemoTimer = null; return; }
+    i = Number.isFinite(+i) ? Math.round(+i) : 1;
+    i = ((i - 1) % IOS_DEMO_STEPS + IOS_DEMO_STEPS) % IOS_DEMO_STEPS + 1;   // по кругу: 0 → 4, 5 → 1
+    d.dataset.step = String(i);
+    const n = document.getElementById('ios-demo-n'), tx = document.getElementById('ios-demo-tx');
+    if (n) n.textContent = String(i);
+    if (tx) tx.innerHTML = _iosDemoCaption(i);
+    d.querySelectorAll('.ios-demo-dot').forEach((dot, k) => {
+      const on = k + 1 === i;
+      dot.classList.toggle('on', on);
+      if (on) dot.setAttribute('aria-current', 'step'); else dot.removeAttribute('aria-current');
+    });
+    _iosDemoArm();
+  }
+  function iosDemoStep(delta) {
+    const d = document.getElementById('ios-demo');
+    if (d) iosDemoGo((+d.dataset.step || 1) + delta);
+  }
+  function iosDemoToggle() {
+    _iosDemoPaused = !_iosDemoPaused;
+    _iosDemoPaintToggle();
+    _iosDemoArm();
   }
   function copyIosInstallLink() {
     const done = () => toast(t('ios.inst.copied'), 'var(--sage)');
@@ -36576,18 +36755,25 @@
     ]
   };
   // ── Локализация контента «Учёбы в Корее» (RU → UZ). Узбекский — для uz-локали, иначе RU. ──
+  // Соглашение о полях: рядом с русским `field` лежат `field_uz`, `field_en`, `field_kk`.
+  // Нет перевода на текущий язык → русский (как и раньше для uz).
   function skLoc(obj, field) {
     if (!obj) return '';
-    if (APP_LANG === 'uz' && obj[field + '_uz'] != null) return obj[field + '_uz'];
+    if (APP_LANG !== 'ru' && obj[field + '_' + APP_LANG] != null) return obj[field + '_' + APP_LANG];
     return obj[field] != null ? obj[field] : '';
   }
   function skLocA(obj, field) {
     if (!obj) return [];
-    if (APP_LANG === 'uz' && Array.isArray(obj[field + '_uz'])) return obj[field + '_uz'];
+    if (APP_LANG !== 'ru' && Array.isArray(obj[field + '_' + APP_LANG])) return obj[field + '_' + APP_LANG];
     return Array.isArray(obj[field]) ? obj[field] : [];
   }
-  // Короткая подпись интерфейса раздела (ru → uz). en пока показывает ru.
-  function skUi(ru, uz) { return APP_LANG === 'uz' ? uz : ru; }
+  // Короткая подпись интерфейса раздела: (ru, uz[, en[, kk]]). Нет перевода → русский.
+  function skUi(ru, uz, en, kk) {
+    if (APP_LANG === 'uz') return uz != null ? uz : ru;
+    if (APP_LANG === 'en') return en != null ? en : ru;
+    if (APP_LANG === 'kk') return kk != null ? kk : ru;
+    return ru;
+  }
   // ── Рейтинг вузов Кореи (реальные ведущие университеты) ──
   // Требования TOPIK даны ориентировочно — они меняются по годам и факультетам; всегда сверяться на сайте вуза.
   const KR_UNIVERSITIES = [

@@ -3867,6 +3867,144 @@ body.calm-motion .talk-wave i { height: 10px; }
   .ios-inst-url { margin-top: 12px; padding: 12px; border: 1.5px solid var(--line); border-radius: 14px; background: var(--paper); text-align: center; }
   .ios-inst-link { font-size: 15px; font-weight: 600; color: var(--berry); overflow-wrap: anywhere; -webkit-user-select: text; user-select: text; }
 
+  /* ── Интерактивный показ установки на iPhone: мини-телефон, 4 сцены ──
+     Сцену выбирает [data-step] на .ios-demo. Базовое состояние каждой детали — КОНЕЧНОЕ
+     (лист выехал, список прокручен, значок на месте), а анимация идёт «от начала к нему»
+     (fill backwards): в спокойном режиме анимаций нет, и сцена просто показывает итог. */
+  .ios-demo { margin-top: 14px; }
+  .ios-demo-phone {
+    width: 196px; max-width: 100%; margin: 0 auto; padding: 6px;
+    border-radius: 30px; border: 2px solid var(--line); background: var(--card);
+    box-shadow: 0 14px 28px -18px rgba(var(--shade-rgb), .45);
+  }
+  .ios-demo-screen {
+    position: relative; height: 252px; overflow: hidden;
+    border-radius: 23px; background: var(--paper);
+    font-size: 9.5px; line-height: 1.3; color: var(--text2);
+  }
+  .ios-demo-sc {
+    position: absolute; inset: 0; display: flex; flex-direction: column;
+    opacity: 0; visibility: hidden;
+    transition: opacity 260ms var(--ease-out), visibility 0s linear 260ms;
+  }
+  .ios-demo[data-step="1"] .ios-demo-sc1,
+  .ios-demo[data-step="2"] .ios-demo-sc2,
+  .ios-demo[data-step="3"] .ios-demo-sc3,
+  .ios-demo[data-step="4"] .ios-demo-sc4 { opacity: 1; visibility: visible; transition-delay: 0s; }
+  .ios-demo-app { width: 22px; height: 22px; border-radius: 6px; flex-shrink: 0; display: block; }
+
+  /* Сцена 1 — страница в браузере */
+  .ios-demo-page { flex: 1; min-height: 0; padding: 12px 10px 0; display: flex; flex-direction: column; gap: 8px; }
+  .ios-demo-pg-h { display: flex; align-items: center; gap: 6px; font-weight: 700; color: var(--berry); font-size: 10px; }
+  .ios-demo-sk { height: 26px; border-radius: 8px; background: var(--blush); }
+  .ios-demo-sk--hero { height: 64px; background: linear-gradient(135deg, rgba(var(--rose-rgb), .30), rgba(var(--accent-rgb), .18)); }
+  .ios-demo-sk--short { width: 62%; }
+  .ios-demo-bar, .ios-demo-topbar { background: var(--card); padding: 7px 9px; display: flex; flex-direction: column; gap: 7px; }
+  .ios-demo-bar { border-top: 1px solid var(--line); }
+  .ios-demo-topbar { border-bottom: 1px solid var(--line); flex-direction: row; align-items: center; }
+  .ios-demo-addr {
+    flex: 1; min-width: 0; padding: 4px 8px; border-radius: 9px; background: var(--blush);
+    text-align: center; font-size: 9px; color: var(--text2);
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .ios-demo-tools { display: flex; align-items: center; justify-content: space-between; padding: 0 4px; min-height: 26px; color: var(--soft); font-size: 11px; }
+  .ios-demo-dim { opacity: .4; }
+
+  /* «Мишень» — куда нажимать на этом шаге */
+  .ios-demo-hit {
+    position: relative; margin: 0; border: none; background: none; padding: 0;
+    font: inherit; color: var(--coral); cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .ios-demo-hit::after {
+    content: ''; position: absolute; inset: -3px; border-radius: inherit;
+    border: 2px solid var(--coral); opacity: 0; pointer-events: none;
+  }
+  .ios-demo-share { width: 26px; height: 26px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .ios-demo-share .ios-inst-share { vertical-align: 0; }
+  .ios-demo[data-step="1"] .ios-demo-share { background: rgba(var(--accent-rgb), .14); }
+  .ios-demo[data-step="1"] .ios-demo-share::after { animation: iosDemoPulse 1.5s var(--ease-out) .5s infinite; }
+
+  /* Сцена 2 — лист «Поделиться» */
+  .ios-demo-sc2 { justify-content: flex-end; background: rgba(var(--shade-rgb), .28); }
+  .ios-demo-sheet { background: var(--card); border-radius: 16px 16px 0 0; padding: 10px 9px 0; display: flex; flex-direction: column; gap: 8px; }
+  .ios-demo[data-step="2"] .ios-demo-sheet { animation: iosDemoSheet .3s var(--ease-out) backwards; }
+  .ios-demo-sheet-h, .ios-demo-dlg-row { display: flex; align-items: center; gap: 7px; }
+  .ios-demo-sheet-tx { min-width: 0; display: flex; flex-direction: column; }
+  .ios-demo-sheet-tx b { font-weight: 700; color: var(--berry); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .ios-demo-sheet-tx small { font-size: 8px; color: var(--soft); }
+  .ios-demo-apps { display: flex; justify-content: space-between; padding: 2px 4px; }
+  .ios-demo-ic { width: 26px; height: 26px; border-radius: 8px; background: var(--blush); display: block; }
+  .ios-demo-apps .ios-demo-ic { border-radius: 50%; }
+  /* Окно списка — три строки: нужный пункт сначала под сгибом, прокрутка выводит его в середину */
+  .ios-demo-list { height: 98px; flex-shrink: 0; overflow: hidden; border-radius: 10px 10px 0 0; }
+  .ios-demo-row--blank { background: var(--blush); opacity: .6; }
+  .ios-demo-list-in { display: flex; flex-direction: column; gap: 5px; transform: translateY(-58px); }
+  .ios-demo[data-step="2"] .ios-demo-list-in { animation: iosDemoScroll .7s var(--ease-out) .8s backwards; }
+  .ios-demo-row {
+    display: flex; align-items: center; justify-content: space-between; gap: 6px;
+    width: 100%; height: 26px; flex-shrink: 0; padding: 0 8px; border-radius: 9px;
+    background: var(--paper); color: var(--text2); text-align: left; font-size: 9.5px;
+  }
+  .ios-demo-row span { min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .ios-demo-row i { flex-shrink: 0; font-size: 10px; color: var(--soft); }
+  .ios-demo-a2hs { color: var(--berry); font-weight: 700; background: rgba(var(--accent-rgb), .14); }
+  .ios-demo-a2hs i { color: var(--coral); }
+  .ios-demo[data-step="2"] .ios-demo-a2hs::after { animation: iosDemoPulse 1.5s var(--ease-out) 1.6s infinite; }
+
+  /* Сцена 3 — окно «На экран Домой» */
+  .ios-demo-sc3 { padding: 12px 10px; gap: 10px; background: var(--card); }
+  .ios-demo-dlg-nav { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+  .ios-demo-dlg-cancel { color: var(--soft); }
+  .ios-demo-add { padding: 4px 9px; border-radius: 9px; font-weight: 700; background: rgba(var(--accent-rgb), .14); }
+  .ios-demo[data-step="3"] .ios-demo-add::after { animation: iosDemoPulse 1.5s var(--ease-out) .5s infinite; }
+  .ios-demo-dlg-title { text-align: center; font-weight: 700; color: var(--berry); font-size: 10.5px; overflow-wrap: anywhere; }
+  .ios-demo-dlg-row { padding: 8px; border-radius: 10px; background: var(--paper); }
+  .ios-demo-dlg-row .ios-demo-app { width: 30px; height: 30px; border-radius: 8px; }
+
+  /* Сцена 4 — экран «Домой» со значком Madie */
+  .ios-demo-sc4 { padding: 16px 12px 10px; justify-content: space-between; background: linear-gradient(160deg, rgba(var(--rose-rgb), .26), rgba(var(--accent-rgb), .14)); }
+  .ios-demo-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px 8px; justify-items: center; }
+  .ios-demo-grid .ios-demo-ic, .ios-demo-dock .ios-demo-ic { width: 30px; height: 30px; background: rgba(var(--shade-rgb), .14); }
+  .ios-demo-new { display: flex; flex-direction: column; align-items: center; gap: 2px; }
+  .ios-demo-new .ios-demo-app { width: 30px; height: 30px; border-radius: 8px; box-shadow: 0 0 0 2px var(--coral); }
+  .ios-demo-new small { font-size: 8px; font-weight: 700; color: var(--berry); }
+  .ios-demo[data-step="4"] .ios-demo-new { animation: iosDemoPop .5s var(--ease-out) .35s backwards; }
+  .ios-demo-dock { display: flex; justify-content: space-around; padding: 7px; border-radius: 16px; background: rgba(var(--shade-rgb), .10); }
+
+  /* Подпись шага и управление */
+  .ios-demo-cap { display: flex; align-items: flex-start; gap: 10px; margin-top: 14px; min-height: 41px; font-size: 13.5px; line-height: 1.5; color: var(--text2); }
+  .ios-demo-nav { display: flex; align-items: center; justify-content: center; gap: 6px; margin-top: 8px; }
+  .ios-demo-btn {
+    width: 44px; height: 44px; flex-shrink: 0; border-radius: 50%;
+    border: 1px solid var(--line); background: var(--card); color: var(--berry);
+    font-family: inherit; font-size: 13px; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: transform var(--t-fast) var(--ease-out), background var(--t-fast) var(--ease-out);
+  }
+  .ios-demo-btn:active { transform: scale(.94); background: var(--blush); }
+  .ios-demo-dots { display: flex; align-items: center; }
+  .ios-demo-dot { width: 26px; height: 44px; padding: 0; border: none; background: none; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+  .ios-demo-dot::before { content: ''; width: 8px; height: 8px; border-radius: 4px; background: var(--line); transition: width 240ms var(--ease-out), background 240ms var(--ease-out); }
+  .ios-demo-dot.on::before { width: 20px; background: var(--coral); }
+  .ios-demo-more { margin-top: 12px; }
+  .ios-demo-more summary { min-height: 44px; display: flex; align-items: center; gap: 6px; font-size: 12.5px; font-weight: 600; color: var(--berry); cursor: pointer; list-style: none; }
+  .ios-demo-more summary::-webkit-details-marker { display: none; }
+  .ios-demo-more summary::before { content: '›'; font-size: 16px; line-height: 1; transition: transform 200ms var(--ease-out); }
+  .ios-demo-more[open] summary::before { transform: rotate(90deg); }
+  .ios-demo-more .ios-inst-steps { margin-top: 4px; }
+  /* Низкий экран (iPhone SE): «телефон» пониже, чтобы подпись и кнопки были видны без прокрутки */
+  @media (max-height: 700px) { .ios-demo-screen { height: 214px; } .ios-demo-sk--hero { height: 44px; } }
+
+  @keyframes iosDemoPulse { 0% { opacity: .9; transform: scale(1); } 70%, 100% { opacity: 0; transform: scale(1.35); } }
+  @keyframes iosDemoSheet { from { transform: translateY(100%); } }
+  @keyframes iosDemoScroll { from { transform: translateY(0); } }
+  @keyframes iosDemoPop { from { opacity: 0; transform: scale(.3); } 70% { transform: scale(1.12); } }
+  body.calm-motion .ios-demo *, body.calm-motion .ios-demo *::after { animation: none !important; transition: none !important; }
+  @media (prefers-reduced-motion: reduce) {
+    .ios-demo *, .ios-demo *::after { animation: none !important; transition: none !important; }
+  }
+
   /* Mini progress bar under the current lesson tile (resume point) */
   .tile-progress {
     width: 72px; height: 5px; margin: 6px auto 0;
