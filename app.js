@@ -1279,8 +1279,6 @@
     'ios.demo.bookmark':  { ru: 'В закладки', en: 'Add Bookmark', uz: 'Xatchoʻpga qoʻshish' },
     'ios.demo.find':      { ru: 'Найти на странице', en: 'Find on Page', uz: 'Sahifadan topish' },
     'ios.demo.more':      { ru: 'Подробнее текстом', en: 'More details', uz: 'Batafsil, matn koʻrinishida' },
-    'ios.demo.prev':      { ru: 'Предыдущий шаг', en: 'Previous step', uz: 'Oldingi qadam' },
-    'ios.demo.next':      { ru: 'Следующий шаг', en: 'Next step', uz: 'Keyingi qadam' },
     'ios.demo.pause':     { ru: 'Пауза', en: 'Pause', uz: 'Pauza' },
     'ios.demo.play':      { ru: 'Продолжить показ', en: 'Play', uz: 'Davom ettirish' },
     'ios.demo.stepN':     { ru: 'Шаг {i}', en: 'Step {i}', uz: '{i}-qadam' },
@@ -5466,8 +5464,6 @@
     "ios.demo.bookmark": "Бетбелгіге қосу",
     "ios.demo.find": "Беттен табу",
     "ios.demo.more": "Толығырақ, мәтінмен",
-    "ios.demo.prev": "Алдыңғы қадам",
-    "ios.demo.next": "Келесі қадам",
     "ios.demo.pause": "Кідірту",
     "ios.demo.play": "Көрсетуді жалғастыру",
     "ios.demo.stepN": "{i}-қадам",
@@ -10066,7 +10062,7 @@
   // Версия сборки: держать ВРУЧНУЮ синхронной с ?v= в index.html при каждом деплое
   // (те же 3 места — stylesheet/preload/script). Используется тихим автообновлением
   // ниже — сама загрузка кода по-прежнему идёт через ?v=.
-  const APP_VERSION = '20261117a';
+  const APP_VERSION = '20261117b';
   // ── Тихое автообновление (25.08.2026, вместо попапа «Вышло обновление!») ──
   // Узнав из облака про новую версию (appVersion пишет первый клиент нового деплоя,
   // promptVersion — кнопка «Оповестить» в админке), вкладка НЕ дёргает ученицу:
@@ -14326,8 +14322,7 @@
          <div class="ios-inst-url"><span class="ios-inst-link">koreanmadie.study</span></div>
          <button type="button" class="btn btn-primary btn-block" style="margin-top:10px;" onclick="copyIosInstallLink()">${t('ios.inst.copy')}</button>
          <div class="ios-inst-note">${t('ios.inst.inappHow')}</div>`
-      : `<p class="ios-inst-lead">${t('ios.inst.lead')}</p>
-         ${_iosDemoHtml()}
+      : `${_iosDemoHtml()}
          <details class="ios-demo-more">
            <summary>${t('ios.demo.more')}</summary>
            <ol class="ios-inst-steps">
@@ -14364,7 +14359,8 @@
   }
   // ── Интерактивный показ установки: мини-iPhone, 4 сцены ──
   // Сцену выбирает data-step на #ios-demo (вся анимация — в CSS, перезапускается при смене шага).
-  // Листается сам (как видео), а ещё — нажатием на подсвеченную кнопку в «телефоне», стрелками и точками.
+  // Листается сам (как видео), а ещё — нажатием на подсвеченную кнопку в «телефоне» и точками под ним.
+  // Нажатие на сам «телефон» ставит показ на паузу (поверх появляется ▶), повторное — продолжает.
   // В Chrome на iPhone «Поделиться» стоит вверху, в адресной строке — для него первая сцена другая.
   const IOS_DEMO_STEPS = 4;
   let _iosDemoTimer = null, _iosDemoPaused = false;
@@ -14388,13 +14384,14 @@
     const top = _iosDemoTop();
     const icon = `<img class="ios-demo-app" src="assets/pwa/apple-touch-icon.png" alt="">`;
     // «Мишень» — то, на что нужно нажать на этом шаге; нажатие ведёт к следующему
-    const hit = (cls, inner, next) => `<button type="button" tabindex="-1" class="ios-demo-hit ${cls}" onclick="iosDemoGo(${next})">${inner}</button>`;
+    const hit = (cls, inner, next) => `<button type="button" tabindex="-1" class="ios-demo-hit ${cls}" onclick="event.stopPropagation(); iosDemoGo(${next})">${inner}</button>`;
     const shareHit = hit('ios-demo-share', _iosDemoShareSvg(15), 2);
     const row = (ico, label) => `<div class="ios-demo-row"><span>${escHtml(label)}</span><i class="${ico}"></i></div>`;
     const blank = n => Array.from({ length: n }, () => '<span class="ios-demo-ic"></span>').join('');
     return `
       <div class="ios-demo${top ? ' ios-demo--top' : ''}" id="ios-demo" data-step="1">
-        <div class="ios-demo-phone" aria-hidden="true">
+        <div class="ios-demo-stage">
+        <div class="ios-demo-phone" aria-hidden="true" onclick="iosDemoToggle()">
           <div class="ios-demo-screen">
             <div class="ios-demo-sc ios-demo-sc1">
               ${top ? `<div class="ios-demo-topbar"><span class="ios-demo-addr">koreanmadie.study</span>${shareHit}</div>` : ''}
@@ -14447,22 +14444,20 @@
             </div>
           </div>
         </div>
+        <button type="button" class="ios-demo-toggle" id="ios-demo-toggle" onclick="iosDemoToggle()"><i class="fa-solid fa-play" aria-hidden="true"></i></button>
+        </div>
         <div class="ios-demo-cap" aria-live="polite"><span class="ios-inst-n" id="ios-demo-n" aria-hidden="true">1</span><span class="ios-inst-st" id="ios-demo-tx"></span></div>
-        <div class="ios-demo-nav">
-          <button type="button" class="ios-demo-btn" id="ios-demo-toggle" onclick="iosDemoToggle()"><i class="fa-solid fa-pause" aria-hidden="true"></i></button>
-          <button type="button" class="ios-demo-btn" onclick="iosDemoStep(-1)" aria-label="${escAttr(t('ios.demo.prev'))}"><i class="fa-solid fa-chevron-left" aria-hidden="true"></i></button>
-          <div class="ios-demo-dots">
-            ${Array.from({ length: IOS_DEMO_STEPS }, (_, k) => `<button type="button" class="ios-demo-dot" onclick="iosDemoGo(${k + 1})" aria-label="${escAttr(t('ios.demo.stepN', { i: k + 1 }))}"></button>`).join('')}
-          </div>
-          <button type="button" class="ios-demo-btn" onclick="iosDemoStep(1)" aria-label="${escAttr(t('ios.demo.next'))}"><i class="fa-solid fa-chevron-right" aria-hidden="true"></i></button>
+        <div class="ios-demo-dots">
+          ${Array.from({ length: IOS_DEMO_STEPS }, (_, k) => `<button type="button" class="ios-demo-dot" onclick="iosDemoGo(${k + 1})" aria-label="${escAttr(t('ios.demo.stepN', { i: k + 1 }))}"></button>`).join('')}
         </div>
       </div>`;
   }
+  // Кнопка ▶ лежит поверх «телефона» и видна только на паузе (с клавиатуры доступна всегда)
   function _iosDemoPaintToggle() {
-    const b = document.getElementById('ios-demo-toggle');
-    if (!b) return;
+    const d = document.getElementById('ios-demo'), b = document.getElementById('ios-demo-toggle');
+    if (!d || !b) return;
+    d.classList.toggle('paused', _iosDemoPaused);
     b.setAttribute('aria-label', t(_iosDemoPaused ? 'ios.demo.play' : 'ios.demo.pause'));
-    b.innerHTML = `<i class="fa-solid ${_iosDemoPaused ? 'fa-play' : 'fa-pause'}" aria-hidden="true"></i>`;
   }
   // Следующий шаг сам, пока показ не на паузе и окно открыто (окно закрыли — таймер просто не продлевается)
   function _iosDemoArm() {
@@ -14473,7 +14468,7 @@
     _iosDemoTimer = setTimeout(() => {
       const el = document.getElementById('ios-demo');
       if (el && !_iosDemoPaused) iosDemoGo((+el.dataset.step || 1) + 1);
-    }, cur === IOS_DEMO_STEPS ? 5200 : 4400);
+    }, cur === IOS_DEMO_STEPS ? 4200 : (cur === 2 ? 3900 : 3300));   // шаг 2 дольше: там прокрутка списка
   }
   function iosDemoGo(i) {
     const d = document.getElementById('ios-demo');
@@ -14490,10 +14485,6 @@
       if (on) dot.setAttribute('aria-current', 'step'); else dot.removeAttribute('aria-current');
     });
     _iosDemoArm();
-  }
-  function iosDemoStep(delta) {
-    const d = document.getElementById('ios-demo');
-    if (d) iosDemoGo((+d.dataset.step || 1) + delta);
   }
   function iosDemoToggle() {
     _iosDemoPaused = !_iosDemoPaused;

@@ -3872,8 +3872,18 @@ body.calm-motion .talk-wave i { height: 10px; }
      (лист выехал, список прокручен, значок на месте), а анимация идёт «от начала к нему»
      (fill backwards): в спокойном режиме анимаций нет, и сцена просто показывает итог. */
   .ios-demo { margin-top: 14px; }
+  .ios-demo-stage { position: relative; width: fit-content; max-width: 100%; margin: 0 auto; }
+  /* ▶ поверх «телефона»: видна только на паузе; нажатие на сам «телефон» ставит на паузу */
+  .ios-demo-toggle {
+    position: absolute; inset: 0; margin: auto; width: 60px; height: 60px; border-radius: 50%;
+    border: none; background: rgba(var(--shade-rgb), .62); color: #fff; font-size: 20px; padding-left: 4px;
+    display: flex; align-items: center; justify-content: center; cursor: pointer;
+    opacity: 0; pointer-events: none; transform: scale(.85);
+    transition: opacity 220ms var(--ease-out), transform 220ms var(--ease-out);
+  }
+  .ios-demo.paused .ios-demo-toggle, .ios-demo-toggle:focus-visible { opacity: 1; pointer-events: auto; transform: none; }
   .ios-demo-phone {
-    width: 196px; max-width: 100%; margin: 0 auto; padding: 6px;
+    width: 196px; margin: 0 auto; padding: 6px; zoom: 1.22; cursor: pointer;
     border-radius: 30px; border: 2px solid var(--line); background: var(--card);
     box-shadow: 0 14px 28px -18px rgba(var(--shade-rgb), .45);
   }
@@ -3940,7 +3950,7 @@ body.calm-motion .talk-wave i { height: 10px; }
   .ios-demo-list { height: 98px; flex-shrink: 0; overflow: hidden; border-radius: 10px 10px 0 0; }
   .ios-demo-row--blank { background: var(--blush); opacity: .6; }
   .ios-demo-list-in { display: flex; flex-direction: column; gap: 5px; transform: translateY(-58px); }
-  .ios-demo[data-step="2"] .ios-demo-list-in { animation: iosDemoScroll .7s var(--ease-out) .8s backwards; }
+  .ios-demo[data-step="2"] .ios-demo-list-in { animation: iosDemoScroll .6s var(--ease-out) .6s backwards; }
   .ios-demo-row {
     display: flex; align-items: center; justify-content: space-between; gap: 6px;
     width: 100%; height: 26px; flex-shrink: 0; padding: 0 8px; border-radius: 9px;
@@ -3950,7 +3960,7 @@ body.calm-motion .talk-wave i { height: 10px; }
   .ios-demo-row i { flex-shrink: 0; font-size: 10px; color: var(--soft); }
   .ios-demo-a2hs { color: var(--berry); font-weight: 700; background: rgba(var(--accent-rgb), .14); }
   .ios-demo-a2hs i { color: var(--coral); }
-  .ios-demo[data-step="2"] .ios-demo-a2hs::after { animation: iosDemoPulse 1.5s var(--ease-out) 1.6s infinite; }
+  .ios-demo[data-step="2"] .ios-demo-a2hs::after { animation: iosDemoPulse 1.5s var(--ease-out) 1.2s infinite; }
 
   /* Сцена 3 — окно «На экран Домой» */
   .ios-demo-sc3 { padding: 12px 10px; gap: 10px; background: var(--card); }
@@ -3974,16 +3984,7 @@ body.calm-motion .talk-wave i { height: 10px; }
 
   /* Подпись шага и управление */
   .ios-demo-cap { display: flex; align-items: flex-start; gap: 10px; margin-top: 14px; min-height: 41px; font-size: 13.5px; line-height: 1.5; color: var(--text2); }
-  .ios-demo-nav { display: flex; align-items: center; justify-content: center; gap: 6px; margin-top: 8px; }
-  .ios-demo-btn {
-    width: 44px; height: 44px; flex-shrink: 0; border-radius: 50%;
-    border: 1px solid var(--line); background: var(--card); color: var(--berry);
-    font-family: inherit; font-size: 13px; cursor: pointer;
-    display: flex; align-items: center; justify-content: center;
-    transition: transform var(--t-fast) var(--ease-out), background var(--t-fast) var(--ease-out);
-  }
-  .ios-demo-btn:active { transform: scale(.94); background: var(--blush); }
-  .ios-demo-dots { display: flex; align-items: center; }
+  .ios-demo-dots { display: flex; align-items: center; justify-content: center; margin-top: 2px; }
   .ios-demo-dot { width: 26px; height: 44px; padding: 0; border: none; background: none; cursor: pointer; display: flex; align-items: center; justify-content: center; }
   .ios-demo-dot::before { content: ''; width: 8px; height: 8px; border-radius: 4px; background: var(--line); transition: width 240ms var(--ease-out), background 240ms var(--ease-out); }
   .ios-demo-dot.on::before { width: 20px; background: var(--coral); }
@@ -3994,7 +3995,7 @@ body.calm-motion .talk-wave i { height: 10px; }
   .ios-demo-more[open] summary::before { transform: rotate(90deg); }
   .ios-demo-more .ios-inst-steps { margin-top: 4px; }
   /* Низкий экран (iPhone SE): «телефон» пониже, чтобы подпись и кнопки были видны без прокрутки */
-  @media (max-height: 700px) { .ios-demo-screen { height: 214px; } .ios-demo-sk--hero { height: 44px; } }
+  @media (max-height: 700px) { .ios-demo-phone { zoom: 1.08; } .ios-demo-screen { height: 222px; } .ios-demo-sk--hero { height: 48px; } }
 
   @keyframes iosDemoPulse { 0% { opacity: .9; transform: scale(1); } 70%, 100% { opacity: 0; transform: scale(1.35); } }
   @keyframes iosDemoSheet { from { transform: translateY(100%); } }
