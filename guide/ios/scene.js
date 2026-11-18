@@ -21,15 +21,15 @@
 
   // ───────── сценарий
   const SC = [
-    { id: 'intro', t0: 0, t1: 3.6, eb: 'ИНСТРУКЦИЯ', title: 'Madie на iPhone', sub: 'Значок на экране и уведомления — за минуту, без App Store', n: 0, chip: 'Начало' },
-    { id: 'safari', t0: 3.6, t1: 8.0, eb: 'СНАЧАЛА', title: 'Открой в Safari', sub: 'Именно в Safari — не внутри Instagram или Telegram', n: 0, chip: 'Safari' },
-    { id: 's1', t0: 8.0, t1: 13.6, eb: 'ШАГ 1 ИЗ 4', title: 'Нажми «Поделиться»', sub: 'Квадрат со стрелкой вверх — внизу экрана. В новых iPhone — в меню «⋯»', n: 1, chip: '1 · Поделиться' },
-    { id: 's2', t0: 13.6, t1: 17.6, eb: 'ШАГ 2 ИЗ 4', title: 'На экран «Домой»', sub: 'Пролистай список вверх и выбери «На экран «Домой»»', n: 2, chip: '2 · На экран «Домой»' },
-    { id: 's3', t0: 17.6, t1: 22.2, eb: 'ШАГ 3 ИЗ 4', title: 'Нажми «Добавить»', sub: 'Значок Madie появится среди твоих приложений', n: 3, chip: '3 · Добавить' },
-    { id: 's4', t0: 22.2, t1: 29.6, eb: 'ШАГ 4 ИЗ 4', title: 'Открывай со значка', sub: 'Только так работают уведомления', n: 4, chip: '4 · Открой значок' },
-    { id: 'push', t0: 29.6, t1: 36.0, eb: 'БОНУС', title: 'Включи уведомления', sub: 'Настройки → «Уведомления» → «Разрешить»', n: 0, chip: 'Уведомления' },
-    { id: 'mic', t0: 36.0, t1: 41.8, eb: 'ВАЖНО', title: 'Голос — через Safari', sub: 'С экрана «Домой» iPhone не даёт распознавание речи — вместо него клавиатура', n: 0, chip: 'Про голос' },
-    { id: 'done', t0: 41.8, t1: 47.0, eb: 'ГОТОВО', title: 'Madie уже на экране', sub: 'Заходи на koreanmadie.study — и учи корейский 🌸', n: 0, chip: 'Готово' }
+    { id: 'intro', t0: 0, t1: 3.6, eb: 'ИНСТРУКЦИЯ', title: 'Madie на iPhone', sub: 'за 1 минуту', n: 0, chip: 'Начало' },
+    { id: 'safari', t0: 3.6, t1: 8.0, eb: 'СНАЧАЛА', title: 'Открой в Safari', sub: '', n: 0, chip: 'Safari' },
+    { id: 's1', t0: 8.0, t1: 13.6, eb: 'ШАГ 1', title: 'Поделиться', sub: '', n: 1, chip: '1 · Поделиться' },
+    { id: 's2', t0: 13.6, t1: 17.6, eb: 'ШАГ 2', title: 'На экран «Домой»', sub: '', n: 2, chip: '2 · На экран «Домой»' },
+    { id: 's3', t0: 17.6, t1: 22.2, eb: 'ШАГ 3', title: 'Добавить', sub: '', n: 3, chip: '3 · Добавить' },
+    { id: 's4', t0: 22.2, t1: 29.6, eb: 'ШАГ 4', title: 'Открой значок', sub: '', n: 4, chip: '4 · Открой значок' },
+    { id: 'push', t0: 29.6, t1: 36.0, eb: 'УВЕДОМЛЕНИЯ', title: 'Включи уведомления', sub: 'Нажми «Разрешить»', n: 0, chip: 'Уведомления' },
+    { id: 'mic', t0: 36.0, t1: 41.8, eb: 'ВАЖНО', title: 'Голос — в Safari', sub: 'со значка — клавиатура', n: 0, chip: 'Про голос' },
+    { id: 'done', t0: 41.8, t1: 47.0, eb: 'ГОТОВО', title: 'Madie на экране', sub: 'koreanmadie.study', n: 0, chip: 'Готово' }
   ];
   const TOTAL = 47.0;
   // касания: t — момент нажатия; sel — цель для интерактива; hold — за сколько до касания палец уже на цели
@@ -151,7 +151,7 @@
 .hg .dots b.on{background:#BC4B5E}
 .hg .ti{position:absolute;left:60px;width:960px;top:306px;text-align:center;font-size:80px;line-height:1.06;color:#5C2A33;white-space:nowrap}
 .hg .ti span{display:inline-block;will-change:transform,opacity}
-.hg .su{position:absolute;left:90px;width:900px;top:418px;text-align:center;font-size:33px;line-height:1.32;font-weight:500;color:rgba(92,42,51,.82)}
+.hg .su{position:absolute;left:90px;width:900px;top:418px;text-align:center;font-size:40px;line-height:1.3;font-weight:600;color:rgba(92,42,51,.82)}
 #fade{position:absolute;left:0;top:0;width:1080px;height:620px;background:linear-gradient(180deg,#FFFAF6 0,#FFFAF6 80%,rgba(255,250,246,0) 100%);pointer-events:none}
 .petal{position:absolute;left:0;top:0;width:34px;height:26px;border-radius:70% 30% 70% 30%;background:linear-gradient(135deg,#F7CDD2,#F2A6AE);opacity:0;will-change:transform,opacity}
 .spark{position:absolute;left:0;top:0;width:26px;height:26px;opacity:0}
@@ -318,7 +318,8 @@
   const hgs = SC.map(s => {
     const dots = s.n ? '<span class="dots">' + [1, 2, 3, 4].map(k => '<b class="' + (k <= s.n ? 'on' : '') + '"></b>').join('') + '</span>' : '';
     const words = s.title.split(' ').map(w => '<span>' + w + '</span>').join(' ');
-    const e = h('<div class="hg"><div class="eb"><i></i><span>' + s.eb + '</span>' + dots + '<i class="r"></i></div><div class="ti disp">' + words + '</div><div class="su">' + s.sub + '</div></div>');
+    const fs_ = s.title.length <= 15 ? 104 : s.title.length <= 16 ? 96 : s.title.length <= 17 ? 88 : 76, ty = s.sub ? 306 : 330;
+    const e = h('<div class="hg"><div class="eb"><i></i><span>' + s.eb + '</span>' + dots + '<i class="r"></i></div><div class="ti disp" style="font-size:' + fs_ + 'px;top:' + ty + 'px">' + words + '</div>' + (s.sub ? '<div class="su" style="top:' + (ty + 116) + 'px">' + s.sub + '</div>' : '') + '</div>');
     return { e, ws: [].slice.call(e.querySelectorAll('.ti span')), s };
   });
   stage.appendChild(h('<div id="fade"></div>'));
@@ -476,6 +477,11 @@
     });
   }
 
-  window.GUIDE = { SC, TAPS, TOTAL, CAM, renderAt, P };
-  window.renderAt = renderAt;
+  // Весь сценарий проигрывается быстрее: внутренние времена — в «длинной» шкале, наружу отдаём сжатую
+  const OUT_TOTAL = 34.8, K = TOTAL / OUT_TOTAL;
+  const SCo = SC.map(s => Object.assign({}, s, { t0: s.t0 / K, t1: s.t1 / K }));
+  const TAPSo = TAPS.map(x => Object.assign({}, x, { t: x.t / K, hold: x.hold / K }));
+  const renderOut = tt => renderAt(tt * K);
+  window.GUIDE = { SC: SCo, TAPS: TAPSo, TOTAL: OUT_TOTAL, K, renderAt: renderOut };
+  window.renderAt = renderOut;
 })();

@@ -90,7 +90,7 @@ details summary{cursor:pointer;font-weight:700;min-height:44px;display:flex;alig
         <button id="next" class="ib" type="button" aria-label="Следующий шаг"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M18 5v14M5 5l9 7-9 7z"/></svg></button>
         <span id="time" class="tm">0:00</span>
       </div>
-      <div class="ctl" style="margin-top:6px"><input id="seek" type="range" min="0" max="47" step="0.01" value="0" aria-label="Положение в инструкции"></div>
+      <div class="ctl" style="margin-top:6px"><input id="seek" type="range" min="0" max="35" step="0.01" value="0" aria-label="Положение в инструкции"></div>
       <div class="mode" role="group" aria-label="Режим">
         <button id="mManual" type="button" aria-pressed="true">Нажимаю сама</button>
         <button id="mAuto" type="button" aria-pressed="false">Просто смотрю</button>
@@ -123,7 +123,7 @@ details summary{cursor:pointer;font-weight:700;min-height:44px;display:flex;alig
   const view = $('view'), scaler = $('scaler'), hot = $('hot'), hint = $('hint'), start = $('start'), endEl = $('end');
   const seek = $('seek'), timeEl = $('time'), pp = $('pp'), ppi = $('ppi'), chipsEl = $('chips');
   const PLAY = '<path d="M8 5l12 7-12 7z"/>', PAUSE = '<path d="M7 5h4v14H7zM13 5h4v14h-4z"/>';
-  let t = 0, playing = false, waiting = -1, last = 0, manual = true, done = new Set(), k = .33;
+  seek.max = TOTAL; let t = 0, playing = false, waiting = -1, last = 0, manual = true, done = new Set(), k = .33;
 
   // — подгонка под экран
   function fit() {
