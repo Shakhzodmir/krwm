@@ -614,14 +614,24 @@
     transition: background var(--t-base) var(--ease-out), box-shadow var(--t-base) var(--ease-out);
   }
   .progress-segments > span.done    { background: linear-gradient(90deg, var(--berry), var(--plum)); }
+  /* Пульс текущего сегмента. Раньше анимировался сам box-shadow — браузер перерисовывал
+     кусок экрана каждый кадр, бесконечно: на телефоне это главный источник нагрева Главной
+     (замер 18.11: ~20 п.п. загрузки в простое). Теперь оба свечения нарисованы один раз,
+     а пульсирует только прозрачность верхнего слоя — её считает видеочип, без перерисовки. */
   .progress-segments > span.current {
+    position: relative;
     background: white;
     box-shadow: 0 0 0 2px rgba(201,165,92,.45), 0 0 10px rgba(201,165,92,.55);
+  }
+  .progress-segments > span.current::after {
+    content: ''; position: absolute; inset: 0; border-radius: inherit; pointer-events: none;
+    box-shadow: 0 0 0 3px rgba(201,165,92,.30), 0 0 14px rgba(201,165,92,.75);
+    opacity: 0; will-change: opacity;
     animation: segPulse 1.6s ease-in-out infinite;
   }
   @keyframes segPulse {
-    0%, 100% { box-shadow: 0 0 0 2px rgba(201,165,92,.45), 0 0 10px rgba(201,165,92,.55); }
-    50%      { box-shadow: 0 0 0 3px rgba(201,165,92,.30), 0 0 14px rgba(201,165,92,.75); }
+    0%, 100% { opacity: 0; }
+    50%      { opacity: 1; }
   }
 
   /* ───── HERO LESSON ───── */
@@ -2677,6 +2687,10 @@ body.calm-motion .talk-wave i { height: 10px; }
     animation: deco-twinkle 3.4s ease-in-out infinite;
   }
   .path-deco.sparkle.sm { font-size: 11px; }
+  /* Мелкий декор стоит на месте и без тени: на пути 60 украшений, и каждое анимированное —
+     отдельный слой в памяти видеочипа. Движутся только крупные (половина), картинка та же. */
+  .path-deco.sakura.sm, .path-deco.sparkle.sm { animation: none; filter: none; }
+  .path-deco.sparkle.sm { opacity: .6; }
   @keyframes deco-float {
     0%, 100% { transform: translateY(0) rotate(-6deg); }
     50%      { transform: translateY(-6px) rotate(8deg); }
@@ -2898,6 +2912,16 @@ body.calm-motion .talk-wave i { height: 10px; }
     position: absolute; top: -28px;
     animation: petalFall linear infinite;
     will-change: transform;
+  }
+  /* Фоновый лепесток падает один раз и убирается (app.js: ambientPetals) — без повторного круга */
+  #ambient-petals .petal { animation-iteration-count: 1; animation-fill-mode: both; }
+  /* Экран закрыт окном, игрой, чатом или уроком — лепестков всё равно не видно, не крутим их зря */
+  #ambient-petals.hold { display: none; }
+  /* Телефоны: размытие фона под шапкой и нижним меню отключено. Под ними постоянно движется
+     содержимое (лепестки, прокрутка), и размытие пересчитывалось каждый кадр — это греет телефон.
+     Сами панели почти непрозрачные, на вид разница минимальна. */
+  @media (hover: none) and (pointer: coarse) {
+    .topbar, .bottomnav { backdrop-filter: none; -webkit-backdrop-filter: none; }
   }
   @keyframes petalFall {
     0%   { transform: translateY(-30px) rotate(0); opacity: 0; }
@@ -6516,7 +6540,7 @@ body.calm-motion .talk-wave i { height: 10px; }
   body.no-petals #ambient-petals { display: none !important; }
   body.calm-motion #ambient-petals, body.calm-motion #intro-petals, body.calm-motion .petal,
   body.calm-motion .path-deco, body.calm-motion .lesson-bear, body.calm-motion .duo-mascot { display: none !important; }
-  body.calm-motion .progress-segments > span.current { animation: none !important; }
+  body.calm-motion .progress-segments > span.current::after { animation: none !important; }
 
   /* ───── ТЁМНАЯ ТЕМА (графит · серый · тёмно-синий) ─────
      Для мужской аудитории и любителей тёмного. Включается в Настройках
@@ -7283,7 +7307,7 @@ body.calm-motion .talk-wave i { height: 10px; }
     }
     #ambient-petals, #intro-petals, .petal,
     .path-deco, .lesson-bear, .duo-mascot { display: none !important; }
-    .progress-segments > span.current { animation: none !important; }
+    .progress-segments > span.current::after { animation: none !important; }
   }
 
   /* ═══════════════════════════════════════════════════════════════════

@@ -10062,7 +10062,7 @@
   // Версия сборки: держать ВРУЧНУЮ синхронной с ?v= в index.html при каждом деплое
   // (те же 3 места — stylesheet/preload/script). Используется тихим автообновлением
   // ниже — сама загрузка кода по-прежнему идёт через ?v=.
-  const APP_VERSION = '20261117b';
+  const APP_VERSION = '20261118a';
   // ── Тихое автообновление (25.08.2026, вместо попапа «Вышло обновление!») ──
   // Узнав из облака про новую версию (appVersion пишет первый клиент нового деплоя,
   // promptVersion — кнопка «Оповестить» в админке), вкладка НЕ дёргает ученицу:
@@ -52981,26 +52981,41 @@
     const layer = document.getElementById('ambient-petals');
     if (!layer) return;
     const symbols = ['🌸','🌸','🌸','🌺','✿'];
-    function spawn() {
-      if (document.hidden) return; // don't churn DOM while the tab is in the background
+    // Нагрузка растёт с числом лепестков (замер 18.11: ~1 п.п. процессора на лепесток), а раньше их
+    // было до 17 сразу: первые шесть крутились вечно, остальные жили лишних 2 с на втором круге.
+    // Теперь не больше PETALS_MAX, каждый падает один раз и убирается по окончании анимации.
+    const PETALS_MAX = 6;
+    // Лепестки не видны и не нужны: вкладка в фоне, выключены в настройках, «спокойный режим»
+    // или экран закрыт окном / игрой / чатом / уроком (они непрозрачные или затемняют фон).
+    function covered() {
+      return !!document.querySelector('.modal-bg, .game-page, #chat-page, #lesson-modal, #lesson-complete-page, #user-profile-page, #writing-practice-page, #intro');
+    }
+    function off() {
+      const b = document.body.classList;
+      return document.hidden || b.contains('no-petals') || b.contains('calm-motion');
+    }
+    function add(offset) {
       const p = document.createElement('div');
       p.className = 'petal';
       const dur = 8 + Math.random() * 6;
       const size = 11 + Math.random() * 11;
-      p.style.cssText = `left:${Math.random()*100}%; font-size:${size}px; animation-duration:${dur}s; opacity:${(0.45 + Math.random()*0.4).toFixed(2)};`;
+      const delay = offset ? -Math.random() * dur * 0.8 : 0;   // стартовые — уже «в полёте»
+      p.style.cssText = `left:${Math.random()*100}%; font-size:${size}px; animation-duration:${dur}s; animation-delay:${delay.toFixed(2)}s; opacity:${(0.45 + Math.random()*0.4).toFixed(2)};`;
       p.textContent = symbols[Math.floor(Math.random()*symbols.length)];
+      p.addEventListener('animationend', () => p.remove());
       layer.appendChild(p);
-      setTimeout(() => p.remove(), (dur+2)*1000);
+      // Страховка: пока слой скрыт, анимация не идёт и animationend не придёт — убираем по таймеру
+      setTimeout(() => p.remove(), (dur + delay + 30) * 1000);
     }
-    for (let i = 0; i < 6; i++) {
-      const p = document.createElement('div');
-      p.className = 'petal';
-      const dur = 8 + Math.random() * 6;
-      p.style.cssText = `left:${Math.random()*100}%; font-size:${11+Math.random()*11}px; animation-duration:${dur}s; animation-delay:${(-Math.random()*dur).toFixed(2)}s; opacity:${(0.45+Math.random()*0.4).toFixed(2)};`;
-      p.textContent = symbols[Math.floor(Math.random()*symbols.length)];
-      layer.appendChild(p);
+    function tick() {
+      if (off()) { if (layer.firstChild) layer.textContent = ''; return; }
+      const hold = covered();
+      layer.classList.toggle('hold', hold);
+      if (hold) { if (layer.firstChild) layer.textContent = ''; return; }   // после окна лепестки набираются заново, по одному
+      if (layer.childElementCount < PETALS_MAX) add(false);
     }
-    setInterval(spawn, 1400);
+    if (!off() && !covered()) for (let i = 0; i < 4; i++) add(true);
+    setInterval(tick, 2000);
   })();
 
   // ── Escape key closes the topmost overlay (modal → game → chat → lesson) ──
