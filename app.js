@@ -1268,6 +1268,10 @@
     'ios.inst.copy':      { ru: 'Скопировать ссылку', en: 'Copy link', uz: 'Havolani nusxalash' },
     'ios.inst.copied':    { ru: 'Ссылка скопирована 🌸', en: 'Link copied 🌸', uz: 'Havola nusxalandi 🌸' },
     'ios.inst.copyFail':  { ru: 'Не получилось скопировать — выдели ссылку и скопируй вручную', en: 'Couldn’t copy — select the link and copy it manually', uz: 'Nusxalab boʻlmadi — havolani belgilab, qoʻlda nusxalang' },
+    // Список чатов и список учениц у Мади: порции + поиск
+    'adm.chat.rating':    { ru: 'Рейтинг', en: 'Ranking', uz: 'Reyting' },
+    'adm.chat.search':    { ru: 'Найти ученицу: имя или почта', en: 'Find a student: name or email', uz: 'Oʻquvchini topish: ism yoki pochta' },
+    'adm.chat.more':      { ru: 'Показать ещё {n} · осталось {rest}', en: 'Show {n} more · {rest} left', uz: 'Yana {n} ta koʻrsatish · {rest} ta qoldi' },
     // Интерактивный показ установки (мини-iPhone в окне «Установить на iPhone»)
     'ios.demo.c1':        { ru: 'Нажми «Поделиться» внизу экрана', en: 'Tap “Share” at the bottom of the screen', uz: 'Ekran pastidagi «Ulashish» tugmasini bosing' },
     'ios.demo.c1top':     { ru: 'Нажми «Поделиться» — вверху, в адресной строке', en: 'Tap “Share” — at the top, in the address bar', uz: '«Ulashish» tugmasini bosing — yuqorida, manzil satrida' },
@@ -5454,6 +5458,9 @@
     "ios.inst.copy": "Сілтемені көшіру",
     "ios.inst.copied": "Сілтеме көшірілді 🌸",
     "ios.inst.copyFail": "Көшіру мүмкін болмады — сілтемені белгілеп, қолмен көшір",
+    "adm.chat.rating": "Рейтинг",
+    "adm.chat.search": "Оқушыны табу: аты немесе пошта",
+    "adm.chat.more": "Тағы {n} көрсету · {rest} қалды",
     "ios.demo.c1": "Экранның төменгі жағындағы «Бөлісу» түймесін бас",
     "ios.demo.c1top": "«Бөлісу» түймесін бас — жоғарыда, мекенжай жолағында",
     "ios.demo.c4": "Дайын! Madie-ді басты экраннан аш",
@@ -10062,7 +10069,7 @@
   // Версия сборки: держать ВРУЧНУЮ синхронной с ?v= в index.html при каждом деплое
   // (те же 3 места — stylesheet/preload/script). Используется тихим автообновлением
   // ниже — сама загрузка кода по-прежнему идёт через ?v=.
-  const APP_VERSION = '20261118a';
+  const APP_VERSION = '20261119a';
   // ── Тихое автообновление (25.08.2026, вместо попапа «Вышло обновление!») ──
   // Узнав из облака про новую версию (appVersion пишет первый клиент нового деплоя,
   // promptVersion — кнопка «Оповестить» в админке), вкладка НЕ дёргает ученицу:
@@ -12888,22 +12895,75 @@
     </div>`;
   }
 
+  // Список чатов Мади = весь справочник учениц. 18.11.2026 их стало 2546, и список рисовался
+  // ЦЕЛИКОМ: ~90 тысяч узлов DOM, перерисовка на каждое входящее сообщение (даже когда «Общение»
+  // закрыто) и запрос меты чата на КАЖДУЮ ученицу. Телефон Мади грелся и подвисал на секунды
+  // (замер: открытие списка 9 с, одно сообщение — 2–8 с). Теперь:
+  //  • пока список не на экране, он не перерисовывается (бейдж считается отдельно);
+  //  • на экран выводится первая порция (ADM_CHAT_PAGE), остальные — «Показать ещё» и поиск;
+  //  • меты читаются только у тех, с кем есть переписка, и у показанных строк.
+  const ADM_CHAT_PAGE = 60;
+  let _admChatLimit = ADM_CHAT_PAGE;
+  let _admChatQuery = '';
+  let _admChatSearchTimer = null;
+  function adminChatSearch(q) {
+    _admChatQuery = String(q || '').trim().toLowerCase();
+    _admChatLimit = ADM_CHAT_PAGE;
+    if (_admChatSearchTimer) clearTimeout(_admChatSearchTimer);
+    _admChatSearchTimer = setTimeout(() => { _admChatSearchTimer = null; renderAdminChatList(); }, 180);
+  }
+  function adminChatMore() { _admChatLimit += ADM_CHAT_PAGE * 2; renderAdminChatList(); }
+  // С кем у Мади может быть переписка: друзья (первое сообщение авто-дружит), непрочитанное,
+  // закреплённые и те, с кем была активность на этом устройстве.
+  function _admChatActiveUids() {
+    const s = new Set();
+    Object.keys(_friendsCache || {}).forEach(k => s.add(k));
+    Object.keys(_unreadFromCache || {}).forEach(k => s.add(k));
+    Object.keys(_loadPins()).forEach(k => s.add(k));
+    if (!_chatLastAtLoaded) loadChatLastAt();
+    Object.keys(_chatLastAt || {}).forEach(k => s.add(k));
+    return s;
+  }
+  function _admChatSort(a, b) {
+    const pa = isChatPinned(a.uid) ? 1 : 0, pb = isChatPinned(b.uid) ? 1 : 0;
+    if (pa !== pb) return pb - pa;
+    const aUnread = unreadCountFor(a.uid);
+    const bUnread = unreadCountFor(b.uid);
+    if (aUnread !== bUnread) return bUnread - aUnread;
+    const aAt = (_chatMetaCache[a.uid] && _chatMetaCache[a.uid].lastAt) || 0;
+    const bAt = (_chatMetaCache[b.uid] && _chatMetaCache[b.uid].lastAt) || 0;
+    if (aAt !== bAt) return bAt - aAt;
+    return (b.lastSeen || 0) - (a.lastSeen || 0);
+  }
   async function renderAdminChatList(fromBgRefresh) {
     const slot = document.getElementById('friends-chat-section');
     if (!slot) return;
+    // Список не на экране — не строим его вовсе: при входе на «Общение» switchScreen
+    // сам вызовет рендер и нарисует свежее состояние.
+    if (!_chatListVisible()) return;
     const seq = ++_renderFriendsSeq;
     const dir = _usersDirCache || {};
     const me = myUid();
     const groups = _groupsCache || {};
-    // Fresh previews — cache-first: повторный заход рисуется мгновенно из кэша,
-    // свежие меты (по одному запросу на ученицу — дорого) тянутся фоном.
     const studentUids = Object.keys(dir).filter(uid => !(dir[uid] && dir[uid].isAdmin) && uid !== me);
-    // У Мади в списке ВСЕ ученицы, поэтому перекачка мет здесь особенно дорогая:
-    // ходим в сеть только когда список открыт, и не чаще раза в 1,2 секунды.
-    if (me && me !== 'guest' && !fromBgRefresh && _chatListVisible()) {
+    const q = _admChatQuery;
+    const pick = () => {
+      let arr = studentUids.map(uid => ({ uid, ...dir[uid] }));
+      if (q) arr = arr.filter(u => String(u.name || '').toLowerCase().includes(q) || String(u.email || '').toLowerCase().includes(q));
+      return arr.sort(_admChatSort);
+    };
+    // Fresh previews — cache-first: повторный заход рисуется мгновенно из кэша, свежие меты
+    // тянутся фоном. В сеть ходим только когда список открыт, и не чаще раза в 1,2 секунды.
+    if (me && me !== 'guest' && !fromBgRefresh) {
+      // Что читать: показанные строки и чаты с непрочитанным — каждый раз (там превью меняется);
+      // остальные переписки — один раз, чтобы список знал, кого поднять наверх по дате сообщения.
+      const active = _admChatActiveUids();
+      const unread = _unreadFromCache || {};
+      const want = new Set(studentUids.filter(uid => active.has(uid) && (!_chatMetaCache[uid] || unread[uid])));
+      pick().slice(0, _admChatLimit).forEach(u => want.add(u.uid));
       const items = [
         { key: COMMUNITY_GID, chatId: COMMUNITY_GID },
-        ...studentUids.map(uid => ({ key: uid, chatId: chatIdFor(me, uid) })),
+        ...Array.from(want).map(uid => ({ key: uid, chatId: chatIdFor(me, uid) })),
         ...Object.keys(groups).map(gid => ({ key: gid, chatId: gid }))
       ];
       if (!Object.keys(_chatMetaCache).length) {
@@ -12921,46 +12981,54 @@
     }
     if (!document.getElementById('friends-chat-section')) return;
     if (seq !== _renderFriendsSeq) return;
-    const students = studentUids
-      .map(uid => ({ uid, ...dir[uid] }))
-      .sort((a, b) => {
-        const pa = isChatPinned(a.uid) ? 1 : 0, pb = isChatPinned(b.uid) ? 1 : 0;
-        if (pa !== pb) return pb - pa;
-        const aUnread = unreadCountFor(a.uid);
-        const bUnread = unreadCountFor(b.uid);
-        if (aUnread !== bUnread) return bUnread - aUnread;
-        const aAt = (_chatMetaCache[a.uid] && _chatMetaCache[a.uid].lastAt) || 0;
-        const bAt = (_chatMetaCache[b.uid] && _chatMetaCache[b.uid].lastAt) || 0;
-        if (aAt !== bAt) return bAt - aAt;
-        return (b.lastSeen || 0) - (a.lastSeen || 0);
-      });
+    const found = pick();
+    const students = found.slice(0, _admChatLimit);
+    const rest = found.length - students.length;
 
-    const groupRows = Object.keys(groups)
+    // При поиске группы и сообщество не показываем — ищут ученицу
+    const groupRows = q ? '' : Object.keys(groups)
       .sort((a, b) => ((_chatMetaCache[b] && _chatMetaCache[b].lastAt) || 0) - ((_chatMetaCache[a] && _chatMetaCache[a].lastAt) || 0))
       .map(gid => groupRowHtml(gid, groups[gid])).join('');
+    const commRow = q ? '' : communityRowHtml();
+    const moreBtn = rest > 0
+      ? `<button type="button" onclick="adminChatMore()" class="btn btn-ghost btn-block" style="margin-top:10px;">${t('adm.chat.more', { n: Math.min(rest, ADM_CHAT_PAGE * 2), rest })}</button>`
+      : '';
+    const emptyBox = text => `<div style="text-align:center;padding:18px 12px;color:var(--soft);font-size:12px;background:var(--blush);border:1px dashed var(--line);border-radius:14px;">${text}</div>`;
+    const rowsHtml = students.length
+      ? `<div style="display:grid;gap:8px;">${commRow}${groupRows}${students.map(s => adminChatRowHtml(s)).join('')}</div>${moreBtn}`
+      : `${commRow ? `<div style="display:grid;gap:8px;margin-bottom:10px;">${commRow}${groupRows}</div>` : ''}${emptyBox(q ? t('social.search.empty') : t('ui.098'))}`;
 
-    // stagger-in — только при первом наполнении; сигнатура гасит холостые
-    // перерисовки (unreadFrom дёргает список на каждое сообщение). См. renderFriendsAndChat.
-    const staggerCls = slot.childElementCount ? '' : 'stagger-in';
-    const listHtml = students.length
-      ? `<div class="${staggerCls}" style="display:grid;gap:8px;">${communityRowHtml()}${groupRows}${students.map(s => adminChatRowHtml(s)).join('')}</div>`
-      : `<div style="display:grid;gap:8px;margin-bottom:10px;">${communityRowHtml()}</div>
-         <div style="text-align:center;padding:18px 12px;color:var(--soft);font-size:12px;background:var(--blush);border:1px dashed var(--line);border-radius:14px;">${t('ui.098')}</div>`;
-
-    const finalHtml = `
-      <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;padding:0 4px;margin-bottom:10px;">
-        <div style="font-size:10px;letter-spacing:.2em;color:var(--soft);">${t('ui.099')} <span style="color:var(--coral);font-weight:700;letter-spacing:.04em;">${students.length}</span></div>
-        <div style="display:flex;gap:6px;">
-          <button onclick="adminOpenFullRating()" class="chip" style="font-size:11px;padding:5px 12px;cursor:pointer;border:none;background:var(--blush);color:var(--berry);">🏆 Рейтинг</button>
-          <button onclick="openCreateGroupModal()" class="chip" style="font-size:11px;padding:5px 12px;cursor:pointer;border:none;background:var(--blush);color:var(--berry);"><i class="fa-solid fa-user-group" style="font-size:10px;"></i> ${t('ui.089')}</button>
-          <button onclick="refreshAdminChatList()" class="chip" style="font-size:11px;padding:5px 12px;cursor:pointer;border:none;background:var(--blush);color:var(--berry);"><i class="fa-solid fa-rotate" style="font-size:10px;"></i> ${t('ui.100')}</button>
+    // Каркас (шапка + поиск) рисуем один раз: поле поиска не должно пересоздаваться
+    // при каждой перерисовке строк — иначе на телефоне пропадает фокус и клавиатура.
+    let rowsEl = slot.querySelector('#adm-chat-rows');
+    if (rowsEl && slot.dataset.admLang !== APP_LANG) rowsEl = null;   // сменили язык — подписи каркаса устарели
+    if (!rowsEl) {
+      slot.dataset.admLang = APP_LANG;
+      slot.innerHTML = `
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;padding:0 4px;margin-bottom:10px;">
+          <div style="font-size:10px;letter-spacing:.2em;color:var(--soft);">${t('ui.099')} <span id="adm-chat-count" style="color:var(--coral);font-weight:700;letter-spacing:.04em;"></span></div>
+          <div style="display:flex;gap:6px;flex-wrap:wrap;min-width:0;">
+            <button onclick="adminOpenFullRating()" class="chip" style="font-size:11px;padding:5px 12px;cursor:pointer;border:none;background:var(--blush);color:var(--berry);">🏆 ${t('adm.chat.rating')}</button>
+            <button onclick="openCreateGroupModal()" class="chip" style="font-size:11px;padding:5px 12px;cursor:pointer;border:none;background:var(--blush);color:var(--berry);"><i class="fa-solid fa-user-group" style="font-size:10px;"></i> ${t('ui.089')}</button>
+            <button onclick="refreshAdminChatList()" class="chip" style="font-size:11px;padding:5px 12px;cursor:pointer;border:none;background:var(--blush);color:var(--berry);"><i class="fa-solid fa-rotate" style="font-size:10px;"></i> ${t('ui.100')}</button>
+          </div>
         </div>
-      </div>
-      ${listHtml}
-    `;
-    if (slot._lastListHtml !== finalHtml) {
-      slot._lastListHtml = finalHtml;
-      slot.innerHTML = finalHtml;
+        <div style="position:relative; margin-bottom:12px;">
+          <i class="fa-solid fa-magnifying-glass" style="position:absolute; left:14px; top:50%; transform:translateY(-50%); color:var(--soft); font-size:13px; pointer-events:none;"></i>
+          <input id="adm-chat-search" class="input" autocomplete="off" placeholder="${escAttr(t('adm.chat.search'))}" oninput="adminChatSearch(this.value)" style="padding-left:38px; font-size:13px;">
+        </div>
+        <div id="adm-chat-rows"></div>`;
+      rowsEl = slot.querySelector('#adm-chat-rows');
+      slot._lastListHtml = null;
+      const inp = slot.querySelector('#adm-chat-search');
+      if (inp && q) inp.value = _admChatQuery;
+    }
+    const cnt = slot.querySelector('#adm-chat-count');
+    if (cnt) cnt.textContent = q ? `${found.length} / ${studentUids.length}` : String(studentUids.length);
+    // Сигнатура гасит холостые перерисовки (unreadFrom дёргает список на каждое сообщение)
+    if (slot._lastListHtml !== rowsHtml) {
+      slot._lastListHtml = rowsHtml;
+      rowsEl.innerHTML = rowsHtml;
     }
   }
 
@@ -45300,14 +45368,24 @@
     }
     return `<span class="chip chip-blush" style="font-size:9px; padding:2px 8px;">${p.emoji} ${p.name}${suffix}</span>`;
   }
-  function renderAdminUsersList(arr) {
+  // Учениц тысячи — карточки рисуем порциями (весь список сразу = десятки тысяч узлов DOM,
+  // телефон подвисает). Поиск и фильтры работают по ВСЕМ, порция — только то, что на экране.
+  let _admUsersShown = ADM_CHAT_PAGE, _admUsersArr = [];
+  function adminUsersMore() { _admUsersShown += ADM_CHAT_PAGE * 2; renderAdminUsersList(_admUsersArr, true); }
+  function renderAdminUsersList(arr, keepShown) {
     const list = document.getElementById('admin-users-list');
     if (!list) return;
+    if (!keepShown) _admUsersShown = ADM_CHAT_PAGE;
+    _admUsersArr = arr;
     if (arr.length === 0) {
       list.innerHTML = `<div style="text-align:center; padding: 24px 12px; color:var(--soft); font-size:12px;">${t('ui.378')}</div>`;
       return;
     }
-    list.innerHTML = arr.map(u => {
+    const rest = arr.length - Math.min(arr.length, _admUsersShown);
+    const moreBtn = rest > 0
+      ? `<button type="button" onclick="adminUsersMore()" class="btn btn-ghost btn-block" style="margin-top:4px;">${t('adm.chat.more', { n: Math.min(rest, ADM_CHAT_PAGE * 2), rest })}</button>`
+      : '';
+    list.innerHTML = arr.slice(0, _admUsersShown).map(u => {
       const xp = u.stats?.xp || 0;
       const lvl = getLevel(xp);
       const meta = u.meta || {};
@@ -45340,7 +45418,7 @@
           <i class="fa-solid fa-chevron-right" style="color:var(--coral); font-size:11px;"></i>
         </div>
       `;
-    }).join('');
+    }).join('') + moreBtn;
   }
   // Поиск по ЛЮБОМУ полю: имя, ник, email, страна, возраст, пол, категория
   function filterAdminUsers() {
